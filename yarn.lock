@@ -3546,10 +3546,10 @@
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@theguild/components@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.3.tgz#05658ae43354ec4a9a1649107dd60b03ce6a58c4"
-  integrity sha512-xr8S/LYZgEAsQUlVXPP9O5WBtpYWrR6pYr2nl6BsLuwB+bLgC73/JuEL3sTdEk1avuz2vaRTY2/07UDIwfVwEQ==
+"@theguild/components@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-2.0.5.tgz#0bfd46c4eec5673a5620f41e0dfc938d5aae5200"
+  integrity sha512-yfSc8eg0D3bpO9uXr0jrbyP7k/r/DB+rkA/DsthWRJmTB9XWXC9tmsT94sUx8tz+VMJFg24+YAA/DNLmrKayMA==
   dependencies:
     "@algolia/autocomplete-js" "1.7.1"
     "@algolia/autocomplete-plugin-algolia-insights" "1.7.1"
@@ -3560,7 +3560,7 @@
     algoliasearch "4.14.1"
     clsx "1.2.1"
     focus-trap-react "9.0.2"
-    nextra-theme-docs "2.0.0-beta.15"
+    nextra-theme-docs "2.0.0-beta.17"
     react-instantsearch-dom "6.31.1"
     react-paginate "8.1.3"
     react-player "2.10.1"
@@ -5358,7 +5358,7 @@ cjs-module-lexer@^1.0.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz#9f84ba3244a512f3a54e5277e8eef4c489864e40"
   integrity sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==
 
-classnames@2.3.1, classnames@^2.2.5, classnames@^2.3.1:
+classnames@2.3.1, classnames@^2.2.5:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
@@ -5439,7 +5439,7 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
 
-clsx@1.2.1:
+clsx@1.2.1, clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
@@ -8058,10 +8058,10 @@ gray-matter@^4.0.3:
     section-matter "^1.0.0"
     strip-bom-string "^1.0.0"
 
-guild-docs@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/guild-docs/-/guild-docs-3.1.1.tgz#5716442e5ec211257a0fa12904707509befd601d"
-  integrity sha512-eEDFyoHl8BCPKjn8081rwUKuqkY8FYddHGYYTzj00ZfZqsqFdIzyF+PGJwa4N3NOhPqzPvM9faan23zULsgkTg==
+guild-docs@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/guild-docs/-/guild-docs-3.1.2.tgz#39ca9ea1beaa4d005b6a11e594e642d9b4661445"
+  integrity sha512-wvFZq8i6MhAF4zcN6aLL+6X0xiFBtDVecf5uRpxp2ROx9XtqqU9/xgj9U49Jp3Ls17zcq7S7LV6ia6NCRXVQmA==
   dependencies:
     "@chakra-ui/react" "2.2.6"
     "@emotion/react" "11.10.0"
@@ -8070,7 +8070,7 @@ guild-docs@3.1.1:
     framer-motion "7.0.0"
     mermaid "^9.1.4"
     next-seo "5.5.0"
-    nextra "2.0.0-beta.15"
+    nextra "2.0.0-beta.17"
     nprogress "0.2.0"
     react-icons "4.4.0"
     react-use "17.4.0"
@@ -10644,15 +10644,15 @@ next@12.2.4:
     "@next/swc-win32-ia32-msvc" "12.2.4"
     "@next/swc-win32-x64-msvc" "12.2.4"
 
-nextra-theme-docs@2.0.0-beta.15:
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.0.0-beta.15.tgz#8afd1b4010867df44784d719d47281c8d0fe74e9"
-  integrity sha512-9YIfQCaLcc7N8DwEnRpbJ5GK6dKSBNSOv7p8bV0pBUj2jtdReJHWmyf3rZVsVJyo3j9Ruj3JYGgcUcj0kIUEuA==
+nextra-theme-docs@2.0.0-beta.17:
+  version "2.0.0-beta.17"
+  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.0.0-beta.17.tgz#af8665425c03471420bc1ec4a120aafdf21ad8e3"
+  integrity sha512-N+b3OTpXKJ/AwwPq0RBjNLSUSAnFB1TOlMIEjQG+rxtANlBpkCe4+65d9fIIAtL6Kw2/+3GNeM6R4PijStMJag==
   dependencies:
     "@headlessui/react" "^1.6.5"
     "@mdx-js/react" "^2.1.2"
     "@reach/skip-nav" "^0.17.0"
-    classnames "^2.3.1"
+    clsx "^1.2.1"
     flexsearch "^0.7.21"
     focus-visible "^5.2.0"
     github-slugger "^1.4.0"
@@ -10661,12 +10661,12 @@ nextra-theme-docs@2.0.0-beta.15:
     next-themes "^0.2.0-beta.2"
     parse-git-url "^1.0.1"
     scroll-into-view-if-needed "^2.2.29"
-    title "^3.4.2"
+    title "^3.5.1"
 
-nextra@2.0.0-beta.15:
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.0.0-beta.15.tgz#b4220a1a4a5739b519dc29d9e1b0155ac10932ba"
-  integrity sha512-7wsUZr4w4mtlxiefFble1HRBm7Lx2SWbUCYTTSvz4wmVgMH/vp9Bu1K+9PIo5RMRScuWT+OCGzFWJCoCeskx0A==
+nextra@2.0.0-beta.17:
+  version "2.0.0-beta.17"
+  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.0.0-beta.17.tgz#e6d79dab12b934982305b9d8fb79264448c471f4"
+  integrity sha512-V/FIjroXeh1C9QuGJIUo5g+82GyQAjnLGX97AEJfXaf5Vy61wmZ8rWXm8D0KUTGvGp4ILUuzzFuNe/f+C/l1zw==
   dependencies:
     "@mdx-js/mdx" "^2.1.2"
     "@napi-rs/simple-git" "^0.1.8"
@@ -13143,10 +13143,10 @@ title-case@^3.0.3:
   dependencies:
     tslib "^2.0.3"
 
-title@^3.4.2:
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/title/-/title-3.4.4.tgz#5c0ab11fd69643bc05dc006bba52aaf5c1630f5e"
-  integrity sha512-ViLJMyg5TFwWQ7Aqrs3e0IPINA99++cOLzQFIuBw6rKPhn8Cz7J7sdsag0BQPCf4ip7bHY1/docykbQe2R4N6Q==
+title@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/title/-/title-3.5.1.tgz#a2034454aff0442c71543006f08e1aff3ec99cb6"
+  integrity sha512-tf3NFu/EXsIyEN+GKq6ZuDaOw5wiyE6nmp4Yw7BuWZPk9jgE5PpLWH40ekzDW85+8kbcBCcV+Jz2Qfw0D/Y2MQ==
   dependencies:
     arg "1.0.0"
     chalk "2.3.0"
