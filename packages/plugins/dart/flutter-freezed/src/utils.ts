@@ -1,6 +1,6 @@
 import {
-  ConstArgumentNode,
-  ConstDirectiveNode,
+  ArgumentNode,
+  DirectiveNode,
   EnumTypeDefinitionNode,
   FieldDefinitionNode,
   InputObjectTypeDefinitionNode,
@@ -153,12 +153,12 @@ export function transformCustomDecorators(
  * this decorator array might contain a `final` string which would be filtered out
  * and used to mark the parameter block as final
  */
-function directiveToString(directive: ConstDirectiveNode, customDecorators: CustomDecorator) {
+function directiveToString(directive: DirectiveNode, customDecorators: CustomDecorator) {
   const key = directive.name.value;
   const value = customDecorators[key];
   if (value.mapsToFreezedAs === 'directive') {
     // get the directive's arguments
-    const directiveArgs: readonly ConstArgumentNode[] = directive?.arguments ?? [];
+    const directiveArgs: readonly ArgumentNode[] = directive?.arguments ?? [];
     // extract the directive's argument using the template index: ["$0", "$1", ...]
     // specified in the customDecorator.arguments array
     const args = value?.arguments
