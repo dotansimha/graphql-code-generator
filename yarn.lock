@@ -2553,10 +2553,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@guild-docs/algolia@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@guild-docs/algolia/-/algolia-0.2.1.tgz#910f7b2b185c8af1e46a7bc39e56fb27dbbf4cdb"
-  integrity sha512-GOvNOnCyC0nZ5LBOgGPniG/NkZ2YZKP+P45sV524vv9TYMYEwKmDBel7SURjiHX/LkhrM06sdGyXF8/aNiS+zg==
+"@guild-docs/algolia@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@guild-docs/algolia/-/algolia-0.2.2.tgz#cd85e0e9d3db5fc16c9f97f64ba46f7d9eda0256"
+  integrity sha512-USTJlJGXvFEv2cF/IFkS9dhpEu2vGV8nJf8nTQr1GMQs3VPOSSN6WQpKVRAE5Cd2REZRg24U33g7i/p7BxRZ1g==
   dependencies:
     algoliasearch "^4.13.1"
     github-slugger "^1.4.0"
