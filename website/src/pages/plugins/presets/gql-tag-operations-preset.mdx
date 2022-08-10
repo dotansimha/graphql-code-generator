@@ -3,12 +3,11 @@ title: gql-tag-operations-preset
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('gql-tag-operations-preset')
-
-<PackageHeader />
+<PluginHeader />
 
 This preset generates typings for your inline `gql` function usages, without having to manually specify import statements for the documents. All you need to do is import your `gql` function and run codegen in watch mode.
 
@@ -403,4 +402,4 @@ generates:
         augmentedModuleName: '@something/fragment'
 ```
 
-<PackageApiDocs />
+<PluginApiDocs />

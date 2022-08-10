@@ -7,7 +7,7 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/typings/index.d.ts",
+        "types": "./dist/typings/index.d.cts",
         "default": "./dist/cjs/index.js"
       },
       "import": {
@@ -40,11 +40,11 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.6.1",
+    "@graphql-codegen/plugin-helpers": "^2.6.2",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
     "graphql-helix": "1.13.0",
-    "nock": "13.2.8",
+    "nock": "13.2.9",
     "tslib": "~2.4.0"
   },
   "devDependencies": {

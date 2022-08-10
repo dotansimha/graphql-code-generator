@@ -1107,15 +1107,16 @@
   },
   {
     "objectID": "code-generator-plugins-flow-flow-resolvers",
-    "headings": ["Usage Example", "Enum Resolvers"],
+    "headings": ["Enum Resolvers"],
     "toc": [
       {
-        "children": [],
-        "title": "Usage Example",
-        "anchor": "usage-example"
-      },
-      {
-        "children": [],
+        "children": [
+          {
+            "children": [],
+            "title": "Usage Example",
+            "anchor": "usage-example"
+          }
+        ],
         "title": "Enum Resolvers",
         "anchor": "enum-resolvers"
       }
@@ -1142,13 +1143,8 @@
   },
   {
     "objectID": "code-generator-plugins-java-java",
-    "headings": ["Prepare your environment", "How to use"],
+    "headings": ["How to use"],
     "toc": [
-      {
-        "children": [],
-        "title": "Prepare your environment",
-        "anchor": "prepare-your-environment"
-      },
       {
         "children": [],
         "title": "How to use",
@@ -1188,14 +1184,8 @@
   },
   {
     "objectID": "code-generator-plugins-java-java-resolvers",
-    "headings": ["Prepare your environment"],
-    "toc": [
-      {
-        "children": [],
-        "title": "Prepare your environment",
-        "anchor": "prepare-your-environment"
-      }
-    ],
+    "headings": [],
+    "toc": [],
     "content": "-",
     "url": "https://www.graphql-code-generator.com/plugins/java/java-resolvers",
     "domain": "https://www.graphql-code-generator.com/",
@@ -2054,7 +2044,13 @@
         "anchor": "use-your-model-types-mappers"
       },
       {
-        "children": [],
+        "children": [
+          {
+            "children": [],
+            "title": "Usage Example",
+            "anchor": "usage-example-1"
+          }
+        ],
         "title": "Enum Resolvers",
         "anchor": "enum-resolvers"
       },

@@ -404,6 +404,11 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   // Running tasks doesn't throw anything
   const executedContext = await tasks.run();
 
+  if (config.debug) {
+    // if we have debug logs, make sure to print them before throwing the errors
+    printLogs();
+  }
+
   if (executedContext.errors.length > 0) {
     const errors = executedContext.errors.map(subErr =>
       isDetailedError(subErr)
@@ -414,10 +419,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     // Best-effort to all stack traces for debugging
     newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
     throw newErr;
-  }
-
-  if (config.debug) {
-    printLogs();
   }
 
   return result;

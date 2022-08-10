@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import path from 'node:path';
+import { readFileSync } from 'node:fs';
 import * as TJS from 'typescript-json-schema';
 import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
 import { generateDocs } from './docs-generator';
-import tsConfig from '../../../tsconfig.json';
+
+const tsConfig = JSON.parse(readFileSync(path.join(process.cwd(), 'tsconfig.json'), 'utf8'));
 
 const ROOT_FILE = '../packages/utils/plugins-helpers/src/types.ts';
 const ROOT_IDENTIFIER = 'Types.Config';

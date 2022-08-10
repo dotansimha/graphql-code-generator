@@ -3,12 +3,11 @@ title: typescript-mongodb
 ---
 
 import { Callout } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('typescript-mongodb')
-
-<PackageHeader isDev={false} />
+<PluginHeader isDev={false} />
 
 <Callout type="warning" emoji="⚠️">
   Don't install this plugin as `devDependency`, because you need to import the directives from it.
@@ -42,11 +41,11 @@ export interface UserDbObject {
 
 This interface can be used for db read/write purposes, thus making communication with the db much more consistent.
 
-<PackageApiDocs />
+<PluginApiDocs />
 
 ## Usage Example
 
-Once installed, add the directives declaration to your GraphQL Schema definition:
+Once installed, add the directives' declaration to your GraphQL Schema definition:
 
 ```ts
 import { makeExecutableSchema } from '@graphql-tools/schema'

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "GraphQL Code Generator plugin for generating Java code based on a GraphQL schema",
   "repository": {
     "type": "git",
@@ -13,9 +13,9 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/java-common": "^2.2.2",
-    "@graphql-codegen/plugin-helpers": "^2.6.0",
-    "@graphql-codegen/visitor-plugin-common": "2.12.0",
+    "@graphql-codegen/java-common": "^2.2.3",
+    "@graphql-codegen/plugin-helpers": "^2.6.2",
+    "@graphql-codegen/visitor-plugin-common": "2.12.1",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {
@@ -26,7 +26,7 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/typings/index.d.ts",
+        "types": "./dist/typings/index.d.cts",
         "default": "./dist/cjs/index.js"
       },
       "import": {

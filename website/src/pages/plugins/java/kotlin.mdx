@@ -3,12 +3,11 @@ title: kotlin
 ---
 
 import { Callout, PackageCmd } from '@theguild/components'
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('kotlin')
-
-<PackageHeader />
+<PluginHeader />
 
 The `kotlin` plugin generates Kotlin `classes` for Enums and Input types.
 
@@ -38,4 +37,4 @@ generates:
 
 <Callout>Also, make sure to add `node_modules` to your `.gitignore` file.</Callout>
 
-<PackageApiDocs />
+<PluginApiDocs />

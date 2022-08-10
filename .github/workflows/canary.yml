@@ -38,7 +38,7 @@ jobs:
 
       - name: Release Canary
         id: canary
-        uses: 'the-guild-org/changesets-snapshot-action@main'
+        uses: 'the-guild-org/changesets-snapshot-action@v0.0.1'
         with:
           tag: alpha
           prepareScript: 'yarn build'

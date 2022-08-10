@@ -2,12 +2,11 @@
 title: named-operations-object
 ---
 
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('named-operations-object')
-
-<PackageHeader />
+<PluginHeader />
 
 This plugin generates an object containing a list of all your GraphQL operations and fragments. This is useful if you are using Apollo-Client and wish to have type validation when you are using `refetchQueries`.
 
@@ -22,7 +21,7 @@ export const namedOperations = {
 }
 ```
 
-<PackageApiDocs />
+<PluginApiDocs />
 
 ## How to use?
 

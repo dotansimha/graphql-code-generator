@@ -2,13 +2,12 @@
 title: import-types-preset
 ---
 
-import { PackageApiDocs, PackageHeader } from '@/components'
-import { getNpmInfo } from '@/lib/get-npm-info'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
 
-export const getStaticProps = getNpmInfo('import-types-preset')
-
-<PackageHeader />
+<PluginHeader />
 
 This preset generates a file per each operation file, and allow to import types from another file.
 
-<PackageApiDocs />
+<PluginApiDocs />

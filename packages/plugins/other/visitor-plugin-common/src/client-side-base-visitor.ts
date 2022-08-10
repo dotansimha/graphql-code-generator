@@ -533,6 +533,7 @@ export class ClientSideBaseVisitor<
                 ...fragmentImport.importSource,
                 identifiers: newIdentifiers,
               },
+              emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
             };
           })
           // remove any imports that now have no identifiers in them
