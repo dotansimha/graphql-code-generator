@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "2.11.5",
+  "version": "2.11.6",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "@graphql-codegen/core": "2.6.1",
+    "@graphql-codegen/core": "2.6.2",
     "@graphql-codegen/plugin-helpers": "^2.6.2",
     "@graphql-tools/apollo-engine-loader": "^7.3.6",
     "@graphql-tools/code-file-loader": "^7.3.1",
