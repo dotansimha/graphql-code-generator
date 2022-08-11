@@ -268,7 +268,6 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         config,
         schema: options.schema,
         schemaAst: schemaObject,
-        skipDocumentsValidation: true,
       });
     }
 

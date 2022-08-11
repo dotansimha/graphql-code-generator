@@ -681,23 +681,6 @@ describe('near-operation-file preset', () => {
     ]);
   });
 
-  it('Should skip the duplicate documents validation', async () => {
-    const result = await executePreset({
-      baseOutputDir: './src/',
-      config: {},
-      presetConfig: {
-        baseTypesPath: 'types.ts',
-      },
-      schema: schemaDocumentNode,
-      schemaAst: schemaNode,
-      documents: testDocuments,
-      plugins: [],
-      pluginMap: {},
-    });
-
-    expect(result[0].skipDocumentsValidation).toBeTruthy();
-  });
-
   it('Should allow to customize output extension', async () => {
     const result = await executePreset({
       baseOutputDir: './src/',
