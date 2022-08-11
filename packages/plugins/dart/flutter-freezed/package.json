@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-codegen/typescript-graphql-apollo",
-  "version": "1.2.1",
-  "description": "GraphQL Code Generator plugin for generating a ready-to-use SDK based on apollo client and GraphQL operations",
+  "name": "@graphql-codegen/flutter-freezed",
+  "version": "2.11.1",
+  "description": "GraphQL Code Generator plugin to generate Freezed models from your GraphQL schema",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/plugins/typescript/graphql-apollo"
+    "directory": "packages/plugins/typescript/typescript"
   },
   "license": "MIT",
   "scripts": {
@@ -13,20 +13,15 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.6.2",
-    "@graphql-codegen/visitor-plugin-common": "^2.12.1",
+    "@graphql-codegen/plugin-helpers": "^2.6.0",
+    "@graphql-codegen/schema-ast": "^2.5.0",
+    "@graphql-codegen/visitor-plugin-common": "2.12.0",
     "auto-bind": "~4.0.0",
-    "change-case-all": "1.0.14",
-    "tslib": "~2.4.0"
+    "tslib": "~2.4.0",
+    "change-case-all": "1.0.14"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
-    "graphql-tag": "^2.0.0"
-  },
-  "devDependencies": {
-    "@apollo/client": "3.6.9",
-    "@graphql-tools/schema": "9.0.1",
-    "cross-fetch": "3.1.5"
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

@@ -1,9 +1,33 @@
 [
   {
+    "objectID": "code-generator-404",
+    "headings": [],
+    "toc": [],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.graphql-code-generator.com//404",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": [],
+    "source": "Code Generator",
+    "title": "404",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-500",
+    "headings": [],
+    "toc": [],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.graphql-code-generator.com//500",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": [],
+    "source": "Code Generator",
+    "title": "500",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "149e4a89159f50eaeac0b815b1587ad5",
     "url": "https://www.graphql-code-generator.com/docs/advanced/generated-files-colocation",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Advanced Usage"],
@@ -21,7 +45,7 @@
         "anchor": "example-with-graphql-codegentypescript"
       }
     ],
-    "content": "-",
+    "content": "44dbaecef18f05b5b1a0902fa29e37f3",
     "url": "https://www.graphql-code-generator.com/docs/advanced/how-does-it-work",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Advanced Usage"],
@@ -33,7 +57,7 @@
     "objectID": "code-generator-docs-advanced-usage-profiler",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "042c1533a36a671659613f323cafc888",
     "url": "https://www.graphql-code-generator.com/docs/advanced/profiler",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Advanced Usage"],
@@ -56,7 +80,7 @@
         "anchor": "using-the-cli-instead-of-core"
       }
     ],
-    "content": "-",
+    "content": "18d45c846ec05b26ec0ec37c9c8f190f",
     "url": "https://www.graphql-code-generator.com/docs/advanced/programmatic-usage",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Advanced Usage"],
@@ -112,7 +136,7 @@
         "anchor": "other-ways-to-provide-configuration"
       }
     ],
-    "content": "-",
+    "content": "e9e6cdd52e1d4897a7c6089bd9b377c4",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/codegen-config",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -124,7 +148,7 @@
     "objectID": "code-generator-docs-config-reference-config-field",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "e51f75119aa3976643dab38b6adbb060",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/config-field",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -191,7 +215,7 @@
         "anchor": "custom-document-loader"
       }
     ],
-    "content": "-",
+    "content": "5b4ed527ab88af33e917f63360c91f39",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/documents-field",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -261,7 +285,7 @@
         "anchor": "output-level"
       }
     ],
-    "content": "-",
+    "content": "d4594a1706f25609c2d0f123f069ca1f",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/lifecycle-hooks",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -284,7 +308,7 @@
         "anchor": "command-to-generate-files"
       }
     ],
-    "content": "-",
+    "content": "5a75079d9328107dbf018c8ba6b8416f",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/multiproject-config",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -296,7 +320,7 @@
     "objectID": "code-generator-docs-config-reference-naming-convention",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "b187ca7d3cc785ac08dcba58ad616052",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/naming-convention",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -330,7 +354,7 @@
         "anchor": "specifying-from-the-command-line"
       }
     ],
-    "content": "-",
+    "content": "62621d3e772063542e27c5304ec7e65a",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/require-field",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -428,7 +452,7 @@
         "anchor": "custom-schema-loader"
       }
     ],
-    "content": "-",
+    "content": "44a9b98f216d3149bf819108b01f60a8",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/schema-field",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -456,7 +480,7 @@
         "anchor": "monorepo-and-yarn-workspaces"
       }
     ],
-    "content": "-",
+    "content": "e57b018010e3bbf8d002a87e2bace8e6",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/development-workflow",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -489,7 +513,7 @@
         "anchor": "conclusion"
       }
     ],
-    "content": "-",
+    "content": "d46e6162b649af27f503114d3d2b4948",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/esm-typescript-usage",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -524,7 +548,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "-",
+    "content": "eca3271999b60fe7f88911d61050a913",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/index",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -564,7 +588,7 @@
         "anchor": "setup"
       }
     ],
-    "content": "-",
+    "content": "bbe1beaac030fffe17cbb2c50d0ce337",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/installation",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -576,7 +600,7 @@
     "objectID": "code-generator-docs-guides-angular",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "fd2fd70d2466c34852ad426ecca37c39",
     "url": "https://www.graphql-code-generator.com/docs/guides/angular",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -588,7 +612,7 @@
     "objectID": "code-generator-docs-guides-front-end-typescript-only",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "8aab04fafe49e1fecd9709e0f944b4f8",
     "url": "https://www.graphql-code-generator.com/docs/guides/front-end-typescript-only",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -611,7 +635,7 @@
         "anchor": "integrations"
       }
     ],
-    "content": "-",
+    "content": "9bf22f0b96904c0897adae60f5345e34",
     "url": "https://www.graphql-code-generator.com/docs/guides/further-reading",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -623,7 +647,7 @@
     "objectID": "code-generator-docs-guides-graphql-modules",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "12951c96b46d8695659ab65c1b32e081",
     "url": "https://www.graphql-code-generator.com/docs/guides/graphql-modules",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -646,7 +670,7 @@
         "anchor": "guide"
       }
     ],
-    "content": "-",
+    "content": "34f2713d8fd427777e511eba348f8643",
     "url": "https://www.graphql-code-generator.com/docs/guides/graphql-server-apollo-yoga",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -681,7 +705,7 @@
         "anchor": "apollo-and-urql"
       }
     ],
-    "content": "-",
+    "content": "b4c3e76f407de374b8c6e9b5690a72c3",
     "url": "https://www.graphql-code-generator.com/docs/guides/react",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -704,7 +728,7 @@
         "anchor": "sveltekit-native"
       }
     ],
-    "content": "-",
+    "content": "b3382a3b4cb84794e7242516e2bbfdae",
     "url": "https://www.graphql-code-generator.com/docs/guides/svelte",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -727,7 +751,7 @@
         "anchor": "vuejs-apollo"
       }
     ],
-    "content": "-",
+    "content": "8085d6354872df448a97a11f9f00be68",
     "url": "https://www.graphql-code-generator.com/docs/guides/vue",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -739,7 +763,7 @@
     "objectID": "code-generator-docs-integrations-apollo-local-state",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "b75a40f72486ce89e69013fe0534ff8f",
     "url": "https://www.graphql-code-generator.com/docs/integrations/apollo-local-state",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],
@@ -751,7 +775,7 @@
     "objectID": "code-generator-docs-integrations-create-react-app",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "aded4d90122700837990432cf31ca6b4",
     "url": "https://www.graphql-code-generator.com/docs/integrations/create-react-app",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],
@@ -763,7 +787,7 @@
     "objectID": "code-generator-docs-integrations-federation",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "016768a497e27802c1b3cfb88a3a37b4",
     "url": "https://www.graphql-code-generator.com/docs/integrations/federation",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],
@@ -781,7 +805,7 @@
         "anchor": "community-plugins"
       }
     ],
-    "content": "-",
+    "content": "4585c0f9c374e73f40b25b0035be3fb6",
     "url": "https://www.graphql-code-generator.com/docs/integrations/gatsby",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],
@@ -809,7 +833,7 @@
         "anchor": "eslint"
       }
     ],
-    "content": "-",
+    "content": "526af2f728ec27d8f7788dd1b7796e7e",
     "url": "https://www.graphql-code-generator.com/docs/integrations/prettier",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],
@@ -821,7 +845,7 @@
     "objectID": "code-generator-docs-integrations-vscode",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "3a94f89e7c40e5e9c35d77fe4e46a869",
     "url": "https://www.graphql-code-generator.com/docs/integrations/vscode",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],
@@ -844,7 +868,7 @@
         "anchor": "how-to-migrate"
       }
     ],
-    "content": "-",
+    "content": "6febb172b4c56568fafd5b8fa6394240",
     "url": "https://www.graphql-code-generator.com/docs/migration/from-0-13",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Migration Guides"],
@@ -878,7 +902,7 @@
         "anchor": "breaking-changes--semver"
       }
     ],
-    "content": "-",
+    "content": "d33d9f4f6e0cd69c5a10ab7db2003a37",
     "url": "https://www.graphql-code-generator.com/docs/migration/from-0-18",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Migration Guides"],
@@ -958,7 +982,7 @@
         "anchor": "11-add-it-to-the-live-demo-optional"
       }
     ],
-    "content": "-",
+    "content": "8e1af57cd4b189da7eaade01fedce0e2",
     "url": "https://www.graphql-code-generator.com/docs/custom-codegen/contributing",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Writing Plugins"],
@@ -970,7 +994,7 @@
     "objectID": "code-generator-docs-writing-plugins-extend-schema",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "f7cf903c681c2156c319e593d56ec6d6",
     "url": "https://www.graphql-code-generator.com/docs/custom-codegen/extend-schema",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Writing Plugins"],
@@ -982,7 +1006,7 @@
     "objectID": "code-generator-docs-writing-plugins-index",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "2e91a8d03380fe061291a059d61dae4b",
     "url": "https://www.graphql-code-generator.com/docs/custom-codegen/index",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Writing Plugins"],
@@ -1026,7 +1050,7 @@
         "anchor": "packing-your-plugin"
       }
     ],
-    "content": "-",
+    "content": "72a5b6733ad1887d1ceddf6782062485",
     "url": "https://www.graphql-code-generator.com/docs/custom-codegen/plugin-structure",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Writing Plugins"],
@@ -1049,7 +1073,7 @@
         "anchor": "codegen-and-visitors"
       }
     ],
-    "content": "-",
+    "content": "a8b9aaf4e633c30cb77a21c4f3355b89",
     "url": "https://www.graphql-code-generator.com/docs/custom-codegen/using-visitor",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Writing Plugins"],
@@ -1061,7 +1085,7 @@
     "objectID": "code-generator-docs-writing-plugins-validate-configuration",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "cc51c395115ce18f2ef55f3a859cc5c1",
     "url": "https://www.graphql-code-generator.com/docs/custom-codegen/validate-configuration",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Writing Plugins"],
@@ -1073,7 +1097,7 @@
     "objectID": "code-generator-index",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "a2c44aa2037429070a236ab7c430faba",
     "url": "https://www.graphql-code-generator.com//index",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": [],
@@ -1085,7 +1109,7 @@
     "objectID": "code-generator-plugins-c-sharp-c-sharp-operations",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "f8e1010d5593a30997755c3d0bedd4fc",
     "url": "https://www.graphql-code-generator.com/plugins/c-sharp/c-sharp-operations",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "C-Sharp"],
@@ -1097,7 +1121,7 @@
     "objectID": "code-generator-plugins-flow-flow-operations",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.graphql-code-generator.com/plugins/flow/flow-operations",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Flow"],
@@ -1121,7 +1145,7 @@
         "anchor": "enum-resolvers"
       }
     ],
-    "content": "-",
+    "content": "4c17e00926226f0d719f61c3c4533c57",
     "url": "https://www.graphql-code-generator.com/plugins/flow/flow-resolvers",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Flow"],
@@ -1133,7 +1157,7 @@
     "objectID": "code-generator-plugins-index",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "329d4b572e55accae5af460934690e73",
     "url": "https://www.graphql-code-generator.com/plugins/index",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins"],
@@ -1151,7 +1175,7 @@
         "anchor": "how-to-use"
       }
     ],
-    "content": "-",
+    "content": "89b9aa593f8f02ac821d085fb5b5dc52",
     "url": "https://www.graphql-code-generator.com/plugins/java/java",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Java"],
@@ -1174,7 +1198,7 @@
         "anchor": "usage"
       }
     ],
-    "content": "-",
+    "content": "db158d2260d449b0669fe12052f446ee",
     "url": "https://www.graphql-code-generator.com/plugins/java/java-apollo-android",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Java"],
@@ -1186,7 +1210,7 @@
     "objectID": "code-generator-plugins-java-java-resolvers",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "718d0ec8cf302ad52e24484183940a09",
     "url": "https://www.graphql-code-generator.com/plugins/java/java-resolvers",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Java"],
@@ -1204,7 +1228,7 @@
         "anchor": "prepare-your-environment"
       }
     ],
-    "content": "-",
+    "content": "3d790ede1f02e856919906b07610e63a",
     "url": "https://www.graphql-code-generator.com/plugins/java/kotlin",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Java"],
@@ -1222,7 +1246,7 @@
         "anchor": "examples"
       }
     ],
-    "content": "-",
+    "content": "8c263bce0f9f01745743527244c1915b",
     "url": "https://www.graphql-code-generator.com/plugins/other/add",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1240,7 +1264,7 @@
         "anchor": "how-to-use"
       }
     ],
-    "content": "-",
+    "content": "deb67b8f2caf922c36be46f875469a64",
     "url": "https://www.graphql-code-generator.com/plugins/other/fragment-matcher",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1258,7 +1282,7 @@
         "anchor": "examples"
       }
     ],
-    "content": "-",
+    "content": "da843767640ecface054b7ed58aa5ca0",
     "url": "https://www.graphql-code-generator.com/plugins/other/hasura-allow-list",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1270,7 +1294,7 @@
     "objectID": "code-generator-plugins-other-introspection",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.graphql-code-generator.com/plugins/other/introspection",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1282,7 +1306,7 @@
     "objectID": "code-generator-plugins-other-jsdoc",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "8d63df848873c568288034b9a04341d9",
     "url": "https://www.graphql-code-generator.com/plugins/other/jsdoc",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1305,7 +1329,7 @@
         "anchor": "usage--documentation"
       }
     ],
-    "content": "-",
+    "content": "76754855f52dd45444ccd21c0bd13395",
     "url": "https://www.graphql-code-generator.com/plugins/other/reason-client",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1323,7 +1347,7 @@
         "anchor": "examples"
       }
     ],
-    "content": "-",
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.graphql-code-generator.com/plugins/other/schema-ast",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1335,7 +1359,7 @@
     "objectID": "code-generator-plugins-other-time",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.graphql-code-generator.com/plugins/other/time",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1353,7 +1377,7 @@
         "anchor": "how-to-use"
       }
     ],
-    "content": "-",
+    "content": "ebd6d02bf0af200bab76fdbb9ebde7c1",
     "url": "https://www.graphql-code-generator.com/plugins/other/urql-introspection",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "other"],
@@ -1403,7 +1427,7 @@
         "anchor": "fragment-masking"
       }
     ],
-    "content": "-",
+    "content": "d30c820d43775bf045f058e0cfa27572",
     "url": "https://www.graphql-code-generator.com/plugins/presets/gql-tag-operations-preset",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Presets"],
@@ -1426,7 +1450,7 @@
         "anchor": "using-without-graphql-modules"
       }
     ],
-    "content": "-",
+    "content": "daa276296e71d35e90fd941c330a5f90",
     "url": "https://www.graphql-code-generator.com/plugins/presets/graphql-modules-preset",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Presets"],
@@ -1438,7 +1462,7 @@
     "objectID": "code-generator-plugins-presets-import-types-preset",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "82e2197c055bf1b9c552763180663368",
     "url": "https://www.graphql-code-generator.com/plugins/presets/import-types-preset",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Presets"],
@@ -1456,7 +1480,7 @@
         "anchor": "example"
       }
     ],
-    "content": "-",
+    "content": "12b91414300aa46b5026c0fb8fb5901d",
     "url": "https://www.graphql-code-generator.com/plugins/presets/near-operation-file-preset",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Presets"],
@@ -1486,7 +1510,7 @@
         "anchor": "how-to-use"
       }
     ],
-    "content": "-",
+    "content": "03cb3f7ac5fb547142c74d2b837ffce7",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/named-operations-object",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1509,7 +1533,7 @@
         "anchor": "usage"
       }
     ],
-    "content": "-",
+    "content": "fab2fda63167aa7a42391068ac00654d",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/relay-operation-optimizer",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1521,7 +1545,7 @@
     "objectID": "code-generator-plugins-typescript-typed-document-node",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "9d073d78f8596d086d613b4dcf80e940",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typed-document-node",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1533,7 +1557,7 @@
     "objectID": "code-generator-plugins-typescript-typescript",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1551,7 +1575,7 @@
         "anchor": "how-to-use"
       }
     ],
-    "content": "-",
+    "content": "e05e0a1ac6ea1c04a7e63c86b3fff31e",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-apollo-angular",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1563,7 +1587,7 @@
     "objectID": "code-generator-plugins-typescript-typescript-apollo-client-helpers",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "ace34d8f77a55f5963d5341886f73d3d",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-apollo-client-helpers",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1733,7 +1757,7 @@
         "anchor": "api-reference"
       }
     ],
-    "content": "-",
+    "content": "35af6bccc2898308e9d27d89584483f5",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-apollo-next",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1751,7 +1775,7 @@
         "anchor": "usage"
       }
     ],
-    "content": "-",
+    "content": "02705b1d40bb30b50c369aec5ac78776",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-document-nodes",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1769,7 +1793,7 @@
         "anchor": "usage"
       }
     ],
-    "content": "-",
+    "content": "94a3b175316353e1c8f130701593e81b",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-generic-sdk",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1792,7 +1816,7 @@
         "anchor": "example"
       }
     ],
-    "content": "-",
+    "content": "5e88aefb663a8879bb9f01bc979b802b",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-graphql-files-modules",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1821,7 +1845,7 @@
         "anchor": "simple-request-middleware"
       }
     ],
-    "content": "-",
+    "content": "a0936fc75ce222f43cec96dbdfc3dc29",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-graphql-request",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1849,7 +1873,7 @@
         "anchor": "example"
       }
     ],
-    "content": "-",
+    "content": "b04b1a404a35147da19fbefd0b94d745",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-mongodb",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1861,7 +1885,7 @@
     "objectID": "code-generator-plugins-typescript-typescript-msw",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "c28caf4ff20017c18be2ce95f58c3e9e",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-msw",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1918,7 +1942,7 @@
         "anchor": "advanced-features"
       }
     ],
-    "content": "-",
+    "content": "99fdcf1f4d53adcf319ce55a273e2ae4",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-oclif",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1930,7 +1954,7 @@
     "objectID": "code-generator-plugins-typescript-typescript-operations",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-operations",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -1965,7 +1989,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "-",
+    "content": "2a2249bb9739f7dddad1a05315a6fa52",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-react-apollo",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2010,7 +2034,7 @@
         "anchor": "usage-examples"
       }
     ],
-    "content": "-",
+    "content": "125d206758a1d38804a9ca4d4d3d5444",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-react-query",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2060,7 +2084,7 @@
         "anchor": "defined-shared-mappers-across-configurations"
       }
     ],
-    "content": "-",
+    "content": "205c80dcd676dba7f4004389202d2d40",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-resolvers",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2090,7 +2114,7 @@
         "anchor": "usage-examples"
       }
     ],
-    "content": "-",
+    "content": "3907473a457c2d82137ae00d4272ad6d",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-rtk-query",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2108,7 +2132,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "-",
+    "content": "af9ef641b5cbbd35ee04c1b29bc1f2bd",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-stencil-apollo",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2155,7 +2179,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "-",
+    "content": "3e792df5a76621e4ce572720c6a8e92b",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-svelte-apollo",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2167,7 +2191,7 @@
     "objectID": "code-generator-plugins-typescript-typescript-type-graphql",
     "headings": [],
     "toc": [],
-    "content": "-",
+    "content": "df4706f394ae64859ab80b2b98eb6550",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-type-graphql",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2185,7 +2209,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "-",
+    "content": "2e7d15dfbbe471e5a3b2dfe60fa94d81",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-urql",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2208,7 +2232,7 @@
         "anchor": "usage--documentation"
       }
     ],
-    "content": "-",
+    "content": "fc56876c0394716f728ab401db77ff7e",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-validation-schema",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2232,7 +2256,7 @@
         "anchor": "examples"
       }
     ],
-    "content": "-",
+    "content": "e46ffcdf6a18828be3ffd968b1b63b4c",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-vue-apollo",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2256,7 +2280,7 @@
         "anchor": "examples"
       }
     ],
-    "content": "-",
+    "content": "9343f5e2a2bd30741bb3d8dacc228c14",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-vue-apollo-smart-ops",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],
@@ -2274,7 +2298,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "-",
+    "content": "af9ef641b5cbbd35ee04c1b29bc1f2bd",
     "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-vue-urql",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "TypeScript"],

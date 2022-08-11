@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 import { useSSG } from 'nextra/ssg';
-import { PackageCmd } from '@theguild/components';
-import { getComponents } from 'nextra-theme-docs';
+import { PackageCmd, getComponents } from '@theguild/components';
 import { MDXRemote } from 'next-mdx-remote';
 import { format } from 'date-fns';
 import ClientNote from './client-note.mdx';

@@ -46,4 +46,5 @@ export const CategoryToPackages = {
     'typescript-vue-apollo-smart-ops',
     'typescript-vue-urql',
   ],
+  dart: ['flutter'],
 };

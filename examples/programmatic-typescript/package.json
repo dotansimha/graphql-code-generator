@@ -13,9 +13,9 @@
     "@graphql-codegen/typescript": "*",
     "@graphql-codegen/typescript-operations": "*",
     "@graphql-codegen/typescript-resolvers": "*",
-    "@graphql-tools/graphql-file-loader": "7.5.1",
-    "@graphql-tools/load": "7.7.3",
-    "@graphql-tools/schema": "9.0.0",
+    "@graphql-tools/graphql-file-loader": "7.5.2",
+    "@graphql-tools/load": "7.7.4",
+    "@graphql-tools/schema": "9.0.1",
     "graphql": "16.5.0",
     "graphql-tag": "2.12.6",
     "prettier": "2.7.1"
