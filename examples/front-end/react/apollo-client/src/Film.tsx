@@ -10,10 +10,7 @@ export const FilmFragment = gql(/* GraphQL */ `
   }
 `);
 
-const Film = (props: {
-  /* tweet property has the correct type 🎉 */
-  film: FragmentType<typeof FilmFragment>;
-}) => {
+const Film = (props: { film: FragmentType<typeof FilmFragment> }) => {
   const film = useFragment(FilmFragment, props.film);
   return (
     <div>
