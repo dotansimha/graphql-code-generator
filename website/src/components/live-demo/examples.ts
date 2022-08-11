@@ -345,7 +345,7 @@ export const EXAMPLES = {
     {
       name: 'Resolvers Signature',
       description: `This example demonstrate how to generate a basic resolver signature, based on your GraphQL schema. With the default setup, you'll need to adjust your models types to the same structure of your GraphQL schema (see mappers example for more advanced usage).
-      
+
 [You can read more about using this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)`,
       tags: ['nodejs', 'backend'],
       config: `generates:
@@ -358,7 +358,7 @@ export const EXAMPLES = {
     {
       name: 'Resolvers Signature (with custom models)',
       description: `This example demonstrate how to generate resolvers signature, based on your GraphQL schema, with your model types (\`mappers\` configuration)
-      
+
 [You can read more about using this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)`,
       tags: ['nodejs', 'backend'],
       config: `generates:
@@ -458,6 +458,23 @@ export const EXAMPLES = {
       - c-sharp-operations`,
       schema: TS_SCHEMA,
       documents: TS_QUERY,
+    },
+  ],
+  Dart: [
+    {
+      name: 'Flutter Freezed models',
+      description: `This plugin generate Freezed classes from your GraphQL Schema`,
+      tags: ['dart', 'flutter', 'freezed'],
+      config: `generates:
+  flutter-app/lib/data/models/app_models.dart:
+    plugins:
+      - flutter-freezed
+    config:
+      customScalars:
+        {
+          "Date: "DateTime",
+        }`,
+      schema: TS_SCHEMA,
     },
   ],
   Java: [

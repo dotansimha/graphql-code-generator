@@ -66,6 +66,7 @@
         "packages/plugins/typescript/vue-apollo-smart-ops/src/index.ts"
       ],
       "@graphql-codegen/c-sharp": ["packages/plugins/c-sharp/c-sharp/src/index.ts"],
+      "@graphql-codegen/flutter-freezed": ["packages/plugins/dart/flutter-freezed/src/index.ts"],
       "@graphql-codegen/c-sharp-apollo": ["packages/plugins/c-sharp/apollo-dot-net/src/index.ts"],
       "@graphql-codegen/c-sharp-common": ["packages/plugins/c-sharp/c-sharp-common/src/index.ts"],
       "@graphql-codegen/import-types-preset": ["packages/presets/import-types/src/index.ts"],

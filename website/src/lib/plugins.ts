@@ -1,6 +1,9 @@
 export const ALL_TAGS = [
   'typescript',
   'csharp',
+  'dart',
+  'flutter',
+  'freezed',
   'flow',
   'java',
   'utilities',
@@ -318,5 +321,11 @@ export const PACKAGES: Record<
     npmPackage: '@graphql-codegen/urql-introspection',
     iconUrl: '/assets/img/icons/graphql.svg',
     tags: ['plugin', 'urql', 'typescript'],
+  },
+  flutter: {
+    title: 'Flutter Freezed Classes',
+    npmPackage: '@graphql-codegen/flutter-freezed',
+    iconUrl: '/assets/img/icons/codegen.svg',
+    tags: ['plugin', 'dart', 'flutter', 'freezed'],
   },
 };
