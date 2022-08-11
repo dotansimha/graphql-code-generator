@@ -1,0 +1,13 @@
+schema: https://swapi-graphql.netlify.app/.netlify/functions/index
+documents:
+  - 'src/**/*.vue'
+  - '!src/gql/**/*'
+
+config:
+  useTypeImports: true
+
+generates:
+  ./src/gql/:
+    preset: gql-tag-operations-preset
+    presetConfig:
+      fragmentMasking: true
