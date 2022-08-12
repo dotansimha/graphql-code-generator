@@ -1,0 +1,74 @@
+---
+title: flutter-freezed
+---
+
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
+
+<PluginHeader />
+
+
+## TL;DR
+
+The `flutter-freezed` plugin generates Freezed models from a GraphQL Schema.
+
+## Motivation
+
+> Dart is awesome, but defining a "model" can be tedious. We may have to:
+>
+> - define a constructor + the properties
+> - override toString, operator ==, hashCode
+> - implement a copyWith method to clone the object
+> - handling de/serialization
+>
+> On top of that, Dart is also missing features such as union types and pattern-matching.
+>
+> Implementing all of this can take hundreds of lines, which are error-prone and the readability of your model significantly.
+>
+> Freezed tries to fix that by implementing most of this for you, allowing you to focus on the definition of your model.
+> https://pub.dev/packages/freezed
+
+Fortunately enough, GraphQL is strongly typed, and so is Dart.
+Save yourself from implementing a model to match your strongly typed GraphQL types, and let Freezed handle the work while you chill with this `flutter-freezed`plugin
+
+## Features
+Currently, the plugin  supports the following features
+- [x] Generate Freezed classes for ObjectTypes
+- [x] Generate Freezed classes for InputTypes
+- [x] Support for EnumsTypes
+- [x] Support for custom ScalarTypes
+- [x] Support freeze documentation of class & properties from GraphQL SDL description comments
+- [x] Ignore/don't generate freezed classes for certain ObjectTypes
+- [x] Support directives
+- [x] Support deprecation annotation
+- [x] ~~Support for InterfaceTypes~~
+- [x] Support for UnionTypes [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
+- [x] Merge InputTypes with ObjectType as union/sealed class [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
+
+## Usage
+
+Since this plugin as well as the `graphql-code-generator` is written in JS/TS, and this plugin would likely be used in a Dart environment, you have 2 options:
+
+- (WIP) The flutter-freezed-cli
+- A NodeJS project
+
+### The flutter-freezed-cli
+This is currently in progress. Upon it completion, you can install and run the generator globally.
+
+A PR would also be grately appreciated for using `build-runner` instead of a cli written in JS
+
+### NodeJS project
+Follow the [Installation Guide](https://www.graphql-code-generator.com/docs/getting-started/installation) for more details on getting started
+
+1. Create a new NodeJS project
+2. Install the `graphql-code-generator` and the `flutter-freezed` plugin
+3. Add your `codegen.yml` to the root of your project and
+4. simply run `codegen init`
+5. Copy and paste the output into your flutter project.
+6. Enjoy
+
+```bash
+```
+
+<PluginApiDocs />
