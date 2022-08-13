@@ -22,7 +22,7 @@ If you are impatient, [checkout this example](https://github.com/dotansimha/grap
 One quirk of ESM is that named imports, such as `./foo` or `../something/from/here` now require adding a `.js` at the end of the import statement.
 For these examples the correct ESM counterpart is `./foo.js` and `../something/from/here.js`.
 
-In order to instruct GraphQL Code Generator to generatse such imports whenever a named import is generated you need to set the `emitLegacyCommonJSImports` option to `false`.
+In order to instruct GraphQL Code Generator to generate such imports whenever a named import is generated you need to set the `emitLegacyCommonJSImports` option to `false`.
 
 ```yaml filename="codegen.yml" {5}
 schema: https://swapi-graphql.netlify.app/.netlify/functions/index
