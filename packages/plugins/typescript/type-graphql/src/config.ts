@@ -12,7 +12,6 @@ export interface TypeGraphQLPluginConfig extends TypeScriptPluginConfig {
   /**
    * @name decorateTypes
    * @description Specifies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.
-   * @type string[]
    * @example Decorate only type User
    * ```yaml
    * generates:
