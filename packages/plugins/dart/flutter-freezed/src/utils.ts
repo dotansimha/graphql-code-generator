@@ -137,10 +137,10 @@ export function transformCustomDecorators(
       // if the custom directives have arguments,
       if (args && args !== []) {
         // join them with a comma in the parenthesis
-        result = [...result, `${key}(${args.join(', ')})`];
+        result = [...result, `${key}(${args.join(', ')})\n`];
       } else {
         // else return the customDecorator key just as it is
-        result = [...result, key];
+        result = [...result, key + '\n'];
       }
     }
   });
@@ -171,17 +171,17 @@ function directiveToString(directive: DirectiveNode, customDecorators: CustomDec
     // if the args is not empty
     if (args !== []) {
       // returns "@directiveName(argName: argValue, argName: argValue ...)"
-      return `@${directive.name.value}(${args?.join(', ')})`;
+      return `@${directive.name.value}(${args?.join(', ')})\n`;
     }
   } else if (value.mapsToFreezedAs === '@Default') {
     const defaultValue = directive?.arguments?.[argToInt(value?.arguments?.[0] ?? '0')];
     if (defaultValue) {
-      return `@Default(value: ${defaultValue})`;
+      return `@Default(value: ${defaultValue})\n`;
     }
   }
   // returns either "@deprecated" || "final".
   // `final` to be filtered from the decorators array when applying the decorators
-  return value.mapsToFreezedAs;
+  return value.mapsToFreezedAs + '\n';
 }
 
 /** transforms string template: "$0" into an integer: 1 */
@@ -195,8 +195,8 @@ export function addFreezedImportStatements(fileName: string) {
   return [
     "import 'package:freezed_annotation/freezed_annotation.dart';\n",
     "import 'package:flutter/foundation.dart';\n\n",
-    `part ${fileName}.dart;\n`,
-    `part '${fileName}.g.dart';\n\n`,
+    `part ${fileName.replace(/\.dart/g, '')}.dart;\n`,
+    `part '${fileName.replace(/\.dart/g, '')}.g.dart';\n\n`,
   ].join('');
 }
 
@@ -217,8 +217,8 @@ export class FreezedConfigValue {
    * for a specific type if given typeName
    * or else fallback to the global FreezedConfig value
    */
-  get(option: OptionName) {
-    return getFreezedConfigValue(option, this._config, this._typeName);
+  get<T>(option: OptionName): T {
+    return getFreezedConfigValue(option, this._config, this._typeName) as T;
   }
 }
 
@@ -229,41 +229,48 @@ export class FreezedConfigValue {
 export class FreezedFactoryBlockRepository {
   _store: Record<string, FreezedFactoryBlock> = {};
 
+  get(key: string): FreezedFactoryBlock | undefined {
+    return this._store[key];
+  }
+
   register(key: string, value: FreezedFactoryBlock): FreezedFactoryBlock {
     this._store[key] = value;
     return value;
   }
 
-  retrieve(key: string, appliesOn: string, name: string, typeName: string | undefined): FreezedFactoryBlock {
-    return this._store[key]
-      .setDecorators(appliesOn, key)
-      .setKey(key)
-      .setName(name)
-      .setNamedConstructor(typeName)
-      .init();
+  retrieve(key: string, appliesOn: string, name: string, typeName: string | undefined): string {
+    if (this._store[key]) {
+      return (
+        this._store[key]
+          .setDecorators(appliesOn, key)
+          .setKey(key)
+          .setName(name)
+          .setNamedConstructor(typeName)
+          .init()
+          .toString() + '\n'
+      );
+    }
+    return '';
   }
 }
 
 /** initializes a FreezedPluginConfig with the defaults values */
 export class DefaultFreezedPluginConfig implements FlutterFreezedPluginConfig {
+  camelCasedEnums?: boolean;
   customScalars?: { [name: string]: string };
   fileName?: string;
   globalFreezedConfig?: FreezedConfig;
   typeSpecificFreezedConfig?: Record<string, TypeSpecificFreezedConfig>;
   ignoreTypes?: string[];
-  interfaceNamePrefix?: string;
-  interfaceNameSuffix?: string;
-  lowercaseEnums?: boolean;
-  modular?: boolean;
 
   constructor(config: FlutterFreezedPluginConfig = {}) {
     Object.assign(this, {
+      camelCasedEnums: config.camelCasedEnums ?? true,
       customScalars: config.customScalars ?? {},
       fileName: config.fileName ?? 'app_models',
       globalFreezedConfig: { ...new DefaultFreezedConfig(), ...(config.globalFreezedConfig ?? {}) },
       typeSpecificFreezedConfig: config.typeSpecificFreezedConfig ?? {},
       ignoreTypes: config.ignoreTypes ?? [],
-      lowercaseEnums: config.lowercaseEnums ?? true,
     });
   }
 }
