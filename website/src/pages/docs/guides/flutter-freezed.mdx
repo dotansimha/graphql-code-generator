@@ -48,27 +48,29 @@ Currently, the plugin  supports the following features
 
 ## Usage
 
-Since this plugin as well as the `graphql-code-generator` is written in JS/TS, and this plugin would likely be used in a Dart environment, you have 2 options:
+This plugin as well as the `graphql-code-generator` is written in JS/TS, and this plugin would likely be used in a Dart environment, the following options are available:
 
-- (WIP) The flutter-freezed-cli
+- 🚧 The flutter-freezed-cli (WIP)
 - A NodeJS project
 
 ### The flutter-freezed-cli
 This is currently in progress. Upon it completion, you can install and run the generator globally.
 
-A PR would also be grately appreciated for using `build-runner` instead of a cli written in JS
+A PR would also be grately appreciated for using `build-runner` instead of using a JS CLI
 
 ### NodeJS project
 Follow the [Installation Guide](https://www.graphql-code-generator.com/docs/getting-started/installation) for more details on getting started
 
 1. Create a new NodeJS project
 2. Install the `graphql-code-generator` and the `flutter-freezed` plugin
+  ```bash
+  yarn graphql-code-generator init
+  yarn # install the chosen plugins
+  ```
 3. Add your `codegen.yml` to the root of your project and
-4. simply run `codegen init`
+4. Simply run `codegen init`
 5. Copy and paste the output into your flutter project.
 6. Enjoy
 
 ```bash
 ```
-
-<PluginApiDocs />
