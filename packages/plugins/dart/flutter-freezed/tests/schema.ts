@@ -13,8 +13,24 @@ export const baseSchema = buildSchema(/* GraphQL */ `
     id: String
   }
 
-  type IgnoreBaseType {
+  type PersonType {
     id: String
+    name: String!
+  }
+`);
+
+export const extendedBaseSchema = buildSchema(/* GraphQL */ `
+  type BaseType {
+    id: String
+    primaryKey: String!
+    CompositeForeignKey: String!
+  }
+
+  type PersonType {
+    id: String
+    name: String!
+    primaryKey: String!
+    CompositeForeignKey: String!
   }
 `);
 
@@ -104,6 +120,21 @@ export const cyclicSchema = buildSchema(/* GraphQL */ `
   type Base {
     id: String
   }
+`);
+
+export const simpleUnionSchema = buildSchema(/* GraphQL */ `
+  input RequestOTPInput {
+    email: String
+    phoneNumber: String
+  }
+
+  input VerifyOTPInput {
+    email: String
+    phoneNumber: String
+    otpCode: String!
+  }
+
+  union AuthWithOTPInput = RequestOTPInput | VerifyOTPInput
 `);
 
 export const nonNullableListWithCustomScalars = buildSchema(/* GraphQL */ `

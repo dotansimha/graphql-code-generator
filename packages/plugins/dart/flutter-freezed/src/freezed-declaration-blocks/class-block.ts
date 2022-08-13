@@ -134,7 +134,7 @@ export class FreezedDeclarationBlock {
         }
 
         if (unionValueCase !== undefined) {
-          atFreezed += indent(`unionValueCase: ${unionValueCase},\n`);
+          atFreezed += indent(`unionValueCase: '${unionValueCase}',\n`);
         }
 
         atFreezed += ')\n';

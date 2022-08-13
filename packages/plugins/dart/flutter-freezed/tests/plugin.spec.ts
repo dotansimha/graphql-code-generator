@@ -98,7 +98,7 @@ class DeleteMovieInput with _$DeleteMovieInput {
 @Freezed(
   copyWith: false,
   equal: false,
-  unionValueCase: FreezedUnionCase.pascal,
+  unionValueCase: 'FreezedUnionCase.pascal',
 )
 @JsonSerializable(explicitToJson: true)
 class Starship with _$Starship {
