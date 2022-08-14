@@ -580,7 +580,7 @@ export const useTestMutation = <
         `import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';`
       );
       expect(out.prepend).toContain(`import { GraphQLClient } from 'graphql-request';`);
-      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom';`);
+      expect(out.prepend).toContain(`import { RequestInit } from 'graphql-request/dist/types.dom.js';`);
       expect(out.prepend[3])
         .toBeSimilarStringTo(`    function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
           return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);

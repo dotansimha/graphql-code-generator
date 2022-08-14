@@ -41,9 +41,10 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
     autoBind(this);
 
     const typeImport = this.config.useTypeImports ? 'import type' : 'import';
+    const fileExtension = this.config.emitLegacyCommonJSImports ? '' : '.js';
 
     this._additionalImports.push(`${typeImport} { GraphQLClient } from 'graphql-request';`);
-    this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom';`);
+    this._additionalImports.push(`${typeImport} * as Dom from 'graphql-request/dist/types.dom${fileExtension}';`);
 
     if (this.config.rawRequest && this.config.documentMode !== DocumentMode.string) {
       this._additionalImports.push(`import { print } from 'graphql'`);

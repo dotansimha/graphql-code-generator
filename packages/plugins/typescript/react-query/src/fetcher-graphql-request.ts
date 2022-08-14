@@ -66,8 +66,9 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
 
     const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
+    const fileExtension = this.visitor.config.emitLegacyCommonJSImports ? '' : '.js';
     this.visitor.imports.add(`${typeImport} { GraphQLClient } from 'graphql-request';`);
-    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
+    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom${fileExtension}';`);
 
     const hookConfig = this.visitor.queryMethodMap;
     this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.query.hook);
@@ -134,7 +135,8 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
   ): string {
     const variables = generateQueryVariablesSignature(hasRequiredVariables, operationVariablesTypes);
     const typeImport = this.visitor.config.useTypeImports ? 'import type' : 'import';
-    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom';`);
+    const fileExtension = this.visitor.config.emitLegacyCommonJSImports ? '' : '.js';
+    this.visitor.imports.add(`${typeImport} { RequestInit } from 'graphql-request/dist/types.dom${fileExtension}';`);
 
     return `\nuse${operationName}.fetcher = (client: GraphQLClient, ${variables}, headers?: RequestInit['headers']) => fetcher<${operationResultType}, ${operationVariablesTypes}>(client, ${documentVariableName}, variables, headers);`;
   }
