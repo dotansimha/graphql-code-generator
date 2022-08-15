@@ -31,6 +31,7 @@
 /docs/getting-started/require-field -> /docs/config-reference/require-field
 /docs/getting-started/schema-field -> /docs/config-reference/schema-field
 /docs/guides/angular
+/docs/guides/flutter-freezed
 /docs/guides/front-end-typescript-only
 /docs/guides/further-reading
 /docs/guides/graphql-modules
@@ -50,10 +51,12 @@
 /plugins/add -> /plugins/other/add
 /plugins/c-sharp-operations -> /plugins/c-sharp/c-sharp-operations
 /plugins/c-sharp/c-sharp-operations
+/plugins/dart/flutter-freezed
 /plugins/flow-operations -> /plugins/flow/flow-operations
 /plugins/flow-resolvers -> /plugins/flow/flow-resolvers
 /plugins/flow/flow-operations
 /plugins/flow/flow-resolvers
+/plugins/flutter-freezed -> /plugins/dart/flutter-freezed
 /plugins/fragment-matcher -> /plugins/other/fragment-matcher
 /plugins/gql-tag-operations-preset -> /plugins/presets/gql-tag-operations-preset
 /plugins/graphql-modules-preset -> /plugins/presets/graphql-modules-preset
