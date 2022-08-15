@@ -111,7 +111,7 @@
     "prettier": "2.7.1",
     "babel-jest": "27.5.1",
     "jest-runner": "27.5.1",
-    "graphql": "16.5.0",
+    "graphql": "npm:@graphql-tools/graphql@0.1.0-alpha-20220815173503-a11014cc",
     "graphql-language-service-interface": "2.10.2",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0",
