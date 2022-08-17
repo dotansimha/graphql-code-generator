@@ -25,7 +25,9 @@ describe('Integration', () => {
   monorepo.correctCWD();
 
   beforeEach(() => {
-    jest.useFakeTimers('legacy');
+    jest.useFakeTimers({
+      legacyFakeTimers: true,
+    });
   });
 
   // In this test, we make sure executeCodegen passes on a list of Sources as an extension
