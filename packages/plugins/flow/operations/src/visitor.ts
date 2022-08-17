@@ -80,7 +80,6 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
       convertName: this.convertName.bind(this),
       enumPrefix: this.config.enumPrefix,
       scalars: this.scalars,
-      autoSelectId: this.config.autoSelectId,
       formatNamedField,
       wrapTypeWithModifiers(baseType, type) {
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
