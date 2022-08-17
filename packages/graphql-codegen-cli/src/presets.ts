@@ -5,6 +5,10 @@ export async function getPresetByName(
   name: string,
   loader: Types.PackageLoaderFn<{ preset?: Types.OutputPreset; default?: Types.OutputPreset }>
 ): Promise<Types.OutputPreset> {
+  if (name === 'front-end') {
+    name = 'gql-tag-operations-preset';
+  }
+
   const possibleNames = [
     `@graphql-codegen/${name}`,
     `@graphql-codegen/${name}-preset`,

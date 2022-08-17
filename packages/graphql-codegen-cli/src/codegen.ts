@@ -202,9 +202,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
             const outputConfig = generates[filename];
             const hasPreset = !!outputConfig.preset;
 
-            const title = hasPreset
-              ? `Generate to ${filename} (using EXPERIMENTAL preset "${outputConfig.preset}")`
-              : `Generate ${filename}`;
+            const title = `Generate to ${filename}`;
 
             return {
               title,
@@ -323,7 +321,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                 async () =>
                                   preset.buildGeneratesSection({
                                     baseOutputDir: filename,
-                                    presetConfig: outputConfig.presetConfig || {},
+                                    presetConfig:
+                                      outputConfig.presetConfig ||
+                                      (outputConfig.preset === 'front-end' ? { fragmentMasking: true } : {}),
                                     plugins: normalizedPluginsArray,
                                     schema: outputSchema,
                                     schemaAst: outputSchemaAst,
