@@ -355,12 +355,14 @@ gq <graphql-endpoint> -H "Authorization: Bearer <token>" --introspect > schema.g
 ```
 
 4. Add the following to the `.gitignore` file:
-```.gitignore
+
+```
 # graphql-code-generator related
 node_modules/
 ```
 
 5. Create a `package.json` file at the root of the Flutter project with the following:
+
 ```json
 {
   "name": "GraphQL Code Generator",
@@ -373,19 +375,20 @@ node_modules/
 
 6. Install the `graphql-code-generator` and the `flutter-freezed` plugin
 
-  <PackageCmd packages={[{ cmd: 'init' }, 'graphql', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
+<PackageCmd packages={[{ cmd: 'init' }, 'graphql', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
 
 7. Create a `codegen.yml`  file at the root of the Flutter project with the following:
 
-  ```yaml
-  schema: "./schema.graphql"
-  generates:
-    ./lib/data/models/app_models.dart:
-      plugins:
-        - flutter-freezed
-  ```
+```yaml
+schema: "./schema.graphql"
+generates:
+  ./lib/data/models/app_models.dart:
+    plugins:
+      - flutter-freezed
+```
 
 8. Generate your freezed models with the following command and chill 🍻:
+
 ```bash
 npm run flutter-freezed
 ```
