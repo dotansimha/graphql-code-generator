@@ -2,11 +2,9 @@ import { PackageCmd, Callout } from '@theguild/components'
 
 # Guide: Dart/Flutter
 
-Boost 🚀  your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
+Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
 
 Currrently this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work in ongoing to make it way easier to work with GRaphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL]()
-
-PRs are always welcomed 🤗.
 
 ## TL;DR
 
@@ -30,26 +28,6 @@ The `flutter-freezed` plugin generates [Freezed](https://pub.dev/packages/freeze
 
 Fortunately enough, GraphQL is strongly typed, and so is Dart.
 Save yourself from implementing a model to match your strongly typed GraphQL types, and let [Freezed](https://pub.dev/packages/freezed) handle the work while you chill with this `flutter-freezed`plugin
-
-## Features
-
-Currently, the plugin  supports the following features
-- [x] Generate Freezed classes for ObjectTypes
-- [x] Generate Freezed classes for InputTypes
-- [x] Support for EnumsTypes
-- [x] Support for custom ScalarTypes
-- [x] Support freeze documentation of class & properties from GraphQL SDL description comments
-- [x] Ignore/don't generate freezed classes for certain ObjectTypes
-- [x] Support directives
-- [x] Support custom annotatios/decorators
-- [x] ~~Support for InterfaceTypes~~
-- [x] Support for UnionTypes [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
-- [x] Merge InputTypes with ObjectType as union/sealed class [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
-
-## TODO
-
-- [ ] Support Queries, Mutations, and Subscription: make it way easier to use GraphQL in flutter without going through any complex process. Inspired by [KitQL](https://www.kitql.dev/)
-PR's are welcomed
 
 ## Demo
 
@@ -327,7 +305,6 @@ class SearchResult with _$SearchResult {
 }
 ```
 
-
 ## Getting started
 
 To get started, make sure you have the following installed:
@@ -348,10 +325,10 @@ Inside your Flutter project root folder:
 ```sh
 npm install -g graphqurl
 
-gq <graphql-endpoint>  --introspect > schema.graphql
+gq < graphql-endpoint > --introspect > schema.graphql
 
 # if your graphql endpoint requires authentication:
-gq <graphql-endpoint> -H "Authorization: Bearer <token>" --introspect > schema.graphql
+gq < graphql-endpoint > -H "Authorization: Bearer <token>" --introspect > schema.graphql
 ```
 
 4. Add the following to the `.gitignore` file:
@@ -377,10 +354,10 @@ node_modules/
 
 <PackageCmd packages={[{ cmd: 'init' }, 'graphql', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
 
-7. Create a `codegen.yml`  file at the root of the Flutter project with the following:
+7. Create a `codegen.yml` file at the root of the Flutter project with the following:
 
 ```yaml
-schema: "./schema.graphql"
+schema: './schema.graphql'
 generates:
   ./lib/data/models/app_models.dart:
     plugins:
@@ -393,7 +370,6 @@ generates:
 npm run flutter-freezed
 ```
 
-
-For more advanced configuration, please refer to the [plugin documentation](/plugins/flutter-freezed).
+For more advanced configuration, please refer to the [plugin documentation](/plugins/dart/flutter).
 
 For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
