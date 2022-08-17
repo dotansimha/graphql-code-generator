@@ -1,0 +1,375 @@
+import { PackageCmd, Callout } from '@theguild/components'
+
+# Guide: Dart/Flutter
+
+Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
+
+Currrently this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work in ongoing to make it way easier to work with GRaphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL]()
+
+## TL;DR
+
+The `flutter-freezed` plugin generates [Freezed](https://pub.dev/packages/freezed) models from a GraphQL Schema.
+
+## Motivation
+
+> Dart is awesome, but defining a "model" can be tedious. We may have to:
+>
+> - define a constructor + the properties
+> - override toString, operator ==, hashCode
+> - implement a copyWith method to clone the object
+> - handling de/serialization
+>
+> On top of that, Dart is also missing features such as union types and pattern-matching.
+>
+> Implementing all of this can take hundreds of lines, which are error-prone and the readability of your model significantly.
+>
+> Freezed tries to fix that by implementing most of this for you, allowing you to focus on the definition of your model.
+> https://pub.dev/packages/freezed
+
+Fortunately enough, GraphQL is strongly typed, and so is Dart.
+Save yourself from implementing a model to match your strongly typed GraphQL types, and let [Freezed](https://pub.dev/packages/freezed) handle the work while you chill with this `flutter-freezed`plugin
+
+## Demo
+
+Given the following GraphQL schema:
+
+```graphql
+# *******************************************
+# custom scalars                            *
+# *******************************************
+scalar UUID
+scalar timestamptz
+scalar jsonb
+
+# *******************************************
+# enums                                     *
+# *******************************************
+enum Episode {
+  NEWHOPE
+  EMPIRE
+  JEDI
+}
+
+# *******************************************
+# object type with input types              *
+# *******************************************
+type Movie {
+  id: ID!
+  title: String!
+}
+
+input CreateMovieInput {
+  title: String!
+}
+
+input UpsertMovieInput {
+  id: ID!
+  title: String!
+}
+
+input UpdateMovieInput {
+  id: ID!
+  title: String
+}
+
+input DeleteMovieInput {
+  id: ID!
+}
+
+# *******************************************
+# union type                                *
+# *******************************************
+type Starship {
+  id: ID!
+  name: String!
+  length: Float
+}
+
+interface Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+}
+
+type MovieCharacter {
+  name: String!
+  appearsIn: [Episode]!
+}
+
+type Human implements Character {
+  id: ID!
+  name: String!
+  friends: [MovieCharacter]
+  appearsIn: [Episode]!
+  starships: [Starship]
+  totalCredits: Int
+}
+
+type Droid implements Character {
+  id: ID!
+  name: String!
+  friends: [MovieCharacter]
+  appearsIn: [Episode]!
+  primaryFunction: String
+}
+
+union SearchResult = Human | Droid | Starship
+
+# *******************************************
+# (non)-nullables                           *
+# *******************************************
+type ComplexType {
+  a: [String]
+  b: [ID!]
+  c: [Boolean!]!
+  d: [[Int]]
+  e: [[Float]!]
+  f: [[String]!]!
+  g: jsonb
+  h: timestamptz!
+  i: UUID!
+}
+
+# *******************************************
+# cyclic inputs                             *
+# *******************************************
+input BaseAInput {
+  b: BaseBInput!
+}
+
+input BaseBInput {
+  c: BaseCInput!
+}
+
+input BaseCInput {
+  a: BaseAInput!
+}
+
+type Base {
+  id: String
+}
+```
+
+Using the following config:
+
+```yaml
+schema: demo-schema.graphql
+generates:
+  ./lib/data/models/app_models.dart:
+    plugins:
+      - flutter-freezed
+    config:
+      globalFreezedConfig: {
+        customDecorators: {
+          '@JsonSerializable(explicitToJson: true)': {
+            applyOn: ['class'],
+            mapsToFreezedAs: 'custom',
+          },
+        },
+      },
+      typeSpecificFreezedConfig: {
+        Droid: {
+          config: {
+            customDecorators: {
+              '@FreezedUnionValue': {
+                applyOn: ['union_factory'],
+                arguments: ["'BestDroid'"],
+                mapsToFreezedAs: 'custom',
+              },
+            },
+          },
+          fields: {
+            id: {
+              customDecorators: {
+                '@NanoId': {
+                  applyOn: ['union_factory_parameter'],
+                  arguments: ['size: 16', 'alphabets: NanoId.ALPHA_NUMERIC'],
+                  mapsToFreezedAs: 'custom',
+                },
+              },
+            },
+          },
+        },
+      },
+```
+
+This is the generated output:
+
+```dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+
+part app_models.dart;
+part 'app_models.g.dart';
+
+enum Episode{
+  @JsonKey(name: NEWHOPE) newhope
+  @JsonKey(name: EMPIRE) empire
+  @JsonKey(name: JEDI) jedi
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class Starship with _$Starship {
+  const Starship._();
+
+  const factory Starship({
+    required String id,
+    required String name,
+    double? length,
+  }) = _Starship;
+
+  factory Starship.fromJson(Map<String, Object?> json) => _StarshipFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class MovieCharacter with _$MovieCharacter {
+  const MovieCharacter._();
+
+  const factory MovieCharacter({
+    required String name,
+    required List<Episode?> appearsIn,
+  }) = _MovieCharacter;
+
+  factory MovieCharacter.fromJson(Map<String, Object?> json) => _MovieCharacterFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class Human with _$Human {
+  const Human._();
+
+  const factory Human({
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    List<Starship?>? starships,
+    int? totalCredits,
+  }) = _Human;
+
+  factory Human.fromJson(Map<String, Object?> json) => _HumanFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class Droid with _$Droid {
+  const Droid._();
+
+  const factory Droid({
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    String? primaryFunction,
+  }) = _Droid;
+
+  factory Droid.fromJson(Map<String, Object?> json) => _DroidFromJson(json);
+}
+
+@freezed
+@JsonSerializable(explicitToJson: true)
+class SearchResult with _$SearchResult {
+  const SearchResult._();
+
+  const factory SearchResult() = _SearchResult;
+
+  const factory SearchResult.human({
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    List<Starship?>? starships,
+    int? totalCredits,
+  }) = Human;
+
+  @FreezedUnionValue('BestDroid')
+  const factory SearchResult.droid({
+    @NanoId(size: 16, alphabets: NanoId.ALPHA_NUMERIC)
+    required String id,
+    required String name,
+    List<MovieCharacter?>? friends,
+    required List<Episode?> appearsIn,
+    String? primaryFunction,
+  }) = Droid;
+
+  const factory SearchResult.starship({
+    required String id,
+    required String name,
+    double? length,
+  }) = Starship;
+
+  factory SearchResult.fromJson(Map<String, Object?> json) => _SearchResultFromJson(json);
+}
+```
+
+## Getting started
+
+To get started, make sure you have the following installed:
+
+- Node.js (10 or later)
+- NPM or Yarn
+
+Follow the [Installation Guide](https://www.graphql-code-generator.com/docs/getting-started/installation) for more details on getting started
+
+Inside your Flutter project root folder:
+
+1. Install [freezed](https://pub.dev/packages/freezed#install) in your flutter project
+
+2. Install [json_serializable](https://pub.dev/packages/json_serializable) in your flutter project
+
+3. Download your GraphQL schema in graphql format and place it at the root of your Flutter project
+
+```sh
+npm install -g graphqurl
+
+gq < graphql-endpoint > --introspect > schema.graphql
+
+# if your graphql endpoint requires authentication:
+gq < graphql-endpoint > -H "Authorization: Bearer <token>" --introspect > schema.graphql
+```
+
+4. Add the following to the `.gitignore` file:
+
+```
+# graphql-code-generator related
+node_modules/
+```
+
+5. Create a `package.json` file at the root of the Flutter project with the following:
+
+```json
+{
+  "name": "GraphQL Code Generator",
+  "version": "1.0.0",
+  "scripts": {
+    "flutter-freezed": "graphql-codegen"
+  }
+}
+```
+
+6. Install the `graphql-code-generator` and the `flutter-freezed` plugin
+
+<PackageCmd packages={[{ cmd: 'init' }, 'graphql', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
+
+7. Create a `codegen.yml` file at the root of the Flutter project with the following:
+
+```yaml
+schema: './schema.graphql'
+generates:
+  ./lib/data/models/app_models.dart:
+    plugins:
+      - flutter-freezed
+```
+
+8. Generate your freezed models with the following command and chill 🍻:
+
+```bash
+npm run flutter-freezed
+```
+
+For more advanced configuration, please refer to the [plugin documentation](/plugins/dart/flutter).
+
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.

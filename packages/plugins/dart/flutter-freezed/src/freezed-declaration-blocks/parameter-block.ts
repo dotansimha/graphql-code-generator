@@ -78,7 +78,7 @@ export class FreezedParameterBlock {
     const defaultValue = this._config.typeSpecificFreezedConfig?.[nodeName]?.fields?.[fieldName]?.defaultValue;
 
     if (this._freezedConfigValue.get('alwaysUseJsonKeyName') || fieldName !== camelCase(fieldName)) {
-      this._decorators = [...this._decorators, `@JsonKey(name: '${fieldName}')`];
+      this._decorators = [...this._decorators, `@JsonKey(name: '${fieldName}')\n`];
     }
 
     this._decorators = [
@@ -93,14 +93,14 @@ export class FreezedParameterBlock {
     // @deprecated
     // if this._decorators doesn't include an @deprecated decorator but the field is marked as @deprecated...
     if (!this._decorators.includes('@deprecated') && isDeprecated) {
-      this._decorators = [...this._decorators, '@deprecated'];
+      this._decorators = [...this._decorators, '@deprecated\n'];
     }
 
     // @Default
     if (defaultValue) {
       //overwrite the customDecorator's defaultValue
       this._decorators = this._decorators.filter(d => !d.startsWith('@Default'));
-      this._decorators = [...this._decorators, `@Default(value: ${defaultValue})`];
+      this._decorators = [...this._decorators, `@Default(value: ${defaultValue})\n`];
     }
     return this;
   }
@@ -137,7 +137,7 @@ export class FreezedParameterBlock {
     // append the decorators
     shape += this._decorators
       .filter(d => d !== 'final')
-      .map(d => indent(`${d}\n`, 2))
+      .map(d => indent(d, 2))
       .join('');
 
     // append required for non-nullable types

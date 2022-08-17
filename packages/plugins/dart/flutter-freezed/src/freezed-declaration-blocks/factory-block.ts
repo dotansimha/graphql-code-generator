@@ -92,8 +92,12 @@ export class FreezedFactoryBlock {
   }
 
   private setParameters(): FreezedFactoryBlock {
+    // TODO: get this from config directly
+    const mergeInputs = this._freezedConfigValue.get('mergeInputs');
     const appliesOn: ApplyDecoratorOn[] = this._namedConstructor
       ? ['union_factory_parameter']
+      : mergeInputs ?? mergeInputs !== []
+      ? ['merged_input_parameter']
       : ['class_factory_parameter'];
 
     if (this._node.kind !== Kind.UNION_TYPE_DEFINITION && this._node.kind !== Kind.ENUM_TYPE_DEFINITION) {
@@ -117,7 +121,7 @@ export class FreezedFactoryBlock {
     block += this._comment;
 
     // append the decorators
-    block += this._decorators.map(d => indent(`${d}\n`)).join('');
+    block += this._decorators.map(d => indent(d)).join('');
 
     block += indent('');
 
