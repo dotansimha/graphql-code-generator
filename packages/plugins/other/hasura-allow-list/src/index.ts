@@ -109,16 +109,28 @@ export const plugin: PluginFunction<HasuraAllowListPluginConfig> = async (
   documents: Types.DocumentFile[],
   config: HasuraAllowListPluginConfig
 ): Promise<Types.PluginOutput> => {
+  if ('config_version' in config) {
+    throw new Error(
+      `[hasura allow list plugin] Configuration error: configuration property config_version has been renamed configVersion. Please update your configuration accordingly.`
+    );
+  }
+
+  if ('collection_name' in config) {
+    throw new Error(
+      `[hasura allow list plugin] Configuration error: configuration property collection_name has been renamed collectionName. Please update your configuration accordingly.`
+    );
+  }
+
   const queries: { name: string; query: string }[] = [];
 
-  // if config global_fragments is set, get fragments from all documents
-  const globalFragments = !config.global_fragments ? false : getGlobalFragments(documents);
+  // if config globalFragments is set, get fragments from all documents
+  const globalFragments = !config.globalFragments ? false : getGlobalFragments(documents);
 
   for (const document of documents) {
     // filter out anonymous operations
     const documentOperations = document.document.definitions.filter(namedOperationDefinitionFilter);
 
-    // depending on global_fragments settings, either use document level or global level fragments
+    // depending on globalFragments settings, either use document level or global level fragments
     const fragments = globalFragments || getDocumentFragments(document);
 
     // for each operation in the document
@@ -137,7 +149,7 @@ export const plugin: PluginFunction<HasuraAllowListPluginConfig> = async (
 
   return yaml.stringify([
     {
-      name: config.collection_name ?? 'allowed-queries',
+      name: config.collectionName ?? 'allowed-queries',
       definition: {
         queries,
       },
