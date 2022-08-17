@@ -15,5 +15,5 @@ export interface HasuraAllowListPluginConfig {
    * @default false
    * @description Whether to source fragments per-document, or globally. If set, will enforce fragment name uniqueness
    */
-  global_fragments?: boolean;
+  globalFragments?: boolean;
 }
