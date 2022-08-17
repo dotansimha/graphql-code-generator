@@ -6473,6 +6473,37 @@ function test(q: GetEntityBrandDataQuery): void {
     `);
     });
 
+    it.only('does not create a duplicate selection', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            id
+            ...UserFragment
+          }
+        }
+
+        fragment UserFragment on User {
+          username
+        }
+      `);
+
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { autoSelectId: true },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string } | null };
+
+      export type UserFragmentFragment = { __typename?: 'User', username: string, id: string };
+    `);
+    });
+
     it('works for lists', async () => {
       const ast = parse(/* GraphQL */ `
         query {
