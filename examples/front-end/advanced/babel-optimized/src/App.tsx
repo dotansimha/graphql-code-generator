@@ -1,19 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
+import { useQuery } from '@apollo/client';
+
 import './App.css';
+import Film from './Film';
+import { gql } from './gql/gql';
+
+const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          ...FilmItem
+        }
+      }
+    }
+  }
+`);
 
 function App() {
+  const { data } = useQuery(allFilmsWithVariablesQueryDocument, { variables: { first: 10 } });
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
+      {data && <ul>{data.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>}
     </div>
   );
 }
