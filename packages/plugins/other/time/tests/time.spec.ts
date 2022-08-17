@@ -1,4 +1,4 @@
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 
 describe('Time', () => {
   it('Should use default comment when extenion is unknown', async () => {

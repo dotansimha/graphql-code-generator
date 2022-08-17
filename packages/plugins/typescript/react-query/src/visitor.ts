@@ -6,14 +6,18 @@ import {
   getConfigValue,
 } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
-import { generateMutationKeyMaker, generateQueryKeyMaker, generateInfiniteQueryKeyMaker } from './variables-generator';
+import {
+  generateMutationKeyMaker,
+  generateQueryKeyMaker,
+  generateInfiniteQueryKeyMaker,
+} from './variables-generator.js';
 
-import { CustomMapperFetcher } from './fetcher-custom-mapper';
-import { FetchFetcher } from './fetcher-fetch';
-import { FetcherRenderer } from './fetcher';
-import { GraphQLRequestClientFetcher } from './fetcher-graphql-request';
-import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded';
-import { ReactQueryRawPluginConfig } from './config';
+import { CustomMapperFetcher } from './fetcher-custom-mapper.js';
+import { FetchFetcher } from './fetcher-fetch.js';
+import { FetcherRenderer } from './fetcher.js';
+import { GraphQLRequestClientFetcher } from './fetcher-graphql-request.js';
+import { HardcodedFetchFetcher } from './fetcher-fetch-hardcoded.js';
+import { ReactQueryRawPluginConfig } from './config.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
@@ -25,6 +29,7 @@ export interface ReactQueryPluginConfig extends ClientSideBasePluginConfig {
   exposeMutationKeys: boolean;
   exposeFetcher: boolean;
   addInfiniteQuery: boolean;
+  legacyMode: boolean;
 }
 
 export interface ReactQueryMethodMap {
@@ -77,6 +82,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       exposeMutationKeys: getConfigValue(rawConfig.exposeMutationKeys, false),
       exposeFetcher: getConfigValue(rawConfig.exposeFetcher, false),
       addInfiniteQuery: getConfigValue(rawConfig.addInfiniteQuery, false),
+      legacyMode: getConfigValue(rawConfig.legacyMode, false),
     });
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
@@ -114,10 +120,6 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       return baseImports;
     }
 
-    if (this.config.addInfiniteQuery) {
-      this.reactQueryOptionsIdentifiersInUse.add('QueryFunctionContext');
-    }
-
     const hookAndTypeImports = [
       ...Array.from(this.reactQueryHookIdentifiersInUse),
       ...Array.from(this.reactQueryOptionsIdentifiersInUse).map(
@@ -125,7 +127,9 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       ),
     ];
 
-    return [...baseImports, `import { ${hookAndTypeImports.join(', ')} } from 'react-query';`];
+    const moduleName = this.config.legacyMode ? 'react-query' : '@tanstack/react-query';
+
+    return [...baseImports, `import { ${hookAndTypeImports.join(', ')} } from '${moduleName}';`];
   }
 
   public getFetcherImplementation(): string {

@@ -1,4 +1,4 @@
-import { Types } from './types';
+import { Types } from './types.js';
 import {
   FragmentDefinitionNode,
   visit,
@@ -18,7 +18,7 @@ import {
   SelectionSetNode,
   GraphQLObjectType,
 } from 'graphql';
-import { getBaseType } from './utils';
+import { getBaseType } from './utils.js';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);
@@ -179,20 +179,18 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         if (schema) {
           const lastType = typesStack[typesStack.length - 1];
 
-          if (lastType) {
-            if (isObjectType(lastType)) {
-              const field = lastType.getFields()[node.name.value];
+          if (lastType && isObjectType(lastType)) {
+            const field = lastType.getFields()[node.name.value];
 
-              if (!field) {
-                throw new Error(`Unable to find field "${node.name.value}" on type "${lastType}"!`);
-              }
+            if (!field) {
+              throw new Error(`Unable to find field "${node.name.value}" on type "${lastType}"!`);
+            }
 
-              const currentType = field.type;
+            const currentType = field.type;
 
-              // To handle `Maybe` usage
-              if (hasNullableTypeRecursively(currentType)) {
-                foundFields++;
-              }
+            // To handle `Maybe` usage
+            if (hasNullableTypeRecursively(currentType)) {
+              foundFields++;
             }
           }
         }

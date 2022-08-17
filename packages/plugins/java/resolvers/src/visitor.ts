@@ -10,7 +10,7 @@ import {
   ExternalParsedMapper,
   buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { JavaResolversPluginRawConfig } from './config';
+import { JavaResolversPluginRawConfig } from './config.js';
 import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
 import {
   GraphQLSchema,

@@ -20,9 +20,9 @@ import {
   Kind,
   GraphQLEnumType,
 } from 'graphql';
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
-import { DEFAULT_SCALARS } from './scalars';
-import { normalizeDeclarationKind } from './declaration-kinds';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { normalizeDeclarationKind } from './declaration-kinds.js';
 import {
   EnumValuesMap,
   NormalizedScalarsMap,
@@ -31,7 +31,7 @@ import {
   ParsedEnumValuesMap,
   DirectiveArgumentAndInputFieldMappings,
   ParsedDirectiveArgumentAndInputFieldMappings,
-} from './types';
+} from './types.js';
 import {
   transformComment,
   DeclarationBlock,
@@ -40,10 +40,11 @@ import {
   wrapWithSingleQuotes,
   getConfigValue,
   buildScalarsFromConfig,
-} from './utils';
-import { OperationVariablesToObject } from './variables-to-object';
-import { parseEnumValues } from './enum-values';
-import { transformDirectiveArgumentAndInputFieldMappings } from './mappers';
+  isOneOfInputObjectType,
+} from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
+import { parseEnumValues } from './enum-values.js';
+import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -179,7 +180,7 @@ export interface RawTypesConfig extends RawConfig {
    * @exampleMarkdown
    * ## Override all definition types
    *
-   * ```yml
+   * ```yaml
    * generates:
    *   path/to/file.ts:
    *     plugins:
@@ -454,8 +455,22 @@ export class BaseTypesVisitor<
       .withBlock(node.fields.join('\n'));
   }
 
+  getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.input)
+      .withName(this.convertName(node))
+      .withComment(node.description as any as string)
+      .withContent(`\n` + node.fields.join('\n  |'));
+  }
+
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     if (this.config.onlyEnums) return '';
+
+    // Why the heck is node.name a string and not { value: string } at runtime ?!
+    if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
+      return this.getInputObjectOneOfDeclarationBlock(node).string;
+    }
 
     return this.getInputObjectDeclarationBlock(node).string;
   }
@@ -820,7 +835,7 @@ export class BaseTypesVisitor<
     return null;
   }
 
-  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode): string {
+  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
     let commentText: string = node.description as any;
     const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
     if (deprecationDirective) {

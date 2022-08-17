@@ -1,5 +1,75 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.5.4
+
+### Patch Changes
+
+- [#8189](https://github.com/dotansimha/graphql-code-generator/pull/8189) [`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+
+- Updated dependencies [[`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f), [`47d0a57e2`](https://github.com/dotansimha/graphql-code-generator/commit/47d0a57e27dd0d2334670bfc6c81c45e00ff4e74)]:
+  - @graphql-codegen/add@3.2.1
+  - @graphql-codegen/visitor-plugin-common@2.12.1
+  - @graphql-codegen/gql-tag-operations@1.4.1
+  - @graphql-codegen/typescript-operations@2.5.3
+  - @graphql-codegen/typed-document-node@2.3.3
+  - @graphql-codegen/typescript@2.7.3
+  - @graphql-codegen/plugin-helpers@2.6.2
+
+## 1.5.3
+
+### Patch Changes
+
+- 95db434b0: Add missing file extension for re-exports in ESM mode
+
+## 1.5.2
+
+### Patch Changes
+
+- bc4b7eb24: Bumping to release for https://github.com/dotansimha/graphql-code-generator/issues/8067
+
+## 1.5.1
+
+### Patch Changes
+
+- 525ad580b: Revert breaking change for Next.js applications that are incapable of resolving an import with a `.js` extension.
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+  - @graphql-codegen/gql-tag-operations@1.3.1
+  - @graphql-codegen/typescript-operations@2.5.1
+  - @graphql-codegen/typed-document-node@2.3.1
+  - @graphql-codegen/typescript@2.7.1
+
+## 1.5.0
+
+### Minor Changes
+
+- 68bb30e19: Attach `.js` extension to relative file imports for compliance with ESM module resolution. Since in CommonJS the `.js` extension is optional, this is not a breaking change.
+
+  If you have path configuration within your configuration, consider attaching `.js` if you are migrating to ESM.
+
+  ```yml
+  mappers:
+    MyOtherType: './my-file.js#MyCustomOtherType',
+  ```
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/add@3.2.0
+  - @graphql-codegen/gql-tag-operations@1.3.0
+  - @graphql-codegen/typescript-operations@2.5.0
+  - @graphql-codegen/typed-document-node@2.3.0
+  - @graphql-codegen/typescript@2.7.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
 ## 1.4.0
 
 ### Minor Changes

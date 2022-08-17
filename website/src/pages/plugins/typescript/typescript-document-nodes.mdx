@@ -1,0 +1,39 @@
+---
+title: typescript-document-nodes
+---
+
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
+
+<PluginHeader />
+<PluginApiDocs />
+
+## Usage
+
+With [GitHub GraphQL API v4](https://developer.github.com/v4) schema and following GraphQL operation:
+
+```graphql
+query Viewer {
+  viewer {
+    login
+    name
+  }
+}
+```
+
+It will generate following TypeScript code:
+
+```ts
+import { DocumentNode } from 'graphql'
+import gql from 'graphql-tag'
+
+export const viewerQuery: DocumentNode = gql`
+  query Viewer {
+    viewer {
+      login
+      name
+    }
+  }
+`
+```

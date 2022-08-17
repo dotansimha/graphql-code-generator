@@ -11,8 +11,8 @@ import {
   buildScalarsFromConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode, FragmentDefinitionNode, GraphQLSchema, Kind, print } from 'graphql';
-import { DocumentImportResolverOptions } from './resolve-document-imports';
-import { extractExternalFragmentsInUse } from './utils';
+import { DocumentImportResolverOptions } from './resolve-document-imports.js';
+import { extractExternalFragmentsInUse } from './utils.js';
 
 export interface NearOperationFileParsedConfig extends ParsedConfig {
   importTypesNamespace?: string;
@@ -152,10 +152,13 @@ export default function buildFragmentResolver<T>(
           (dedupeFragments &&
             ['OperationDefinition', 'FragmentDefinition'].includes(documentFileContent.definitions[0].kind))
         ) {
-          if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
-            fragmentFileImports[fragmentDetails.filePath] = fragmentDetails.imports;
-          } else {
-            fragmentFileImports[fragmentDetails.filePath].push(...fragmentDetails.imports);
+          if (fragmentDetails.filePath !== generatedFilePath) {
+            // don't emit imports to same location
+            if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
+              fragmentFileImports[fragmentDetails.filePath] = fragmentDetails.imports;
+            } else {
+              fragmentFileImports[fragmentDetails.filePath].push(...fragmentDetails.imports);
+            }
           }
         }
 
@@ -180,6 +183,7 @@ export default function buildFragmentResolver<T>(
             path: fragmentsFilePath,
             identifiers,
           },
+          emitLegacyCommonJSImports: presetOptions.config.emitLegacyCommonJSImports,
           typesImport,
         })
       ),

@@ -7,10 +7,10 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { CSharpOperationsVisitor } from './visitor';
+import { CSharpOperationsVisitor } from './visitor.js';
 import { extname } from 'path';
 import gql from 'graphql-tag';
-import { CSharpOperationsRawPluginConfig } from './config';
+import { CSharpOperationsRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<CSharpOperationsRawPluginConfig> = (
   schema: GraphQLSchema,

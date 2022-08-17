@@ -26,6 +26,11 @@ export const presetsConfigurations: PresetConfig[] = [
 
 export const pluginsConfigurations: PluginConfig[] = [
   {
+    file: '../packages/plugins/dart/flutter-freezed/src/config.ts',
+    identifier: 'FlutterFreezedPluginConfig',
+    name: 'flutter-freezed',
+  },
+  {
     file: '../packages/plugins/typescript/react-query/src/config.ts',
     identifier: 'ReactQueryRawPluginConfig',
     name: 'typescript-react-query',
@@ -181,8 +186,8 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'flow',
   },
   {
-    file: '../packages/plugins/flow/resolvers/src/index.ts',
-    identifier: 'RawFlowResolversConfig',
+    file: '../packages/plugins/flow/resolvers/src/config.ts',
+    identifier: 'FlowResolversPluginConfig',
     name: 'flow-resolvers',
   },
   {

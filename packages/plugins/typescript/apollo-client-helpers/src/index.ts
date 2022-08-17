@@ -1,7 +1,7 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, isInterfaceType, isObjectType } from 'graphql';
 import { extname } from 'path';
-import { ApolloClientHelpersConfig } from './config';
+import { ApolloClientHelpersConfig } from './config.js';
 
 export const plugin: PluginFunction<ApolloClientHelpersConfig> = (
   schema: GraphQLSchema,

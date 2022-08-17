@@ -1,9 +1,9 @@
 import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { StencilApolloVisitor } from './visitor';
+import { StencilApolloVisitor } from './visitor.js';
 import { extname } from 'path';
-import { StencilApolloRawPluginConfig } from './config';
+import { StencilApolloRawPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (
   schema: GraphQLSchema,

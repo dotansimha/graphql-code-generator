@@ -1,12 +1,12 @@
-import { lifecycleHooks } from './hooks';
+import { lifecycleHooks } from './hooks.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { executeCodegen } from './codegen';
-import { createWatcher } from './utils/watcher';
-import { fileExists, readFile, writeFile, unlinkFile } from './utils/file-system';
+import { executeCodegen } from './codegen.js';
+import { createWatcher } from './utils/watcher.js';
+import { fileExists, readFile, writeFile, unlinkFile } from './utils/file-system.js';
 import mkdirp from 'mkdirp';
 import { dirname, join, isAbsolute } from 'path';
-import { debugLog } from './utils/debugging';
-import { CodegenContext, ensureContext } from './config';
+import { debugLog } from './utils/debugging.js';
+import { CodegenContext, ensureContext } from './config.js';
 import { createHash } from 'crypto';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
@@ -73,8 +73,10 @@ export async function generate(
 
             if (previousHash && currentHash === previousHash) {
               debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
-
               return;
+            } else if (context.checkMode) {
+              context.checkModeStaleFiles.push(result.filename);
+              return; // skip updating file in dry mode
             }
 
             if (content.length === 0) {

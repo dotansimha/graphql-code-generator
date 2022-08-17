@@ -3,7 +3,7 @@ import {
   loadDocuments as loadDocumentsToolkit,
   UnnormalizedTypeDefPointer,
 } from '@graphql-tools/load';
-import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import { CodeFileLoader } from '@graphql-tools/code-file-loader';
 import { GitLoader } from '@graphql-tools/git-loader';
@@ -51,23 +51,22 @@ export async function loadSchema(
     });
     return schema;
   } catch (e) {
-    throw new DetailedError(
-      'Failed to load schema',
+    throw new Error(
       `
         Failed to load schema from ${Object.keys(schemaPointers).join(',')}:
 
         ${e.message || e}
         ${e.stack || ''}
-    
+
         GraphQL Code Generator supports:
           - ES Modules and CommonJS exports (export as default or named export "schema")
           - Introspection JSON File
           - URL of GraphQL endpoint
           - Multiple files with type definitions (glob expression)
           - String in config file
-    
+
         Try to use one of above options and run codegen again.
-    
+
       `
     );
   }
@@ -97,13 +96,17 @@ export async function loadDocuments(
     ignore.push(join(process.cwd(), generatePath));
   }
 
-  const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
-    ...defaultDocumentsLoadOptions,
-    ignore,
-    loaders,
-    ...config,
-    ...config.config,
-  });
-
-  return loadedFromToolkit;
+  try {
+    const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {
+      ...defaultDocumentsLoadOptions,
+      ignore,
+      loaders,
+      ...config,
+      ...config.config,
+    });
+    return loadedFromToolkit;
+  } catch (error) {
+    if (config.ignoreNoDocuments) return [];
+    throw error;
+  }
 }

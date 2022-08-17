@@ -1,5 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { debugLog } from './utils/debugging';
+import { debugLog } from './utils/debugging.js';
 import { exec } from 'child_process';
 import { delimiter, sep } from 'path';
 
@@ -59,6 +59,7 @@ function execShellCommand(cmd: string): Promise<string> {
         if (error) {
           reject(error);
         } else {
+          debugLog(stdout || stderr);
           resolve(stdout || stderr);
         }
       }

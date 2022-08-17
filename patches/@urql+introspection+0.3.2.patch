@@ -1,0 +1,21 @@
+diff --git a/node_modules/@urql/introspection/dist/urql-introspection.mjs b/node_modules/@urql/introspection/dist/urql-introspection.mjs
+index f560a86..d732c77 100644
+--- a/node_modules/@urql/introspection/dist/urql-introspection.mjs
++++ b/node_modules/@urql/introspection/dist/urql-introspection.mjs
+@@ -1,10 +1,9 @@
+-import { buildSchema as e } from "graphql/utilities/buildASTSchema.mjs";
+-
+-import { execute as n } from "graphql/execution/execute.mjs";
+-
+-import { parse as a } from "graphql/language/parser.mjs";
+-
+-import { getIntrospectionQuery as t } from "graphql/utilities/index.mjs";
++import {
++  buildSchema as e,
++  execute as n,
++  parse as a,
++  getIntrospectionQuery as t,
++} from "graphql";
+ 
+ function getIntrospectedSchema(r) {
+   if ("string" == typeof r) {

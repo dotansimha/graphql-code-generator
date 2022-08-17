@@ -1,4 +1,3 @@
-import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 import {
   Types,
   PluginFunction,
@@ -7,21 +6,13 @@ import {
   oldVisit,
 } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
-import { FlowResolversVisitor } from './visitor';
+import { FlowResolversPluginConfig } from './config';
+import { FlowResolversVisitor } from './visitor.js';
 
-/**
- * @description This plugin generates resolvers signature based on your `GraphQLSchema`.
- *
- * It generates types for your entire schema: types, input types, enum, interface, scalar and union.
- *
- * This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.
- */
-export interface RawFlowResolversConfig extends RawResolversConfig {}
-
-export const plugin: PluginFunction<RawFlowResolversConfig, Types.ComplexPluginOutput> = (
+export const plugin: PluginFunction<FlowResolversPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: RawFlowResolversConfig
+  config: FlowResolversPluginConfig
 ) => {
   const imports = ['type GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;

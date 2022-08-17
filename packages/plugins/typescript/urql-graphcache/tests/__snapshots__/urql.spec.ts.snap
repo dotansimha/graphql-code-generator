@@ -3,7 +3,7 @@
 exports[`urql graphcache Should correctly name GraphCacheResolvers & GraphCacheOptimisticUpdaters with nonstandard mutationType names 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
-export type WithTypename<T extends { __typename?: any }> = T & { __typename: NonNullable<T['__typename']> };
+export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
   Todo?: (data: WithTypename<Todo>) => null | string
@@ -41,10 +41,47 @@ export type GraphCacheConfig = {
 };"
 `;
 
+exports[`urql graphcache Should correctly output GraphCacheOptimisticUpdaters when there are no mutations 1`] = `
+"import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
+import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
+export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
+
+export type GraphCacheKeysConfig = {
+  Todo?: (data: WithTypename<Todo>) => null | string
+}
+
+export type GraphCacheResolvers = {
+  Query_Root?: {
+    todos?: GraphCacheResolver<WithTypename<Query_Root>, Record<string, never>, Array<WithTypename<Todo> | string>>
+  },
+  Todo?: {
+    id?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['ID'] | string>,
+    text?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['String'] | string>,
+    complete?: GraphCacheResolver<WithTypename<Todo>, Record<string, never>, Scalars['Boolean'] | string>
+  }
+};
+
+export type GraphCacheOptimisticUpdaters = {};
+
+export type GraphCacheUpdaters = {
+  Mutation?: {},
+  Subscription?: {},
+};
+
+export type GraphCacheConfig = {
+  schema?: IntrospectionData,
+  updates?: GraphCacheUpdaters,
+  keys?: GraphCacheKeysConfig,
+  optimistic?: GraphCacheOptimisticUpdaters,
+  resolvers?: GraphCacheResolvers,
+  storage?: GraphCacheStorageAdapter
+};"
+`;
+
 exports[`urql graphcache Should output the cache-generic correctly (with interfaces) 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
-export type WithTypename<T extends { __typename?: any }> = T & { __typename: NonNullable<T['__typename']> };
+export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
   Author?: (data: WithTypename<Author>) => null | string,
@@ -76,9 +113,7 @@ export type GraphCacheResolvers = {
   }
 };
 
-export type GraphCacheOptimisticUpdaters = {
-  {}
-};
+export type GraphCacheOptimisticUpdaters = {};
 
 export type GraphCacheUpdaters = {
   Mutation?: {},
@@ -98,7 +133,7 @@ export type GraphCacheConfig = {
 exports[`urql graphcache Should output the cache-generic correctly (with typesPrefix and typesSuffix) 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
-export type WithTypename<T extends { __typename?: any }> = T & { __typename: NonNullable<T['__typename']> };
+export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
   Author?: (data: WithTypename<PrefixAuthorSuffix>) => null | string,
@@ -155,7 +190,7 @@ export type GraphCacheConfig = {
 exports[`urql graphcache Should output the cache-generic correctly (with unions) 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
-export type WithTypename<T extends { __typename?: any }> = T & { __typename: NonNullable<T['__typename']> };
+export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
   Book?: (data: WithTypename<Book>) => null | string,
@@ -202,7 +237,7 @@ export type GraphCacheConfig = {
 exports[`urql graphcache Should output the cache-generic correctly 1`] = `
 "import { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
 import { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
-export type WithTypename<T extends { __typename?: any }> = T & { __typename: NonNullable<T['__typename']> };
+export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
   Author?: (data: WithTypename<Author>) => null | string,

@@ -1,5 +1,5 @@
 import { getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
-import { JavaApolloAndroidPluginConfig } from './plugin';
+import { JavaApolloAndroidPluginConfig } from './plugin.js';
 import { JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import {
   InputObjectTypeDefinitionNode,
@@ -11,9 +11,9 @@ import {
   isEnumType,
   VariableDefinitionNode,
 } from 'graphql';
-import { Imports } from './imports';
-import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
-import { VisitorConfig } from './visitor-config';
+import { Imports } from './imports.js';
+import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor.js';
+import { VisitorConfig } from './visitor-config.js';
 
 export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {

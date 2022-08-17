@@ -6,7 +6,7 @@ import {
   OMIT_TYPE,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { ReactApolloRawPluginConfig } from './config';
+import { ReactApolloRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';

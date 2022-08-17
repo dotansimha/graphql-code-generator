@@ -3,11 +3,11 @@ import {
   generateMutationKey,
   generateQueryKey,
   generateQueryVariablesSignature,
-} from './variables-generator';
+} from './variables-generator.js';
 
-import { FetcherRenderer } from './fetcher';
+import { FetcherRenderer } from './fetcher.js';
 import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
+import { ReactQueryVisitor } from './visitor.js';
 
 export class GraphQLRequestClientFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor) {}
@@ -42,7 +42,7 @@ function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variab
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      pageParamKey: keyof ${operationVariablesTypes},
+      _pageParamKey: keyof ${operationVariablesTypes},
       client: GraphQLClient,
       ${variables},
       ${options},

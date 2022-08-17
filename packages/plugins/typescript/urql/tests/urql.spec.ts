@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index';
+import { plugin } from '../src/index.js';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
@@ -553,7 +553,7 @@ query MyFeed {
 
       expect(content.content).toBeSimilarStringTo(`
 export function useFeedQuery(options?: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'>) {
-  return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
+  return Urql.useQuery<FeedQuery, FeedQueryVariables>({ query: FeedDocument, ...options });
 };`);
 
       expect(content.content).toBeSimilarStringTo(`
@@ -582,7 +582,7 @@ export function useSubmitRepositoryMutation() {
 
       expect(content.content).toBeSimilarStringTo(`
 export function useRequiredArgQuery(options: Omit<Urql.UseQueryArgs<RequiredArgQueryVariables>, 'query'>) {
-  return Urql.useQuery<RequiredArgQuery>({ query: RequiredArgDocument, ...options });
+  return Urql.useQuery<RequiredArgQuery, RequiredArgQueryVariables>({ query: RequiredArgDocument, ...options });
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -606,7 +606,7 @@ export function useRequiredArgQuery(options: Omit<Urql.UseQueryArgs<RequiredArgQ
 
       expect(content.content).toBeSimilarStringTo(`
 export function useDefaultValueArgQuery(options?: Omit<Urql.UseQueryArgs<DefaultValueArgQueryVariables>, 'query'>) {
-  return Urql.useQuery<DefaultValueArgQuery>({ query: DefaultValueArgDocument, ...options });
+  return Urql.useQuery<DefaultValueArgQuery, DefaultValueArgQueryVariables>({ query: DefaultValueArgDocument, ...options });
 };`);
       await validateTypeScript(content, schema, docs, {});
     });

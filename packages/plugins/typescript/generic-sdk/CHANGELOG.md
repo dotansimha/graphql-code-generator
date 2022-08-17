@@ -1,5 +1,83 @@
 # @graphql-codegen/typescript-generic-sdk
 
+## 3.0.0
+
+### Major Changes
+
+- [#8204](https://github.com/dotansimha/graphql-code-generator/pull/8204) [`25a5b0f93`](https://github.com/dotansimha/graphql-code-generator/commit/25a5b0f93e295757ce809fa3fa0a0aa1c8eb940c) Thanks [@ardatan](https://github.com/ardatan)! - - Respect GraphQL Live Queries like Subscriptions and use the stream return types (`AsyncIterable` or `Observable`).
+  - Previously if there was no `usingObservableFrom` set in the configuration, the plugin was using `Promise` as subscriptions' return type, and this is wrong. Now it uses `AsyncIterable` in this case.
+
+## 2.5.1
+
+### Patch Changes
+
+- [#8189](https://github.com/dotansimha/graphql-code-generator/pull/8189) [`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+
+- Updated dependencies [[`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f), [`47d0a57e2`](https://github.com/dotansimha/graphql-code-generator/commit/47d0a57e27dd0d2334670bfc6c81c45e00ff4e74)]:
+  - @graphql-codegen/visitor-plugin-common@2.12.1
+  - @graphql-codegen/plugin-helpers@2.6.2
+
+## 2.5.0
+
+### Minor Changes
+
+- 1b0b00be3: fix(generic-sdk): fix Requester type when rawQuery is true
+
+## 2.4.2
+
+### Patch Changes
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/visitor-plugin-common@2.12.0
+  - @graphql-codegen/plugin-helpers@2.6.0
+
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [525ad580b]
+  - @graphql-codegen/visitor-plugin-common@2.11.1
+
+## 2.4.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [68bb30e19]
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/visitor-plugin-common@2.11.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 2.3.13
+
+### Patch Changes
+
+- Updated dependencies [aa1e6eafd]
+- Updated dependencies [a42fcbfe4]
+- Updated dependencies [8b10f22be]
+  - @graphql-codegen/visitor-plugin-common@2.10.0
+
+## 2.3.12
+
+### Patch Changes
+
+- Updated dependencies [d16bebacb]
+  - @graphql-codegen/visitor-plugin-common@2.9.1
+
+## 2.3.11
+
+### Patch Changes
+
+- Updated dependencies [c3d7b7226]
+  - @graphql-codegen/visitor-plugin-common@2.9.0
+
 ## 2.3.10
 
 ### Patch Changes

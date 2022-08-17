@@ -1,5 +1,37 @@
 # @graphql-codegen/core
 
+## 2.6.2
+
+### Patch Changes
+
+- [#8207](https://github.com/dotansimha/graphql-code-generator/pull/8207) [`6c7d3e54b`](https://github.com/dotansimha/graphql-code-generator/commit/6c7d3e54bb3cb53d8bbbd25e31c45b66f29f4640) Thanks [@renovate](https://github.com/apps/renovate)! - ### Dependencies Updates
+
+  - Updated dependency ([`@graphql-tools/schema@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/schema/v/^9.0.0)) (was `^8.5.0`, in `dependencies`)
+
+## 2.6.1
+
+### Patch Changes
+
+- [#8189](https://github.com/dotansimha/graphql-code-generator/pull/8189) [`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+
+- Updated dependencies [[`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f)]:
+  - @graphql-codegen/plugin-helpers@2.6.2
+
+## 2.6.0
+
+### Minor Changes
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+### Patch Changes
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/plugin-helpers@2.5.0
+
 ## 2.5.1
 
 ### Patch Changes

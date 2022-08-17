@@ -1,0 +1,13 @@
+---
+title: import-types-preset
+---
+
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
+
+<PluginHeader />
+
+This preset generates a file per each operation file, and allow to import types from another file.
+
+<PluginApiDocs />

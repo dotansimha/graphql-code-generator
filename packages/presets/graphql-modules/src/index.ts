@@ -1,16 +1,17 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { concatAST, isScalarType } from 'graphql';
 import { resolve, relative, join } from 'path';
-import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils';
-import { buildModule } from './builder';
-import { ModulesConfig } from './config';
+import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils.js';
+import { buildModule } from './builder.js';
+import { ModulesConfig } from './config.js';
 import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
-    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
     const { baseOutputDir } = options;
     const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
+    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
+    const requireRootResolvers = getConfigValue(options?.presetConfig.requireRootResolvers, false);
 
     const cwd = resolve(options.presetConfig.cwd || process.cwd());
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
@@ -102,6 +103,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                 importNamespace: importTypesNamespace,
                 importPath,
                 encapsulate: encapsulateModuleTypes || 'namespace',
+                requireRootResolvers,
                 shouldDeclare,
                 schema,
                 baseVisitor,

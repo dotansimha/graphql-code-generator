@@ -1,0 +1,25 @@
+---
+title: schema-ast
+---
+
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
+
+<PluginHeader />
+
+## Examples
+
+```yaml {9}
+# …
+schema:
+  - 'http://localhost:3000/graphql'
+  - './src/**/*.graphql'
+  - 'scalar MyCustomScalar'
+generates:
+  path/to/file.graphql:
+    plugins:
+      - schema-ast
+```
+
+<PluginApiDocs />

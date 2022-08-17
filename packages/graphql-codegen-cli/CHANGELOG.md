@@ -1,5 +1,195 @@
 # @graphql-codegen/cli
 
+## 2.11.6
+
+### Patch Changes
+
+- Updated dependencies [[`6c7d3e54b`](https://github.com/dotansimha/graphql-code-generator/commit/6c7d3e54bb3cb53d8bbbd25e31c45b66f29f4640)]:
+  - @graphql-codegen/core@2.6.2
+
+## 2.11.5
+
+### Patch Changes
+
+- [#8198](https://github.com/dotansimha/graphql-code-generator/pull/8198) [`1c7a8c0ad`](https://github.com/dotansimha/graphql-code-generator/commit/1c7a8c0ade2cd1f505b303c742aa31b4489cc12d) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(ci): regression on error output
+
+## 2.11.4
+
+### Patch Changes
+
+- [#8189](https://github.com/dotansimha/graphql-code-generator/pull/8189) [`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+
+- Updated dependencies [[`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f)]:
+  - @graphql-codegen/core@2.6.1
+  - @graphql-codegen/plugin-helpers@2.6.2
+
+## 2.11.3
+
+### Patch Changes
+
+- b75ca4b48: Prevent cli from early returning when run init command.
+
+## 2.11.2
+
+### Patch Changes
+
+- 8cd1526c4: chore(deps): update `@whatwg-node/fetch` to fix vulnerability
+
+## 2.11.1
+
+### Patch Changes
+
+- 20bf4b225: support for path containing "&" characters
+
+## 2.11.0
+
+### Minor Changes
+
+- fd6be805b: feat(cli): add a dry-run mode with `--check` cli flag
+
+### Patch Changes
+
+- 6a2e328e6: feat(cli): `--verbose` and `--debug` flags
+- Updated dependencies [6a2e328e6]
+  - @graphql-codegen/plugin-helpers@2.6.1
+
+## 2.10.0
+
+### Minor Changes
+
+- 273ad602f: Replace cross-undici-fetch with @whatwg-node/fetch to fix security vulnerability from undici
+
+### Patch Changes
+
+- cc18923d3: feat(hooks): forward hooks logs to debug logs
+
+## 2.9.1
+
+### Patch Changes
+
+- e2cfc5c36: fix(cli): prevent duplicated error messages on fail (without watcher)
+
+## 2.9.0
+
+### Minor Changes
+
+- 2cbcbb371: Add new flag to emit legacy common js imports. Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
+
+  You can use the option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+   documents:
+     - 'src/**/*.graphql'
+   emitLegacyCommonJSImports: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --emit-legacy-common-js-imports
+  ```
+
+### Patch Changes
+
+- 32c1560f1: getPluginByName fails unexpectedly when plugin is not prefixed with @graphq-codegen in ESM context
+
+  MODULE_NOT_FOUND is the error code you receive in a CommonJS context when you require() a module and it does not exist.
+  ERR_MODULE_NOT_FOUND is the error code you receive in an ESM context when you import or import() ad module that does not exist.
+
+- Updated dependencies [2cbcbb371]
+  - @graphql-codegen/plugin-helpers@2.6.0
+
+## 2.8.1
+
+### Patch Changes
+
+- 147e801bf: Add `tslib` as a dependency. See https://github.com/dotansimha/graphql-code-generator/issues/8075
+
+## 2.8.0
+
+### Minor Changes
+
+- d84afec09: Add bin CLI command for running `graphql-code-generator` in ESM mode. You can now use `graphql-codegen-esm` instead of `graphql-codegen`.
+
+  GraphQL Code Generator will continue supporting both ESM and CommonJS in parallel.
+
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+
+  [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
+
+- 8e44df58b: Add new config option to not exit with non-zero exit code when there are no documents.
+
+  You can use this option in your config:
+
+  ```yaml
+  schema: 'schema.graphql'
+  documents:
+    - 'src/**/*.graphql'
+  ignoreNoDocuments: true
+  ```
+
+  Alternative you can use the CLI to set this option:
+
+  ```bash
+  $ codegen --config-file=config.yml --ignore-no-documents
+  ```
+
+### Patch Changes
+
+- e7870ac28: Fix security vulnerability by removing `latest-version` dependency.
+- dce40edeb: Allow to disable watch mode from CLI to overwrite the config. Now you can do:
+
+  ```bash
+  $ graphql-codegen --watch=false
+  ```
+
+- 2e86ecb65: ### Summary
+
+  - Migrate to [`listr2`](https://listr2.kilic.dev)
+  - Remove custom renderer for `listr`
+  - Remove unused dependencies
+
+  ### Why
+
+  [`listr`](https://github.com/SamVerschueren/listr) is not actively maintained and we have to maintain our custom renderer for it to display errors. Migrating to `listr2` it just works out of the almost similar to how it was working in past and is a actively maintained.
+
+  ### Dev notes
+
+  Big change for us is how errors were collected. In `listr` errors were thrown and were caught in the `end` function of our custom `listr` Renderer but with `listr2` we don't really get `Error` in `end` function always so instead we use the [context](https://listr2.kilic.dev/getting-started/the-concept-of-context) to collect errors from all the tasks and then show them after all the tasks are finished.
+
+- Updated dependencies [d84afec09]
+- Updated dependencies [a4fe5006b]
+- Updated dependencies [8e44df58b]
+  - @graphql-codegen/core@2.6.0
+  - @graphql-codegen/plugin-helpers@2.5.0
+
+## 2.7.0
+
+### Minor Changes
+
+- e050230c0: Remove unnecessary browser check
+
+### Patch Changes
+
+- dfd9f07dc: Fix/multi project
+- 2fb1d8b87: Remove unused `tryToBuildSchema` function
+- 4dce44263: Bumps `@graphql-tools/url-loader` to the latest `cross-undici-fetch` version that has pinned `undici` to `~5.5.0` in order to fix a bug/breaking-change introduced with `undici@5.6.0` that causes a `GET/HEAD requests cannot have 'body'` error.
+  See https://github.com/ardatan/graphql-tools/pull/4559#issue-1292915844 for more details.
+
+## 2.6.4
+
+### Patch Changes
+
+- 92f714278: Revert "Upgrade latest version"
+
+## 2.6.3
+
+### Patch Changes
+
+- c1fe7758a: Remove unused deps
+- 52b41e90e: bump latest-version to patch vuln
+
 ## 2.6.2
 
 ### Patch Changes

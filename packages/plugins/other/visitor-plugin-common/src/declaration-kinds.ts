@@ -1,4 +1,4 @@
-import { DeclarationKindConfig, DeclarationKind } from './types';
+import { DeclarationKindConfig, DeclarationKind } from './types.js';
 
 export const DEFAULT_DECLARATION_KINDS: DeclarationKindConfig = {
   directive: 'type',

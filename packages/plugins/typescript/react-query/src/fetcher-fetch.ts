@@ -3,11 +3,11 @@ import {
   generateMutationKey,
   generateQueryKey,
   generateQueryVariablesSignature,
-} from './variables-generator';
+} from './variables-generator.js';
 
-import { FetcherRenderer } from './fetcher';
+import { FetcherRenderer } from './fetcher.js';
 import { OperationDefinitionNode } from 'graphql';
-import { ReactQueryVisitor } from './visitor';
+import { ReactQueryVisitor } from './visitor.js';
 
 export class FetchFetcher implements FetcherRenderer {
   constructor(private visitor: ReactQueryVisitor) {}
@@ -48,14 +48,14 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
     this.visitor.reactQueryHookIdentifiersInUse.add(hookConfig.infiniteQuery.hook);
     this.visitor.reactQueryOptionsIdentifiersInUse.add(hookConfig.infiniteQuery.options);
 
-    const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
+    const options = `options?: ${hookConfig.infiniteQuery.options}<${operationResultType}, TError, TData>`;
 
     return `export const useInfinite${operationName} = <
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      pageParamKey: keyof ${operationVariablesTypes},
+      _pageParamKey: keyof ${operationVariablesTypes},
       ${variables},
       ${options}
     ) =>

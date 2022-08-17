@@ -7,12 +7,12 @@ import {
   LoadedFragment,
   NormalizedScalarsMap,
   DeclarationKind,
-} from './types';
-import { DeclarationBlockConfig } from './utils';
+} from './types.js';
+import { DeclarationBlockConfig } from './utils.js';
 import autoBind from 'auto-bind';
-import { convertFactory } from './naming';
+import { convertFactory } from './naming.js';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { ImportDeclaration, FragmentImport } from './imports';
+import { ImportDeclaration, FragmentImport } from './imports.js';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -35,6 +35,7 @@ export interface ParsedConfig {
   dedupeFragments: boolean;
   allowEnumStringTypes: boolean;
   inlineFragmentTypes: InlineFragmentTypeOptions;
+  emitLegacyCommonJSImports: boolean;
 }
 
 export interface RawConfig {
@@ -46,7 +47,7 @@ export interface RawConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   strictScalars: true
    * ```
@@ -57,7 +58,7 @@ export interface RawConfig {
    * @default any
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   defaultScalarType: unknown
    * ```
@@ -123,7 +124,7 @@ export interface RawConfig {
    * @description Prefixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   typesPrefix: I
    * ```
@@ -134,7 +135,7 @@ export interface RawConfig {
    * @description Suffixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   typesSuffix: I
    * ```
@@ -157,7 +158,7 @@ export interface RawConfig {
    * in the selection set, and makes it non-optional
    *
    * @exampleMarkdown
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   nonOptionalTypename: true
    * ```
@@ -171,7 +172,7 @@ export interface RawConfig {
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
    * @example
-   * ```yaml
+   * ```yaml {2}
    * config:
    *   useTypeImports: true
    * ```
@@ -212,6 +213,12 @@ export interface RawConfig {
    * @default inline
    */
   inlineFragmentTypes?: InlineFragmentTypeOptions;
+  /**
+   * @default true
+   * @description Emit legacy common js imports.
+   * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
+   */
+  emitLegacyCommonJSImports?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -232,6 +239,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       dedupeFragments: !!rawConfig.dedupeFragments,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
+      emitLegacyCommonJSImports:
+        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       ...((additionalConfig || {}) as any),
     };
 

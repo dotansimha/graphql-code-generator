@@ -1,4 +1,4 @@
-import { TypeScriptDocumentNodesRawPluginConfig } from '.';
+import { TypeScriptDocumentNodesRawPluginConfig } from './index.js';
 import autoBind from 'auto-bind';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import {

@@ -5,7 +5,7 @@ import {
   LoadedFragment,
   DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
-import { VueApolloRawPluginConfig } from './config';
+import { VueApolloRawPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';

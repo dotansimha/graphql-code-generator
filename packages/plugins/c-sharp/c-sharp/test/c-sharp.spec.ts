@@ -1,8 +1,8 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index';
-import { CSharpResolversPluginRawConfig } from '../src/config';
-import { getJsonAttributeSourceConfiguration } from '../src/json-attributes';
+import { plugin } from '../src/index.js';
+import { CSharpResolversPluginRawConfig } from '../src/config.js';
+import { getJsonAttributeSourceConfiguration } from '../src/json-attributes.js';
 import each from 'jest-each';
 
 describe('C#', () => {

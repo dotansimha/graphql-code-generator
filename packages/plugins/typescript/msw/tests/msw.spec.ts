@@ -1,6 +1,6 @@
 import { pascalCase } from 'change-case-all';
 import { parse } from 'graphql';
-import { plugin } from '../src';
+import { plugin } from '../src/index.js';
 
 describe('msw', () => {
   const queryName = 'User';
@@ -64,5 +64,25 @@ describe('msw', () => {
     expect(result.content).toContain(`const { ${variables.join(', ')} } = req.variables`);
     expect(result.content).toContain(`ctx.data({ ${selection} })`);
     expect(result.content).toMatchSnapshot('content with variables and selection JSDoc documentation');
+  });
+
+  it('Should use the "importOperationTypesFrom" setting', async () => {
+    const importOperationTypesFrom = 'Types';
+    const result = await plugin(null, documents, { importOperationTypesFrom });
+
+    // handler variable and result type
+    const queryVariablesType = `${importOperationTypesFrom}.${queryName}QueryVariables`;
+    const queryType = `${importOperationTypesFrom}.${queryName}Query`;
+    expect(result.content).toContain(`GraphQLRequest<${queryVariablesType}>`);
+    expect(result.content).toContain(`GraphQLContext<${queryType}>`);
+    expect(result.content).toContain(`graphql.query<${queryType}, ${queryVariablesType}>`);
+
+    const mutationVariablesType = `${importOperationTypesFrom}.${mutationName}MutationVariables`;
+    const mutationType = `${importOperationTypesFrom}.${mutationName}Mutation`;
+    expect(result.content).toContain(`GraphQLRequest<${mutationVariablesType}>`);
+    expect(result.content).toContain(`GraphQLContext<${mutationType}>`);
+    expect(result.content).toContain(`graphql.mutation<${mutationType}, ${mutationVariablesType}>`);
+
+    expect(result.content).toMatchSnapshot('content with types configured via importOperationTypesFrom');
   });
 });
