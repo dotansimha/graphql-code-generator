@@ -30,7 +30,11 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     const hasId = Boolean(schemaType.getFields()['id']);
 
     if (hasId) {
-      fields.push({ isConditional: false, fieldName: 'id' });
+      const alreadySelectedId = fields.some(field => field.fieldName === 'id');
+
+      if (!alreadySelectedId) {
+        fields.push({ isConditional: false, fieldName: 'id' });
+      }
     }
 
     return fields.map(field => {
