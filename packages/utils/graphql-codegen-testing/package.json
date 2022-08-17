@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "peerDependencies": {
-    "jest-diff": "^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0",
+    "jest-diff": "^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0",
     "typescript": ">=3.0.0"
   },
   "dependencies": {
