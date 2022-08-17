@@ -1,4 +1,5 @@
 import { parse } from 'graphql';
+import { HasuraAllowListPluginConfig } from '../src/config.js';
 import { plugin } from '../src/index.js';
 
 describe('Hasura allow list', () => {
@@ -304,7 +305,7 @@ describe('Hasura allow list', () => {
 
     expect(content).toBe(expectedContent);
   });
-  it('with global_fragments enabled, should use fragments from all documents', async () => {
+  it('with globalFragments enabled, should use fragments from all documents', async () => {
     const expectedContent = `- name: allowed-queries
   definition:
     queries:
@@ -343,12 +344,12 @@ describe('Hasura allow list', () => {
         { document: document1, location: '/dummy/location1' },
         { document: document2, location: '/dummy/location2' },
       ],
-      { global_fragments: true }
+      { globalFragments: true }
     );
 
     expect(content).toBe(expectedContent);
   });
-  it('with global_fragments enabled, should error on missing fragments', async () => {
+  it('with globalFragments enabled, should error on missing fragments', async () => {
     const document1 = parse(/* GraphQL */ `
       query MyQuery1 {
         field
@@ -368,11 +369,11 @@ describe('Hasura allow list', () => {
           { document: document1, location: '/dummy/location1' },
           { document: document2, location: '/dummy/location2' },
         ],
-        { global_fragments: true }
+        { globalFragments: true }
       )
     ).rejects.toThrow();
   });
-  it('with global_fragments enabled, should error on duplicate fragments', async () => {
+  it('with globalFragments enabled, should error on duplicate fragments', async () => {
     const document1 = parse(/* GraphQL */ `
       query MyQuery1 {
         field
@@ -398,8 +399,31 @@ describe('Hasura allow list', () => {
           { document: document1, location: '/dummy/location1' },
           { document: document2, location: '/dummy/location2' },
         ],
-        { global_fragments: true }
+        { globalFragments: true }
       )
     ).rejects.toThrow();
+  });
+  it('should throw helpful errors when using older, deprecated configuration options', async () => {
+    const document = parse(/* GraphQL */ `
+      query MyQuery {
+        field
+      }
+    `);
+
+    const documents = [{ document, location: '/dummy/location' }];
+
+    const config1 = {
+      config_version: 1,
+    };
+    const error1 = `[hasura allow list plugin] Configuration error: configuration property config_version has been renamed configVersion. Please update your configuration accordingly.`;
+    // test for renamed config_version config option
+    await expect(plugin(null, documents, config1 as HasuraAllowListPluginConfig)).rejects.toThrowError(error1);
+
+    const config2 = {
+      collection_name: 'custom_name',
+    };
+    // test for renamed collection_name config option
+    const error2 = `[hasura allow list plugin] Configuration error: configuration property collection_name has been renamed collectionName. Please update your configuration accordingly.`;
+    await expect(plugin(null, documents, config2 as HasuraAllowListPluginConfig)).rejects.toThrowError(error2);
   });
 });
