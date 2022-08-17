@@ -513,7 +513,7 @@
         "anchor": "conclusion"
       }
     ],
-    "content": "d46e6162b649af27f503114d3d2b4948",
+    "content": "ff06a6d8323fadfd0b7dbb79c744c8d5",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/esm-typescript-usage",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -606,6 +606,39 @@
     "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Angular",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-docs-guides-flutter-freezed",
+    "headings": ["TL;DR", "Motivation", "Demo", "Getting started"],
+    "toc": [
+      {
+        "children": [],
+        "title": "TL;DR",
+        "anchor": "tldr"
+      },
+      {
+        "children": [],
+        "title": "Motivation",
+        "anchor": "motivation"
+      },
+      {
+        "children": [],
+        "title": "Demo",
+        "anchor": "demo"
+      },
+      {
+        "children": [],
+        "title": "Getting started",
+        "anchor": "getting-started"
+      }
+    ],
+    "content": "a4fcebad6f64a2d216a95294d19c4466",
+    "url": "https://www.graphql-code-generator.com/docs/guides/flutter-freezed",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Docs", "Guides"],
+    "source": "Code Generator",
+    "title": "Dart/Flutter",
     "type": "Documentation"
   },
   {
@@ -1115,6 +1148,18 @@
     "hierarchy": ["Plugins", "C-Sharp"],
     "source": "Code Generator",
     "title": "operations",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-plugins-dart-flutter",
+    "headings": [],
+    "toc": [],
+    "content": "a38b682da4571e5655572a342e2ca359",
+    "url": "https://www.graphql-code-generator.com/plugins/dart/flutter",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Plugins", "dart"],
+    "source": "Code Generator",
+    "title": "Dart/Flutter",
     "type": "Plugin"
   },
   {
