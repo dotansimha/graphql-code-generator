@@ -13,6 +13,7 @@
     "prettier:check": "prettier --check .",
     "types:check": "tsc --noEmit",
     "test-and-build": "yarn build && yarn test",
+    "ci:lint": "eslint --ext .ts . --output-file eslint_report.json --format json",
     "prerelease": "yarn build",
     "release": "changeset publish",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env",
