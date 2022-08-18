@@ -6,6 +6,11 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
 );
 
 export default withGuildDocs({
+  experimental: {
+    images: {
+      unoptimized: true,
+    },
+  },
   basePath: '/graphql/codegen',
   eslint: {
     ignoreDuringBuilds: true,
