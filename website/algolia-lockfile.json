@@ -610,7 +610,7 @@
   },
   {
     "objectID": "code-generator-docs-guides-flutter-freezed",
-    "headings": ["TL;DR", "Motivation", "Demo", "Getting started"],
+    "headings": ["TL;DR", "Motivation", "Features", "TODO:", "Demo", "Getting started", "PRs are welcomed"],
     "toc": [
       {
         "children": [],
@@ -624,6 +624,16 @@
       },
       {
         "children": [],
+        "title": "Features",
+        "anchor": "features"
+      },
+      {
+        "children": [],
+        "title": "TODO:",
+        "anchor": "todo"
+      },
+      {
+        "children": [],
         "title": "Demo",
         "anchor": "demo"
       },
@@ -631,9 +641,14 @@
         "children": [],
         "title": "Getting started",
         "anchor": "getting-started"
+      },
+      {
+        "children": [],
+        "title": "PRs are welcomed",
+        "anchor": "prs-are-welcomed"
       }
     ],
-    "content": "a4fcebad6f64a2d216a95294d19c4466",
+    "content": "1d89192805c6db0fd057532f7a70d379",
     "url": "https://www.graphql-code-generator.com/docs/guides/flutter-freezed",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -1151,15 +1166,15 @@
     "type": "Plugin"
   },
   {
-    "objectID": "code-generator-plugins-dart-flutter",
+    "objectID": "code-generator-plugins-dart-flutter-freezed",
     "headings": [],
     "toc": [],
-    "content": "a38b682da4571e5655572a342e2ca359",
-    "url": "https://www.graphql-code-generator.com/plugins/dart/flutter",
+    "content": "9cec7baf25d43eb5eeaeca180fc429dd",
+    "url": "https://www.graphql-code-generator.com/plugins/dart/flutter-freezed",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "dart"],
     "source": "Code Generator",
-    "title": "Dart/Flutter",
+    "title": "flutter-freezed",
     "type": "Plugin"
   },
   {
