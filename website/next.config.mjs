@@ -5,13 +5,18 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
   packageNames.map(packageName => [`/plugins/${packageName}`, `/plugins/${category}/${packageName}`])
 );
 
+const basePath =
+  process.env.NODE_ENV === 'development' || process.env.CF_PAGES_BRANCH !== 'master' ? '/' : '/graphql/codegen';
+
+console.log('going to use basePath=', basePath);
+
 export default withGuildDocs({
   experimental: {
     images: {
       unoptimized: true,
     },
   },
-  basePath: '/graphql/codegen',
+  basePath,
   eslint: {
     ignoreDuringBuilds: true,
   },
