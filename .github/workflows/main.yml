@@ -14,46 +14,21 @@ env:
 jobs:
   lint:
     name: Linting Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Use Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 17
-      - name: Cache Yarn
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-17-16-yarn-
-      - name: Install Dependencies
-        run: yarn
-      - name: Lint
-        run: yarn lint
+    uses: the-guild-org/shared-config/.github/workflows/lint.yml@main
+    with:
+      script: yarn ci:lint
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
   prettier-check:
     name: 🧹 Prettier Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
         uses: actions/checkout@v3
-      - name: Use Node
-        uses: actions/setup-node@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 17
-      - name: Cache Yarn
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-17-16-yarn-
-      - name: Install Dependencies
-        run: yarn
-      - name: Lint
-        run: yarn lint
+          nodeVersion: 17
       - name: Prettier Check
         run: yarn prettier:check
   dev-tests:
@@ -67,19 +42,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Use Node
-        uses: actions/setup-node@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 17
-      - name: Cache Yarn
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-17-16-yarn-
-      - name: Install Dependencies
-        run: yarn
+          nodeVersion: 17
       - name: Build
         run: yarn build
         env:
@@ -94,19 +60,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Use Node
-        uses: actions/setup-node@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 17
-      - name: Cache Yarn
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-17-16-yarn-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-17-16-yarn-
-      - name: Install Dependencies
-        run: yarn
+          nodeVersion: 17
       - name: Build
         run: yarn build
         env:
@@ -133,17 +90,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Use Node
-        uses: actions/setup-node@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: ${{matrix.node_version}}
-      - name: Cache Yarn
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-yarn-
+          nodeVersion: ${{matrix.node_version}}
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
