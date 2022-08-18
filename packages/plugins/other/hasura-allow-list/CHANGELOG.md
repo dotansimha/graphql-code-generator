@@ -1,5 +1,12 @@
 # @graphql-codegen/hasura-allow-list
 
+## 2.0.0
+
+### Major Changes
+
+- [#8242](https://github.com/dotansimha/graphql-code-generator/pull/8242) [`7bee5c597`](https://github.com/dotansimha/graphql-code-generator/commit/7bee5c597466d53152776b1cca9085bd29af00cb) Thanks [@BenoitRanque](https://github.com/BenoitRanque)! - added support for global fragments
+  breaking: changed config options to camelCase for consistency
+
 ## 1.1.1
 
 ### Patch Changes
