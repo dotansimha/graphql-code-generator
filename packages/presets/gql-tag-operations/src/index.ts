@@ -7,7 +7,7 @@ import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources.js';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import babelPlugin from './babel.js';
+import babelOptimizerPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 
 export type FragmentMaskingConfig = {
@@ -216,4 +216,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
   },
 };
 
-export { babelPlugin };
+// back-compat
+const babelPlugin = babelOptimizerPlugin;
+
+export { babelOptimizerPlugin, babelPlugin };
