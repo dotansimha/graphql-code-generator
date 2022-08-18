@@ -61,6 +61,22 @@ export type GqlTagConfig = {
    * ```
    */
   fragmentMasking?: FragmentMaskingConfig | boolean;
+  /**
+   * @description Specify the name of the "graphql tag" function to use
+   * @default "gql"
+   *
+   * E.g. `graphql` or `gql`.
+   *
+   * @exampleMarkdown
+   * ```yaml {5}
+   * generates:
+   *   gql/:
+   *     preset: gql-tag-operations-preset
+   *     presetConfig:
+   *       gqlTagName: 'graphql'
+   * ```
+   */
+  gqlTagName?: string;
 };
 
 export const preset: Types.OutputPreset<GqlTagConfig> = {
@@ -190,6 +206,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         config: {
           ...config,
           augmentedModuleName: options.presetConfig.augmentedModuleName,
+          gqlTagName: options.presetConfig.gqlTagName,
         },
         documents: sources,
       },

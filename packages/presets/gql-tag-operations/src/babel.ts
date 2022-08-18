@@ -13,6 +13,7 @@ export default declare((api, opts): PluginObj => {
   const visitor = new ClientSideBaseVisitor(noopSchema, [], {}, {});
 
   const artifactDirectory = opts['artifactDirectory'] ?? '';
+  const gqlTagName = opts['gqlTagName'] || 'gql';
 
   let program: NodePath<Program>;
   return {
@@ -22,7 +23,7 @@ export default declare((api, opts): PluginObj => {
         program = path;
       },
       CallExpression(path, state) {
-        if (path.node.callee.type !== 'Identifier' || path.node.callee.name !== 'gql') {
+        if (path.node.callee.type !== 'Identifier' || path.node.callee.name !== gqlTagName) {
           return;
         }
         const [argument] = path.node.arguments;

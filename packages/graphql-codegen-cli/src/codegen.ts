@@ -323,7 +323,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                     baseOutputDir: filename,
                                     presetConfig:
                                       outputConfig.presetConfig ||
-                                      (outputConfig.preset === 'front-end' ? { fragmentMasking: true } : {}),
+                                      (outputConfig.preset === 'front-end'
+                                        ? { fragmentMasking: true, gqlTagName: 'graphql' }
+                                        : {}),
                                     plugins: normalizedPluginsArray,
                                     schema: outputSchema,
                                     schemaAst: outputSchemaAst,
