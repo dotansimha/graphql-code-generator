@@ -39,7 +39,7 @@ export const plugin: PluginFunction<{
     `\n`,
     ...getDocumentRegistryChunk(sourcesWithOperations),
     `\n`,
-    ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
+    ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName),
     `\n`,
     `export function ${gqlTagName}(source: string): unknown;\n`,
     `export function ${gqlTagName}(source: string) {\n`,
@@ -66,27 +66,18 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
   return lines;
 }
 
-type Mode = 'lookup' | 'augmented';
-
-function getGqlOverloadChunk(
-  sourcesWithOperations: Array<SourceWithOperations>,
-  gqlTagName: string,
-  mode: Mode,
-  emitLegacyCommonJSImports?: boolean
-) {
+function getGqlOverloadChunk(sourcesWithOperations: Array<SourceWithOperations>, gqlTagName: string) {
   const lines = new Set<string>();
 
   // We intentionally don't use a <T extends keyof typeof documents> generic, because TS
   // would print very long `gql` function signatures (duplicating the source).
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
-    const returnType =
-      mode === 'lookup'
-        ? `(typeof documents)[${JSON.stringify(originalString)}]`
-        : emitLegacyCommonJSImports
-        ? `typeof import('./graphql').${operations[0].initialName}`
-        : `typeof import('./graphql.js').${operations[0].initialName}`;
-    lines.add(`export function ${gqlTagName}(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
+    lines.add(
+      `export function ${gqlTagName}(source: ${JSON.stringify(originalString)}): ${`(typeof documents)[${JSON.stringify(
+        originalString
+      )}]`};\n`
+    );
   }
 
   return lines;
