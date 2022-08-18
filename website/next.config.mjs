@@ -6,9 +6,9 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
 );
 
 const basePath =
-  process.env.NODE_ENV === 'development' || process.env.CF_PAGES_BRANCH !== 'master' ? undefined : '/graphql/codegen';
-
-console.log('going to use basePath=', basePath);
+  process.env.NODE_ENV === 'development' || process.env.CF_PAGES_BRANCH !== 'master' || process.env.GITHUB_ACTION
+    ? undefined
+    : '/graphql/codegen';
 
 export default withGuildDocs({
   experimental: {
