@@ -81,6 +81,9 @@ export type GqlTagConfig = {
 
 export const preset: Types.OutputPreset<GqlTagConfig> = {
   buildGeneratesSection: options => {
+    // TODO: add link?
+    // eslint-disable-next-line no-console
+    console.warn('DEPRECATED: `gql-tag-operations-preset` is deprecated in favor of `front-end-preset`.');
     /** when not using augmentation stuff must be re-exported. */
     const reexports: Array<string> = [];
 
