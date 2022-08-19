@@ -41,7 +41,7 @@
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
     "@graphql-codegen/core": "2.6.2",
-    "@graphql-codegen/front-end-preset": "1.0.1-alpha-20220819143342-edd1e6155",
+    "@graphql-codegen/front-end-preset": "1.0.1-alpha-20220819144347-ab4dcfa54",
     "@graphql-codegen/plugin-helpers": "^2.6.2",
     "@graphql-tools/apollo-engine-loader": "^7.3.6",
     "@graphql-tools/code-file-loader": "^7.3.1",

@@ -2264,15 +2264,15 @@
     "@graphql-tools/load" "6.2.4"
     tslib "2.0.2"
 
-"@graphql-codegen/front-end-preset@1.0.1-alpha-20220819143342-edd1e6155":
-  version "1.0.1-alpha-20220819143342-edd1e6155"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/front-end-preset/-/front-end-preset-1.0.1-alpha-20220819143342-edd1e6155.tgz#913a64ce4e8994754f8698cf13cfb0d8de6a7a22"
-  integrity sha512-SZKcXtJsZLzGk+xTHFE6pTw+u1LYTUdGDh9H9ZLe43Rw6KafLJcBXtkPJ9xNm6biyfrR0L/mKza6MK8aCJ7hWQ==
+"@graphql-codegen/front-end-preset@1.0.1-alpha-20220819144347-ab4dcfa54":
+  version "1.0.1-alpha-20220819144347-ab4dcfa54"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/front-end-preset/-/front-end-preset-1.0.1-alpha-20220819144347-ab4dcfa54.tgz#46835fcff0ce67837a8ad50ca0d87a2fcc8723e8"
+  integrity sha512-97agpMOkiGww+vcvTClwDLrpe8I0j7qpl69QgEcx8RRzEKSJihF3sq9g8puKpvujmQp6bXyIEHZh9galkrjkEw==
   dependencies:
     "@babel/helper-plugin-utils" "^7.14.5"
     "@babel/template" "^7.15.4"
     "@graphql-codegen/add" "^3.2.1"
-    "@graphql-codegen/gql-tag-operations" "1.5.0-alpha-20220819143342-edd1e6155"
+    "@graphql-codegen/gql-tag-operations" "1.5.0-alpha-20220819144347-ab4dcfa54"
     "@graphql-codegen/plugin-helpers" "^2.6.2"
     "@graphql-codegen/typed-document-node" "^2.3.3"
     "@graphql-codegen/typescript" "^2.7.3"
@@ -2281,10 +2281,10 @@
     "@graphql-tools/utils" "^8.8.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/gql-tag-operations@1.5.0-alpha-20220819143342-edd1e6155":
-  version "1.5.0-alpha-20220819143342-edd1e6155"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.5.0-alpha-20220819143342-edd1e6155.tgz#d4260bbf7351553e723c961b74ba8cbd3e5dc476"
-  integrity sha512-hB/oKRXPUZNcLNYw869zU1gp1+u5SoMDajPYA7FeBuwzXw0b19CFliuo7GceGwwBw0C+i+tMbM1hivBdDo7ERw==
+"@graphql-codegen/gql-tag-operations@1.5.0-alpha-20220819144347-ab4dcfa54":
+  version "1.5.0-alpha-20220819144347-ab4dcfa54"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.5.0-alpha-20220819144347-ab4dcfa54.tgz#f60e371fde84771234dcec4bc0a1098c9a3cc892"
+  integrity sha512-Iv1cvAYNsAV/Js6u3y6dlsMP5JuA41r8TDyC2cl7lNGdd7MWb/Wl59Bna9Ybbh2kwFQREvFzef8betfuVdz/xw==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.6.2"
     "@graphql-codegen/visitor-plugin-common" "2.12.1"
