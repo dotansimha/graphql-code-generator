@@ -75,6 +75,12 @@ export const PACKAGES: Record<
     iconUrl: '/assets/img/icons/codegen.svg',
     tags: ['preset', 'utilities', 'typescript'],
   },
+  'front-end-preset': {
+    title: 'front-end Preset',
+    npmPackage: '@graphql-codegen/front-end-preset',
+    iconUrl: '/assets/img/icons/codegen.svg',
+    tags: ['preset', 'utilities', 'typescript'],
+  },
   'graphql-modules-preset': {
     title: 'GraphQL Modules Preset',
     npmPackage: '@graphql-codegen/graphql-modules-preset',
