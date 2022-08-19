@@ -157,7 +157,7 @@ export const preset: Types.OutputPreset<FrontEndConfig> = {
         plugins,
         pluginMap,
         schema: options.schema,
-        config,
+        config: {},
         documents: sources,
       },
       {
