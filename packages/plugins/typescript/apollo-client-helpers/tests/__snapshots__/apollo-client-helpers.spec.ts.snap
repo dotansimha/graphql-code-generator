@@ -12,11 +12,11 @@ export type UserFieldPolicy = {
 	name?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type StrictTypedTypePolicies = {
-	Query?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
+	Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
 		fields?: QueryFieldPolicy,
 	},
-	User?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
+	User?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
 		fields?: UserFieldPolicy,
 	}
@@ -36,11 +36,11 @@ export type UserFieldPolicy = {
 	name?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type StrictTypedTypePolicies = {
-	Query?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
+	Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
 		fields?: QueryFieldPolicy,
 	},
-	User?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
+	User?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
 		fields?: UserFieldPolicy,
 	}
@@ -60,11 +60,11 @@ export type UserFieldPolicy = {
 	name?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type StrictTypedTypePolicies = {
-	Query?: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
+	Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
 		fields?: QueryFieldPolicy,
 	},
-	User: Omit<TypePolicy, \\"fields\\" | \\"keyFields\\"> & {
+	User: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
 		fields?: UserFieldPolicy,
 	}

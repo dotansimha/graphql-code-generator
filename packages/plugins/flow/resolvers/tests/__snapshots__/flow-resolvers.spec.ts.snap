@@ -137,7 +137,7 @@ export type QueryResolvers<ContextType = any, ParentType = $ElementType<Resolver
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
-  somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, \\"somethingChanged\\", ParentType, ContextType>,
+  somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, "somethingChanged", ParentType, ContextType>,
 };
 
 export type NodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Node'>> = {

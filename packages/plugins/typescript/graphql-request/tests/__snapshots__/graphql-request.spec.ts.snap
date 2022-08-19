@@ -231,7 +231,7 @@ export const Feed3Document = \`
 }
     \`;
 export const Feed4Document = \`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -245,16 +245,16 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FeedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FeedQuery>(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed2Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed2Query>(Feed2Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed3Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed3Query>(Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed4Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed4Query>(Feed4Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -275,7 +275,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -517,7 +517,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -531,16 +531,16 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FeedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FeedQuery>(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed2Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed2Query>(Feed2Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed3Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed3Query>(Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed4Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed4Query>(Feed4Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -554,7 +554,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -795,7 +795,7 @@ export const Feed3Document = \`
 }
     \`;
 export const Feed4Document = \`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -809,16 +809,16 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FeedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FeedQuery>(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed2Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed2Query>(Feed2Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed3Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed3Query>(Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed4Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed4Query>(Feed4Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -832,7 +832,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -1075,7 +1075,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -1092,16 +1092,16 @@ const Feed3DocumentString = print(Feed3Document);
 const Feed4DocumentString = print(Feed4Document);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: FeedQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: FeedQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<FeedQuery>(FeedDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed2Query; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed2Query; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed2Query>(Feed2DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed3Query; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed3Query; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed3Query>(Feed3DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed4Query; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed4Query; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed4Query>(Feed4DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -1116,7 +1116,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -1359,7 +1359,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -1376,16 +1376,16 @@ const Feed3DocumentString = print(Feed3Document);
 const Feed4DocumentString = print(Feed4Document);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: FeedQuery; extensions?: unknown; headers: Dom.Headers; status: number; }> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: FeedQuery; extensions?: unknown; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<FeedQuery>(FeedDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed2Query; extensions?: unknown; headers: Dom.Headers; status: number; }> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed2Query; extensions?: unknown; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed2Query>(Feed2DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed3Query; extensions?: unknown; headers: Dom.Headers; status: number; }> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed3Query; extensions?: unknown; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed3Query>(Feed3DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed4Query; extensions?: unknown; headers: Dom.Headers; status: number; }> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed4Query; extensions?: unknown; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed4Query>(Feed4DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -1400,7 +1400,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -1643,7 +1643,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -1660,16 +1660,16 @@ const Feed3DocumentString = print(Feed3Document);
 const Feed4DocumentString = print(Feed4Document);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: FeedQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: FeedQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<FeedQuery>(FeedDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed2Query; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed2Query; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed2Query>(Feed2DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed3Query; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed3Query; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed3Query>(Feed3DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<{ data: Feed4Query; extensions?: any; headers: Dom.Headers; status: number; }> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: Feed4Query; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<Feed4Query>(Feed4DocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -1684,7 +1684,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -1926,7 +1926,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -1940,16 +1940,16 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FeedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FeedQuery>(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed2Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed2Query>(Feed2Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed3Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed3Query>(Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed4Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed4Query>(Feed4Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -1964,7 +1964,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -2206,7 +2206,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -2220,16 +2220,16 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FeedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FeedQuery>(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');
     },
-    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed2Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed2Query>(Feed2Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');
     },
-    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed3Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed3Query>(Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');
     },
-    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit[\\"headers\\"]): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Feed4Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<Feed4Query>(Feed4Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed4', 'query');
     }
   };
@@ -2244,7 +2244,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
