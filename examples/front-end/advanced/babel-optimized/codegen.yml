@@ -1,0 +1,9 @@
+schema: https://swapi-graphql.netlify.app/.netlify/functions/index
+documents:
+  - 'src/**/*.tsx'
+  - '!src/gql/**/*'
+generates:
+  ./src/gql/:
+    preset: gql-tag-operations-preset
+    presetConfig:
+      fragmentMasking: true
