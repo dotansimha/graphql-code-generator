@@ -2264,6 +2264,34 @@
     "@graphql-tools/load" "6.2.4"
     tslib "2.0.2"
 
+"@graphql-codegen/front-end-preset@1.0.1-alpha-20220819143342-edd1e6155":
+  version "1.0.1-alpha-20220819143342-edd1e6155"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/front-end-preset/-/front-end-preset-1.0.1-alpha-20220819143342-edd1e6155.tgz#913a64ce4e8994754f8698cf13cfb0d8de6a7a22"
+  integrity sha512-SZKcXtJsZLzGk+xTHFE6pTw+u1LYTUdGDh9H9ZLe43Rw6KafLJcBXtkPJ9xNm6biyfrR0L/mKza6MK8aCJ7hWQ==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.14.5"
+    "@babel/template" "^7.15.4"
+    "@graphql-codegen/add" "^3.2.1"
+    "@graphql-codegen/gql-tag-operations" "1.5.0-alpha-20220819143342-edd1e6155"
+    "@graphql-codegen/plugin-helpers" "^2.6.2"
+    "@graphql-codegen/typed-document-node" "^2.3.3"
+    "@graphql-codegen/typescript" "^2.7.3"
+    "@graphql-codegen/typescript-operations" "^2.5.3"
+    "@graphql-codegen/visitor-plugin-common" "^2.12.1"
+    "@graphql-tools/utils" "^8.8.0"
+    tslib "~2.4.0"
+
+"@graphql-codegen/gql-tag-operations@1.5.0-alpha-20220819143342-edd1e6155":
+  version "1.5.0-alpha-20220819143342-edd1e6155"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.5.0-alpha-20220819143342-edd1e6155.tgz#d4260bbf7351553e723c961b74ba8cbd3e5dc476"
+  integrity sha512-hB/oKRXPUZNcLNYw869zU1gp1+u5SoMDajPYA7FeBuwzXw0b19CFliuo7GceGwwBw0C+i+tMbM1hivBdDo7ERw==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.6.2"
+    "@graphql-codegen/visitor-plugin-common" "2.12.1"
+    "@graphql-tools/utils" "^8.8.0"
+    auto-bind "~4.0.0"
+    tslib "~2.4.0"
+
 "@graphql-codegen/visitor-plugin-common@2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.12.0.tgz#49b055c5c2c5c0890f2226ce9e84bb73dfd83801"
@@ -4052,15 +4080,15 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@16.11.49", "@types/node@^16.9.2":
-  version "16.11.49"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.49.tgz#560b1ea774b61e19a89c3fc72d2dcaa3863f38b2"
-  integrity sha512-Abq9fBviLV93OiXMu+f6r0elxCzRwc0RC5f99cU892uBITL44pTvgvEqlRlPRi8EGcO1z7Cp8A4d0s/p3J/+Nw==
-
-"@types/node@18.6.2":
+"@types/node@*", "@types/node@18.6.2":
   version "18.6.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.6.2.tgz#ffc5f0f099d27887c8d9067b54e55090fcd54126"
   integrity sha512-KcfkBq9H4PI6Vpu5B/KoPeuVDAbmi+2mDBqGPGUgoL7yXQtcWGu2vJWmmRkneWK3Rh0nIAX192Aa87AqKHYChQ==
+
+"@types/node@16.11.49", "@types/node@^16.9.2":
+  version "16.11.49"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.49.tgz#560b1ea774b61e19a89c3fc72d2dcaa3863f38b2"
+  integrity sha512-Abq9fBviLV93OiXMu+f6r0elxCzRwc0RC5f99cU892uBITL44pTvgvEqlRlPRi8EGcO1z7Cp8A4d0s/p3J/+Nw==
 
 "@types/node@^10.1.0":
   version "10.17.60"
