@@ -23,5 +23,8 @@ module.exports = ({ dirname, projectMode = true }) => {
     collectCoverage: false,
     testTimeout: 20000,
     resolver: 'bob-the-bundler/jest-resolver.js',
+    snapshotFormat: {
+      escapeString: false,
+    },
   };
 };

@@ -131,7 +131,7 @@ export const SubmitRepositoryDocument = \`
     \`;
 
 const injectedRtkApi = api.injectEndpoints({
-  overrideExisting: module.hot?.status() === \\"apply\\",
+  overrideExisting: module.hot?.status() === "apply",
   endpoints: (build) => ({
     Comment: build.query<CommentQuery, CommentQueryVariables>({
       query: (variables) => ({ document: CommentDocument, variables })

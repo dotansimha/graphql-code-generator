@@ -824,27 +824,27 @@ export const useTestMutation = <
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
       expect(out.prepend[1]).toMatchInlineSnapshot(`
-"
-function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
-  return async (): Promise<TData> => {
-    const res = await fetch(\\"http://localhost:3000/graphql\\", {
-    method: \\"POST\\",
-    ...({\\"headers\\":{\\"Authorization\\":\\"Bearer XYZ\\"}}),
-      body: JSON.stringify({ query, variables }),
-    });
+        "
+        function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+          return async (): Promise<TData> => {
+            const res = await fetch("http://localhost:3000/graphql", {
+            method: "POST",
+            ...({"headers":{"Authorization":"Bearer XYZ"}}),
+              body: JSON.stringify({ query, variables }),
+            });
 
-    const json = await res.json();
+            const json = await res.json();
 
-    if (json.errors) {
-      const { message } = json.errors[0];
+            if (json.errors) {
+              const { message } = json.errors[0];
 
-      throw new Error(message);
-    }
+              throw new Error(message);
+            }
 
-    return json.data;
-  }
-}"
-`);
+            return json.data;
+          }
+        }"
+      `);
 
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config);
@@ -866,27 +866,27 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       const out = (await plugin(schema, docs, config)) as Types.ComplexPluginOutput;
 
       expect(out.prepend[1]).toMatchInlineSnapshot(`
-"
-function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
-  return async (): Promise<TData> => {
-    const res = await fetch(\\"http://localhost:3000/graphql\\", {
-    method: \\"POST\\",
-    ...({\\"headers\\":{\\"Authorization\\":\\"Bearer XYZ\\"}}),
-      body: JSON.stringify({ query, variables }),
-    });
+        "
+        function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+          return async (): Promise<TData> => {
+            const res = await fetch("http://localhost:3000/graphql", {
+            method: "POST",
+            ...({"headers":{"Authorization":"Bearer XYZ"}}),
+              body: JSON.stringify({ query, variables }),
+            });
 
-    const json = await res.json();
+            const json = await res.json();
 
-    if (json.errors) {
-      const { message } = json.errors[0];
+            if (json.errors) {
+              const { message } = json.errors[0];
 
-      throw new Error(message);
-    }
+              throw new Error(message);
+            }
 
-    return json.data;
-  }
-}"
-`);
+            return json.data;
+          }
+        }"
+      `);
 
       expect(out.content).toMatchSnapshot();
       await validateTypeScript(mergeOutputs(out), schema, docs, config);

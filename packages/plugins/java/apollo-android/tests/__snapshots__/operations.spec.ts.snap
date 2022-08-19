@@ -30,14 +30,14 @@ import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
 
-@Generated(\\"Apollo GraphQL\\")
+@Generated("Apollo GraphQL")
 public final class ListProductsQuery implements Query<ListProductsQuery.Data, ListProductsQuery.Data, ListProductsQuery.Variables> {
-  public static final String OPERATION_DEFINITION = \\"query ListProducts($filter: ModelProductFilterInput, $limit: Int, $nextToken: String) {   listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {     items {       id       title       content       price       rating     }     nextToken   } }\\";
+  public static final String OPERATION_DEFINITION = "query ListProducts($filter: ModelProductFilterInput, $limit: Int, $nextToken: String) {   listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {     items {       id       title       content       price       rating     }     nextToken   } }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return \\"ListProducts\\";
+      return "ListProducts";
     }
   };
   private final ListProductsQuery.Variables variables;
@@ -71,7 +71,7 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
   }
   
   public String operationId() {
-    return \\"5597d12b4e13d225a0107e7713b35f7a\\";
+    return "5597d12b4e13d225a0107e7713b35f7a";
   }
   
   public ListProductsQuery(@Nullable ModelProductFilterInput filter, @Nullable Integer limit, @Nullable String nextToken) {
@@ -83,7 +83,7 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forObject(\\"listProducts\\", \\"listProducts\\", new UnmodifiableMapBuilder<String, Object>(3).put(\\"filter\\", new UnmodifiableMapBuilder<String, Object>(2).put(\\"kind\\", \\"Variable\\").put(\\"variableName\\", \\"filter\\").build()).put(\\"limit\\", new UnmodifiableMapBuilder<String, Object>(2).put(\\"kind\\", \\"Variable\\").put(\\"variableName\\", \\"limit\\").build()).put(\\"nextToken\\", new UnmodifiableMapBuilder<String, Object>(2).put(\\"kind\\", \\"Variable\\").put(\\"variableName\\", \\"nextToken\\").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forObject("listProducts", "listProducts", new UnmodifiableMapBuilder<String, Object>(3).put("filter", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "filter").build()).put("limit", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "limit").build()).put("nextToken", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "nextToken").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
       };
     public Data(@Nullable ListProducts listProducts) {
       this.listProducts = listProducts;
@@ -96,9 +96,9 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = \\"Data{\\"
-          + \\"listProducts=\\" + listProducts + \\", \\"
-          + \\"}\\";
+        $toString = "Data{"
+          + "listProducts=" + listProducts + ", "
+          + "}";
       }
       
       return $toString;
@@ -163,12 +163,12 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forString(\\"__typename\\", \\"__typename\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forList(\\"items\\", \\"items\\", null, true, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forString(\\"nextToken\\", \\"nextToken\\", null, true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forList("items", "items", null, true, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forString("nextToken", "nextToken", null, true, Collections.<ResponseField.Condition>emptyList())
       };
     public ListProducts(@Nonnull String __typename, @Nullable List<Item> items, @Nullable String nextToken) {
-      this.__typename = Utils.checkNotNull(__typename, \\"__typename == null\\");
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.items = items;
       this.nextToken = nextToken;
     }
@@ -188,11 +188,11 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = \\"ListProducts{\\"
-          + \\"__typename=\\" + __typename + \\", \\"
-          + \\"items=\\" + items + \\", \\"
-          + \\"nextToken=\\" + nextToken + \\", \\"
-          + \\"}\\";
+        $toString = "ListProducts{"
+          + "__typename=" + __typename + ", "
+          + "items=" + items + ", "
+          + "nextToken=" + nextToken + ", "
+          + "}";
       }
       
       return $toString;
@@ -278,18 +278,18 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forString(\\"__typename\\", \\"__typename\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forCustomType(\\"id\\", \\"id\\", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forString(\\"title\\", \\"title\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forString(\\"content\\", \\"content\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forInt(\\"price\\", \\"price\\", null, true, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forDouble(\\"rating\\", \\"rating\\", null, true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forCustomType("id", "id", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forString("title", "title", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forString("content", "content", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forInt("price", "price", null, true, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forDouble("rating", "rating", null, true, Collections.<ResponseField.Condition>emptyList())
       };
     public Item(@Nonnull String __typename, @Nonnull String id, @Nonnull String title, @Nonnull String content, @Nullable Integer price, @Nullable Double rating) {
-      this.__typename = Utils.checkNotNull(__typename, \\"__typename == null\\");
-      this.id = Utils.checkNotNull(id, \\"id == null\\");
-      this.title = Utils.checkNotNull(title, \\"title == null\\");
-      this.content = Utils.checkNotNull(content, \\"content == null\\");
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.id = Utils.checkNotNull(id, "id == null");
+      this.title = Utils.checkNotNull(title, "title == null");
+      this.content = Utils.checkNotNull(content, "content == null");
       this.price = price;
       this.rating = rating;
     }
@@ -321,14 +321,14 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = \\"Item{\\"
-          + \\"__typename=\\" + __typename + \\", \\"
-          + \\"id=\\" + id + \\", \\"
-          + \\"title=\\" + title + \\", \\"
-          + \\"content=\\" + content + \\", \\"
-          + \\"price=\\" + price + \\", \\"
-          + \\"rating=\\" + rating + \\", \\"
-          + \\"}\\";
+        $toString = "Item{"
+          + "__typename=" + __typename + ", "
+          + "id=" + id + ", "
+          + "title=" + title + ", "
+          + "content=" + content + ", "
+          + "price=" + price + ", "
+          + "rating=" + rating + ", "
+          + "}";
       }
       
       return $toString;
@@ -447,11 +447,11 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     
     public Variables(@Nonnull ModelProductFilterInput filter, @Nonnull Integer limit, @Nonnull String nextToken) {
       this.filter = filter;
-      this.valueMap.put(\\"filter\\", filter);
+      this.valueMap.put("filter", filter);
       this.limit = limit;
-      this.valueMap.put(\\"limit\\", limit);
+      this.valueMap.put("limit", limit);
       this.nextToken = nextToken;
-      this.valueMap.put(\\"nextToken\\", nextToken);
+      this.valueMap.put("nextToken", nextToken);
     }
     
     @Override
@@ -464,9 +464,9 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
       return new InputFieldMarshaller() {
         @Override
         public void marshal(InputFieldWriter writer) throws IOException {
-          writer.writeObject(\\"filter\\", filter != null ? filter.marshaller() : null);
-          writer.writeInt(\\"limit\\", limit);
-          writer.writeString(\\"nextToken\\", nextToken);
+          writer.writeObject("filter", filter != null ? filter.marshaller() : null);
+          writer.writeInt("limit", limit);
+          writer.writeString("nextToken", nextToken);
         }
       };
     }
@@ -512,14 +512,14 @@ import java.io.IOException;
 import com.apollographql.apollo.api.GraphqlFragment;
 import type.CustomType;
 
-@Generated(\\"Apollo GraphQL\\")
+@Generated("Apollo GraphQL")
 public final class ListProductsQuery implements Query<ListProductsQuery.Data, ListProductsQuery.Data, ListProductsQuery.Variables> {
-  public static final String OPERATION_DEFINITION = \\"query ListProducts($filter: ModelProductFilterInput, $limit: Int, $nextToken: String) {   listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {     items {       ...ProductFields       ...ProductFields2     }     nextToken   } }\\";
+  public static final String OPERATION_DEFINITION = "query ListProducts($filter: ModelProductFilterInput, $limit: Int, $nextToken: String) {   listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {     items {       ...ProductFields       ...ProductFields2     }     nextToken   } }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return \\"ListProducts\\";
+      return "ListProducts";
     }
   };
   private final ListProductsQuery.Variables variables;
@@ -553,7 +553,7 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
   }
   
   public String operationId() {
-    return \\"3d73f8740686dce349e37868c42a4d69\\";
+    return "3d73f8740686dce349e37868c42a4d69";
   }
   
   public ListProductsQuery(@Nullable ModelProductFilterInput filter, @Nullable Integer limit, @Nullable String nextToken) {
@@ -565,7 +565,7 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forObject(\\"listProducts\\", \\"listProducts\\", new UnmodifiableMapBuilder<String, Object>(3).put(\\"filter\\", new UnmodifiableMapBuilder<String, Object>(2).put(\\"kind\\", \\"Variable\\").put(\\"variableName\\", \\"filter\\").build()).put(\\"limit\\", new UnmodifiableMapBuilder<String, Object>(2).put(\\"kind\\", \\"Variable\\").put(\\"variableName\\", \\"limit\\").build()).put(\\"nextToken\\", new UnmodifiableMapBuilder<String, Object>(2).put(\\"kind\\", \\"Variable\\").put(\\"variableName\\", \\"nextToken\\").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forObject("listProducts", "listProducts", new UnmodifiableMapBuilder<String, Object>(3).put("filter", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "filter").build()).put("limit", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "limit").build()).put("nextToken", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "nextToken").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
       };
     public Data(@Nullable ListProducts listProducts) {
       this.listProducts = listProducts;
@@ -578,9 +578,9 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = \\"Data{\\"
-          + \\"listProducts=\\" + listProducts + \\", \\"
-          + \\"}\\";
+        $toString = "Data{"
+          + "listProducts=" + listProducts + ", "
+          + "}";
       }
       
       return $toString;
@@ -645,12 +645,12 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forString(\\"__typename\\", \\"__typename\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forList(\\"items\\", \\"items\\", null, true, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forString(\\"nextToken\\", \\"nextToken\\", null, true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forList("items", "items", null, true, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forString("nextToken", "nextToken", null, true, Collections.<ResponseField.Condition>emptyList())
       };
     public ListProducts(@Nonnull String __typename, @Nullable List<Item> items, @Nullable String nextToken) {
-      this.__typename = Utils.checkNotNull(__typename, \\"__typename == null\\");
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.items = items;
       this.nextToken = nextToken;
     }
@@ -670,11 +670,11 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = \\"ListProducts{\\"
-          + \\"__typename=\\" + __typename + \\", \\"
-          + \\"items=\\" + items + \\", \\"
-          + \\"nextToken=\\" + nextToken + \\", \\"
-          + \\"}\\";
+        $toString = "ListProducts{"
+          + "__typename=" + __typename + ", "
+          + "items=" + items + ", "
+          + "nextToken=" + nextToken + ", "
+          + "}";
       }
       
       return $toString;
@@ -756,12 +756,12 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forString(\\"__typename\\", \\"__typename\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forFragment(\\"__typename\\", \\"__typename\\", Arrays.asList(\\"Product\\", \\"Product\\"))
+        ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forFragment("__typename", "__typename", Arrays.asList("Product", "Product"))
       };
     public Item(@Nonnull String __typename, @Nonnull Fragments fragments) {
-      this.__typename = Utils.checkNotNull(__typename, \\"__typename == null\\");
-      this.fragments = Utils.checkNotNull(fragments, \\"fragments == null\\");
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.fragments = Utils.checkNotNull(fragments, "fragments == null");
     }
     
     public @Nonnull String __typename() {
@@ -775,10 +775,10 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = \\"Item{\\"
-          + \\"__typename=\\" + __typename + \\", \\"
-          + \\"fragments=\\" + fragments + \\", \\"
-          + \\"}\\";
+        $toString = "Item{"
+          + "__typename=" + __typename + ", "
+          + "fragments=" + fragments + ", "
+          + "}";
       }
       
       return $toString;
@@ -828,8 +828,8 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
       private volatile int $hashCode;
       private volatile boolean $hashCodeMemoized;
       public Fragments(@Nonnull ProductFields productFields, @Nonnull ProductFields2 productFields2) {
-        this.productFields = Utils.checkNotNull(productFields, \\"productFields == null\\");
-        this.productFields2 = Utils.checkNotNull(productFields2, \\"productFields2 == null\\");
+        this.productFields = Utils.checkNotNull(productFields, "productFields == null");
+        this.productFields2 = Utils.checkNotNull(productFields2, "productFields2 == null");
       }
       
       public @Nonnull ProductFields productFields() {
@@ -856,10 +856,10 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
       @Override
        public String toString() {
         if ($toString == null) {
-            $toString = \\"Fragments{\\"
-              + \\"productFields=\\" + productFields + \\", \\"
-            + \\"productFields2=\\" + productFields2 + \\", \\"
-              + \\"}\\";
+            $toString = "Fragments{"
+              + "productFields=" + productFields + ", "
+            + "productFields2=" + productFields2 + ", "
+              + "}";
           }
           
           return $toString;
@@ -907,7 +907,7 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
             productFields2 = productFields2FieldMapper.map(reader);
           }
           
-          return new Fragments(Utils.checkNotNull(productFields, \\"productFields == null\\"), Utils.checkNotNull(productFields2, \\"productFields2 == null\\"));
+          return new Fragments(Utils.checkNotNull(productFields, "productFields == null"), Utils.checkNotNull(productFields2, "productFields2 == null"));
                 
         }
       }
@@ -981,11 +981,11 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
     
     public Variables(@Nonnull ModelProductFilterInput filter, @Nonnull Integer limit, @Nonnull String nextToken) {
       this.filter = filter;
-      this.valueMap.put(\\"filter\\", filter);
+      this.valueMap.put("filter", filter);
       this.limit = limit;
-      this.valueMap.put(\\"limit\\", limit);
+      this.valueMap.put("limit", limit);
       this.nextToken = nextToken;
-      this.valueMap.put(\\"nextToken\\", nextToken);
+      this.valueMap.put("nextToken", nextToken);
     }
     
     @Override
@@ -998,9 +998,9 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
       return new InputFieldMarshaller() {
         @Override
         public void marshal(InputFieldWriter writer) throws IOException {
-          writer.writeObject(\\"filter\\", filter != null ? filter.marshaller() : null);
-          writer.writeInt(\\"limit\\", limit);
-          writer.writeString(\\"nextToken\\", nextToken);
+          writer.writeObject("filter", filter != null ? filter.marshaller() : null);
+          writer.writeInt("limit", limit);
+          writer.writeString("nextToken", nextToken);
         }
       };
     }
@@ -1019,20 +1019,20 @@ public class ProductFields implements GraphqlFragment {
   private volatile int $hashCode;
   private volatile boolean $hashCodeMemoized;
   static final ResponseField[] $responseFields = {
-      ResponseField.forString(\\"__typename\\", \\"__typename\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType(\\"id\\", \\"id\\", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString(\\"title\\", \\"title\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString(\\"content\\", \\"content\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forInt(\\"price\\", \\"price\\", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forDouble(\\"rating\\", \\"rating\\", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("id", "id", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("title", "title", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("content", "content", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forInt("price", "price", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forDouble("rating", "rating", null, true, Collections.<ResponseField.Condition>emptyList())
     };
-  public static final String FRAGMENT_DEFINITION = \\"fragment ProductFields on Product {   id   title   content   price   rating }\\";
-  public static final List<String> POSSIBLE_TYPES = Collections.unmodifiableList(Arrays.asList(\\"Product\\"));
+  public static final String FRAGMENT_DEFINITION = "fragment ProductFields on Product {   id   title   content   price   rating }";
+  public static final List<String> POSSIBLE_TYPES = Collections.unmodifiableList(Arrays.asList("Product"));
   public ProductFields(@Nonnull String __typename, @Nonnull String id, @Nonnull String title, @Nonnull String content, @Nullable Integer price, @Nullable Double rating) {
-    this.__typename = Utils.checkNotNull(__typename, \\"__typename == null\\");
-    this.id = Utils.checkNotNull(id, \\"id == null\\");
-    this.title = Utils.checkNotNull(title, \\"title == null\\");
-    this.content = Utils.checkNotNull(content, \\"content == null\\");
+    this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+    this.id = Utils.checkNotNull(id, "id == null");
+    this.title = Utils.checkNotNull(title, "title == null");
+    this.content = Utils.checkNotNull(content, "content == null");
     this.price = price;
     this.rating = rating;
   }
@@ -1064,14 +1064,14 @@ public class ProductFields implements GraphqlFragment {
   @Override
    public String toString() {
     if ($toString == null) {
-      $toString = \\"ProductFields{\\"
-        + \\"__typename=\\" + __typename + \\", \\"
-        + \\"id=\\" + id + \\", \\"
-        + \\"title=\\" + title + \\", \\"
-        + \\"content=\\" + content + \\", \\"
-        + \\"price=\\" + price + \\", \\"
-        + \\"rating=\\" + rating + \\", \\"
-        + \\"}\\";
+      $toString = "ProductFields{"
+        + "__typename=" + __typename + ", "
+        + "id=" + id + ", "
+        + "title=" + title + ", "
+        + "content=" + content + ", "
+        + "price=" + price + ", "
+        + "rating=" + rating + ", "
+        + "}";
     }
     
     return $toString;
@@ -1149,16 +1149,16 @@ public class ProductFields2 implements GraphqlFragment {
   private volatile int $hashCode;
   private volatile boolean $hashCodeMemoized;
   static final ResponseField[] $responseFields = {
-      ResponseField.forString(\\"__typename\\", \\"__typename\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString(\\"title\\", \\"title\\", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString(\\"content\\", \\"content\\", null, false, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("title", "title", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("content", "content", null, false, Collections.<ResponseField.Condition>emptyList())
     };
-  public static final String FRAGMENT_DEFINITION = \\"fragment ProductFields2 on Product {   title   content }\\";
-  public static final List<String> POSSIBLE_TYPES = Collections.unmodifiableList(Arrays.asList(\\"Product\\"));
+  public static final String FRAGMENT_DEFINITION = "fragment ProductFields2 on Product {   title   content }";
+  public static final List<String> POSSIBLE_TYPES = Collections.unmodifiableList(Arrays.asList("Product"));
   public ProductFields2(@Nonnull String __typename, @Nonnull String title, @Nonnull String content) {
-    this.__typename = Utils.checkNotNull(__typename, \\"__typename == null\\");
-    this.title = Utils.checkNotNull(title, \\"title == null\\");
-    this.content = Utils.checkNotNull(content, \\"content == null\\");
+    this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+    this.title = Utils.checkNotNull(title, "title == null");
+    this.content = Utils.checkNotNull(content, "content == null");
   }
   
   public @Nonnull String __typename() {
@@ -1176,11 +1176,11 @@ public class ProductFields2 implements GraphqlFragment {
   @Override
    public String toString() {
     if ($toString == null) {
-      $toString = \\"ProductFields2{\\"
-        + \\"__typename=\\" + __typename + \\", \\"
-        + \\"title=\\" + title + \\", \\"
-        + \\"content=\\" + content + \\", \\"
-        + \\"}\\";
+      $toString = "ProductFields2{"
+        + "__typename=" + __typename + ", "
+        + "title=" + title + ", "
+        + "content=" + content + ", "
+        + "}";
     }
     
     return $toString;
