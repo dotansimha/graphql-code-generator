@@ -157,7 +157,9 @@ export const preset: Types.OutputPreset<FrontEndConfig> = {
         plugins,
         pluginMap,
         schema: options.schema,
-        config: {},
+        config: {
+          inlineFragmentTypes: isMaskingFragments ? 'mask' : options.config['inlineFragmentTypes'],
+        },
         documents: sources,
       },
       {
