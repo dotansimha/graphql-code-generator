@@ -4,6 +4,4 @@ documents:
   - '!src/gql/**/*'
 generates:
   ./src/gql/:
-    preset: gql-tag-operations-preset
-    presetConfig:
-      fragmentMasking: true
+    preset: front-end
