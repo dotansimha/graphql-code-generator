@@ -139,10 +139,10 @@ query GetCurrentUser {
 
 export default class GetCurrentUser extends Command {
   
-static description = \\"Get Current User\\";
+static description = "Get Current User";
 
   
-static examples: string[] = [\\"cli get-current-user\\",\\"hello\\"];
+static examples: string[] = ["cli get-current-user","hello"];
 
   static flags = {
     help: flags.help({ char: 'h' }),

@@ -10,20 +10,20 @@ describe('gql-tag-operations-preset > babelPlugin', () => {
       configFile: false,
     }).code;
     expect(result).toMatchInlineSnapshot(`
-"import { CFragmentDoc } from \\"./graphql\\";
-import { BDocument } from \\"./graphql\\";
-import { ADocument } from \\"./graphql\\";
+      "import { CFragmentDoc } from "./graphql";
+      import { BDocument } from "./graphql";
+      import { ADocument } from "./graphql";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-//@ts-ignore
-import gql from 'gql-tag'; //@ts-ignore
+      /* eslint-disable @typescript-eslint/ban-ts-comment */
+      //@ts-ignore
+      import gql from 'gql-tag'; //@ts-ignore
 
-const A = ADocument; //@ts-ignore
+      const A = ADocument; //@ts-ignore
 
-const B = BDocument; //@ts-ignore
+      const B = BDocument; //@ts-ignore
 
-const C = CFragmentDoc;"
-`);
+      const C = CFragmentDoc;"
+    `);
   });
   test('can import files in another directory', () => {
     const result = transformFileSync(path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'), {
@@ -32,19 +32,19 @@ const C = CFragmentDoc;"
       configFile: false,
     }).code;
     expect(result).toMatchInlineSnapshot(`
-"import { CFragmentDoc } from \\"../graphql\\";
-import { BDocument } from \\"../graphql\\";
-import { ADocument } from \\"../graphql\\";
+      "import { CFragmentDoc } from "../graphql";
+      import { BDocument } from "../graphql";
+      import { ADocument } from "../graphql";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-//@ts-ignore
-import gql from 'gql-tag'; //@ts-ignore
+      /* eslint-disable @typescript-eslint/ban-ts-comment */
+      //@ts-ignore
+      import gql from 'gql-tag'; //@ts-ignore
 
-const A = ADocument; //@ts-ignore
+      const A = ADocument; //@ts-ignore
 
-const B = BDocument; //@ts-ignore
+      const B = BDocument; //@ts-ignore
 
-const C = CFragmentDoc;"
-`);
+      const C = CFragmentDoc;"
+    `);
   });
 });

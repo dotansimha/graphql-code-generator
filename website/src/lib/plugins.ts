@@ -327,7 +327,7 @@ export const PACKAGES: Record<
     iconUrl: '/assets/img/icons/graphql.svg',
     tags: ['plugin', 'urql', 'typescript'],
   },
-  flutter: {
+  'flutter-freezed': {
     title: 'Dart Flutter Freezed Classes',
     npmPackage: '@graphql-codegen/flutter-freezed',
     iconUrl: '/assets/img/icons/dart.svg',

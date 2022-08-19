@@ -23,7 +23,7 @@ export type DecoratorToFreezed = {
    * @description Arguments to be applied on the decorator. if the `mapsToFreezedAs === 'directive'`,  use template string such `['$0', '$2', '$3']` to select/order the arguments of the directive to be used($0 is the first argument, $1 is the second).
    * @default undefined
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * arguments: [$0] # $0 is the first argument, $1 is the 2nd ...
    * ```
    */
@@ -33,7 +33,7 @@ export type DecoratorToFreezed = {
    * @name applyOn
    * @description Specify where the decorator should be applied
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * applyOn: ['class_factory','union_factory'], # applies this decorator on both class and union factory blocks
    * ```
    */
@@ -64,7 +64,7 @@ export interface FreezedConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -83,7 +83,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -101,7 +101,7 @@ export interface FreezedConfig {
    * @default {}
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -139,7 +139,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -157,7 +157,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -175,7 +175,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -194,7 +194,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -213,7 +213,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -232,7 +232,7 @@ export interface FreezedConfig {
    * @default []
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -250,7 +250,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -269,7 +269,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -288,7 +288,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -307,7 +307,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -355,7 +355,7 @@ export interface FieldConfig {
    * @description specific directives to apply to the field. All `mapsToFreezedAs` values except `custom` are parsed so use the name of the directive without the `@` symbol as the key of the customDecorators. With the `custom` value, whatever you use as the key of the custom directive is used just as it is, and the arguments spread into a parenthesis ()
    * @default undefined
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * customDecorators: {
    *    'default' : {
    *        mapsToFreezedAs: '@Default',
@@ -411,7 +411,7 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -429,7 +429,7 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    * @default {}
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -452,7 +452,7 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    * @default "app_models"
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -471,7 +471,7 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    * @default DefaultFreezedConfig
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -494,7 +494,7 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -527,7 +527,7 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    * @default []
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:

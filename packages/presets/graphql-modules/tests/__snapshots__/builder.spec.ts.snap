@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`encapsulate: should wrap correctly with namespace 1`] = `
-"import * as core from \\"../types\\";
-import * as gm from \\"graphql-modules\\";
+"import * as core from "../types";
+import * as gm from "graphql-modules";
 export namespace TestModule {
   interface DefinedFields {
     Article: 'id' | 'title' | 'text' | 'author' | 'comments' | 'url';
@@ -73,8 +73,8 @@ export namespace TestModule {
 `;
 
 exports[`encapsulate: should wrap correctly with prefix 1`] = `
-"import * as core from \\"../types\\";
-import * as gm from \\"graphql-modules\\";
+"import * as core from "../types";
+import * as gm from "graphql-modules";
 interface DefinedFields {
   Article: 'id' | 'title' | 'text' | 'author' | 'comments' | 'url';
   Query: 'articles' | 'articleById' | 'articlesByUser';
