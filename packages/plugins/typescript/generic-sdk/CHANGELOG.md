@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-generic-sdk
 
+## 3.0.1
+
+### Patch Changes
+
+- [#8255](https://github.com/dotansimha/graphql-code-generator/pull/8255) [`3281b001c`](https://github.com/dotansimha/graphql-code-generator/commit/3281b001cb612a5f07ded227a4d794a12cdafec0) Thanks [@ardatan](https://github.com/ardatan)! - Explicitly defined the return type to satisfy TypeScript type checking
+
 ## 3.0.0
 
 ### Major Changes
