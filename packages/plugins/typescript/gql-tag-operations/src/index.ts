@@ -24,30 +24,53 @@ export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocume
 export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
   useTypeImports?: boolean;
+  augmentedModuleName?: string;
   gqlTagName?: string;
   emitLegacyCommonJSImports?: boolean;
-}> = (_, __, { sourcesWithOperations, useTypeImports, gqlTagName = 'gql', emitLegacyCommonJSImports }, _info) => {
+}> = (
+  _,
+  __,
+  { sourcesWithOperations, useTypeImports, augmentedModuleName, gqlTagName = 'gql', emitLegacyCommonJSImports },
+  _info
+) => {
   if (!sourcesWithOperations) {
     return '';
   }
 
+  if (augmentedModuleName == null) {
+    return [
+      `import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
+      `${
+        useTypeImports ? 'import type' : 'import'
+      } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
+      `\n`,
+      ...getDocumentRegistryChunk(sourcesWithOperations),
+      `\n`,
+      ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
+      `\n`,
+      `export function ${gqlTagName}(source: string): unknown;\n`,
+      `export function ${gqlTagName}(source: string) {\n`,
+      `  return (documents as any)[source] ?? {};\n`,
+      `}\n`,
+      `\n`,
+      ...documentTypePartial,
+    ].join(``);
+  }
+
   return [
-    `import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
-    `${
-      useTypeImports ? 'import type' : 'import'
-    } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
-    `\n`,
-    ...getDocumentRegistryChunk(sourcesWithOperations),
-    `\n`,
-    ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
-    `\n`,
-    `export function ${gqlTagName}(source: string): unknown;\n`,
-    `export function ${gqlTagName}(source: string) {\n`,
-    `  return (documents as any)[source] ?? {};\n`,
-    `}\n`,
-    `\n`,
-    ...documentTypePartial,
-  ].join(``);
+    `import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
+    `declare module "${augmentedModuleName}" {`,
+    [
+      `\n`,
+      ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports),
+      `export function ${gqlTagName}(source: string): unknown;\n`,
+      `\n`,
+      ...documentTypePartial,
+    ]
+      .map(line => (line === `\n` ? line : `  ${line}`))
+      .join(``),
+    `}`,
+  ].join(`\n`);
 };
 
 function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperations> = []) {
