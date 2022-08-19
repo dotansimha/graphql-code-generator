@@ -41,7 +41,7 @@ export function processSources(sources: Array<Source>, buildName: BuildNameFunct
  * which means that the linebreaks are read as-is and the result will be different
  * depending on the OS: it will contain LF (\n) on Linux/MacOS and CRLF (\r\n) on Windows.
  *
- * In most scenarios that would be OK. However, gql-tag-operation is using the resulting string
+ * In most scenarios that would be OK. However, front-end preset is using the resulting string
  * as a TypeScript type. Which means that the string will be compared against a template literal,
  * for example:
  *

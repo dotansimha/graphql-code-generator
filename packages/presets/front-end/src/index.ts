@@ -24,21 +24,9 @@ export type FrontEndConfig = {
    * ```yaml
    * generates:
    *   gql/:
-   *     preset: gql-tag-operations-preset
+   *     preset: front-end
    *     presetConfig:
-   *       fragmentMasking: true
-   * ```
-   *
-   * When using the `augmentedModuleName` option, the unmask function will by default NOT be imported from the same module. It will still be generated to a `index.ts` file. You can, however, specify to resolve the unmasking function from an an augmented module by using the `augmentedModuleName` object sub-config.
-   * @exampleMarkdown
-   * ```yaml {6-7}
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       augmentedModuleName: '@urql/core'
-   *       fragmentMasking:
-   *         augmentedModuleName: '@urql/fragment'
+   *       fragmentMasking: false
    * ```
    */
   fragmentMasking?: FragmentMaskingConfig | boolean;
@@ -52,7 +40,7 @@ export type FrontEndConfig = {
    * ```yaml {5}
    * generates:
    *   gql/:
-   *     preset: gql-tag-operations-preset
+   *     preset: front-end
    *     presetConfig:
    *       gqlTagName: 'graphql'
    * ```

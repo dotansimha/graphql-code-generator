@@ -17,7 +17,7 @@ export default declare((api, opts): PluginObj => {
 
   let program: NodePath<Program>;
   return {
-    name: 'gql-tag-operations',
+    name: 'front-end-preset',
     visitor: {
       Program(path) {
         program = path;
