@@ -321,11 +321,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                 async () =>
                                   preset.buildGeneratesSection({
                                     baseOutputDir: filename,
-                                    presetConfig:
-                                      outputConfig.presetConfig ||
-                                      (outputConfig.preset === 'front-end'
-                                        ? { fragmentMasking: true, gqlTagName: 'graphql' }
-                                        : {}),
+                                    presetConfig: outputConfig.presetConfig || {},
                                     plugins: normalizedPluginsArray,
                                     schema: outputSchema,
                                     schemaAst: outputSchemaAst,

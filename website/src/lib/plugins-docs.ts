@@ -22,6 +22,11 @@ export const presetsConfigurations: PresetConfig[] = [
     identifier: 'GqlTagConfig',
     name: 'gql-tag-operations-preset',
   },
+  {
+    file: '../packages/presets/front-end/src/index.ts',
+    identifier: 'FrontEndConfig',
+    name: 'front-end-preset',
+  },
 ];
 
 export const pluginsConfigurations: PluginConfig[] = [
