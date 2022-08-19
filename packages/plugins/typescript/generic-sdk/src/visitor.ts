@@ -97,7 +97,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
         }, options?: C): ${returnType}<${resultData}> {
   return requester<${o.operationResultType}, ${o.operationVariablesTypes}>(${
           o.documentVariableName
-        }, variables, options);
+        }, variables, options) as ${returnType}<${resultData}>;
 }`;
       })
       .map(s => indentMultiline(s, 2));

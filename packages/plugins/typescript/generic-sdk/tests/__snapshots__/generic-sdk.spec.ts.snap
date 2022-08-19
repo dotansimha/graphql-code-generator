@@ -241,16 +241,16 @@ export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V,
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
-      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;
     },
     feed2(variables: Feed2QueryVariables, options?: C): Promise<Feed2Query> {
-      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options);
+      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options) as Promise<Feed2Query>;
     },
     feed3(variables?: Feed3QueryVariables, options?: C): Promise<Feed3Query> {
-      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options);
+      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options) as Promise<Feed3Query>;
     },
     feed4(variables?: Feed4QueryVariables, options?: C): Promise<Feed4Query> {
-      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options);
+      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options) as Promise<Feed4Query>;
     }
   };
 }
@@ -490,13 +490,13 @@ export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V,
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
-      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;
     },
     commentAdded(variables?: CommentAddedSubscriptionVariables, options?: C): AsyncIterable<CommentAddedSubscription> {
-      return requester<CommentAddedSubscription, CommentAddedSubscriptionVariables>(CommentAddedDocument, variables, options);
+      return requester<CommentAddedSubscription, CommentAddedSubscriptionVariables>(CommentAddedDocument, variables, options) as AsyncIterable<CommentAddedSubscription>;
     },
     feedLive(variables?: FeedLiveQueryVariables, options?: C): AsyncIterable<FeedLiveQuery> {
-      return requester<FeedLiveQuery, FeedLiveQueryVariables>(FeedLiveDocument, variables, options);
+      return requester<FeedLiveQuery, FeedLiveQueryVariables>(FeedLiveDocument, variables, options) as AsyncIterable<FeedLiveQuery>;
     }
   };
 }
@@ -730,13 +730,13 @@ export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V,
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
-      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;
     },
     commentAdded(variables?: CommentAddedSubscriptionVariables, options?: C): Observable<CommentAddedSubscription> {
-      return requester<CommentAddedSubscription, CommentAddedSubscriptionVariables>(CommentAddedDocument, variables, options);
+      return requester<CommentAddedSubscription, CommentAddedSubscriptionVariables>(CommentAddedDocument, variables, options) as Observable<CommentAddedSubscription>;
     },
     feedLive(variables?: FeedLiveQueryVariables, options?: C): Observable<FeedLiveQuery> {
-      return requester<FeedLiveQuery, FeedLiveQueryVariables>(FeedLiveDocument, variables, options);
+      return requester<FeedLiveQuery, FeedLiveQueryVariables>(FeedLiveDocument, variables, options) as Observable<FeedLiveQuery>;
     }
   };
 }
@@ -982,16 +982,16 @@ export type Requester<C = {}, E = unknown> = <R, V>(doc: string, vars?: V, optio
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
-      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;
     },
     feed2(variables: Feed2QueryVariables, options?: C): Promise<Feed2Query> {
-      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options);
+      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options) as Promise<Feed2Query>;
     },
     feed3(variables?: Feed3QueryVariables, options?: C): Promise<Feed3Query> {
-      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options);
+      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options) as Promise<Feed3Query>;
     },
     feed4(variables?: Feed4QueryVariables, options?: C): Promise<Feed4Query> {
-      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options);
+      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options) as Promise<Feed4Query>;
     }
   };
 }
@@ -1255,16 +1255,16 @@ export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V,
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<ExecutionResult<FeedQuery, E>> {
-      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
+      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<ExecutionResult<FeedQuery, E>>;
     },
     feed2(variables: Feed2QueryVariables, options?: C): Promise<ExecutionResult<Feed2Query, E>> {
-      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options);
+      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options) as Promise<ExecutionResult<Feed2Query, E>>;
     },
     feed3(variables?: Feed3QueryVariables, options?: C): Promise<ExecutionResult<Feed3Query, E>> {
-      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options);
+      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options) as Promise<ExecutionResult<Feed3Query, E>>;
     },
     feed4(variables?: Feed4QueryVariables, options?: C): Promise<ExecutionResult<Feed4Query, E>> {
-      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options);
+      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options) as Promise<ExecutionResult<Feed4Query, E>>;
     }
   };
 }
