@@ -984,6 +984,28 @@ describe('near-operation-file preset', () => {
     );
   });
 
+  it('Should not add import if the path is not set', async () => {
+    const result = await executePreset({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+      },
+      schemaAst: schemaNode,
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          location: '/some/deep/path/src/me-query.graphql',
+          document: operationAst,
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ 'typescript-react-apollo': {} }],
+      pluginMap: { 'typescript-react-apollo': {} as any },
+    });
+    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ 'typescript-react-apollo': {} }]));
+  });
+
   it('Should not generate an absolute path if the path starts with "~"', async () => {
     const result = await executePreset({
       baseOutputDir: './src/',
