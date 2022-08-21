@@ -24,7 +24,7 @@ export type DocumentImportResolverOptions = {
   /**
    * Schema base types source
    */
-  schemaTypesSource: string | ImportSource;
+  schemaTypesSource?: string | ImportSource;
   /**
    * Should `import type` be used
    */
@@ -68,7 +68,7 @@ export function resolveDocumentImports<T>(
         definitions: [...documentFile.document.definitions, ...externalFragments.map(fragment => fragment.node)],
       };
 
-      if (isUsingTypes(externalFragmentsInjectedDocument, [], schemaObject)) {
+      if (schemaTypesSource && isUsingTypes(externalFragmentsInjectedDocument, [], schemaObject)) {
         const schemaTypesImportStatement = generateImportStatement({
           baseDir,
           emitLegacyCommonJSImports: presetOptions.config.emitLegacyCommonJSImports,
