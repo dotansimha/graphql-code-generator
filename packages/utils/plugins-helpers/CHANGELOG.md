@@ -32,7 +32,7 @@
   ```bash
   $ codegen --config-file=config.yml --emit-legacy-common-js-imports
   ```
-
+09530096
 ## 2.5.0
 
 ### Minor Changes
@@ -51,7 +51,7 @@
     - 'src/**/*.graphql'
   ignoreNoDocuments: true
   ```
-
+09530096
   Alternative you can use the CLI to set this option:
 
   ```bash
