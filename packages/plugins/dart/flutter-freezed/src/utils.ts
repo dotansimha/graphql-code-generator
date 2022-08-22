@@ -6,16 +6,19 @@ import {
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
   ObjectTypeDefinitionNode,
-  UnionTypeDefinitionNode,
-} from 'graphql';
+  UnionTypeDefinitionNode
+} from "graphql";
 import {
   ApplyDecoratorOn,
   CustomDecorator,
   FreezedConfig,
   FlutterFreezedPluginConfig,
-  TypeSpecificFreezedConfig,
-} from './config.js';
-import { FreezedDeclarationBlock, FreezedFactoryBlock } from './freezed-declaration-blocks/index.js';
+  TypeSpecificFreezedConfig
+} from "./config.js";
+import {
+  FreezedDeclarationBlock,
+  FreezedFactoryBlock
+} from "./freezed-declaration-blocks/index.js";
 
 export type FieldType = FieldDefinitionNode | InputValueDefinitionNode;
 
@@ -27,19 +30,18 @@ export type NodeType =
 
 export type OptionName =
   // FreezedClassConfig
-  | 'alwaysUseJsonKeyName'
-  | 'copyWith'
-  | 'customDecorators'
-  | 'defaultUnionConstructor'
-  | 'equal'
-  | 'fromJsonToJson'
-  | 'immutable'
-  | 'makeCollectionsUnmodifiable'
-  | 'mergeInputs'
-  | 'mutableInputs'
-  | 'privateEmptyConstructor'
-  | 'unionKey'
-  | 'unionValueCase';
+  | "alwaysUseJsonKeyName"
+  | "copyWith"
+  | "customDecorators"
+  | "equal"
+  | "fromJsonToJson"
+  | "immutable"
+  | "makeCollectionsUnmodifiable"
+  | "mergeInputs"
+  | "mutableInputs"
+  | "privateEmptyConstructor"
+  | "unionKey"
+  | "unionValueCase";
 
 export function transformDefinition(
   config: FlutterFreezedPluginConfig,
@@ -47,11 +49,22 @@ export function transformDefinition(
   node: NodeType
 ) {
   // ignore these...
-  if (['Query', 'Mutation', 'Subscription', ...(config?.ignoreTypes ?? [])].includes(node.name.value)) {
-    return '';
+  if (
+    [
+      "Query",
+      "Mutation",
+      "Subscription",
+      ...(config?.ignoreTypes ?? [])
+    ].includes(node.name.value)
+  ) {
+    return "";
   }
 
-  return new FreezedDeclarationBlock(config, freezedFactoryBlockRepository, node).init();
+  return new FreezedDeclarationBlock(
+    config,
+    freezedFactoryBlockRepository,
+    node
+  ).init();
 }
 
 /**
@@ -65,7 +78,10 @@ export function getFreezedConfigValue(
   typeName?: string | undefined
 ): any {
   if (typeName) {
-    return config?.typeSpecificFreezedConfig?.[typeName]?.config?.[option] ?? getFreezedConfigValue(option, config);
+    return (
+      config?.typeSpecificFreezedConfig?.[typeName]?.config?.[option] ??
+      getFreezedConfigValue(option, config)
+    );
   }
   return config?.globalFreezedConfig?.[option];
 }
@@ -80,17 +96,23 @@ export function getCustomDecorators(
   fieldName?: string | undefined
 ): CustomDecorator {
   const filteredCustomDecorators: CustomDecorator = {};
-  const globalCustomDecorators = config?.globalFreezedConfig?.customDecorators ?? {};
+  const globalCustomDecorators =
+    config?.globalFreezedConfig?.customDecorators ?? {};
   let customDecorators: CustomDecorator = { ...globalCustomDecorators };
 
   if (nodeName) {
     const typeConfig = config?.typeSpecificFreezedConfig?.[nodeName];
-    const typeSpecificCustomDecorators = typeConfig?.config?.customDecorators ?? {};
+    const typeSpecificCustomDecorators =
+      typeConfig?.config?.customDecorators ?? {};
     customDecorators = { ...customDecorators, ...typeSpecificCustomDecorators };
 
     if (fieldName) {
-      const fieldSpecificCustomDecorators = typeConfig?.fields?.[fieldName]?.customDecorators ?? {};
-      customDecorators = { ...customDecorators, ...fieldSpecificCustomDecorators };
+      const fieldSpecificCustomDecorators =
+        typeConfig?.fields?.[fieldName]?.customDecorators ?? {};
+      customDecorators = {
+        ...customDecorators,
+        ...fieldSpecificCustomDecorators
+      };
     }
   }
 
@@ -121,26 +143,26 @@ export function transformCustomDecorators(
       .filter(d => {
         const key = d.name.value;
         const value = customDecorators[key] ?? customDecorators[`@${key}`];
-        if (value && value.mapsToFreezedAs !== 'custom') {
+        if (value && value.mapsToFreezedAs !== "custom") {
           return true;
         }
         return false;
       })
       // transform each directive to string
-      .map(d => directiveToString(d, customDecorators)),
+      .map(d => directiveToString(d, customDecorators))
   ];
 
   // for  decorators that mapsToFreezedAs === 'custom'
   Object.entries(customDecorators).forEach(([key, value]) => {
-    if (value.mapsToFreezedAs === 'custom') {
+    if (value.mapsToFreezedAs === "custom") {
       const args = value?.arguments;
       // if the custom directives have arguments,
       if (args && args !== []) {
         // join them with a comma in the parenthesis
-        result = [...result, `${key}(${args.join(', ')})\n`];
+        result = [...result, `${key}(${args.join(", ")})\n`];
       } else {
         // else return the customDecorator key just as it is
-        result = [...result, key + '\n'];
+        result = [...result, key + "\n"];
       }
     }
   });
@@ -153,10 +175,13 @@ export function transformCustomDecorators(
  * this decorator array might contain a `final` string which would be filtered out
  * and used to mark the parameter block as final
  */
-function directiveToString(directive: DirectiveNode, customDecorators: CustomDecorator) {
+function directiveToString(
+  directive: DirectiveNode,
+  customDecorators: CustomDecorator
+) {
   const key = directive.name.value;
   const value = customDecorators[key];
-  if (value.mapsToFreezedAs === 'directive') {
+  if (value.mapsToFreezedAs === "directive") {
     // get the directive's arguments
     const directiveArgs: readonly ArgumentNode[] = directive?.arguments ?? [];
     // extract the directive's argument using the template index: ["$0", "$1", ...]
@@ -171,22 +196,23 @@ function directiveToString(directive: DirectiveNode, customDecorators: CustomDec
     // if the args is not empty
     if (args !== []) {
       // returns "@directiveName(argName: argValue, argName: argValue ...)"
-      return `@${directive.name.value}(${args?.join(', ')})\n`;
+      return `@${directive.name.value}(${args?.join(", ")})\n`;
     }
-  } else if (value.mapsToFreezedAs === '@Default') {
-    const defaultValue = directive?.arguments?.[argToInt(value?.arguments?.[0] ?? '0')];
+  } else if (value.mapsToFreezedAs === "@Default") {
+    const defaultValue =
+      directive?.arguments?.[argToInt(value?.arguments?.[0] ?? "0")];
     if (defaultValue) {
       return `@Default(value: ${defaultValue})\n`;
     }
   }
   // returns either "@deprecated" || "final".
   // `final` to be filtered from the decorators array when applying the decorators
-  return value.mapsToFreezedAs + '\n';
+  return value.mapsToFreezedAs + "\n";
 }
 
 /** transforms string template: "$0" into an integer: 1 */
 function argToInt(arg: string) {
-  const parsedIndex = Number.parseInt(arg.replace('$', '').trim() ?? '0'); // '$1 => 1
+  const parsedIndex = Number.parseInt(arg.replace("$", "").trim() ?? "0"); // '$1 => 1
   return parsedIndex ? parsedIndex : 0;
 }
 
@@ -195,9 +221,9 @@ export function addFreezedImportStatements(fileName: string) {
   return [
     "import 'package:freezed_annotation/freezed_annotation.dart';\n",
     "import 'package:flutter/foundation.dart';\n\n",
-    `part ${fileName.replace(/\.dart/g, '')}.dart;\n`,
-    `part '${fileName.replace(/\.dart/g, '')}.g.dart';\n\n`,
-  ].join('');
+    `part '${fileName.replace(/\.dart/g, "")}.freezed.dart';\n`,
+    `part '${fileName.replace(/\.dart/g, "")}.g.dart';\n\n`
+  ].join("");
 }
 
 /** a class variant of the getFreezedConfigValue helper function
@@ -207,7 +233,10 @@ export function addFreezedImportStatements(fileName: string) {
  * or else fallback to the global FreezedConfig value
  */
 export class FreezedConfigValue {
-  constructor(private _config: FlutterFreezedPluginConfig, private _typeName: string | undefined) {
+  constructor(
+    private _config: FlutterFreezedPluginConfig,
+    private _typeName: string | undefined
+  ) {
     this._config = _config;
     this._typeName = _typeName;
   }
@@ -238,7 +267,12 @@ export class FreezedFactoryBlockRepository {
     return value;
   }
 
-  retrieve(key: string, appliesOn: string, name: string, typeName: string | undefined): string {
+  retrieve(
+    key: string,
+    appliesOn: string,
+    name: string,
+    typeName: string | undefined
+  ): string {
     if (this._store[key]) {
       return (
         this._store[key]
@@ -247,10 +281,10 @@ export class FreezedFactoryBlockRepository {
           .setName(name)
           .setNamedConstructor(typeName)
           .init()
-          .toString() + '\n'
+          .toString() + "\n"
       );
     }
-    return '';
+    return "";
   }
 }
 
@@ -267,10 +301,13 @@ export class DefaultFreezedPluginConfig implements FlutterFreezedPluginConfig {
     Object.assign(this, {
       camelCasedEnums: config.camelCasedEnums ?? true,
       customScalars: config.customScalars ?? {},
-      fileName: config.fileName ?? 'app_models',
-      globalFreezedConfig: { ...new DefaultFreezedConfig(), ...(config.globalFreezedConfig ?? {}) },
+      fileName: config.fileName ?? "app_models",
+      globalFreezedConfig: {
+        ...new DefaultFreezedConfig(),
+        ...(config.globalFreezedConfig ?? {})
+      },
       typeSpecificFreezedConfig: config.typeSpecificFreezedConfig ?? {},
-      ignoreTypes: config.ignoreTypes ?? [],
+      ignoreTypes: config.ignoreTypes ?? []
     });
   }
 }
@@ -280,7 +317,6 @@ export class DefaultFreezedConfig implements FreezedConfig {
   alwaysUseJsonKeyName?: boolean;
   copyWith?: boolean;
   customDecorators?: CustomDecorator;
-  defaultUnionConstructor?: boolean;
   equal?: boolean;
   fromJsonToJson?: boolean;
   immutable?: boolean;
@@ -289,23 +325,22 @@ export class DefaultFreezedConfig implements FreezedConfig {
   mutableInputs?: boolean;
   privateEmptyConstructor?: boolean;
   unionKey?: string;
-  unionValueCase?: 'FreezedUnionCase.camel' | 'FreezedUnionCase.pascal';
+  unionValueCase?: "FreezedUnionCase.camel" | "FreezedUnionCase.pascal";
 
   constructor() {
     Object.assign(this, {
       alwaysUseJsonKeyName: false,
       copyWith: undefined,
       customDecorators: {},
-      defaultUnionConstructor: true,
       equal: undefined,
       fromJsonToJson: true,
       immutable: true,
       makeCollectionsUnmodifiable: undefined,
       mergeInputs: [],
       mutableInputs: true,
-      privateEmptyConstructor: true,
+      privateEmptyConstructor: false,
       unionKey: undefined,
-      unionValueCase: undefined,
+      unionValueCase: undefined
     });
   }
 }

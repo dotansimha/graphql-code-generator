@@ -84,38 +84,32 @@ This is the generated output:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @unfreezed
 class RequestOtpInput with _$RequestOtpInput {
-  const RequestOtpInput._();
-
   const factory RequestOtpInput({
     String? email,
     String? phoneNumber,
   }) = _RequestOtpInput;
 
-  factory RequestOtpInput.fromJson(Map<String, Object?> json) => _RequestOtpInputFromJson(json);
+  factory RequestOtpInput.fromJson(Map<String, dynamic> json) => _$RequestOtpInputFromJson(json);
 }
 
 @unfreezed
 class VerifyOtpInput with _$VerifyOtpInput {
-  const VerifyOtpInput._();
-
   const factory VerifyOtpInput({
     String? email,
     String? phoneNumber,
     required String otpCode,
   }) = _VerifyOtpInput;
 
-  factory VerifyOtpInput.fromJson(Map<String, Object?> json) => _VerifyOtpInputFromJson(json);
+  factory VerifyOtpInput.fromJson(Map<String, dynamic> json) => _$VerifyOtpInputFromJson(json);
 }
 
 @freezed
 class AuthWithOtpInput with _$AuthWithOtpInput {
-  const AuthWithOtpInput._();
-
   const factory AuthWithOtpInput() = _AuthWithOtpInput;
 
   const factory AuthWithOtpInput.requestOtpInput({
@@ -129,7 +123,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
     required String otpCode,
   }) = VerifyOtpInput;
 
-  factory AuthWithOtpInput.fromJson(Map<String, Object?> json) => _AuthWithOtpInputFromJson(json);
+  factory AuthWithOtpInput.fromJson(Map<String, dynamic> json) => _$AuthWithOtpInputFromJson(json);
 }
 ```
 
@@ -146,9 +140,16 @@ Inside your Flutter project root folder:
 
 1. Install [freezed](https://pub.dev/packages/freezed#install) in your flutter project
 
-2. Install [json_serializable](https://pub.dev/packages/json_serializable) in your flutter project
+```sh
+flutter pub add freezed_annotation
+flutter pub add --dev build_runner
+flutter pub add --dev freezed
+# if using freezed to generate fromJson/toJson, also add:
+flutter pub add json_annotation
+flutter pub add --dev json_serializable
+```
 
-3. Download your GraphQL schema in graphql format and place it at the root of your Flutter project
+2. Download your GraphQL schema in graphql format and place it at the root of your Flutter project
 
 ```sh
 npm install -g graphqurl
@@ -159,18 +160,18 @@ gq < graphql-endpoint > --introspect > schema.graphql
 gq < graphql-endpoint > -H "Authorization: Bearer <token>" --introspect > schema.graphql
 ```
 
-4. Add the following to the `.gitignore` file:
+3. Add the following to the `.gitignore` file:
 
 ```
 # graphql-code-generator related
 node_modules/
 ```
 
-5. Create a `package.json` file at the root of the Flutter project with the following:
+4. Create a `package.json` file at the root of the Flutter project with the following:
 
 ```json
 {
-  "name": "GraphQL Code Generator Flutter Freezed",
+  "name": "graph-ql-code-generator-flutter-freezed",
   "version": "1.0.0",
   "scripts": {
     "flutter-freezed": "graphql-codegen"
@@ -178,11 +179,11 @@ node_modules/
 }
 ```
 
-6. Install the `graphql-code-generator` and the `flutter-freezed` plugin
+5. Install the `graphql-code-generator` and the `flutter-freezed` plugin
 
-<PackageCmd packages={['graphql', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
+<PackageCmd packages={['graphql typescript', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
 
-7. Create a `codegen.yml` file at the root of the Flutter project with the following:
+6. Create a `codegen.yml` file at the root of the Flutter project with the following:
 
 ```yaml
 schema: './schema.graphql'
@@ -192,10 +193,12 @@ generates:
       - flutter-freezed
 ```
 
-8. Generate your freezed models with the following command and chill 🍻:
+7. Generate your freezed models with the following command and chill 🍻:
 
 ```bash
 npm run flutter-freezed
+
+flutter pub run build_runner build
 ```
 
 ## PRs are welcomed

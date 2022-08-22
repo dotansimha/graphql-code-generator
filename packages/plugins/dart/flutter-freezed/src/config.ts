@@ -3,15 +3,15 @@
  * @description Values that are passed to the `DecoratorToFreezed.applyOn` field that specifies where the custom decorator should be applied
  */
 export type ApplyDecoratorOn =
-  | 'enum'
-  | 'enum_field'
-  | 'class'
-  | 'class_factory'
-  | 'union_factory'
-  | 'merged_input_factory'
-  | 'class_factory_parameter'
-  | 'union_factory_parameter'
-  | 'merged_input_parameter';
+  | "enum"
+  | "enum_field"
+  | "class"
+  | "class_factory"
+  | "union_factory"
+  | "merged_input_factory"
+  | "class_factory_parameter"
+  | "union_factory_parameter"
+  | "merged_input_parameter";
 
 /**
  * @name DecoratorToFreezed
@@ -42,7 +42,12 @@ export type DecoratorToFreezed = {
   /**
    * @name mapsToFreezedAs
    * @description maps to a Freezed decorator or use `custom` to use a custom decorator.If `mapsToFreezedAs === 'directive'` don't include the `@` prefix in the key of the customDecorator.  If `mapsToFreezedAs === 'custom'` value, whatever you use as the key of the customDecorator is used just as it is, and the arguments spread into a parenthesis () */
-  mapsToFreezedAs: '@Default' | '@deprecated' | 'final' | 'directive' | 'custom';
+  mapsToFreezedAs:
+    | "@Default"
+    | "@deprecated"
+    | "final"
+    | "directive"
+    | "custom";
 };
 
 /**
@@ -132,24 +137,6 @@ export interface FreezedConfig {
    */
 
   customDecorators?: CustomDecorator;
-
-  /**
-   * @name defaultUnionConstructor
-   * @description generate empty constructors for Union Types and mergedInputs
-   * @default true
-   *
-   * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   flutter_app/lib/data/models/app_models.dart
-   *     plugins:
-   *       - flutter-freezed
-   *     config:
-   *       defaultUnionConstructor: true
-   * ```
-   */
-
-  defaultUnionConstructor?: boolean;
 
   /**
    * @name equal
@@ -266,7 +253,7 @@ export interface FreezedConfig {
   /**
    * @name privateEmptyConstructor
    * @description if true, defines a private empty constructor to allow getter and methods to work on the class
-   * @default true
+   * @default false
    *
    * @exampleMarkdown
    * ```yaml
@@ -318,7 +305,7 @@ export interface FreezedConfig {
    * ```
    */
 
-  unionValueCase?: 'FreezedUnionCase.camel' | 'FreezedUnionCase.pascal';
+  unionValueCase?: "FreezedUnionCase.camel" | "FreezedUnionCase.pascal";
 }
 
 /**
