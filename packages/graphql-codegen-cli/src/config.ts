@@ -1,25 +1,33 @@
-import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { resolve } from 'path';
+import { cosmiconfig, defaultLoaders } from "cosmiconfig";
+import TypeScriptLoader from "cosmiconfig-typescript-loader";
+import { resolve } from "path";
 import {
   DetailedError,
   Types,
   Profiler,
   createProfiler,
   createNoopProfiler,
-  getCachedDocumentNodeFromSchema,
-} from '@graphql-codegen/plugin-helpers';
-import { env } from 'string-env-interpolation';
-import yargs from 'yargs';
-import { GraphQLConfig } from 'graphql-config';
-import { findAndLoadGraphQLConfig } from './graphql-config.js';
-import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load.js';
-import { GraphQLSchema, print, GraphQLSchemaExtensions } from 'graphql';
-import yaml from 'yaml';
-import { createRequire } from 'module';
-import { promises } from 'fs';
-import { createHash } from 'crypto';
+  getCachedDocumentNodeFromSchema
+} from "@graphql-codegen/plugin-helpers";
+import { env } from "string-env-interpolation";
+import yargs from "yargs";
+import { GraphQLConfig } from "graphql-config";
+import { findAndLoadGraphQLConfig } from "./graphql-config.js";
+import {
+  loadSchema,
+  loadDocuments,
+  defaultSchemaLoadOptions,
+  defaultDocumentsLoadOptions
+} from "./load.js";
+import { GraphQLSchema, print, GraphQLSchemaExtensions } from "graphql";
+import yaml from "yaml";
+import { createRequire } from "module";
+import { promises } from "fs";
+import { createHash } from "crypto";
 
 const { lstat } = promises;
+
+export type CodegenConfig = Types.Config;
 
 export type YamlCliFlags = {
   config: string;
@@ -38,26 +46,28 @@ export type YamlCliFlags = {
 };
 
 export function generateSearchPlaces(moduleName: string) {
-  const extensions = ['json', 'yaml', 'yml', 'js', 'config.js'];
+  const extensions = ["json", "yaml", "yml", "js", "config.js"];
   // gives codegen.json...
   const regular = extensions.map(ext => `${moduleName}.${ext}`);
   // gives .codegenrc.json... but no .codegenrc.config.js
-  const dot = extensions.filter(ext => ext !== 'config.js').map(ext => `.${moduleName}rc.${ext}`);
+  const dot = extensions
+    .filter(ext => ext !== "config.js")
+    .map(ext => `.${moduleName}rc.${ext}`);
 
-  return [...regular.concat(dot), 'package.json'];
+  return [...regular.concat(dot), "package.json"];
 }
 
-function customLoader(ext: 'json' | 'yaml' | 'js') {
+function customLoader(ext: "json" | "yaml" | "js" | "ts") {
   function loader(filepath: string, content: string) {
-    if (typeof process !== 'undefined' && 'env' in process) {
+    if (typeof process !== "undefined" && "env" in process) {
       content = env(content);
     }
 
-    if (ext === 'json') {
-      return defaultLoaders['.json'](filepath, content);
+    if (ext === "json") {
+      return defaultLoaders[".json"](filepath, content);
     }
 
-    if (ext === 'yaml') {
+    if (ext === "yaml") {
       try {
         const result = yaml.parse(content, { prettyErrors: true, merge: true });
         return result;
@@ -67,8 +77,12 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
       }
     }
 
-    if (ext === 'js') {
-      return defaultLoaders['.js'](filepath, content);
+    if (ext === "js") {
+      return defaultLoaders[".js"](filepath, content);
+    }
+
+    if (ext === "ts") {
+      return TypeScriptLoader()(filepath, content);
     }
   }
 
@@ -97,7 +111,10 @@ export interface LoadCodegenConfigOptions {
   /**
    * Overrides or extends the loaders for specific file extensions
    */
-  loaders?: Record<string, (filepath: string, content: string) => Promise<Types.Config> | Types.Config>;
+  loaders?: Record<
+    string,
+    (filepath: string, content: string) => Promise<Types.Config> | Types.Config
+  >;
 }
 
 export interface LoadCodegenConfigResult {
@@ -111,33 +128,40 @@ export async function loadCodegenConfig({
   moduleName,
   searchPlaces: additionalSearchPlaces,
   packageProp,
-  loaders: customLoaders,
+  loaders: customLoaders
 }: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
   configFilePath = configFilePath || process.cwd();
-  moduleName = moduleName || 'codegen';
+  moduleName = moduleName || "codegen";
   packageProp = packageProp || moduleName;
   const cosmi = cosmiconfig(moduleName, {
-    searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces || []),
+    searchPlaces: generateSearchPlaces(moduleName).concat(
+      additionalSearchPlaces || []
+    ),
     packageProp,
     loaders: {
-      '.json': customLoader('json'),
-      '.yaml': customLoader('yaml'),
-      '.yml': customLoader('yaml'),
-      '.js': customLoader('js'),
-      noExt: customLoader('yaml'),
-      ...customLoaders,
-    },
+      ".json": customLoader("json"),
+      ".yaml": customLoader("yaml"),
+      ".yml": customLoader("yaml"),
+      ".js": customLoader("js"),
+      ".ts": customLoader("ts"),
+      noExt: customLoader("yaml"),
+      ...customLoaders
+    }
   });
   const pathStats = await lstat(configFilePath);
-  return pathStats.isDirectory() ? cosmi.search(configFilePath) : cosmi.load(configFilePath);
+  return pathStats.isDirectory()
+    ? cosmi.search(configFilePath)
+    : cosmi.load(configFilePath);
 }
 
-export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
+export async function loadContext(
+  configFilePath?: string
+): Promise<CodegenContext> | never {
   const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
 
   if (graphqlConfig) {
     return new CodegenContext({
-      graphqlConfig,
+      graphqlConfig
     });
   }
 
@@ -176,7 +200,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
 
   return new CodegenContext({
     filepath: result.filepath,
-    config: result.config as Types.Config,
+    config: result.config as Types.Config
   });
 }
 
@@ -189,84 +213,89 @@ function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
 export function buildOptions() {
   return {
     c: {
-      alias: 'config',
-      type: 'string' as const,
-      describe: 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory',
+      alias: "config",
+      type: "string" as const,
+      describe:
+        'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory'
     },
     w: {
-      alias: 'watch',
+      alias: "watch",
       describe:
-        'Watch for changes and execute generation automatically. You can also specify a glob expression for custom watch list.',
+        "Watch for changes and execute generation automatically. You can also specify a glob expression for custom watch list.",
       coerce: (watch: any) => {
-        if (watch === 'false') {
+        if (watch === "false") {
           return false;
         }
-        if (typeof watch === 'string' || Array.isArray(watch)) {
+        if (typeof watch === "string" || Array.isArray(watch)) {
           return watch;
         }
         return !!watch;
-      },
+      }
     },
     r: {
-      alias: 'require',
-      describe: 'Loads specific require.extensions before running the codegen and reading the configuration',
-      type: 'array' as const,
-      default: [],
+      alias: "require",
+      describe:
+        "Loads specific require.extensions before running the codegen and reading the configuration",
+      type: "array" as const,
+      default: []
     },
     o: {
-      alias: 'overwrite',
-      describe: 'Overwrites existing files',
-      type: 'boolean' as const,
+      alias: "overwrite",
+      describe: "Overwrites existing files",
+      type: "boolean" as const
     },
     s: {
-      alias: 'silent',
-      describe: 'Suppresses printing errors',
-      type: 'boolean' as const,
+      alias: "silent",
+      describe: "Suppresses printing errors",
+      type: "boolean" as const
     },
     e: {
-      alias: 'errors-only',
-      describe: 'Only print errors',
-      type: 'boolean' as const,
+      alias: "errors-only",
+      describe: "Only print errors",
+      type: "boolean" as const
     },
     profile: {
-      describe: 'Use profiler to measure performance',
-      type: 'boolean' as const,
+      describe: "Use profiler to measure performance",
+      type: "boolean" as const
     },
     p: {
-      alias: 'project',
-      describe: 'Name of a project in GraphQL Config',
-      type: 'string' as const,
+      alias: "project",
+      describe: "Name of a project in GraphQL Config",
+      type: "string" as const
     },
     v: {
-      alias: 'verbose',
-      describe: 'output more detailed information about performed tasks',
-      type: 'boolean' as const,
-      default: false,
+      alias: "verbose",
+      describe: "output more detailed information about performed tasks",
+      type: "boolean" as const,
+      default: false
     },
     d: {
-      alias: 'debug',
-      describe: 'Print debug logs to stdout',
-      type: 'boolean' as const,
-      default: false,
-    },
+      alias: "debug",
+      describe: "Print debug logs to stdout",
+      type: "boolean" as const,
+      default: false
+    }
   };
 }
 
 export function parseArgv(argv = process.argv): YamlCliFlags {
-  return yargs(argv).options(buildOptions()).parse(argv) as any;
+  return yargs(argv)
+    .options(buildOptions())
+    .parse(argv) as any;
 }
 
-export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
+export async function createContext(
+  cliFlags: YamlCliFlags = parseArgv(process.argv)
+): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
     const relativeRequire = createRequire(process.cwd());
     await Promise.all(
-      cliFlags.require.map(
-        mod =>
-          import(
-            relativeRequire.resolve(mod, {
-              paths: [process.cwd()],
-            })
-          )
+      cliFlags.require.map(mod =>
+        import(
+          relativeRequire.resolve(mod, {
+            paths: [process.cwd()]
+          })
+        )
       )
     );
   }
@@ -277,9 +306,12 @@ export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.a
   return context;
 }
 
-export function updateContextWithCliFlags(context: CodegenContext, cliFlags: YamlCliFlags) {
+export function updateContextWithCliFlags(
+  context: CodegenContext,
+  cliFlags: YamlCliFlags
+) {
   const config: Partial<Types.Config & { configFilePath?: string }> = {
-    configFilePath: context.filepath,
+    configFilePath: context.filepath
   };
 
   if (cliFlags.watch !== undefined) {
@@ -306,14 +338,15 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     config.errorsOnly = cliFlags.errorsOnly;
   }
 
-  if (cliFlags['ignore-no-documents'] !== undefined) {
+  if (cliFlags["ignore-no-documents"] !== undefined) {
     // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
-    config.ignoreNoDocuments = cliFlags['ignore-no-documents'] === true;
+    config.ignoreNoDocuments = cliFlags["ignore-no-documents"] === true;
   }
 
-  if (cliFlags['emit-legacy-common-js-imports'] !== undefined) {
+  if (cliFlags["emit-legacy-common-js-imports"] !== undefined) {
     // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
-    config.emitLegacyCommonJSImports = cliFlags['emit-legacy-common-js-imports'] === true;
+    config.emitLegacyCommonJSImports =
+      cliFlags["emit-legacy-common-js-imports"] === true;
   }
 
   if (cliFlags.project) {
@@ -348,7 +381,7 @@ export class CodegenContext {
   constructor({
     config,
     graphqlConfig,
-    filepath,
+    filepath
   }: {
     config?: Types.Config;
     graphqlConfig?: GraphQLConfig;
@@ -356,8 +389,12 @@ export class CodegenContext {
   }) {
     this._config = config;
     this._graphqlConfig = graphqlConfig;
-    this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;
-    this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : process.cwd();
+    this.filepath = this._graphqlConfig
+      ? this._graphqlConfig.filepath
+      : filepath;
+    this.cwd = this._graphqlConfig
+      ? this._graphqlConfig.dirpath
+      : process.cwd();
     this.profiler = createNoopProfiler();
   }
 
@@ -371,10 +408,10 @@ export class CodegenContext {
         const project = this._graphqlConfig.getProject(this._project);
 
         this.config = {
-          ...project.extension('codegen'),
+          ...project.extension("codegen"),
           schema: project.schema,
           documents: project.documents,
-          pluginContext: this._pluginContext,
+          pluginContext: this._pluginContext
         };
       } else {
         this.config = { ...this._config, pluginContext: this._pluginContext };
@@ -383,14 +420,14 @@ export class CodegenContext {
 
     return {
       ...extraConfig,
-      ...this.config,
+      ...this.config
     };
   }
 
   updateConfig(config: Partial<Types.Config>): void {
     this.config = {
       ...this.getConfig(),
-      ...config,
+      ...config
     };
   }
 
@@ -406,8 +443,8 @@ export class CodegenContext {
     this.profiler = createProfiler();
 
     const now = new Date(); // 2011-10-05T14:48:00.000Z
-    const datetime = now.toISOString().split('.')[0]; // 2011-10-05T14:48:00
-    const datetimeNormalized = datetime.replace(/-|:/g, ''); // 20111005T144800
+    const datetime = now.toISOString().split(".")[0]; // 2011-10-05T14:48:00
+    const datetimeNormalized = datetime.replace(/-|:/g, ""); // 20111005T144800
 
     this.profilerOutput = `codegen-${datetimeNormalized}.json`;
   }
@@ -421,42 +458,60 @@ export class CodegenContext {
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
       return addHashToSchema(
-        this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config)
+        this._graphqlConfig
+          .getProject(this._project)
+          .loadSchema(pointer, "GraphQLSchema", config)
       );
     }
     return addHashToSchema(loadSchema(pointer, config));
   }
 
-  async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
+  async loadDocuments(
+    pointer: Types.OperationDocument[]
+  ): Promise<Types.DocumentFile[]> {
     const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
-      return addHashToDocumentFiles(this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config));
+      return addHashToDocumentFiles(
+        this._graphqlConfig
+          .getProject(this._project)
+          .loadDocuments(pointer, config)
+      );
     }
 
     return addHashToDocumentFiles(loadDocuments(pointer, config));
   }
 }
 
-export function ensureContext(input: CodegenContext | Types.Config): CodegenContext {
-  return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
+export function ensureContext(
+  input: CodegenContext | Types.Config
+): CodegenContext {
+  return input instanceof CodegenContext
+    ? input
+    : new CodegenContext({ config: input });
 }
 
 function hashContent(content: string): string {
-  return createHash('sha256').update(content).digest('hex');
+  return createHash("sha256")
+    .update(content)
+    .digest("hex");
 }
 
 function hashSchema(schema: GraphQLSchema): string {
   return hashContent(print(getCachedDocumentNodeFromSchema(schema)));
 }
 
-function addHashToSchema(schemaPromise: Promise<GraphQLSchema>): Promise<GraphQLSchema> {
+function addHashToSchema(
+  schemaPromise: Promise<GraphQLSchema>
+): Promise<GraphQLSchema> {
   return schemaPromise.then(schema => {
     // It's consumed later on. The general purpose is to use it for caching.
     if (!schema.extensions) {
-      (schema.extensions as unknown as GraphQLSchemaExtensions) = {};
+      ((schema.extensions as unknown) as GraphQLSchemaExtensions) = {};
     }
-    (schema.extensions as unknown as GraphQLSchemaExtensions)['hash'] = hashSchema(schema);
+    ((schema.extensions as unknown) as GraphQLSchemaExtensions)[
+      "hash"
+    ] = hashSchema(schema);
     return schema;
   });
 }
@@ -473,7 +528,9 @@ function hashDocument(doc: Types.DocumentFile) {
   return null;
 }
 
-function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile[]>): Promise<Types.DocumentFile[]> {
+function addHashToDocumentFiles(
+  documentFilesPromise: Promise<Types.DocumentFile[]>
+): Promise<Types.DocumentFile[]> {
   return documentFilesPromise.then(documentFiles =>
     documentFiles.map(doc => {
       doc.hash = hashDocument(doc);
@@ -483,8 +540,14 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
   );
 }
 
-export function shouldEmitLegacyCommonJSImports(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : !!config.emitLegacyCommonJSImports;
+export function shouldEmitLegacyCommonJSImports(
+  config: Types.Config,
+  outputPath: string
+): boolean {
+  const globalValue =
+    config.emitLegacyCommonJSImports === undefined
+      ? true
+      : !!config.emitLegacyCommonJSImports;
   // const outputConfig = config.generates[outputPath];
 
   // if (!outputConfig) {
