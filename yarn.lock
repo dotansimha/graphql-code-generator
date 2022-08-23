@@ -2600,10 +2600,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@graphql-yoga/common@^2.12.7":
-  version "2.12.7"
-  resolved "https://registry.yarnpkg.com/@graphql-yoga/common/-/common-2.12.7.tgz#2ec4dd054be9dbc47a9759e21f856277d0cfda4c"
-  integrity sha512-K3NJdtMwC/IKuHWqT4aQS5FrPllYXKX3uGBuOkGCyc0U9IjppLEMQpX/26bO4fa+WstCp4hHU3QxKf1dw78DMQ==
+"@graphql-yoga/common@^2.12.8":
+  version "2.12.8"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/common/-/common-2.12.8.tgz#1979b0008ef7f79fe21255f629c724b2a99a524f"
+  integrity sha512-c/dd/c9mX/A1chA2N7I/bWIf7LrZGPJbCjMUyq35cXZ2xLWaXs6d1aDS4qbsJjb6JplBu6KX6HAZTFY06UJ7ow==
   dependencies:
     "@envelop/core" "^2.5.0"
     "@envelop/parser-cache" "^4.6.0"
@@ -2616,14 +2616,14 @@
     dset "^3.1.1"
     tslib "^2.3.1"
 
-"@graphql-yoga/node@2.13.8":
-  version "2.13.8"
-  resolved "https://registry.yarnpkg.com/@graphql-yoga/node/-/node-2.13.8.tgz#ae83149f7058cfd4b58309c596a17545735d5b1d"
-  integrity sha512-OjE00qEHLdmuZLOKVRTHL+7c2rPnYx0W/wv5bCOryv9gupZV+k5srcsBghmGYd5uK2/rOGlf+OsuLE1ftA7mBA==
+"@graphql-yoga/node@2.13.9":
+  version "2.13.9"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/node/-/node-2.13.9.tgz#3942bf6a2717f2b07ca097c852e5b7a2ecae0d2b"
+  integrity sha512-3UWG7ueHherpdPOMYX6kHXh/nzJZQHfRUeeipI7Ig/HS9DYEJlSHyg0RRkTMIa0GkB2sAvAzRWDIQSORhnjZ/g==
   dependencies:
     "@envelop/core" "^2.5.0"
     "@graphql-tools/utils" "^8.8.0"
-    "@graphql-yoga/common" "^2.12.7"
+    "@graphql-yoga/common" "^2.12.8"
     "@graphql-yoga/subscription" "^2.2.3"
     "@whatwg-node/fetch" "^0.2.6"
     tslib "^2.3.1"
@@ -4052,10 +4052,10 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@16.11.53", "@types/node@^16.9.2":
-  version "16.11.53"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.53.tgz#0826570a96f46cdba185c7129f11628bd6d3ab11"
-  integrity sha512-3yJerjVV8GlGSWCjEPal2cDymbQEE/1bhUr1NdW5apDPZo6EjBaqHxR7AC4wKmZ24Hzqcz+tgJyAGe9qcGHw7w==
+"@types/node@*", "@types/node@16.11.55", "@types/node@^16.9.2":
+  version "16.11.55"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.55.tgz#4b1e4fa4238b083cf0d0b4ad9077629123950caa"
+  integrity sha512-ZZepNkqPNCBy6PlCjeOY0gI1q91v7l5MUhVc5RMAUV39OxRO8lF8fqGnhY2j8FWz8fxcN8HvAUWoccWpOzl/Ug==
 
 "@types/node@18.6.2":
   version "18.6.2"
