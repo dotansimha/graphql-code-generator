@@ -17,16 +17,24 @@ export type FragmentMaskingConfig = {
   unmaskFunctionName?: string;
 };
 
-export type FrontEndConfig = {
+export type ClientPresetConfig = {
   /**
    * @description Fragment masking hides data from components and only allows accessing the data by using a unmasking function.
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   gql/:
-   *     preset: front-end
-   *     presetConfig:
-   *       fragmentMasking: false
+   * ```tsx
+   * const config = {
+   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
+   *    generates: {
+   *       './src/gql/': {
+   *          preset: 'front-end',
+   *          presetConfig: {
+   *            fragmentMasking: false,
+   *          }
+   *        },
+   *    },
+   * };
+   * export default config;
    * ```
    */
   fragmentMasking?: FragmentMaskingConfig | boolean;
@@ -37,18 +45,26 @@ export type FrontEndConfig = {
    * E.g. `graphql` or `gql`.
    *
    * @exampleMarkdown
-   * ```yaml {5}
-   * generates:
-   *   gql/:
-   *     preset: front-end
-   *     presetConfig:
-   *       gqlTagName: 'graphql'
+   * ```tsx
+   * const config = {
+   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
+   *    generates: {
+   *       './src/gql/': {
+   *          preset: 'front-end',
+   *          presetConfig: {
+   *            gqlTagName: 'gql',
+   *          }
+   *        },
+   *    },
+   * };
+   * export default config;
    * ```
    */
   gqlTagName?: string;
 };
 
-export const preset: Types.OutputPreset<FrontEndConfig> = {
+export const preset: Types.OutputPreset<ClientPresetConfig> = {
   buildGeneratesSection: options => {
     const reexports: Array<string> = [];
 

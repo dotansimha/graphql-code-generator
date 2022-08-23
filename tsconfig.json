@@ -72,7 +72,7 @@
       "@graphql-codegen/import-types-preset": ["packages/presets/import-types/src/index.ts"],
       "@graphql-codegen/near-operation-file-preset": ["packages/presets/near-operation-file/src/index.ts"],
       "@graphql-codegen/gql-tag-operations-preset": ["packages/presets/gql-tag-operations-preset/src/index.ts"],
-      "@graphql-codegen/front-end": ["packages/presets/front-end-preset/src/index.ts"],
+      "@graphql-codegen/client": ["packages/presets/client-preset/src/index.ts"],
       "@graphql-codegen/testing": ["packages/utils/graphql-codegen-testing/src/index.ts"],
       "@graphql-codegen/plugin-helpers": ["packages/utils/plugins-helpers/src/index.ts"],
       "@graphql-codegen/typescript-apollo-client-helpers": [

@@ -21,7 +21,7 @@ export const CategoryToPackages = {
     'import-types-preset',
     'graphql-modules-preset',
     'gql-tag-operations-preset',
-    'front-end-preset',
+    'client-preset',
   ],
   typescript: [
     'named-operations-object',

@@ -2,7 +2,7 @@ import { transformFileSync } from '@babel/core';
 import * as path from 'path';
 import babelPlugin from '../src/babel.js';
 
-describe('front-end-preset > babelPlugin', () => {
+describe('client-preset > babelPlugin', () => {
   test('can imports files in the same directory', () => {
     const result = transformFileSync(path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'), {
       plugins: [[babelPlugin, { artifactDirectory: path.join(__dirname, 'fixtures') }]],

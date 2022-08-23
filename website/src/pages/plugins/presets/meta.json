@@ -1,6 +1,6 @@
 {
   "gql-tag-operations-preset": "gql-tag-operations",
-  "front-end-preset": "Front-end preset",
+  "client-preset": "Client preset",
   "graphql-modules-preset": "graphql-modules",
   "import-types-preset": "import-types",
   "near-operation-file-preset": "near-operation-file"

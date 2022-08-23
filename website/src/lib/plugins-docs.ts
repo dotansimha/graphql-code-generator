@@ -23,9 +23,9 @@ export const presetsConfigurations: PresetConfig[] = [
     name: 'gql-tag-operations-preset',
   },
   {
-    file: '../packages/presets/front-end/src/index.ts',
-    identifier: 'FrontEndConfig',
-    name: 'front-end-preset',
+    file: '../packages/presets/client/src/index.ts',
+    identifier: 'ClientPresetConfig',
+    name: 'client-preset',
   },
 ];
 

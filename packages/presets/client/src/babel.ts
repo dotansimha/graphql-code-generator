@@ -17,7 +17,7 @@ export default declare((api, opts): PluginObj => {
 
   let program: NodePath<Program>;
   return {
-    name: 'front-end-preset',
+    name: 'client-preset',
     visitor: {
       Program(path) {
         program = path;

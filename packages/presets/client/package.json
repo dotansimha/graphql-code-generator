@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-codegen/front-end-preset",
+  "name": "@graphql-codegen/client-preset",
   "version": "1.0.0",
-  "description": "GraphQL Code Generator preset for front-end.",
+  "description": "GraphQL Code Generator preset for client.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/presets/front-end"
+    "directory": "packages/presets/client"
   },
   "license": "MIT",
   "scripts": {
