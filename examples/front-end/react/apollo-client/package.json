@@ -19,7 +19,7 @@
     "web-vitals": "^2.1.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "3.0.0-alpha-20220819151557-d00fec86a",
+    "@graphql-codegen/cli": "3.0.0-alpha-20220823170937-72dab5155",
     "@graphql-codegen/schema-ast": "^2.5.1"
   },
   "scripts": {
@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "eslintConfig": {
     "extends": [

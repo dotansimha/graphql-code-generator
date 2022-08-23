@@ -3,7 +3,7 @@ const config = {
   documents: ['src/**/*.tsx', '!src/gql/**/*'],
   generates: {
     './src/gql/': {
-      preset: 'front-end',
+      preset: 'client',
     },
   },
 };
