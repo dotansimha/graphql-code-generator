@@ -1,6 +1,7 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
 import type { Profiler } from './profiler.js';
+import { ClientPresetConfig } from 'packages/presets/client/src/index.js';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -218,10 +219,17 @@ export namespace Types {
   export type NamedPreset = string;
   export type OutputConfig = NamedPlugin | ConfiguredPlugin;
 
+  export type LegacyPresetNamesBase =
+    | 'near-operation-file'
+    | 'gql-tag-operations'
+    | 'graphql-modules'
+    | 'import-types-preset';
+  export type LegacyPresetNames = `${LegacyPresetNamesBase}-preset` | LegacyPresetNamesBase;
+
   /**
    * @additionalProperties false
    */
-  export interface ConfiguredOutput {
+  export type ConfiguredOutput = {
     /**
      * @type array
      * @items { "$ref": "#/definitions/GeneratedPluginsMap" }
@@ -233,22 +241,6 @@ export namespace Types {
      * Need a custom plugin? read this: https://graphql-code-generator.com/docs/custom-codegen/index
      */
     plugins: OutputConfig[];
-    /**
-     * @description If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.
-     *
-     * Presets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file
-     *
-     * You can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.
-     *
-     * List of available presets: https://graphql-code-generator.com/docs/presets/presets-index
-     */
-    preset?: string | OutputPreset;
-    /**
-     * @description If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.
-     *
-     * List of available presets: https://graphql-code-generator.com/docs/presets/presets-index
-     */
-    presetConfig?: { [key: string]: any };
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
      *
@@ -302,7 +294,44 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
-  }
+  } & (
+    | {
+        /**
+         * @description If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.
+         *
+         * Presets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file
+         *
+         * You can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.
+         *
+         * List of available presets: https://graphql-code-generator.com/docs/presets/presets-index
+         */
+        preset?: LegacyPresetNames | OutputPreset;
+        /**
+         * @description If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.
+         *
+         * List of available presets: https://graphql-code-generator.com/docs/presets/presets-index
+         */
+        presetConfig?: { [key: string]: any };
+      }
+    | {
+        /**
+         * @description If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.
+         *
+         * Presets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file
+         *
+         * You can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.
+         *
+         * List of available presets: https://graphql-code-generator.com/docs/presets/presets-index
+         */
+        preset: 'client';
+        /**
+         * @description If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.
+         *
+         * List of available presets: https://graphql-code-generator.com/docs/presets/presets-index
+         */
+        presetConfig?: ClientPresetConfig;
+      }
+  );
 
   /* Output Builder Preset */
   export type PresetFnArgs<
