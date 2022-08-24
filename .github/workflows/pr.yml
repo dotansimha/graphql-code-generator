@@ -13,7 +13,7 @@ jobs:
   release:
     uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
     with:
-      npmTag: alpha
+      npmTag: v3rfc
       buildScript: build
       nodeVersion: 18
     secrets:
