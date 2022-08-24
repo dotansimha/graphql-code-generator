@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useQuery } from '@urql/vue';
-import { gql } from './gql/gql';
+import { graphql } from './gql/gql';
 import FilmItem from './components/FilmItem.vue';
 import { computed } from 'vue';
 
 const { data } = useQuery({
-  query: gql(/* GraphQL */ `
+  query: graphql(/* GraphQL */ `
     query allFilmsWithVariablesQuery($first: Int!) {
       allFilms(first: $first) {
         edges {

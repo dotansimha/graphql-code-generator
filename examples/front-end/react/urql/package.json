@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "urql": "2.2.3",
-    "@graphql-typed-document-node/core": "3.1.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -19,16 +18,14 @@
     "web-vitals": "^2.1.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.11.5",
-    "@graphql-codegen/gql-tag-operations-preset": "^1.5.4",
-    "@graphql-codegen/schema-ast": "^2.5.1"
+    "@graphql-codegen/cli": "3.0.0-v3rfc"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "eslintConfig": {
     "extends": [

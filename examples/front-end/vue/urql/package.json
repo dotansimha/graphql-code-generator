@@ -7,18 +7,16 @@
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@graphql-typed-document-node/core": "3.1.1",
     "@urql/vue": "^0.6.4",
     "graphql": "^16.5.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.11.5",
-    "@graphql-codegen/gql-tag-operations-preset": "^1.5.4",
+    "@graphql-codegen/cli": "3.0.0-v3rfc",
     "@types/node": "^16.11.47",
     "@vitejs/plugin-vue": "^3.0.1",
     "@vitejs/plugin-vue-jsx": "^2.0.0",

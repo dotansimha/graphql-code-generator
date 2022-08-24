@@ -40,7 +40,7 @@ export type ClientPresetConfig = {
   fragmentMasking?: FragmentMaskingConfig | boolean;
   /**
    * @description Specify the name of the "graphql tag" function to use
-   * @default "gql"
+   * @default "graphql"
    *
    * E.g. `graphql` or `gql`.
    *
@@ -175,6 +175,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         schema: options.schema,
         config: {
           inlineFragmentTypes: isMaskingFragments ? 'mask' : options.config['inlineFragmentTypes'],
+          useTypeImports: options.config.useTypeImports,
         },
         documents: sources,
       },

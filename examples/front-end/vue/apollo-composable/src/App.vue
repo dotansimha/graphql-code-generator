@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useQuery } from '@vue/apollo-composable';
-import { gql } from './gql/gql';
+import { graphql } from './gql/gql';
 import FilmItem from './components/FilmItem.vue';
 import { computed } from 'vue';
 
 const { result } = useQuery(
-  gql(/* GraphQL */ `
+  graphql(/* GraphQL */ `
     query allFilmsWithVariablesQuery($first: Int!) {
       allFilms(first: $first) {
         edges {

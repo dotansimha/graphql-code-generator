@@ -550,11 +550,12 @@
     "@graphql-codegen/plugin-helpers" "^2.6.2"
     tslib "~2.4.0"
 
-"@graphql-codegen/cli@^2.11.5":
-  version "2.11.6"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-2.11.6.tgz#3acfd7cd3bac40999ba1262063d84ca7c96172dc"
-  integrity sha512-0R2Bhgjt3XZTSdsn8MGGuJjDEN2z+KCo7920zLZz9boy6bQ0EyuxS9AUATePS9aC3djy2POAIPCHz8iHK68IlQ==
+"@graphql-codegen/cli@3.0.0-v3rfc":
+  version "3.0.0-v3rfc-20220824100538-d659bc2e8"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-3.0.0-v3rfc-20220824100538-d659bc2e8.tgz#4662e2ec0be20417c726f85de9fa71735eb51b16"
+  integrity sha512-iSVNDuT+8k7GoT21+ZILKV2Mis1W5gzTKfjwQTj3F7sgrdU3Gs4igZOhdgsspkAtPZz0Zl0rOVAgrbkZAoN9NQ==
   dependencies:
+    "@graphql-codegen/client-preset" "1.0.1-v3rfc-20220824100538-d659bc2e8"
     "@graphql-codegen/core" "2.6.2"
     "@graphql-codegen/plugin-helpers" "^2.6.2"
     "@graphql-tools/apollo-engine-loader" "^7.3.6"
@@ -567,11 +568,12 @@
     "@graphql-tools/prisma-loader" "^7.2.7"
     "@graphql-tools/url-loader" "^7.13.2"
     "@graphql-tools/utils" "^8.9.0"
-    "@whatwg-node/fetch" "^0.2.3"
+    "@whatwg-node/fetch" "^0.3.0"
     ansi-escapes "^4.3.1"
     chalk "^4.1.0"
     chokidar "^3.5.2"
     cosmiconfig "^7.0.0"
+    cosmiconfig-typescript-loader "^3.1.1"
     debounce "^1.2.0"
     detect-indent "^6.0.0"
     graphql-config "^4.3.1"
@@ -587,6 +589,23 @@
     yaml "^1.10.0"
     yargs "^17.0.0"
 
+"@graphql-codegen/client-preset@1.0.1-v3rfc-20220824100538-d659bc2e8":
+  version "1.0.1-v3rfc-20220824100538-d659bc2e8"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/client-preset/-/client-preset-1.0.1-v3rfc-20220824100538-d659bc2e8.tgz#ce0d10869313f4ebb0bc98a385b14e95aac620db"
+  integrity sha512-eYzAnzFZ+7RDEnyk1eQQ6OSFf86fUZ7+WDM9Q4NFXlGiJL5/GXY64LYeCXqOnGG2BWYK1E92i3qZDKNE8y/U/A==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.14.5"
+    "@babel/template" "^7.15.4"
+    "@graphql-codegen/add" "^3.2.1"
+    "@graphql-codegen/gql-tag-operations" "1.5.0-v3rfc-20220824100538-d659bc2e8"
+    "@graphql-codegen/plugin-helpers" "^2.6.2"
+    "@graphql-codegen/typed-document-node" "^2.3.3"
+    "@graphql-codegen/typescript" "^2.7.3"
+    "@graphql-codegen/typescript-operations" "^2.5.3"
+    "@graphql-codegen/visitor-plugin-common" "^2.12.1"
+    "@graphql-tools/utils" "^8.8.0"
+    tslib "~2.4.0"
+
 "@graphql-codegen/core@2.6.2":
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-2.6.2.tgz#29c766d2e9e5a3deeeb4f1728c1f7b1aca054a22"
@@ -597,27 +616,10 @@
     "@graphql-tools/utils" "^8.8.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/gql-tag-operations-preset@^1.5.4":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations-preset/-/gql-tag-operations-preset-1.5.4.tgz#b5ffb5dcb1a3acabc9fd8002ea9ec44964f59b08"
-  integrity sha512-B3ViC/uJLVvqk18k4u3dz0u+BkWAoq7ITMLjt5tFDlz3quU+rlaBUJwJAaLUvdemDMZG+TTf3bFBOaP/DpgR7g==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.14.5"
-    "@babel/template" "^7.15.4"
-    "@graphql-codegen/add" "^3.2.1"
-    "@graphql-codegen/gql-tag-operations" "^1.4.1"
-    "@graphql-codegen/plugin-helpers" "^2.6.2"
-    "@graphql-codegen/typed-document-node" "^2.3.3"
-    "@graphql-codegen/typescript" "^2.7.3"
-    "@graphql-codegen/typescript-operations" "^2.5.3"
-    "@graphql-codegen/visitor-plugin-common" "^2.12.1"
-    "@graphql-tools/utils" "^8.8.0"
-    tslib "~2.4.0"
-
-"@graphql-codegen/gql-tag-operations@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.4.1.tgz#70457dd386d40c077691ca9d9213ff46846fad90"
-  integrity sha512-Ww1NTDq/B21nd97KjpiNOyIFe1pIk8o3f/yqWeGOYJPyM97Dhsf7DIod1rVqTuVH97GXCY71o9yFanvijkSMiQ==
+"@graphql-codegen/gql-tag-operations@1.5.0-v3rfc-20220824100538-d659bc2e8":
+  version "1.5.0-v3rfc-20220824100538-d659bc2e8"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.5.0-v3rfc-20220824100538-d659bc2e8.tgz#171c5f01006a5b6955640276a2faf0bc30ab3cd2"
+  integrity sha512-fCXoV4SaUWbu+l6pHaswVV4ESYgw11McgDumrQtvWEsh4hN5zElIqdFtzbHVnejLIY9b/w41huv6T3r6D3PBtw==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.6.2"
     "@graphql-codegen/visitor-plugin-common" "2.12.1"
@@ -910,7 +912,7 @@
     tslib "^2.4.0"
     value-or-promise "1.0.11"
 
-"@graphql-typed-document-node/core@3.1.1", "@graphql-typed-document-node/core@^3.1.1":
+"@graphql-typed-document-node/core@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
@@ -1281,10 +1283,25 @@
   resolved "https://registry.yarnpkg.com/@vue/tsconfig/-/tsconfig-0.1.3.tgz#4a61dbd29783d01ddab504276dcf0c2b6988654f"
   integrity sha512-kQVsh8yyWPvHpb8gIc9l/HIDiiVUy1amynLNpCy8p+FoCiZXCo6fQos5/097MmnNZc9AtseDsCrfkhqCrJ8Olg==
 
-"@whatwg-node/fetch@^0.2.3", "@whatwg-node/fetch@^0.2.4":
+"@whatwg-node/fetch@^0.2.4":
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.2.8.tgz#ccfa4a32873fcd5442a6a0c18e3fd3ae934329c4"
   integrity sha512-KyUD1Vx9TpdTTlM01aXOx1NED93C33cOT/5RyCqVL6H/srGTU1hlLacOLgmYSLNzkEVerVfhb7Bd6IxiI7JziA==
+  dependencies:
+    "@peculiar/webcrypto" "^1.4.0"
+    abort-controller "^3.0.0"
+    busboy "^1.6.0"
+    event-target-polyfill "^0.0.3"
+    form-data-encoder "^1.7.1"
+    formdata-node "^4.3.1"
+    node-fetch "^2.6.7"
+    undici "^5.8.0"
+    web-streams-polyfill "^3.2.0"
+
+"@whatwg-node/fetch@^0.3.0":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.3.2.tgz#da4323795c26c135563ba01d49dc16037bec4287"
+  integrity sha512-Bs5zAWQs0tXsLa4mRmLw7Psps1EN78vPtgcLpw3qPY8s6UYPUM67zFZ9cy+7tZ64PXhfwzxJn+m7RH2Lq48RNQ==
   dependencies:
     "@peculiar/webcrypto" "^1.4.0"
     abort-controller "^3.0.0"
@@ -1786,7 +1803,7 @@ cosmiconfig-toml-loader@1.0.0:
   dependencies:
     "@iarna/toml" "^2.2.5"
 
-cosmiconfig-typescript-loader@^3.1.0:
+cosmiconfig-typescript-loader@^3.1.0, cosmiconfig-typescript-loader@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig-typescript-loader/-/cosmiconfig-typescript-loader-3.1.1.tgz#9cdc2ae1a219cf52b0bc0647596c6691b9ab56a3"
   integrity sha512-SR5/NciF0vyYqcGsmB9WJ4QOKkcSSSzcBPLrnT6094BYahMy0eImWvlH3zoEOYqpF2zgiyAKHtWTXTo+fqgxPg==

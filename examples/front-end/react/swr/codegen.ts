@@ -2,9 +2,9 @@ import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
-  documents: ['src/**/*.tsx', '!src/gql/**/*'],
+  documents: ['components/**/*.tsx', 'pages/**/*.tsx', '!/gql/**/*'],
   generates: {
-    './src/gql/': {
+    './gql/': {
       preset: 'client',
       plugins: [],
     },

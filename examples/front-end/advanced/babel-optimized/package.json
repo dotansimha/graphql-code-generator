@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@graphql-typed-document-node/core": "3.1.1",
     "@babel/core": "^7.16.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
@@ -65,15 +64,13 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.11.5",
-    "@graphql-codegen/gql-tag-operations-preset": "^1.5.4",
-    "@graphql-codegen/schema-ast": "^2.5.1"
+    "@graphql-codegen/cli": "3.0.0-v3rfc"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "eslintConfig": {
     "extends": [

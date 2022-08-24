@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
 import Film from './Film';
-import { gql } from './gql/gql';
+import { graphql } from './gql/gql';
 import { useQuery } from 'urql';
 
-const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {
     allFilms(first: $first) {
       edges {

@@ -2,12 +2,12 @@ import type { NextPage } from 'next';
 import useSWR from 'swr';
 import request from 'graphql-request';
 
-import { gql } from '../gql/gql';
+import { graphql } from '../gql/gql';
 
 import styles from '../styles/Home.module.css';
 import Film from '../components/Film';
 
-const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {
     allFilms(first: $first) {
       edges {

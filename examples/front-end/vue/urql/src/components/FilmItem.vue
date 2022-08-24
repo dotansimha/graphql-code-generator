@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { gql } from '../gql/gql';
+import { graphql } from '../gql/gql';
 import { type FragmentType, useFragment } from '../gql/fragment-masking';
 
-const FilmFragment = gql(/* GraphQL */ `
+const FilmFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title

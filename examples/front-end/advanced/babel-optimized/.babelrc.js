@@ -1,6 +1,6 @@
-const { babelPlugin } = require('@graphql-codegen/gql-tag-operations-preset');
+const { babelOptimizerPlugin } = require('@graphql-codegen/client-preset');
 
 module.exports = {
   presets: ['react-app'],
-  plugins: [[babelPlugin, { artifactDirectory: './src/gql' }]],
+  plugins: [[babelOptimizerPlugin, { artifactDirectory: './src/gql' }]],
 };
