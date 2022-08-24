@@ -65,6 +65,7 @@ export type ClientPresetConfig = {
 };
 
 export const preset: Types.OutputPreset<ClientPresetConfig> = {
+  prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
     const reexports: Array<string> = [];
 
