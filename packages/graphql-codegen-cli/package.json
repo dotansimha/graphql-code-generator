@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "2.11.6",
+  "version": "2.11.7",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
