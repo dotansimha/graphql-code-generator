@@ -1,171 +1,144 @@
-jest.mock("../src/utils/get-latest-version.ts", () => {
-  return { getLatestVersion: () => Promise.resolve("1.0.0") };
+jest.mock('../src/utils/get-latest-version.ts', () => {
+  return { getLatestVersion: () => Promise.resolve('1.0.0') };
 });
 
-import bddStdin from "bdd-stdin";
-import { resolve } from "path";
-import { init } from "../src/init/index.js";
-import { Tags } from "../src/init/types.js";
-import { guessTargets } from "../src/init/targets.js";
-import { plugins } from "../src/init/plugins.js";
-import { bold } from "../src/init/helpers.js";
-import {
-  getApplicationTypeChoices,
-  getPluginChoices
-} from "../src/init/questions.js";
-import { load } from "js-yaml";
+import bddStdin from 'bdd-stdin';
+import { resolve } from 'path';
+import { init } from '../src/init/index.js';
+import { Tags } from '../src/init/types.js';
+import { guessTargets } from '../src/init/targets.js';
+import { plugins } from '../src/init/plugins.js';
+import { bold } from '../src/init/helpers.js';
+import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
+import { load } from 'js-yaml';
 
-jest.mock("fs");
-const { version } = require("../package.json");
+jest.mock('fs');
+const { version } = require('../package.json');
 
-const SELECT = " "; // checkbox
-const ENTER = "\n";
+const SELECT = ' '; // checkbox
+const ENTER = '\n';
 // const DOWN = bddStdin.keys.down;
 
 const packageJson = {
   withAngular: JSON.stringify({
     version,
     dependencies: {
-      "@angular/core": "x.x.x"
-    }
+      '@angular/core': 'x.x.x',
+    },
   }),
   withTypescript: JSON.stringify({
     version,
     devDependencies: {
-      typescript: "x.x.x"
-    }
+      typescript: 'x.x.x',
+    },
   }),
   withReact: JSON.stringify({
     version,
     dependencies: {
-      react: "x.x.x"
-    }
+      react: 'x.x.x',
+    },
   }),
   withFlow: JSON.stringify({
     version,
     devDependencies: {
-      flow: "x.x.x"
-    }
+      flow: 'x.x.x',
+    },
   }),
   withStencil: JSON.stringify({
     version,
     dependencies: {
-      "@stencil/core": "x.x.x"
-    }
+      '@stencil/core': 'x.x.x',
+    },
   }),
   withVue: JSON.stringify({
     version,
     dependencies: {
-      vue: "x.x.x"
-    }
+      vue: 'x.x.x',
+    },
   }),
   withReactQuery: JSON.stringify({
     version,
     dependencies: {
-      "@tanstack/react-query": "x.x.x"
-    }
+      '@tanstack/react-query': 'x.x.x',
+    },
   }),
   withSWR: JSON.stringify({
     version,
     dependencies: {
-      swr: "x.x.x"
-    }
+      swr: 'x.x.x',
+    },
   }),
   withGraphqlRequest: JSON.stringify({
     version,
     dependencies: {
-      "graphql-request": "x.x.x"
-    }
-  })
+      'graphql-request': 'x.x.x',
+    },
+  }),
 };
 
-describe("init", () => {
+describe('init', () => {
   beforeEach(() => {
     // make sure terminal don't get noisy
-    jest.spyOn(process.stdout, "write").mockImplementation();
+    jest.spyOn(process.stdout, 'write').mockImplementation();
   });
 
   afterEach(() => {
-    require("fs").__resetMockFiles();
+    require('fs').__resetMockFiles();
     jest.clearAllMocks();
   });
 
-  describe("guessTargets()", () => {
-    it("should guess angular projects", async () => {
-      require("fs").__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withAngular
-      );
+  describe('guessTargets()', () => {
+    it('should guess angular projects', async () => {
+      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
       const targets = await guessTargets();
       expect(targets.Angular).toEqual(true);
     });
 
-    it("should guess typescript projects", async () => {
-      require("fs").__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withTypescript
-      );
+    it('should guess typescript projects', async () => {
+      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withTypescript);
       const targets = await guessTargets();
       expect(targets.TypeScript).toEqual(true);
     });
 
-    it("should guess react projects", async () => {
-      require("fs").__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withReact
-      );
+    it('should guess react projects', async () => {
+      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
       const targets = await guessTargets();
       expect(targets.React).toEqual(true);
     });
 
-    it("should guess stencil projects", async () => {
-      require("fs").__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withStencil
-      );
+    it('should guess stencil projects', async () => {
+      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withStencil);
       const targets = await guessTargets();
       expect(targets.Stencil).toEqual(true);
     });
 
-    it("should guess flow projects", async () => {
-      require("fs").__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withFlow
-      );
+    it('should guess flow projects', async () => {
+      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withFlow);
       const targets = await guessTargets();
       expect(targets.Flow).toEqual(true);
     });
 
-    it("should guess vue projects", async () => {
-      require("fs").__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withVue
-      );
+    it('should guess vue projects', async () => {
+      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withVue);
       const targets = await guessTargets();
       expect(targets.Vue).toEqual(true);
     });
 
-    it("should guess graphql-request projects", async () => {
-      require("fs").__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withGraphqlRequest
-      );
+    it('should guess graphql-request projects', async () => {
+      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withGraphqlRequest);
       const targets = await guessTargets();
       expect(targets.graphqlRequest).toEqual(true);
     });
   });
 
-  describe("plugins suggestions for client-side setup", () => {
-    it("should use angular related plugins when @angular/core is found", async () => {
-      const fs = require("fs");
-      fs.__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withAngular
-      );
+  describe('plugins suggestions for client-side setup', () => {
+    it('should use angular related plugins when @angular/core is found', async () => {
+      const fs = require('fs');
+      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
       // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, "writeFileSync").mockImplementation();
+      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
       // silent
-      jest.spyOn(console, "log").mockImplementation();
+      jest.spyOn(console, 'log').mockImplementation();
 
       useInputs({
         onTarget: [ENTER], // confirm angular target
@@ -173,9 +146,9 @@ describe("init", () => {
         onDocuments: [ENTER],
         // onPlugins: [ENTER], // use selected packages
         onOutput: [ENTER], // use default output path
-        onIntrospection: ["n", ENTER], // no introspection,
+        onIntrospection: ['n', ENTER], // no introspection,
         onConfig: [ENTER], // use default config path
-        onScript: ["graphql", ENTER] // use custom npm script
+        onScript: ['graphql', ENTER], // use custom npm script
       });
 
       await init();
@@ -188,30 +161,27 @@ describe("init", () => {
       expect(config).toMatchSnapshot();
 
       // expected plugins
-      expect(pkg.devDependencies).toHaveProperty("@graphql-codegen/cli");
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/cli');
       // should not have other plugins
       expect(Object.keys(pkg.devDependencies)).toHaveLength(1);
     });
 
-    it("should use react related plugins when react is found", async () => {
-      const fs = require("fs");
-      fs.__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withReact
-      );
+    it('should use react related plugins when react is found', async () => {
+      const fs = require('fs');
+      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
       // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, "writeFileSync").mockImplementation();
+      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
       // silent
-      jest.spyOn(console, "log").mockImplementation();
+      jest.spyOn(console, 'log').mockImplementation();
 
       useInputs({
         onTarget: [ENTER], // confirm react target
         onSchema: [ENTER], // use default
         onDocuments: [ENTER],
         onOutput: [ENTER], // use default output path
-        onIntrospection: ["n", ENTER], // no introspection,
+        onIntrospection: ['n', ENTER], // no introspection,
         onConfig: [ENTER], // use default config path
-        onScript: ["graphql", ENTER] // use custom npm script
+        onScript: ['graphql', ENTER], // use custom npm script
       });
 
       await init();
@@ -224,21 +194,18 @@ describe("init", () => {
       expect(config).toMatchSnapshot();
 
       // expected plugins
-      expect(pkg.devDependencies).toHaveProperty("@graphql-codegen/cli");
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/cli');
       // should not have other plugins
       expect(Object.keys(pkg.devDependencies)).toHaveLength(1);
     });
 
-    it("should use stencil related plugins when @stencil/core is found", async () => {
-      const fs = require("fs");
-      fs.__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withStencil
-      );
+    it('should use stencil related plugins when @stencil/core is found', async () => {
+      const fs = require('fs');
+      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withStencil);
       // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, "writeFileSync").mockImplementation();
+      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
       // silent
-      jest.spyOn(console, "log").mockImplementation();
+      jest.spyOn(console, 'log').mockImplementation();
 
       useInputs({
         onTarget: [ENTER], // confirm angular target
@@ -246,9 +213,9 @@ describe("init", () => {
         onDocuments: [ENTER],
         onPlugins: [ENTER], // use selected packages
         onOutput: [ENTER], // use default output path
-        onIntrospection: ["n", ENTER], // no introspection,
+        onIntrospection: ['n', ENTER], // no introspection,
         onConfig: [ENTER], // use default config path
-        onScript: ["graphql", ENTER] // use custom npm script
+        onScript: ['graphql', ENTER], // use custom npm script
       });
 
       await init();
@@ -256,53 +223,43 @@ describe("init", () => {
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-      const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<
-        string,
-        any
-      >;
+      const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
       // should use default output path
-      expect(config.generates["src/generated/graphql.tsx"]).toBeDefined();
+      expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
 
-      const output: any = config.generates["src/generated/graphql.tsx"];
-      expect(output.plugins).toContainEqual("typescript");
-      expect(output.plugins).toContainEqual("typescript-operations");
-      expect(output.plugins).toContainEqual("typescript-stencil-apollo");
+      const output: any = config.generates['src/generated/graphql.tsx'];
+      expect(output.plugins).toContainEqual('typescript');
+      expect(output.plugins).toContainEqual('typescript-operations');
+      expect(output.plugins).toContainEqual('typescript-stencil-apollo');
       expect(output.plugins).toHaveLength(3);
 
       // expected plugins
-      expect(pkg.devDependencies).toHaveProperty("@graphql-codegen/typescript");
-      expect(pkg.devDependencies).toHaveProperty(
-        "@graphql-codegen/typescript-operations"
-      );
-      expect(pkg.devDependencies).toHaveProperty(
-        "@graphql-codegen/typescript-stencil-apollo"
-      );
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-stencil-apollo');
       // should not have other plugins
       expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
     });
   });
 
-  describe("plugins suggestions non client-side setup", () => {
-    it("should use typescript related plugins when typescript is found (node)", async () => {
-      const fs = require("fs");
-      fs.__setMockFiles(
-        resolve(process.cwd(), "package.json"),
-        packageJson.withTypescript
-      );
+  describe('plugins suggestions non client-side setup', () => {
+    it('should use typescript related plugins when typescript is found (node)', async () => {
+      const fs = require('fs');
+      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withTypescript);
       // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, "writeFileSync").mockImplementation();
+      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
       // silent
-      jest.spyOn(console, "log").mockImplementation();
+      jest.spyOn(console, 'log').mockImplementation();
 
       useInputs({
         onTarget: [SELECT, ENTER], // confirm api target
         onSchema: [ENTER], // use default
         onPlugins: [ENTER], // use selected packages
         onOutput: [ENTER], // use default output path
-        onIntrospection: ["n", ENTER], // no introspection,
+        onIntrospection: ['n', ENTER], // no introspection,
         onConfig: [ENTER], // use default config path
-        onScript: ["graphql", ENTER] // use custom npm script
+        onScript: ['graphql', ENTER], // use custom npm script
       });
 
       await init();
@@ -310,40 +267,32 @@ describe("init", () => {
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-      const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<
-        string,
-        any
-      >;
+      const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
 
       // should use default output path
-      expect(config.generates["src/generated/graphql.ts"]).toBeDefined();
+      expect(config.generates['src/generated/graphql.ts']).toBeDefined();
 
-      const output: any = config.generates["src/generated/graphql.ts"];
-      expect(output.plugins).toContainEqual("typescript");
-      expect(output.plugins).toContainEqual("typescript-resolvers");
+      const output: any = config.generates['src/generated/graphql.ts'];
+      expect(output.plugins).toContainEqual('typescript');
+      expect(output.plugins).toContainEqual('typescript-resolvers');
       expect(output.plugins).toHaveLength(2);
 
       // expected plugins
-      expect(pkg.devDependencies).toHaveProperty("@graphql-codegen/typescript");
-      expect(pkg.devDependencies).toHaveProperty(
-        "@graphql-codegen/typescript-resolvers"
-      );
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-resolvers');
       // should not have other plugins
       expect(Object.keys(pkg.devDependencies)).toHaveLength(4); // 3 - because we have typescript package in devDeps
     });
   });
 
-  it("should have few default values", async () => {
-    const fs = require("fs");
-    fs.__setMockFiles(
-      resolve(process.cwd(), "package.json"),
-      packageJson.withAngular
-    );
+  it('should have few default values', async () => {
+    const fs = require('fs');
+    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
     // make sure we don't write stuff
-    const writeFileSpy = jest.spyOn(fs, "writeFileSync").mockImplementation();
-    const logSpy = jest.spyOn(console, "log").mockImplementation();
+    const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+    const logSpy = jest.spyOn(console, 'log').mockImplementation();
     const defaults = {
-      config: "codegen.ts"
+      config: 'codegen.ts',
     };
 
     useInputs({
@@ -353,7 +302,7 @@ describe("init", () => {
       onOutput: [ENTER], // use default output path
       onIntrospection: [ENTER], // no introspection,
       onConfig: [ENTER], // use default config path
-      onScript: ["graphql", ENTER] // use custom npm script
+      onScript: ['graphql', ENTER], // use custom npm script
     });
 
     await init();
@@ -365,26 +314,21 @@ describe("init", () => {
     expect(pkg.scripts.graphql).toEqual(`graphql-codegen --config codegen.ts`);
     expect(configFile).toEqual(resolve(process.cwd(), defaults.config));
     expect(config).toMatchSnapshot();
-    expect(logSpy.mock.calls[2][0]).toContain(
-      `Config file generated at ${bold(defaults.config)}`
-    );
+    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(defaults.config)}`);
   });
 
-  it("should have few default values", async () => {
-    const fs = require("fs");
-    fs.__setMockFiles(
-      resolve(process.cwd(), "package.json"),
-      packageJson.withAngular
-    );
+  it('should have few default values', async () => {
+    const fs = require('fs');
+    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
     // make sure we don't write stuff
-    const writeFileSpy = jest.spyOn(fs, "writeFileSync").mockImplementation();
-    const logSpy = jest.spyOn(console, "log").mockImplementation();
+    const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+    const logSpy = jest.spyOn(console, 'log').mockImplementation();
     const options = {
-      script: "graphql",
-      schema: "./schema.ts",
-      documents: "graphql/**/*.graphql",
-      output: "graphql/index.ts",
-      config: "app-codegen.yml"
+      script: 'graphql',
+      schema: './schema.ts',
+      documents: 'graphql/**/*.graphql',
+      output: 'graphql/index.ts',
+      config: 'app-codegen.yml',
     };
 
     useInputs({
@@ -392,9 +336,9 @@ describe("init", () => {
       onSchema: [options.schema, ENTER], // use default
       onDocuments: [options.documents, ENTER],
       onOutput: [options.output, ENTER], // use default output path
-      onIntrospection: ["y", ENTER], // with introspection,
+      onIntrospection: ['y', ENTER], // with introspection,
       onConfig: [options.config, ENTER], // use default config path
-      onScript: [options.script, ENTER] // use custom npm script
+      onScript: [options.script, ENTER], // use custom npm script
     });
 
     await init();
@@ -403,36 +347,29 @@ describe("init", () => {
     const config = writeFileSpy.mock.calls[0][1] as string;
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
-    expect(pkg.scripts[options.script]).toEqual(
-      `graphql-codegen --config ${options.config}`
-    );
+    expect(pkg.scripts[options.script]).toEqual(`graphql-codegen --config ${options.config}`);
     expect(configFile).toEqual(resolve(process.cwd(), options.config));
     expect(config).toMatchSnapshot();
-    expect(logSpy.mock.calls[2][0]).toContain(
-      `Config file generated at ${bold(options.config)}`
-    );
+    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(options.config)}`);
   });
 
-  it("custom setup", async () => {
-    const fs = require("fs");
-    fs.__setMockFiles(
-      resolve(process.cwd(), "package.json"),
-      packageJson.withAngular
-    );
+  it('custom setup', async () => {
+    const fs = require('fs');
+    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
     // make sure we don't write stuff
-    const writeFileSpy = jest.spyOn(fs, "writeFileSync").mockImplementation();
-    const logSpy = jest.spyOn(console, "log").mockImplementation();
-    const documents = "graphql/*.ts";
-    const script = "generate:types";
+    const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+    const logSpy = jest.spyOn(console, 'log').mockImplementation();
+    const documents = 'graphql/*.ts';
+    const script = 'generate:types';
 
     useInputs({
       onTarget: [ENTER], // confirm angular target
       onSchema: [ENTER], // use default
       onDocuments: [documents, ENTER],
       onOutput: [ENTER], // use default output path
-      onIntrospection: ["y", ENTER], // no introspection,
+      onIntrospection: ['y', ENTER], // no introspection,
       onConfig: [ENTER], // use default config path
-      onScript: [script, ENTER] // use custom npm script
+      onScript: [script, ENTER], // use custom npm script
     });
 
     await init();
@@ -446,38 +383,32 @@ describe("init", () => {
     expect(config).toMatchSnapshot();
 
     // script name should match what we provided
-    expect(pkg.scripts[script]).toEqual("graphql-codegen --config codegen.ts");
+    expect(pkg.scripts[script]).toEqual('graphql-codegen --config codegen.ts');
     // expected plugins
-    expect(pkg.devDependencies).toHaveProperty(
-      "@graphql-codegen/introspection"
-    );
+    expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/introspection');
     // should not have these plugins
-    expect(pkg.devDependencies).not.toHaveProperty(
-      "@graphql-codegen/typescript-resolvers"
-    );
+    expect(pkg.devDependencies).not.toHaveProperty('@graphql-codegen/typescript-resolvers');
 
     // logs
     const welcomeMsg = logSpy.mock.calls[0][0];
     const doneMsg = logSpy.mock.calls[2][0];
 
-    expect(welcomeMsg).toContain(
-      `Welcome to ${bold("GraphQL Code Generator")}`
-    );
-    expect(doneMsg).toContain(`Config file generated at ${bold("codegen.ts")}`);
-    expect(doneMsg).toContain(bold("$ npm install"));
+    expect(welcomeMsg).toContain(`Welcome to ${bold('GraphQL Code Generator')}`);
+    expect(doneMsg).toContain(`Config file generated at ${bold('codegen.ts')}`);
+    expect(doneMsg).toContain(bold('$ npm install'));
     expect(doneMsg).toContain(bold(`$ npm run ${script}`));
   });
 
-  describe("plugin choices", () => {
+  describe('plugin choices', () => {
     function getAvailable(tags: Tags[]): string[] {
       return getPluginChoices({
-        targets: tags
+        targets: tags,
       } as any).map((c: any) => c.value.value);
     }
 
     function getSelected(tags: Tags[]): string[] {
       return getPluginChoices({
-        targets: tags
+        targets: tags,
       } as any)
         .filter((c: any) => c.checked)
         .map((c: any) => c.value.value);
@@ -493,121 +424,121 @@ describe("init", () => {
         [Tags.typescript]: targets.includes(Tags.typescript),
         [Tags.flow]: targets.includes(Tags.flow),
         [Tags.vue]: targets.includes(Tags.vue),
-        [Tags.graphqlRequest]: targets.includes(Tags.graphqlRequest)
+        [Tags.graphqlRequest]: targets.includes(Tags.graphqlRequest),
       })
         .filter(c => c.checked)
         .reduce((all, choice) => all.concat(choice.value), []);
 
       return {
         available: getAvailable(tags),
-        selected: getSelected(tags)
+        selected: getSelected(tags),
       };
     }
 
-    it("node", () => {
+    it('node', () => {
       const { available, selected } = getPlugins([Tags.node]);
 
       // available
       expect(available).toHaveLength(6);
-      expect(available).toContainEqual("typescript");
-      expect(available).toContainEqual("typescript-resolvers");
-      expect(available).toContainEqual("typescript-mongodb");
-      expect(available).toContainEqual("typescript-document-nodes");
-      expect(available).toContainEqual("flow");
-      expect(available).toContainEqual("flow-resolvers");
+      expect(available).toContainEqual('typescript');
+      expect(available).toContainEqual('typescript-resolvers');
+      expect(available).toContainEqual('typescript-mongodb');
+      expect(available).toContainEqual('typescript-document-nodes');
+      expect(available).toContainEqual('flow');
+      expect(available).toContainEqual('flow-resolvers');
       // selected
       expect(selected).toHaveLength(0);
     });
 
-    it("node + typescript", () => {
+    it('node + typescript', () => {
       const { selected, available } = getPlugins([Tags.node, Tags.typescript]);
 
       // available
       expect(available).toHaveLength(4);
-      expect(available).toContainEqual("typescript");
-      expect(available).toContainEqual("typescript-resolvers");
-      expect(available).toContainEqual("typescript-mongodb");
-      expect(available).toContainEqual("typescript-document-nodes");
+      expect(available).toContainEqual('typescript');
+      expect(available).toContainEqual('typescript-resolvers');
+      expect(available).toContainEqual('typescript-mongodb');
+      expect(available).toContainEqual('typescript-document-nodes');
       // selected
       expect(selected).toHaveLength(2);
-      expect(selected).toContainEqual("typescript");
-      expect(selected).toContainEqual("typescript-resolvers");
+      expect(selected).toContainEqual('typescript');
+      expect(selected).toContainEqual('typescript-resolvers');
     });
 
-    it("node + flow", () => {
+    it('node + flow', () => {
       const { selected, available } = getPlugins([Tags.node, Tags.flow]);
 
       // available
       expect(available).toHaveLength(2);
-      expect(available).toContainEqual("flow");
-      expect(available).toContainEqual("flow-resolvers");
+      expect(available).toContainEqual('flow');
+      expect(available).toContainEqual('flow-resolvers');
       // selected
       expect(selected).toHaveLength(2);
-      expect(selected).toContainEqual("flow");
-      expect(selected).toContainEqual("flow-resolvers");
+      expect(selected).toContainEqual('flow');
+      expect(selected).toContainEqual('flow-resolvers');
     });
 
-    it("angular", () => {
+    it('angular', () => {
       const { selected, available } = getPlugins([Tags.angular]);
 
       // available
       expect(available).toHaveLength(2);
-      expect(available).toContainEqual("fragment-matcher");
-      expect(available).toContainEqual("urql-introspection");
+      expect(available).toContainEqual('fragment-matcher');
+      expect(available).toContainEqual('urql-introspection');
       // selected
       expect(selected).toHaveLength(0);
     });
 
-    it("react", () => {
+    it('react', () => {
       const { selected, available } = getPlugins([Tags.react]);
 
       // available
       expect(available).toHaveLength(2);
-      expect(available).toContainEqual("fragment-matcher");
-      expect(available).toContainEqual("urql-introspection");
+      expect(available).toContainEqual('fragment-matcher');
+      expect(available).toContainEqual('urql-introspection');
       // selected
       expect(selected).toHaveLength(0);
     });
 
-    it("react + flow", () => {
+    it('react + flow', () => {
       const { selected, available } = getPlugins([Tags.react, Tags.flow]);
 
       // available
       expect(available).toHaveLength(4);
-      expect(available).toContainEqual("flow");
-      expect(available).toContainEqual("flow-operations");
-      expect(available).toContainEqual("fragment-matcher");
+      expect(available).toContainEqual('flow');
+      expect(available).toContainEqual('flow-operations');
+      expect(available).toContainEqual('fragment-matcher');
       // selected
       expect(selected).toHaveLength(2);
-      expect(selected).toContainEqual("flow");
-      expect(selected).toContainEqual("flow-operations");
+      expect(selected).toContainEqual('flow');
+      expect(selected).toContainEqual('flow-operations');
     });
 
-    it("stencil", () => {
+    it('stencil', () => {
       const { selected, available } = getPlugins([Tags.stencil]);
 
       // available
       expect(available).toHaveLength(7);
-      expect(available).toContainEqual("typescript");
-      expect(available).toContainEqual("typescript-operations");
-      expect(available).toContainEqual("typescript-stencil-apollo");
-      expect(available).toContainEqual("typescript-graphql-files-modules");
-      expect(available).toContainEqual("typescript-document-nodes");
-      expect(available).toContainEqual("fragment-matcher");
+      expect(available).toContainEqual('typescript');
+      expect(available).toContainEqual('typescript-operations');
+      expect(available).toContainEqual('typescript-stencil-apollo');
+      expect(available).toContainEqual('typescript-graphql-files-modules');
+      expect(available).toContainEqual('typescript-document-nodes');
+      expect(available).toContainEqual('fragment-matcher');
       // selected
       expect(selected).toHaveLength(3);
-      expect(selected).toContainEqual("typescript");
-      expect(selected).toContainEqual("typescript-operations");
-      expect(selected).toContainEqual("typescript-stencil-apollo");
+      expect(selected).toContainEqual('typescript');
+      expect(selected).toContainEqual('typescript-operations');
+      expect(selected).toContainEqual('typescript-stencil-apollo');
     });
   });
 
-  describe("plugins", () => {
-    it("should have correct plugin and package names", async () => {});
+  describe('plugins', () => {
+    it('should have correct plugin and package names', async () => {});
     plugins.forEach(pkg => {
       const { name } = require(`../../plugins/${pkg.pathInRepo}/package.json`);
 
-      expect(pkg.package.replace("@graphql-codegen/", "")).toEqual(pkg.value);
+      expect(pkg.package.replace('@graphql-codegen/', '')).toEqual(pkg.value);
       expect(pkg.package).toEqual(name);
     });
   });

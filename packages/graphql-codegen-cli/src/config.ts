@@ -41,7 +41,7 @@ export type YamlCliFlags = {
 };
 
 export function generateSearchPlaces(moduleName: string) {
-  const extensions = ['json', 'yaml', 'yml', 'js', 'config.js'];
+  const extensions = ['json', 'yaml', 'yml', 'js', 'ts', 'config.js'];
   // gives codegen.json...
   const regular = extensions.map(ext => `${moduleName}.${ext}`);
   // gives .codegenrc.json... but no .codegenrc.config.js

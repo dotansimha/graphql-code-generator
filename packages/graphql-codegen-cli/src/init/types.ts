@@ -20,13 +20,13 @@ export interface Answers {
 }
 
 export enum Tags {
-  client = "Browser",
-  node = "Node",
-  typescript = "TypeScript",
-  flow = "Flow",
-  angular = "Angular",
-  stencil = "Stencil",
-  react = "React",
-  vue = "Vue",
-  graphqlRequest = "graphqlRequest"
+  client = 'Browser',
+  node = 'Node',
+  typescript = 'TypeScript',
+  flow = 'Flow',
+  angular = 'Angular',
+  stencil = 'Stencil',
+  react = 'React',
+  vue = 'Vue',
+  graphqlRequest = 'graphqlRequest',
 }
