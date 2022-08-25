@@ -40,8 +40,11 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "@graphql-codegen/core": "2.6.2",
+    "@babel/generator": "^7.18.13",
+    "@babel/template": "^7.18.10",
+    "@babel/types": "^7.18.13",
     "@graphql-codegen/client-preset": "1.0.1-alpha-20220823170145-c93d8aee3",
+    "@graphql-codegen/core": "2.6.2",
     "@graphql-codegen/plugin-helpers": "^2.6.2",
     "@graphql-tools/apollo-engine-loader": "^7.3.6",
     "@graphql-tools/code-file-loader": "^7.3.1",

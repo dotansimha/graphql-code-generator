@@ -11,7 +11,7 @@ export interface PluginOption {
 export interface Answers {
   targets: Tags[];
   config: string;
-  plugins: PluginOption[];
+  plugins?: PluginOption[];
   schema: string;
   documents?: string;
   output: string;
@@ -20,12 +20,13 @@ export interface Answers {
 }
 
 export enum Tags {
-  browser = 'Browser',
-  node = 'Node',
-  typescript = 'TypeScript',
-  flow = 'Flow',
-  angular = 'Angular',
-  stencil = 'Stencil',
-  react = 'React',
-  vue = 'Vue',
+  client = "Browser",
+  node = "Node",
+  typescript = "TypeScript",
+  flow = "Flow",
+  angular = "Angular",
+  stencil = "Stencil",
+  react = "React",
+  vue = "Vue",
+  graphqlRequest = "graphqlRequest"
 }
