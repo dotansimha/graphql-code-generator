@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.5.5
+
+### Patch Changes
+
+- [#8260](https://github.com/dotansimha/graphql-code-generator/pull/8260) [`576d3ad01`](https://github.com/dotansimha/graphql-code-generator/commit/576d3ad01349c564355d6fffb55487decfa81c4e) Thanks [@saihaj](https://github.com/saihaj)! - use [`template.smart`](https://babeljs.io/docs/en/babel-template#templatesmart) instead of default import which should fix bable plugin loading issues in `vite`
+
 ## 1.5.4
 
 ### Patch Changes
