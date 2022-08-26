@@ -1487,7 +1487,7 @@
         "anchor": "fragment-masking"
       }
     ],
-    "content": "d30c820d43775bf045f058e0cfa27572",
+    "content": "08b583069e04fbb0dc34b64b683047d3",
     "url": "https://www.graphql-code-generator.com/plugins/presets/gql-tag-operations-preset",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Plugins", "Presets"],
