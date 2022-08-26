@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 2.11.8
+
+### Patch Changes
+
+- [#8289](https://github.com/dotansimha/graphql-code-generator/pull/8289) [`b5897fcad`](https://github.com/dotansimha/graphql-code-generator/commit/b5897fcad2832d9ffbed0eb2f59e6b7535f4b61c) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@^4.3.4` ↗︎](https://www.npmjs.com/package/graphql-config/v/null) (from `^4.3.1`, in `dependencies`)
+
+- [#8289](https://github.com/dotansimha/graphql-code-generator/pull/8289) [`b5897fcad`](https://github.com/dotansimha/graphql-code-generator/commit/b5897fcad2832d9ffbed0eb2f59e6b7535f4b61c) Thanks [@n1ru4l](https://github.com/n1ru4l)! - resolve issue for loading typescript configs
+
 ## 2.11.7
 
 ### Patch Changes
