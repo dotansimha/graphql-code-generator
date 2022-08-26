@@ -3125,6 +3125,43 @@ describe('TypeScript Operations Plugin', () => {
       validateTs(content);
     });
 
+    it('TODO Should generate enum-array ', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum Access {
+          Read
+          Write
+          All
+        }
+        type User {
+          access: Access!
+        }
+        type Query {
+          users: [User!]!
+        }
+      `);
+      const query = parse(/* GraphQL */ `
+        query users {
+          users {
+            ...UserFragment
+          }
+        }
+        fragment User on User {
+          access
+        }
+      `);
+
+      expect(
+        (
+          await plugin(
+            testSchema,
+            [{ location: 'test-file.ts', document: query }],
+            { allowEnumStringTypes: true },
+            { outputFile: '' }
+          )
+        ).content
+      ).toContain("export type UserFragment = { __typename?: 'User', access: Access | `${Access}` };");
+    });
+
     it('Should generate correctly when using enums and typesPrefix', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum Access {
