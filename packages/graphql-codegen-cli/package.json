@@ -59,7 +59,7 @@
     "cosmiconfig": "^7.0.0",
     "debounce": "^1.2.0",
     "detect-indent": "^6.0.0",
-    "graphql-config": "^4.3.4",
+    "graphql-config": "^4.3.5",
     "inquirer": "^8.0.0",
     "is-glob": "^4.0.1",
     "json-to-pretty-yaml": "^1.2.2",
