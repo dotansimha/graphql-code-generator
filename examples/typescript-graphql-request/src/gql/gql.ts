@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as graphql from './graphql.js';
+import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {

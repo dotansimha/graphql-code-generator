@@ -1,0 +1,7 @@
+schema: https://swapi-graphql.netlify.app/.netlify/functions/index
+documents:
+  - 'src/**/*.ts'
+  - '!src/gql/**/*'
+generates:
+  ./src/gql/:
+    preset: gql-tag-operations-preset
