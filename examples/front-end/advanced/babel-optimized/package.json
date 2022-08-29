@@ -64,7 +64,7 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "3.0.0-v3rfc"
+    "@graphql-codegen/cli": "3.0.0-v3rfc-20220829075600-d966c407d"
   },
   "scripts": {
     "start": "node scripts/start.js",

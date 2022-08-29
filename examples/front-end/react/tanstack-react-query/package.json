@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@tanstack/react-query": "4.0.10",
-    "graphql-request": "next",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -12,6 +11,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "graphql-request": "next",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -19,7 +19,7 @@
     "web-vitals": "^2.1.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "3.0.0-v3rfc"
+    "@graphql-codegen/cli": "3.0.0-v3rfc-20220829075600-d966c407d"
   },
   "scripts": {
     "start": "react-scripts start",
