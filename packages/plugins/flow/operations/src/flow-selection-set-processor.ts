@@ -105,6 +105,8 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {
-    return [`{ ${name}: ${type} }`];
+    const useFlowExactObject = this.config.useFlowExactObjects;
+
+    return [`{${useFlowExactObject ? "|" : ""} ${name}: ${type} } ${useFlowExactObject ? "|" : ""}`];
   }
 }
