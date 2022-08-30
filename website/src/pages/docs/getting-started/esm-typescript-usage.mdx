@@ -24,15 +24,22 @@ For these examples the correct ESM counterpart is `./foo.js` and `../something/f
 
 In order to instruct GraphQL Code Generator to generate such imports whenever a named import is generated you need to set the `emitLegacyCommonJSImports` option to `false`.
 
-```yaml filename="codegen.yml" {5}
-schema: https://swapi-graphql.netlify.app/.netlify/functions/index
-documents:
-  - 'src/**/*.ts'
-  - '!src/gql/**/*'
-emitLegacyCommonJSImports: false
-generates:
-  ./src/gql/:
-    preset: gql-tag-operations-preset
+```ts filename="codegen.ts" {6}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000/graphql',
+  documents: ['src/**/*.tsx'],
+  emitLegacyCommonJSImports: false
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: []
+    }
+  }
+}
+
+export default config
 ```
 
 ## TypeScript Compiler Options
@@ -73,7 +80,7 @@ This step, however, is fully optional.
     "graphql": "16.5.0"
   },
   "scripts": {
-    "codegen": "graphql-codegen-esm --config codegen.yml",
+    "codegen": "graphql-codegen-esm --config codegen.ts",
     "build": "tsc",
     "start": "node dist/main.js"
   },
