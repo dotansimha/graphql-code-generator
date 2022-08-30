@@ -24,7 +24,7 @@ jobs:
           nodeVersion: 17
           packageManager: yarn
 
-      - uses: the-guild-org/shared-config/website-cf@wip-fix
+      - uses: the-guild-org/shared-config/website-cf@main
         name: build and deploy website
         env:
           NEXT_BASE_PATH: ${{ github.ref == 'refs/heads/master' && '/graphql/codegen' || '' }}
