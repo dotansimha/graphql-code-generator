@@ -16,3 +16,4 @@ tsconfig.tsbuildinfo
 recompile.sh
 
 .next/
+out
