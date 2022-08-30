@@ -1,11 +1,11 @@
 /* eslint-disable */
-import * as graphql from './graphql.js';
+import * as types from './graphql.js';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n': graphql.FooDocument,
-  '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n': graphql.LelFragmentDoc,
-  '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n': graphql.BarDocument,
+  '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n': types.FooDocument,
+  '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n': types.LelFragmentDoc,
+  '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n': types.BarDocument,
 };
 
 export function gql(
