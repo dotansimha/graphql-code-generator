@@ -338,6 +338,10 @@ export namespace Types {
 
   export type OutputPreset<TPresetConfig = any> = {
     buildGeneratesSection: (options: PresetFnArgs<TPresetConfig>) => Promisable<GenerateOptions[]>;
+    prepareDocuments?: (
+      outputFilePath: string,
+      outputSpecificDocuments: Types.OperationDocument[]
+    ) => Promisable<Types.OperationDocument[]>;
   };
 
   /* Require Extensions */
