@@ -218,6 +218,14 @@ export namespace Types {
   export type NamedPreset = string;
   export type OutputConfig = NamedPlugin | ConfiguredPlugin;
 
+  export type PresetNamesBase =
+    | 'client'
+    | 'near-operation-file'
+    | 'gql-tag-operations'
+    | 'graphql-modules'
+    | 'import-types-preset';
+  export type PresetNames = `${PresetNamesBase}-preset` | PresetNamesBase;
+
   /**
    * @additionalProperties false
    */
@@ -242,7 +250,7 @@ export namespace Types {
      *
      * List of available presets: https://graphql-code-generator.com/docs/presets/presets-index
      */
-    preset?: string | OutputPreset;
+    preset?: PresetNames | OutputPreset;
     /**
      * @description If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.
      *

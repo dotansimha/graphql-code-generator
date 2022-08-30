@@ -7,3 +7,4 @@ export * from './errors.js';
 export * from './getCachedDocumentNodeFromSchema.js';
 export * from './oldVisit.js';
 export * from './profiler.js';
+export { Types } from './types.js';
