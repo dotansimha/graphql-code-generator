@@ -1,5 +1,6 @@
 ---
 '@graphql-codegen/cli': minor
+'@graphql-cli/codegen': minor
 '@graphql-codegen/plugin-helpers': minor
 ---
 
