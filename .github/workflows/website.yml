@@ -11,9 +11,7 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: checkout
         uses: actions/checkout@v3
