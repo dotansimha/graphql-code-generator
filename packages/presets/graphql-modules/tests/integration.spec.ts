@@ -11,7 +11,7 @@ const options = {
     './tests/test-files/modules': {
       schema: './tests/test-files/modules/*/types/*.graphql',
       plugins: ['typescript', 'typescript-resolvers'],
-      preset: 'graphql-modules',
+      preset: 'graphql-modules' as const,
       presetConfig: {
         baseTypesPath: 'global-types.ts',
         filename: 'module-types.ts',
