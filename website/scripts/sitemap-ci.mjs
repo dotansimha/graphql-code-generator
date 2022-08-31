@@ -7,7 +7,7 @@ import config from '../next.config.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const sitemapPath = path.join(__dirname, '..', 'public', 'sitemap-0.xml');
+const sitemapPath = path.join(__dirname, '..', 'public', 'sitemap.xml');
 const lockfilePath = path.join(__dirname, '..', 'route-lockfile.txt');
 
 async function main() {

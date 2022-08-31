@@ -17,3 +17,4 @@ recompile.sh
 
 .next/
 out
+public/sitemap.xml
