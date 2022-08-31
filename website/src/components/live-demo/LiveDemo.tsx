@@ -1,16 +1,11 @@
-import { useState, useEffect, Suspense, ReactElement } from 'react';
-import { load } from 'js-yaml';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import { useTheme } from '@theguild/components';
+import { useState, useEffect, ReactElement } from 'react';
+import { useTheme, Image } from '@theguild/components';
 import Select from 'react-select';
-import { EXAMPLES, EXAMPLES_ICONS } from './examples';
+import { EXAMPLES } from './examples';
+import { icons } from '@/lib/plugins';
 import { getMode } from './formatter';
 import { generate } from './generate';
-import { Loading } from '../ui/Loading';
 import LiveDemoEditors from './LiveDemoEditors';
-
-const ErrorBoundary = dynamic(import('./ErrorBoundary'), { ssr: false });
 
 const groupedExamples = Object.entries(EXAMPLES).map(([catName, category]) => ({
   label: catName,
@@ -47,7 +42,7 @@ const DEFAULT_EXAMPLE = {
   index: 0,
 } as const;
 
-export const LiveDemo = (): ReactElement => {
+export default function LiveDemo(): ReactElement {
   const { theme } = useTheme();
   const isDarkTheme = theme === 'dark';
   const [template, setTemplate] = useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
@@ -56,29 +51,13 @@ export const LiveDemo = (): ReactElement => {
   const [config, setConfig] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].config);
   const { output, error } = useCodegen(config, schema, documents, template);
 
-  const changeTemplate = value => {
+  const changeTemplate = (value: string) => {
     const [catName, index] = value.split('__');
     setSchema(EXAMPLES[catName][index].schema);
     setDocuments(EXAMPLES[catName][index].documents);
     setConfig(EXAMPLES[catName][index].config);
     setTemplate(value);
   };
-
-  let mode = null;
-
-  try {
-    const parsedConfig = load(config || '');
-    mode = getMode(parsedConfig);
-  } catch (e) {
-    console.error(e);
-  }
-
-  // let description = null;
-  //
-  // if (template) {
-  //   const [catName, index] = template.split('__');
-  //   description = EXAMPLES[catName][index].description;
-  // }
 
   return (
     <div className="hidden lg:!block">
@@ -105,13 +84,12 @@ export const LiveDemo = (): ReactElement => {
           getOptionLabel={o => (
             <div className="flex items-center justify-end gap-1.5">
               <span className="mr-auto">{o.name}</span>
-              {o.tags?.map((t, index) => {
-                const icon = EXAMPLES_ICONS[t];
-                const key = `${o.name}_${index}`;
+              {o.tags?.map(t => {
+                const icon = icons[t];
                 return icon ? (
-                  <Image key={key} priority height={18} width={18} alt={icon.alt} src={icon.src} />
+                  <Image key={t} src={icon} placeholder="empty" loading="eager" className="max-h-[20px] w-auto" />
                 ) : (
-                  <span key={key} className="rounded-lg bg-gray-200 px-2 px-1 text-xs text-gray-800">
+                  <span key={t} className="rounded-lg bg-gray-200 px-2 text-xs text-gray-800">
                     {t}
                   </span>
                 );
@@ -122,25 +100,16 @@ export const LiveDemo = (): ReactElement => {
           options={groupedExamples}
         />
       </div>
-      <div className="flex border-y border-gray-300">
-        <ErrorBoundary>
-          <Suspense fallback={<Loading color={isDarkTheme ? '#fff' : '#000'} height="450px" />}>
-            <LiveDemoEditors
-              setSchema={setSchema}
-              schema={schema}
-              setDocuments={setDocuments}
-              documents={documents}
-              setConfig={setConfig}
-              config={config}
-              mode={mode}
-              error={error}
-              output={output}
-            />
-          </Suspense>
-        </ErrorBoundary>
-      </div>
+      <LiveDemoEditors
+        setSchema={setSchema}
+        schema={schema}
+        setDocuments={setDocuments}
+        documents={documents}
+        setConfig={setConfig}
+        config={config}
+        error={error}
+        output={output}
+      />
     </div>
   );
-};
-
-export default LiveDemo;
+}
