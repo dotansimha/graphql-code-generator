@@ -1,0 +1,587 @@
+import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
+
+# Guide: React, Vue and Angular
+
+GraphQL Code Generator provides an unified way to get GraphQL TypeScript types for:
+
+- **React**
+  - `@apollo/client` (since `3.2.0`, not when using React Components (`<Query>`))
+  - `@urql/core` (since `1.15.0`)
+  - `@urql/preact` (since `1.4.0`)
+  - `urql` (since `1.11.0`)
+  - `graphql-request` (since `5.0.0`)
+  - `react-query` (with `graphql-request@5.0.0`)
+  - `swr` (with `graphql-request@5.0.0`)
+- **Angular**
+
+  - `apollo-angular` (since `2.6.0`)
+
+- **Vue**
+  - `@vue/apollo-composable` (since `4.0.0-alpha.13`)
+  - `villus` (since `1.0.0-beta.8`)
+  - `@urql/vue` (since `1.11.0`)
+
+<br />
+
+This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index), you can [find the complete `schema.graphql` in our repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+
+We will build a simple GraphQL Front-end app using the following Query:
+
+```graphql
+query allFilmsWithVariablesQuery($first: Int!) {
+  allFilms(first: $first) {
+    edges {
+      node {
+        ...FilmItem
+      }
+    }
+  }
+}
+```
+
+and Fragment definition:
+
+```graphql
+fragment FilmItem on Film {
+  id
+  title
+  releaseDate
+  producers
+}
+```
+
+## Demo project for React, Vue or Angular
+
+<Callout type="info">
+
+All the below code examples are available in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+
+</Callout>
+
+### Installation
+
+For all GraphQL client and framework (React, Angular, Vue), install the following packages:
+
+<PackageCmd packages={['graphql', '-D @graphql-codegen/cli', '-D @graphql-codegen/client-preset']} />
+
+Then provide the corresponding framework-specific configuration:
+
+<Tabs items={['React project', 'Vue project', 'Angular project']}>
+
+<Tab>
+
+```ts filename="codegen.ts" {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: []
+    }
+  }
+}
+
+export default config
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="codegen.ts" {1, 5, 9-11}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  documents: ['src/**/*.vue'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      config: {
+        useTypeImports: true
+      },
+      plugins: []
+    }
+  }
+}
+
+export default config
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="codegen.ts" {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  documents: ['src/**/*.ts'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: []
+    }
+  }
+}
+
+export default config
+```
+
+> Each framework-specific lines are highlighted
+
+</Tab>
+
+</Tabs>
+
+### Writing GraphQL Queries
+
+After running GraphQL Code Generator in watch mode:
+
+```
+yarn graphql-codegen --watch
+```
+
+We can start implementing our first query with the `graphql()` function, generated in `src/gql/`:
+
+<Tabs items={['React Apollo', 'React Query', 'React URQL', 'Vue Apollo', 'Vue URQL', 'Angular']}>
+
+<Tab>
+
+```ts filename="src/App.tsx" {6, 8-18, 22}
+import React from 'react'
+import { useQuery } from '@apollo/client'
+
+import './App.css'
+import Film from './Film'
+import { graphql } from './gql/gql'
+
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          ...FilmItem
+        }
+      }
+    }
+  }
+`)
+
+function App() {
+  // `data` is typed!
+  const { data } = useQuery(allFilmsWithVariablesQueryDocument, { variables: { first: 10 } })
+  return (
+    <div className="App">
+      {data && <ul>{data.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>}
+    </div>
+  )
+}
+
+export default App
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="src/App.tsx" {7, 8-18, 23-27}
+import React from 'react'
+import request from 'graphql-request'
+import { useQuery } from '@tanstack/react-query'
+
+import './App.css'
+import Film from './Film'
+import { graphql } from './gql/gql'
+
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          ...FilmItem
+        }
+      }
+    }
+  }
+`)
+
+function App() {
+  // `data` is typed!
+  const { data } = useQuery(['films'], async () =>
+    request('https://swapi-graphql.netlify.app/.netlify/functions/index', allFilmsWithVariablesQueryDocument, {
+      first: 10 // variables are typed too!
+    })
+  )
+
+  return (
+    <div className="App">
+      {data && <ul>{data.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>}
+    </div>
+  )
+}
+
+export default App
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="src/App.tsx" {6, 8-18, 22-27}
+import React from 'react'
+import { useQuery } from 'urql'
+
+import './App.css'
+import Film from './Film'
+import { graphql } from './gql/gql'
+
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          ...FilmItem
+        }
+      }
+    }
+  }
+`)
+
+function App() {
+  // `data` is typed!
+  const [{ data }] = useQuery({
+    query: allFilmsWithVariablesQueryDocument,
+    variables: {
+      // variables are typed too!
+      first: 10
+    }
+  })
+
+  return (
+    <div className="App">
+      {data && <ul>{data.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>}
+    </div>
+  )
+}
+
+export default App
+```
+
+</Tab>
+
+<Tab>
+
+```vue filename="src/App.vue" {6, 9-21, 24}
+<script setup lang="ts">
+import { useQuery } from '@urql/vue'
+import { computed } from 'vue'
+
+import { graphql } from './gql/gql'
+import FilmItem from './components/FilmItem.vue'
+
+const { data } = useQuery({
+  query: graphql(/* GraphQL */ `
+    query allFilmsWithVariablesQuery($first: Int!) {
+      allFilms(first: $first) {
+        edges {
+          node {
+            ...FilmItem
+          }
+        }
+      }
+    }
+  `),
+  // variables are typed!
+  variables: { first: 10 }
+})
+// `films` is typed!
+const films = computed(() => data.value?.allFilms?.edges?.map(e => e?.node!))
+</script>
+
+<template>
+  <ul>
+    <li v-for="film of films"><FilmItem :film="film" /></li>
+  </ul>
+</template>
+```
+
+</Tab>
+
+<Tab>
+
+```vue filename="src/App.vue" {6, 9-21, 24}
+<script setup lang="ts">
+import { useQuery } from '@vue/apollo-composable'
+import { computed } from 'vue'
+
+import FilmItem from './components/FilmItem.vue'
+import { graphql } from './gql/gql'
+
+const { result } = useQuery(
+  graphql(/* GraphQL */ `
+    query allFilmsWithVariablesQuery($first: Int!) {
+      allFilms(first: $first) {
+        edges {
+          node {
+            ...FilmItem
+          }
+        }
+      }
+    }
+  `),
+  // variables are typed!
+  { first: 10 }
+)
+// `films` is typed!
+const films = computed(() => result.value?.allFilms?.edges?.map(e => e?.node!))
+</script>
+
+<template>
+  <ul>
+    <li v-for="film of films"><FilmItem :film="film" /></li>
+  </ul>
+</template>
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="src/app/films.service.ts" {6, 9-21, 24}
+// TODO
+```
+
+</Tab>
+
+</Tabs>
+
+<Callout type="info">
+
+Examples for React SWR, `graphql-request` and Villus are available in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+
+</Callout>
+
+Notice how easy GraphQL Code Generator integrates with your code ⚡️
+
+Simply use the `graphql()` function to declare your GraphQL operations and get instant typed results!
+
+Let's now take a look at using GraphQL Fragments for a better components architecture:
+
+### Writing GraphQL Fragments
+
+As showcased, in more details, [in one of our recent blog post](https://www.the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen), using GraphQL Fragments helps building better isolated and reusable UI components.
+
+Let's look at the implementation of our `Film` UI component in React, Vue or Angular:
+
+<Tabs items={['React Apollo', 'React Query', 'React URQL', 'Vue Apollo', 'Vue URQL', 'Angular']}>
+
+<Tab>
+
+```ts filename="src/Film.tsx" {4-11, 15, 17}
+import { FragmentType, useFragment } from './gql/fragment-masking'
+import { graphql } from './gql/gql'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+const Film = (props: {
+  /* `film` property has the correct type 🎉 */
+  film: FragmentType<typeof FilmFragment>
+}) => {
+  const film = useFragment(FilmFragment, props.film)
+  return (
+    <div>
+      <h3>{film.title}</h3>
+      <p>{film.releaseDate}</p>
+    </div>
+  )
+}
+
+export default Film
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="src/Film.tsx" {4-11, 15, 17}
+import { FragmentType, useFragment } from './gql/fragment-masking'
+import { graphql } from './gql/gql'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+const Film = (props: {
+  /* `film` property has the correct type 🎉 */
+  film: FragmentType<typeof FilmFragment>
+}) => {
+  const film = useFragment(FilmFragment, props.film)
+  return (
+    <div>
+      <h3>{film.title}</h3>
+      <p>{film.releaseDate}</p>
+    </div>
+  )
+}
+
+export default Film
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="src/Film.tsx" {4-11, 15, 17}
+import { FragmentType, useFragment } from './gql/fragment-masking'
+import { graphql } from './gql/gql'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+const Film = (props: {
+  /* `film` property has the correct type 🎉 */
+  film: FragmentType<typeof FilmFragment>
+}) => {
+  const film = useFragment(FilmFragment, props.film)
+  return (
+    <div>
+      <h3>{film.title}</h3>
+      <p>{film.releaseDate}</p>
+    </div>
+  )
+}
+
+export default Film
+```
+
+</Tab>
+
+<Tab>
+
+```vue filename="src/components/FilmItem.vue" {5-12, 14, 17}
+<script setup lang="ts">
+import { graphql } from '../gql/gql'
+import { type FragmentType, useFragment } from '../gql/fragment-masking'
+
+const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+const props = defineProps<{
+  film: FragmentType<typeof FilmFragment>
+}>()
+// `filmObj` is typed!
+const filmObj = useFragment(FilmFragment, props.film)
+</script>
+
+<template>
+  <div>
+    <h3>{{ filmObj.title }}</h3>
+    <p>{{ filmObj.releaseDate }}</p>
+  </div>
+</template>
+```
+
+</Tab>
+
+<Tab>
+
+```vue filename="src/components/FilmItem.vue" {5-12, 14, 17}
+<script setup lang="ts">
+import { graphql } from '../gql/gql'
+import { type FragmentType, useFragment } from '../gql/fragment-masking'
+
+const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+const props = defineProps<{
+  film: FragmentType<typeof FilmFragment>
+}>()
+// `filmObj` is typed!
+const filmObj = useFragment(FilmFragment, props.film)
+</script>
+
+<template>
+  <div>
+    <h3>{{ filmObj.title }}</h3>
+    <p>{{ filmObj.releaseDate }}</p>
+  </div>
+</template>
+```
+
+</Tab>
+
+<Tab>
+
+```ts filename="src/app/films.service.ts" {6, 9-21, 24}
+// TODO
+```
+
+</Tab>
+
+</Tabs>
+
+<Callout type="info">
+
+Examples for React SWR, `graphql-request` and Villus are available in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+
+</Callout>
+
+You will notice 2 major specificities:
+
+- we use `FragmentType<typeof FilmFragment>` to get the corresponding Fragment TypeScript type
+- later on, we use `useFragment()` (from the generated `./gql/gql`) to retrieve the properly `film` property
+
+> Leveraging `FragmentType<typeof FilmFragment>` and `useFragment()` helps keeping your UI component isolated and no inherit of the typings of the related GraphQL Query.
+
+By using this pattern, you are explicitly declaring the data dependencies of your UI component and safely accessing only the data it needs.
+
+Finally, unlike most setup GraphQL Client setup, you don't need to add the Fragment document to the related Query.
+
+_// TODO_
+
+## Note: React Query usage
+
+<Callout type="info">
+
+**Usage with `@tanstack/react-query`**
+
+For the best developer experience, we recommend using `@tanstack/react-query` with `graphql-request@^5.0.0`.
+
+</Callout>
+
+### Usage with a custom fetcher
+
+_// TODO_

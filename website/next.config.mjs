@@ -44,6 +44,9 @@ export default withGuildDocs({
       '/docs/getting-started/require-field': '/docs/config-reference/require-field',
       '/docs/getting-started/naming-convention': '/docs/config-reference/naming-convention',
       '/docs/getting-started/how-does-it-work': '/docs/advanced/how-does-it-work',
+      '/docs/guides/react': '/docs/advanced/react-vue-angular',
+      '/docs/guides/vue': '/docs/advanced/react-vue-angular',
+      '/docs/guides/angular': '/docs/advanced/react-vue-angular',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({

@@ -1,9 +1,6 @@
 {
-  "react": "React",
-  "vue": "Vue.js",
-  "angular": "Angular",
+  "react-vue-angular": "React, Vue, Angular",
   "svelte": "Svelte / Kit",
-  "front-end-typescript-only": "TypeScript only (front-end)",
   "flutter-freezed": "Dart/Flutter",
   "graphql-server-apollo-yoga": "Apollo Server / GraphQL Yoga",
   "graphql-modules": "GraphQL Modules",
