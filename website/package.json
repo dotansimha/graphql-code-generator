@@ -19,7 +19,7 @@
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
     "@types/node": "18.6.2",
-    "@types/react": "18.0.17",
+    "@types/react": "18.0.18",
     "eslint-config-next": "12.2.5",
     "fast-xml-parser": "4.0.9",
     "jsonpath": "1.1.1",
