@@ -1,0 +1,40 @@
+name: website
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push'
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: the-guild-org/shared-config/setup@main
+        name: setup env
+        with:
+          nodeVersion: 17
+          packageManager: yarn
+
+      - uses: the-guild-org/shared-config/website-cf@main
+        name: build and deploy website
+        env:
+          NEXT_BASE_PATH: ${{ github.ref == 'refs/heads/master' && '/graphql/codegen' || '' }}
+          SITE_URL: ${{ github.ref == 'refs/heads/master' && 'https://the-guild.dev/graphql/codegen' || '' }}
+        with:
+          cloudflareApiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          cloudflareAccountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          projectName: graphql-code-generator
+          prId: ${{ github.event.pull_request.number }}
+          websiteDirectory: ./
+          buildScript: yarn build && cd website && yarn build && yarn next export
+          artifactDir: website/out
