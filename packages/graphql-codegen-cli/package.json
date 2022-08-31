@@ -57,6 +57,7 @@
     "chalk": "^4.1.0",
     "chokidar": "^3.5.2",
     "cosmiconfig": "^7.0.0",
+    "cosmiconfig-typescript-loader": "^4.0.0",
     "debounce": "^1.2.0",
     "detect-indent": "^6.0.0",
     "graphql-config": "^4.3.5",

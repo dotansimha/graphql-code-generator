@@ -78,16 +78,18 @@ fragment UserFields on User {
 }
 ```
 
-And with the following `codegen.yml` configuration file:
+And with the following `codegen.ts` configuration file:
 
-```yaml filename="codegen.yml"
-schema: http://localhost:3333
-generates:
-  types-and-hooks.tsx:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-query
+```ts filename="codegen.ts"
+import { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:3333',
+  generates: {
+    'types-and-hooks.tsx': { plugins: ['typescript', 'typescript-operations', 'typescript-react-query'] },
+  },
+};
+export default config;
 ```
 
 `@graphql-codegen/typescript` plugin can generate the following TypeScript typings and React hooks files based on defined operations:
