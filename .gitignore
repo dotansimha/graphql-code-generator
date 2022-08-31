@@ -16,3 +16,5 @@ tsconfig.tsbuildinfo
 recompile.sh
 
 .next/
+out
+public/sitemap.xml

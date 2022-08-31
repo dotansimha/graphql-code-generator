@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import { useSSG } from 'nextra/ssg';
-import { PackageCmd, getComponents } from '@theguild/components';
+import { PackageCmd, getComponents, Anchor } from '@theguild/components';
 import { MDXRemote } from 'next-mdx-remote';
 import { format } from 'date-fns';
 import ClientNote from './client-note.mdx';
@@ -27,27 +27,27 @@ export const PluginHeader = ({
             <tr>
               <td>Package name</td>
               <td>
-                <a href={`https://npmjs.com/package/${npmPackage}`} target="_blank" rel="noreferrer">
+                <Anchor href={`https://npmjs.com/package/${npmPackage}`}>
                   <code>{npmPackage}</code>
-                </a>
+                </Anchor>
               </td>
             </tr>
             <tr>
               <td>Weekly Downloads</td>
               <td>
-                <img alt="downloads" src={`https://badgen.net/npm/dw/${npmPackage}`} />
+                <img alt="downloads" src={`https://badgen.net/npm/dw/${npmPackage}`} className="h-6" />
               </td>
             </tr>
             <tr>
               <td>Version</td>
               <td>
-                <img alt="license" src={`https://badgen.net/npm/v/${npmPackage}`} />
+                <img alt="license" src={`https://badgen.net/npm/v/${npmPackage}`} className="h-6" />
               </td>
             </tr>
             <tr>
               <td>License</td>
               <td>
-                <img alt="license" src={`https://badgen.net/npm/license/${npmPackage}`} />
+                <img alt="license" src={`https://badgen.net/npm/license/${npmPackage}`} className="h-6" />
               </td>
             </tr>
             <tr>
