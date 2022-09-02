@@ -3703,13 +3703,13 @@
     "@typescript-eslint/types" "5.36.1"
     eslint-visitor-keys "^3.3.0"
 
-"@urql/core@>=2.5.0", "@urql/core@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.6.1.tgz#c10ee972c5e81df6d7bf1e778ef1b5d30e2906e5"
-  integrity sha512-gYrEHy3tViJhwIhauK6MIf2Qp09QTsgNHZRd0n71rS+hF6gdwjspf1oKljl4m25+272cJF7fPjBUGmjaiEr7Kg==
+"@urql/core@>=2.5.0", "@urql/core@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-3.0.3.tgz#da054babb4d4aed26dc4503806b310ba6dd6eea1"
+  integrity sha512-raQP51ERNtg5BvlN8x8mHVRvk4K0ugWQ69n53BdkjKpXVV5kuWp7trnwriGv1fQKa8HuiGNSCfyslUucc0OVQg==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
-    wonka "^4.0.14"
+    wonka "^6.0.0"
 
 "@urql/exchange-graphcache@4.4.3":
   version "4.4.3"
@@ -12942,13 +12942,13 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-urql@2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-2.2.3.tgz#84c6ad962d771235106f24de56b5dc6bd85a2c3a"
-  integrity sha512-XMkSYJKW9s4ZlbSuxcUz3fTBIykOn0sGileRXQeyZpaRBXJPVz5saSY05k7jdefNxShZtTI+/nr7PYUWQertfg==
+urql@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-3.0.2.tgz#b05e492f45d00acba21852ee238b2f816e9f8312"
+  integrity sha512-jn2wY+2jJreHPnnTuU84pr+9UK7U30Rl1IFYMV2fBWVlUjObcI3a9u1NBLP8TpKPR3dkltS8kVCPk9VbXUtLHw==
   dependencies:
-    "@urql/core" "^2.6.1"
-    wonka "^4.0.14"
+    "@urql/core" "^3.0.3"
+    wonka "^6.0.0"
 
 use-debounce@8.0.3:
   version "8.0.3"
@@ -13239,6 +13239,11 @@ wonka@^4.0.14:
   version "4.0.15"
   resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.15.tgz#9aa42046efa424565ab8f8f451fcca955bf80b89"
   integrity sha512-U0IUQHKXXn6PFo9nqsHphVCE5m3IntqZNB9Jjn7EB1lrR7YTDY3YWgFvEvwniTzXSvOH/XMzAZaIfJF/LvHYXg==
+
+wonka@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-6.0.0.tgz#38cd39a517fc3ff721ea3bf353642b353bf48860"
+  integrity sha512-TEiIOqkhQXbcmL1RrjxPCzTX15V5FSyJvZRSiTxvgTgrJMaOVKmzGTdRVh349CfaNo9dsIhWDyg1/GNq4NWrEg==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
