@@ -237,8 +237,8 @@ export const Feed4Document = gql\`
   }
 }
     \`;
-export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
-export function getSdk<C, E>(requester: Requester<C, E>) {
+export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;
@@ -486,8 +486,8 @@ export const FeedLiveDocument = gql\`
   }
 }
     \`;
-export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
-export function getSdk<C, E>(requester: Requester<C, E>) {
+export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;
@@ -726,8 +726,8 @@ export const FeedLiveDocument = gql\`
   }
 }
     \`;
-export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | Observable<R>
-export function getSdk<C, E>(requester: Requester<C, E>) {
+export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | Observable<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;
@@ -978,8 +978,8 @@ export const Feed4Document = \`
   }
 }
     \`;
-export type Requester<C = {}, E = unknown> = <R, V>(doc: string, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
-export function getSdk<C, E>(requester: Requester<C, E>) {
+export type Requester<C = {}> = <R, V>(doc: string, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
     feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
       return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options) as Promise<FeedQuery>;

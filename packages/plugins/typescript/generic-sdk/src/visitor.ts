@@ -104,10 +104,16 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
 
     const documentNodeType = this.config.documentMode === DocumentMode.string ? 'string' : 'DocumentNode';
     const resultData = this.config.rawRequest ? 'ExecutionResult<R, E>' : 'R';
-    const returnType = `Promise<${resultData}> | ${usingObservable ? 'Observable' : 'AsyncIterable'}<${resultData}>`;
+    const requesterTypeName = this.config.rawRequest ? 'Requester<C = {}, E = unknown>' : 'Requester<C = {}>';
+    const requesterReturnType = `Promise<${resultData}> | ${
+      usingObservable ? 'Observable' : 'AsyncIterable'
+    }<${resultData}>`;
+    const getSdkSignature = this.config.rawRequest
+      ? 'getSdk<C, E>(requester: Requester<C, E>)'
+      : 'getSdk<C>(requester: Requester<C>)';
 
-    return `export type Requester<C = {}, E = unknown> = <R, V>(doc: ${documentNodeType}, vars?: V, options?: C) => ${returnType}
-export function getSdk<C, E>(requester: Requester<C, E>) {
+    return `export type ${requesterTypeName} = <R, V>(doc: ${documentNodeType}, vars?: V, options?: C) => ${requesterReturnType}
+export function ${getSdkSignature} {
   return {
 ${allPossibleActions.join(',\n')}
   };
