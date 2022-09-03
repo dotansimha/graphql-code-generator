@@ -77,8 +77,8 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'server/src/**/*.graphql',
-  documents: 'client/src/**/*.graphql'
-  generates {
+  documents: 'client/src/**/*.graphql',
+  generates: {
     'client/src/models.ts': [
       'typescript',
       'typescript-operations'
