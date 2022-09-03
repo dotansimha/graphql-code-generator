@@ -434,7 +434,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     let requireTypename = false;
 
     // usages via fragment typescript type
-    const fragmentsSpreadUsages: string[] = [];
+    const fragmentsSpreadUsages: { name: string; onType: string }[] = [];
 
     // ensure we mutate no function params
     selectionNodes = [...selectionNodes];
@@ -494,7 +494,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       }
 
       if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
-        fragmentsSpreadUsages.push(selectionNode.typeName);
+        fragmentsSpreadUsages.push({ name: selectionNode.typeName, onType: selectionNode.onType });
         continue;
       }
 
@@ -546,13 +546,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       requireTypename,
       this._config.skipTypeNameForRoot
     );
+    const transformedTypenameFields =
+      !this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask'
+        ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
+        : [];
     const transformed: ProcessResult = [
       // Only add the typename field if we're not merging fragment
       // types. If we are merging, we need to wait until we know all
       // the involved typenames.
-      ...(typeInfoField && (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask')
-        ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
-        : []),
+      ...transformedTypenameFields,
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
@@ -584,9 +586,18 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     if (fragmentsSpreadUsages.length) {
       if (this._config.inlineFragmentTypes === 'combine') {
-        fields.push(...fragmentsSpreadUsages);
+        fields.push(...fragmentsSpreadUsages.map(({ name }) => name));
+
+        // Remove the typename field if all fragments already contain it
+        const allOnSameType = fragmentsSpreadUsages.every(({ onType }) => onType === typeInfoField.type);
+        const stringTypenames = transformedTypenameFields.filter((field): field is string => typeof field === 'string');
+        if (allOnSameType && stringTypenames.length === 1) {
+          fields.splice(fields.indexOf(stringTypenames[0]), 1);
+        }
       } else if (this._config.inlineFragmentTypes === 'mask') {
-        fields.push(`{ ' $fragmentRefs': { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
+        fields.push(
+          `{ ' $fragmentRefs': { ${fragmentsSpreadUsages.map(({ name }) => `'${name}': ${name}`).join(`;`)} } }`
+        );
       }
     }
 
