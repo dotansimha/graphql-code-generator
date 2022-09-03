@@ -7,6 +7,7 @@ import {
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
+  stripIgnoredCharacters,
 } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
@@ -160,6 +161,11 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * @description If set to true, it will enable support for parsing variables on fragments.
    */
   experimentalFragmentVariables?: boolean;
+  /**
+   * @default false
+   * @description If set to true, any extraneous whitespace characters, etc. in the strings will be removed — using `graphql-js`'s `stripIgnoredCharacters` function. Has no effect if `documentMode` is set to `documentNode`.
+   */
+  stripIgnoredCharacters?: boolean;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
@@ -180,6 +186,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   pureMagicComment?: boolean;
   optimizeDocumentNode: boolean;
   experimentalFragmentVariables?: boolean;
+  stripIgnoredCharacters?: boolean;
 }
 
 export class ClientSideBaseVisitor<
@@ -333,12 +340,14 @@ export class ClientSideBaseVisitor<
       return JSON.stringify(gqlObj);
     }
     if (this.config.documentMode === DocumentMode.string) {
-      return '`' + doc + '`';
+      return '`' + this.config.stripIgnoredCharacters ? stripIgnoredCharacters(doc) : doc + '`';
     }
 
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
 
-    return (gqlImport.propName || 'gql') + '`' + doc + '`';
+    return (gqlImport.propName || 'gql') + '`' + this.config.stripIgnoredCharacters
+      ? stripIgnoredCharacters(doc)
+      : doc + '`';
   }
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
