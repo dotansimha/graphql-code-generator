@@ -51,6 +51,11 @@ type FragmentSpreadUsage = {
   selectionNodes: Array<SelectionNode>;
 };
 
+type TypenameField = {
+  name: string;
+  type: string;
+};
+
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
 }
@@ -434,7 +439,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     let requireTypename = false;
 
     // usages via fragment typescript type
-    const fragmentsSpreadUsages: { name: string; onType: string }[] = [];
+    const fragmentsSpreadUsages: FragmentSpreadUsage[] = [];
 
     // ensure we mutate no function params
     selectionNodes = [...selectionNodes];
@@ -494,7 +499,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       }
 
       if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
-        fragmentsSpreadUsages.push({ name: selectionNode.typeName, onType: selectionNode.onType });
+        fragmentsSpreadUsages.push(selectionNode);
         continue;
       }
 
@@ -546,15 +551,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       requireTypename,
       this._config.skipTypeNameForRoot
     );
-    const transformedTypenameFields =
-      !this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask'
-        ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
-        : [];
     const transformed: ProcessResult = [
-      // Only add the typename field if we're not merging fragment
-      // types. If we are merging, we need to wait until we know all
-      // the involved typenames.
-      ...transformedTypenameFields,
+      ...(this.needsTypenameField(fragmentsSpreadUsages, typeInfoField)
+        ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
+        : []),
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
@@ -586,22 +586,36 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     if (fragmentsSpreadUsages.length) {
       if (this._config.inlineFragmentTypes === 'combine') {
-        fields.push(...fragmentsSpreadUsages.map(({ name }) => name));
-
-        // Remove the typename field if all fragments already contain it
-        const allOnSameType = fragmentsSpreadUsages.every(({ onType }) => onType === typeInfoField.type);
-        const stringTypenames = transformedTypenameFields.filter((field): field is string => typeof field === 'string');
-        if (allOnSameType && stringTypenames.length === 1) {
-          fields.splice(fields.indexOf(stringTypenames[0]), 1);
-        }
+        fields.push(...fragmentsSpreadUsages.map(({ typeName }) => typeName));
       } else if (this._config.inlineFragmentTypes === 'mask') {
         fields.push(
-          `{ ' $fragmentRefs': { ${fragmentsSpreadUsages.map(({ name }) => `'${name}': ${name}`).join(`;`)} } }`
+          `{ ' $fragmentRefs': { ${fragmentsSpreadUsages
+            .map(({ typeName }) => `'${typeName}': ${typeName}`)
+            .join(`;`)} } }`
         );
       }
     }
 
     return { typeInfo: typeInfoField, fields };
+  }
+
+  /**
+   * When masking the fragments, typename will always be added.
+   * When combining the fragments, typename will be added only if all
+   * fragments don't have the same type as the main typename.
+   * When merging fragments, we need to wait until we know all the involved
+   * typenames, so we don't add the typename field.
+   */
+  private needsTypenameField(fragmentsSpreadUsages: FragmentSpreadUsage[], typeInfoField: TypenameField) {
+    if (
+      this._config.inlineFragmentTypes === 'combine' &&
+      fragmentsSpreadUsages.length > 0 &&
+      fragmentsSpreadUsages.every(({ onType }) => onType === typeInfoField.type)
+    ) {
+      return false;
+    }
+
+    return !this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask';
   }
 
   protected buildTypeNameField(
@@ -610,7 +624,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     addTypename: boolean = this._config.addTypename,
     queriedForTypename: boolean = this._queriedForTypename,
     skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
-  ): { name: string; type: string } {
+  ): TypenameField {
     const rootTypes = getRootTypes(this._schema);
     if (rootTypes.has(type) && skipTypeNameForRoot && !queriedForTypename) {
       return null;
