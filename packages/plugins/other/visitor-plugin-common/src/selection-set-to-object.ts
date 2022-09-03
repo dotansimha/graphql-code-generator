@@ -552,7 +552,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       this._config.skipTypeNameForRoot
     );
     const transformed: ProcessResult = [
-      ...(typeInfoField && this.needsTypenameField(fragmentsSpreadUsages, typeInfoField)
+      ...(typeInfoField && this.needsTypenameField(fragmentsSpreadUsages)
         ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
         : []),
       ...this._processor.transformPrimitiveFields(
@@ -601,17 +601,13 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
   /**
    * When masking the fragments, typename will always be added.
-   * When combining the fragments, typename will be added only if all
-   * fragments don't have the same type as the main typename.
+   * When combining the fragments, typename will be added only if there
+   * are no fragments.
    * When merging fragments, we need to wait until we know all the involved
    * typenames, so we don't add the typename field.
    */
-  private needsTypenameField(fragmentsSpreadUsages: FragmentSpreadUsage[], typeInfoField: TypenameField) {
-    if (
-      this._config.inlineFragmentTypes === 'combine' &&
-      fragmentsSpreadUsages.length > 0 &&
-      fragmentsSpreadUsages.every(({ onType }) => `'${onType}'` === typeInfoField.type)
-    ) {
+  private needsTypenameField(fragmentsSpreadUsages: FragmentSpreadUsage[]) {
+    if (this._config.inlineFragmentTypes === 'combine' && fragmentsSpreadUsages.length > 0) {
       return false;
     }
 
