@@ -6364,6 +6364,23 @@ function test(q: GetEntityBrandDataQuery): void {
         fragment UserFragment on User {
           id
         }
+
+        query {
+          me {
+            id
+          }
+        }
+
+        query {
+          search(term: "test") {
+            ...UserFragment
+            ...NotifFragment
+          }
+        }
+        fragment NotifFragment on TextNotification {
+          id
+          text
+        }
       `);
       const result = await plugin(
         schema,
@@ -6375,12 +6392,21 @@ function test(q: GetEntityBrandDataQuery): void {
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
-            { __typename?: 'User' }
-            & UserFragmentFragment
-          ) | null };
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: UserFragmentFragment | null };
 
         export type UserFragmentFragment = { __typename?: 'User', id: string };
+
+        export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_2_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+
+        export type Unnamed_3_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_3_Query = { __typename?: 'Query', search: Array<NotifFragmentFragment | { __typename?: 'ImageNotification' } | UserFragmentFragment> };
+
+        export type NotifFragmentFragment = { __typename?: 'TextNotification', id: string, text: string };
       `);
     });
 
