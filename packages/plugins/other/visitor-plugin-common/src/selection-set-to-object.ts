@@ -552,7 +552,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       this._config.skipTypeNameForRoot
     );
     const transformed: ProcessResult = [
-      ...(this.needsTypenameField(fragmentsSpreadUsages, typeInfoField)
+      ...(typeInfoField && this.needsTypenameField(fragmentsSpreadUsages, typeInfoField)
         ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
         : []),
       ...this._processor.transformPrimitiveFields(
@@ -624,7 +624,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     addTypename: boolean = this._config.addTypename,
     queriedForTypename: boolean = this._queriedForTypename,
     skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
-  ): TypenameField {
+  ): TypenameField | null {
     const rootTypes = getRootTypes(this._schema);
     if (rootTypes.has(type) && skipTypeNameForRoot && !queriedForTypename) {
       return null;
