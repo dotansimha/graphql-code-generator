@@ -610,7 +610,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     if (
       this._config.inlineFragmentTypes === 'combine' &&
       fragmentsSpreadUsages.length > 0 &&
-      fragmentsSpreadUsages.every(({ onType }) => onType === typeInfoField.type)
+      fragmentsSpreadUsages.every(({ onType }) => `'${onType}'` === typeInfoField.type)
     ) {
       return false;
     }
