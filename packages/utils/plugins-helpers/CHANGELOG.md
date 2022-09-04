@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.7.0
+
+### Minor Changes
+
+- [#8301](https://github.com/dotansimha/graphql-code-generator/pull/8301) [`2ed21a471`](https://github.com/dotansimha/graphql-code-generator/commit/2ed21a471f8de58ecafebf4bf64b3c32cee24d2f) Thanks [@charlypoly](https://github.com/charlypoly)! - Introduces support for TypeScript config file and a new preset lifecycle (required for `client-preset`)
+
 ## 2.6.2
 
 ### Patch Changes

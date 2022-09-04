@@ -233,7 +233,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -242,7 +242,7 @@ export const Feed4Document = gql\`
 function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
   if (result.errors) {
     const originalErrors = result.errors.map(error => error.originalError|| error);
-    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
   }
   return result.data as unknown as T;
 }
@@ -255,25 +255,25 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed', jitOptions);
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
     const feed2Compiled = compileQuery(schema, Feed2Document, 'feed2', jitOptions);
     if(!(isCompiledQuery(feed2Compiled))) {
       const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed2: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
     const feed3Compiled = compileQuery(schema, Feed3Document, 'feed3', jitOptions);
     if(!(isCompiledQuery(feed3Compiled))) {
       const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed3: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
     const feed4Compiled = compileQuery(schema, Feed4Document, 'feed4', jitOptions);
     if(!(isCompiledQuery(feed4Compiled))) {
       const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed4: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
   return {
@@ -321,191 +321,191 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
 }
 export type Sdk = ReturnType<typeof getSdk>;
 async function test() {
-  const schema = buildSchema(\`\\"\\"\\"\\"\\"\\"
+  const schema = buildSchema(\`""""""
 type Query {
-  \\"\\"\\"A feed of repository submissions\\"\\"\\"
+  """A feed of repository submissions"""
   feed(
-    \\"\\"\\"The sort order for the feed\\"\\"\\"
+    """The sort order for the feed"""
     type: FeedType!
 
-    \\"\\"\\"The number of items to skip, for pagination\\"\\"\\"
+    """The number of items to skip, for pagination"""
     offset: Int
 
-    \\"\\"\\"The number of items to fetch starting from the offset, for pagination\\"\\"\\"
+    """The number of items to fetch starting from the offset, for pagination"""
     limit: Int
   ): [Entry]
 
-  \\"\\"\\"A single entry\\"\\"\\"
+  """A single entry"""
   entry(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
   ): Entry
 
-  \\"\\"\\"Return the currently logged in user, or null if nobody is logged in\\"\\"\\"
+  """Return the currently logged in user, or null if nobody is logged in"""
   currentUser: User
 }
 
-\\"\\"\\"A list of options for the sort order of the feed\\"\\"\\"
+"""A list of options for the sort order of the feed"""
 enum FeedType {
-  \\"\\"\\"Sort by a combination of freshness and score, using Reddit's algorithm\\"\\"\\"
+  """Sort by a combination of freshness and score, using Reddit's algorithm"""
   HOT
 
-  \\"\\"\\"Newest entries first\\"\\"\\"
+  """Newest entries first"""
   NEW
 
-  \\"\\"\\"Highest score entries first\\"\\"\\"
+  """Highest score entries first"""
   TOP
 }
 
-\\"\\"\\"Information about a GitHub repository submitted to GitHunt\\"\\"\\"
+"""Information about a GitHub repository submitted to GitHunt"""
 type Entry {
-  \\"\\"\\"Information about the repository from GitHub\\"\\"\\"
+  """Information about the repository from GitHub"""
   repository: Repository!
 
-  \\"\\"\\"The GitHub user who submitted this entry\\"\\"\\"
+  """The GitHub user who submitted this entry"""
   postedBy: User!
 
-  \\"\\"\\"A timestamp of when the entry was submitted\\"\\"\\"
+  """A timestamp of when the entry was submitted"""
   createdAt: Float!
 
-  \\"\\"\\"The score of this repository, upvotes - downvotes\\"\\"\\"
+  """The score of this repository, upvotes - downvotes"""
   score: Int!
 
-  \\"\\"\\"The hot score of this repository\\"\\"\\"
+  """The hot score of this repository"""
   hotScore: Float!
 
-  \\"\\"\\"Comments posted about this repository\\"\\"\\"
+  """Comments posted about this repository"""
   comments(limit: Int, offset: Int): [Comment]!
 
-  \\"\\"\\"The number of comments posted about this repository\\"\\"\\"
+  """The number of comments posted about this repository"""
   commentCount: Int!
 
-  \\"\\"\\"The SQL ID of this entry\\"\\"\\"
+  """The SQL ID of this entry"""
   id: Int!
 
-  \\"\\"\\"XXX to be changed\\"\\"\\"
+  """XXX to be changed"""
   vote: Vote!
 }
 
-\\"\\"\\"
+"""
 A repository object from the GitHub API. This uses the exact field names returned by the
 GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
-\\"\\"\\"
+"""
 type Repository {
-  \\"\\"\\"Just the name of the repository, e.g. GitHunt-API\\"\\"\\"
+  """Just the name of the repository, e.g. GitHunt-API"""
   name: String!
 
-  \\"\\"\\"
+  """
   The full name of the repository with the username, e.g. apollostack/GitHunt-API
-  \\"\\"\\"
+  """
   full_name: String!
 
-  \\"\\"\\"The description of the repository\\"\\"\\"
+  """The description of the repository"""
   description: String
 
-  \\"\\"\\"The link to the repository on GitHub\\"\\"\\"
+  """The link to the repository on GitHub"""
   html_url: String!
 
-  \\"\\"\\"The number of people who have starred this repository on GitHub\\"\\"\\"
+  """The number of people who have starred this repository on GitHub"""
   stargazers_count: Int!
 
-  \\"\\"\\"The number of open issues on this repository on GitHub\\"\\"\\"
+  """The number of open issues on this repository on GitHub"""
   open_issues_count: Int
 
-  \\"\\"\\"The owner of this repository on GitHub, e.g. apollostack\\"\\"\\"
+  """The owner of this repository on GitHub, e.g. apollostack"""
   owner: User
 }
 
-\\"\\"\\"
+"""
 A user object from the GitHub API. This uses the exact field names returned from the GitHub API.
-\\"\\"\\"
+"""
 type User {
-  \\"\\"\\"The name of the user, e.g. apollostack\\"\\"\\"
+  """The name of the user, e.g. apollostack"""
   login: String!
 
-  \\"\\"\\"The URL to a directly embeddable image for this user's avatar\\"\\"\\"
+  """The URL to a directly embeddable image for this user's avatar"""
   avatar_url: String!
 
-  \\"\\"\\"The URL of this user's GitHub page\\"\\"\\"
+  """The URL of this user's GitHub page"""
   html_url: String!
 }
 
-\\"\\"\\"A comment about an entry, submitted by a user\\"\\"\\"
+"""A comment about an entry, submitted by a user"""
 type Comment {
-  \\"\\"\\"The SQL ID of this entry\\"\\"\\"
+  """The SQL ID of this entry"""
   id: Int!
 
-  \\"\\"\\"The GitHub user who posted the comment\\"\\"\\"
+  """The GitHub user who posted the comment"""
   postedBy: User!
 
-  \\"\\"\\"A timestamp of when the comment was posted\\"\\"\\"
+  """A timestamp of when the comment was posted"""
   createdAt: Float!
 
-  \\"\\"\\"The text of the comment\\"\\"\\"
+  """The text of the comment"""
   content: String!
 
-  \\"\\"\\"The repository which this comment is about\\"\\"\\"
+  """The repository which this comment is about"""
   repoName: String!
 }
 
-\\"\\"\\"XXX to be removed\\"\\"\\"
+"""XXX to be removed"""
 type Vote {
-  \\"\\"\\"\\"\\"\\"
+  """"""
   vote_value: Int!
 }
 
-\\"\\"\\"\\"\\"\\"
+""""""
 type Mutation {
-  \\"\\"\\"Submit a new repository, returns the new submission\\"\\"\\"
+  """Submit a new repository, returns the new submission"""
   submitRepository(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
   ): Entry
 
-  \\"\\"\\"
+  """
   Vote on a repository submission, returns the submission that was voted on
-  \\"\\"\\"
+  """
   vote(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
 
-    \\"\\"\\"The type of vote - UP, DOWN, or CANCEL\\"\\"\\"
+    """The type of vote - UP, DOWN, or CANCEL"""
     type: VoteType!
   ): Entry
 
-  \\"\\"\\"Comment on a repository, returns the new comment\\"\\"\\"
+  """Comment on a repository, returns the new comment"""
   submitComment(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
 
-    \\"\\"\\"The text content for the new comment\\"\\"\\"
+    """The text content for the new comment"""
     commentContent: String!
   ): Comment
 }
 
-\\"\\"\\"The type of vote to record, when submitting a vote\\"\\"\\"
+"""The type of vote to record, when submitting a vote"""
 enum VoteType {
-  \\"\\"\\"\\"\\"\\"
+  """"""
   UP
 
-  \\"\\"\\"\\"\\"\\"
+  """"""
   DOWN
 
-  \\"\\"\\"\\"\\"\\"
+  """"""
   CANCEL
 }
 
-\\"\\"\\"\\"\\"\\"
+""""""
 type Subscription {
-  \\"\\"\\"Subscription fires on every comment added\\"\\"\\"
+  """Subscription fires on every comment added"""
   commentAdded(repoFullName: String!): Comment
 }\`);
   const sdk = getJitSdk(schema);
@@ -514,7 +514,7 @@ type Subscription {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -737,7 +737,7 @@ async function handleSubscriptionResult<T>(resultIterator: AsyncIterableIterator
 function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
   if (result.errors) {
     const originalErrors = result.errors.map(error => error.originalError|| error);
-    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
   }
   return result.data as unknown as T;
 }
@@ -750,13 +750,13 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
     const feedCompiled = compileQuery(schema, FeedDocument, 'feed', jitOptions);
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
     const commentAddedCompiled = compileQuery(schema, CommentAddedDocument, 'commentAdded', jitOptions);
     if(!(isCompiledQuery(commentAddedCompiled))) {
       const originalErrors = commentAddedCompiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile commentAdded: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile commentAdded: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
   return {
@@ -1018,7 +1018,7 @@ export const Feed3Document = \`
 }
     \`;
 export const Feed4Document = \`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -1027,7 +1027,7 @@ export const Feed4Document = \`
 function handleExecutionResult<T>(result: ExecutionResult, operationName: string) {
   if (result.errors) {
     const originalErrors = result.errors.map(error => error.originalError|| error);
-    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+    throw new AggregateError(originalErrors, \`Failed to execute \${operationName}: \\n\\t\${originalErrors.join('\\n\\t')}\`);
   }
   return result.data as unknown as T;
 }
@@ -1040,25 +1040,25 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
     const feedCompiled = compileQuery(schema, parse(FeedDocument), 'feed', jitOptions);
     if(!(isCompiledQuery(feedCompiled))) {
       const originalErrors = feedCompiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
     const feed2Compiled = compileQuery(schema, parse(Feed2Document), 'feed2', jitOptions);
     if(!(isCompiledQuery(feed2Compiled))) {
       const originalErrors = feed2Compiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed2: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed2: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
     const feed3Compiled = compileQuery(schema, parse(Feed3Document), 'feed3', jitOptions);
     if(!(isCompiledQuery(feed3Compiled))) {
       const originalErrors = feed3Compiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed3: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed3: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
     const feed4Compiled = compileQuery(schema, parse(Feed4Document), 'feed4', jitOptions);
     if(!(isCompiledQuery(feed4Compiled))) {
       const originalErrors = feed4Compiled?.errors?.map(error => error.originalError || error) || [];
-      throw new AggregateError(originalErrors, \`Failed to compile feed4: \\\\n\\\\t\${originalErrors.join('\\\\n\\\\t')}\`);
+      throw new AggregateError(originalErrors, \`Failed to compile feed4: \\n\\t\${originalErrors.join('\\n\\t')}\`);
     }
 
   return {
@@ -1106,191 +1106,191 @@ export function getSdk<TGlobalContext = any, TGlobalRoot = any, TOperationContex
 }
 export type Sdk = ReturnType<typeof getSdk>;
 async function test() {
-  const schema = buildSchema(\`\\"\\"\\"\\"\\"\\"
+  const schema = buildSchema(\`""""""
 type Query {
-  \\"\\"\\"A feed of repository submissions\\"\\"\\"
+  """A feed of repository submissions"""
   feed(
-    \\"\\"\\"The sort order for the feed\\"\\"\\"
+    """The sort order for the feed"""
     type: FeedType!
 
-    \\"\\"\\"The number of items to skip, for pagination\\"\\"\\"
+    """The number of items to skip, for pagination"""
     offset: Int
 
-    \\"\\"\\"The number of items to fetch starting from the offset, for pagination\\"\\"\\"
+    """The number of items to fetch starting from the offset, for pagination"""
     limit: Int
   ): [Entry]
 
-  \\"\\"\\"A single entry\\"\\"\\"
+  """A single entry"""
   entry(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
   ): Entry
 
-  \\"\\"\\"Return the currently logged in user, or null if nobody is logged in\\"\\"\\"
+  """Return the currently logged in user, or null if nobody is logged in"""
   currentUser: User
 }
 
-\\"\\"\\"A list of options for the sort order of the feed\\"\\"\\"
+"""A list of options for the sort order of the feed"""
 enum FeedType {
-  \\"\\"\\"Sort by a combination of freshness and score, using Reddit's algorithm\\"\\"\\"
+  """Sort by a combination of freshness and score, using Reddit's algorithm"""
   HOT
 
-  \\"\\"\\"Newest entries first\\"\\"\\"
+  """Newest entries first"""
   NEW
 
-  \\"\\"\\"Highest score entries first\\"\\"\\"
+  """Highest score entries first"""
   TOP
 }
 
-\\"\\"\\"Information about a GitHub repository submitted to GitHunt\\"\\"\\"
+"""Information about a GitHub repository submitted to GitHunt"""
 type Entry {
-  \\"\\"\\"Information about the repository from GitHub\\"\\"\\"
+  """Information about the repository from GitHub"""
   repository: Repository!
 
-  \\"\\"\\"The GitHub user who submitted this entry\\"\\"\\"
+  """The GitHub user who submitted this entry"""
   postedBy: User!
 
-  \\"\\"\\"A timestamp of when the entry was submitted\\"\\"\\"
+  """A timestamp of when the entry was submitted"""
   createdAt: Float!
 
-  \\"\\"\\"The score of this repository, upvotes - downvotes\\"\\"\\"
+  """The score of this repository, upvotes - downvotes"""
   score: Int!
 
-  \\"\\"\\"The hot score of this repository\\"\\"\\"
+  """The hot score of this repository"""
   hotScore: Float!
 
-  \\"\\"\\"Comments posted about this repository\\"\\"\\"
+  """Comments posted about this repository"""
   comments(limit: Int, offset: Int): [Comment]!
 
-  \\"\\"\\"The number of comments posted about this repository\\"\\"\\"
+  """The number of comments posted about this repository"""
   commentCount: Int!
 
-  \\"\\"\\"The SQL ID of this entry\\"\\"\\"
+  """The SQL ID of this entry"""
   id: Int!
 
-  \\"\\"\\"XXX to be changed\\"\\"\\"
+  """XXX to be changed"""
   vote: Vote!
 }
 
-\\"\\"\\"
+"""
 A repository object from the GitHub API. This uses the exact field names returned by the
 GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
-\\"\\"\\"
+"""
 type Repository {
-  \\"\\"\\"Just the name of the repository, e.g. GitHunt-API\\"\\"\\"
+  """Just the name of the repository, e.g. GitHunt-API"""
   name: String!
 
-  \\"\\"\\"
+  """
   The full name of the repository with the username, e.g. apollostack/GitHunt-API
-  \\"\\"\\"
+  """
   full_name: String!
 
-  \\"\\"\\"The description of the repository\\"\\"\\"
+  """The description of the repository"""
   description: String
 
-  \\"\\"\\"The link to the repository on GitHub\\"\\"\\"
+  """The link to the repository on GitHub"""
   html_url: String!
 
-  \\"\\"\\"The number of people who have starred this repository on GitHub\\"\\"\\"
+  """The number of people who have starred this repository on GitHub"""
   stargazers_count: Int!
 
-  \\"\\"\\"The number of open issues on this repository on GitHub\\"\\"\\"
+  """The number of open issues on this repository on GitHub"""
   open_issues_count: Int
 
-  \\"\\"\\"The owner of this repository on GitHub, e.g. apollostack\\"\\"\\"
+  """The owner of this repository on GitHub, e.g. apollostack"""
   owner: User
 }
 
-\\"\\"\\"
+"""
 A user object from the GitHub API. This uses the exact field names returned from the GitHub API.
-\\"\\"\\"
+"""
 type User {
-  \\"\\"\\"The name of the user, e.g. apollostack\\"\\"\\"
+  """The name of the user, e.g. apollostack"""
   login: String!
 
-  \\"\\"\\"The URL to a directly embeddable image for this user's avatar\\"\\"\\"
+  """The URL to a directly embeddable image for this user's avatar"""
   avatar_url: String!
 
-  \\"\\"\\"The URL of this user's GitHub page\\"\\"\\"
+  """The URL of this user's GitHub page"""
   html_url: String!
 }
 
-\\"\\"\\"A comment about an entry, submitted by a user\\"\\"\\"
+"""A comment about an entry, submitted by a user"""
 type Comment {
-  \\"\\"\\"The SQL ID of this entry\\"\\"\\"
+  """The SQL ID of this entry"""
   id: Int!
 
-  \\"\\"\\"The GitHub user who posted the comment\\"\\"\\"
+  """The GitHub user who posted the comment"""
   postedBy: User!
 
-  \\"\\"\\"A timestamp of when the comment was posted\\"\\"\\"
+  """A timestamp of when the comment was posted"""
   createdAt: Float!
 
-  \\"\\"\\"The text of the comment\\"\\"\\"
+  """The text of the comment"""
   content: String!
 
-  \\"\\"\\"The repository which this comment is about\\"\\"\\"
+  """The repository which this comment is about"""
   repoName: String!
 }
 
-\\"\\"\\"XXX to be removed\\"\\"\\"
+"""XXX to be removed"""
 type Vote {
-  \\"\\"\\"\\"\\"\\"
+  """"""
   vote_value: Int!
 }
 
-\\"\\"\\"\\"\\"\\"
+""""""
 type Mutation {
-  \\"\\"\\"Submit a new repository, returns the new submission\\"\\"\\"
+  """Submit a new repository, returns the new submission"""
   submitRepository(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
   ): Entry
 
-  \\"\\"\\"
+  """
   Vote on a repository submission, returns the submission that was voted on
-  \\"\\"\\"
+  """
   vote(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
 
-    \\"\\"\\"The type of vote - UP, DOWN, or CANCEL\\"\\"\\"
+    """The type of vote - UP, DOWN, or CANCEL"""
     type: VoteType!
   ): Entry
 
-  \\"\\"\\"Comment on a repository, returns the new comment\\"\\"\\"
+  """Comment on a repository, returns the new comment"""
   submitComment(
-    \\"\\"\\"
-    The full repository name from GitHub, e.g. \\"apollostack/GitHunt-API\\"
-    \\"\\"\\"
+    """
+    The full repository name from GitHub, e.g. "apollostack/GitHunt-API"
+    """
     repoFullName: String!
 
-    \\"\\"\\"The text content for the new comment\\"\\"\\"
+    """The text content for the new comment"""
     commentContent: String!
   ): Comment
 }
 
-\\"\\"\\"The type of vote to record, when submitting a vote\\"\\"\\"
+"""The type of vote to record, when submitting a vote"""
 enum VoteType {
-  \\"\\"\\"\\"\\"\\"
+  """"""
   UP
 
-  \\"\\"\\"\\"\\"\\"
+  """"""
   DOWN
 
-  \\"\\"\\"\\"\\"\\"
+  """"""
   CANCEL
 }
 
-\\"\\"\\"\\"\\"\\"
+""""""
 type Subscription {
-  \\"\\"\\"Subscription fires on every comment added\\"\\"\\"
+  """Subscription fires on every comment added"""
   commentAdded(repoFullName: String!): Comment
 }\`);
   const sdk = getJitSdk(schema);
@@ -1299,7 +1299,7 @@ type Subscription {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {

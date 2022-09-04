@@ -5,3 +5,4 @@ export * from './init/index.js';
 export * from './utils/cli-error.js';
 export * from './cli.js';
 export * from './graphql-config.js';
+export { CodegenConfig } from './config.js';

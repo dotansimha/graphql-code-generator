@@ -1,32 +1,44 @@
-import { FC } from 'react';
-import Image from 'next/image';
+import { ReactElement } from 'react';
 import Editor from './Editor';
 import CodegenOutput from './CodegenOutput';
 import classes from './styles.module.css';
+import { Image } from '@theguild/components';
+import graphqlLogo from '../../../public/assets/img/GraphQL_Logo.svg';
+import gqlCodegenIcon from '../../../public/assets/img/gql-codegen-icon.svg';
+import { load } from 'js-yaml';
+import { getMode } from './formatter';
 
-const LiveDemoEditors: FC = ({
+const LiveDemoEditors = ({
   setSchema,
   schema,
   setDocuments,
   documents,
   setConfig,
   config,
-  mode,
   error,
   output,
-}) => {
+}): ReactElement => {
+  let mode = null;
+
+  try {
+    const parsedConfig = load(config || '');
+    mode = getMode(parsedConfig);
+  } catch (e) {
+    console.error(e);
+  }
+
   return (
-    <>
+    <div className="flex">
       <div className={classes.column}>
         <div className={classes.title}>
-          <Image alt="GraphQL" src="/assets/img/GraphQL_Logo.svg" width={30} height={30} />
+          <Image alt="GraphQL" src={graphqlLogo} placeholder="empty" loading="eager" className="h-7 w-7" />
           <span className={classes.iconText}>schema.graphql</span>
         </div>
         <Editor lang="graphql" onEdit={setSchema} value={schema} />
       </div>
       <div className={classes.column}>
         <div className={classes.title}>
-          <Image alt="GraphQL" src="/assets/img/GraphQL_Logo.svg" width={30} height={30} />
+          <Image alt="GraphQL" src={graphqlLogo} placeholder="empty" loading="eager" className="h-7 w-7" />
           <span className={classes.iconText}>operation.graphql</span>
         </div>
         <Editor
@@ -37,7 +49,7 @@ const LiveDemoEditors: FC = ({
       </div>
       <div className={classes.column}>
         <div className={classes.title}>
-          <Image alt="Codegen" src="/assets/img/gql-codegen-icon.svg" width={30} height={30} />
+          <Image alt="Codegen" src={gqlCodegenIcon} placeholder="empty" loading="eager" className="h-7 w-7" />
           <span className={classes.iconText}>codegen.yml</span>
         </div>
         <Editor lang="yaml" onEdit={setConfig} value={config} />
@@ -52,7 +64,7 @@ const LiveDemoEditors: FC = ({
           outputArray={output}
         />
       </div>
-    </>
+    </div>
   );
 };
 

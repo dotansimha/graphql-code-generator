@@ -13,13 +13,11 @@ jobs:
           fetch-depth: 0
       - name: Fetch
         run: git fetch origin master
-      - name: Use Node 18
-        uses: actions/setup-node@v3
+
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 18
-          cache: 'yarn'
-      - name: Install Dependencies
-        run: yarn --ignore-engines
+          nodeVersion: 18
 
       - name: Build Packages
         run: yarn build

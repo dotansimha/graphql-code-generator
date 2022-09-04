@@ -1,0 +1,207 @@
+import { PackageCmd, Callout } from '@theguild/components'
+
+# Guide: Dart/Flutter
+
+Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
+
+Currrently this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work is ongoing to make it way easier to work with GraphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL]()
+
+## TL;DR
+
+The `flutter-freezed` plugin generates [Freezed](https://pub.dev/packages/freezed) models from a GraphQL Schema.
+
+## Motivation
+
+> Dart is awesome, but defining a "model" can be tedious. We may have to:
+>
+> - define a constructor + the properties
+> - override toString, operator ==, hashCode
+> - implement a copyWith method to clone the object
+> - handling de/serialization
+>
+> On top of that, Dart is also missing features such as union types and pattern-matching.
+>
+> Implementing all of this can take hundreds of lines, which are error-prone and the readability of your model significantly.
+>
+> Freezed tries to fix that by implementing most of this for you, allowing you to focus on the definition of your model.
+> https://pub.dev/packages/freezed
+
+Fortunately enough, GraphQL is strongly typed, and so is Dart.
+Save yourself from implementing a model to match your strongly typed GraphQL types, and let [Freezed](https://pub.dev/packages/freezed) handle the work while you chill with this `flutter-freezed`plugin
+
+## Features
+
+Currently, the plugin supports the following features
+
+- [x] Generate Freezed classes for ObjectTypes
+- [x] Generate Freezed classes for InputTypes
+- [x] Support for EnumsTypes
+- [x] Support for custom ScalarTypes
+- [x] Support freeze documentation of class & properties from GraphQL SDL description comments
+- [x] Ignore/don't generate freezed classes for certain ObjectTypes
+- [x] Support directives
+- [x] Support deprecation annotation
+- [x] ~~Support for InterfaceTypes~~
+- [x] Support for UnionTypes [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
+- [x] Merge InputTypes with ObjectType as union/sealed class [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
+
+## TODO:
+
+- [ ] Support Queries, Mutations, and Subscription: make it way easier to use GraphQL in flutter without going through any complex process. Inspired by [KitQL](https://www.kitql.dev/)
+
+## Demo
+
+Given the following GraphQL schema:
+
+```graphql
+input RequestOTPInput {
+  email: String
+  phoneNumber: String
+}
+
+input VerifyOTPInput {
+  email: String
+  phoneNumber: String
+  otpCode: String!
+}
+
+union AuthWithOTPInput = RequestOTPInput | VerifyOTPInput
+```
+
+Using the following config:
+
+```yaml
+schema: demo-schema.graphql
+generates:
+  ./lib/data/models/app_models.dart:
+    plugins:
+      - flutter-freezed
+```
+
+This is the generated output:
+
+```dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+
+part app_models.dart;
+part 'app_models.g.dart';
+
+@unfreezed
+class RequestOtpInput with _$RequestOtpInput {
+  const RequestOtpInput._();
+
+  const factory RequestOtpInput({
+    String? email,
+    String? phoneNumber,
+  }) = _RequestOtpInput;
+
+  factory RequestOtpInput.fromJson(Map<String, Object?> json) => _RequestOtpInputFromJson(json);
+}
+
+@unfreezed
+class VerifyOtpInput with _$VerifyOtpInput {
+  const VerifyOtpInput._();
+
+  const factory VerifyOtpInput({
+    String? email,
+    String? phoneNumber,
+    required String otpCode,
+  }) = _VerifyOtpInput;
+
+  factory VerifyOtpInput.fromJson(Map<String, Object?> json) => _VerifyOtpInputFromJson(json);
+}
+
+@freezed
+class AuthWithOtpInput with _$AuthWithOtpInput {
+  const AuthWithOtpInput._();
+
+  const factory AuthWithOtpInput() = _AuthWithOtpInput;
+
+  const factory AuthWithOtpInput.requestOtpInput({
+    String? email,
+    String? phoneNumber,
+  }) = RequestOtpInput;
+
+  const factory AuthWithOtpInput.verifyOtpInput({
+    String? email,
+    String? phoneNumber,
+    required String otpCode,
+  }) = VerifyOtpInput;
+
+  factory AuthWithOtpInput.fromJson(Map<String, Object?> json) => _AuthWithOtpInputFromJson(json);
+}
+```
+
+## Getting started
+
+To get started, make sure you have the following installed:
+
+- Node.js (10 or later)
+- NPM or Yarn
+
+Follow the [Installation Guide](https://www.graphql-code-generator.com/docs/getting-started/installation) for more details on getting started with GraphQL Code Generator
+
+Inside your Flutter project root folder:
+
+1. Install [freezed](https://pub.dev/packages/freezed#install) in your flutter project
+
+2. Install [json_serializable](https://pub.dev/packages/json_serializable) in your flutter project
+
+3. Download your GraphQL schema in graphql format and place it at the root of your Flutter project
+
+```sh
+npm install -g graphqurl
+
+gq < graphql-endpoint > --introspect > schema.graphql
+
+# if your graphql endpoint requires authentication:
+gq < graphql-endpoint > -H "Authorization: Bearer <token>" --introspect > schema.graphql
+```
+
+4. Add the following to the `.gitignore` file:
+
+```
+# graphql-code-generator related
+node_modules/
+```
+
+5. Create a `package.json` file at the root of the Flutter project with the following:
+
+```json
+{
+  "name": "GraphQL Code Generator Flutter Freezed",
+  "version": "1.0.0",
+  "scripts": {
+    "flutter-freezed": "graphql-codegen"
+  }
+}
+```
+
+6. Install the `graphql-code-generator` and the `flutter-freezed` plugin
+
+<PackageCmd packages={['graphql', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
+
+7. Create a `codegen.yml` file at the root of the Flutter project with the following:
+
+```yaml
+schema: './schema.graphql'
+generates:
+  ./lib/data/models/app_models.dart:
+    plugins:
+      - flutter-freezed
+```
+
+8. Generate your freezed models with the following command and chill 🍻:
+
+```bash
+npm run flutter-freezed
+```
+
+## PRs are welcomed
+
+This started as a plugin but eventually we hope to make it way easier to use GraphQL in your Flutter apps.
+
+For more advanced configuration, please refer to the [plugin documentation](/plugins/dart/flutter-freezed).
+
+For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.

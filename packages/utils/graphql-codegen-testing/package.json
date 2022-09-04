@@ -36,11 +36,11 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "peerDependencies": {
-    "jest-diff": "^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0",
+    "jest-diff": "^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0",
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^2.6.2",
+    "@graphql-codegen/plugin-helpers": "^2.7.0",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
     "graphql-helix": "1.13.0",

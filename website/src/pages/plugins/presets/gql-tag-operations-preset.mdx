@@ -14,7 +14,7 @@ This preset generates typings for your inline `gql` function usages, without hav
 Huge thanks to [Maël Nison](https://github.com/arcanis), who conceptualized the foundation for this preset [over here](https://github.com/arcanis/graphql-typescript-integration).
 
 ```ts
-import { gql } from '@app/gql'
+import { gql } from './gql'
 
 // TweetFragment is a fully typed document node
 const TweetFragment = gql(/* GraphQL */ `
@@ -48,18 +48,12 @@ generates:
     preset: gql-tag-operations-preset
 ```
 
-It is also recommended, that you link `./src/gql` to `@app/gql`, so you can import your gql function easily from anywhere within your app.
-
-```sh
-yarn add -D @app/gql@link:./src/gql
-```
-
 Now start your codegen in watch mode via `yarn graphql-codegen --watch`.
 
 Create a new file within your `src` directory, e.g. `./src/index.ts` and add a query for your schema:
 
 ```ts
-import { gql } from '@app/gql'
+import { gql } from './gql'
 
 // TweetsQuery is a fully typed document node!
 const TweetsQuery = gql(/* GraphQL */ `
@@ -74,7 +68,7 @@ const TweetsQuery = gql(/* GraphQL */ `
 Next we can simply add our GraphQL client of choice and use the typed document! Let's try `urql`!
 
 ```tsx
-import { gql } from '@app/gql'
+import { gql } from './gql'
 import { useQuery } from 'urql'
 
 // TweetsQuery is a fully typed document node/

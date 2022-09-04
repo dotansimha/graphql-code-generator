@@ -202,21 +202,29 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
             const outputConfig = generates[filename];
             const hasPreset = !!outputConfig.preset;
 
-            const title = hasPreset
-              ? `Generate to ${filename} (using EXPERIMENTAL preset "${outputConfig.preset}")`
-              : `Generate ${filename}`;
+            const title = `Generate to ${filename}`;
 
             return {
               title,
-              task: (_, subTask) => {
+              task: async (_, subTask) => {
                 let outputSchemaAst: GraphQLSchema;
                 let outputSchema: DocumentNode;
                 const outputFileTemplateConfig = outputConfig.config || {};
                 let outputDocuments: Types.DocumentFile[] = [];
                 const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
-                const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
-                  outputConfig.documents
-                );
+                let outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
+
+                const preset: Types.OutputPreset | null = hasPreset
+                  ? typeof outputConfig.preset === 'string'
+                    ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
+                    : outputConfig.preset
+                  : null;
+
+                if (preset) {
+                  if (preset.prepareDocuments) {
+                    outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
+                  }
+                }
 
                 return subTask.newListr(
                   [
@@ -296,13 +304,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
                           );
 
-                          const preset: Types.OutputPreset = hasPreset
-                            ? typeof outputConfig.preset === 'string'
-                              ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
-                              : outputConfig.preset
-                            : null;
-
-                          const pluginMap: { [name: string]: CodegenPlugin } = Object.fromEntries(
+                          const pluginMap: {
+                            [name: string]: CodegenPlugin;
+                          } = Object.fromEntries(
                             pluginPackages.map((pkg, i) => {
                               const plugin = normalizedPluginsArray[i];
                               const name = Object.keys(plugin)[0];
@@ -318,7 +322,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, filename),
                           };
 
-                          const outputs: Types.GenerateOptions[] = hasPreset
+                          const outputs: Types.GenerateOptions[] = preset
                             ? await context.profiler.run(
                                 async () =>
                                   preset.buildGeneratesSection({

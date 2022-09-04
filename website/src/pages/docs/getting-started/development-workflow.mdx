@@ -49,12 +49,21 @@ Use this when you are loading your schema or documents from a single code file t
 
 By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead of in unusual cases where system support is unavailable.
 
-```yaml
-watch: true
-# Passed directly through to chokidar's file watch configuration
-watchConfig:
-  usePolling: true
-  interval: 1000
+```ts {6-10}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000/graphql',
+  // ...
+  watch: true,
+  watchConfig: {
+    // Passed directly through to chokidar's file watch configuration
+    usePolling: true,
+    interval: 1000
+  }
+}
+
+export default config
 ```
 
 ## Monorepo and Yarn Workspaces
@@ -63,14 +72,17 @@ If you are using a monorepo structure, with tools such as [Yarn Workspaces](http
 
 If you need to execute the codegen multiple times, note that you can specify multiple fields for `generates` field, for example:
 
-```yaml {4,7}
-schema: 'server/src/**/*.graphql'
-documents: 'client/src/**/*.graphql'
-generates:
-  client/src/models.ts:
-    - typescript
-    - typescript-operations
-  server/src/models.ts:
-    - typescript
-    - typescript-resolvers
+```ts {7,11}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'server/src/**/*.graphql',
+  documents: 'client/src/**/*.graphql',
+  generates: {
+    'client/src/models.ts': ['typescript', 'typescript-operations'],
+    'server/src/models.ts': ['typescript', 'typescript-resolver']
+  }
+}
+
+export default config
 ```

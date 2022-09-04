@@ -2,16 +2,20 @@
 
 The `typescript-resolvers` plugin also supports [Apollo Federation](https://apollographql.com/docs/apollo-server/federation/introduction).
 
-To use it, add `federation: true{:yaml}` to your configuration:
+To use it, add `federation: true{:ts}` to your configuration:
 
-```yaml {6-7}
-generates:
-  ./src/types.ts:
-    plugins:
-      - typescript
-      - typescript-resolvers
-    config:
-      federation: true
+```ts {6-7}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  generates: {
+    './src/types.ts': {
+      plugins: ['typescript', 'typescript-resolvers'],
+      config: { federation: true }
+    }
+  }
+}
+export default config
 ```
 
 It will add the required GraphQL directives to your codegen schema and generate a compatible resolvers signature for Apollo Federation.

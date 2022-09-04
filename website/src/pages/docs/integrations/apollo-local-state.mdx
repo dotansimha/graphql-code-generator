@@ -28,10 +28,13 @@ type Todo {
 
 And then, you can merge this part of the schema with your remote schema by specifying it as part of your `schema` field:
 
-```yaml
-schema:
-  - http://my-remote-schema/graphql
-  - my-client-schema.graphql
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: ['http://my-remote-schema/graphql', 'my-client-schema.graphql']
+}
+export default config
 ```
 
 This way, the GraphQL Code Generator will generate complete typings that match both your client fields and server fields.

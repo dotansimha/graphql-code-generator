@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "2.11.6",
+  "version": "2.12.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
@@ -41,7 +41,7 @@
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
     "@graphql-codegen/core": "2.6.2",
-    "@graphql-codegen/plugin-helpers": "^2.6.2",
+    "@graphql-codegen/plugin-helpers": "^2.7.0",
     "@graphql-tools/apollo-engine-loader": "^7.3.6",
     "@graphql-tools/code-file-loader": "^7.3.1",
     "@graphql-tools/git-loader": "^7.2.1",
@@ -52,14 +52,15 @@
     "@graphql-tools/prisma-loader": "^7.2.7",
     "@graphql-tools/url-loader": "^7.13.2",
     "@graphql-tools/utils": "^8.9.0",
-    "@whatwg-node/fetch": "^0.2.3",
+    "@whatwg-node/fetch": "^0.3.0",
     "ansi-escapes": "^4.3.1",
     "chalk": "^4.1.0",
     "chokidar": "^3.5.2",
     "cosmiconfig": "^7.0.0",
+    "cosmiconfig-typescript-loader": "^4.0.0",
     "debounce": "^1.2.0",
     "detect-indent": "^6.0.0",
-    "graphql-config": "^4.3.1",
+    "graphql-config": "^4.3.5",
     "inquirer": "^8.0.0",
     "is-glob": "^4.0.1",
     "json-to-pretty-yaml": "^1.2.2",
@@ -73,9 +74,9 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
-    "@graphql-tools/merge": "8.3.3",
+    "@graphql-tools/merge": "8.3.4",
     "@types/debounce": "1.2.1",
-    "@types/inquirer": "8.2.2",
+    "@types/inquirer": "8.2.3",
     "@types/is-glob": "4.0.2",
     "@types/js-yaml": "4.0.5",
     "@types/mkdirp": "1.0.2",

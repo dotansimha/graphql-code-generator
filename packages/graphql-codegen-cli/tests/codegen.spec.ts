@@ -17,7 +17,9 @@ describe('Codegen Executor', () => {
   monorepo.correctCWD();
 
   beforeEach(() => {
-    jest.useFakeTimers('legacy');
+    jest.useFakeTimers({
+      legacyFakeTimers: true,
+    });
   });
 
   describe('Generator General Options', () => {

@@ -210,7 +210,7 @@ export type QueryResolvers<ContextType = any, ParentType = ResolversParentTypes[
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType = ResolversParentTypes['Subscription']> = ResolversObject<{
-  somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, \\"somethingChanged\\", ParentType, ContextType>;
+  somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
 }>;
 
 export type NodeResolvers<ContextType = any, ParentType = ResolversParentTypes['Node']> = ResolversObject<{
@@ -407,7 +407,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
-  somethingChanged?: SubscriptionResolver<Types.Maybe<ResolversTypes['MyOtherType']>, \\"somethingChanged\\", ParentType, ContextType>;
+  somethingChanged?: SubscriptionResolver<Types.Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
 }>;
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = ResolversObject<{
@@ -658,7 +658,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
-  somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, \\"somethingChanged\\", ParentType, ContextType>;
+  somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
 }>;
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = ResolversObject<{

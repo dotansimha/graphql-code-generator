@@ -1,39 +1,37 @@
 import { PackageCmd, Callout } from '@theguild/components'
 
-# `codegen.yml` file
+# `codegen.ts` file
 
 [The plugins' page](/plugins) lists dozens of plugins with their set of options and specific outputs.
 
-GraphQL Code Generator relies on a configuration file named `codegen.yml` or `codegen.json` to manage all possible options, input, and output document types.
+GraphQL Code Generator relies on a configuration file named `codegen.ts` to manage all possible options, input, and output document types.
 
 The CLI automatically detects the defined config file and generates code accordingly.
 
 In addition, you can also define a path to your config file with the `--config` options, like so:
 
-<PackageCmd packages={[{ name: 'graphql-code-generator --config ./path/to/config.yml', cmd: 'run', isNpx: true }]} />
+<PackageCmd packages={[{ name: 'graphql-code-generator --config ./path/to/codegen.ts', cmd: 'run', isNpx: true }]} />
 
 ## Configuration file format
 
 Here's an example for a possible config file:
 
-```yaml
-schema: http://localhost:3000/graphql
-documents: ./src/**/*.graphql
-generates:
-  ./src/types.ts:
-    plugins:
-      - typescript
-      - typescript-operations
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000/graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: []
+    }
+  }
+}
+
+export default config
 ```
-
-If you are looking for a reference file, an example for a [large configuration file can be seen here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
-
-<Callout>
-**For VSCode users**
-
-Ensure to [install the YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) to add validation auto-complete capabilities for available plugins configuration files and `codegen.yml` file.
-
-</Callout>
 
 ## Configuration options
 
@@ -99,24 +97,23 @@ Here are the supported options that you can define in the config file (see [sour
 
 ## Environment Variables
 
-You can use environment variables in your `codegen.yml` file:
+You can use environment variables in your `codegen.ts` file:
 
-```yaml /${SCHEMA_PATH}/
-schema: ${SCHEMA_PATH}
-documents: ./src/**/*.graphql
-generates:
-  ./src/types.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-```
+```ts /process.env.SCHEMA_PATH/
+import { CodegenConfig } from '@graphql-codegen/cli'
 
-You can load a `.env` file by adding the `-r dotenv/config` option to your CLI command and adding `dotenv` as a dependency on your project.
+const config: CodegenConfig = {
+  schema: process.env.SCHEMA_PATH,
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: []
+    }
+  }
+}
 
-You can specify a default value in case an environment variable is missing:
-
-```yaml
-schema: ${SCHEMA_PATH:schema.graphql}
+export default config
 ```
 
 ## CLI Flags
@@ -180,7 +177,7 @@ For more detailed output, you can also enable the `verbose: true` or `--verbose`
 
 GraphQL-Codegen is uses [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig) library to manage configuration loading.
 
-That means you can use `codegen.yml`, `codegen.json`, or `codegen.js` as configuration files. You can also specify the entire configuration under a key called `"codegen"` in your `package.json`.
+That means you can use `codegen.yml`, `codegen.json`, `codegen.js`, or `codegen.ts` as configuration files. You can also specify the entire configuration under a key called `"codegen"` in your `package.json`.
 
 For more information, [please refer to `cosmiconfig` documentation](https://github.com/davidtheclark/cosmiconfig#cosmiconfig).
 

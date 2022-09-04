@@ -1,4 +1,5 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
+import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { resolve } from 'path';
 import {
   DetailedError,
@@ -21,6 +22,8 @@ import { createHash } from 'crypto';
 
 const { lstat } = promises;
 
+export type CodegenConfig = Types.Config;
+
 export type YamlCliFlags = {
   config: string;
   watch: boolean | string | string[];
@@ -38,7 +41,7 @@ export type YamlCliFlags = {
 };
 
 export function generateSearchPlaces(moduleName: string) {
-  const extensions = ['json', 'yaml', 'yml', 'js', 'config.js'];
+  const extensions = ['json', 'yaml', 'yml', 'js', 'ts', 'config.js'];
   // gives codegen.json...
   const regular = extensions.map(ext => `${moduleName}.${ext}`);
   // gives .codegenrc.json... but no .codegenrc.config.js
@@ -47,7 +50,7 @@ export function generateSearchPlaces(moduleName: string) {
   return [...regular.concat(dot), 'package.json'];
 }
 
-function customLoader(ext: 'json' | 'yaml' | 'js') {
+function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
   function loader(filepath: string, content: string) {
     if (typeof process !== 'undefined' && 'env' in process) {
       content = env(content);
@@ -69,6 +72,10 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
 
     if (ext === 'js') {
       return defaultLoaders['.js'](filepath, content);
+    }
+
+    if (ext === 'ts') {
+      return TypeScriptLoader()(filepath, content);
     }
   }
 
@@ -124,6 +131,7 @@ export async function loadCodegenConfig({
       '.yaml': customLoader('yaml'),
       '.yml': customLoader('yaml'),
       '.js': customLoader('js'),
+      '.ts': customLoader('ts'),
       noExt: customLoader('yaml'),
       ...customLoaders,
     },

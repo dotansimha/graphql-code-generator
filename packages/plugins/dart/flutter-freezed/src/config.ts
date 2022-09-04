@@ -1,22 +1,29 @@
 /**
- * @name
+ * @name ApplyDecoratorOn
  * @description Values that are passed to the `DecoratorToFreezed.applyOn` field that specifies where the custom decorator should be applied
  */
 export type ApplyDecoratorOn =
   | 'enum'
+  | 'enum_field'
   | 'class'
   | 'class_factory'
   | 'union_factory'
+  | 'merged_input_factory'
   | 'class_factory_parameter'
-  | 'union_factory_parameter';
+  | 'union_factory_parameter'
+  | 'merged_input_parameter';
 
+/**
+ * @name DecoratorToFreezed
+ * @description the value of a `CustomDecorator`. This value specifies how the the decorator should be handled by Freezed
+ */
 export type DecoratorToFreezed = {
   /**
    * @name arguments
-   * @description arrange the arguments of the directive in order of how the should be outputted
+   * @description Arguments to be applied on the decorator. if the `mapsToFreezedAs === 'directive'`,  use template string such `['$0', '$2', '$3']` to select/order the arguments of the directive to be used($0 is the first argument, $1 is the second).
    * @default undefined
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * arguments: [$0] # $0 is the first argument, $1 is the 2nd ...
    * ```
    */
@@ -26,7 +33,7 @@ export type DecoratorToFreezed = {
    * @name applyOn
    * @description Specify where the decorator should be applied
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * applyOn: ['class_factory','union_factory'], # applies this decorator on both class and union factory blocks
    * ```
    */
@@ -34,12 +41,22 @@ export type DecoratorToFreezed = {
 
   /**
    * @name mapsToFreezedAs
-   * @description maps to a Freezed decorator or use `custom` to use a custom decorator */
+   * @description maps to a Freezed decorator or use `custom` to use a custom decorator.If `mapsToFreezedAs === 'directive'` don't include the `@` prefix in the key of the customDecorator.  If `mapsToFreezedAs === 'custom'` value, whatever you use as the key of the customDecorator is used just as it is, and the arguments spread into a parenthesis () */
   mapsToFreezedAs: '@Default' | '@deprecated' | 'final' | 'directive' | 'custom';
 };
 
+/**
+ * @name CustomDecorator
+ * @description
+ * use this option to add annotations/decorators for the the generated output. Also use this to add @Assert decorators to validate the properties of the model
+ */
 export type CustomDecorator = Record<string, DecoratorToFreezed>;
 
+/**
+ * @name FreezedConfig
+ * @description configure what Freeze should generate
+ * @default DefaultFreezedConfig
+ */
 export interface FreezedConfig {
   /**
    * @name alwaysUseJsonKeyName
@@ -47,7 +64,7 @@ export interface FreezedConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -66,7 +83,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -80,11 +97,11 @@ export interface FreezedConfig {
 
   /**
    * @name customDecorators
-   * @description maps GraphQL directives to freezed decorators. Arguments of the directive are passed using template strings: $1 is the first argument, $2 is the second... All `mapsToFreezedAs` values except `custom` are parsed so use the name of the directive without the `@` symbol as the key of the customDecorators. With the `custom` value, whatever you use as the key of the custom directive is used just as it is, and the arguments spread into a parenthesis ()
+   * @description annotate/decorate the generated output. Also use this option to map GraphQL directives to freezed decorators.
    * @default {}
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -118,11 +135,11 @@ export interface FreezedConfig {
 
   /**
    * @name defaultUnionConstructor
-   * @description generate empty constructors for Union Types
+   * @description generate empty constructors for Union Types and mergedInputs
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -140,7 +157,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -158,7 +175,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -177,7 +194,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -196,7 +213,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -215,7 +232,7 @@ export interface FreezedConfig {
    * @default []
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -233,7 +250,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -252,7 +269,7 @@ export interface FreezedConfig {
    * @default true
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -271,7 +288,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -290,7 +307,7 @@ export interface FreezedConfig {
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -304,6 +321,10 @@ export interface FreezedConfig {
   unionValueCase?: 'FreezedUnionCase.camel' | 'FreezedUnionCase.pascal';
 }
 
+/**
+ * @name FieldConfig
+ * @description configuration for the field
+ */
 export interface FieldConfig {
   /**
    * @name final
@@ -334,7 +355,7 @@ export interface FieldConfig {
    * @description specific directives to apply to the field. All `mapsToFreezedAs` values except `custom` are parsed so use the name of the directive without the `@` symbol as the key of the customDecorators. With the `custom` value, whatever you use as the key of the custom directive is used just as it is, and the arguments spread into a parenthesis ()
    * @default undefined
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * customDecorators: {
    *    'default' : {
    *        mapsToFreezedAs: '@Default',
@@ -361,6 +382,10 @@ export interface FieldConfig {
   customDecorators?: CustomDecorator;
 }
 
+/**
+ * @name TypeSpecificFreezedConfig
+ * @description override the `FlutterFreezedPluginConfig.globalFreezedConfig` option for a specific type
+ */
 export interface TypeSpecificFreezedConfig {
   /** marks a type as deprecated */
 
@@ -370,19 +395,41 @@ export interface TypeSpecificFreezedConfig {
 
   config?: FreezedConfig;
 
-  /** configure fields for this type */
+  /** configure fields for this type. The GraphQL field name is the key */
 
   fields?: Record<string, FieldConfig>;
 }
 
+/**
+ * @name FlutterFreezedPluginConfig
+ * @description configure the `flutter-freezed` plugin
+ */
 export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */ {
+  /**
+   * @name camelCasedEnums
+   * @description Dart's recommended lint uses camelCase for enum fields. Set this option to `false` to use the same case as used in the GraphQL Schema but note this can cause lint issues.
+   * @default true
+   *
+   * @exampleMarkdown
+   * ```yaml
+   * generates:
+   *   flutter_app/lib/data/models/app_models.dart
+   *     plugins:
+   *       - flutter-freezed
+   *     config:
+   *       camelCasedEnums: true
+   * ```
+   */
+
+  camelCasedEnums?: boolean;
+
   /**
    * @name customScalars
    * @description map custom Scalars to Dart built-in types
    * @default {}
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -401,11 +448,11 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
 
   /**
    * @name fileName
-   * @description if `modular` is set to false, this fileName will be used for the generated output file
+   * @description this fileName will be used for the generated output file
    * @default "app_models"
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -421,10 +468,10 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
   /**
    * @name globalFreezedConfig
    * @description use the same Freezed configuration for every generated output
-   * @default undefined
+   * @default DefaultFreezedConfig
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -443,11 +490,11 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
 
   /**
    * @name typeSpecificFreezedConfig
-   * @description override the `globalFreezedConfig` for specific types
+   * @description override the `globalFreezedConfig` for specific types. The GraphQL Type name is the key
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -480,7 +527,7 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    * @default []
    *
    * @exampleMarkdown
-   * ```yml
+   * ```yaml
    * generates:
    *   flutter_app/lib/data/models/app_models.dart
    *     plugins:
@@ -492,22 +539,4 @@ export interface FlutterFreezedPluginConfig /* extends TypeScriptPluginConfig */
    */
 
   ignoreTypes?: string[];
-
-  /**
-   * @name lowercaseEnums
-   * @description make enum fields lowercase
-   * @default true
-   *
-   * @exampleMarkdown
-   * ```yml
-   * generates:
-   *   flutter_app/lib/data/models/app_models.dart
-   *     plugins:
-   *       - flutter-freezed
-   *     config:
-   *       lowercaseEnums: true
-   * ```
-   */
-
-  lowercaseEnums?: boolean;
 }

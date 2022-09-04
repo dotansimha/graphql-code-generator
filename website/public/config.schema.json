@@ -94,6 +94,38 @@
         }
       }
     },
+    "FlutterFreezedPluginConfig": {
+      "description": "configure the `flutter-freezed` plugin",
+      "type": "object",
+      "properties": {
+        "camelCasedEnums": {
+          "description": "Dart's recommended lint uses camelCase for enum fields. Set this option to `false` to use the same case as used in the GraphQL Schema but note this can cause lint issues.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "customScalars": {
+          "description": "map custom Scalars to Dart built-in types\nDefault value: \"[object Object]\"",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "fileName": {
+          "description": "this fileName will be used for the generated output file\nDefault value: \"app_models\"",
+          "type": "string"
+        },
+        "globalFreezedConfig": {
+          "$ref": "#/definitions/FreezedConfig",
+          "description": "use the same Freezed configuration for every generated output\nDefault value: \"DefaultFreezedConfig\""
+        },
+        "typeSpecificFreezedConfig": {
+          "$ref": "#/definitions/Record",
+          "description": "override the `globalFreezedConfig` for specific types. The GraphQL Type name is the key\nDefault value: \"undefined\""
+        },
+        "ignoreTypes": {
+          "description": "names of GraphQL types to ignore when generating Freezed classes\nDefault value: \"\"",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
     "ReactQueryRawPluginConfig": {
       "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**",
       "type": "object",
@@ -965,7 +997,8 @@
         },
         "decorateTypes": {
           "description": "Specifies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.",
-          "type": "string[]"
+          "type": "array",
+          "items": { "type": "string" }
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
@@ -1375,7 +1408,7 @@
           "type": "string"
         },
         "directiveResolverMappings": {
-          "$ref": "#/definitions/Record_1",
+          "$ref": "#/definitions/Record_2",
           "description": "Map the usage of a directive into using a specific resolver."
         },
         "allowParentTypeOverride": {
@@ -3308,14 +3341,18 @@
     "HasuraAllowListPluginConfig": {
       "type": "object",
       "properties": {
-        "collection_name": {
+        "collectionName": {
           "description": "Choose the collection name to be generated. Defaults to allowed-queries\nDefault value: \"allowed-queries\"",
           "type": "string"
         },
-        "config_version": {
+        "configVersion": {
           "description": "Target metadata config version. Supported versions are 2 and 3.\nThis is mostly for future proofing, currently has no impact as both versions use the same format.\nThe default value _will change_ in the future if/when newer config versions are released.\nDefault value: \"3\"",
           "enum": [2, 3],
           "type": "number"
+        },
+        "globalFragments": {
+          "description": "Whether to source fragments per-document, or globally. If set, will enforce fragment name uniqueness\nDefault value: \"false\"",
+          "type": "boolean"
         }
       }
     },
@@ -3568,7 +3605,24 @@
         },
         "preset": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.\n\nPresets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file\n\nYou can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
-          "anyOf": [{ "$ref": "#/definitions/Types.OutputPreset" }, { "type": "string" }]
+          "anyOf": [
+            { "$ref": "#/definitions/Types.OutputPreset" },
+            {
+              "enum": [
+                "client",
+                "client-preset",
+                "gql-tag-operations",
+                "gql-tag-operations-preset",
+                "graphql-modules",
+                "graphql-modules-preset",
+                "import-types-preset",
+                "import-types-preset-preset",
+                "near-operation-file",
+                "near-operation-file-preset"
+              ],
+              "type": "string"
+            }
+          ]
         },
         "presetConfig": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
@@ -3594,6 +3648,10 @@
         }
       },
       "allOf": [
+        {
+          "if": { "properties": { "plugins": { "contains": { "type": "string", "const": "flutter-freezed" } } } },
+          "then": { "properties": { "config": { "$ref": "#/definitions/FlutterFreezedPluginConfig" } } }
+        },
         {
           "if": {
             "properties": { "plugins": { "contains": { "type": "string", "const": "typescript-react-query" } } }
@@ -3774,7 +3832,10 @@
         }
       ]
     },
-    "__type_1": { "type": "object", "properties": { "buildGeneratesSection": { "type": "object" } } },
+    "__type_1": {
+      "type": "object",
+      "properties": { "buildGeneratesSection": { "type": "object" }, "prepareDocuments": { "type": "object" } }
+    },
     "Types.OutputPreset": { "$ref": "#/definitions/__type_1" },
     "__type_2": {
       "type": "object",
@@ -3830,6 +3891,7 @@
       "type": "object",
       "additionalProperties": { "$ref": "#/definitions/Types.PluginConfig" },
       "properties": {
+        "flutter-freezed": { "$ref": "#/definitions/FlutterFreezedPluginConfig" },
         "typescript-react-query": { "$ref": "#/definitions/ReactQueryRawPluginConfig" },
         "typescript-rtk-query": { "$ref": "#/definitions/RTKConfig" },
         "typescript-generic-sdk": { "$ref": "#/definitions/RawGenericSdkPluginConfig" },
@@ -3881,16 +3943,80 @@
         }
       }
     },
+    "FreezedConfig": {
+      "description": "configure what Freeze should generate\nDefault value: \"DefaultFreezedConfig\"",
+      "type": "object",
+      "properties": {
+        "alwaysUseJsonKeyName": { "description": "Use\nDefault value: \"false\"", "type": "boolean" },
+        "copyWith": {
+          "description": "set to false to disable Freezed copyWith method helper\nDefault value: \"undefined\"",
+          "type": "boolean"
+        },
+        "customDecorators": {
+          "$ref": "#/definitions/CustomDecorator",
+          "description": "annotate/decorate the generated output. Also use this option to map GraphQL directives to freezed decorators.\nDefault value: \"[object Object]\""
+        },
+        "defaultUnionConstructor": {
+          "description": "generate empty constructors for Union Types and mergedInputs\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "equal": {
+          "description": "set to false to disable Freezed equal method helper\nDefault value: \"undefined\"",
+          "type": "boolean"
+        },
+        "fromJsonToJson": {
+          "description": "generate fromJson toJson methods on the classes with json_serialization. Requires the [json_serializable](https://pub.dev/packages/json_serializable) to be installed in your Flutter app\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "immutable": {
+          "description": "set to true to use the `@freezed` decorator or false to use the `@unfreezed` decorator\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "makeCollectionsUnmodifiable": {
+          "description": "allows collections(lists/maps) to be modified even if class is immutable\nDefault value: \"undefined\"",
+          "type": "boolean"
+        },
+        "mergeInputs": {
+          "description": "merge InputTypes as a union of an ObjectType where ObjectType is denoted by a $ in the pattern.\nDefault value: \"\"",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "mutableInputs": {
+          "description": "since inputs will be used to collect data, it makes sense to make them mutable with Freezed's `@unfreezed` decorator. This overrides(in order words: has a higher precedence than) the `immutable` config value `ONLY` for GraphQL `input types`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "privateEmptyConstructor": {
+          "description": "if true, defines a private empty constructor to allow getter and methods to work on the class\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "unionKey": {
+          "description": "specify the key to be used for Freezed union/sealed classes\nDefault value: \"undefined\"",
+          "type": "string"
+        },
+        "unionValueCase": {
+          "description": "specify the casing style to be used for Freezed union/sealed classes\nDefault value: \"undefined\"",
+          "enum": ["FreezedUnionCase.camel", "FreezedUnionCase.pascal"],
+          "type": "string"
+        }
+      }
+    },
     "__type_5": {
+      "description": "use this option to add annotations/decorators for the the generated output. Also use this to add",
+      "type": "object"
+    },
+    "CustomDecorator": { "$ref": "#/definitions/__type_5" },
+    "__type_6": { "type": "object" },
+    "Record": { "$ref": "#/definitions/__type_6" },
+    "__type_7": {
       "type": "object",
       "properties": {
         "endpoint": { "type": "string" },
-        "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record" }, { "type": "string" }] }
+        "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record_1" }, { "type": "string" }] }
       }
     },
-    "__type_6": { "type": "object" },
-    "Record": { "$ref": "#/definitions/__type_6" },
-    "HardcodedFetch": { "$ref": "#/definitions/__type_5" },
+    "__type_8": { "type": "object" },
+    "Record_1": { "$ref": "#/definitions/__type_8" },
+    "HardcodedFetch": { "$ref": "#/definitions/__type_7" },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
@@ -3902,8 +4028,8 @@
         { "type": "string" }
       ]
     },
-    "__type_7": { "type": "object" },
-    "NamingConventionFn": { "$ref": "#/definitions/__type_7" },
+    "__type_9": { "type": "object" },
+    "NamingConventionFn": { "$ref": "#/definitions/__type_9" },
     "NamingConventionMap": {
       "additionalProperties": false,
       "type": "object",
@@ -3961,14 +4087,14 @@
       }
     },
     "DeclarationKind": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_8": {
+    "__type_10": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_8" },
+    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_10" },
     "JsonAttributesSource": { "enum": ["Newtonsoft.Json", "System.Text.Json"], "type": "string" },
-    "__type_9": {
+    "__type_11": {
       "type": "object",
       "properties": {
         "type": { "type": "string" },
@@ -3978,15 +4104,15 @@
         "arguments": { "type": "string" }
       }
     },
-    "Partial_1": { "$ref": "#/definitions/__type_9" },
-    "__type_10": { "type": "object" },
-    "Record_1": { "$ref": "#/definitions/__type_10" },
+    "Partial_1": { "$ref": "#/definitions/__type_11" },
+    "__type_12": { "type": "object" },
+    "Record_2": { "$ref": "#/definitions/__type_12" },
     "Array_1": { "type": "array", "items": { "type": "string" } },
     "StencilComponentType": { "enum": ["class", "functional"], "type": "string" },
     "FileType": { "enum": [0, 1, 2, 3], "type": "number" },
-    "__type_11": { "type": "object" },
-    "FragmentImportFromFn": { "$ref": "#/definitions/__type_11" },
-    "__type_12": {
+    "__type_13": { "type": "object" },
+    "FragmentImportFromFn": { "$ref": "#/definitions/__type_13" },
+    "__type_14": {
       "type": "object",
       "properties": {
         "augmentedModuleName": {
@@ -3999,13 +4125,18 @@
         }
       }
     },
-    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_12" },
+    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_14" },
     "GeneratedPluginsMap": {
       "anyOf": [
         {
           "type": "object",
           "additionalProperties": true,
           "properties": {
+            "flutter-freezed": { "additionalProperties": false, "$ref": "#/definitions/FlutterFreezedPluginConfig" },
+            "@graphql-codegen/flutter-freezed": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/FlutterFreezedPluginConfig"
+            },
             "typescript-react-query": {
               "additionalProperties": false,
               "$ref": "#/definitions/ReactQueryRawPluginConfig"
@@ -4235,6 +4366,14 @@
         {
           "type": "string",
           "oneOf": [
+            {
+              "const": "flutter-freezed",
+              "description": "configure the `flutter-freezed` plugin\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flutter-freezed\n\n=> Make sure to include \"@graphql-codegen/flutter-freezed\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/flutter-freezed",
+              "description": "configure the `flutter-freezed` plugin\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flutter-freezed\n\n=> Make sure to include \"@graphql-codegen/flutter-freezed\" in your package.json file and install your dependencies.\n\n"
+            },
             {
               "const": "typescript-react-query",
               "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"

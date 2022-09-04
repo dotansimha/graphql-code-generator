@@ -2,6 +2,7 @@ import { CodeGeneratorLogo } from '@theguild/components';
 
 const SITE_NAME = 'GraphQL Code Generator';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   titleSuffix: ` – ${SITE_NAME}`,
   projectLink: 'https://github.com/dotansimha/graphql-code-generator', // GitHub link in the navbar
@@ -27,7 +28,7 @@ export default {
   ),
   // bannerKey: "new-website-banner",
   // banner: `New ${SITE_NAME} website is out! Read more →`,
-  head: (
+  head: () => (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content={`${SITE_NAME}: documentation`} />

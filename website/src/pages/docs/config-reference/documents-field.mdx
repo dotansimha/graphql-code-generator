@@ -14,28 +14,34 @@ You can specify either a `string` pointing to your documents or `string[]` point
 
 You can specify the `documents` field in your root level config:
 
-```yaml {2}
-schema: http://localhost:3000/graphql
-documents: 'src/**/*.graphql'
-generates:
-  ./src/types.ts:
-    plugins:
-      - typescript
-      - typescript-operations
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:3000/graphql',
+  documents: 'src/**/*.graphql',
+  generates: { './src/types.ts': { plugins: ['typescript', 'typescript-operations'] } }
+}
+export default config
 ```
 
 ### Output-file level
 
 You can also specify the `documents` field in your generated file level config:
 
-```yaml {4}
-schema: http://server1.com/graphql
-generates:
-  ./src/types1.ts:
-    documents: 'src/**/*.graphql'
-    plugins:
-      - typescript
-      - typescript-operations
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://server1.com/graphql',
+  generates: {
+    './src/types1.ts': {
+      documents: 'src/**/*.graphql',
+      plugins: ['typescript', 'typescript-operations']
+    }
+  }
+}
+export default config
 ```
 
 ### Document Scanner
@@ -44,9 +50,14 @@ GraphQL Code Generator has a built-in document scanner, which means you can spec
 
 You can tell it to find documents in TypeScript files:
 
-```yaml /!(*.d).{ts,tsx}/
-schema: http://server1.com/graphql
-documents: 'src/**/!(*.d).{ts,tsx}'
+```ts /!(*.d).{ts,tsx}/
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://server1.com/graphql',
+  documents: 'src/**/!(*.d).{ts,tsx}'
+}
+export default config
 ```
 
 ## Available Formats
@@ -57,59 +68,103 @@ The following can be specified as a single value or as an array with mixed value
 
 You can specify a `string` to point to a single file:
 
-```yaml
-documents: my-query.graphql
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: 'my-query.graphql'
+  // ...
+}
+export default config
 ```
 
 Or `string[]` to point to multiple files:
 
-```yaml
-documents:
-  - my-query.graphql
-  - my-other-query.graphql
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['my-query.graphql', 'my-other-query.graphql']
+  // ...
+}
+export default config
 ```
 
 - ### Glob Expression
 
 You can specify a Glob expression in order to load multiple files:
 
-```yaml
-documents: './src/**/*.graphql'
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: './src/**/*.graphql'
+  // ...
+}
+export default config
 ```
 
 You can also specify multiple Glob expressions as an array:
 
-```yaml
-documents:
-  - './src/dir1/*.graphql'
-  - './src/dir2/*.graphql'
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['./src/dir1/*.graphql', './src/dir2/*.graphql']
+  // ...
+}
+export default config
 ```
 
 You can specify files to exclude by prefixing the Glob expression with `!`:
 
-```yaml {3}
-documents:
-  - './src/**/*.graphql'
-  - '!*.generated.graphql'
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['./src/**/*.graphql', '!*.generated.graphql']
+  // ...
+}
+export default config
 ```
 
 <Callout>All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.</Callout>
 
 Additionally, you can use code files, and the codegen will try to extract the GraphQL documents from it:
 
-```yaml
-documents:
-  - './src/*.jsx'
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['./src/*.jsx']
+  // ...
+}
+export default config
 ```
 
 The codegen will try to load the file as an AST and look for exact GraphQL operations strings. Still, if it can't find those, it will try to `require` the file and look for operations in the default export.
 
 You can disable the `require` if it causes errors for you (for example, because of different module system):
 
-```yaml {3}
-documents:
-  - './src/*.jsx':
-    noRequire: true
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: {
+    './src/*.jsx': {
+      noRequire: true
+    }
+  }
+  // ...
+}
+export default config
 ```
 
 <Callout>
@@ -120,10 +175,15 @@ Your operations should be declared as template strings with the `gql` tag or wit
 
 You can specify your GraphQL documents directly as an AST string in your config file. It's very useful for testing.
 
-```yaml
-documents:
-  - 'query { f1 }'
-  - 'query { f2 }'
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['query { f1 }', 'query { f2 }']
+  // ...
+}
+export default config
 ```
 
 ## GraphQL Tag Pluck
@@ -161,38 +221,74 @@ By default, it has a predefined list of popular `gql` tags to look for, in order
 
 You can add custom tags if you need by using `pluckConfig` on the root level on your config file:
 
-```yaml
-pluckConfig:
-  modules:
-    - name: my-custom-module
-      identifier: gql
+```ts {6-13}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['./src/*.jsx'],
+  pluckConfig: {
+    modules: [
+      {
+        name: 'my-custom-module'
+        identifier: 'gql'
+      }
+    ]
+  }
+  // ...
+}
+export default config
 ```
 
 You can also customize globally used identifiers, like that:
 
-```yaml {2-5}
-pluckConfig:
-  globalGqlIdentifierName:
-    - gql
-    - graphql
-    - myCustomGlobalGqlTag
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['./src/*.jsx'],
+  pluckConfig: {
+    globalGqlIdentifierName: ['gql', 'graphql', 'myCustomGlobalGqlTag']
+  }
+  // ...
+}
+export default config
 ```
 
 And you can customize the magic GraphQL comment by doing:
 
-```yaml {2}
-pluckConfig:
-  gqlMagicComment: customcomment
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: ['./src/*.jsx'],
+  pluckConfig: {
+    gqlMagicComment: 'customcomment'
+  }
+  // ...
+}
+export default config
 ```
 
 ## Custom Document Loader
 
 Suppose your schema has a different or complicated way of loading. In that case, you can specify a custom loader with the `loader` field.
 
-```yaml {3}
-documents:
-  - '**/*.graphql':
-      loader: my-documents-loader.js
+```ts {6-8}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  documents: {
+    './src/*.jsx': {
+      loader: 'my-documents-loader.js'
+    }
+  }
+  // ...
+}
+export default config
 ```
 
 Your custom loader should export a default function that returns a `DocumentNode`. For example:

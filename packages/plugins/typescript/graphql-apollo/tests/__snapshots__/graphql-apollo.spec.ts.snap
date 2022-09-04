@@ -259,7 +259,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -296,7 +296,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {
@@ -565,7 +565,7 @@ export const Feed3Document = gql\`
 }
     \`;
 export const Feed4Document = gql\`
-    query feed4($v: String! = \\"TEST\\") {
+    query feed4($v: String! = "TEST") {
   feed {
     id
   }
@@ -602,7 +602,7 @@ async function test() {
   await sdk.feed3();
   await sdk.feed4();
 
-  const result = await sdk.feed2({ v: \\"1\\" });
+  const result = await sdk.feed2({ v: "1" });
 
   if (result.feed) {
     if (result.feed[0]) {

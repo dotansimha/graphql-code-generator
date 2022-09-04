@@ -10,6 +10,15 @@ describe('parseMapper', () => {
     });
   });
 
+  it('Should support a custom mapper with no imports', () => {
+    const result = parseMapper('CustomMergeTypeMapper<SomeType, SomeOtherType>', 'SomeType');
+
+    expect(result).toEqual({
+      isExternal: false,
+      type: 'CustomMergeTypeMapper<SomeType, SomeOtherType>',
+    });
+  });
+
   it('Should return the correct values for a external named mapper', () => {
     const result = parseMapper('file#MyType');
 
