@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-urql
 
+## 3.7.0
+
+### Minor Changes
+
+- [#8323](https://github.com/dotansimha/graphql-code-generator/pull/8323) [`3eb273e79`](https://github.com/dotansimha/graphql-code-generator/commit/3eb273e79b446a4fa9c6cdf5fb63d8a0bc060a7c) Thanks [@JoviDeCroock](https://github.com/JoviDeCroock)! - upgrade to the new urql major version
+
 ## 3.6.4
 
 ### Patch Changes
