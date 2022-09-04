@@ -38,6 +38,7 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/plugins/typescript/': '/plugins/typescript/typescript',
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
       '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
