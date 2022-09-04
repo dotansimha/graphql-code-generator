@@ -6,7 +6,7 @@ import 'guild-docs/style.css';
 export default function App({ Component, pageProps }: AppProps): ReactElement {
   return (
     <ThemeProvider attribute="class">
-      <Header sameSite accentColor="#0070f3" themeSwitch searchBarProps={{ version: 'v2' }} />
+      <Header accentColor="#0070f3" themeSwitch searchBarProps={{ version: 'v2' }} />
       <Component {...pageProps} />
       <FooterExtended sameSite />
     </ThemeProvider>
