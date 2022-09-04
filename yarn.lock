@@ -7639,10 +7639,10 @@ gray-matter@^4.0.3:
     section-matter "^1.0.0"
     strip-bom-string "^1.0.0"
 
-guild-docs@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/guild-docs/-/guild-docs-4.0.1.tgz#0445e0d20544910810f5cc3cd66a455d67f066b8"
-  integrity sha512-2b5DMSxrzJqLCYbsFizzulGUyDFHgzsGBW6hdMkIiYo/4mLeSsnG3IIZTnZeoRHoKqGUi/xKqOKyAq1ErzW/JA==
+guild-docs@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/guild-docs/-/guild-docs-4.1.0.tgz#4d209fd0040d2e6f23a027c11100488dd3298bcc"
+  integrity sha512-CcqYqRmlAI9y03NBw5qgOLisq1kXABQHH333LWI90DDmKApQEjeeA/BKSuCCxJ5YZ7UQYh6rzK8G9rMcE5GhHQ==
   dependencies:
     "@emotion/react" "11.10.0"
     "@emotion/styled" "11.10.0"

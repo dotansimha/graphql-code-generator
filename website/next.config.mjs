@@ -1,23 +1,10 @@
-import { writeFile } from 'fs/promises';
 import { withGuildDocs } from 'guild-docs/next.config';
-import { join } from 'path';
+import { applyUnderscoreRedirects } from 'guild-docs/underscore-redirects';
 import { CategoryToPackages } from './src/category-to-packages.mjs';
 
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
   packageNames.map(packageName => [`/plugins/${packageName}`, `/plugins/${category}/${packageName}`])
 );
-
-class RunPromiseWebpackPlugin {
-  asyncHook;
-
-  constructor(asyncHook) {
-    this.asyncHook = asyncHook;
-  }
-
-  apply(compiler) {
-    compiler.hooks.beforeCompile.tapPromise('RunPromiseWebpackPlugin', this.asyncHook);
-  }
-}
 
 export default withGuildDocs({
   basePath: process.env.NEXT_BASE_PATH && process.env.NEXT_BASE_PATH !== '' ? process.env.NEXT_BASE_PATH : undefined,
@@ -45,33 +32,7 @@ export default withGuildDocs({
       module: false,
     };
 
-    config.plugins.push(
-      new RunPromiseWebpackPlugin(async () => {
-        const outDir = meta.dir;
-        const outFile = join(outDir, './public/_redirects');
-
-        try {
-          const redirects = meta.config.redirects
-            ? Array.isArray(typeof meta.config.redirects)
-              ? typeof meta.config.redirects
-              : await meta.config.redirects()
-            : [];
-
-          if (redirects.length > 0) {
-            const redirectsTxt = redirects
-              .map(r => `${r.source} ${r.destination} ${r.permanent ? '301' : '302'}`)
-              .join('\n');
-            await writeFile(outFile, redirectsTxt);
-            console.info(`✅ "_redirects" file created under "public" dir, with ${redirects.length} records`);
-          } else {
-            console.warn(`No redirects defined, no "_redirect" file is created!`);
-          }
-        } catch (e) {
-          console.error('Error while generating redirects', e);
-          throw new Error(`Failed to generate "_redirects" file during build: ${e.message}`);
-        }
-      })
-    );
+    applyUnderscoreRedirects(config, meta);
 
     return config;
   },
