@@ -187,6 +187,21 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   maybeValue?: string;
-
+  /**
+   * @description Automatically select an `id` field if one is present.
+   * This is typically helpful if you're using the Relay framework.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Automatically select `id` fields
+   * ```yaml
+   * generates:
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *    config:
+   *      autoSelectId: true
+   * ```
+   */
   autoSelectId?: boolean;
 }
