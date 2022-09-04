@@ -10,10 +10,6 @@ import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } fr
 import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 
 export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
-  constructor(config) {
-    super(config);
-  }
-
   transformTypenameField(type: string, name: string): ProcessResult {
     return [
       {

@@ -13,6 +13,10 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[]
   ): ProcessResult {
+    if (fields.length === 0) {
+      return [];
+    }
+
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {
