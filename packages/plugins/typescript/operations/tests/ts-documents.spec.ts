@@ -6442,7 +6442,7 @@ function test(q: GetEntityBrandDataQuery): void {
     });
   });
 
-  describe.only('autoSelectIds', () => {
+  describe('autoSelectIds', () => {
     it('works for simple field', async () => {
       const ast = parse(/* GraphQL */ `
         query {
@@ -6473,7 +6473,7 @@ function test(q: GetEntityBrandDataQuery): void {
     `);
     });
 
-    it.only('does not create a duplicate selection', async () => {
+    it('does not create a duplicate selection', async () => {
       const ast = parse(/* GraphQL */ `
         query {
           me {
