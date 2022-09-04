@@ -1,9 +1,11 @@
 import { withGuildDocs } from 'guild-docs/next.config';
+import { applyUnderscoreRedirects } from 'guild-docs/underscore-redirects';
 import { CategoryToPackages } from './src/category-to-packages.mjs';
 
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
   packageNames.map(packageName => [`/plugins/${packageName}`, `/plugins/${category}/${packageName}`])
 );
+
 export default withGuildDocs({
   basePath: process.env.NEXT_BASE_PATH && process.env.NEXT_BASE_PATH !== '' ? process.env.NEXT_BASE_PATH : undefined,
   eslint: {
@@ -24,11 +26,14 @@ export default withGuildDocs({
     // Todo: remove it before merge to master
     ignoreBuildErrors: true,
   },
-  webpack(config) {
+  webpack(config, meta) {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       module: false,
     };
+
+    applyUnderscoreRedirects(config, meta);
+
     return config;
   },
   redirects: () =>
