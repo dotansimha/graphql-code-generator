@@ -51,7 +51,7 @@
     "@types/webpack-env": "1.18.0",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
-    "@urql/exchange-graphcache": "4.4.3",
+    "@urql/exchange-graphcache": "5.0.0",
     "@vue/apollo-composable": "4.0.0-alpha.19",
     "@vue/composition-api": "1.7.0",
     "apollo-client": "2.6.10",
@@ -93,7 +93,7 @@
     "ts-node": "10.9.1",
     "tslib": "2.4.0",
     "typescript": "4.7.4",
-    "urql": "2.2.3",
+    "urql": "3.0.0",
     "vue": "3.2.38",
     "vue-apollo-smart-ops": "0.1.0"
   },
