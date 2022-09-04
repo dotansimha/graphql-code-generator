@@ -3122,10 +3122,10 @@
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@theguild/components@3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-3.0.2.tgz#6a69f96811a3f0034a2bc1d2449590365eda60b6"
-  integrity sha512-hKjPeLCeTYXE+w4xiyvhEr9Ot8xVcd5tyrIx7Pjs1OpCdBw1xF3+Rx5VQ3I8sEbOcpOz9uYe3tfK/xFE7aNSfw==
+"@theguild/components@3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-3.0.3.tgz#63e44c375c592612db37bf5303eb0729905ba34b"
+  integrity sha512-QTuZtVtFQ76uOCjiHn4hPcHZ6VEjJD/4vr/zpP7dxPqMa6LB/arfdNr9WofMtqOmGAaB69kSS4uGeAwlV61wig==
   dependencies:
     "@algolia/autocomplete-js" "1.7.1"
     "@algolia/autocomplete-plugin-algolia-insights" "1.7.1"
