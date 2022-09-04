@@ -41,7 +41,9 @@ export default withGuildDocs({
       '/docs/custom-codegen/write-your-plugin': '/docs/custom-codegen',
       '/plugins/typescript/': '/plugins/typescript/typescript',
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
+      '/docs/presets/:presetName/': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
+      '/docs/plugins/:pluginName/': '/plugins/:pluginName',
       '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/documents-field': '/docs/config-reference/documents-field',
@@ -53,6 +55,7 @@ export default withGuildDocs({
       '/docs/getting-started/how-does-it-work': '/docs/advanced/how-does-it-work',
     })
       .concat(PLUGINS_REDIRECTS)
+      .concat(PLUGINS_REDIRECTS.map(([from, to]) => [`${from}/`, to]))
       .map(([from, to]) => ({
         source: from,
         destination: to,
