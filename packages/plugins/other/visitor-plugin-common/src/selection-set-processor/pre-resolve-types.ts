@@ -27,13 +27,15 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[]
   ): ProcessResult {
-    const hasId = Boolean(schemaType.getFields()['id']);
+    if (this.config.autoSelectId) {
+      const hasId = Boolean(schemaType.getFields()['id']);
 
-    if (hasId) {
-      const alreadySelectedId = fields.some(field => field.fieldName === 'id');
+      if (hasId) {
+        const alreadySelectedId = fields.some(field => field.fieldName === 'id');
 
-      if (!alreadySelectedId) {
-        fields.push({ isConditional: false, fieldName: 'id' });
+        if (!alreadySelectedId) {
+          fields.push({ isConditional: false, fieldName: 'id' });
+        }
       }
     }
 
