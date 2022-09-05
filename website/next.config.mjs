@@ -38,6 +38,8 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/docs/generated-config/:presetName-preset': '/plugins/:presetName-preset',
+      '/docs/generated-config/:pluginName': '/plugins/:pluginName',
       '/docs/custom-codegen/write-your-plugin': '/docs/custom-codegen',
       '/plugins/typescript/': '/plugins/typescript/typescript',
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
