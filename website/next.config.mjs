@@ -38,12 +38,11 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/docs/guides': '/guides/react',
       '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
       '/docs/react': '/docs/guides/react',
       '/docs/custom-codegen/contributing': '/docs/custom-codegen/contributing',
-      '/plugins/other/': '/plugins',
       '/plugins/other': '/plugins',
-      '/docs/advanced/': '/docs/advanced/generated-files-colocation',
       '/docs/advanced': '/docs/advanced/generated-files-colocation',
       '/plugins/java-installation': '/plugins/java/java',
       '/docs/plugins/c-sharp': '/plugins/c-sharp/c-sharp-operations',
@@ -52,16 +51,14 @@ export default withGuildDocs({
       '/docs/tags': '/docs/getting-started',
       '/docs': '/docs/getting-started',
       '/docs/plugins': '/plugins',
-      '/docs/config-reference/': '/docs/config-reference/codegen-config',
+      '/docs/config-reference': '/docs/config-reference/codegen-config',
       '/docs/generated-config/:presetName-preset': '/plugins/:presetName-preset',
       '/docs/generated-config/:pluginName': '/plugins/:pluginName',
       '/docs/custom-codegen/write-your-plugin': '/docs/custom-codegen',
-      '/plugins/typescript/': '/plugins/typescript/typescript',
+      '/plugins/typescript': '/plugins/typescript/typescript',
       '/docs/plugins/typescript-common': '/plugins/typescript/typescript',
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
-      '/docs/presets/:presetName/': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
-      '/docs/plugins/:pluginName/': '/plugins/:pluginName',
       '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/documents-field': '/docs/config-reference/documents-field',
@@ -73,7 +70,6 @@ export default withGuildDocs({
       '/docs/getting-started/how-does-it-work': '/docs/advanced/how-does-it-work',
     })
       .concat(PLUGINS_REDIRECTS)
-      .concat(PLUGINS_REDIRECTS.map(([from, to]) => [`${from}/`, to]))
       .map(([from, to]) => ({
         source: from,
         destination: to,
