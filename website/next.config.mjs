@@ -38,6 +38,10 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/plugins/other/': '/plugins',
+      '/plugins/other': '/plugins',
+      '/docs/advanced/': '/docs/advanced/generated-files-colocation',
+      '/docs/advanced': '/docs/advanced/generated-files-colocation',
       '/plugins/java-installation': '/plugins/java/java',
       '/docs/plugins/c-sharp': '/plugins/c-sharp/c-sharp-operations',
       '/plugins/dart/flutter': '/plugins/dart/flutter-freezed',
