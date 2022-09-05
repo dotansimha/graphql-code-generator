@@ -38,6 +38,7 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/docs/presets/presets-index': '/plugins',
       '/docs/guides': '/guides/react',
       '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
       '/docs/react': '/docs/guides/react',
@@ -52,6 +53,7 @@ export default withGuildDocs({
       '/docs': '/docs/getting-started',
       '/docs/plugins': '/plugins',
       '/docs/config-reference': '/docs/config-reference/codegen-config',
+      '/docs/config-reference/': '/docs/config-reference/codegen-config',
       '/docs/generated-config/:presetName-preset': '/plugins/:presetName-preset',
       '/docs/generated-config/:pluginName': '/plugins/:pluginName',
       '/docs/custom-codegen/write-your-plugin': '/docs/custom-codegen',
