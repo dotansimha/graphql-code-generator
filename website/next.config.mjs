@@ -38,6 +38,7 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
       '/docs/react': '/docs/guides/react',
       '/docs/custom-codegen/contributing': '/docs/custom-codegen/contributing',
       '/plugins/other/': '/plugins',
