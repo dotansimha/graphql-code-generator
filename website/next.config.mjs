@@ -42,7 +42,6 @@ export default withGuildDocs({
       '/docs/guides': '/guides/react',
       '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
       '/docs/react': '/docs/guides/react',
-      '/docs/custom-codegen/contributing': '/docs/custom-codegen/contributing',
       '/plugins/other': '/plugins',
       '/docs/advanced': '/docs/advanced/generated-files-colocation',
       '/plugins/java-installation': '/plugins/java/java',
