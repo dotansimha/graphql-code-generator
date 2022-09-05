@@ -38,6 +38,8 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/docs/react': '/docs/guides/react',
+      '/docs/custom-codegen/contributing': '/docs/custom-codegen/contributing',
       '/plugins/other/': '/plugins',
       '/plugins/other': '/plugins',
       '/docs/advanced/': '/docs/advanced/generated-files-colocation',
