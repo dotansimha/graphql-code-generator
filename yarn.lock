@@ -3864,6 +3864,21 @@
     undici "^5.8.0"
     web-streams-polyfill "^3.2.0"
 
+"@whatwg-node/fetch@^0.4.0":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.4.2.tgz#a5045d66b1ef09f02c07f997c40302a49e82cbf8"
+  integrity sha512-5ACCCexn6i5Ud45wHxcqSzlcRes1FfKgRpEs87V1Ha6gJTc7wNdw7TJQE7qoYMI0dGjVmKbDvP0+Em4HKF8JLQ==
+  dependencies:
+    "@peculiar/webcrypto" "^1.4.0"
+    abort-controller "^3.0.0"
+    busboy "^1.6.0"
+    event-target-polyfill "^0.0.3"
+    form-data-encoder "^1.7.1"
+    formdata-node "^4.3.1"
+    node-fetch "^2.6.7"
+    undici "^5.8.0"
+    web-streams-polyfill "^3.2.0"
+
 "@wry/context@^0.6.0":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.6.1.tgz#c3c29c0ad622adb00f6a53303c4f965ee06ebeb2"
