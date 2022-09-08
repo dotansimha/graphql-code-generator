@@ -54,7 +54,6 @@ export default withGuildDocs({
       '/docs': '/docs/getting-started',
       '/docs/plugins': '/plugins',
       '/docs/generated-config/base-documents-visitor': '/plugins',
-      '/plugins/presets/:presetName-preset': '/plugins/:presetName-preset',
       '/docs/config-reference': '/docs/config-reference/codegen-config',
       '/docs/config-reference/': '/docs/config-reference/codegen-config',
       '/plugins/flow': '/plugins/flow/flow-operations',
