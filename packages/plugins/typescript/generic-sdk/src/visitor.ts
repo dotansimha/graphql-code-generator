@@ -56,6 +56,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
     } else if (this.config.rawRequest) {
       this._additionalImports.push(`${importType} { ExecutionResult } from 'graphql';`);
     }
+    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
   }
 
   protected buildOperation(
@@ -68,6 +69,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
     if (node.name == null) {
       throw new Error("Plugin 'generic-sdk' cannot generate SDK for unnamed operation.\n\n" + print(node));
     } else {
+      operationResultType = this._externalImportPrefix + operationResultType;
       this._operationsToInclude.push({
         node,
         documentVariableName,
