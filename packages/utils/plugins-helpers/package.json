@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@graphql-tools/utils": "^8.8.0",
-    "change-case-all": "1.0.14",
+    "change-case-all": "1.0.15",
     "common-tags": "1.8.2",
     "import-from": "4.0.0",
     "lodash": "~4.17.0",

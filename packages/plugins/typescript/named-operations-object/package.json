@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.6.2",
-    "change-case-all": "1.0.14",
+    "change-case-all": "1.0.15",
     "tslib": "~2.4.0"
   },
   "main": "dist/cjs/index.js",
