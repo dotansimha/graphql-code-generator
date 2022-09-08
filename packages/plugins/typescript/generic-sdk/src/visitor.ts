@@ -70,6 +70,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
       throw new Error("Plugin 'generic-sdk' cannot generate SDK for unnamed operation.\n\n" + print(node));
     } else {
       operationResultType = this._externalImportPrefix + operationResultType;
+      operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
       this._operationsToInclude.push({
         node,
         documentVariableName,
