@@ -38,11 +38,13 @@ export default withGuildDocs({
   },
   redirects: () =>
     Object.entries({
+      '/live-demo': '/',
       '/docs/presets/presets-index': '/plugins',
       '/docs/guides': '/guides/react',
       '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
       '/docs/react': '/docs/guides/react',
       '/plugins/other': '/plugins',
+      '/docs/integrations': '/plugins',
       '/docs/advanced': '/docs/advanced/generated-files-colocation',
       '/plugins/java-installation': '/plugins/java/java',
       '/docs/plugins/c-sharp': '/plugins/c-sharp/c-sharp-operations',
@@ -51,8 +53,13 @@ export default withGuildDocs({
       '/docs/tags': '/docs/getting-started',
       '/docs': '/docs/getting-started',
       '/docs/plugins': '/plugins',
+      '/docs/generated-config/base-documents-visitor': '/plugins',
+      '/plugins/presets/:presetName-preset': '/plugins/:presetName-preset',
       '/docs/config-reference': '/docs/config-reference/codegen-config',
       '/docs/config-reference/': '/docs/config-reference/codegen-config',
+      '/plugins/flow': '/plugins/flow/flow-operations',
+      '/plugins/typescript-urql-graphcache': '/plugins/typescript/typescript-urql',
+      '/plugins/typescript/typescript-urql-graphcache': '/plugins/typescript/typescript-urql',
       '/docs/generated-config/:presetName-preset': '/plugins/:presetName-preset',
       '/docs/generated-config/:pluginName': '/plugins/:pluginName',
       '/docs/custom-codegen/write-your-plugin': '/docs/custom-codegen',
@@ -69,6 +76,7 @@ export default withGuildDocs({
       '/docs/getting-started/require-field': '/docs/config-reference/require-field',
       '/docs/getting-started/naming-convention': '/docs/config-reference/naming-convention',
       '/docs/getting-started/how-does-it-work': '/docs/advanced/how-does-it-work',
+      '/plugins/typescript-svelte-urql': '/plugins',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({
