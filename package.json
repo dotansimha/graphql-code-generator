@@ -92,7 +92,7 @@
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
     "tslib": "2.4.0",
-    "typescript": "4.7.4",
+    "typescript": "4.8.3",
     "urql": "3.0.3",
     "vue": "3.2.39",
     "vue-apollo-smart-ops": "0.1.0"
