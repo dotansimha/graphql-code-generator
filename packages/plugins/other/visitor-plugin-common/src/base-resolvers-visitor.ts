@@ -278,6 +278,7 @@ export interface RawResolversConfig extends RawConfig {
    *         inputValue: true
    *         object: true
    *         defaultValue: true
+   * 	       resolvers: true;
    * ```
    */
   avoidOptionals?: boolean | AvoidOptionalsConfig;
@@ -370,6 +371,22 @@ export interface RawResolversConfig extends RawConfig {
    * @ignore
    */
   directiveResolverMappings?: Record<string, string>;
+  /**
+   * @description Allow you to set the visitor class that will be used to traverse the graphql AST to generate
+   * the types.
+   *
+   *
+   * @exampleMarkdown
+   *
+   * ## Custom Visitor
+   *
+   * ```yaml
+   * plugins
+   *   config:
+   *     customVisitor: ./my-custom-visitor#VisitorClass
+   * ```
+   * **/
+  customVisitor?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -431,6 +448,7 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
+      customVisitor: getConfigValue(rawConfig.customVisitor, null), // If custom visitor is not set, we will use the default one
       ...additionalConfig,
     } as TPluginConfig);
 
