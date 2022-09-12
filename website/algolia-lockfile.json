@@ -45,7 +45,7 @@
         "anchor": "example-with-graphql-codegentypescript"
       }
     ],
-    "content": "7c3e7fc430a141dba4a7fcaae5e9ac82",
+    "content": "8a7ab80fcd7350c251b0aa1f92d0e3a2",
     "url": "https://www.graphql-code-generator.com/docs/advanced/how-does-it-work",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Advanced Usage"],
@@ -548,7 +548,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "eca3271999b60fe7f88911d61050a913",
+    "content": "94d0d1d3abb31711c3a506b357d6b5ef",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/index",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
