@@ -115,20 +115,32 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
           }
           return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
             o.operationVariablesTypes
-          }, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ${o.operationResultType}; extensions?: ${
-            this.config.extensionsType
-          }; headers: Dom.Headers; status: number; }> {
-    return withWrapper((wrappedRequestHeaders) => client.rawRequest<${
-      o.operationResultType
-    }>(${docArg}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
+          }, signal?: AbortSignal, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ${
+            o.operationResultType
+          }; extensions?: ${this.config.extensionsType}; headers: Dom.Headers; status: number; }> {
+    return withWrapper((wrappedRequestHeaders) => client.rawRequest<${o.operationResultType}>({
+        query: ${docArg},
+        signal: signal as Dom.RequestInit['signal'],
+        variables,
+        requestHeaders: {
+          ...requestHeaders,
+          ...wrappedRequestHeaders,
+        },
+      }), '${operationName}', '${operationType}');
 }`;
         }
         return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
           o.operationVariablesTypes
-        }, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
-  return withWrapper((wrappedRequestHeaders) => client.request<${
-    o.operationResultType
-  }>(${docVarName}, variables, {...requestHeaders, ...wrappedRequestHeaders}), '${operationName}', '${operationType}');
+        }, signal?: AbortSignal, requestHeaders?: Dom.RequestInit["headers"]): Promise<${o.operationResultType}> {
+  return withWrapper((wrappedRequestHeaders) => client.request<${o.operationResultType}>({
+      document: ${docVarName},
+      signal: signal as Dom.RequestInit['signal'],
+      variables,
+      requestHeaders: {
+        ...requestHeaders,
+        ...wrappedRequestHeaders,
+      },
+    }), '${operationName}', '${operationType}');
 }`;
       })
       .filter(Boolean)

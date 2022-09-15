@@ -88,7 +88,15 @@ async function test() {
       const output = await validate(result, config, docs, schema, usage);
 
       expect(result.content).toContain(
-        `(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');`
+        `({
+          document: FeedDocument,
+          signal: signal as Dom.RequestInit['signal'],
+          variables,
+          requestHeaders: {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          },
+        }), 'feed', 'query');`
       );
       expect(output).toMatchSnapshot();
     });
@@ -339,13 +347,37 @@ async function test() {
 
       expect(output).toContain(`import * as Operations from './operations';`);
       expect(output).toContain(
-        `(Operations.FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed', 'query');`
+        `({
+          document: Operations.FeedDocument,
+          signal: signal as Dom.RequestInit['signal'],
+          variables,
+          requestHeaders: {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          },
+        }), 'feed', 'query');`
       );
       expect(output).toContain(
-        `(Operations.Feed2Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed2', 'query');`
+        `({
+          document: Operations.Feed2Document,
+          signal: signal as Dom.RequestInit['signal'],
+          variables,
+          requestHeaders: {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          },
+        }), 'feed2', 'query');`
       );
       expect(output).toContain(
-        `(Operations.Feed3Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed3', 'query');`
+        `({
+          document: Operations.Feed3Document,
+          signal: signal as Dom.RequestInit['signal'],
+          variables,
+          requestHeaders: {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          },
+        }), 'feed3', 'query');`
       );
     });
 
