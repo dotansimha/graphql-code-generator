@@ -40,7 +40,7 @@ export default withGuildDocs({
     Object.entries({
       '/live-demo': '/',
       '/docs/presets/presets-index': '/plugins',
-      '/docs/guides': '/guides/react',
+      '/docs/guides': '/docs/guides/react',
       '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
       '/docs/react': '/docs/guides/react',
       '/plugins/other': '/plugins',
@@ -57,6 +57,8 @@ export default withGuildDocs({
       '/docs/config-reference': '/docs/config-reference/codegen-config',
       '/docs/config-reference/': '/docs/config-reference/codegen-config',
       '/plugins/flow': '/plugins/flow/flow-operations',
+      '/plugins/typescript-common': '/plugins/typescript/typescript',
+      '/plugins/other/typescript-operations': '/plugins/typescript/typescript-operations',
       '/plugins/typescript-urql-graphcache': '/plugins/typescript/typescript-urql',
       '/plugins/typescript/typescript-urql-graphcache': '/plugins/typescript/typescript-urql',
       '/docs/generated-config/:presetName-preset': '/plugins/:presetName-preset',
@@ -66,6 +68,8 @@ export default withGuildDocs({
       '/docs/plugins/typescript-common': '/plugins/typescript/typescript',
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
+      '/docs/plugins/client-note': '/plugins',
+      '/docs/generated-config/base-visitor': '/plugins',
       '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/documents-field': '/docs/config-reference/documents-field',
@@ -76,6 +80,14 @@ export default withGuildDocs({
       '/docs/getting-started/naming-convention': '/docs/config-reference/naming-convention',
       '/docs/getting-started/how-does-it-work': '/docs/advanced/how-does-it-work',
       '/plugins/typescript-svelte-urql': '/plugins',
+      '/plugins/presets': '/plugins',
+      '/docs/getting-startedinstallation': '/docs/getting-started',
+      '/docs/plugins/typescript-graphql-requesttypescript-graphql-request':
+        '/plugins/typescript/typescript-graphql-request',
+      '/plugins/typescript/fragment-matcher': '/plugins/other/fragment-matcher',
+      '/plugins/core': '/plugins',
+      '/plugins/dart': '/plugins',
+      '/home': '/',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({
