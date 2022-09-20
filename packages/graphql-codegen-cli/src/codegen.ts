@@ -166,7 +166,12 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
     if (
       rootSchemas.length === 0 &&
-      Object.keys(generates).some(filename => !generates[filename].schema || generates[filename].schema.length === 0)
+      Object.keys(generates).some(
+        filename =>
+          !generates[filename].schema ||
+          (Array.isArray(generates[filename].schema === 'object') &&
+            (generates[filename].schema as unknown as any[]).length === 0)
+      )
     ) {
       throw new DetailedError(
         'Invalid Codegen Configuration!',
