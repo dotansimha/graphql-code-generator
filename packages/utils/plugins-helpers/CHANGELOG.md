@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 2.7.1
+
+### Patch Changes
+
+- [#8368](https://github.com/dotansimha/graphql-code-generator/pull/8368) [`4113b1bd3`](https://github.com/dotansimha/graphql-code-generator/commit/4113b1bd39f3d32759c68a292e8492a0dd4f7371) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(cli): support ApolloEngine loader in TypeScript config
+
 ## 2.7.0
 
 ### Minor Changes

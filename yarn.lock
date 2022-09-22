@@ -1711,14 +1711,14 @@
     parse-filepath "^1.0.2"
     tslib "~2.4.0"
 
-"@graphql-tools/apollo-engine-loader@^7.3.6":
-  version "7.3.6"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-7.3.6.tgz#a2bd7cbae69975bb8ccd33e7ca4c6a705671dc30"
-  integrity sha512-r7YU1X9Ce/sr+tPzSuZqVqlK7knGDpiRfB9HB2uVmbm+kPrlISQ0LuamFoT1g1nkfDZUNZn2p18ag512P1aVVw==
+"@graphql-tools/apollo-engine-loader@7.3.13", "@graphql-tools/apollo-engine-loader@^7.3.6":
+  version "7.3.13"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/apollo-engine-loader/-/apollo-engine-loader-7.3.13.tgz#090bf03a99a5aaf8580826125346cb7441b54d94"
+  integrity sha512-fr2TcA9fM+H81ymdtyDaocZ/Ua4Vhhf1IvpQoPpuEUwLorREd86N8VORUEIBvEdJ1b7Bz7NqwL3RnM5m9KXftA==
   dependencies:
     "@ardatan/sync-fetch" "0.0.1"
-    "@graphql-tools/utils" "8.9.0"
-    "@whatwg-node/fetch" "^0.2.4"
+    "@graphql-tools/utils" "8.12.0"
+    "@whatwg-node/fetch" "^0.4.0"
     tslib "^2.4.0"
 
 "@graphql-tools/batch-execute@8.5.1":
@@ -1985,10 +1985,17 @@
   dependencies:
     tslib "~2.3.0"
 
-"@graphql-tools/utils@8.11.0", "@graphql-tools/utils@^8.6.5", "@graphql-tools/utils@^8.8.0", "@graphql-tools/utils@^8.9.0":
+"@graphql-tools/utils@8.11.0":
   version "8.11.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.11.0.tgz#764ebf9b371b5f5cb66228267c68bea996cc8c03"
   integrity sha512-4lkc+F/hsQTjNnnfFh7lzrhRmRm1y2ARfKA6RD5FbTJO58JadirNbkY5u4lsVEPBZHiivHqAiQ/pIBhGMyEMcQ==
+  dependencies:
+    tslib "^2.4.0"
+
+"@graphql-tools/utils@8.12.0", "@graphql-tools/utils@^8.6.5", "@graphql-tools/utils@^8.8.0", "@graphql-tools/utils@^8.9.0":
+  version "8.12.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.12.0.tgz#243bc4f5fc2edbc9e8fd1038189e57d837cbe31f"
+  integrity sha512-TeO+MJWGXjUTS52qfK4R8HiPoF/R7X+qmgtOYd8DTH0l6b+5Y/tlg5aGeUJefqImRq7nvi93Ms40k/Uz4D5CWw==
   dependencies:
     tslib "^2.4.0"
 
