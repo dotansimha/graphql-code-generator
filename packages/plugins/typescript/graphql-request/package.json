@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@graphql-tools/schema": "9.0.3",
-    "graphql-request": "5.0.0"
+    "graphql-request": "next"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
