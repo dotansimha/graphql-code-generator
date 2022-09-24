@@ -752,4 +752,74 @@ describe('gql-tag-operations-preset', () => {
     const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(graphqlFile).toBeDefined();
   });
+
+  it('supports importing base schema types', async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            a: String
+            b: String
+            c: String
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      generates: {
+        out1: {
+          preset,
+          presetConfig: {
+            importTypesPath: './base-types.ts',
+          },
+          plugins: [],
+        },
+      },
+    });
+
+    expect(result.length).toBe(3);
+    const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+    expect(gqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import * as graphql from './graphql';
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+      const documents = {
+          "\\n  query A {\\n    a\\n  }\\n": graphql.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": graphql.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": graphql.CFragmentDoc,
+      };
+
+      export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      export function gql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
+
+      export function gql(source: string): unknown;
+      export function gql(source: string) {
+        return (documents as any)[source] ?? {};
+      }
+
+      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    `);
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import * as Types from './base-types.ts';
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type AQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+      export type AQuery = { __typename?: 'Query', a?: string | null };
+
+      export type BQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+      export type BQuery = { __typename?: 'Query', b?: string | null };
+
+      export type CFragment = { __typename?: 'Query', c?: string | null };
+
+      export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+      export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+      export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+    `);
+  });
 });
