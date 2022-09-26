@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`init custom setup 1`] = `
+"
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  overwrite: true,
+  schema: "http://localhost:4000",
+  documents: "graphql/*.ts",
+  generates: {
+    "src/gql": {
+      preset: "client",
+      plugins: []
+    },
+    "./graphql.schema.json": {
+      plugins: ["introspection"]
+    }
+  }
+};
+
+export default config;
+"
+`;
+
+exports[`init plugins suggestions for client-side setup should use angular related plugins when @angular/core is found 1`] = `
+"
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  overwrite: true,
+  schema: "http://localhost:4000",
+  documents: "src/**/*.ts",
+  generates: {
+    "src/gql": {
+      preset: "client",
+      plugins: []
+    }
+  }
+};
+
+export default config;
+"
+`;
+
+exports[`init plugins suggestions for client-side setup should use react related plugins when react is found 1`] = `
+"
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  overwrite: true,
+  schema: "http://localhost:4000",
+  documents: "src/**/*.tsx",
+  generates: {
+    "src/gql": {
+      preset: "client",
+      plugins: []
+    }
+  }
+};
+
+export default config;
+"
+`;
+
+exports[`init should have few default values 1`] = `
+"
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  overwrite: true,
+  schema: "http://localhost:4000",
+  documents: "src/**/*.ts",
+  generates: {
+    "src/gql": {
+      preset: "client",
+      plugins: []
+    }
+  }
+};
+
+export default config;
+"
+`;
+
+exports[`init should have few default values 2`] = `
+"overwrite: true
+schema: "./schema.ts"
+documents: "graphql/**/*.graphql"
+generates:
+  graphql/index.ts:
+    preset: "client"
+    plugins: []
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
+"
+`;

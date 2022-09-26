@@ -24,10 +24,11 @@ export async function init() {
   const config: Types.Config = {
     overwrite: true,
     schema: answers.schema,
-    documents: answers.targets.includes(Tags.browser) ? answers.documents : null,
+    documents: answers.targets.includes(Tags.client) ? answers.documents : undefined,
     generates: {
       [answers.output]: {
-        plugins: answers.plugins.map(p => p.value),
+        preset: answers.targets.includes(Tags.client) ? 'client' : undefined,
+        plugins: answers.plugins ? answers.plugins.map(p => p.value) : [],
       },
     },
   };
@@ -48,7 +49,7 @@ export async function init() {
   // Emit status to the terminal
   log(`
     Config file generated at ${bold(relativePath)}
-    
+
       ${bold('$ npm install')}
 
     To install the plugins.
