@@ -3605,7 +3605,24 @@
         },
         "preset": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.\n\nPresets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file\n\nYou can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
-          "anyOf": [{ "$ref": "#/definitions/Types.OutputPreset" }, { "type": "string" }]
+          "anyOf": [
+            { "$ref": "#/definitions/Types.OutputPreset" },
+            {
+              "enum": [
+                "client",
+                "client-preset",
+                "gql-tag-operations",
+                "gql-tag-operations-preset",
+                "graphql-modules",
+                "graphql-modules-preset",
+                "import-types-preset",
+                "import-types-preset-preset",
+                "near-operation-file",
+                "near-operation-file-preset"
+              ],
+              "type": "string"
+            }
+          ]
         },
         "presetConfig": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
@@ -3815,7 +3832,10 @@
         }
       ]
     },
-    "__type_1": { "type": "object", "properties": { "buildGeneratesSection": { "type": "object" } } },
+    "__type_1": {
+      "type": "object",
+      "properties": { "buildGeneratesSection": { "type": "object" }, "prepareDocuments": { "type": "object" } }
+    },
     "Types.OutputPreset": { "$ref": "#/definitions/__type_1" },
     "__type_2": {
       "type": "object",

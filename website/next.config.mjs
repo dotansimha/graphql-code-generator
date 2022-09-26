@@ -1,9 +1,11 @@
 import { withGuildDocs } from 'guild-docs/next.config';
+import { applyUnderscoreRedirects } from 'guild-docs/underscore-redirects';
 import { CategoryToPackages } from './src/category-to-packages.mjs';
 
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
   packageNames.map(packageName => [`/plugins/${packageName}`, `/plugins/${category}/${packageName}`])
 );
+
 export default withGuildDocs({
   basePath: process.env.NEXT_BASE_PATH && process.env.NEXT_BASE_PATH !== '' ? process.env.NEXT_BASE_PATH : undefined,
   eslint: {
@@ -24,17 +26,50 @@ export default withGuildDocs({
     // Todo: remove it before merge to master
     ignoreBuildErrors: true,
   },
-  webpack(config) {
+  webpack(config, meta) {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       module: false,
     };
+
+    applyUnderscoreRedirects(config, meta);
+
     return config;
   },
   redirects: () =>
     Object.entries({
+      '/live-demo': '/',
+      '/docs/presets/presets-index': '/plugins',
+      '/docs/guides': '/docs/guides/react',
+      '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
+      '/docs/react': '/docs/guides/react',
+      '/plugins/other': '/plugins',
+      '/docs/integrations': '/plugins',
+      '/docs/advanced': '/docs/advanced/generated-files-colocation',
+      '/plugins/java-installation': '/plugins/java/java',
+      '/docs/plugins/c-sharp': '/plugins/c-sharp/c-sharp-operations',
+      '/plugins/dart/flutter': '/plugins/dart/flutter-freezed',
+      '/docs/getting-started/programmatic-usage': '/docs/advanced/programmatic-usage',
+      '/docs/tags': '/docs/getting-started',
+      '/docs': '/docs/getting-started',
+      '/docs/plugins': '/plugins',
+      '/docs/generated-config/base-documents-visitor': '/plugins',
+      '/docs/config-reference': '/docs/config-reference/codegen-config',
+      '/docs/config-reference/': '/docs/config-reference/codegen-config',
+      '/plugins/flow': '/plugins/flow/flow-operations',
+      '/plugins/typescript-common': '/plugins/typescript/typescript',
+      '/plugins/other/typescript-operations': '/plugins/typescript/typescript-operations',
+      '/plugins/typescript-urql-graphcache': '/plugins/typescript/typescript-urql',
+      '/plugins/typescript/typescript-urql-graphcache': '/plugins/typescript/typescript-urql',
+      '/docs/generated-config/:presetName-preset': '/plugins/:presetName-preset',
+      '/docs/generated-config/:pluginName': '/plugins/:pluginName',
+      '/docs/custom-codegen/write-your-plugin': '/docs/custom-codegen',
+      '/plugins/typescript': '/plugins/typescript/typescript',
+      '/docs/plugins/typescript-common': '/plugins/typescript/typescript',
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
+      '/docs/plugins/client-note': '/plugins',
+      '/docs/generated-config/base-visitor': '/plugins',
       '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/documents-field': '/docs/config-reference/documents-field',
@@ -47,6 +82,15 @@ export default withGuildDocs({
       '/docs/guides/react': '/docs/advanced/react-vue-angular',
       '/docs/guides/vue': '/docs/advanced/react-vue-angular',
       '/docs/guides/angular': '/docs/advanced/react-vue-angular',
+      '/plugins/typescript-svelte-urql': '/plugins',
+      '/plugins/presets': '/plugins',
+      '/docs/getting-startedinstallation': '/docs/getting-started',
+      '/docs/plugins/typescript-graphql-requesttypescript-graphql-request':
+        '/plugins/typescript/typescript-graphql-request',
+      '/plugins/typescript/fragment-matcher': '/plugins/other/fragment-matcher',
+      '/plugins/core': '/plugins',
+      '/plugins/dart': '/plugins',
+      '/home': '/',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({

@@ -17,4 +17,5 @@ recompile.sh
 
 .next/
 out
-public/sitemap.xml
+website/public/sitemap.xml
+website/public/_redirects

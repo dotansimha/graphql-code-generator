@@ -1,5 +1,23 @@
 # @graphql-cli/codegen
 
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [[`3e121d92e`](https://github.com/dotansimha/graphql-code-generator/commit/3e121d92ebd563a82dbc367cd3e9194ebe5ca1ee), [`4113b1bd3`](https://github.com/dotansimha/graphql-code-generator/commit/4113b1bd39f3d32759c68a292e8492a0dd4f7371)]:
+  - @graphql-codegen/cli@2.12.1
+
+## 2.4.0
+
+### Minor Changes
+
+- [#8301](https://github.com/dotansimha/graphql-code-generator/pull/8301) [`2ed21a471`](https://github.com/dotansimha/graphql-code-generator/commit/2ed21a471f8de58ecafebf4bf64b3c32cee24d2f) Thanks [@charlypoly](https://github.com/charlypoly)! - Introduces support for TypeScript config file and a new preset lifecycle (required for `client-preset`)
+
+### Patch Changes
+
+- Updated dependencies [[`d8b4012e1`](https://github.com/dotansimha/graphql-code-generator/commit/d8b4012e1fdbdcff6f9e62365b57426cef578d9a), [`2ed21a471`](https://github.com/dotansimha/graphql-code-generator/commit/2ed21a471f8de58ecafebf4bf64b3c32cee24d2f), [`2ed21a471`](https://github.com/dotansimha/graphql-code-generator/commit/2ed21a471f8de58ecafebf4bf64b3c32cee24d2f)]:
+  - @graphql-codegen/cli@2.12.0
+
 ## 2.3.13
 
 ### Patch Changes

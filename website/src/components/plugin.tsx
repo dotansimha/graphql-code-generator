@@ -67,5 +67,5 @@ export const PluginHeader = ({
 export const PluginApiDocs = (): ReactElement => {
   // Get the data from SSG, and render it as a component.
   const { compiledSource } = useSSG();
-  return <MDXRemote compiledSource={compiledSource} components={getComponents()} />;
+  return <MDXRemote compiledSource={compiledSource} components={getComponents({})} />;
 };
