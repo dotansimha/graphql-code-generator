@@ -23,18 +23,28 @@ all files as stale.
 
 You can run it per each file:
 
-```yaml
-hooks:
-  afterOneFileWrite:
-    - prettier --write
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  hooks: { afterOneFileWrite: ['prettier --write'] }
+  // ...
+}
+export default config
 ```
 
 Or, for all files together:
 
-```yaml
-hooks:
-  afterAllFileWrite:
-    - prettier --write
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  hooks: { afterAllFileWrite: ['prettier --write'] }
+  // ...
+}
+export default config
 ```
 
 Consider this method if you're using `near-operation-file` preset as this has better performance when writing many files.
@@ -43,32 +53,54 @@ Consider this method if you're using `near-operation-file` preset as this has be
 
 You can run it per each file:
 
-```yaml
-hooks:
-  afterOneFileWrite:
-    - tslint --fix
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  hooks: { afterOneFileWrite: ['tslint --fix'] }
+  // ...
+}
+export default config
 ```
 
 Or, for all files together:
 
-```yaml
-hooks:
-  afterAllFileWrite:
-    - tslint --fix
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  hooks: { afterAllFileWrite: ['tslint --fix'] }
+  // ...
+}
+export default config
 ```
 
 ## ESLint
 
-```yaml
-hooks:
-  afterOneFileWrite:
-    - eslint --fix
+You can run it per each file:
+
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  hooks: { afterOneFileWrite: ['eslint --fix'] }
+  // ...
+}
+export default config
 ```
 
 Or, for all files together:
 
-```yaml
-hooks:
-  afterAllFileWrite:
-    - eslint --fix
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  hooks: { afterAllFileWrite: ['eslint --fix'] }
+  // ...
+}
+export default config
 ```

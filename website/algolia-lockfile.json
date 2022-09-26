@@ -27,7 +27,7 @@
     "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
-    "content": "149e4a89159f50eaeac0b815b1587ad5",
+    "content": "1e44a9e9b2b56f2e033237b8ae1b4b53",
     "url": "https://www.graphql-code-generator.com/docs/advanced/generated-files-colocation",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Advanced Usage"],
@@ -45,7 +45,7 @@
         "anchor": "example-with-graphql-codegentypescript"
       }
     ],
-    "content": "44dbaecef18f05b5b1a0902fa29e37f3",
+    "content": "8a7ab80fcd7350c251b0aa1f92d0e3a2",
     "url": "https://www.graphql-code-generator.com/docs/advanced/how-does-it-work",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Advanced Usage"],
@@ -136,12 +136,12 @@
         "anchor": "other-ways-to-provide-configuration"
       }
     ],
-    "content": "e9e6cdd52e1d4897a7c6089bd9b377c4",
+    "content": "7ad15783187cd47d7219dc1ed6a7fe19",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/codegen-config",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
-    "title": "codegen.yml",
+    "title": "codegen.ts",
     "type": "Documentation"
   },
   {
@@ -285,7 +285,7 @@
         "anchor": "output-level"
       }
     ],
-    "content": "d4594a1706f25609c2d0f123f069ca1f",
+    "content": "ab30f7e90736312a2ef5e545669cae47",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/lifecycle-hooks",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -452,7 +452,7 @@
         "anchor": "custom-schema-loader"
       }
     ],
-    "content": "44a9b98f216d3149bf819108b01f60a8",
+    "content": "778320f4454acd01d66df3f11e326899",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/schema-field",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -513,7 +513,7 @@
         "anchor": "conclusion"
       }
     ],
-    "content": "ff06a6d8323fadfd0b7dbb79c744c8d5",
+    "content": "0d2a1a5e2eb4715d7f952af900fb9d9f",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/esm-typescript-usage",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -548,7 +548,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "eca3271999b60fe7f88911d61050a913",
+    "content": "94d0d1d3abb31711c3a506b357d6b5ef",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/index",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -835,7 +835,7 @@
     "objectID": "code-generator-docs-integrations-federation",
     "headings": [],
     "toc": [],
-    "content": "016768a497e27802c1b3cfb88a3a37b4",
+    "content": "78111eb85e54ca2e8b692ecca9289fc0",
     "url": "https://www.graphql-code-generator.com/docs/integrations/federation",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],
@@ -881,7 +881,7 @@
         "anchor": "eslint"
       }
     ],
-    "content": "526af2f728ec27d8f7788dd1b7796e7e",
+    "content": "e370a10aa198649e9365aaf534978d3c",
     "url": "https://www.graphql-code-generator.com/docs/integrations/prettier",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Integrations"],

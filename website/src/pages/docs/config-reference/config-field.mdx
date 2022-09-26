@@ -10,29 +10,36 @@ The `config` field is used to pass configuration to Plugins.
 
 If you specify it in your root level, the options will be passed to every plugin for each output file:
 
-```yaml {2-3}
-schema: schema.graphql
-config:
-  configKey: configValue
-generates:
-  output.ts:
-    - plugin1
-    - plugin2
+```ts {5}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  config: { configKey: 'configValue' },
+  generates: { 'output.ts': ['plugin1', 'plugin2'] }
+}
+export default config
 ```
 
 ### Output Level
 
 If you specify it at the output file level, every plugin for specific output will get the config value:
 
-```yaml {4-5}
-schema: schema.graphql
-generates:
-  output.ts:
-    config:
-      configKey: configValue
-    plugins:
-      - plugin1
-      - plugin2
+```ts {7-9}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  generates: {
+    'output.ts': {
+      config: {
+        configKey: 'configValue'
+      },
+      plugins: ['plugin1', 'plugin2']
+    }
+  }
+}
+export default config
 ```
 
 <Callout>Output level configuration overrides root-level configuration.</Callout>
@@ -41,14 +48,23 @@ generates:
 
 If you specify it at the plugin level, only that plugin will get the config value:
 
-```yaml {5,7}
-schema: schema.graphql
-generates:
-  output.ts:
-    - plugin1:
-        configKey: configValue
-    - plugin2:
-        configKey: otherValue
+```ts {8,11}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  generates: {
+    'output.ts': [
+      {
+        plugin1: { configKey: 'configValue' }
+      },
+      {
+        plugin2: { configKey: 'otherValue' }
+      }
+    ]
+  }
+}
+export default config
 ```
 
 <Callout>Plugin level configuration overrides output-level and root-level configuration.</Callout>

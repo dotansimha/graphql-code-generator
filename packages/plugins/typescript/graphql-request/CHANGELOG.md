@@ -1,5 +1,25 @@
 # @graphql-codegen/typescript-graphql-request
 
+## 4.5.5
+
+### Patch Changes
+
+- [#8334](https://github.com/dotansimha/graphql-code-generator/pull/8334) [`e6e497afa`](https://github.com/dotansimha/graphql-code-generator/commit/e6e497afa54213ad3eabfae26c014ab03eb4727c) Thanks [@jcarrus](https://github.com/jcarrus)! - graphql-request: append explicit extension when importing dom types
+
+- Updated dependencies [[`4113b1bd3`](https://github.com/dotansimha/graphql-code-generator/commit/4113b1bd39f3d32759c68a292e8492a0dd4f7371)]:
+  - @graphql-codegen/plugin-helpers@2.7.1
+
+## 4.5.4
+
+### Patch Changes
+
+- [#8295](https://github.com/dotansimha/graphql-code-generator/pull/8295) [`a18818118`](https://github.com/dotansimha/graphql-code-generator/commit/a18818118c11d834ae41edbd172dbc259817fcb6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`graphql-request@^3.4.0 || ^4.0.0 || ^5.0.0` ↗︎](https://www.npmjs.com/package/graphql-request/v/null) (from `^3.4.0 || ^4.0.0`, in `peerDependencies`)
+
+- Updated dependencies [[`2ed21a471`](https://github.com/dotansimha/graphql-code-generator/commit/2ed21a471f8de58ecafebf4bf64b3c32cee24d2f)]:
+  - @graphql-codegen/plugin-helpers@2.7.0
+
 ## 4.5.3
 
 ### Patch Changes
