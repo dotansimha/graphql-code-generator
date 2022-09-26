@@ -1,34 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Using GraphQL Code Generator with SWR and React
 
-## Getting Started
+This example illustrates using GraphQL Code Generator in a React application using SWR with `graphql-request` as a GraphQL Client.
 
-First, run the development server:
+You will find the TypeScript-based codegen configuration in [`codegen.ts`](./codegen.ts).
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+This simple codegen configuration generates types and helpers in the [`src/gql`](./src/gql/) folder that help you to get typed GraphQL Queries and Mutations seamlessly ⚡️
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<br />
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+For a step-by-step implementation tutorial, please refer to the related guide:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue-angular
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+--
 
-## Learn More
+Please note that the `client` preset used in this example is compatible with `graphql-request` from `5.0` as SWR fetcher.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+For indications in writing your fetcher, [please refer to our documentation](https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue-angular#appendix-i-react-query-with-a-custom-fetcher-setup).

@@ -1,40 +1,17 @@
-# test
+# Using GraphQL Code Generator with Villus and Vue 3
 
-This template should help get you started developing with Vue 3 in Vite.
+This example illustrates using GraphQL Code Generator in a Vue 3 application using the Villus GraphQL Client.
 
-## Recommended IDE Setup
+You will find the TypeScript-based codegen configuration in [`codegen.ts`](./codegen.ts).
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+This simple codegen configuration generates types and helpers in the [`src/gql`](./src/gql/) folder that help you to get typed GraphQL Queries and Mutations seamlessly ⚡️
 
-## Type Support for `.vue` Imports in TS
+<br />
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+For a step-by-step implementation tutorial, please refer to the related guide:
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue-angular
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+--
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+Please note that the `client` preset used in this example is compatible with `villus` (since `1.0.0-beta.8`).
