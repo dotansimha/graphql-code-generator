@@ -58,6 +58,8 @@ function execShellCommand(cmd: string): Promise<string> {
       (error, stdout, stderr) => {
         if (error) {
           reject(error);
+          // eslint-disable-next-line no-console
+          console.error(error);
         } else {
           debugLog(stdout || stderr);
           resolve(stdout || stderr);
