@@ -77,9 +77,21 @@ export interface ReactQueryRawPluginConfig
    * @default false
    * @description For each generate query hook adds `fetcher` field with a corresponding GraphQL query using the fetcher.
    * It is useful for `queryClient.fetchQuery` and `queryClient.prefetchQuery`.
+   *
+   * For hooks because the fetcher can't be called like above it will generate a function with the corresponding GraphQL with `Fetcher` on the end
+   *
+   * eg `getBasketQuery` would become `getBasketFetcher` this returns the function to call
+   *
    * @exampleMarkdown
    * ```ts
    * await queryClient.prefetchQuery(userQuery.getKey(), () => userQuery.fetcher())
+   * ```
+   *
+   * For hooks
+   * @exampleMarkdown
+   * ```ts
+   * const fetch = userQueryFetcher()
+   * await queryClient.prefetchQuery(userQuery.getKey(), () => fetch())
    * ```
    */
   exposeFetcher?: boolean;

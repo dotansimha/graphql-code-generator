@@ -199,6 +199,7 @@ Depending on the `isReactHook` property, your `myFetcher` should be in the follo
 export const fetchData = <TData, TVariables>(
   query: string,
   variables?: TVariables,
+  context?: QueryFunctionContext<QueryKey, any>
   options?: RequestInit['headers']
 ): (() => Promise<TData>) => {
   return async () => {
@@ -211,7 +212,8 @@ export const fetchData = <TData, TVariables>(
       body: JSON.stringify({
         query,
         variables
-      })
+      },
+      signal: context.signal)
     })
 
     const json = await res.json()
@@ -232,11 +234,17 @@ export const fetchData = <TData, TVariables>(
 export const useFetchData = <TData, TVariables>(
   query: string,
   options?: RequestInit['headers']
-): ((variables?: TVariables) => Promise<TData>) => {
+): ((
+  variables?: TVariables | QueryFunctionContext<QueryKey, any>,
+  context?: QueryFunctionContext<QueryKey, any>
+ ) => Promise<TData>) => {
   // it is safe to call React Hooks here.
   const { url, headers } = React.useContext(FetchParamsContext)
 
-  return async (variables?: TVariables) => {
+  return async <TPageParam = any>(
+    variables?: TVariables | QueryFunctionContext<QueryKey, TPageParam>,
+    context?: QueryFunctionContext<QueryKey, TPageParam>,
+  ) => {
     const res = await fetch(url, {
       method: 'POST',
       headers: {
@@ -247,7 +255,8 @@ export const useFetchData = <TData, TVariables>(
       body: JSON.stringify({
         query,
         variables
-      })
+      },
+      signal: context.signal)
     })
 
     const json = await res.json()
@@ -265,6 +274,8 @@ export const useFetchData = <TData, TVariables>(
 <Callout>
   Note: The return value is an async function, with no params, that returns a `Promise` with the actual data.
 </Callout>
+
+> Important if you use `queryClient.refetchQueries(queryKey)` with no variables it will not add the variables to the query, this means either add `{}` to queries with no variables or add some logic to see if the variable is now the context.
 
 ### Using Infinite Query
 

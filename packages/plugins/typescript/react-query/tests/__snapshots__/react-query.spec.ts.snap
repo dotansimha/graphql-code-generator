@@ -23,12 +23,13 @@ export const useTestQuery = <
     >(
       variables?: TTestQueryVariables,
       options?: UseQueryOptions<TTestQuery, TError, TData>
-    ) =>
-    useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test'] : ['test', variables],
-      useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument).bind(null, variables),
-      options
-    );
+      ) =>{
+        const query = useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument)
+        return useQuery<TTestQuery, TError, TData>(
+          variables === undefined ? ['test'] : ['test', variables],
+          (props) => query(variables, props),
+          options
+        )};
 export const useInfiniteTestQuery = <
       TData = TTestQuery,
       TError = unknown
@@ -39,7 +40,7 @@ export const useInfiniteTestQuery = <
     const query = useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument)
     return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => query({...variables, ...(metaData.pageParam ?? {})}),
+      (props) => query({...variables, ...(props.pageParam ?? {})}, props),
       options
     )};
 
@@ -84,12 +85,13 @@ export const useTestQuery = <
     >(
       variables?: TTestQueryVariables,
       options?: UseQueryOptions<TTestQuery, TError, TData>
-    ) =>
-    useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test'] : ['test', variables],
-      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-      options
-    );
+      ) =>{
+        
+        return useQuery<TTestQuery, TError, TData>(
+          variables === undefined ? ['test'] : ['test', variables],
+          (props) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables, props)(),
+          options
+        )};
 export const useInfiniteTestQuery = <
       TData = TTestQuery,
       TError = unknown
@@ -100,7 +102,7 @@ export const useInfiniteTestQuery = <
     
     return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      (props) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(props.pageParam ?? {})}, props)(),
       options
     )};
 
@@ -145,12 +147,13 @@ export const useTestQuery = <
     >(
       variables?: TTestQueryVariables,
       options?: UseQueryOptions<TTestQuery, TError, TData>
-    ) =>
-    useQuery<TTestQuery, TError, TData>(
-      variables === undefined ? ['test'] : ['test', variables],
-      myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables),
-      options
-    );
+      ) =>{
+        
+        return useQuery<TTestQuery, TError, TData>(
+          variables === undefined ? ['test'] : ['test', variables],
+          (props) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, variables, props)(),
+          options
+        )};
 export const TestDocument = \`
     mutation test($name: String) {
   submitRepository(repoFullName: $name) {

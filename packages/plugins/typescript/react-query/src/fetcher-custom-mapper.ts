@@ -58,8 +58,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const implHookOuter = this._isReactHook ? `const query = ${typedFetcher}(${documentVariableName})` : '';
     const impl = this._isReactHook
-      ? `(metaData) => query({...variables, ...(metaData.pageParam ?? {})})`
-      : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})()`;
+      ? `(props) => query({...variables, ...(props.pageParam ?? {})}, props)`
+      : `(props) => ${typedFetcher}(${documentVariableName}, {...variables, ...(props.pageParam ?? {})}, props)()`;
 
     return `export const useInfinite${operationName} = <
       TData = ${operationResultType},
@@ -93,9 +93,10 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const options = `options?: ${hookConfig.query.options}<${operationResultType}, TError, TData>`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
+    const implHookOuter = this._isReactHook ? `const query = ${typedFetcher}(${documentVariableName})` : '';
     const impl = this._isReactHook
-      ? `${typedFetcher}(${documentVariableName}).bind(null, variables)`
-      : `${typedFetcher}(${documentVariableName}, variables)`;
+      ? `(props) => query(variables, props)`
+      : `(props) => ${typedFetcher}(${documentVariableName}, variables, props)()`;
 
     return `export const use${operationName} = <
       TData = ${operationResultType},
@@ -103,12 +104,13 @@ export class CustomMapperFetcher implements FetcherRenderer {
     >(
       ${variables},
       ${options}
-    ) =>
-    ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
-      ${generateQueryKey(node, hasRequiredVariables)},
-      ${impl},
-      options
-    );`;
+      ) =>{
+        ${implHookOuter}
+        return ${hookConfig.query.hook}<${operationResultType}, TError, TData>(
+          ${generateQueryKey(node, hasRequiredVariables)},
+          ${impl},
+          options
+        )};`;
   }
 
   generateMutationHook(
@@ -149,15 +151,16 @@ export class CustomMapperFetcher implements FetcherRenderer {
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
-    // We can't generate a fetcher field since we can't call react hooks outside of a React Fucntion Component
-    // Related: https://reactjs.org/docs/hooks-rules.html
-    if (this._isReactHook) return '';
-
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
-    const impl = `${typedFetcher}(${documentVariableName}, variables, options)`;
+    if (this._isReactHook) {
+      const hockImpl = `${typedFetcher}(${documentVariableName}, options)`;
+      return `\nexport const use${operationName}Fetcher = (options?: RequestInit['headers']) => ${hockImpl};`;
+    }
 
-    return `\nuse${operationName}.fetcher = (${variables}, options?: RequestInit['headers']) => ${impl};`;
+    const impl = `${typedFetcher}(${documentVariableName}, variables, context, options)`;
+
+    return `\nuse${operationName}.fetcher = (${variables}, options?: RequestInit['headers'], context?: QueryFunctionContext<QueryKey, any>) => ${impl};`;
   }
 }

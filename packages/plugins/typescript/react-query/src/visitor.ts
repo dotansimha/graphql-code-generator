@@ -202,10 +202,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
         }
       }
 
-      // The reason we're looking at the private field of the CustomMapperFetcher to see if it's a react hook
-      // is to prevent calling generateFetcherFetch for each query since all the queries won't be able to generate
-      // a fetcher field anyways.
-      if (this.config.exposeFetcher && !(this.fetcher as any)._isReactHook) {
+      if (this.config.exposeFetcher) {
         query += this.fetcher.generateFetcherFetch(
           node,
           documentVariableName,
@@ -229,7 +226,7 @@ export class ReactQueryVisitor extends ClientSideBaseVisitor<ReactQueryRawPlugin
       if (this.config.exposeMutationKeys) {
         query += generateMutationKeyMaker(node, operationName);
       }
-      if (this.config.exposeFetcher && !(this.fetcher as any)._isReactHook) {
+      if (this.config.exposeFetcher) {
         query += this.fetcher.generateFetcherFetch(
           node,
           documentVariableName,
