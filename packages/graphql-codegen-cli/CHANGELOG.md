@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.12.2
+
+### Patch Changes
+
+- [#8384](https://github.com/dotansimha/graphql-code-generator/pull/8384) [`9d3eedaea`](https://github.com/dotansimha/graphql-code-generator/commit/9d3eedaea6a5a505a8f693378bed44a1648a3a37) Thanks [@charlypoly](https://github.com/charlypoly)! - CLI: properly print error that occurred during hook execution
+
 ## 2.12.1
 
 ### Patch Changes
