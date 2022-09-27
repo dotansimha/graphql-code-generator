@@ -1,15 +1,14 @@
 import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
 
-# Guide: React, Vue and Angular
+# Guide: React and Vue
 
-GraphQL Code Generator provides an unified way to get TypeScript types from GraphQL operations.
-The following guide is compatible with [most modern GraphQL clients and frameworks](#compatibility).
+GraphQL Code Generator provides an unified way to get TypeScript types from GraphQL operations for [most modern GraphQL clients and frameworks](#appendix-ii-compatibility).
 
 <br />
 
 This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index), you can [find the complete `schema.graphql` in our repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
 
-We will build a simple GraphQL Front-end app using the following Query:
+We will build a simple GraphQL front-end app using the following Query to fetches the list of Star Wars films:
 
 ```graphql
 query allFilmsWithVariablesQuery($first: Int!) {
@@ -23,7 +22,7 @@ query allFilmsWithVariablesQuery($first: Int!) {
 }
 ```
 
-and Fragment definition:
+and its `FilmItem` Fragment definition:
 
 ```graphql
 fragment FilmItem on Film {
@@ -42,13 +41,13 @@ All the below code examples are available in our [repository `examples/front-end
 
 ## Installation
 
-For all GraphQL client and framework (React, Angular, Vue), install the following packages:
+For most GraphQL clients and frameworks (React, Vue), install the following packages:
 
 <PackageCmd packages={['graphql', '-D typescript', '-D @graphql-codegen/cli', '-D @graphql-codegen/client-preset']} />
 
 Then provide the corresponding framework-specific configuration:
 
-<Tabs items={['React project', 'Vue project', 'Angular project']}>
+<Tabs items={['React project', 'Vue project']}>
 
 <Tab>
 
@@ -95,27 +94,6 @@ export default config
 
 </Tab>
 
-<Tab>
-
-```ts filename="codegen.ts" {5}
-import { CodegenConfig } from '@graphql-codegen/cli'
-
-const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
-  documents: ['src/**/*.ts'],
-  generates: {
-    './src/gql/': {
-      preset: 'client',
-      plugins: []
-    }
-  }
-}
-
-export default config
-```
-
-</Tab>
-
 </Tabs>
 
 > Each framework-specific lines are highlighted
@@ -127,7 +105,7 @@ export default config
 **Usage with `@tanstack/react-query`**
 
 For the best developer experience, we recommend using `@tanstack/react-query` with `graphql-request@^5.0.0`. <br/>
-If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query properly setup.
+If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I: Compatibility"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query is properly setup.
 
 </Callout>
 
@@ -135,15 +113,17 @@ If you are willing to provide your own fetcher, you can directly jump to the ["A
 
 ## Writing GraphQL Queries
 
-Then, start GraphQL Code Generator in watch mode:
+First, start GraphQL Code Generator in watch mode:
 
 ```
 yarn graphql-codegen --watch
 ```
 
-We can start implementing our first query with the `graphql()` function, generated in `src/gql/`:
+_Using GraphQL Code Generator will type your GraphQL Query and Mutations as you write them ⚡️_
 
-<Tabs items={['React Apollo', 'React Query', 'React URQL', 'Vue Apollo', 'Vue URQL', 'Angular']}>
+Now, we can start implementing our first query with the `graphql()` function, generated in `src/gql/`:
+
+<Tabs items={['React Apollo', 'React Query', 'React URQL', 'Vue Apollo', 'Vue URQL']}>
 
 <Tab>
 
@@ -276,8 +256,8 @@ export default App
 import { useQuery } from '@urql/vue'
 import { computed } from 'vue'
 
-import { graphql } from '../src/gql'
 import FilmItem from './components/FilmItem.vue'
+import { graphql } from '../src/gql'
 
 const { data } = useQuery({
   query: graphql(/* GraphQL */ `
@@ -345,14 +325,6 @@ const films = computed(() => result.value?.allFilms?.edges?.map(e => e?.node!))
 
 </Tab>
 
-<Tab>
-
-```ts filename="src/app/films.service.ts" {6, 9-21, 24}
-// TODO
-```
-
-</Tab>
-
 </Tabs>
 
 <Callout type="info">
@@ -369,9 +341,9 @@ Let's now take a look at how to define our `<Film>` component using the `FilmIte
 
 As showcased, in more details, [in one of our recent blog post](https://www.the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen), using GraphQL Fragments helps building better isolated and reusable UI components.
 
-Let's look at the implementation of our `Film` UI component in React, Vue or Angular:
+Let's look at the implementation of our `Film` UI component in React or Vue:
 
-<Tabs items={['React (Apollo, React Query, URQL)', 'Vue (Apollo, URQL)', 'Angular']}>
+<Tabs items={['React (Apollo, React Query, URQL)', 'Vue (Apollo, URQL)']}>
 
 <Tab>
 
@@ -438,14 +410,6 @@ const filmObj = useFragment(FilmFragment, props.film)
 
 </Tab>
 
-<Tab>
-
-```ts filename="src/app/films.service.ts" {6, 9-21, 24}
-// TODO
-```
-
-</Tab>
-
 </Tabs>
 
 <Callout type="info">
@@ -461,9 +425,13 @@ You will notice that our `<FilmItem>` component leverages 2 imports from our gen
 
 Leveraging `FragmentType<typeof FilmFragment>` and `useFragment()` helps keeping your UI component isolated and not inherit of the typings of the parent GraphQL Query.
 
-By using this pattern, you are explicitly declaring the data dependencies of your UI component and safely accessing only the data it needs.
+<br />
 
-Finally, unlike most setup GraphQL Client setup, you don't need to append the Fragment definition document to the related Query, you simply need to reference it in your Query definition, as shown below:
+> By using GraphQL Fragments, you are explicitly declaring the data dependencies of your UI component and safely accessing only the data it needs.
+
+<br />
+
+Finally, unlike most GraphQL Client setup, you don't need to append the Fragment definition document to the related Query, you simply need to reference it in your GraphQL Query, as shown below:
 
 ```ts {6}
 const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
@@ -478,6 +446,20 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
   }
 `)
 ```
+
+<br />
+
+Congratulations, you now have the best GraphQL front-end experience with fully-typed Queries and Mutations!
+
+From simple Queries to more advanced Fragments-based ones, GraphQL Code Generator got you covered with a simple TypeScript configuration file and, without impact on your application bundle size! 🚀
+
+Feel free to continue playing with this demo project, available in all flavors, in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/).
+
+<br />
+
+---
+
+<br />
 
 ## Appendix I: React Query with a custom fetcher setup
 
@@ -530,6 +512,9 @@ The type-checking on variables arguments can be added to your custom React Query
 Feel free [to reach out on GitHub discussions](https://github.com/dotansimha/graphql-code-generator/discussions) if you need any help in typing a custom React Query fetcher.
 
 <br />
+
+---
+
 <br />
 
 ## Appendix II: Compatibility
@@ -537,6 +522,7 @@ Feel free [to reach out on GitHub discussions](https://github.com/dotansimha/gra
 GraphQL Code Generator `client` preset (`@graphql-codegen/client-preset`) is compatible with the following GraphQL clients and frameworks:
 
 - **React**
+
   - `@apollo/client` (since `3.2.0`, not when using React Components (`<Query>`))
   - `@urql/core` (since `1.15.0`)
   - `@urql/preact` (since `1.4.0`)
@@ -544,13 +530,10 @@ GraphQL Code Generator `client` preset (`@graphql-codegen/client-preset`) is com
   - `graphql-request` (since `5.0.0`)
   - `react-query` (with `graphql-request@5.0.0`)
   - `swr` (with `graphql-request@5.0.0`)
-- **Angular**
-
-  - `apollo-angular` (since `2.6.0`)
 
 - **Vue**
   - `@vue/apollo-composable` (since `4.0.0-alpha.13`)
   - `villus` (since `1.0.0-beta.8`)
   - `@urql/vue` (since `1.11.0`)
 
-If your stack is not listed above, please refer to [our plugins directory](/plugins).
+If your stack is not listed above, please refer to other guides ([Angular](/docs/guides/angular), [Svelte](/docs/guides/svelte)) or to [our plugins directory](/plugins).

@@ -1,5 +1,6 @@
 {
-  "react-vue-angular": "React, Vue, Angular",
+  "react-vue": "React, Vue",
+  "angular": "Angular",
   "svelte": "Svelte / Kit",
   "flutter-freezed": "Dart/Flutter",
   "graphql-server-apollo-yoga": "Apollo Server / GraphQL Yoga",
