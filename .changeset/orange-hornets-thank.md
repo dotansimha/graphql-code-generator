@@ -1,7 +1,7 @@
 ---
 '@graphql-codegen/gql-tag-operations': minor
 '@graphql-codegen/gql-tag-operations-preset': minor
-'@graphql-codegen/plugin-helpers': minor
+"@graphql-codegen/cli": minor
 '@graphql-codegen/client-preset': patch
 ---
 
