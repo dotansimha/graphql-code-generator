@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@graphql-codegen/cli": "2.12.2",
+    "@graphql-codegen/cli": "2.13.0",
     "@graphql-codegen/typescript": "2.7.3",
     "@graphql-codegen/typescript-resolvers": "2.7.3"
   },
