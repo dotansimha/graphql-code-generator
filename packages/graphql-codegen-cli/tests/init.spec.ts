@@ -141,10 +141,10 @@ describe('init', () => {
       jest.spyOn(console, 'log').mockImplementation();
 
       useInputs({
-        onTarget: [ENTER], // confirm angular target
+        onTarget: [ENTER], // confirm target
         onSchema: [ENTER], // use default
         onDocuments: [ENTER],
-        // onPlugins: [ENTER], // use selected packages
+        onPlugins: [ENTER], // use selected packages
         onOutput: [ENTER], // use default output path
         onIntrospection: ['n', ENTER], // no introspection,
         onConfig: [ENTER], // use default config path
@@ -161,9 +161,10 @@ describe('init', () => {
       expect(config).toMatchSnapshot();
 
       // expected plugins
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/cli');
-      // should not have other plugins
-      expect(Object.keys(pkg.devDependencies)).toHaveLength(1);
+      expect(pkg.devDependencies).toEqual({
+        '@graphql-codegen/cli': '1.0.0',
+        '@graphql-codegen/typescript-apollo-angular': '1.0.0',
+      });
     });
 
     it('should use react related plugins when react is found', async () => {
@@ -195,8 +196,9 @@ describe('init', () => {
 
       // expected plugins
       expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/cli');
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/client');
       // should not have other plugins
-      expect(Object.keys(pkg.devDependencies)).toHaveLength(1);
+      expect(Object.keys(pkg.devDependencies)).toHaveLength(2);
     });
 
     it('should use stencil related plugins when @stencil/core is found', async () => {
@@ -208,7 +210,7 @@ describe('init', () => {
       jest.spyOn(console, 'log').mockImplementation();
 
       useInputs({
-        onTarget: [ENTER], // confirm angular target
+        onTarget: [ENTER], // confirm stencil target
         onSchema: [ENTER], // use default
         onDocuments: [ENTER],
         onPlugins: [ENTER], // use selected packages
@@ -287,7 +289,7 @@ describe('init', () => {
 
   it('should have few default values', async () => {
     const fs = require('fs');
-    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
+    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
     // make sure we don't write stuff
     const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
     const logSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -319,7 +321,7 @@ describe('init', () => {
 
   it('should have few default values', async () => {
     const fs = require('fs');
-    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
+    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
     // make sure we don't write stuff
     const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
     const logSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -332,7 +334,7 @@ describe('init', () => {
     };
 
     useInputs({
-      onTarget: [ENTER], // confirm angular target
+      onTarget: [ENTER], // confirm target
       onSchema: [options.schema, ENTER], // use default
       onDocuments: [options.documents, ENTER],
       onOutput: [options.output, ENTER], // use default output path
@@ -355,7 +357,7 @@ describe('init', () => {
 
   it('custom setup', async () => {
     const fs = require('fs');
-    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
+    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
     // make sure we don't write stuff
     const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
     const logSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -363,7 +365,7 @@ describe('init', () => {
     const script = 'generate:types';
 
     useInputs({
-      onTarget: [ENTER], // confirm angular target
+      onTarget: [ENTER], // confirm target
       onSchema: [ENTER], // use default
       onDocuments: [documents, ENTER],
       onOutput: [ENTER], // use default output path
@@ -483,10 +485,10 @@ describe('init', () => {
 
       // available
       expect(available).toHaveLength(2);
-      expect(available).toContainEqual('fragment-matcher');
-      expect(available).toContainEqual('urql-introspection');
+      expect(available).toEqual(['fragment-matcher', 'typescript-apollo-angular']);
       // selected
-      expect(selected).toHaveLength(0);
+      expect(selected).toHaveLength(1);
+      expect(selected).toEqual(['typescript-apollo-angular']);
     });
 
     it('react', () => {

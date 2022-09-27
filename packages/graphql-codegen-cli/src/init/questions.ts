@@ -30,7 +30,11 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
         // I can't find an API in Inquirer that would do that
         answers.targets = normalizeTargets(answers.targets);
 
-        return answers.targets.includes(Tags.client) || answers.targets.includes(Tags.stencil);
+        return (
+          answers.targets.includes(Tags.client) ||
+          answers.targets.includes(Tags.angular) ||
+          answers.targets.includes(Tags.stencil)
+        );
       },
       default: getDocumentsDefaultValue,
       validate: (str: string) => str.length > 0,
@@ -66,7 +70,8 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
       type: 'input',
       name: 'config',
       message: 'How to name the config file?',
-      default: answers => (answers.targets.includes(Tags.client) ? 'codegen.ts' : 'codegen.yml'),
+      default: answers =>
+        answers.targets.includes(Tags.client) || answers.targets.includes(Tags.angular) ? 'codegen.ts' : 'codegen.yml',
       validate: (str: string) => {
         const isNotEmpty = str.length > 0;
         const hasCorrectExtension = ['json', 'yml', 'yaml', 'js', 'ts'].some(ext =>
@@ -109,7 +114,7 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
     {
       name: 'Application built with Angular',
       key: 'angular',
-      value: [Tags.angular, Tags.client],
+      value: [Tags.angular],
       checked: possibleTargets.Angular,
     },
     {

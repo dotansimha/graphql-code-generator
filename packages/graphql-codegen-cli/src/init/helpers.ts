@@ -3,7 +3,7 @@ import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import detectIndent from 'detect-indent';
-import { Answers } from './types.js';
+import { Answers, Tags } from './types.js';
 import { getLatestVersion } from '../utils/get-latest-version.js';
 import template from '@babel/template';
 import generate from '@babel/generator';
@@ -102,6 +102,9 @@ export async function writePackage(answers: Answers, configLocation: string) {
   }
 
   pkg.devDependencies['@graphql-codegen/cli'] = await getLatestVersion('@graphql-codegen/cli');
+  if (answers.targets.includes(Tags.client)) {
+    pkg.devDependencies['@graphql-codegen/client'] = await getLatestVersion('@graphql-codegen/client');
+  }
 
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));
 }

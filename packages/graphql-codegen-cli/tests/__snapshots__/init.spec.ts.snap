@@ -32,9 +32,8 @@ const config: CodegenConfig = {
   schema: "http://localhost:4000",
   documents: "src/**/*.ts",
   generates: {
-    "src/gql": {
-      preset: "client",
-      plugins: []
+    "src/generated/graphql.ts": {
+      plugins: ["typescript-apollo-angular"]
     }
   }
 };
@@ -70,7 +69,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 const config: CodegenConfig = {
   overwrite: true,
   schema: "http://localhost:4000",
-  documents: "src/**/*.ts",
+  documents: "src/**/*.tsx",
   generates: {
     "src/gql": {
       preset: "client",

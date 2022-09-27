@@ -24,10 +24,14 @@ export async function init() {
   const config: Types.Config = {
     overwrite: true,
     schema: answers.schema,
-    documents: answers.targets.includes(Tags.client) ? answers.documents : undefined,
+    ...(answers.targets.includes(Tags.client) ||
+    answers.targets.includes(Tags.angular) ||
+    answers.targets.includes(Tags.stencil)
+      ? { documents: answers.documents }
+      : {}),
     generates: {
       [answers.output]: {
-        preset: answers.targets.includes(Tags.client) ? 'client' : undefined,
+        ...(answers.targets.includes(Tags.client) ? { preset: 'client' } : {}),
         plugins: answers.plugins ? answers.plugins.map(p => p.value) : [],
       },
     },
