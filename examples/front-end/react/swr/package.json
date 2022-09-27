@@ -10,7 +10,7 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
-    "@graphql-codegen/client-preset": "1.0.1-alpha-20220926151920-eb4e81ced",
+    "@graphql-codegen/client-preset": "1.0.1-alpha-20220927105207-2a09814eb",
     "graphql-request": "next",
     "next": "12.2.4",
     "react": "18.2.0",
