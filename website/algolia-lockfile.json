@@ -668,20 +668,37 @@
   },
   {
     "objectID": "code-generator-docs-guides-further-reading",
-    "headings": ["TypeScript", "Integrations"],
+    "headings": ["For front-end applications", "For GraphQL servers", "Stay up-to-date with GraphQL"],
     "toc": [
       {
-        "children": [],
-        "title": "TypeScript",
-        "anchor": "typescript"
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Angular projects",
+                "anchor": "angular-projects"
+              }
+            ],
+            "title": "Leverage GraphQL Fragments",
+            "anchor": "leverage-graphql-fragments"
+          }
+        ],
+        "title": "For front-end applications",
+        "anchor": "for-front-end-applications"
       },
       {
         "children": [],
-        "title": "Integrations",
-        "anchor": "integrations"
+        "title": "For GraphQL servers",
+        "anchor": "for-graphql-servers"
+      },
+      {
+        "children": [],
+        "title": "Stay up-to-date with GraphQL",
+        "anchor": "stay-up-to-date-with-graphql"
       }
     ],
-    "content": "9bf22f0b96904c0897adae60f5345e34",
+    "content": "792d396908e7f40465cc6edae08c0f84",
     "url": "https://www.graphql-code-generator.com/docs/guides/further-reading",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
