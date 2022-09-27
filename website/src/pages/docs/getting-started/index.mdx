@@ -264,7 +264,7 @@ and providing a simple configuration:
 ```ts  filename="codegen.ts"
 const config = {
    schema: 'https://localhost:4000/graphql',
-   documents: ['src/**/*.tsx']
+   documents: ['src/**/*.tsx'],
    generates: {
       './src/gql/': { preset: 'client' }
    }
@@ -278,7 +278,7 @@ You will no longer need to maintain TypeScript types:
 <Tab>
 ```tsx
 import { useQuery } from 'urql'
-import { graphql } from './graphql/gql'
+import { graphql } from './gql/gql'
 
 // postsQueryDocument is now fully typed!
 const postsQueryDocument = graphql(/* GraphQL */ `
