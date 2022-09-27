@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@graphql-codegen/client-preset": "1.0.1-alpha-20220927105207-2a09814eb",
+    "@graphql-codegen/client-preset": "1.0.1",
     "@tanstack/react-query": "4.0.10",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",

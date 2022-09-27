@@ -1695,34 +1695,6 @@
     "@graphql-tools/load" "6.2.4"
     tslib "2.0.2"
 
-"@graphql-codegen/client-preset@1.0.1-alpha-20220823170145-c93d8aee3":
-  version "1.0.1-alpha-20220823170145-c93d8aee3"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/client-preset/-/client-preset-1.0.1-alpha-20220823170145-c93d8aee3.tgz#a0536be350843b1d9b8668598ac98ba1ca90b95a"
-  integrity sha512-Ou/Mmut+KSGA/rYOCs8rterYu2b1Ar4EssRHQNiTdNceXCp4K4eh/8nFit6+ute9TDeYUsTb6gaEKkbztisNbA==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.14.5"
-    "@babel/template" "^7.15.4"
-    "@graphql-codegen/add" "^3.2.1"
-    "@graphql-codegen/gql-tag-operations" "1.5.0-alpha-20220823170145-c93d8aee3"
-    "@graphql-codegen/plugin-helpers" "^2.6.2"
-    "@graphql-codegen/typed-document-node" "^2.3.3"
-    "@graphql-codegen/typescript" "^2.7.3"
-    "@graphql-codegen/typescript-operations" "^2.5.3"
-    "@graphql-codegen/visitor-plugin-common" "^2.12.1"
-    "@graphql-tools/utils" "^8.8.0"
-    tslib "~2.4.0"
-
-"@graphql-codegen/gql-tag-operations@1.5.0-alpha-20220823170145-c93d8aee3":
-  version "1.5.0-alpha-20220823170145-c93d8aee3"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.5.0-alpha-20220823170145-c93d8aee3.tgz#5d4226a0dea28af5f2298d8ee0b55a1344a3e76b"
-  integrity sha512-cEC4l5Py5NLk7Lidhpj4lBwoS5G7UyoNeamIQ7DBdkLOK1zN/2HJCleDVp0HIEJM+nJv12vFmZBJ0NUrDTu7aQ==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.6.2"
-    "@graphql-codegen/visitor-plugin-common" "2.12.1"
-    "@graphql-tools/utils" "^8.8.0"
-    auto-bind "~4.0.0"
-    tslib "~2.4.0"
-
 "@graphql-codegen/visitor-plugin-common@2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.12.0.tgz#49b055c5c2c5c0890f2226ce9e84bb73dfd83801"
