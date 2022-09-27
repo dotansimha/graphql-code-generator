@@ -7,84 +7,66 @@ import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources.js';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import babelPlugin from './babel.js';
+import babelOptimizerPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 
 export type FragmentMaskingConfig = {
-  /**
-   * @description The module name from which a augmented module should be imported from.
-   */
-  augmentedModuleName?: string;
   /** @description Name of the function that should be used for unmasking a masked fragment property.
    * @default `'useFragment'`
    */
   unmaskFunctionName?: string;
 };
 
-export type GqlTagConfig = {
-  /**
-   * @description Instead of generating a `gql` function, this preset can also generate a `d.ts` that will enhance the `gql` function of your framework.
-   *
-   * E.g. `graphql-tag` or `@urql/core`.
-   *
-   * @exampleMarkdown
-   * ```yaml {5}
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       augmentedModuleName: '@urql/core'
-   * ```
-   */
-  augmentedModuleName?: string;
+export type ClientPresetConfig = {
   /**
    * @description Fragment masking hides data from components and only allows accessing the data by using a unmasking function.
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       fragmentMasking: true
-   * ```
-   *
-   * When using the `augmentedModuleName` option, the unmask function will by default NOT be imported from the same module. It will still be generated to a `index.ts` file. You can, however, specify to resolve the unmasking function from an an augmented module by using the `augmentedModuleName` object sub-config.
-   * @exampleMarkdown
-   * ```yaml {6-7}
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       augmentedModuleName: '@urql/core'
-   *       fragmentMasking:
-   *         augmentedModuleName: '@urql/fragment'
+   * ```tsx
+   * const config = {
+   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
+   *    generates: {
+   *       './src/gql/': {
+   *          preset: 'front-end',
+   *          presetConfig: {
+   *            fragmentMasking: false,
+   *          }
+   *        },
+   *    },
+   * };
+   * export default config;
    * ```
    */
   fragmentMasking?: FragmentMaskingConfig | boolean;
   /**
    * @description Specify the name of the "graphql tag" function to use
-   * @default "gql"
+   * @default "graphql"
    *
    * E.g. `graphql` or `gql`.
    *
    * @exampleMarkdown
-   * ```yaml {5}
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       gqlTagName: 'graphql'
+   * ```tsx
+   * const config = {
+   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
+   *    generates: {
+   *       './src/gql/': {
+   *          preset: 'front-end',
+   *          presetConfig: {
+   *            gqlTagName: 'gql',
+   *          }
+   *        },
+   *    },
+   * };
+   * export default config;
    * ```
    */
   gqlTagName?: string;
 };
 
-export const preset: Types.OutputPreset<GqlTagConfig> = {
+export const preset: Types.OutputPreset<ClientPresetConfig> = {
+  prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
-    // TODO: add link?
-    // eslint-disable-next-line no-console
-    console.warn('DEPRECATED: `gql-tag-operations-preset` is deprecated in favor of `client-preset`.');
-    /** when not using augmentation stuff must be re-exported. */
     const reexports: Array<string> = [];
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
@@ -92,7 +74,8 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
 
     if (typeof options?.presetConfig?.fragmentMasking === 'object') {
       fragmentMaskingConfig = options.presetConfig.fragmentMasking;
-    } else if (options?.presetConfig?.fragmentMasking === true) {
+    } else if (options?.presetConfig?.fragmentMasking !== false) {
+      // `true` by default
       fragmentMaskingConfig = {};
     }
 
@@ -128,11 +111,8 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
       { [`gen-dts`]: { sourcesWithOperations } },
     ];
 
-    let gqlArtifactFileExtension = '.d.ts';
-    if (options.presetConfig.augmentedModuleName == null) {
-      gqlArtifactFileExtension = '.ts';
-      reexports.push('gql');
-    }
+    const gqlArtifactFileExtension = '.ts';
+    reexports.push('gql');
 
     const config = {
       ...options.config,
@@ -142,12 +122,9 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
     if (isMaskingFragments === true) {
-      let fragmentMaskingArtifactFileExtension = '.d.ts';
+      const fragmentMaskingArtifactFileExtension = '.ts';
 
-      if (fragmentMaskingConfig.augmentedModuleName == null) {
-        reexports.push('fragment-masking');
-        fragmentMaskingArtifactFileExtension = '.ts';
-      }
+      reexports.push('fragment-masking');
 
       fragmentMaskingFileGenerateConfig = {
         filename: `${options.baseOutputDir}/fragment-masking${fragmentMaskingArtifactFileExtension}`,
@@ -162,7 +139,6 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         schema: options.schema,
         config: {
           useTypeImports: options.config.useTypeImports,
-          augmentedModuleName: fragmentMaskingConfig.augmentedModuleName,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
         },
         documents: [],
@@ -198,7 +174,10 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         plugins,
         pluginMap,
         schema: options.schema,
-        config,
+        config: {
+          inlineFragmentTypes: isMaskingFragments ? 'mask' : options.config['inlineFragmentTypes'],
+          useTypeImports: options.config.useTypeImports,
+        },
         documents: sources,
       },
       {
@@ -208,8 +187,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         schema: options.schema,
         config: {
           ...config,
-          augmentedModuleName: options.presetConfig.augmentedModuleName,
-          gqlTagName: options.presetConfig.gqlTagName || 'gql',
+          gqlTagName: options.presetConfig.gqlTagName || 'graphql',
         },
         documents: sources,
       },
@@ -219,4 +197,4 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
   },
 };
 
-export { babelPlugin };
+export { babelOptimizerPlugin };

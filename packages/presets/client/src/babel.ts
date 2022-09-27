@@ -17,7 +17,7 @@ export default declare((api, opts): PluginObj => {
 
   let program: NodePath<Program>;
   return {
-    name: 'gql-tag-operations',
+    name: 'client-preset',
     visitor: {
       Program(path) {
         program = path;
@@ -54,7 +54,7 @@ export default declare((api, opts): PluginObj => {
 
         const importPath = getRelativeImportPath(state, artifactDirectory);
 
-        const importDeclaration = template.smart(`
+        const importDeclaration = template(`
           import { %%importName%% } from %%importPath%%
         `);
         program.unshiftContainer(

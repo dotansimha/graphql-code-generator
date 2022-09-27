@@ -8,18 +8,18 @@ const documents = {
   '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n': types.BarDocument,
 };
 
-export function gql(
+export function graphql(
   source: '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n'
 ): typeof documents['\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n'];
-export function gql(
+export function graphql(
   source: '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n'
 ): typeof documents['\n  fragment Lel on Tweet {\n    id\n    body\n  }\n'];
-export function gql(
+export function graphql(
   source: '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n'
 ): typeof documents['\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n'];
 
-export function gql(source: string): unknown;
-export function gql(source: string) {
+export function graphql(source: string): unknown;
+export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 

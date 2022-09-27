@@ -18,10 +18,11 @@ export async function guessTargets(): Promise<Record<Tags, boolean>> {
     [Tags.react]: isReact(dependencies),
     [Tags.stencil]: isStencil(dependencies),
     [Tags.vue]: isVue(dependencies),
-    [Tags.browser]: false,
+    [Tags.client]: false,
     [Tags.node]: false,
     [Tags.typescript]: isTypescript(dependencies),
     [Tags.flow]: isFlow(dependencies),
+    [Tags.graphqlRequest]: isGraphqlRequest(dependencies),
   };
 }
 
@@ -47,4 +48,8 @@ function isTypescript(dependencies: string[]): boolean {
 
 function isFlow(dependencies: string[]): boolean {
   return dependencies.includes('flow');
+}
+
+function isGraphqlRequest(dependencies: string[]): boolean {
+  return dependencies.includes('graphql-request');
 }
