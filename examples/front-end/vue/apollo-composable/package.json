@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@graphql-codegen/client-preset": "1.0.1-alpha-20220830093424-2a4853976",
+    "@graphql-codegen/client-preset": "1.0.1-alpha-20220926151920-eb4e81ced",
     "@vue/apollo-composable": "^4.0.0-alpha.19",
     "vue": "^3.2.37"
   },
