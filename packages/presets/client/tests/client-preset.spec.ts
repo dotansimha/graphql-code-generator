@@ -661,4 +661,53 @@ export * from "./fragment-masking.js"`);
     const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(graphqlFile).toBeDefined();
   });
+
+  describe('when no operations are found', () => {
+    it('still generates the helper `graphql()` (or under another `presetConfig.gqlTagName` name) function', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        generates: {
+          out1: {
+            preset,
+            plugins: [],
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(4);
+      // index.ts (re-exports)
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      expect(indexFile.content).toEqual(`export * from "./gql.js"
+export * from "./fragment-masking.js"`);
+
+      // gql.ts
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import * as types from './graphql.js';
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+
+        export function graphql(source: string): unknown;
+        export function graphql(source: string) {
+          return (documents as any)[source] ?? {};
+        }
+
+        export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+      `);
+
+      // graphql.ts
+      const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(graphqlFile).toBeDefined();
+    });
+  });
 });
