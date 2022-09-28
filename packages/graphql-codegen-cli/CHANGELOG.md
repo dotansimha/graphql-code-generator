@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 2.13.1
+
+### Patch Changes
+
+- [#8405](https://github.com/dotansimha/graphql-code-generator/pull/8405) [`7f7e52bc2`](https://github.com/dotansimha/graphql-code-generator/commit/7f7e52bc22749d1dd6946510856103ab683a1807) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Removed dependency [`@graphql-codegen/client-preset@1.0.1` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/1.0.1) (from `dependencies`)
+
+- [#8405](https://github.com/dotansimha/graphql-code-generator/pull/8405) [`7f7e52bc2`](https://github.com/dotansimha/graphql-code-generator/commit/7f7e52bc22749d1dd6946510856103ab683a1807) Thanks [@charlypoly](https://github.com/charlypoly)! - remove `@graphql-codegen/client-preset` direct dependency
+
 ## 2.13.0
 
 ### Minor Changes
