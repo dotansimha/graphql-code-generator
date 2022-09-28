@@ -422,6 +422,10 @@ generates:
     schema: ./dev-test/gql-tag-operations/schema.graphql
     documents: './dev-test/gql-tag-operations/src/**/*.ts'
     preset: gql-tag-operations-preset
+  ./dev-test/gql-tag-operations/graphql:
+    schema: ./dev-test/gql-tag-operations/schema.graphql
+    documents: './dev-test/gql-tag-operations/src/**/*.ts'
+    preset: client
   ./dev-test/gql-tag-operations-urql/gql:
     schema: ./dev-test/gql-tag-operations-urql/schema.graphql
     documents: './dev-test/gql-tag-operations-urql/src/**/*.ts'
