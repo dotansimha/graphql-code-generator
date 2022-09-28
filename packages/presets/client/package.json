@@ -23,7 +23,7 @@
     "@graphql-codegen/typed-document-node": "^2.3.3",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
-    "@graphql-codegen/gql-tag-operations": "^1.5.0",
+    "@graphql-codegen/gql-tag-operations": "1.5.1",
     "@graphql-codegen/plugin-helpers": "^2.6.2",
     "@graphql-codegen/visitor-plugin-common": "^2.12.1",
     "@graphql-typed-document-node/core": "3.1.1",
