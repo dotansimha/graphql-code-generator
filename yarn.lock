@@ -1695,10 +1695,10 @@
     "@graphql-tools/load" "6.2.4"
     tslib "2.0.2"
 
-"@graphql-codegen/gql-tag-operations@1.5.1-alpha-20220928091403-d57e83ac2":
-  version "1.5.1-alpha-20220928091403-d57e83ac2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.5.1-alpha-20220928091403-d57e83ac2.tgz#7908a9dc933fca33490ad807877a08a96c68999c"
-  integrity sha512-+ur3UEJJkDSznTS3SxNaxXRx+QzTcYmMVijaL50Mm3CSsgf/7FMsCjrN1uZvLVrftjhBwrgEhDtP+m96GyI0gg==
+"@graphql-codegen/gql-tag-operations@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-1.5.1.tgz#7c41b958168881aa886adfa910d14d2a424d3170"
+  integrity sha512-9dUaPOMxHDVMzCjzBJqci3a8kVD6L6XGV77IGEuNFNtjH+Ct01COGBhs0lT2NGIQnrw7Qv89xqtJMIyLhvycuQ==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.6.2"
     "@graphql-codegen/visitor-plugin-common" "2.12.1"
