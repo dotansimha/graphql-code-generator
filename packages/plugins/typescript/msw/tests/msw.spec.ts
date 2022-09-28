@@ -85,4 +85,28 @@ describe('msw', () => {
 
     expect(result.content).toMatchSnapshot('content with types configured via importOperationTypesFrom');
   });
+
+  it('Should use the "dedupeOperationSuffix" setting', async () => {
+    const queryNameWithOperation = 'UserQuery';
+    const mutationNameWithOperation = 'UpdateUserMutation';
+    const documentsWithDupes = [
+      { document: parse(`query ${queryNameWithOperation} { name }`) },
+      { document: parse(`mutation ${mutationNameWithOperation} { name }`) },
+    ];
+
+    const result = await plugin(null, documentsWithDupes, { dedupeOperationSuffix: true });
+
+    // handler function names
+    expect(result.content).toContain(`mock${queryNameWithOperation}`);
+    expect(result.content).not.toContain(`mock${queryNameWithOperation}Query`);
+    expect(result.content).toContain(`mock${mutationNameWithOperation}`);
+    expect(result.content).not.toContain(`mock${mutationNameWithOperation}Mutation`);
+
+    // handler strings
+    expect(result.content).toContain(`'${queryNameWithOperation}',`);
+    expect(result.content).toContain(`'${mutationNameWithOperation}',`);
+
+    expect(result.prepend).toMatchSnapshot('imports');
+    expect(result.content).toMatchSnapshot('content');
+  });
 });

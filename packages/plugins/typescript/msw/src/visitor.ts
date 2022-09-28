@@ -9,6 +9,12 @@ import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema, print } from 'graphql';
 import { pascalCase } from 'change-case-all';
 
+type OperationTypeName = 'Query' | 'Mutation' | 'Subscription';
+interface GetOperationNameOptions {
+  operationSuffix: string;
+  suffix: string;
+}
+
 export interface MSWPluginConfig extends ClientSideBasePluginConfig {
   link?: {
     endpoint: string;
@@ -44,6 +50,20 @@ export class MSWVisitor extends ClientSideBaseVisitor<MSWRawPluginConfig, MSWPlu
     return [`import { graphql, ResponseResolver, GraphQLRequest, GraphQLContext } from 'msw'`];
   }
 
+  private _getOperationFunctionSuffix(name: string, operationType: OperationTypeName): string {
+    if (!this.config.dedupeOperationSuffix) {
+      return this.config.omitOperationSuffix ? '' : pascalCase(operationType);
+    }
+    if (name.includes('Query') || name.includes('Mutation') || name.includes('Subscription')) {
+      return '';
+    }
+    return pascalCase(operationType);
+  }
+
+  private _getHandlerName(name: string, { suffix, operationSuffix }: GetOperationNameOptions) {
+    return `mock${name}${operationSuffix}${suffix}`;
+  }
+
   public getContent() {
     const { link } = this.config;
     let endpoint: string;
@@ -53,10 +73,12 @@ export class MSWVisitor extends ClientSideBaseVisitor<MSWRawPluginConfig, MSWPlu
     }
 
     const suffix = pascalCase(link?.name || '');
+
     const operations = this._operationsToInclude.map(
       ({ node, operationType, operationResultType, operationVariablesTypes }) => {
         if (operationType === 'Query' || operationType === 'Mutation') {
-          const handlerName = `mock${pascalCase(node.name.value)}${operationType}${suffix}`;
+          const operationSuffix = this._getOperationFunctionSuffix(node.name.value, operationType);
+          const handlerName = this._getHandlerName(node.name.value, { operationSuffix, suffix });
 
           /** @ts-expect-error name DOES exist on @type{import('graphql').SelectionNode} */
           const selections = node.selectionSet.selections.map(sel => sel.name.value).join(', ');

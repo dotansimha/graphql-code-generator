@@ -117,6 +117,48 @@ Array [
 ]
 `;
 
+exports[`msw Should use the "dedupeOperationSuffix" setting: content 1`] = `
+"
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUserQuery((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUserQuery = (resolver: ResponseResolver<GraphQLRequest<UserQueryVariables>, GraphQLContext<UserQuery>, any>) =>
+  graphql.query<UserQuery, UserQueryVariables>(
+    'UserQuery',
+    resolver
+  )
+
+/**
+ * @param resolver a function that accepts a captured request and may return a mocked response.
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUpdateUserMutation((req, res, ctx) => {
+ *   return res(
+ *     ctx.data({ name })
+ *   )
+ * })
+ */
+export const mockUpdateUserMutation = (resolver: ResponseResolver<GraphQLRequest<UpdateUserMutationVariables>, GraphQLContext<UpdateUserMutation>, any>) =>
+  graphql.mutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    'UpdateUserMutation',
+    resolver
+  )
+"
+`;
+
+exports[`msw Should use the "dedupeOperationSuffix" setting: imports 1`] = `
+Array [
+  "import { graphql, ResponseResolver, GraphQLRequest, GraphQLContext } from 'msw'",
+]
+`;
+
 exports[`msw Should use the "importOperationTypesFrom" setting: content with types configured via importOperationTypesFrom 1`] = `
 "
 /**
