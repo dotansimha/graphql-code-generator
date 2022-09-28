@@ -1,5 +1,12 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.5.2
+
+### Patch Changes
+
+- [#8402](https://github.com/dotansimha/graphql-code-generator/pull/8402) [`a76c606e3`](https://github.com/dotansimha/graphql-code-generator/commit/a76c606e3b631ef903d4066e2643bc7f95457e30) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Removed dependency [`graphql-tag@^2.0.0` ↗︎](https://www.npmjs.com/package/graphql-tag/v/2.0.0) (from `peerDependencies`)
+
 ## 1.5.1
 
 ### Patch Changes
