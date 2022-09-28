@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@graphql-codegen/client-preset": "1.0.1",
+    "@graphql-codegen/client-preset": "1.0.2",
     "@urql/vue": "^0.6.4",
     "graphql": "^16.5.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.12.1",
+    "@graphql-codegen/cli": "2.13.1",
     "@types/node": "^16.11.47",
     "@vitejs/plugin-vue": "^3.0.1",
     "@vitejs/plugin-vue-jsx": "^2.0.0",
