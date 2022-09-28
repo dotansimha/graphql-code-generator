@@ -5,7 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@babel/core": "^7.16.0",
-    "@graphql-codegen/client-preset": "1.0.1",
+    "@graphql-codegen/client-preset": "1.0.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -65,7 +65,7 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.12.1"
+    "@graphql-codegen/cli": "2.13.1"
   },
   "scripts": {
     "start": "node scripts/start.js",
