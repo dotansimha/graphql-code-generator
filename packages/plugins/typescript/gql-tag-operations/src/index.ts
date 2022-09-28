@@ -25,30 +25,46 @@ export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
   useTypeImports?: boolean;
   augmentedModuleName?: string;
+  gqlTagName?: string;
   emitLegacyCommonJSImports?: boolean;
-}> = (_, __, { sourcesWithOperations, useTypeImports, augmentedModuleName, emitLegacyCommonJSImports }, _info) => {
-  if (!sourcesWithOperations) {
-    return '';
-  }
-
+}> = (
+  _,
+  __,
+  { sourcesWithOperations, useTypeImports, augmentedModuleName, gqlTagName = 'gql', emitLegacyCommonJSImports },
+  _info
+) => {
   if (augmentedModuleName == null) {
-    return [
-      `import * as graphql from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
+    const code = [
+      `import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
       `${
         useTypeImports ? 'import type' : 'import'
       } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
       `\n`,
-      ...getDocumentRegistryChunk(sourcesWithOperations),
-      `\n`,
-      ...getGqlOverloadChunk(sourcesWithOperations, 'lookup', emitLegacyCommonJSImports),
-      `\n`,
-      `export function gql(source: string): unknown;\n`,
-      `export function gql(source: string) {\n`,
-      `  return (documents as any)[source] ?? {};\n`,
-      `}\n`,
-      `\n`,
-      ...documentTypePartial,
-    ].join(``);
+    ];
+
+    if (sourcesWithOperations.length > 0) {
+      code.push(
+        [
+          ...getDocumentRegistryChunk(sourcesWithOperations),
+          `\n`,
+          ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
+        ].join('')
+      );
+    }
+
+    code.push(
+      [
+        `\n`,
+        `export function ${gqlTagName}(source: string): unknown;\n`,
+        `export function ${gqlTagName}(source: string) {\n`,
+        `  return (documents as any)[source] ?? {};\n`,
+        `}\n`,
+        `\n`,
+        ...documentTypePartial,
+      ].join('')
+    );
+
+    return code.join('');
   }
 
   return [
@@ -56,8 +72,10 @@ export const plugin: PluginFunction<{
     `declare module "${augmentedModuleName}" {`,
     [
       `\n`,
-      ...getGqlOverloadChunk(sourcesWithOperations, 'augmented', emitLegacyCommonJSImports),
-      `export function gql(source: string): unknown;\n`,
+      ...(sourcesWithOperations.length > 0
+        ? getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports)
+        : []),
+      `export function ${gqlTagName}(source: string): unknown;\n`,
       `\n`,
       ...documentTypePartial,
     ]
@@ -75,7 +93,7 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
     const originalString = rest.source.rawSDL!;
     const operation = operations[0];
 
-    lines.add(`    ${JSON.stringify(originalString)}: graphql.${operation.initialName},\n`);
+    lines.add(`    ${JSON.stringify(originalString)}: types.${operation.initialName},\n`);
   }
 
   lines.add(`};\n`);
@@ -87,6 +105,7 @@ type Mode = 'lookup' | 'augmented';
 
 function getGqlOverloadChunk(
   sourcesWithOperations: Array<SourceWithOperations>,
+  gqlTagName: string,
   mode: Mode,
   emitLegacyCommonJSImports?: boolean
 ) {
@@ -102,7 +121,7 @@ function getGqlOverloadChunk(
         : emitLegacyCommonJSImports
         ? `typeof import('./graphql').${operations[0].initialName}`
         : `typeof import('./graphql.js').${operations[0].initialName}`;
-    lines.add(`export function gql(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
+    lines.add(`export function ${gqlTagName}(source: ${JSON.stringify(originalString)}): ${returnType};\n`);
   }
 
   return lines;

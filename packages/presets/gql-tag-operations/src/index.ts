@@ -61,10 +61,29 @@ export type GqlTagConfig = {
    * ```
    */
   fragmentMasking?: FragmentMaskingConfig | boolean;
+  /**
+   * @description Specify the name of the "graphql tag" function to use
+   * @default "gql"
+   *
+   * E.g. `graphql` or `gql`.
+   *
+   * @exampleMarkdown
+   * ```yaml {5}
+   * generates:
+   *   gql/:
+   *     preset: gql-tag-operations-preset
+   *     presetConfig:
+   *       gqlTagName: 'graphql'
+   * ```
+   */
+  gqlTagName?: string;
 };
 
 export const preset: Types.OutputPreset<GqlTagConfig> = {
   buildGeneratesSection: options => {
+    // TODO: add link?
+    // eslint-disable-next-line no-console
+    console.warn('DEPRECATED: `gql-tag-operations-preset` is deprecated in favor of `client-preset`.');
     /** when not using augmentation stuff must be re-exported. */
     const reexports: Array<string> = [];
 
@@ -190,6 +209,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         config: {
           ...config,
           augmentedModuleName: options.presetConfig.augmentedModuleName,
+          gqlTagName: options.presetConfig.gqlTagName || 'gql',
         },
         documents: sources,
       },
