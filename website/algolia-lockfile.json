@@ -452,7 +452,7 @@
         "anchor": "custom-schema-loader"
       }
     ],
-    "content": "778320f4454acd01d66df3f11e326899",
+    "content": "e3e3b8836c9ddd92648655b93b84c3c2",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/schema-field",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
