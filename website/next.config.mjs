@@ -1,5 +1,4 @@
-import { withGuildDocs } from 'guild-docs/next.config';
-import { applyUnderscoreRedirects } from 'guild-docs/underscore-redirects';
+import { withGuildDocs } from '@theguild/components/next.config';
 import { CategoryToPackages } from './src/category-to-packages.mjs';
 
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
@@ -7,9 +6,11 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
 );
 
 export default withGuildDocs({
-  basePath: process.env.NEXT_BASE_PATH && process.env.NEXT_BASE_PATH !== '' ? process.env.NEXT_BASE_PATH : undefined,
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  images: {
+    unoptimized: true, // doesn't work with `next export`
   },
   experimental: {
     urlImports: [
@@ -17,10 +18,6 @@ export default withGuildDocs({
       'https://pbs.twimg.com/profile_images/1004185780313395200/ImZxrDWf_400x400.jpg',
       'https://raw.githubusercontent.com/mswjs/msw/HEAD/media/msw-logo.svg',
     ],
-    images: {
-      unoptimized: true, // doesn't work with `next export`
-      allowFutureImage: true,
-    },
   },
   typescript: {
     // Todo: remove it before merge to master
@@ -31,9 +28,6 @@ export default withGuildDocs({
       ...config.resolve.fallback,
       module: false,
     };
-
-    applyUnderscoreRedirects(config, meta);
-
     return config;
   },
   redirects: () =>
