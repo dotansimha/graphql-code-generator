@@ -1,29 +1,5 @@
 [
   {
-    "objectID": "code-generator-404",
-    "headings": [],
-    "toc": [],
-    "content": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "https://www.graphql-code-generator.com//404",
-    "domain": "https://www.graphql-code-generator.com/",
-    "hierarchy": [],
-    "source": "Code Generator",
-    "title": "404",
-    "type": "Documentation"
-  },
-  {
-    "objectID": "code-generator-500",
-    "headings": [],
-    "toc": [],
-    "content": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "https://www.graphql-code-generator.com//500",
-    "domain": "https://www.graphql-code-generator.com/",
-    "hierarchy": [],
-    "source": "Code Generator",
-    "title": "500",
-    "type": "Documentation"
-  },
-  {
     "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
