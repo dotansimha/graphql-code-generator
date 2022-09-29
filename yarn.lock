@@ -3078,10 +3078,10 @@
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@theguild/algolia@0.1.0-alpha-20220929133012-aba6d86":
-  version "0.1.0-alpha-20220929133012-aba6d86"
-  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-0.1.0-alpha-20220929133012-aba6d86.tgz#8eace0ba4a1f1bed22fdd43b675d40efd8048b5b"
-  integrity sha512-ENY0bdc5RuUu85PlHvVLmXP76MGqmmq3eMGT+THe/rZMmqs1uvEo4TPXFIsDwxnNnUytYxbiC1tyFIW9uAzxzA==
+"@theguild/algolia@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-0.1.0.tgz#3937ad35df42cde7972137369b2f23f2118eb1f3"
+  integrity sha512-bIC4qBUj1U/EOkNx7ncFP9uX3cc8u+rRx3duNQv3eA3NUIAn4VmQsAwPx8kKJwSsUSQ0H2vJAh3RtaG5kSVvHA==
   dependencies:
     algoliasearch "^4.13.1"
     github-slugger "^1.4.0"
@@ -3090,10 +3090,10 @@
     lodash "^4.17.21"
     remove-markdown "0.5.0"
 
-"@theguild/components@4.1.0-alpha-20220929133735-9b85c3a":
-  version "4.1.0-alpha-20220929133735-9b85c3a"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.1.0-alpha-20220929133735-9b85c3a.tgz#77d579f83dabfe3d3438cc44ec3f4659da9b7cce"
-  integrity sha512-clW43hUPZti32y4oeu0hlk/dpUKSoILPGrVii33u6ZZRHagSsOt+yPFLaQoA/PKdAX9s7pfmE2RhP5AypNT3bw==
+"@theguild/components@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.1.0.tgz#0b6390b6776f0e532a21731c9d45afc7bdad5560"
+  integrity sha512-rpUuMZznBOJCA5+Cg+sGb8Js82gVDHiTJmf1OdIERUT8jFX+yUe3BhjiNe/tmxRh8/rMxCLxInSQCAJqrOfu9A==
   dependencies:
     "@algolia/autocomplete-js" "1.7.1"
     "@algolia/autocomplete-plugin-algolia-insights" "1.7.1"
@@ -3126,10 +3126,10 @@
   dependencies:
     prettier-plugin-sh "^0.12.0"
 
-"@theguild/tailwind-config@0.1.1-alpha-20220929134856-be190df":
-  version "0.1.1-alpha-20220929134856-be190df"
-  resolved "https://registry.yarnpkg.com/@theguild/tailwind-config/-/tailwind-config-0.1.1-alpha-20220929134856-be190df.tgz#e1db1cad7a90ec4dfdcb324613a4a24b6515fc8c"
-  integrity sha512-11B882rFoDICIfPhkEm89GXVyP3WubRdT++pguQB2hvhrYDUDs/meCa0WCq0e/RvjVmpzLzPLh2hhpgS/FuRyw==
+"@theguild/tailwind-config@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@theguild/tailwind-config/-/tailwind-config-0.1.1.tgz#ff77a44d97ca62bfb710a29024daee5f17b27cdc"
+  integrity sha512-eA3bclBuyMycNue9ngBnk92q9BzmZZSipfFXq3/DZrl87K5BDhrOuzQ/mEJ4oh+hDEX0MkbFidL4Cupz229i9w==
   dependencies:
     autoprefixer "^10.4.12"
     cssnano "^5.1.13"

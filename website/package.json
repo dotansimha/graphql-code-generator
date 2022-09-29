@@ -14,8 +14,8 @@
     "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/algolia": "0.1.0-alpha-20220929133012-aba6d86",
-    "@theguild/tailwind-config": "0.1.1-alpha-20220929134856-be190df",
+    "@theguild/algolia": "0.1.0",
+    "@theguild/tailwind-config": "0.1.1",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
     "@types/node": "18.7.23",
@@ -65,7 +65,7 @@
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.3.3",
     "@graphql-codegen/typescript-vue-urql": "2.3.3",
     "@monaco-editor/react": "4.4.5",
-    "@theguild/components": "4.1.0-alpha-20220929133735-9b85c3a",
+    "@theguild/components": "4.1.0",
     "classnames": "2.3.2",
     "date-fns": "2.29.3",
     "dedent": "0.7.0",
