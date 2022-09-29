@@ -1,8 +1,12 @@
 
+/docs -> /docs/getting-started
+/docs/advanced -> /docs/advanced/generated-files-colocation
 /docs/advanced/generated-files-colocation
 /docs/advanced/how-does-it-work
 /docs/advanced/profiler
 /docs/advanced/programmatic-usage
+/docs/config-reference -> /docs/config-reference/codegen-config
+/docs/config-reference/ -> /docs/config-reference/codegen-config
 /docs/config-reference/codegen-config
 /docs/config-reference/config-field
 /docs/config-reference/documents-field
@@ -17,6 +21,9 @@
 /docs/custom-codegen/plugin-structure
 /docs/custom-codegen/using-visitor
 /docs/custom-codegen/validate-configuration
+/docs/custom-codegen/write-your-plugin -> /docs/custom-codegen
+/docs/generated-config/base-documents-visitor -> /plugins
+/docs/generated-config/base-visitor -> /plugins
 /docs/getting-started
 /docs/getting-started/codegen-config -> /docs/config-reference/codegen-config
 /docs/getting-started/config-field -> /docs/config-reference/config-field
@@ -28,17 +35,20 @@
 /docs/getting-started/installation
 /docs/getting-started/lifecycle-hooks -> /docs/config-reference/lifecycle-hooks
 /docs/getting-started/naming-convention -> /docs/config-reference/naming-convention
+/docs/getting-started/programmatic-usage -> /docs/advanced/programmatic-usage
 /docs/getting-started/require-field -> /docs/config-reference/require-field
 /docs/getting-started/schema-field -> /docs/config-reference/schema-field
+/docs/getting-startedinstallation -> /docs/getting-started
 /docs/guides/angular
 /docs/guides/flutter-freezed
-/docs/guides/front-end-typescript-only
 /docs/guides/further-reading
 /docs/guides/graphql-modules
 /docs/guides/graphql-server-apollo-yoga
-/docs/guides/react
+/docs/guides/react -> /docs/guides/react-vue
+/docs/guides/react-vue
 /docs/guides/svelte
-/docs/guides/vue
+/docs/guides/vue -> /docs/guides/react-vue
+/docs/integrations -> /plugins
 /docs/integrations/apollo-local-state
 /docs/integrations/create-react-app
 /docs/integrations/federation
@@ -47,11 +57,23 @@
 /docs/integrations/vscode
 /docs/migration/from-0-13
 /docs/migration/from-0-18
+/docs/plugins -> /plugins
+/docs/plugins/c-sharp -> /plugins/c-sharp/c-sharp-operations
+/docs/plugins/client-note -> /plugins
+/docs/plugins/typescript-common -> /plugins/typescript/typescript
+/docs/plugins/typescript-graphql-requesttypescript-graphql-request -> /plugins/typescript/typescript-graphql-request
+/docs/plugins/typescript-server -> /plugins/typescript/typescript-resolvers
+/docs/presets/presets-index -> /plugins
+/docs/tags -> /docs/getting-started
 /plugins
 /plugins/add -> /plugins/other/add
 /plugins/c-sharp-operations -> /plugins/c-sharp/c-sharp-operations
 /plugins/c-sharp/c-sharp-operations
+/plugins/core -> /plugins
+/plugins/dart -> /plugins
+/plugins/dart/flutter -> /plugins/dart/flutter-freezed
 /plugins/dart/flutter-freezed
+/plugins/flow -> /plugins/flow/flow-operations
 /plugins/flow-operations -> /plugins/flow/flow-operations
 /plugins/flow-resolvers -> /plugins/flow/flow-resolvers
 /plugins/flow/flow-operations
@@ -65,6 +87,7 @@
 /plugins/introspection -> /plugins/other/introspection
 /plugins/java -> /plugins/java/java
 /plugins/java-apollo-android -> /plugins/java/java-apollo-android
+/plugins/java-installation -> /plugins/java/java
 /plugins/java-resolvers -> /plugins/java/java-resolvers
 /plugins/java/java
 /plugins/java/java-apollo-android
@@ -74,6 +97,7 @@
 /plugins/kotlin -> /plugins/java/kotlin
 /plugins/named-operations-object -> /plugins/typescript/named-operations-object
 /plugins/near-operation-file-preset -> /plugins/presets/near-operation-file-preset
+/plugins/other -> /plugins
 /plugins/other/add
 /plugins/other/fragment-matcher
 /plugins/other/hasura-allow-list
@@ -82,7 +106,9 @@
 /plugins/other/reason-client
 /plugins/other/schema-ast
 /plugins/other/time
+/plugins/other/typescript-operations -> /plugins/typescript/typescript-operations
 /plugins/other/urql-introspection
+/plugins/presets -> /plugins
 /plugins/presets/gql-tag-operations-preset
 /plugins/presets/graphql-modules-preset
 /plugins/presets/import-types-preset
@@ -93,9 +119,11 @@
 /plugins/time -> /plugins/other/time
 /plugins/typed-document-node -> /plugins/typescript/typed-document-node
 /plugins/typescript -> /plugins/typescript/typescript
+/plugins/typescript -> /plugins/typescript/typescript
 /plugins/typescript-apollo-angular -> /plugins/typescript/typescript-apollo-angular
 /plugins/typescript-apollo-client-helpers -> /plugins/typescript/typescript-apollo-client-helpers
 /plugins/typescript-apollo-next -> /plugins/typescript/typescript-apollo-next
+/plugins/typescript-common -> /plugins/typescript/typescript
 /plugins/typescript-document-nodes -> /plugins/typescript/typescript-document-nodes
 /plugins/typescript-generic-sdk -> /plugins/typescript/typescript-generic-sdk
 /plugins/typescript-graphql-files-modules -> /plugins/typescript/typescript-graphql-files-modules
@@ -110,12 +138,15 @@
 /plugins/typescript-rtk-query -> /plugins/typescript/typescript-rtk-query
 /plugins/typescript-stencil-apollo -> /plugins/typescript/typescript-stencil-apollo
 /plugins/typescript-svelte-apollo -> /plugins/typescript/typescript-svelte-apollo
+/plugins/typescript-svelte-urql -> /plugins
 /plugins/typescript-type-graphql -> /plugins/typescript/typescript-type-graphql
 /plugins/typescript-urql -> /plugins/typescript/typescript-urql
+/plugins/typescript-urql-graphcache -> /plugins/typescript/typescript-urql
 /plugins/typescript-validation-schema -> /plugins/typescript/typescript-validation-schema
 /plugins/typescript-vue-apollo -> /plugins/typescript/typescript-vue-apollo
 /plugins/typescript-vue-apollo-smart-ops -> /plugins/typescript/typescript-vue-apollo-smart-ops
 /plugins/typescript-vue-urql -> /plugins/typescript/typescript-vue-urql
+/plugins/typescript/fragment-matcher -> /plugins/other/fragment-matcher
 /plugins/typescript/named-operations-object
 /plugins/typescript/relay-operation-optimizer
 /plugins/typescript/typed-document-node
@@ -139,6 +170,7 @@
 /plugins/typescript/typescript-svelte-apollo
 /plugins/typescript/typescript-type-graphql
 /plugins/typescript/typescript-urql
+/plugins/typescript/typescript-urql-graphcache -> /plugins/typescript/typescript-urql
 /plugins/typescript/typescript-validation-schema
 /plugins/typescript/typescript-vue-apollo
 /plugins/typescript/typescript-vue-apollo-smart-ops
