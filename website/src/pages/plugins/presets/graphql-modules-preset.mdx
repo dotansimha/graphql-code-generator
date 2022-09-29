@@ -44,7 +44,7 @@ Here's a short example for generating types and resolvers for 2 modules:
 ```yaml
 schema: './src/modules/**/typedefs/*.graphql'
 generates:
-  ./server/src/modules/:
+  ./src/modules/:
     preset: graphql-modules
     presetConfig:
       baseTypesPath: ../generated-types/graphql.ts # Where to create the complete schema types
