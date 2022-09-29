@@ -28,8 +28,6 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
     }),
     compileMdx(
       `
-## Plugin Details
-
 |Package name|Weekly Downloads|Version|License|Updated|
 |-|-|-|-|-|
 |[\`${npmPackage}\`](https://npmjs.com/package/${npmPackage})|![Downloads](https://badgen.net/npm/dw/${npmPackage} "Downloads")|![Version](https://badgen.net/npm/v/${npmPackage} "Version")|![License](https://badgen.net/npm/license/${npmPackage} "License")|${format(
