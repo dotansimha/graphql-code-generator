@@ -12,7 +12,7 @@ const SITE_NAME = 'GraphQL Code Generator';
 
 const config: DocsThemeConfig = {
   components: mdxComponents,
-  docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website/src/pages', // base URL for the docs repository
+  docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website', // base URL for the docs repository
   editLink: {
     text: 'Edit this page on GitHub',
   },
