@@ -60,7 +60,7 @@
     "chalk": "^4.1.0",
     "chokidar": "^3.5.2",
     "cosmiconfig": "^7.0.0",
-    "cosmiconfig-typescript-swc-loader": "0.0.2-alpha-20220929144852-275a2b7",
+    "cosmiconfig-typescript-swc-loader": "0.0.2-alpha-20220929151048-e2ff243",
     "debounce": "^1.2.0",
     "detect-indent": "^6.0.0",
     "graphql-config": "^4.3.5",

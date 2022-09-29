@@ -5304,10 +5304,10 @@ cosmiconfig-typescript-loader@^4.0.0:
   resolved "https://registry.yarnpkg.com/cosmiconfig-typescript-loader/-/cosmiconfig-typescript-loader-4.0.0.tgz#4a6d856c1281135197346a6f64dfa73a9cd9fefa"
   integrity sha512-cVpucSc2Tf+VPwCCR7SZzmQTQkPbkk4O01yXsYqXBIbjE1bhwqSyAgYQkRK1un4i0OPziTleqFhdkmOc4RQ/9g==
 
-cosmiconfig-typescript-swc-loader@0.0.2-alpha-20220929144852-275a2b7:
-  version "0.0.2-alpha-20220929144852-275a2b7"
-  resolved "https://registry.yarnpkg.com/cosmiconfig-typescript-swc-loader/-/cosmiconfig-typescript-swc-loader-0.0.2-alpha-20220929144852-275a2b7.tgz#7feb00076ae33112aaa819b061bc103da20242e5"
-  integrity sha512-rsAAaRkARKvsQm0t7oLZvc9shewU9yosAKJU0MTZtg14Xr4LsjPLKHupmYUmvLesHPSXJAp/oBDZWijIXICxew==
+cosmiconfig-typescript-swc-loader@0.0.2-alpha-20220929151048-e2ff243:
+  version "0.0.2-alpha-20220929151048-e2ff243"
+  resolved "https://registry.yarnpkg.com/cosmiconfig-typescript-swc-loader/-/cosmiconfig-typescript-swc-loader-0.0.2-alpha-20220929151048-e2ff243.tgz#f50cfd79bdb8c5e2fcd62bda8b11651813b79edd"
+  integrity sha512-k0Zlp66oQaIrc04pXSKx3hl5m90+7H8epiwKWuhmQUQSRKdOBeQaCx6xQGnnP1z+MbU/bQm4wUSQ8JNS9M2g5g==
   dependencies:
     "@swc/core" "^1.3.3"
     cosmiconfig "^7.0.1"
