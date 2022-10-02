@@ -1,28 +1,10 @@
 /* eslint sort-keys: error */
-import {
-  CodeGeneratorLogo,
-  FooterExtended,
-  Navbar,
-  Header,
-  mdxComponents,
-  DocsThemeConfig,
-} from '@theguild/components';
+import { CodeGeneratorLogo, defineConfig } from '@theguild/components';
 
 const SITE_NAME = 'GraphQL Code Generator';
 
-const config: DocsThemeConfig = {
-  components: mdxComponents,
+export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website', // base URL for the docs repository
-  editLink: {
-    text: 'Edit this page on GitHub',
-  },
-  feedback: {
-    content: 'Question? Give us feedback →',
-    labels: 'kind/docs',
-  },
-  footer: {
-    component: <FooterExtended />,
-  },
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,22 +21,5 @@ const config: DocsThemeConfig = {
       </div>
     </>
   ),
-  navbar: props => (
-    <>
-      <Header accentColor="#0070f3" themeSwitch searchBarProps={{ version: 'v2' }} />
-      <Navbar {...props} />
-    </>
-  ),
-  project: {
-    link: 'https://github.com/dotansimha/graphql-code-generator', // GitHub link in the navbar
-  },
-  search: {
-    component: null,
-  },
-  sidebar: {
-    defaultMenuCollapsed: true,
-  },
   titleSuffix: ` – ${SITE_NAME}`,
-};
-
-export default config;
+});
