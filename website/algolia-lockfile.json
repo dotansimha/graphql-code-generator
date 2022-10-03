@@ -1891,6 +1891,18 @@
     "type": "Plugin"
   },
   {
+    "objectID": "code-generator-plugins-typescript-typescript-mock-data",
+    "headings": [],
+    "toc": [],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-mock-data",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Plugins", "TypeScript"],
+    "source": "Code Generator",
+    "title": "typescript-mock-data",
+    "type": "Plugin"
+  },
+  {
     "objectID": "code-generator-plugins-typescript-typescript-mongodb",
     "headings": ["Usage Example", "Directives", "Example"],
     "toc": [
