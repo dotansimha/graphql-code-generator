@@ -66,7 +66,6 @@ export default withGuildDocs({
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
       '/docs/plugins/client-note': '/plugins',
-      '/docs/generated-config/base-visitor': '/plugins',
       '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/documents-field': '/docs/config-reference/documents-field',
@@ -86,7 +85,16 @@ export default withGuildDocs({
       '/plugins/typescript/fragment-matcher': '/plugins/other/fragment-matcher',
       '/plugins/core': '/plugins',
       '/plugins/dart': '/plugins',
+      '/docs/presets': '/plugins',
       '/home': '/',
+      '/plugins/presets/client': '/docs/guides/react-vue',
+      '/plugins/presets/client-preset': '/docs/guides/react-vue',
+      '/plugins/typescript/add': '/plugins/other/add',
+      '/plugins/typescript/typescript-add': '/plugins/other/add',
+      '/docs/generated-config/base-visitor': '/docs/custom-codegen/using-visitor',
+      '/plugins/base-visitor': '/docs/custom-codegen/using-visitor',
+      '/plugins/typescript/instrospection': '/plugins/other/introspection',
+      '/docs/custom-codegen/using-handlebars': '/docs/custom-codegen',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({
