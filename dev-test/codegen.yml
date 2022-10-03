@@ -66,6 +66,10 @@ generates:
     schema: ./dev-test/test-schema/schema-object.js
     plugins:
       - typescript
+  ./dev-test/test-schema/operations.graphql:
+    schema: ./dev-test/test-schema/schema.graphql
+    plugins:
+      - operations-document
   ./dev-test/githunt/graphql-declared-modules.d.ts:
     schema: ./dev-test/githunt/schema.json
     documents:

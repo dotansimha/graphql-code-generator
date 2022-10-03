@@ -1,0 +1,31 @@
+query allUsers_query {
+  allUsers {
+    email
+    id
+    name
+  }
+}
+
+query answer_query {
+  answer
+}
+
+query testArr1_query {
+  testArr1
+}
+
+query testArr2_query {
+  testArr2
+}
+
+query testArr3_query {
+  testArr3
+}
+
+query userById_query($id: Int!) {
+  userById(id: $id) {
+    email
+    id
+    name
+  }
+}

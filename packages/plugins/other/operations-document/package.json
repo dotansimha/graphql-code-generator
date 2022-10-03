@@ -1,0 +1,46 @@
+{
+  "name": "@graphql-codegen/operations-document",
+  "version": "0.0.0",
+  "description": "GraphQL Code Generator plugin for generating GraphQL operation documents",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/plugins/other/operations-document"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "prepack": "bob prepack"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "^2.1.0",
+    "@graphql-tools/utils": "8.3.0",
+    "tslib": "~2.3.0"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
+}
