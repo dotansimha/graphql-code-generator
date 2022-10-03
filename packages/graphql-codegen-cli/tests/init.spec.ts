@@ -196,7 +196,7 @@ describe('init', () => {
 
       // expected plugins
       expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/cli');
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/client');
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/client-preset');
       // should not have other plugins
       expect(Object.keys(pkg.devDependencies)).toHaveLength(2);
     });

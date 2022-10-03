@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { useTheme } from 'next-themes';
+import { useTheme } from '@theguild/components';
 import MonacoEditor from '@monaco-editor/react';
 import { canUseDOM } from '@/utils';
 

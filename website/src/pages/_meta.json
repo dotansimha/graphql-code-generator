@@ -16,19 +16,5 @@
   "plugins": {
     "title": "Plugins",
     "type": "page"
-  },
-  "404": {
-    "type": "page",
-    "theme": {
-      "layout": "full",
-      "timestamp": false
-    }
-  },
-  "500": {
-    "type": "page",
-    "theme": {
-      "layout": "full",
-      "timestamp": false
-    }
   }
 }

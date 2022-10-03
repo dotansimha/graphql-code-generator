@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.13.2
+
+### Patch Changes
+
+- [#8427](https://github.com/dotansimha/graphql-code-generator/pull/8427) [`5524ac447`](https://github.com/dotansimha/graphql-code-generator/commit/5524ac447612ff05bfd68f4b758dfcd0fa9e7356) Thanks [@charlypoly](https://github.com/charlypoly)! - Fix issue with `graphql-codegen init` installation wizard
+
 ## 2.13.1
 
 ### Patch Changes
