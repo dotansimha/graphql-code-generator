@@ -1,12 +1,11 @@
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { indexToAlgolia } from '@guild-docs/algolia';
+import { resolve } from 'node:path';
+import { indexToAlgolia } from '@theguild/algolia';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const CWD = process.cwd();
 
 indexToAlgolia({
   nextra: {
-    docsBaseDir: resolve(__dirname, '../src/pages/'),
+    docsBaseDir: resolve(CWD, 'src/pages'),
   },
   source: 'Code Generator',
   dryMode: process.env.ALGOLIA_DRY_RUN === 'true',
@@ -18,5 +17,5 @@ indexToAlgolia({
       }
       return o;
     }),
-  lockfilePath: resolve(__dirname, '../algolia-lockfile.json'),
+  lockfilePath: resolve(CWD, 'algolia-lockfile.json'),
 });

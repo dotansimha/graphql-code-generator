@@ -3,6 +3,7 @@ import { compileMdx } from 'nextra/compile';
 import { transformDocs } from '@/lib/transform';
 import { fetchNpmInfo } from '@/lib/fetch-npm-info';
 import { parse } from 'node:path';
+import { format } from 'date-fns';
 
 // Can't be used in plugin.tsx due incorrect tree shaking:
 // Module not found: Can't resolve 'fs'
@@ -18,10 +19,32 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
   const generatedDocs = transformDocs();
   const source = generatedDocs.docs[identifier] || readme.replaceAll('```yml', '```yaml') || '';
 
-  const mdx = await compileMdx(source, {
-    outputFormat: 'function-body',
-    jsx: false,
-  });
+  const [mdx, mdxHeader] = await Promise.all([
+    compileMdx(source, {
+      mdxOptions: {
+        outputFormat: 'function-body',
+        jsx: false,
+      },
+    }),
+    compileMdx(
+      `
+|Package name|Weekly Downloads|Version|License|Updated|
+|-|-|-|-|-|
+|[\`${npmPackage}\`](https://npmjs.com/package/${npmPackage})|![Downloads](https://badgen.net/npm/dw/${npmPackage} "Downloads")|![Version](https://badgen.net/npm/v/${npmPackage} "Version")|![License](https://badgen.net/npm/license/${npmPackage} "License")|${format(
+        new Date(updatedAt),
+        'MMM do, yyyy'
+      )}|
+
+### Installation
+`,
+      {
+        mdxOptions: {
+          outputFormat: 'function-body',
+          jsx: false,
+        },
+      }
+    ),
+  ]);
 
   return {
     props: {
@@ -29,8 +52,8 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
       // which will be provided to the Nextra `useSSG` hook.
       ssg: {
         npmPackage,
-        updatedAt,
         compiledSource: mdx.result,
+        compiledHeader: mdxHeader.result,
       },
     },
     // The page will be considered as stale and regenerated every 24 hours.

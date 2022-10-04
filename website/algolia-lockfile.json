@@ -1,29 +1,5 @@
 [
   {
-    "objectID": "code-generator-404",
-    "headings": [],
-    "toc": [],
-    "content": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "https://www.graphql-code-generator.com//404",
-    "domain": "https://www.graphql-code-generator.com/",
-    "hierarchy": [],
-    "source": "Code Generator",
-    "title": "404",
-    "type": "Documentation"
-  },
-  {
-    "objectID": "code-generator-500",
-    "headings": [],
-    "toc": [],
-    "content": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "https://www.graphql-code-generator.com//500",
-    "domain": "https://www.graphql-code-generator.com/",
-    "hierarchy": [],
-    "source": "Code Generator",
-    "title": "500",
-    "type": "Documentation"
-  },
-  {
     "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
@@ -452,7 +428,7 @@
         "anchor": "custom-schema-loader"
       }
     ],
-    "content": "778320f4454acd01d66df3f11e326899",
+    "content": "e3e3b8836c9ddd92648655b93b84c3c2",
     "url": "https://www.graphql-code-generator.com/docs/config-reference/schema-field",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Config Reference"],
@@ -462,7 +438,7 @@
   },
   {
     "objectID": "code-generator-docs-getting-started-development-workflow",
-    "headings": ["Scripts Integration", "Watch Mode", "Monorepo and Yarn Workspaces"],
+    "headings": ["Scripts Integration", "Watch Mode", "Monorepo and Yarn Workspaces", "What's next?"],
     "toc": [
       {
         "children": [],
@@ -478,9 +454,14 @@
         "children": [],
         "title": "Monorepo and Yarn Workspaces",
         "anchor": "monorepo-and-yarn-workspaces"
+      },
+      {
+        "children": [],
+        "title": "What's next?",
+        "anchor": "whats-next"
       }
     ],
-    "content": "e57b018010e3bbf8d002a87e2bace8e6",
+    "content": "241d25c61530cb506ca80af52932b631",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/development-workflow",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -548,7 +529,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "94d0d1d3abb31711c3a506b357d6b5ef",
+    "content": "66b3c192f2a033c11156a1a9e7b024a2",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/index",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -558,7 +539,7 @@
   },
   {
     "objectID": "code-generator-docs-getting-started-installation",
-    "headings": ["Global Installation", "Monorepo Project", "Setup"],
+    "headings": ["Global Installation", "Monorepo Project", "Setup", "What's next?"],
     "toc": [
       {
         "children": [],
@@ -586,9 +567,14 @@
         ],
         "title": "Setup",
         "anchor": "setup"
+      },
+      {
+        "children": [],
+        "title": "What's next?",
+        "anchor": "whats-next"
       }
     ],
-    "content": "bbe1beaac030fffe17cbb2c50d0ce337",
+    "content": "56a87bc49e9abb85cfb614303829a193",
     "url": "https://www.graphql-code-generator.com/docs/getting-started/installation",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -657,33 +643,38 @@
     "type": "Documentation"
   },
   {
-    "objectID": "code-generator-docs-guides-front-end-typescript-only",
-    "headings": [],
-    "toc": [],
-    "content": "8aab04fafe49e1fecd9709e0f944b4f8",
-    "url": "https://www.graphql-code-generator.com/docs/guides/front-end-typescript-only",
-    "domain": "https://www.graphql-code-generator.com/",
-    "hierarchy": ["Docs", "Guides"],
-    "source": "Code Generator",
-    "title": "TypeScript only (front-end)",
-    "type": "Documentation"
-  },
-  {
     "objectID": "code-generator-docs-guides-further-reading",
-    "headings": ["TypeScript", "Integrations"],
+    "headings": ["For front-end applications", "For GraphQL servers", "Stay up-to-date with GraphQL"],
     "toc": [
       {
-        "children": [],
-        "title": "TypeScript",
-        "anchor": "typescript"
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Angular projects",
+                "anchor": "angular-projects"
+              }
+            ],
+            "title": "Leverage GraphQL Fragments",
+            "anchor": "leverage-graphql-fragments"
+          }
+        ],
+        "title": "For front-end applications",
+        "anchor": "for-front-end-applications"
       },
       {
         "children": [],
-        "title": "Integrations",
-        "anchor": "integrations"
+        "title": "For GraphQL servers",
+        "anchor": "for-graphql-servers"
+      },
+      {
+        "children": [],
+        "title": "Stay up-to-date with GraphQL",
+        "anchor": "stay-up-to-date-with-graphql"
       }
     ],
-    "content": "9bf22f0b96904c0897adae60f5345e34",
+    "content": "792d396908e7f40465cc6edae08c0f84",
     "url": "https://www.graphql-code-generator.com/docs/guides/further-reading",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
@@ -727,38 +718,47 @@
     "type": "Documentation"
   },
   {
-    "objectID": "code-generator-docs-guides-react",
-    "headings": ["React Query", "Apollo and URQL"],
+    "objectID": "code-generator-docs-guides-react-vue",
+    "headings": [
+      "Installation",
+      "Writing GraphQL Queries",
+      "Writing GraphQL Fragments",
+      "Appendix I: React Query with a custom fetcher setup",
+      "Appendix II: Compatibility"
+    ],
     "toc": [
       {
         "children": [],
-        "title": "React Query",
-        "anchor": "react-query"
+        "title": "Installation",
+        "anchor": "installation"
       },
       {
-        "children": [
-          {
-            "children": [
-              {
-                "children": [],
-                "title": "Typed hooks for Apollo and URQL",
-                "anchor": "typed-hooks-for-apollo-and-urql"
-              }
-            ],
-            "title": "Optimal configuration for Apollo and URQL",
-            "anchor": "optimal-configuration-for-apollo-and-urql"
-          }
-        ],
-        "title": "Apollo and URQL",
-        "anchor": "apollo-and-urql"
+        "children": [],
+        "title": "Writing GraphQL Queries",
+        "anchor": "writing-graphql-queries"
+      },
+      {
+        "children": [],
+        "title": "Writing GraphQL Fragments",
+        "anchor": "writing-graphql-fragments"
+      },
+      {
+        "children": [],
+        "title": "Appendix I: React Query with a custom fetcher setup",
+        "anchor": "appendix-i-react-query-with-a-custom-fetcher-setup"
+      },
+      {
+        "children": [],
+        "title": "Appendix II: Compatibility",
+        "anchor": "appendix-ii-compatibility"
       }
     ],
-    "content": "b4c3e76f407de374b8c6e9b5690a72c3",
-    "url": "https://www.graphql-code-generator.com/docs/guides/react",
+    "content": "de040092cf42e46630a694921888c407",
+    "url": "https://www.graphql-code-generator.com/docs/guides/react-vue",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
-    "title": "React",
+    "title": "React, Vue",
     "type": "Documentation"
   },
   {
@@ -782,29 +782,6 @@
     "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Svelte / Kit",
-    "type": "Documentation"
-  },
-  {
-    "objectID": "code-generator-docs-guides-vue",
-    "headings": ["Vue.js URQL", "Vue.js Apollo"],
-    "toc": [
-      {
-        "children": [],
-        "title": "Vue.js URQL",
-        "anchor": "vuejs-urql"
-      },
-      {
-        "children": [],
-        "title": "Vue.js Apollo",
-        "anchor": "vuejs-apollo"
-      }
-    ],
-    "content": "8085d6354872df448a97a11f9f00be68",
-    "url": "https://www.graphql-code-generator.com/docs/guides/vue",
-    "domain": "https://www.graphql-code-generator.com/",
-    "hierarchy": ["Docs", "Guides"],
-    "source": "Code Generator",
-    "title": "Vue.js",
     "type": "Documentation"
   },
   {
@@ -1911,6 +1888,18 @@
     "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "graphql-request",
+    "type": "Plugin"
+  },
+  {
+    "objectID": "code-generator-plugins-typescript-typescript-mock-data",
+    "headings": [],
+    "toc": [],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.graphql-code-generator.com/plugins/typescript/typescript-mock-data",
+    "domain": "https://www.graphql-code-generator.com/",
+    "hierarchy": ["Plugins", "TypeScript"],
+    "source": "Code Generator",
+    "title": "typescript-mock-data",
     "type": "Plugin"
   },
   {

@@ -1,0 +1,20 @@
+{
+  "index": {
+    "title": "Home",
+    "type": "page",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+  "docs": {
+    "title": "Docs",
+    "type": "page",
+    "theme": {
+      "toc": true
+    }
+  },
+  "plugins": {
+    "title": "Plugins",
+    "type": "page"
+  }
+}

@@ -45,6 +45,7 @@ export const CategoryToPackages = {
     'typescript-vue-apollo',
     'typescript-vue-apollo-smart-ops',
     'typescript-vue-urql',
+    'typescript-mock-data',
   ],
   dart: ['flutter-freezed'],
 };

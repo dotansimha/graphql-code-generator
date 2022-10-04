@@ -1,5 +1,54 @@
 # @graphql-codegen/cli
 
+## 2.13.2
+
+### Patch Changes
+
+- [#8427](https://github.com/dotansimha/graphql-code-generator/pull/8427) [`5524ac447`](https://github.com/dotansimha/graphql-code-generator/commit/5524ac447612ff05bfd68f4b758dfcd0fa9e7356) Thanks [@charlypoly](https://github.com/charlypoly)! - Fix issue with `graphql-codegen init` installation wizard
+
+## 2.13.1
+
+### Patch Changes
+
+- [#8405](https://github.com/dotansimha/graphql-code-generator/pull/8405) [`7f7e52bc2`](https://github.com/dotansimha/graphql-code-generator/commit/7f7e52bc22749d1dd6946510856103ab683a1807) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Removed dependency [`@graphql-codegen/client-preset@1.0.1` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/1.0.1) (from `dependencies`)
+
+- [#8405](https://github.com/dotansimha/graphql-code-generator/pull/8405) [`7f7e52bc2`](https://github.com/dotansimha/graphql-code-generator/commit/7f7e52bc22749d1dd6946510856103ab683a1807) Thanks [@charlypoly](https://github.com/charlypoly)! - remove `@graphql-codegen/client-preset` direct dependency
+
+## 2.13.0
+
+### Minor Changes
+
+- [#8302](https://github.com/dotansimha/graphql-code-generator/pull/8302) [`876844e76`](https://github.com/dotansimha/graphql-code-generator/commit/876844e7644a917172f09b3c4eb54a2f4c90e4c6) Thanks [@charlypoly](https://github.com/charlypoly)! - **`@graphql-codegen/gql-tag-operations` and `@graphql-codegen/gql-tag-operations-preset`**
+
+  Introduce a `gqlTagName` configuration option
+
+  ***
+
+  **`@graphql-codegen/client-preset`**
+
+  New preset for GraphQL Code Generator v3, more information on the RFC: https://github.com/dotansimha/graphql-code-generator/issues/8296
+
+  ***
+
+  **`@graphql-codegen/cli`**
+
+  Update init wizard with 3.0 recommendations (`codegen.ts`, `client` preset)
+
+### Patch Changes
+
+- [#8302](https://github.com/dotansimha/graphql-code-generator/pull/8302) [`876844e76`](https://github.com/dotansimha/graphql-code-generator/commit/876844e7644a917172f09b3c4eb54a2f4c90e4c6) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Updated dependency [`@graphql-codegen/plugin-helpers@^2.6.2` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/2.6.2) (from `^2.7.1`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/fetch@^0.3.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.3.0) (from `^0.4.0`, in `dependencies`)
+  - Updated dependency [`cosmiconfig-typescript-loader@4.0.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.0.0) (from `^4.0.0`, in `dependencies`)
+  - Added dependency [`@babel/generator@^7.18.13` ↗︎](https://www.npmjs.com/package/@babel/generator/v/7.18.13) (to `dependencies`)
+  - Added dependency [`@babel/template@^7.18.10` ↗︎](https://www.npmjs.com/package/@babel/template/v/7.18.10) (to `dependencies`)
+  - Added dependency [`@babel/types@^7.18.13` ↗︎](https://www.npmjs.com/package/@babel/types/v/7.18.13) (to `dependencies`)
+  - Added dependency [`@graphql-codegen/client-preset@1.0.1-alpha-20220823170145-c93d8aee3` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/1.0.1) (to `dependencies`)
+- Updated dependencies [[`876844e76`](https://github.com/dotansimha/graphql-code-generator/commit/876844e7644a917172f09b3c4eb54a2f4c90e4c6)]:
+  - @graphql-codegen/client-preset@1.0.1
+
 ## 2.12.2
 
 ### Patch Changes

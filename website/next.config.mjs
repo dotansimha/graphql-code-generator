@@ -1,5 +1,4 @@
-import { withGuildDocs } from 'guild-docs/next.config';
-import { applyUnderscoreRedirects } from 'guild-docs/underscore-redirects';
+import { withGuildDocs } from '@theguild/components/next.config';
 import { CategoryToPackages } from './src/category-to-packages.mjs';
 
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
@@ -7,9 +6,11 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
 );
 
 export default withGuildDocs({
-  basePath: process.env.NEXT_BASE_PATH && process.env.NEXT_BASE_PATH !== '' ? process.env.NEXT_BASE_PATH : undefined,
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  images: {
+    unoptimized: true, // doesn't work with `next export`
   },
   experimental: {
     urlImports: [
@@ -17,10 +18,6 @@ export default withGuildDocs({
       'https://pbs.twimg.com/profile_images/1004185780313395200/ImZxrDWf_400x400.jpg',
       'https://raw.githubusercontent.com/mswjs/msw/HEAD/media/msw-logo.svg',
     ],
-    images: {
-      unoptimized: true, // doesn't work with `next export`
-      allowFutureImage: true,
-    },
   },
   typescript: {
     // Todo: remove it before merge to master
@@ -31,9 +28,6 @@ export default withGuildDocs({
       ...config.resolve.fallback,
       module: false,
     };
-
-    applyUnderscoreRedirects(config, meta);
-
     return config;
   },
   redirects: () =>
@@ -43,7 +37,10 @@ export default withGuildDocs({
       '/docs/guides': '/docs/guides/react',
       '/docs/plugins/typescript-server': '/plugins/typescript/typescript-resolvers',
       '/docs/react': '/docs/guides/react',
+      '/docs/guides/react-vue-angular': '/docs/guides/react-vue',
+      '/docs/guides/front-end-typescript-only': '/docs/guides/react-vue',
       '/plugins/other': '/plugins',
+      '/plugins/c-sharp': '/plugins/c-sharp/c-sharp-operations',
       '/docs/integrations': '/plugins',
       '/docs/advanced': '/docs/advanced/generated-files-colocation',
       '/plugins/java-installation': '/plugins/java/java',
@@ -69,7 +66,6 @@ export default withGuildDocs({
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
       '/docs/plugins/client-note': '/plugins',
-      '/docs/generated-config/base-visitor': '/plugins',
       '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/documents-field': '/docs/config-reference/documents-field',
@@ -79,6 +75,8 @@ export default withGuildDocs({
       '/docs/getting-started/require-field': '/docs/config-reference/require-field',
       '/docs/getting-started/naming-convention': '/docs/config-reference/naming-convention',
       '/docs/getting-started/how-does-it-work': '/docs/advanced/how-does-it-work',
+      '/docs/guides/react': '/docs/guides/react-vue',
+      '/docs/guides/vue': '/docs/guides/react-vue',
       '/plugins/typescript-svelte-urql': '/plugins',
       '/plugins/presets': '/plugins',
       '/docs/getting-startedinstallation': '/docs/getting-started',
@@ -87,7 +85,16 @@ export default withGuildDocs({
       '/plugins/typescript/fragment-matcher': '/plugins/other/fragment-matcher',
       '/plugins/core': '/plugins',
       '/plugins/dart': '/plugins',
+      '/docs/presets': '/plugins',
       '/home': '/',
+      '/plugins/presets/client': '/docs/guides/react-vue',
+      '/plugins/presets/client-preset': '/docs/guides/react-vue',
+      '/plugins/typescript/add': '/plugins/other/add',
+      '/plugins/typescript/typescript-add': '/plugins/other/add',
+      '/docs/generated-config/base-visitor': '/docs/custom-codegen/using-visitor',
+      '/plugins/base-visitor': '/docs/custom-codegen/using-visitor',
+      '/plugins/typescript/instrospection': '/plugins/other/introspection',
+      '/docs/custom-codegen/using-handlebars': '/docs/custom-codegen',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({
