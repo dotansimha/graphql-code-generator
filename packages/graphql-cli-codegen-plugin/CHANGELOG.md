@@ -1,5 +1,12 @@
 # @graphql-cli/codegen
 
+## 2.4.6
+
+### Patch Changes
+
+- Updated dependencies [[`15d500776`](https://github.com/dotansimha/graphql-code-generator/commit/15d50077680ff96a8d09cc65acd2f82683e67fb5), [`15d500776`](https://github.com/dotansimha/graphql-code-generator/commit/15d50077680ff96a8d09cc65acd2f82683e67fb5)]:
+  - @graphql-codegen/cli@2.13.3
+
 ## 2.4.5
 
 ### Patch Changes
