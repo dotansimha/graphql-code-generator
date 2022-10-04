@@ -484,7 +484,7 @@ export class ClientSideBaseVisitor<
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             this._imports.add(
-              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}.js';`
+              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
             );
           } else {
             if (!this.config.importDocumentNodeExternallyFrom) {
