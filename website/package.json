@@ -13,7 +13,7 @@
     "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/algolia": "1.0.0-alpha-20221004132550-ca5dda6",
+    "@theguild/algolia": "1.0.0-alpha-20221004140206-c171e2d",
     "@theguild/tailwind-config": "0.1.1",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
