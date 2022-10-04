@@ -13,3 +13,14 @@ jobs:
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NPM_TOKEN }}
+
+  algolia:
+    uses: the-guild-org/shared-config/.github/workflows/algolia-publish.yml@algolia-shared-workflows
+    env:
+      ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+      ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
+      ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
+    secrets:
+      domain: https://www.the-guild.dev/graphql/codegen/
+      docsBaseDir: ./src/pages/ # path is relative to `website/`
+      lockFilePath: ./algolia-lockfile.json # path is relative to `website/`
