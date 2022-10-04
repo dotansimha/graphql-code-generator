@@ -10,6 +10,13 @@ jobs:
     secrets:
       githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
 
+  algoliaIntegrity:
+    uses: the-guild-org/shared-config@algolia-shared-workflows/.github/workflows/algolia-integrity.yaml@main
+    secrets:
+      domain: https://www.the-guild.dev/graphql/codegen/
+      docsBaseDir: ./src/pages/ # path is relative to `website/`
+      lockFilePath: ./algolia-lockfile.json # path is relative to `website/`
+
   release:
     uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
     with:

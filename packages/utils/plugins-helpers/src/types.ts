@@ -229,7 +229,7 @@ export namespace Types {
     | 'near-operation-file'
     | 'gql-tag-operations'
     | 'graphql-modules'
-    | 'import-types-preset';
+    | 'import-types';
   export type PresetNames = `${PresetNamesBase}-preset` | PresetNamesBase;
 
   /**

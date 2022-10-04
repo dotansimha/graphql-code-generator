@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "algolia-sync": "node scripts/algolia-ci.mjs",
     "postbuild": "npx next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "start": "yarn generate-json-config && next start",
     "build": "yarn generate-json-config && next build",
@@ -14,7 +13,7 @@
     "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/algolia": "0.1.0",
+    "@theguild/algolia": "1.0.0-alpha-20221004132550-ca5dda6",
     "@theguild/tailwind-config": "0.1.1",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
