@@ -1,5 +1,16 @@
 # @graphql-codegen/cli
 
+## 2.13.3
+
+### Patch Changes
+
+- [#8415](https://github.com/dotansimha/graphql-code-generator/pull/8415) [`15d500776`](https://github.com/dotansimha/graphql-code-generator/commit/15d50077680ff96a8d09cc65acd2f82683e67fb5) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Added dependency [`cosmiconfig-typescript-swc-loader@0.0.2` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-swc-loader/v/0.0.2) (to `dependencies`)
+  - Removed dependency [`cosmiconfig-typescript-loader@4.0.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.0.0) (from `dependencies`)
+
+- [#8415](https://github.com/dotansimha/graphql-code-generator/pull/8415) [`15d500776`](https://github.com/dotansimha/graphql-code-generator/commit/15d50077680ff96a8d09cc65acd2f82683e67fb5) Thanks [@charlypoly](https://github.com/charlypoly)! - feat(cli): drop peerDep on "typescript" by using `cosmiconfig-typescript-swc-loader`
+
 ## 2.13.2
 
 ### Patch Changes
