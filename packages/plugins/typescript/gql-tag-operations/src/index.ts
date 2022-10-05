@@ -50,6 +50,8 @@ export const plugin: PluginFunction<{
           ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
         ].join('')
       );
+    } else {
+      code.push('const documents = [];');
     }
 
     code.push(
