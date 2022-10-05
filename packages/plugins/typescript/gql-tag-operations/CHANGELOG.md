@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.5.3
+
+### Patch Changes
+
+- [#8443](https://github.com/dotansimha/graphql-code-generator/pull/8443) [`e2d115146`](https://github.com/dotansimha/graphql-code-generator/commit/e2d11514695ca56674983e8b3b7549cd3b440a5d) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(gql-tag-operations): issues with "no documents" scenario
+
 ## 1.5.2
 
 ### Patch Changes
