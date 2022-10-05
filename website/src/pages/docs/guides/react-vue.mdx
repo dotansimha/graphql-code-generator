@@ -57,6 +57,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
   documents: ['src/**/*.tsx'],
+  ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     './src/gql/': {
       preset: 'client',
@@ -78,6 +79,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
   documents: ['src/**/*.vue'],
+  ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     './src/gql/': {
       preset: 'client',
@@ -329,7 +331,7 @@ const films = computed(() => result.value?.allFilms?.edges?.map(e => e?.node!))
 
 <Callout type="info">
 
-Examples for SWR (React), `graphql-request` and Villus (Vue) are available in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+**Be cautious**, anonymous Queries and Mutations will be ignored.
 
 </Callout>
 
