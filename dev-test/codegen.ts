@@ -43,7 +43,7 @@ const config: CodegenConfig = {
         'typescript-operations',
       ],
     },
-    './dev-test/test-schema/env.types.ts': { schema: '${SCHEMA_PATH}', plugins: ['typescript'] },
+    './dev-test/test-schema/env.types.ts': { schema: process.env.SCHEMA_PATH, plugins: ['typescript'] },
     './dev-test/test-schema/typings.immutableTypes.ts': {
       schema: './dev-test/test-schema/schema.json',
       config: { imutableTypes: true },
