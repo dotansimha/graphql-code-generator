@@ -1,5 +1,5 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { TypeScriptSWCLoader } from 'cosmiconfig-typescript-swc-loader';
+import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { resolve } from 'path';
 import {
   DetailedError,
@@ -75,7 +75,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
     }
 
     if (ext === 'ts') {
-      return TypeScriptSWCLoader()(filepath, content);
+      return TypeScriptLoader()(filepath, content);
     }
   }
 
