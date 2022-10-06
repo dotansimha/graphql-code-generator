@@ -1,5 +1,18 @@
 # @graphql-codegen/client-preset
 
+## 1.0.4
+
+### Patch Changes
+
+- [#8455](https://github.com/dotansimha/graphql-code-generator/pull/8455) [`d19573d88`](https://github.com/dotansimha/graphql-code-generator/commit/d19573d889513abab77a99d5f75f25612a891446) Thanks [@charlypoly](https://github.com/charlypoly)! - The client preset now allows the use of the following `config`:
+  - `scalars`
+  - `defaultScalarType`
+  - `strictScalars`
+  - `namingConvention`
+  - `useTypeImports`
+  - `skipTypename`
+  - `arrayInputCoercion`
+
 ## 1.0.3
 
 ### Patch Changes
