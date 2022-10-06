@@ -1,5 +1,26 @@
 # @graphql-codegen/cli
 
+## 2.13.5
+
+### Patch Changes
+
+- [#8452](https://github.com/dotansimha/graphql-code-generator/pull/8452) [`cb1f93618`](https://github.com/dotansimha/graphql-code-generator/commit/cb1f93618b3c92cd092b740973d2469c232c2c00) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@4.3.6` ↗︎](https://www.npmjs.com/package/graphql-config/v/4.3.6) (from `^4.3.5`, in `dependencies`)
+
+- [#8452](https://github.com/dotansimha/graphql-code-generator/pull/8452) [`cb1f93618`](https://github.com/dotansimha/graphql-code-generator/commit/cb1f93618b3c92cd092b740973d2469c232c2c00) Thanks [@charlypoly](https://github.com/charlypoly)! - conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
+
+## 2.13.4
+
+### Patch Changes
+
+- [#8441](https://github.com/dotansimha/graphql-code-generator/pull/8441) [`6785f7f0d`](https://github.com/dotansimha/graphql-code-generator/commit/6785f7f0df6b3eb14d30abf37924791c45a4d586) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Added dependency [`cosmiconfig-typescript-loader@4.1.1` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.1.1) (to `dependencies`)
+  - Removed dependency [`cosmiconfig-typescript-swc-loader@0.0.2` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-swc-loader/v/0.0.2) (from `dependencies`)
+
+- [#8441](https://github.com/dotansimha/graphql-code-generator/pull/8441) [`6785f7f0d`](https://github.com/dotansimha/graphql-code-generator/commit/6785f7f0df6b3eb14d30abf37924791c45a4d586) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(cli): revert to `cosmiconfig-typescript-loader`
+
 ## 2.13.3
 
 ### Patch Changes

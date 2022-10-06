@@ -1,5 +1,5 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { TypeScriptSWCLoader } from 'cosmiconfig-typescript-swc-loader';
+import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { resolve } from 'path';
 import {
   DetailedError,
@@ -21,6 +21,9 @@ import { promises } from 'fs';
 import { createHash } from 'crypto';
 
 const { lstat } = promises;
+
+// #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
+const tsLoader = TypeScriptLoader({ transpileOnly: true });
 
 export type CodegenConfig = Types.Config;
 
@@ -75,7 +78,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
     }
 
     if (ext === 'ts') {
-      return TypeScriptSWCLoader()(filepath, content);
+      return tsLoader(filepath, content);
     }
   }
 
