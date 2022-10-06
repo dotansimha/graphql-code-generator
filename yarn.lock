@@ -3067,10 +3067,10 @@
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@theguild/algolia@1.0.0-alpha-20221004140206-c171e2d":
-  version "1.0.0-alpha-20221004140206-c171e2d"
-  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.0.0-alpha-20221004140206-c171e2d.tgz#c809898a9956d0d691035f97607ccbb466fdecc3"
-  integrity sha512-Nlmcq22JVKirRugpHfeslV3yCKcRsdlIpm0qUeqM1nMjD7jiMVvgFK9XjtgYI+bFqHJ2F2enM16z/QRhLnWjwA==
+"@theguild/algolia@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.0.0.tgz#1e512560537e7d4b289b7070a0329b0206ee63e4"
+  integrity sha512-FqJ0ReT8IwL1VAgCMGslTqEaL6QxI0ZetlhtW2RM/qg1PQv1y7EIuahLQIPGATQLXW51oVo8kGkmhLHjXrirHA==
   dependencies:
     algoliasearch "^4.13.1"
     github-slugger "^1.4.0"
