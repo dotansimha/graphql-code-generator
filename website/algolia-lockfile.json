@@ -723,6 +723,7 @@
       "Installation",
       "Writing GraphQL Queries",
       "Writing GraphQL Fragments",
+      "Config API",
       "Appendix I: React Query with a custom fetcher setup",
       "Appendix II: Compatibility"
     ],
@@ -744,6 +745,11 @@
       },
       {
         "children": [],
+        "title": "Config API",
+        "anchor": "config-api"
+      },
+      {
+        "children": [],
         "title": "Appendix I: React Query with a custom fetcher setup",
         "anchor": "appendix-i-react-query-with-a-custom-fetcher-setup"
       },
@@ -753,7 +759,7 @@
         "anchor": "appendix-ii-compatibility"
       }
     ],
-    "content": "0c16df67201e7458fe84e65a240fd53a",
+    "content": "3f066f5680c2f24af247b8682038fb03",
     "url": "https://www.graphql-code-generator.com/docs/guides/react-vue",
     "domain": "https://www.graphql-code-generator.com/",
     "hierarchy": ["Docs", "Guides"],
