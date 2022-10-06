@@ -14,6 +14,7 @@ jobs:
     uses: the-guild-org/shared-config/.github/workflows/algolia-integrity.yml@algolia-shared-workflows
     with:
       domain: https://www.the-guild.dev/graphql/codegen/
+      source: 'Code Generator'
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
 
