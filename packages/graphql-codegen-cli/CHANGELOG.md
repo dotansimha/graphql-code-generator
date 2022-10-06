@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 2.13.5
+
+### Patch Changes
+
+- [#8452](https://github.com/dotansimha/graphql-code-generator/pull/8452) [`cb1f93618`](https://github.com/dotansimha/graphql-code-generator/commit/cb1f93618b3c92cd092b740973d2469c232c2c00) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@4.3.6` ↗︎](https://www.npmjs.com/package/graphql-config/v/4.3.6) (from `^4.3.5`, in `dependencies`)
+
+- [#8452](https://github.com/dotansimha/graphql-code-generator/pull/8452) [`cb1f93618`](https://github.com/dotansimha/graphql-code-generator/commit/cb1f93618b3c92cd092b740973d2469c232c2c00) Thanks [@charlypoly](https://github.com/charlypoly)! - conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
+
 ## 2.13.4
 
 ### Patch Changes
