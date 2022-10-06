@@ -74,7 +74,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       scalars: options.config.scalars,
       defaultScalarType: options.config.defaultScalarType,
       strictScalars: options.config.strictScalars,
-      namingConvention: options.config.scalars,
+      namingConvention: options.config.namingConvention,
       useTypeImports: options.config.useTypeImports,
       skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
