@@ -12,7 +12,7 @@ jobs:
 
   algolia:
     uses: the-guild-org/shared-config/.github/workflows/algolia-integrity.yml@algolia-shared-workflows
-    inputs:
+    with:
       domain: https://www.the-guild.dev/graphql/codegen/
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
