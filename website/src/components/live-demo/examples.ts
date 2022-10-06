@@ -422,7 +422,7 @@ export const EXAMPLES: Record<
     config:
       customScalars:
         {
-          "Date: "DateTime",
+          "Date": "DateTime",
         }`,
       schema: TS_SCHEMA,
     },
