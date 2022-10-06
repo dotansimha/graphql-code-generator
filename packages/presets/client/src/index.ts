@@ -69,6 +69,17 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
   buildGeneratesSection: options => {
     const reexports: Array<string> = [];
 
+    // the `client` preset is restricting the config options inherited from `typescript`, `typescript-operations` and others.
+    const forwardedConfig = {
+      scalars: options.config.scalars,
+      defaultScalarType: options.config.defaultScalarType,
+      strictScalars: options.config.strictScalars,
+      namingConvention: options.config.scalars,
+      useTypeImports: options.config.useTypeImports,
+      skipTypename: options.config.skipTypename,
+      arrayInputCoercion: options.config.arrayInputCoercion,
+    };
+
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
     let fragmentMaskingConfig: FragmentMaskingConfig | null = null;
 
@@ -176,7 +187,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         schema: options.schema,
         config: {
           inlineFragmentTypes: isMaskingFragments ? 'mask' : options.config['inlineFragmentTypes'],
-          useTypeImports: options.config.useTypeImports,
+          ...forwardedConfig,
         },
         documents: sources,
       },
