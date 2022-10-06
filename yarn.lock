@@ -3067,12 +3067,13 @@
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@theguild/algolia@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.0.0.tgz#1e512560537e7d4b289b7070a0329b0206ee63e4"
-  integrity sha512-FqJ0ReT8IwL1VAgCMGslTqEaL6QxI0ZetlhtW2RM/qg1PQv1y7EIuahLQIPGATQLXW51oVo8kGkmhLHjXrirHA==
+"@theguild/algolia@1.0.1-alpha-20221006151229-b0e15e3":
+  version "1.0.1-alpha-20221006151229-b0e15e3"
+  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.0.1-alpha-20221006151229-b0e15e3.tgz#7c040631b7ac4abb343850f753570df67e720269"
+  integrity sha512-nOHMLt4AXQL4GPVjnrVw+01aWEf1iRUWGhDfqiDqxZskON1JP3tgGWj9uiRfhOLj/C5Sb39j320AJtenRmi/QQ==
   dependencies:
     algoliasearch "^4.13.1"
+    commander "^9.4.1"
     github-slugger "^1.4.0"
     glob "^8.0.3"
     gray-matter "^4.0.3"
@@ -5075,10 +5076,10 @@ commander@^6.2.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
   integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
 
-commander@^9.3.0:
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-9.3.0.tgz#f619114a5a2d2054e0d9ff1b31d5ccf89255e26b"
-  integrity sha512-hv95iU5uXPbK83mjrJKuZyFM/LBAoCV/XhVGkS5Je6tl7sxr6A0ITMw5WoRV46/UaJ46Nllm3Xt7IaJhXTIkzw==
+commander@^9.3.0, commander@^9.4.1:
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-9.4.1.tgz#d1dd8f2ce6faf93147295c0df13c7c21141cfbdd"
+  integrity sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==
 
 common-tags@1.8.2, common-tags@^1.8.0:
   version "1.8.2"
