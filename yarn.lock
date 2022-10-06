@@ -7573,7 +7573,26 @@ graphlib@^2.1.8:
   dependencies:
     lodash "^4.17.15"
 
-graphql-config@^4.1.0, graphql-config@^4.3.5:
+graphql-config@4.3.6-alpha-20221006101253-cd51d3a:
+  version "4.3.6-alpha-20221006101253-cd51d3a"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-4.3.6-alpha-20221006101253-cd51d3a.tgz#37140be2eeb061541dccb08f0f2880ef5b1b25d0"
+  integrity sha512-8uzQhU1ozej7d52W8+wz5xLTo7PJ+6YOpoU30NEnlFy6bG2kSoafrNlFYidYWULIZiNWNaQ8kKtWzJbanml91w==
+  dependencies:
+    "@graphql-tools/graphql-file-loader" "^7.3.7"
+    "@graphql-tools/json-file-loader" "^7.3.7"
+    "@graphql-tools/load" "^7.5.5"
+    "@graphql-tools/merge" "^8.2.6"
+    "@graphql-tools/url-loader" "^7.9.7"
+    "@graphql-tools/utils" "^8.6.5"
+    cosmiconfig "7.0.1"
+    cosmiconfig-toml-loader "1.0.0"
+    cosmiconfig-typescript-loader "^4.0.0"
+    minimatch "4.2.1"
+    string-env-interpolation "1.0.1"
+    ts-node "^10.8.1"
+    tslib "^2.4.0"
+
+graphql-config@^4.1.0:
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-4.3.5.tgz#bd197ec9c1e86d2696c61332be35b920ba7be700"
   integrity sha512-B4jXhHL7j3llCem+ACeo48wvVYhtJxRyt5SfSnvywbRlVYyUzt5ibZV6WJU2Yii2/rcVRIGi7BHDgcAPWdWdJg==
