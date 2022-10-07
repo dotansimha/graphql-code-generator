@@ -483,9 +483,12 @@ export class ClientSideBaseVisitor<
       case DocumentMode.external: {
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-            this._imports.add(
-              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`
-            );
+            let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
+            if (this.config.emitLegacyCommonJSImports) {
+              documentPath += '.js';
+            }
+
+            this._imports.add(`import * as Operations from '${documentPath}';`);
           } else {
             if (!this.config.importDocumentNodeExternallyFrom) {
               // eslint-disable-next-line no-console
