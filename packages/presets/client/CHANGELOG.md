@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 1.0.5
+
+### Patch Changes
+
+- [#8457](https://github.com/dotansimha/graphql-code-generator/pull/8457) [`126194017`](https://github.com/dotansimha/graphql-code-generator/commit/1261940173b8266d17fa03c1775104aff6086d3c) Thanks [@charlypoly](https://github.com/charlypoly)! - typo in config mapping
+
 ## 1.0.4
 
 ### Patch Changes
