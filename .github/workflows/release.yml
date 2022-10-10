@@ -15,7 +15,7 @@ jobs:
       npmToken: ${{ secrets.NPM_TOKEN }}
 
   algolia:
-    uses: the-guild-org/shared-config/.github/workflows/algolia-publish.yml@algolia-shared-workflows
+    uses: the-guild-org/shared-config/.github/workflows/algolia-publish.yml@main
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       algoliaAppId: ${{ secrets.ALGOLIA_APP_ID }}
