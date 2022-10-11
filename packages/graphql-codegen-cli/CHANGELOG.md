@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.13.6
+
+### Patch Changes
+
+- [#8383](https://github.com/dotansimha/graphql-code-generator/pull/8383) [`c4d9566c7`](https://github.com/dotansimha/graphql-code-generator/commit/c4d9566c792413fa26a537bce268a547c61e5f13) Thanks [@vhenzl](https://github.com/vhenzl)! - Fix `executeHooks` to quote args for shell command
+
 ## 2.13.5
 
 ### Patch Changes
