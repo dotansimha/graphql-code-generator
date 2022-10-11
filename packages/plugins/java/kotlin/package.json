@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/kotlin",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "GraphQL Code Generator plugin for generating Kotlin code based on a GraphQL schema",
   "repository": {
     "type": "git",
@@ -13,9 +13,9 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/java-common": "^2.2.3",
+    "@graphql-codegen/java-common": "^2.2.4",
     "@graphql-codegen/plugin-helpers": "^2.6.2",
-    "@graphql-codegen/visitor-plugin-common": "2.12.1",
+    "@graphql-codegen/visitor-plugin-common": "2.12.2",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {
