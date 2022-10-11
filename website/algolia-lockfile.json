@@ -1,6 +1,6 @@
 [
   {
-    "objectID": "code-docs-advanced-usage-generated-files-colocation",
+    "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
     "content": "1e44a9e9b2b56f2e033237b8ae1b4b53",
@@ -10,12 +10,12 @@
       "Docs",
       "Advanced Usage"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Generated files colocation",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-advanced-usage-how-does-it-work",
+    "objectID": "code-generator-docs-advanced-usage-how-does-it-work",
     "headings": [
       "Example with `@graphql-codegen/typescript`"
     ],
@@ -33,12 +33,12 @@
       "Docs",
       "Advanced Usage"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "How does it work?",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-advanced-usage-profiler",
+    "objectID": "code-generator-docs-advanced-usage-profiler",
     "headings": [],
     "toc": [],
     "content": "042c1533a36a671659613f323cafc888",
@@ -48,12 +48,12 @@
       "Docs",
       "Advanced Usage"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Profiler",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-advanced-usage-programmatic-usage",
+    "objectID": "code-generator-docs-advanced-usage-programmatic-usage",
     "headings": [
       "Basic Programmatic Usage",
       "Using the CLI instead of `core`"
@@ -77,12 +77,12 @@
       "Docs",
       "Advanced Usage"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Programmatic Usage",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-codegen-config",
+    "objectID": "code-generator-docs-config-reference-codegen-config",
     "headings": [
       "Configuration file format",
       "Configuration options",
@@ -136,12 +136,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "codegen.ts",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-config-field",
+    "objectID": "code-generator-docs-config-reference-config-field",
     "headings": [],
     "toc": [],
     "content": "e51f75119aa3976643dab38b6adbb060",
@@ -151,12 +151,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "plugin config",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-documents-field",
+    "objectID": "code-generator-docs-config-reference-documents-field",
     "headings": [
       "How to use it?",
       "Available Formats",
@@ -226,12 +226,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "documents field",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-lifecycle-hooks",
+    "objectID": "code-generator-docs-config-reference-lifecycle-hooks",
     "headings": [
       "How to use?",
       "Root Level",
@@ -303,12 +303,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Lifecycle Hooks",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-multiproject-config",
+    "objectID": "code-generator-docs-config-reference-multiproject-config",
     "headings": [
       "Configuration file format",
       "Command to generate files"
@@ -332,12 +332,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Multi Project",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-naming-convention",
+    "objectID": "code-generator-docs-config-reference-naming-convention",
     "headings": [],
     "toc": [],
     "content": "b187ca7d3cc785ac08dcba58ad616052",
@@ -347,12 +347,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Naming Convention",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-require-field",
+    "objectID": "code-generator-docs-config-reference-require-field",
     "headings": [
       "How to use it?",
       "TypeScript Support",
@@ -388,12 +388,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "require field",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-config-reference-schema-field",
+    "objectID": "code-generator-docs-config-reference-schema-field",
     "headings": [
       "How to use it?",
       "Available formats",
@@ -493,12 +493,12 @@
       "Docs",
       "Config Reference"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "schema field",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-getting-started-development-workflow",
+    "objectID": "code-generator-docs-getting-started-development-workflow",
     "headings": [
       "Scripts Integration",
       "Watch Mode",
@@ -534,12 +534,12 @@
       "Docs",
       "Getting Started"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Development workflow",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-getting-started-esm-typescript-usage",
+    "objectID": "code-generator-docs-getting-started-esm-typescript-usage",
     "headings": [
       "Codegen Configuration",
       "TypeScript Compiler Options",
@@ -575,12 +575,12 @@
       "Docs",
       "Getting Started"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "ESM TypeScript usage",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-getting-started-index",
+    "objectID": "code-generator-docs-getting-started-index",
     "headings": [
       "The perfect GraphQL Developer Experience",
       "What's next?"
@@ -616,12 +616,12 @@
       "Docs",
       "Getting Started"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Introduction",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-getting-started-installation",
+    "objectID": "code-generator-docs-getting-started-installation",
     "headings": [
       "Global Installation",
       "Monorepo Project",
@@ -669,12 +669,12 @@
       "Docs",
       "Getting Started"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Installation",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-guides-angular",
+    "objectID": "code-generator-docs-guides-angular",
     "headings": [],
     "toc": [],
     "content": "fd2fd70d2466c34852ad426ecca37c39",
@@ -684,12 +684,12 @@
       "Docs",
       "Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Angular",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-guides-flutter-freezed",
+    "objectID": "code-generator-docs-guides-flutter-freezed",
     "headings": [
       "TL;DR",
       "Motivation",
@@ -743,12 +743,12 @@
       "Docs",
       "Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Dart/Flutter",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-guides-further-reading",
+    "objectID": "code-generator-docs-guides-further-reading",
     "headings": [
       "For front-end applications",
       "For GraphQL servers",
@@ -790,12 +790,12 @@
       "Docs",
       "Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Further Reading",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-guides-graphql-modules",
+    "objectID": "code-generator-docs-guides-graphql-modules",
     "headings": [],
     "toc": [],
     "content": "12951c96b46d8695659ab65c1b32e081",
@@ -805,12 +805,12 @@
       "Docs",
       "Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "GraphQL Modules",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-guides-graphql-server-apollo-yoga",
+    "objectID": "code-generator-docs-guides-graphql-server-apollo-yoga",
     "headings": [
       "Video tutorial",
       "Guide"
@@ -834,12 +834,12 @@
       "Docs",
       "Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Apollo Server / GraphQL Yoga",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-guides-react-vue",
+    "objectID": "code-generator-docs-guides-react-vue",
     "headings": [
       "Installation",
       "Writing GraphQL Queries",
@@ -887,12 +887,12 @@
       "Docs",
       "Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "React / Vue",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-guides-svelte",
+    "objectID": "code-generator-docs-guides-svelte",
     "headings": [
       "Svelte Apollo",
       "SvelteKit Native"
@@ -916,12 +916,12 @@
       "Docs",
       "Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Svelte / Kit",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-integrations-apollo-local-state",
+    "objectID": "code-generator-docs-integrations-apollo-local-state",
     "headings": [],
     "toc": [],
     "content": "b75a40f72486ce89e69013fe0534ff8f",
@@ -931,12 +931,12 @@
       "Docs",
       "Integrations"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "apollo-local-state",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-integrations-create-react-app",
+    "objectID": "code-generator-docs-integrations-create-react-app",
     "headings": [],
     "toc": [],
     "content": "aded4d90122700837990432cf31ca6b4",
@@ -946,12 +946,12 @@
       "Docs",
       "Integrations"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "create-react-app",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-integrations-federation",
+    "objectID": "code-generator-docs-integrations-federation",
     "headings": [],
     "toc": [],
     "content": "78111eb85e54ca2e8b692ecca9289fc0",
@@ -961,12 +961,12 @@
       "Docs",
       "Integrations"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Apollo Federation",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-integrations-gatsby",
+    "objectID": "code-generator-docs-integrations-gatsby",
     "headings": [
       "Community Plugins"
     ],
@@ -984,12 +984,12 @@
       "Docs",
       "Integrations"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Gatsby",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-integrations-prettier",
+    "objectID": "code-generator-docs-integrations-prettier",
     "headings": [
       "Prettier",
       "TSLint",
@@ -1019,12 +1019,12 @@
       "Docs",
       "Integrations"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Prettier & Linters",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-integrations-vscode",
+    "objectID": "code-generator-docs-integrations-vscode",
     "headings": [],
     "toc": [],
     "content": "3a94f89e7c40e5e9c35d77fe4e46a869",
@@ -1034,12 +1034,12 @@
       "Docs",
       "Integrations"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "VSCode Extension",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-migration-guides-from-0-13",
+    "objectID": "code-generator-docs-migration-guides-from-0-13",
     "headings": [
       "What has changed?",
       "How to migrate?"
@@ -1063,12 +1063,12 @@
       "Docs",
       "Migration Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "v0.13 -> v0.17",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-migration-guides-from-0-18",
+    "objectID": "code-generator-docs-migration-guides-from-0-18",
     "headings": [
       "What has changed?",
       "How to migrate?",
@@ -1104,12 +1104,12 @@
       "Docs",
       "Migration Guides"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "v0.18 -> v1.0",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-writing-plugins-contributing",
+    "objectID": "code-generator-docs-writing-plugins-contributing",
     "headings": [
       "1. Requirements",
       "2. Fork and Clone",
@@ -1187,12 +1187,12 @@
       "Docs",
       "Writing Plugins"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Contributing",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-writing-plugins-extend-schema",
+    "objectID": "code-generator-docs-writing-plugins-extend-schema",
     "headings": [],
     "toc": [],
     "content": "f7cf903c681c2156c319e593d56ec6d6",
@@ -1202,12 +1202,12 @@
       "Docs",
       "Writing Plugins"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Extend Schema",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-writing-plugins-index",
+    "objectID": "code-generator-docs-writing-plugins-index",
     "headings": [],
     "toc": [],
     "content": "2e91a8d03380fe061291a059d61dae4b",
@@ -1217,12 +1217,12 @@
       "Docs",
       "Writing Plugins"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "What are Plugins?",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-writing-plugins-plugin-structure",
+    "objectID": "code-generator-docs-writing-plugins-plugin-structure",
     "headings": [
       "Basic Plugin",
       "Using the `GraphQLSchema`",
@@ -1264,12 +1264,12 @@
       "Docs",
       "Writing Plugins"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Plugin structure",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-writing-plugins-using-visitor",
+    "objectID": "code-generator-docs-writing-plugins-using-visitor",
     "headings": [
       "Basic Visitor",
       "Codegen and Visitors"
@@ -1293,12 +1293,12 @@
       "Docs",
       "Writing Plugins"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Using Visitor Pattern",
     "type": "Documentation"
   },
   {
-    "objectID": "code-docs-writing-plugins-validate-configuration",
+    "objectID": "code-generator-docs-writing-plugins-validate-configuration",
     "headings": [],
     "toc": [],
     "content": "cc51c395115ce18f2ef55f3a859cc5c1",
@@ -1308,24 +1308,24 @@
       "Docs",
       "Writing Plugins"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Validate Configuration",
     "type": "Documentation"
   },
   {
-    "objectID": "code-index",
+    "objectID": "code-generator-index",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen//index",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Home",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-c-sharp-c-sharp-operations",
+    "objectID": "code-generator-plugins-c-sharp-c-sharp-operations",
     "headings": [],
     "toc": [],
     "content": "f8e1010d5593a30997755c3d0bedd4fc",
@@ -1335,12 +1335,12 @@
       "Plugins",
       "C-Sharp"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "operations",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-dart-flutter-freezed",
+    "objectID": "code-generator-plugins-dart-flutter-freezed",
     "headings": [],
     "toc": [],
     "content": "9cec7baf25d43eb5eeaeca180fc429dd",
@@ -1350,12 +1350,12 @@
       "Plugins",
       "dart"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "flutter-freezed",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-flow-flow-operations",
+    "objectID": "code-generator-plugins-flow-flow-operations",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
@@ -1365,12 +1365,12 @@
       "Plugins",
       "Flow"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "operations",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-flow-flow-resolvers",
+    "objectID": "code-generator-plugins-flow-flow-resolvers",
     "headings": [
       "Enum Resolvers"
     ],
@@ -1394,12 +1394,12 @@
       "Plugins",
       "Flow"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "resolvers",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-index",
+    "objectID": "code-generator-plugins-index",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
@@ -1408,12 +1408,12 @@
     "hierarchy": [
       "Plugins"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "Plugins",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-java-java",
+    "objectID": "code-generator-plugins-java-java",
     "headings": [
       "How to use"
     ],
@@ -1431,12 +1431,12 @@
       "Plugins",
       "Java"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "java",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-java-java-apollo-android",
+    "objectID": "code-generator-plugins-java-java-apollo-android",
     "headings": [
       "Prepare your env",
       "Usage"
@@ -1460,12 +1460,12 @@
       "Plugins",
       "Java"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "java-apollo-android",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-java-java-resolvers",
+    "objectID": "code-generator-plugins-java-java-resolvers",
     "headings": [],
     "toc": [],
     "content": "718d0ec8cf302ad52e24484183940a09",
@@ -1475,12 +1475,12 @@
       "Plugins",
       "Java"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "java-resolvers",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-java-kotlin",
+    "objectID": "code-generator-plugins-java-kotlin",
     "headings": [
       "Prepare your environment"
     ],
@@ -1498,12 +1498,12 @@
       "Plugins",
       "Java"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "kotlin",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-add",
+    "objectID": "code-generator-plugins-other-add",
     "headings": [
       "Examples"
     ],
@@ -1521,12 +1521,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "add",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-fragment-matcher",
+    "objectID": "code-generator-plugins-other-fragment-matcher",
     "headings": [
       "How to use?"
     ],
@@ -1544,12 +1544,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "fragment-matcher",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-hasura-allow-list",
+    "objectID": "code-generator-plugins-other-hasura-allow-list",
     "headings": [
       "Examples"
     ],
@@ -1567,12 +1567,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "hasura-allow-list",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-introspection",
+    "objectID": "code-generator-plugins-other-introspection",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
@@ -1582,12 +1582,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "introspection",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-jsdoc",
+    "objectID": "code-generator-plugins-other-jsdoc",
     "headings": [],
     "toc": [],
     "content": "8d63df848873c568288034b9a04341d9",
@@ -1597,12 +1597,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "jsdoc",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-reason-client",
+    "objectID": "code-generator-plugins-other-reason-client",
     "headings": [
       "Examples",
       "Usage & Documentation"
@@ -1626,12 +1626,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "reason-client",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-schema-ast",
+    "objectID": "code-generator-plugins-other-schema-ast",
     "headings": [
       "Examples"
     ],
@@ -1649,12 +1649,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "schema-ast",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-time",
+    "objectID": "code-generator-plugins-other-time",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
@@ -1664,12 +1664,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "time",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-other-urql-introspection",
+    "objectID": "code-generator-plugins-other-urql-introspection",
     "headings": [
       "How to use?"
     ],
@@ -1687,12 +1687,12 @@
       "Plugins",
       "other"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "urql-introspection",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-presets-gql-tag-operations-preset",
+    "objectID": "code-generator-plugins-presets-gql-tag-operations-preset",
     "headings": [
       "Getting Started",
       "Improving bundle-size with the gql-tag-operations babel plugin",
@@ -1740,12 +1740,12 @@
       "Plugins",
       "Presets"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "gql-tag-operations",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-presets-graphql-modules-preset",
+    "objectID": "code-generator-plugins-presets-graphql-modules-preset",
     "headings": [
       "Usage Example",
       "Using without GraphQL-Modules"
@@ -1769,12 +1769,12 @@
       "Plugins",
       "Presets"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "graphql-modules",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-presets-import-types-preset",
+    "objectID": "code-generator-plugins-presets-import-types-preset",
     "headings": [],
     "toc": [],
     "content": "82e2197c055bf1b9c552763180663368",
@@ -1784,12 +1784,12 @@
       "Plugins",
       "Presets"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "import-types",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-presets-near-operation-file-preset",
+    "objectID": "code-generator-plugins-presets-near-operation-file-preset",
     "headings": [
       "Example"
     ],
@@ -1807,12 +1807,12 @@
       "Plugins",
       "Presets"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "near-operation-file",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-named-operations-object",
+    "objectID": "code-generator-plugins-typescript-named-operations-object",
     "headings": [
       "How to use?"
     ],
@@ -1842,12 +1842,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "named-operations-object",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-relay-operation-optimizer",
+    "objectID": "code-generator-plugins-typescript-relay-operation-optimizer",
     "headings": [
       "List of Features",
       "Usage"
@@ -1871,12 +1871,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "relay-operation-optimizer",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typed-document-node",
+    "objectID": "code-generator-plugins-typescript-typed-document-node",
     "headings": [],
     "toc": [],
     "content": "9d073d78f8596d086d613b4dcf80e940",
@@ -1886,12 +1886,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "typed-document-node",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript",
+    "objectID": "code-generator-plugins-typescript-typescript",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
@@ -1901,12 +1901,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "typescript",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-apollo-angular",
+    "objectID": "code-generator-plugins-typescript-typescript-apollo-angular",
     "headings": [
       "How to use?"
     ],
@@ -1924,12 +1924,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "apollo-angular",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-apollo-client-helpers",
+    "objectID": "code-generator-plugins-typescript-typescript-apollo-client-helpers",
     "headings": [],
     "toc": [],
     "content": "ace34d8f77a55f5963d5341886f73d3d",
@@ -1939,12 +1939,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "apollo-client-helpers",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-apollo-next",
+    "objectID": "code-generator-plugins-typescript-typescript-apollo-next",
     "headings": [
       "Motivations",
       "API Reference"
@@ -2115,12 +2115,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "apollo-next",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-document-nodes",
+    "objectID": "code-generator-plugins-typescript-typescript-document-nodes",
     "headings": [
       "Usage"
     ],
@@ -2138,12 +2138,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "document-nodes",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-generic-sdk",
+    "objectID": "code-generator-plugins-typescript-typescript-generic-sdk",
     "headings": [
       "Usage"
     ],
@@ -2161,12 +2161,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "generic-sdk",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-graphql-files-modules",
+    "objectID": "code-generator-plugins-typescript-typescript-graphql-files-modules",
     "headings": [
       "Pre-Requirements",
       "Example"
@@ -2190,12 +2190,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "graphql-files-modules",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-graphql-request",
+    "objectID": "code-generator-plugins-typescript-typescript-graphql-request",
     "headings": [
       "Usage Example",
       "Simple Request Middleware"
@@ -2225,12 +2225,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "graphql-request",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-mock-data",
+    "objectID": "code-generator-plugins-typescript-typescript-mock-data",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
@@ -2240,12 +2240,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "typescript-mock-data",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-mongodb",
+    "objectID": "code-generator-plugins-typescript-typescript-mongodb",
     "headings": [
       "Usage Example",
       "Directives",
@@ -2275,12 +2275,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "mongodb",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-msw",
+    "objectID": "code-generator-plugins-typescript-typescript-msw",
     "headings": [],
     "toc": [],
     "content": "c28caf4ff20017c18be2ce95f58c3e9e",
@@ -2290,12 +2290,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "msw",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-oclif",
+    "objectID": "code-generator-plugins-typescript-typescript-oclif",
     "headings": [
       "Usage",
       "Advanced Features"
@@ -2353,12 +2353,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "oclif",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-operations",
+    "objectID": "code-generator-plugins-typescript-typescript-operations",
     "headings": [],
     "toc": [],
     "content": "d41d8cd98f00b204e9800998ecf8427e",
@@ -2368,12 +2368,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "operations",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-react-apollo",
+    "objectID": "code-generator-plugins-typescript-typescript-react-apollo",
     "headings": [
       "Usage Example"
     ],
@@ -2408,12 +2408,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "react-apollo",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-react-query",
+    "objectID": "code-generator-plugins-typescript-typescript-react-query",
     "headings": [
       "Usage Examples"
     ],
@@ -2458,12 +2458,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "react-query",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-resolvers",
+    "objectID": "code-generator-plugins-typescript-typescript-resolvers",
     "headings": [
       "Usage Example",
       "Integration with Apollo-Server",
@@ -2511,12 +2511,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "resolvers",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-rtk-query",
+    "objectID": "code-generator-plugins-typescript-typescript-rtk-query",
     "headings": [
       "Usage Examples"
     ],
@@ -2546,12 +2546,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "rtk-query",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-stencil-apollo",
+    "objectID": "code-generator-plugins-typescript-typescript-stencil-apollo",
     "headings": [
       "Usage Example"
     ],
@@ -2569,12 +2569,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "stencil-apollo",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-svelte-apollo",
+    "objectID": "code-generator-plugins-typescript-typescript-svelte-apollo",
     "headings": [
       "API Reference",
       "Usage Example"
@@ -2622,12 +2622,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "svelte-apollo",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-type-graphql",
+    "objectID": "code-generator-plugins-typescript-typescript-type-graphql",
     "headings": [],
     "toc": [],
     "content": "df4706f394ae64859ab80b2b98eb6550",
@@ -2637,12 +2637,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "type-graphql",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-urql",
+    "objectID": "code-generator-plugins-typescript-typescript-urql",
     "headings": [
       "Usage Example"
     ],
@@ -2660,12 +2660,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "urql",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-validation-schema",
+    "objectID": "code-generator-plugins-typescript-typescript-validation-schema",
     "headings": [
       "Examples",
       "Usage & Documentation"
@@ -2689,12 +2689,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "validation-schema",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-vue-apollo",
+    "objectID": "code-generator-plugins-typescript-typescript-vue-apollo",
     "headings": [
       "Examples"
     ],
@@ -2718,12 +2718,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "vue-apollo",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-vue-apollo-smart-ops",
+    "objectID": "code-generator-plugins-typescript-typescript-vue-apollo-smart-ops",
     "headings": [
       "Examples"
     ],
@@ -2747,12 +2747,12 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "vue-apollo-smart-ops",
     "type": "Documentation"
   },
   {
-    "objectID": "code-plugins-typescript-typescript-vue-urql",
+    "objectID": "code-generator-plugins-typescript-typescript-vue-urql",
     "headings": [
       "Usage Example"
     ],
@@ -2770,7 +2770,7 @@
       "Plugins",
       "TypeScript"
     ],
-    "source": "Code",
+    "source": "Code Generator",
     "title": "vue-urql",
     "type": "Documentation"
   }
