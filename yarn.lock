@@ -3110,12 +3110,12 @@
     unist-util-visit "^4.1.1"
     use-debounce "8.0.4"
 
-"@theguild/prettier-config@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@theguild/prettier-config/-/prettier-config-0.0.3.tgz#25cd612df5e120af81066b50ad6435de3c65b992"
-  integrity sha512-lLdhT8CG+hEXbBZpN+sqlmja9LFUKc6NifanwS7D+WOEKqgwCbYbKeAoc985cxKmYxLRz8kIasqe0beEjlqmkg==
+"@theguild/prettier-config@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@theguild/prettier-config/-/prettier-config-0.1.1.tgz#31935992aaacabe6bcc6578ba1b2c0166dab3410"
+  integrity sha512-vZ0DtusRtMWIM4Bmztq+FimDcKftncteEsKhfDeTj7Oos3+lv8bT4e2VR5HKVKVXZn/cLv6eRwR65/puUakOAQ==
   dependencies:
-    prettier-plugin-sh "^0.12.0"
+    prettier-plugin-sh "^0.12.8"
 
 "@theguild/tailwind-config@0.1.1":
   version "0.1.1"
@@ -11072,7 +11072,7 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==
 
-prettier-plugin-sh@^0.12.0:
+prettier-plugin-sh@^0.12.8:
   version "0.12.8"
   resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.12.8.tgz#174106774c06304e082f030ecb05cdcaeabb2585"
   integrity sha512-VOq8h2Gn5UzrCIKm4p/nAScXJbN09HdyFDknAcxt6Qu/tv/juu9bahxSrcnM9XWYA+Spz1F1ANJ4LhfwB7+Q1Q==
