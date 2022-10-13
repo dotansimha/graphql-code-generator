@@ -41,19 +41,31 @@ Given a folder structure with the following files:
 
 Here's a short example for generating types and resolvers for 2 modules:
 
-```yaml
-schema: './src/modules/**/typedefs/*.graphql'
-generates:
-  ./src/modules/:
-    preset: graphql-modules
-    presetConfig:
-      baseTypesPath: ../generated-types/graphql.ts # Where to create the complete schema types
-      filename: generated-types/module-types.ts # Where to create each module types
-    plugins:
-      - add:
-          content: '/* eslint-disable */'
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: './src/modules/**/typedefs/*.graphql',
+  generates: {
+    './src/modules/': {
+      preset: 'graphql-modules',
+      presetConfig: {
+        baseTypesPath: '../generated-types/graphql.ts',
+        filename: 'generated-types/module-types.ts'
+      },
+      plugins: [
+        {
+          add: {
+            content: '/* eslint-disable */'
+          }
+        },
+        'typescript',
+        'typescript-resolvers'
+      ]
+    }
+  }
+}
+export default config
 ```
 
 This will generate a file called `module-types.ts` under each module you have.

@@ -26,31 +26,81 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    *
    * @exampleMarkdown
    * ## Override All Names
-   * ```yaml
-   * config:
-   *   namingConvention: change-case-all#lowerCase
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          namingConvention: 'change-case-all#lowerCase',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * ## Upper-case enum values
-   * ```yaml
-   * config:
-   *   namingConvention:
-   *     typeNames: change-case-all#pascalCase
-   *     enumValues: change-case-all#upperCase
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          namingConvention: {
+   *            typeNames: 'change-case-all#pascalCase',
+   *            enumValues: 'change-case-all#upperCase',
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
-   * ## Keep name as-is
-   * ```yaml
-   * config:
-   *   namingConvention: keep
+   * ## Keep names as is
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *         namingConvention: 'keep',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * ## Remove Underscores
-   * ```yaml
-   * config:
-   *   namingConvention:
-   *     typeNames: change-case-all#pascalCase
-   *     transformUnderscore: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          namingConvention: {
+   *            typeNames: 'change-case-all#pascalCase',
+   *            transformUnderscore: true
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   namingConvention?: NamingConvention;
@@ -59,14 +109,21 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @description Adds prefix to the name
    *
    * @exampleMarkdown
-   * ```yaml
-   * documents: src/api/user-service/queries.graphql
-   * generates:
-   *   src/api/user-service/queries.ts:
-   *   plugins:
-   *     - typescript-document-nodes
-   *   config:
-   *     namePrefix: 'gql'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'src/api/user-service/queries.ts': {
+   *        plugins: ['typescript-document-nodes'],
+   *        config: {
+   *          namePrefix: 'gql',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   namePrefix?: string;
@@ -75,14 +132,21 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @description Adds suffix to the name
    *
    * @exampleMarkdown
-   * ```yaml
-   * documents: src/api/user-service/queries.graphql
-   * generates:
-   *   src/api/user-service/queries.ts:
-   *   plugins:
-   *     - typescript-document-nodes
-   *   config:
-   *     nameSuffix: 'Query'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'src/api/user-service/queries.ts': {
+   *        plugins: ['typescript-document-nodes'],
+   *        config: {
+   *          nameSuffix: 'Query'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   nameSuffix?: string;

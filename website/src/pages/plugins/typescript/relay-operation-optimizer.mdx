@@ -29,19 +29,24 @@ You can test how relay-compiler affects your queries over on the [Relay Compiler
 
 Set up your project per the GraphQL Codegen Docs, and add `flattenGeneratedTypes: true{:yaml}` in your `codegen.yml`:
 
-```yaml {8}
-overwrite: true
-schema: schema.graphql
-generates:
-  src/generated-types.tsx:
-    documents: 'src/documents/**/*.graphql'
-    config:
-      skipDocumentsValidation: true
-      flattenGeneratedTypes: true
-    plugins:
-      - 'typescript'
-      - 'typescript-operations'
-      - 'typescript-react-apollo'
+```ts filename="codegen.ts" {11}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  overwrite: true,
+  schema: 'schema.graphql',
+  generates: {
+    'src/generated-types.tsx': {
+      documents: 'src/documents/**/*.graphql',
+      config: {
+        skipDocumentsValidation: true,
+        flattenGeneratedTypes: true
+      },
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo']
+    }
+  }
+}
+export default config
 ```
 
 Please notice that you have to skip the document validation - but no worries, relay-compiler will validate your documents instead!

@@ -66,22 +66,28 @@ Just a few configuration steps are required to get observable Apollo queries wit
 **1. Install the `graphql-codegen-svelte-apollo` plugin**
 
 <PackageCmd
-  packages={['-D graphql-codegen-svelte-apollo @graphql-codegen/typescript @graphql-codegen/typescript-operations']}
+  packages={[
+    '-D graphql-codegen-svelte-apollo @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/cli typescript graphql'
+  ]}
 />
 
 **2. Configure the plugin**
 
 Create or update your `codegen.yaml` file as follows:
 
-```yaml
-schema: http://my-graphql-api.com/graphql # Or schema: ./src/schema.graphql
-documents: './src/**/*.gql'
-generates:
-  ./graphql/generated.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - graphql-codegen-svelte-apollo
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://my-graphql-api.com/graphql',
+  documents: './src/**/*.gql',
+  generates: {
+    './graphql/generated.ts': {
+      plugins: ['typescript', 'typescript-operations', 'graphql-codegen-svelte-apollo']
+    }
+  }
+}
+export default config
 ```
 
 <Callout>
@@ -146,16 +152,19 @@ Just a few configuration steps are required to get SvelteKit stores fully typed 
 
 Create or update your `codegen.yaml` file as follows:
 
-```yaml
-schema: http://my-graphql-api.com/graphql # Or schema: ./src/schema.graphql
-documents: './src/**/*.gql'
-generates:
-  ./graphql/generated.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typed-document-node
-      - '@kitql/graphql-codegen'
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://my-graphql-api.com/graphql',
+  documents: './src/**/*.gql',
+  generates: {
+    './graphql/generated.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typed-document-node', '@kitql/graphql-codegen']
+    }
+  }
+}
+export default config
 ```
 
 **3. Run the codegen and update your code**

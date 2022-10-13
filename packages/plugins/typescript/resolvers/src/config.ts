@@ -13,14 +13,21 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-resolvers
-   *     config:
-   *       useIndexSignature: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          useIndexSignature: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   useIndexSignature?: boolean;
@@ -31,14 +38,21 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    *
    * @default true
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-resolvers
-   *     config:
-   *       noSchemaStitching: false
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          noSchemaStitching: false
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   noSchemaStitching?: boolean;
@@ -54,14 +68,21 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @default "graphql#GraphQLResolveInfo"
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-resolvers
-   *     config:
-   *       customResolveInfo: ./my-types#MyResolveInfo
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          customResolveInfo: './my-types#MyResolveInfo'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   customResolveInfo?: string;
@@ -72,45 +93,90 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @exampleMarkdown
    * ## Custom Signature
    *
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-resolvers
-   *     config:
-   *       customResolverFn: ./my-types#MyResolveFn
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          customResolverFn: './my-types#MyResolveFn'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * ## With Graphile
    *
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - add:
-   *           content: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
-   *       - typescript
-   *       - typescript-resolvers
-   *     config:
-   *       customResolverFn: |
-   *         (
-   *           parent: TParent,
-   *           args: TArgs,
-   *           context: TContext,
-   *           info: GraphQLResolveInfo & { graphile: GraphileHelpers<TParent> }
-   *         ) => Promise<TResult> | TResult;
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          customResolverFn: './my-types#MyResolveFn'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      "path/to/file.ts": {
+   *        "plugins": [
+   *            {
+   *                "add": {
+   *                    "content": "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
+   *                }
+   *            },
+   *            "typescript",
+   *            "typescript-resolvers"
+   *        ],
+   *        "config": {
+   *            "customResolverFn": "(\n  parent: TParent,\n  args: TArgs,\n  context: TContext,\n  info: GraphQLResolveInfo & { graphile: GraphileHelpers<TParent> }\n) => Promise<TResult> | TResult;\n"
+   *        }
+   *      }
+   *    }
+   *  };
+   *  export default config;
+   * ```
+   *
    */
   customResolverFn?: string;
   /**
    * @description Map the usage of a directive into using a specific resolver.
    * @exampleMarkdown
-   * ```yaml
-   *   config:
-   *     customResolverFn: ../resolver-types.ts#UnauthenticatedResolver
-   *     directiveResolverMappings:
-   *       authenticated: ../resolvers-types.ts#AuthenticatedResolver
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          customResolverFn: '../resolver-types.ts#UnauthenticatedResolver',
+   *          directiveResolverMappings: {
+   *            authenticated: '../resolvers-types.ts#AuthenticatedResolver',
+   *          },
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   directiveResolverMappings?: Record<string, string>;
@@ -120,9 +186,21 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * This will generate `ParentType = Type` instead of `ParentType extends Type = Type` in each resolver.
    *
    * @exampleMarkdown
-   * ```yaml
-   *   config:
-   *     allowParentTypeOverride: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          allowParentTypeOverride: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    */
@@ -131,9 +209,21 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description Sets `info` argument of resolver function to be optional field. Useful for testing.
    *
    * @exampleMarkdown
-   * ```yaml
-   *   config:
-   *     optionalInfoArgument: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          optionalInfoArgument: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    */
@@ -142,9 +232,21 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * @description Set to `true` in order to allow the Resolver type to be callable
    *
    * @exampleMarkdown
-   * ```yaml
-   *  config:
-   *    makeResolverTypeCallable: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          makeResolverTypeCallable: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   makeResolverTypeCallable?: boolean;

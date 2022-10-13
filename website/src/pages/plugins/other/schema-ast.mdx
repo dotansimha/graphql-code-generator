@@ -10,16 +10,19 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 
 ## Examples
 
-```yaml {9}
-# …
-schema:
-  - 'http://localhost:3000/graphql'
-  - './src/**/*.graphql'
-  - 'scalar MyCustomScalar'
-generates:
-  path/to/file.graphql:
-    plugins:
-      - schema-ast
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  schema: ['http://localhost:3000/graphql', './src/**/*.graphql', 'scalar MyCustomScalar'],
+  generates: {
+    'path/to/file.graphql': {
+      plugins: ['schema-ast']
+    }
+  }
+}
+export default config
 ```
 
 <PluginApiDocs />

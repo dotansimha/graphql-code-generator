@@ -34,13 +34,18 @@ You can find [a blog post we wrote about using and customizing this plugin here]
 
 Run `graphql-codegen` as usual, with this new plugin:
 
-```yaml
-schema: schema.json
-generates:
-  ./src/resolvers-types.ts:
-    plugins:
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.json',
+  generates: {
+    './src/resolvers-types.ts': {
+      plugins: ['typescript', 'typescript-resolvers']
+    }
+  }
+}
+export default config
 ```
 
 Import the types from the generated file and use in the resolver:
@@ -65,14 +70,20 @@ By default `apollo-server` will not work with generated resolvers signature.
 
 If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
 
-```yaml
-generates:
-  ./resolvers-types.ts:
-    config:
-      useIndexSignature: true
-    plugins:
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  generates: {
+    './resolvers-types.ts': {
+      config: {
+        useIndexSignature: true
+      },
+      plugins: ['typescript', 'typescript-resolvers']
+    }
+  }
+}
+export default config
 ```
 
 If you wish to have an easy start, and have the ability to use resolvers chaining without models types, you can also add to your config `defaultMapper: Partial<{T}>`. This will allow you to return partial types in your resolvers.
@@ -83,18 +94,25 @@ If you wish to use your custom model types, codegen allow you to use `mappers` f
 
 Here's the basic example of using it:
 
-```yaml
-schema: schema.graphql
-generates:
-  ./resolvers-types.ts:
-    config:
-      contextType: models#MyContextType
-      mappers:
-        User: ./models#UserModel
-        Profile: ./models#UserProfile
-    plugins:
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  generates: {
+    './resolvers-types.ts': {
+      config: {
+        contextType: 'models#MyContextType',
+        mappers: {
+          User: './models#UserModel',
+          Profile: './models#UserProfile'
+        }
+      },
+      plugins: ['typescript', 'typescript-resolvers']
+    }
+  }
+}
+export default config
 ```
 
 ## Enum Resolvers
@@ -120,16 +138,23 @@ enum Color {
 }
 ```
 
-```yaml
-schema: schema.graphql
-generates:
-  ./resolvers-types.ts:
-    config:
-      enumValues:
-        Color: ./enums#ColorsCode
-    plugins:
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  generates: {
+    './resolvers-types.ts': {
+      config: {
+        enumValues: {
+          Color: './enums#ColorsCode'
+        }
+      },
+      plugins: ['typescript', 'typescript-resolvers']
+    }
+  }
+}
+export default config
 ```
 
 ```ts filename="enums.ts"
@@ -156,32 +181,47 @@ const resolvers: Resolvers = {
 
 You can also define the same with explicit enum values:
 
-```yaml
-schema: schema.graphql
-generates:
-  ./resolvers-types.ts:
-    config:
-      enumValues:
-        Color:
-          RED: '#FF0000'
-          BLUE: '#0000FF'
-    plugins:
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  generates: {
+    './resolvers-types.ts': {
+      config: {
+        enumValues: {
+          Color: {
+            RED: '#FF0000',
+            BLUE: '#0000FF'
+          }
+        }
+      },
+      plugins: ['typescript', 'typescript-resolvers']
+    }
+  }
+}
+export default config
 ```
 
 Or, with `mappers`:
 
-```yaml
-schema: schema.graphql
-generates:
-  ./resolvers-types.ts:
-    config:
-      mappers:
-        Color: ./enums#ColorsCode
-    plugins:
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  generates: {
+    './resolvers-types.ts': {
+      config: {
+        mappers: {
+          Color: './enums#ColorsCode'
+        }
+      },
+      plugins: ['typescript', 'typescript-resolvers']
+    }
+  }
+}
+export default config
 ```
 
 ## Defined shared mappers across configurations
@@ -190,30 +230,38 @@ In some case, you might want to share some common `mappers` between many output 
 
 To do so, you can leverage the YAML references features as follow:
 
-```yaml filename="codegen.yml" {4,5}
-schema: 'schema.graphql'
-documents: src/*.ts
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
 
-shared_mappers: &shared_mappers
-  ID: IDType
+const sharedMappers = {
+  ID: 'IDType'
+}
 
-generates:
-  resolvers-types-1.ts:
-    plugins:
-      - typescript
-      - typescript-resolvers
-    config:
-      mappers:
-        <<: *shared_mappers
-        String: StringType
-  resolvers-types-2.ts:
-    plugins:
-      - typescript
-      - typescript-resolvers
-    config:
-      mappers:
-        <<: *shared_mappers
-        String: StringType
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: 'src/*.ts',
+  generates: {
+    'resolvers-types-1.ts': {
+      plugins: ['typescript', 'typescript-resolvers'],
+      config: {
+        mappers: {
+          ...sharedMappers,
+          String: 'StringType'
+        }
+      }
+    },
+    'resolvers-types-2.ts': {
+      plugins: ['typescript', 'typescript-resolvers'],
+      config: {
+        mappers: {
+          ...sharedMappers,
+          String: 'StringType'
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 The above configuration will provide the ID type mapping to both `resolvers-types-1.ts` and `resolvers-types-2.ts` files.

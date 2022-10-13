@@ -6,10 +6,22 @@ export type ApolloClientHelpersConfig = {
    * @description Will use `import type {}` rather than `import {}` when importing only types. This gives
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
-   * @example
-   * ```yaml
-   * config:
-   *   useTypeImports: true
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          useTypeImports: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   useTypeImports?: boolean;

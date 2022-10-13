@@ -12,15 +12,22 @@ export interface TypeGraphQLPluginConfig extends TypeScriptPluginConfig {
   /**
    * @name decorateTypes
    * @description Specifies the objects that will have TypeGraphQL decorators prepended to them, by name. Non-matching types will still be output, but without decorators. If not set, all types will be decorated.
-   * @example Decorate only type User
-   * ```yaml
-   * generates:
-   *   types.ts:
-   *     plugins:
-   *       - typescript-type-graphql
-   *     config:
-   *       decorateTypes:
-   *         - User
+   * @exampleMarkdown Decorate only type User
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-type-graphql'],
+   *        config: {
+   *          decorateTypes: ['User']
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   decorateTypes?: string[];

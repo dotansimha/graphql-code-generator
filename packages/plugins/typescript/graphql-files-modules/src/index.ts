@@ -17,14 +17,23 @@ export interface TypeScriptFilesModulesPluginConfig {
    * between generated types.
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates: src/api/user-service/queries.d.ts
-   *  documents: src/api/user-service/queries.graphql
-   *  plugins:
-   *    - typescript-graphql-files-modules
-   *  config:
-   *    # resulting module definition path glob: "*\/api/user-service/queries.graphql"
-   *    modulePathPrefix: "/api/user-service/"
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'src/api/user-service/queries.d.ts': {
+   *        documents: 'src/api/user-service/queries.graphql',
+   *        plugins: ['typescript-graphql-files-modules'],
+   *        config: {
+   *          // resulting module definition path glob: "*\/api/user-service/queries.graphql"
+   *          modulePathPrefix: "/api/user-service/",
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   modulePathPrefix?: string;

@@ -16,15 +16,21 @@ export interface RawGenericSdkPluginConfig extends RawClientSideBasePluginConfig
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-generic-sdk
-   *  config:
-   *    rawRequest: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-generic-sdk'],
+   *        config: {
+   *          rawRequest: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   rawRequest?: boolean;

@@ -28,14 +28,22 @@ export type NearOperationFileConfig = {
    * If you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.
    *
    * @exampleMarkdown
-   * ```yaml {5}
-   * generates:
-   *   src/:
-   *     preset: near-operation-file
-   *     presetConfig:
-   *       baseTypesPath: types.ts
-   *     plugins:
-   *       - typescript-operations
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'near-operation-file',
+   *        plugins: ['typescript-operations'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   baseTypesPath: string;
@@ -45,15 +53,23 @@ export type NearOperationFileConfig = {
    * If you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   src/:
-   *     preset: near-operation-file
-   *     presetConfig:
-   *       baseTypesPath: types.ts
-   *       importAllFragmentsFrom: '~types'
-   *     plugins:
-   *       - typescript-operations
+   * ```ts filename="codegen.ts" {11}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'near-operation-file',
+   *        plugins: ['typescript-operations'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts',
+   *          importAllFragmentsFrom: '~types'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   importAllFragmentsFrom?: string | FragmentImportFromFn;
@@ -62,16 +78,23 @@ export type NearOperationFileConfig = {
    * @default .generated.ts
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   src/:
-   *     preset: near-operation-file
-   *     presetConfig:
-   *       baseTypesPath: types.ts
-   *       extension: .generated.tsx
-   *     plugins:
-   *       - typescript-operations
-   *       - typescript-react-apollo
+   * ```ts filename="codegen.ts" {11}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'near-operation-file',
+   *        plugins: ['typescript-operations', 'typescript-react-apollo'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts',
+   *          extension: '.generated.tsx',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   extension?: string;
@@ -80,15 +103,23 @@ export type NearOperationFileConfig = {
    * @default process.cwd()
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   src/:
-   *     preset: near-operation-file
-   *     presetConfig:
-   *       baseTypesPath: types.ts
-   *       cwd: /some/path
-   *     plugins:
-   *       - typescript-operations
+   * ```ts filename="codegen.ts" {11}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'near-operation-file',
+   *        plugins: ['typescript-operations'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts',
+   *          cwd: '/some/path'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   cwd?: string;
@@ -97,15 +128,23 @@ export type NearOperationFileConfig = {
    * @default ''
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   src/:
-   *     preset: near-operation-file
-   *     presetConfig:
-   *       baseTypesPath: types.ts
-   *       folder: __generated__
-   *     plugins:
-   *       - typescript-operations
+   * ```ts filename="codegen.ts" {11}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'near-operation-file',
+   *        plugins: ['typescript-operations'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts',
+   *          folder: '__generated__'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   folder?: string;
@@ -114,15 +153,23 @@ export type NearOperationFileConfig = {
    * @default Types
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   src/:
-   *     preset: near-operation-file
-   *     presetConfig:
-   *       baseTypesPath: types.ts
-   *       importTypesNamespace: SchemaTypes
-   *     plugins:
-   *       - typescript-operations
+   * ```ts filename="codegen.ts" {11}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'near-operation-file',
+   *        plugins: ['typescript-operations'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts',
+   *          importTypesNamespace: 'SchemaTypes'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   importTypesNamespace?: string;
