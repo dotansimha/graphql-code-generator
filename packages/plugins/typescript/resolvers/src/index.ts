@@ -76,7 +76,18 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   }
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
-  const visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
+
+  let visitor;
+
+  if (config.customVisitor) {
+    // @TODO: figure out how to use custom-visitor#VisirClass syntax
+    // instead of using default
+    const CustomVistor = require(config.customVisitor).default;
+    visitor = new CustomVistor({ ...config, directiveResolverMappings }, transformedSchema);
+  } else {
+    visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
+  }
+
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
