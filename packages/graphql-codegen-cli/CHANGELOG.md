@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.13.7
+
+### Patch Changes
+
+- [#8481](https://github.com/dotansimha/graphql-code-generator/pull/8481) [`8473682c4`](https://github.com/dotansimha/graphql-code-generator/commit/8473682c48559382b0a3edd4a494aeaf1c5b99ff) Thanks [@charlypoly](https://github.com/charlypoly)! - ensure to generate `codegen.ts` in a typescript setup
+
 ## 2.13.6
 
 ### Patch Changes
