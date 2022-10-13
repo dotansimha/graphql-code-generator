@@ -34,19 +34,31 @@ Just a few configuration steps are required to get the resolvers types generated
 
 Create or update your `codegen.yaml` file as follows:
 
-```yaml
-schema: './src/modules/**/typedefs/*.graphql'
-generates:
-  ./server/src/modules/:
-    preset: graphql-modules
-    presetConfig:
-      baseTypesPath: ../generated-types/graphql.ts # Where to create the complete schema types
-      filename: generated-types/module-types.ts # Where to create each module types
-    plugins:
-      - add:
-          content: '/* eslint-disable */'
-      - typescript
-      - typescript-resolvers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: './src/modules/**/typedefs/*.graphql',
+  generates: {
+    './server/src/modules/': {
+      preset: 'graphql-modules',
+      presetConfig: {
+        baseTypesPath: '../generated-types/graphql.ts',
+        filename: 'generated-types/module-types.ts'
+      },
+      plugins: [
+        {
+          add: {
+            content: '/* eslint-disable */'
+          }
+        },
+        'typescript',
+        'typescript-resolvers'
+      ]
+    }
+  }
+}
+export default config
 ```
 
 ### Run the codegen and update your code
@@ -67,7 +79,7 @@ Running the following generates the `graphql/generated.tsx` file.
 
 The User module resolvers would be:
 
-```tsx filename="src/modules/user/resolvers.ts"
+```ts filename="src/modules/user/resolvers.ts"
 import { UsersModule } from './generated-types/module-types'
 
 export const resolvers: UsersModule.Resolvers = {

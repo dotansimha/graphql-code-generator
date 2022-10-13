@@ -8,14 +8,22 @@ export type ImportTypesConfig = {
    * The key of the output is used a the base path for this file.
    *
    * @exampleMarkdown
-   * ```yaml {5}
-   * generates:
-   *   path/to/file.ts:
-   *     preset: import-types
-   *     presetConfig:
-   *       typesPath: types.ts
-   *     plugins:
-   *       - typescript-operations
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'import-types',
+   *        plugins: ['typescript-operations'],
+   *        presetConfig: {
+   *          typesPath: 'types.ts'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   typesPath: string;
@@ -24,15 +32,23 @@ export type ImportTypesConfig = {
    * @default Types
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   src/:
-   *     preset: import-types
-   *     presetConfig:
-   *       typesPath: types.ts
-   *       importTypesNamespace: SchemaTypes
-   *     plugins:
-   *       - typescript-operations
+   * ```ts filename="codegen.ts" {11}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'import-types',
+   *        plugins: ['typescript-operations'],
+   *        presetConfig: {
+   *          typesPath: 'types.ts',
+   *          importTypesNamespace: 'SchemaTypes',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   importTypesNamespace?: string;

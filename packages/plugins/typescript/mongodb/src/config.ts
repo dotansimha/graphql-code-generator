@@ -6,9 +6,21 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @description Customize the suffix for the generated GraphQL `type`s.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   dbTypeSuffix: MyType
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        // plugins...
+   *        config: {
+   *          dbTypeSuffix: 'MyType'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   dbTypeSuffix?: string;
@@ -17,9 +29,21 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @description Customize the suffix for the generated GraphQL `interface`s.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   dbInterfaceSuffix: MyInterface
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        // plugins...
+   *        config: {
+   *          dbInterfaceSuffix: 'MyInterface'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   dbInterfaceSuffix?: string;
@@ -28,9 +52,21 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @description Customize the type of `_id` fields. You can either specify a type name, or specify `module#type`.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   objectIdType: ./my-models.ts#MyIdType
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        // plugins...
+   *        config: {
+   *          objectIdType: './my-models.ts#MyIdType'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   objectIdType?: string;
@@ -39,9 +75,21 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @description Customize the name of the id field generated after using `@id` directive over a GraphQL field.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   idFieldName: id
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        // plugins...
+   *        config: {
+   *          idFieldName: 'id'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   idFieldName?: string;
@@ -50,9 +98,21 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @description Replaces generated `enum` values with `string`.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   enumsAsString: false
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        // plugins...
+   *        config: {
+   *          enumsAsString: false
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   enumsAsString?: boolean;
@@ -63,14 +123,21 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-mongodb
-   *     config:
-   *       avoidOptionals: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        // plugins...
+   *        config: {
+   *          avoidOptionals: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   avoidOptionals?: boolean;

@@ -24,15 +24,19 @@ This plugin also generates less boilerplate code for your GraphQL operations.
 
 ### Usage example
 
-```yaml
-schema: SCHEMA_FILE_OR_ENDPOINT_HERE
-documents: './src/**/*.graphql'
-generates:
-  ./src/graphql-operations.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typed-document-node
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'SCHEMA_FILE_OR_ENDPOINT_HERE',
+  documents: './src/**/*.graphql',
+  generates: {
+    './src/graphql-operations.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typed-document-node']
+    }
+  }
+}
+export default config
 ```
 
 The example about will generate `TypedDocumentNode` with the needed types built-in, for example:

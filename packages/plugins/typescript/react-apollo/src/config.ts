@@ -11,15 +11,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       withComponent: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          withComponent: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withComponent?: boolean;
@@ -28,15 +34,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       withHOC: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          withHOC: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withHOC?: boolean;
@@ -45,15 +57,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       withHooks: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          withHooks: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withHooks?: boolean;
@@ -62,15 +80,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       withMutationFn: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          withMutationFn: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withMutationFn?: boolean;
@@ -79,15 +103,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       withRefetchFn: false
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          withRefetchFn: false
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withRefetchFn?: boolean;
@@ -123,15 +153,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default 3
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       reactApolloVersion: 2
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          reactApolloVersion: 2
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   reactApolloVersion?: 2 | 3;
@@ -140,15 +176,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       withResultType: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          withResultType: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withResultType?: boolean;
@@ -157,15 +199,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       withMutationOptionsType: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          withMutationOptionsType: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withMutationOptionsType?: boolean;
@@ -175,15 +223,21 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-react-apollo
-   *     config:
-   *       addDocBlocks: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-operations'],
+   *        config: {
+   *          addDocBlocks: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   addDocBlocks?: boolean;

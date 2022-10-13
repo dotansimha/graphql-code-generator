@@ -34,15 +34,19 @@ query Test {
 
 And the following configuration:
 
-```yaml
-schema: YOUR_SCHEMA_HERE
-documents: './src/**/*.graphql'
-generates:
-  ./generated-types.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-apollo
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'YOUR_SCHEMA_HERE',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generated-types.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo']
+    }
+  }
+}
+export default config
 ```
 
 Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a ready-to-use React Hook for each operation you have.
@@ -63,18 +67,44 @@ export const MyComponent: React.FC = () => {
 
 Codegen also supports generating data Components (deprecated in `@apollo/client` v3), you can turn it on this way:
 
-```yaml
-config:
-  withComponent: true
+```ts filename="codegen.ts" {10}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'YOUR_SCHEMA_HERE',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generated-types.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        withComponent: true
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### Generate HOC
 
 Codegen also supports generating High-Order-Components (deprecated in `@apollo/client` v3), you can turn it on this way:
 
-```yaml
-config:
-  withHOC: true
+```ts filename="codegen.ts" {10}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'YOUR_SCHEMA_HERE',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generated-types.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        withHOC: true
+      }
+    }
+  }
+}
+export default config
 ```
 
 <Callout>

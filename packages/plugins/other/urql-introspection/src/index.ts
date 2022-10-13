@@ -21,13 +21,22 @@ export interface UrqlIntrospectionConfig {
    * @default es2015
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   path/to/file.json:
-   *     plugins:
-   *       - urql-introspection
-   *     config:
-   *       module: commonjs
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['urql-introspection'],
+   *        config: {
+   *          module: 'commonjs'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   module?: 'commonjs' | 'es2015';
@@ -39,10 +48,23 @@ export interface UrqlIntrospectionConfig {
    * @description Will use `import type {}` rather than `import {}` when importing only types. This gives
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
-   * @example
-   * ```yaml
-   * config:
-   *   useTypeImports: true
+   * @exampleMarkdown
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['urql-introspection'],
+   *        config: {
+   *          useTypeImports: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   useTypeImports?: boolean;
@@ -52,10 +74,23 @@ export interface UrqlIntrospectionConfig {
    * @default false
    * @description Includes scalar names (instead of an `Any` replacement) in the output when enabled.
    *
-   * @example
-   * ```yaml
-   * config:
-   *   includeScalars: true
+   * @exampleMarkdown
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['urql-introspection'],
+   *        config: {
+   *          includeScalars: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   includeScalars?: boolean;
@@ -65,10 +100,23 @@ export interface UrqlIntrospectionConfig {
    * @default false
    * @description Includes enums (instead of an `Any` replacement) in the output when enabled.
    *
-   * @example
-   * ```yaml
-   * config:
-   *   includeEnums: true
+   * @exampleMarkdown
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['urql-introspection'],
+   *        config: {
+   *          includeEnums: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   includeEnums?: boolean;
@@ -78,10 +126,23 @@ export interface UrqlIntrospectionConfig {
    * @default false
    * @description Includes all input objects (instead of an `Any` replacement) in the output when enabled.
    *
-   * @example
-   * ```yaml
-   * config:
-   *   includeInputs: true
+   * @exampleMarkdown
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['urql-introspection'],
+   *        config: {
+   *          includeInputs: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   includeInputs?: boolean;
@@ -91,10 +152,23 @@ export interface UrqlIntrospectionConfig {
    * @default false
    * @description Includes all directives in the output when enabled.
    *
-   * @example
-   * ```yaml
-   * config:
-   *   includeDirectives: true
+   * @exampleMarkdown
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['urql-introspection'],
+   *        config: {
+   *          includeDirectives: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   includeDirectives?: boolean;

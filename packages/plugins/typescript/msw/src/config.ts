@@ -10,11 +10,24 @@ export interface MSWConfig {
    * @see https://mswjs.io/docs/api/graphql/link
    *
    * @exampleMarkdown
-   * ```yaml
-   *   config:
-   *     link:
-   *       name: stripe
-   *       endpoint: https://api.stripe.com/graphql
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        // plugins...
+   *        config: {
+   *          link: {
+   *            name: 'stripe',
+   *            endpoint: 'https://api.stripe.com/graphql'
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   link?: {

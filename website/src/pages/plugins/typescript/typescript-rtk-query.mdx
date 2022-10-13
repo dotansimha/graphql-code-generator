@@ -19,17 +19,28 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 
 ### Using `graphql-request`
 
-```yaml
-schema: MY_SCHEMA_PATH
-documents: './src/**/*.graphql'
-generates:
-  ./src/app/api/generated.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-rtk-query:
-          importBaseApiFrom: 'src/app/api/baseApi'
-          exportHooks: true
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'MY_SCHEMA_PATH',
+  documents: './src/**/*.graphql',
+  generates: {
+    './src/app/api/generated.ts': {
+      plugins: [
+        'typescript',
+        'typescript-operations',
+        {
+          'typescript-rtk-query': {
+            importBaseApiFrom: 'src/app/api/baseApi',
+            exportHooks: true
+          }
+        }
+      ]
+    }
+  }
+}
+export default config
 ```
 
 The generated `src/app/api/generated.ts` would try to `import { api } from 'src/app/api/baseApi'{:ts}`, so you have to create that file:

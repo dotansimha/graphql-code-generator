@@ -6,14 +6,21 @@ export interface RTKConfig {
    * @description Define where to import the base api to inject endpoints into
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   ./src/app/api/generated.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-rtk-query:
-   *           importBaseApiFrom: 'src/app/api/baseApi'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers', 'typescript-rtk-query'],
+   *        config: {
+   *          importBaseApiFrom: 'src/app/api/baseApi',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   importBaseApiFrom: string;
@@ -24,15 +31,22 @@ export interface RTKConfig {
    *
 
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   ./src/app/api/generated.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-rtk-query:
-   *           importBaseApiFrom: 'src/app/api/baseApi'
-   *           exportHooks: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers', 'typescript-rtk-query'],
+   *        config: {
+   *          importBaseApiFrom: 'src/app/api/baseApi',
+   *          exportHooks: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   exportHooks?: boolean;
@@ -44,17 +58,22 @@ export interface RTKConfig {
    *
 
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   ./src/app/api/generated.ts:
-   *     plugins:
-   *       - add:
-   *           content: 'module.hot?.accept();'
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-rtk-query:
-   *           importBaseApiFrom: 'src/app/api/baseApi'
-   *           overrideExisting: 'module.hot?.status() === "apply"'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers', 'typescript-rtk-query'],
+   *        config: {
+   *          importBaseApiFrom: 'src/app/api/baseApi',
+   *          overrideExisting: 'module.hot?.status() === "apply"'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   overrideExisting?: string;

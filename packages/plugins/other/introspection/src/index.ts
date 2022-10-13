@@ -12,13 +12,22 @@ export interface IntrospectionPluginConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   introspection.json:
-   *     plugins:
-   *       - introspection
-   *     config:
-   *       minify: true
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'introspection.json': {
+   *        plugins: ['introspection'],
+   *        config: {
+   *          minify: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   minify?: boolean;

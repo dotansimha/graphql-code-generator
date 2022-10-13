@@ -60,15 +60,21 @@ Sets the version of react-apollo.
 
 #### Usage Examples
 
-```yaml {8}
-generates:
-path/to/file.ts:
-  plugins:
-    - typescript
-    - typescript-operations
-    - typescript-react-apollo
-  config:
-    reactApolloVersion: 3
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        reactApolloVersion: 3
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `withHOC`
@@ -80,15 +86,21 @@ Customized the output by enabling/disabling the HOC.
 
 #### Usage Examples
 
-```yaml {8}
-generates:
-path/to/file.ts:
-  plugins:
-    - typescript
-    - typescript-operations
-    - typescript-react-apollo
-  config:
-    withHOC: false
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        withHOC: 'I'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `withHooks`
@@ -100,15 +112,21 @@ Customized the output by enabling/disabling the generated React Hooks.
 
 #### Usage Examples
 
-```yaml {8}
-generates:
-path/to/file.ts:
-  plugins:
-    - typescript
-    - typescript-operations
-    - typescript-react-apollo
-  config:
-    withHooks: false
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        withHooks: 'I'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `excludePatterns`
@@ -158,16 +176,40 @@ This is useful if you want to use modules other than `graphql-tag`, e.g. `graphq
 
 ##### graphql.macro
 
-```yaml {2}
-config:
-  gqlImport: graphql.macro#gql
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        gqlImport: 'graphql.macro#gql'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ##### Gatsby
 
-```yaml {2}
-config:
-  gqlImport: gatsby#graphql
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        gqlImport: 'gatsby#graphql'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `noExport`
@@ -258,16 +300,40 @@ This config should be used if `documentMode` is `external`. This has 2 usage:
 
 #### Usage Examples
 
-```yaml {3}
-config:
-  documentMode: external
-  importDocumentNodeExternallyFrom: path/to/document-node-file
+```ts filename="codegen.ts" {10}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file': {
+      // plugins...
+      config: {
+        documentMode: 'external',
+        importDocumentNodeExternallyFrom: 'path/to/document-node-file'
+      }
+    }
+  }
+}
+export default config
 ```
 
-```yaml {3}
-config:
-  documentMode: external
-  importDocumentNodeExternallyFrom: near-operation-file
+```ts filename="codegen.ts" {10}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file': {
+      // plugins...
+      config: {
+        documentMode: 'external',
+        importDocumentNodeExternallyFrom: 'near-operation-file'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `scalars`
@@ -278,11 +344,24 @@ Extends or overrides the built-in scalars and custom GraphQL scalars to a custom
 
 #### Usage Examples
 
-```yaml {2-4}
-config:
-  scalars:
-    DateTime: Date
-    JSON: '{ [key: string]: any }'
+```ts filename="codegen.ts" {10-11}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file': {
+      // plugins...
+      config: {
+        scalars: {
+          DateTime: 'Date',
+          JSON: '{ [key: string]: any }'
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `namingConvention`
@@ -302,34 +381,84 @@ which is to preserve underscores.
 
 ##### Override All Names
 
-```yaml {2}
-config:
-  namingConvention: change-case-all#lowerCase
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file': {
+      // plugins...
+      config: {
+        namingConvention: 'change-case-all#lowerCase'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ##### Upper-case enum values
 
-```yaml {4}
-config:
-  namingConvention:
-    typeNames: change-case-all#pascalCase
-    enumValues: change-case-all#upperCase
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file': {
+      // plugins...
+      config: {
+        namingConvention: {
+          typeNames: 'change-case-all#pascalCase',
+          enumValues: 'change-case-all#upperCase'
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 ##### Keep names as is
 
-```yaml {2}
-config:
-  namingConvention: keep
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file': {
+      // plugins...
+      config: {
+        namingConvention: 'keep'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ##### Remove Underscores
 
-```yaml {4}
-config:
-  namingConvention:
-    typeNames: change-case-all#pascalCase
-    transformUnderscore: true
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file': {
+      // plugins...
+      config: {
+        namingConvention: {
+          typeNames: 'change-case-all#pascalCase',
+          transformUnderscore: true
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `typesPrefix`
@@ -341,9 +470,21 @@ Prefixes all the generated types.
 
 #### Usage Examples
 
-```yaml {2}
-config:
-  typesPrefix: I
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        typesPrefix: 'I'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `skipTypename`
@@ -355,9 +496,21 @@ Does not add `__typename` to the generated types, unless it was specified in the
 
 #### Usage Examples
 
-```yaml {2}
-config:
-  skipTypename: true
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        skipTypename: true
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### `nonOptionalTypename`
@@ -370,7 +523,19 @@ in the selection set, and makes it non-optional.
 
 #### Usage Examples
 
-```yaml {2}
-config:
-  nonOptionalTypename: true
+```ts filename="codegen.ts" {9}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        nonOptionalTypename: true
+      }
+    }
+  }
+}
+export default config
 ```
