@@ -484,6 +484,7 @@ The `client` preset allows the following `config` options:
 - [`namingConvention`](/plugins/typescript/typescript#config-api-reference): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
 - [`useTypeImports`](/plugins/typescript/typescript#config-api-reference): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's `"importsNotUsedAsValues": "error"` option.
 - [`skipTypename`](/plugins/typescript/typescript#config-api-reference): Does not add `__typename` to the generated types, unless it was specified in the selection set.
+- [`enumsAsTypes`](/plugins/typescript/typescript#config-api-reference): Generates enum as TypeScript `type` instead of `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`
 - [`arrayInputCoercion`](/plugins/typescript/typescript-operations#config-api-reference): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
 
 <br />

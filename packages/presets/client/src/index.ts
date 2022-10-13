@@ -78,6 +78,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       useTypeImports: options.config.useTypeImports,
       skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
+      enumsAsTypes: options.config.enumsAsTypes,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
