@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 1.0.7
+
+### Patch Changes
+
+- [#8472](https://github.com/dotansimha/graphql-code-generator/pull/8472) [`a08fb6502`](https://github.com/dotansimha/graphql-code-generator/commit/a08fb6502f5dec6babcb78dbecd621f05a3e300c) Thanks [@panusoi](https://github.com/panusoi)! - The client preset now allows the use of the `enumsAsTypes` config option
+
 ## 1.0.6
 
 ### Patch Changes
