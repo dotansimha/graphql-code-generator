@@ -163,6 +163,24 @@ test('should include import statement', () => {
   `);
 });
 
+test('should include import type statement', () => {
+  const output = buildModule('test', testDoc, {
+    importPath: '../types',
+    importNamespace: 'core',
+    encapsulate: 'none',
+    requireRootResolvers: false,
+    shouldDeclare: false,
+    rootTypes: ROOT_TYPES,
+    baseVisitor,
+    useGraphQLModules: true,
+    useTypeImports: true,
+  });
+
+  expect(output).toBeSimilarStringTo(`
+    import type * as core from "../types";
+  `);
+});
+
 test('should work with naming conventions', () => {
   const output = buildModule('test', parse(`type query_root { test: ID! } schema { query: query_root }`), {
     importPath: '../types',
