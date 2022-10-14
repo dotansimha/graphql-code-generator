@@ -26,12 +26,18 @@ This plugin generates fully-typed `keyFields` and Type-Policies for Apollo-Clien
 
 Start by adding this plugin to your configuration:
 
-```yaml {5}
-schema: my-schema.graphql
-generates:
-  apollo-helpers.ts:
-    plugins:
-      - typescript-apollo-client-helpers
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'my-schema.graphql',
+  generates: {
+    'apollo-helpers.ts': {
+      plugins: ['typescript-apollo-client-helpers']
+    }
+  }
+}
+export default config
 ```
 
 Then, use the generated TypeScript `type` as your signature for `typePolicies`:

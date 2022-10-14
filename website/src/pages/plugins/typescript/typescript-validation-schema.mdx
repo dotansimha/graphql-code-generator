@@ -16,18 +16,21 @@ A plugin for GraphQL Codegen to generate form validation schema (such as [yup](h
 
 Set up your project per the GraphQL Codegen Docs, and specify this plugin in your `codegen.yml`:
 
-```yaml
-generates:
-  path/to/graphql.ts:
-    plugins:
-      - typescript
-      - typescript-validation-schema # Specify to use this plugin
-    config:
-      # You can put the config for typescript plugin here
-      # See: https://graphql-code-generator.com/plugins/typescript
-      strictScalars: true
-      # You can also write the config for this plugin together
-      schema: yup # or zod
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  generates: {
+    'path/to/graphql.ts': {
+      plugins: ['typescript', 'typescript-validation-schema'],
+      config: {
+        strictScalars: true,
+        schema: 'yup'
+      }
+    }
+  }
+}
+export default config
 ```
 
 ## Usage & Documentation

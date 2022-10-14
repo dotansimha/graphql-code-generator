@@ -20,20 +20,25 @@ In order to use this preset, you need to add 2 outputs to your `codegen.yml` fil
 
 This following example generates operation typings and `react-apollo` component per each operation file, near the original file of the operation:
 
-```yaml
-schema: src/schema.json
-documents: 'src/**/*.graphql'
-generates:
-  src/types.ts:
-    - typescript
-  src/:
-    preset: near-operation-file
-    presetConfig:
-      extension: .generated.tsx
-      baseTypesPath: types.ts
-    plugins:
-      - typescript-operations
-      - typescript-react-apollo
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: 'src/schema.json',
+  documents: 'src/**/*.graphql',
+  generates: {
+    'src/types.ts': { plugins: ['typescript'] },
+    'src/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        extension: '.generated.tsx',
+        baseTypesPath: 'types.ts',
+      },
+      plugins: ['typescript-operations', 'typescript-react-apollo'],
+    },
+  },
+};
+export default config;
 ```
 
 **How does it work?**

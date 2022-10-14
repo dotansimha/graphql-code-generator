@@ -3,7 +3,6 @@ import { useTheme, Image } from '@theguild/components';
 import Select from 'react-select';
 import { EXAMPLES } from './examples';
 import { icons } from '@/lib/plugins';
-import { getMode } from './formatter';
 import { generate } from './generate';
 import LiveDemoEditors from './LiveDemoEditors';
 

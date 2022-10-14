@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-react-query
 
+## 4.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`1bd7f771c`](https://github.com/dotansimha/graphql-code-generator/commit/1bd7f771ccb949a5a37395c7c57cb41c19340714)]:
+  - @graphql-codegen/visitor-plugin-common@2.12.2
+
 ## 4.0.1
 
 ### Patch Changes

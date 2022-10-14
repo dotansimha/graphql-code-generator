@@ -15,9 +15,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default 2
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   apolloAngularVersion: 1
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          apolloAngularVersion: 1
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   apolloAngularVersion?: number;
@@ -25,9 +37,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   ngModule: ./path/to/module#MyModule
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          ngModule: './path/to/module#MyModule'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   ngModule?: string;
@@ -35,9 +59,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Defined the global value of `namedClient`.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   namedClient: 'customName'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          namedClient: 'customName'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   namedClient?: string;
@@ -45,9 +81,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Defined the global value of `serviceName`.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   serviceName: 'MySDK'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          serviceName: 'MySDK'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   serviceName?: string;
@@ -55,9 +103,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Defined the global value of `serviceProvidedInRoot`.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   serviceProvidedInRoot: false
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          serviceProvidedInRoot: false
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   serviceProvidedInRoot?: boolean;
@@ -65,9 +125,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @description Define the Injector of the SDK class.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   serviceProvidedIn: ./path/to/module#MyModule
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          serviceProvidedIn: './path/to/module#MyModule'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   serviceProvidedIn?: string;
@@ -81,9 +153,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   querySuffix: 'QueryService'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          querySuffix: 'QueryService'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   querySuffix?: string;
@@ -92,9 +176,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   mutationSuffix: 'MutationService'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          mutationSuffix: 'MutationService'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   mutationSuffix?: string;
@@ -103,9 +199,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default GQL
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   subscriptionSuffix: 'SubscriptionService'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          subscriptionSuffix: 'SubscriptionService'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   subscriptionSuffix?: 'GQL' | string;
@@ -119,11 +227,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default []
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   additionalDI
-   *      - 'testService: TestService'
-   *      - 'testService1': TestService1'
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          additionalDI: ['testService: TestService', 'testService1': TestService1']
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   additionalDI?: string[];
@@ -132,9 +250,21 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   addExplicitOverride: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['apollo-angular'],
+   *        config: {
+   *          addExplicitOverride: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   addExplicitOverride?: boolean;

@@ -62,15 +62,19 @@ const schema = makeExecutableSchema({
 
 And generate code using `gql-gen`:
 
-```yaml
-schema: ./src/my-schema.js
-require:
-  - ts-node/register
-generates:
-  ./src/generated/graphql.ts:
-    plugins:
-      - typescript
-      - typescript-mongodb
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: './src/my-schema.js',
+  require: ['ts-node/register'],
+  generates: {
+    './src/generated/graphql.ts': {
+      plugins: ['typescript', 'typescript-mongodb']
+    }
+  }
+}
+export default config
 ```
 
 At this point, you can add the directives to your GraphQL definitions, and generate your MongoDB models file.

@@ -26,15 +26,21 @@ export interface SchemaASTConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml {8}
-   * schema:
-   *   - './src/schema.graphql'
-   * generates:
-   *   path/to/file.graphql:
-   *     plugins:
-   *       - schema-ast
-   *     config:
-   *       includeDirectives: true
+   * ```tsx {9} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: './src/schema.graphql',
+   *    generates: {
+   *      'path/to/file.graphql': {
+   *        plugins: ['schema-ast'],
+   *        config: {
+   *          includeDirectives: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   includeDirectives?: boolean;
@@ -43,15 +49,21 @@ export interface SchemaASTConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml {8}
-   * schema:
-   *   - './src/schema.graphql'
-   * generates:
-   *   path/to/file.graphql:
-   *     plugins:
-   *       - schema-ast
-   *     config:
-   *       includeIntrospectionTypes: true
+   * ```tsx {9} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: './src/schema.graphql',
+   *    generates: {
+   *      'path/to/file.graphql': {
+   *        plugins: ['schema-ast'],
+   *        config: {
+   *          includeIntrospectionTypes: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   includeIntrospectionTypes?: boolean;
@@ -60,14 +72,21 @@ export interface SchemaASTConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml {7}
-   * schema: http://localhost:3000/graphql
-   * generates:
-   *   schema.graphql:
-   *     plugins:
-   *       - schema-ast
-   *     config:
-   *       commentDescriptions: true
+   * ```tsx {9} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: './src/schema.graphql',
+   *    generates: {
+   *      'path/to/file.graphql': {
+   *        plugins: ['schema-ast'],
+   *        config: {
+   *          commentDescriptions: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   commentDescriptions?: boolean;

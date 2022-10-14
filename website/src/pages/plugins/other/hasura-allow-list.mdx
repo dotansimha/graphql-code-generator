@@ -16,12 +16,18 @@ This can be useful to keep your allow list and front end code in sync.
 
 ## Examples
 
-```yaml {5}
-# …
-generates:
-  path/to/metadata/allow_list.yaml:
-    plugins:
-      - hasura-allow-list
+```ts filename="codegen.ts" {7}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/metadata/allow_list.yaml': {
+      plugins: ['hasura-allow-list']
+    }
+  }
+}
+export default config
 ```
 
 <PluginApiDocs />

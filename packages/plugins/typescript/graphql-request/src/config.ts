@@ -10,15 +10,21 @@ export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginCo
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-graphql-request
-   *     config:
-   *       rawRequest: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-graphql-request'],
+   *        config: {
+   *          rawRequest: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   rawRequest?: boolean;
@@ -28,10 +34,22 @@ export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginCo
    * @default any
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   rawRequest: true
-   *   extensionsType: unknown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-graphql-request'],
+   *        config: {
+   *          rawRequest: true,
+   *          extensionsType: 'unknown'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   extensionsType?: string;
