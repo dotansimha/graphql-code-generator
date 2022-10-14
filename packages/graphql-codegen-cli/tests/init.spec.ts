@@ -10,7 +10,6 @@ import { guessTargets } from '../src/init/targets.js';
 import { plugins } from '../src/init/plugins.js';
 import { bold } from '../src/init/helpers.js';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
-import { load } from 'js-yaml';
 
 jest.mock('fs');
 const { version } = require('../package.json');
@@ -196,7 +195,7 @@ describe('init', () => {
 
       // expected plugins
       expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/cli');
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/client');
+      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/client-preset');
       // should not have other plugins
       expect(Object.keys(pkg.devDependencies)).toHaveLength(2);
     });
@@ -225,16 +224,9 @@ describe('init', () => {
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-      const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+      const config = writeFileSpy.mock.calls[0][1] as string;
 
-      // should use default output path
-      expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
-
-      const output: any = config.generates['src/generated/graphql.tsx'];
-      expect(output.plugins).toContainEqual('typescript');
-      expect(output.plugins).toContainEqual('typescript-operations');
-      expect(output.plugins).toContainEqual('typescript-stencil-apollo');
-      expect(output.plugins).toHaveLength(3);
+      expect(config).toMatchSnapshot();
 
       // expected plugins
       expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
@@ -269,15 +261,9 @@ describe('init', () => {
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-      const config = load(writeFileSpy.mock.calls[0][1] as string) as Record<string, any>;
+      const config = writeFileSpy.mock.calls[0][1] as string;
 
-      // should use default output path
-      expect(config.generates['src/generated/graphql.ts']).toBeDefined();
-
-      const output: any = config.generates['src/generated/graphql.ts'];
-      expect(output.plugins).toContainEqual('typescript');
-      expect(output.plugins).toContainEqual('typescript-resolvers');
-      expect(output.plugins).toHaveLength(2);
+      expect(config).toMatchSnapshot();
 
       // expected plugins
       expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');

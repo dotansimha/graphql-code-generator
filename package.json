@@ -16,8 +16,8 @@
     "ci:lint": "eslint --ext .ts . --output-file eslint_report.json --format json",
     "prerelease": "yarn build",
     "release": "changeset publish",
-    "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env",
-    "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.yml dotenv_config_path=dev-test/.env",
+    "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
+    "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "generate:examples": "yarn generate:examples:cjs"
   },
   "workspaces": [
@@ -43,7 +43,7 @@
     "@graphql-typed-document-node/core": "3.1.1",
     "@reduxjs/toolkit": "1.8.5",
     "@tanstack/react-query": "4.2.3",
-    "@theguild/prettier-config": "0.0.3",
+    "@theguild/prettier-config": "0.1.1",
     "@types/common-tags": "1.8.1",
     "@types/jest": "28.1.8",
     "@types/mkdirp": "1.0.2",
@@ -72,7 +72,7 @@
     "flow-bin": "0.186.0",
     "flow-parser": "0.186.0",
     "fs-extra": "10.1.0",
-    "globby": "^13.1.2",
+    "globby": "13.1.2",
     "graphql": "16.6.0",
     "graphql-tag": "2.12.6",
     "husky": "8.0.1",

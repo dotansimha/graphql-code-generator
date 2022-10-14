@@ -103,7 +103,7 @@ export async function writePackage(answers: Answers, configLocation: string) {
 
   pkg.devDependencies['@graphql-codegen/cli'] = await getLatestVersion('@graphql-codegen/cli');
   if (answers.targets.includes(Tags.client)) {
-    pkg.devDependencies['@graphql-codegen/client'] = await getLatestVersion('@graphql-codegen/client');
+    pkg.devDependencies['@graphql-codegen/client-preset'] = await getLatestVersion('@graphql-codegen/client-preset');
   }
 
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));

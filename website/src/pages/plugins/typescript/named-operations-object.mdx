@@ -27,15 +27,19 @@ export const namedOperations = {
 
 Include the plugin within your output (into an existing `.js`/`.ts` file, or a new file), for example:
 
-```yaml
-schema: YOUR_SCHEMA
-documents: YOUR_OPERATIONS
-generates:
-  ./types.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - named-operations-object
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'YOUR_SCHEMA',
+  documents: 'YOUR_OPERATIONS',
+  generates: {
+    './types.ts': {
+      plugins: ['typescript', 'typescript-operations', 'named-operations-object']
+    }
+  }
+}
+export default config
 ```
 
 ### Refetch queries without input parameters

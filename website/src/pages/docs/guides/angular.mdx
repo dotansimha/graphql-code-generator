@@ -91,7 +91,12 @@ Just a few configuration steps are required to get those Apollo services:
 
 <PackageCmd
   packages={[
-    '-D @graphql-codegen/typescript-apollo-angular @graphql-codegen/typescript @graphql-codegen/typescript-operations'
+    'graphql',
+    '-D typescript',
+    '-D @graphql-codegen/cli',
+    '-D @graphql-codegen/typescript',
+    '-D @graphql-codegen/typescript-operations',
+    '-D @graphql-codegen/typescript-apollo-angular'
   ]}
 />
 
@@ -99,15 +104,19 @@ Just a few configuration steps are required to get those Apollo services:
 
 Create or update your `codegen.yaml` file as follows:
 
-```yaml
-schema: http://my-graphql-api.com/graphql
-documents: './src/**/*.ts'
-generates:
-  ./graphql/generated.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-apollo-angular
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://my-graphql-api.com/graphql',
+  documents: './src/**/*.ts',
+  generates: {
+    './graphql/generated.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-apollo-angular']
+    }
+  }
+}
+export default config
 ```
 
 <Callout>

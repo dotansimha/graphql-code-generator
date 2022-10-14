@@ -6,14 +6,22 @@ export type ModulesConfig = {
    * The key of the output is used a base path for this file.
    *
    * @example
-   * ```yaml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *  plugins:
-   *    - typescript-resolvers
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'modules',
+   *        plugins: ['typescript-resolvers'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   baseTypesPath: string;
@@ -32,15 +40,23 @@ export type ModulesConfig = {
    * @default process.cwd()
    *
    * @example
-   * ```yaml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    cwd: /some/path
-   *  plugins:
-   *    - typescript-resolvers
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'modules',
+   *        plugins: ['typescript-resolvers'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts',
+   *          cwd: '/some/path'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   cwd?: string;
@@ -51,15 +67,23 @@ export type ModulesConfig = {
    * @default Types
    *
    * @example
-   * ```yaml
-   * generates:
-   * src/:
-   *  preset: modules
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importTypesNamespace: core
-   *  plugins:
-   *    - typescript-resolvers
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'modules',
+   *        plugins: ['typescript-resolvers'],
+   *        presetConfig: {
+   *          baseTypesPath: 'types.ts',
+   *          importTypesNamespace: 'core'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   importTypesNamespace?: string;

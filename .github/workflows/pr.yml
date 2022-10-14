@@ -10,6 +10,14 @@ jobs:
     secrets:
       githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
 
+  algolia:
+    uses: the-guild-org/shared-config/.github/workflows/algolia-integrity.yml@main
+    with:
+      domain: https://www.the-guild.dev/graphql/codegen/
+      source: 'Code Generator'
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
+
   release:
     uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
     with:

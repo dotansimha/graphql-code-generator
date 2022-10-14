@@ -291,6 +291,12 @@ export const PACKAGES: Record<
     icon: 'typescript',
     tags: ['plugin', 'typescript'],
   },
+  'typescript-mock-data': {
+    title: 'TypeScript Mock Data',
+    npmPackage: 'graphql-codegen-typescript-mock-data',
+    icon: 'typescript',
+    tags: ['plugin', 'typescript'],
+  },
   'typescript-mongodb': {
     title: 'TypeScript MongoDB',
     npmPackage: '@graphql-codegen/typescript-mongodb',

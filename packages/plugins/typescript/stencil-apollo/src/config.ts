@@ -11,15 +11,21 @@ export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginCon
    * @default functional
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-stencil-apollo
-   *  config:
-   *    componentType: class
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers', 'typescript-stencil-apollo'],
+   *        config: {
+   *          componentType: 'class'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   componentType?: StencilComponentType;

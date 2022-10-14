@@ -44,16 +44,40 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * @exampleMarkdown
    * ## graphql.macro
    *
-   * ```yaml
-   * config:
-   *   gqlImport: graphql.macro#gql
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          gqlImport: 'graphql.macro#gql'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * ## Gatsby
    *
-   * ```yaml
-   * config:
-   *   gqlImport: gatsby#graphql
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          gqlImport: 'gatsby#graphql'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   gqlImport?: string;
@@ -136,16 +160,40 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   documentMode: external
-   *   importDocumentNodeExternallyFrom: path/to/document-node-file
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          documentMode: 'external',
+   *          importDocumentNodeExternallyFrom: 'path/to/document-node-file',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
-   * ```yaml
-   * config:
-   *   documentMode: external
-   *   importDocumentNodeExternallyFrom: near-operation-file
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          documentMode: 'external',
+   *          importDocumentNodeExternallyFrom: 'near-operation-file',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    */
@@ -483,9 +531,12 @@ export class ClientSideBaseVisitor<
       case DocumentMode.external: {
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-            this._imports.add(
-              `import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}.js';`
-            );
+            let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
+            if (this.config.emitLegacyCommonJSImports) {
+              documentPath += '.js';
+            }
+
+            this._imports.add(`import * as Operations from '${documentPath}';`);
           } else {
             if (!this.config.importDocumentNodeExternallyFrom) {
               // eslint-disable-next-line no-console

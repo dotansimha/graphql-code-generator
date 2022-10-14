@@ -71,7 +71,11 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
       name: 'config',
       message: 'How to name the config file?',
       default: answers =>
-        answers.targets.includes(Tags.client) || answers.targets.includes(Tags.angular) ? 'codegen.ts' : 'codegen.yml',
+        answers.targets.includes(Tags.client) ||
+        answers.targets.includes(Tags.typescript) ||
+        answers.targets.includes(Tags.angular)
+          ? 'codegen.ts'
+          : 'codegen.yml',
       validate: (str: string) => {
         const isNotEmpty = str.length > 0;
         const hasCorrectExtension = ['json', 'yml', 'yaml', 'js', 'ts'].some(ext =>

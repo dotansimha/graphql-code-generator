@@ -12,15 +12,21 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo
-   *     config:
-   *       withCompositionFunctions: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo'],
+   *        config: {
+   *          withCompositionFunctions: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withCompositionFunctions?: boolean;
@@ -29,15 +35,21 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default @vue/apollo-composable
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo
-   *     config:
-   *       vueApolloComposableImportFrom: vue
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo'],
+   *        config: {
+   *          vueApolloComposableImportFrom: 'vue'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueApolloComposableImportFrom?: 'vue' | '@vue/apollo-composable' | string;
@@ -46,15 +58,21 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default @vue/composition-api
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo
-   *     config:
-   *       vueCompositionApiImportFrom: vue
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo'],
+   *        config: {
+   *          vueCompositionApiImportFrom: 'vue'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueCompositionApiImportFrom?: 'vue' | '@vue/composition-api' | string;
@@ -64,15 +82,21 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo
-   *     config:
-   *       addDocBlocks: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo'],
+   *        config: {
+   *          addDocBlocks: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   addDocBlocks?: boolean;

@@ -30,9 +30,7 @@ function generateContentForSchema(schema: TJS.Definition): string {
       const prop = schema.properties![propName] as TJS.Definition;
 
       return `<details>
-  <summary className="flex items-center">
-   ${propName}
-  </summary>
+  <summary>${propName}</summary>
 
   type: \`${printType(prop)}\`
   ${prop.default !== undefined ? `default: \`${prop.default === '' ? '(empty)' : prop.default}\`\n` : ''}

@@ -25,5 +25,6 @@
   "typescript-validation-schema": "validation-schema",
   "typescript-vue-apollo": "vue-apollo",
   "typescript-vue-apollo-smart-ops": "vue-apollo-smart-ops",
-  "typescript-vue-urql": "vue-urql"
+  "typescript-vue-urql": "vue-urql",
+  "typescript-mock-data": "typescript-mock-data"
 }
