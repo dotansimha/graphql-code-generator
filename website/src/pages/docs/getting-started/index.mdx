@@ -268,7 +268,10 @@ const config: CodegenConfig = {
    schema: 'https://localhost:4000/graphql',
    documents: ['src/**/*.tsx'],
    generates: {
-      './src/gql/': { preset: 'client' }
+      './src/gql/': {
+        preset: 'client',
+        plugins: []
+      }
    }
 }
 export default config
