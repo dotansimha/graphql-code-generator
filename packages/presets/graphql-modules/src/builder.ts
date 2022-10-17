@@ -48,6 +48,7 @@ export function buildModule(
     schema,
     baseVisitor,
     useGraphQLModules,
+    useTypeImports = false,
   }: {
     importNamespace: string;
     importPath: string;
@@ -58,6 +59,7 @@ export function buildModule(
     baseVisitor: BaseVisitor;
     schema?: GraphQLSchema;
     useGraphQLModules: boolean;
+    useTypeImports?: boolean;
   }
 ): string {
   const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
@@ -118,10 +120,10 @@ export function buildModule(
   //
 
   // An actual output
-  const imports = [`import * as ${importNamespace} from "${importPath}";`];
+  const imports = [`import${useTypeImports ? ' type' : ''} * as ${importNamespace} from "${importPath}";`];
 
   if (useGraphQLModules) {
-    imports.push(`import * as gm from "graphql-modules";`);
+    imports.push(`import${useTypeImports ? ' type' : ''} * as gm from "graphql-modules";`);
   }
 
   let content = [
