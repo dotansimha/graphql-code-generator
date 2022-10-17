@@ -77,13 +77,13 @@ ${this.getFetchParams()}
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
-      _pageParamKey: keyof ${operationVariablesTypes},
+      pageParamKey: keyof ${operationVariablesTypes},
       ${variables},
       ${options}
     ) =>
     ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
-      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})(),
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, {...variables, [pageParamKey]: metaData.pageParam })(),
       options
     );`;
   }

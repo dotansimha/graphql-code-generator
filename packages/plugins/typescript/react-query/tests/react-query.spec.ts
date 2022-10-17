@@ -87,13 +87,13 @@ export const useInfiniteTestQuery = <
       TError = unknown
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      _pageParamKey: keyof TestQueryVariables,
+      pageParamKey: keyof TestQueryVariables,
       variables?: TestQueryVariables,
       options?: UseInfiniteQueryOptions<TestQuery, TError, TData>
     ) =>
     useInfiniteQuery<TestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      (metaData) => fetcher<TestQuery, TestQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, TestDocument, {...variables, [pageParamKey]: metaData.pageParam })(),
       options
     );
 
@@ -263,12 +263,13 @@ export const useTestMutation = <
       TData = TTestQuery,
       TError = unknown
     >(
+      pageParamKey: keyof TTestQueryVariables,
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
     ) =>{
     return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, [pageParamKey]: metaData.pageParam })(),
       options
     )};`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
@@ -358,13 +359,14 @@ export const useTestMutation = <
       TData = TTestQuery,
       TError = unknown
     >(
+      pageParamKey: keyof TTestQueryVariables,
       variables?: TTestQueryVariables,
       options?: UseInfiniteQueryOptions<TTestQuery, TError, TData>
     ) =>{
       const query = useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument)
       return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => query({...variables, ...(metaData.pageParam ?? {})}),
+      (metaData) => query({...variables, [pageParamKey]: metaData.pageParam }),
       options
     )};`);
       expect(out.content).toBeSimilarStringTo(`export const useTestMutation = <
