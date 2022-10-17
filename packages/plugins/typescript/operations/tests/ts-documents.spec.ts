@@ -3,6 +3,7 @@ import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { plugin } from '../src/index.js';
 import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
@@ -6438,6 +6439,36 @@ function test(q: GetEntityBrandDataQuery): void {
           ) | null };
 
         export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName': 'UserFragmentFragment' };
+      `);
+    });
+  });
+
+  describe('when using stripIgnoredCharacters option', () => {
+    it('correctly removes unused chars', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        // @ts-expect-error This is a config option from client side visitor we want to pass in
+        { stripIgnoredCharacters: true },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string };
       `);
     });
   });

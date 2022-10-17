@@ -29,6 +29,7 @@ function isStreamOperation(operationAST: OperationDefinitionNode) {
 }
 
 export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPluginConfig, GenericSdkPluginConfig> {
+  private _externalImportPrefix: string;
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -56,6 +57,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
     } else if (this.config.rawRequest) {
       this._additionalImports.push(`${importType} { ExecutionResult } from 'graphql';`);
     }
+    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
   }
 
   protected buildOperation(
@@ -84,6 +86,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
     const usingObservable = !!this.config.usingObservableFrom;
     const allPossibleActions = this._operationsToInclude
       .map(o => {
+        const operationName = o.node.name.value;
         const optionalVariables =
           !o.node.variableDefinitions ||
           o.node.variableDefinitions.length === 0 ||
@@ -92,7 +95,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
         const resultData = this.config.rawRequest
           ? `ExecutionResult<${o.operationResultType}, E>`
           : o.operationResultType;
-        return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
+        return `${operationName}(variables${optionalVariables ? '?' : ''}: ${
           o.operationVariablesTypes
         }, options?: C): ${returnType}<${resultData}> {
   return requester<${o.operationResultType}, ${o.operationVariablesTypes}>(${
@@ -100,6 +103,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawGenericSdkPlugin
         }, variables, options) as ${returnType}<${resultData}>;
 }`;
       })
+      .filter(Boolean)
       .map(s => indentMultiline(s, 2));
 
     const documentNodeType = this.config.documentMode === DocumentMode.string ? 'string' : 'DocumentNode';
