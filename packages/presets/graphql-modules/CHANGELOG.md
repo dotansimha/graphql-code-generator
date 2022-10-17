@@ -1,5 +1,11 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 2.5.3
+
+### Patch Changes
+
+- [#8486](https://github.com/dotansimha/graphql-code-generator/pull/8486) [`08add4e88`](https://github.com/dotansimha/graphql-code-generator/commit/08add4e88af8fd05172cbb8f7973952155c43b4a) Thanks [@jycouet](https://github.com/jycouet)! - handle global config.useTypeImports in graphql-modules
+
 ## 2.5.2
 
 ### Patch Changes
