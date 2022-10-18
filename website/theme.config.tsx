@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint sort-keys: error */
-import { CodeGeneratorLogo, defineConfig } from '@theguild/components';
+import { CodeGeneratorLogo, defineConfig, Giscus, useTheme } from '@theguild/components';
+import { useRouter } from 'next/router';
 
 const SITE_NAME = 'GraphQL Code Generator';
 
@@ -21,5 +23,27 @@ export default defineConfig({
       </div>
     </>
   ),
+  main: {
+    extraContent() {
+      const { resolvedTheme } = useTheme();
+      const { route } = useRouter();
+
+      if (route === '/') {
+        return null;
+      }
+      return (
+        <Giscus
+          // ensure giscus is reloaded when client side route is changed
+          key={route}
+          repo="dotansimha/graphql-code-generator"
+          repoId="MDEwOlJlcG9zaXRvcnk3NTY1Nzc5MA=="
+          category="Docs Discussions"
+          categoryId="DIC_kwDOBIJyPs4CSDSK"
+          mapping="pathname"
+          theme={resolvedTheme}
+        />
+      );
+    },
+  },
   titleSuffix: ` – ${SITE_NAME}`,
 });
