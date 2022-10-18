@@ -18,7 +18,7 @@ export function processSources(sources: Array<Source>, buildName: BuildNameFunct
       if (definition.name?.kind !== `Name`) {
         if (definition?.kind === `OperationDefinition`) {
           // eslint-disable-next-line no-console
-          console.warn(`the following anonymous operation is skipped: ${source.rawSDL}`);
+          console.warn(`[client-preset] the following anonymous operation is skipped: ${source.rawSDL}`);
         }
         continue;
       }

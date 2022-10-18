@@ -69,11 +69,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
     if (!isOutputFolder(options.baseOutputDir)) {
-      throw new Error('target output should be a directory');
+      throw new Error('[client-preset] target output should be a directory');
     }
 
     if (options.plugins.length > 0) {
-      throw new Error('providing `plugins` with `preset: "client" leads to duplicated generated types');
+      throw new Error('[client-preset] providing `plugins` with `preset: "client" leads to duplicated generated types');
     }
 
     const reexports: Array<string> = [];
