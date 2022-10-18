@@ -586,7 +586,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       if (this._config.inlineFragmentTypes === 'combine') {
         fields.push(...fragmentsSpreadUsages);
       } else if (this._config.inlineFragmentTypes === 'mask') {
-        fields.push(`{ ' $fragmentRefs': { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
+        fields.push(`{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
       }
     }
 
