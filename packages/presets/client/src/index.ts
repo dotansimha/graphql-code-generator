@@ -72,6 +72,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       throw new Error('target output should be a directory');
     }
 
+    if (options.plugins.length > 0) {
+      throw new Error('providing `plugins` with `preset: "client" leads to duplicated generated types');
+    }
+
     const reexports: Array<string> = [];
 
     // the `client` preset is restricting the config options inherited from `typescript`, `typescript-operations` and others.
