@@ -3,6 +3,7 @@ import type { Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
+import { statSync } from 'fs';
 
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources.js';
@@ -67,6 +68,10 @@ export type ClientPresetConfig = {
 export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
+    if (!statSync(options.baseOutputDir).isDirectory()) {
+      throw new Error('target output should be a directory');
+    }
+
     const reexports: Array<string> = [];
 
     // the `client` preset is restricting the config options inherited from `typescript`, `typescript-operations` and others.
