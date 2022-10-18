@@ -245,7 +245,7 @@ export * from "./fragment-masking"`);
 
       export type BQuery = { __typename?: 'Query', b?: string | null };
 
-      export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName': 'CFragment' };
+      export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
 
       export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -454,9 +454,9 @@ export * from "./fragment-masking"`);
           infer TType,
           any
         >
-          ? TType extends { ' $fragmentName': infer TKey }
+          ? TType extends { ' $fragmentName'?: infer TKey }
             ? TKey extends string
-              ? { ' $fragmentRefs': { [key in TKey]: TType } }
+              ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
               : never
             : never
           : never;
