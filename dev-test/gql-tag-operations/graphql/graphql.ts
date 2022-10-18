@@ -117,7 +117,7 @@ export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
 export type BarQuery = {
   __typename?: 'Query';
-  Tweets?: Array<({ __typename?: 'Tweet' } & { ' $fragmentRefs': { LelFragment: LelFragment } }) | null> | null;
+  Tweets?: Array<({ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }) | null> | null;
 };
 
 export const LelFragmentDoc = {

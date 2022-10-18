@@ -247,8 +247,8 @@ export type HeroDetailsWithFragmentQueryVariables = Exact<{
 export type HeroDetailsWithFragmentQuery = {
   __typename?: 'Query';
   hero?:
-    | ({ __typename?: 'Droid' } & { ' $fragmentRefs': { HeroDetails_Droid_Fragment: HeroDetails_Droid_Fragment } })
-    | ({ __typename?: 'Human' } & { ' $fragmentRefs': { HeroDetails_Human_Fragment: HeroDetails_Human_Fragment } })
+    | ({ __typename?: 'Droid' } & { ' $fragmentRefs'?: { HeroDetails_Droid_Fragment: HeroDetails_Droid_Fragment } })
+    | ({ __typename?: 'Human' } & { ' $fragmentRefs'?: { HeroDetails_Human_Fragment: HeroDetails_Human_Fragment } })
     | null;
 };
 
