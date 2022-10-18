@@ -2,11 +2,20 @@ import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { validateTs } from '@graphql-codegen/testing';
-import { readFileSync } from 'fs';
+import * as fs from 'fs';
 import path from 'path';
 import { preset } from '../src/index.js';
+import { isOutputFolder } from '../src/isOutputFolder.js';
+
+jest.mock('../src/isOutputFolder.js');
 
 describe('client-preset', () => {
+  beforeEach(() => {
+    jest.mocked(isOutputFolder).mockReturnValue(true);
+  });
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
   it('can generate simple examples uppercase names', async () => {
     const result = await executeCodegen({
       schema: [
@@ -553,7 +562,7 @@ export * from "./fragment-masking"`);
 
       const content = mergeOutputs([
         ...result,
-        readFileSync(docPath, 'utf8'),
+        fs.readFileSync(docPath, 'utf8'),
         `
         function App(props: { data: FooQuery }) {
           const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
@@ -593,7 +602,7 @@ export * from "./fragment-masking"`);
 
       const content = mergeOutputs([
         ...result,
-        readFileSync(docPath, 'utf8'),
+        fs.readFileSync(docPath, 'utf8'),
         `
         function App(props: { data: FoosQuery }) {
           const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);

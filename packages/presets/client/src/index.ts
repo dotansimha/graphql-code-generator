@@ -3,13 +3,13 @@ import type { Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
-import { statSync } from 'fs';
 
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import { processSources } from './process-sources.js';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import babelOptimizerPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
+import { isOutputFolder } from './isOutputFolder.js';
 
 export type FragmentMaskingConfig = {
   /** @description Name of the function that should be used for unmasking a masked fragment property.
@@ -68,7 +68,7 @@ export type ClientPresetConfig = {
 export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
-    if (!statSync(options.baseOutputDir).isDirectory()) {
+    if (!isOutputFolder(options.baseOutputDir)) {
       throw new Error('target output should be a directory');
     }
 
