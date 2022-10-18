@@ -253,11 +253,11 @@ export type HeroDetailsWithFragmentQuery = {
 };
 
 type HeroDetails_Droid_Fragment = { __typename: 'Droid'; primaryFunction?: string | null; name: string } & {
-  ' $fragmentName': 'HeroDetails_Droid_Fragment';
+  ' $fragmentName'?: 'HeroDetails_Droid_Fragment';
 };
 
 type HeroDetails_Human_Fragment = { __typename: 'Human'; height?: number | null; name: string } & {
-  ' $fragmentName': 'HeroDetails_Human_Fragment';
+  ' $fragmentName'?: 'HeroDetails_Human_Fragment';
 };
 
 export type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
