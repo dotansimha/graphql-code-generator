@@ -683,7 +683,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     const fragmentTypeName = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
     const fragmentMaskPartial =
-      this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName': '${fragmentTypeName}' }` : '';
+      this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName'?: '${fragmentTypeName}' }` : '';
 
     if (subTypes.length === 1) {
       return new DeclarationBlock(declarationBlockConfig)
@@ -701,7 +701,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             .asKind('type')
             .withName(t.name)
             .withContent(
-              `${t.content}${this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName': '${t.name}' }` : ''}`
+              `${t.content}${
+                this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName'?: '${t.name}' }` : ''
+              }`
             ).string
       ),
       new DeclarationBlock(declarationBlockConfig)
