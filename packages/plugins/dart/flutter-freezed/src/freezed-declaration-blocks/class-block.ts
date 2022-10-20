@@ -202,7 +202,7 @@ export class FreezedDeclarationBlock {
           shape = indent(this.getEnumComment(value));
 
           if (this._config.camelCasedEnums ?? true) {
-            shape += `@JsonKey(name: ${value.name.value}) ${value.name.value.toLowerCase()}`;
+            shape += `@JsonKey(name: '${value.name.value}') ${value.name.value.toLowerCase()}`;
           } else {
             shape += value.name.value;
           }
