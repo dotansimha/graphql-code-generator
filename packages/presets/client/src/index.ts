@@ -70,7 +70,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
     if (!isOutputFolderLike(options.baseOutputDir)) {
-      throw new Error('[client-preset] target output should be a directory');
+      throw new Error('[client-preset] target output should be a directory, ex: "src/gql/"');
     }
 
     if (options.plugins.length > 0) {
