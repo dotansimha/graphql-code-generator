@@ -66,7 +66,7 @@ describe('flutter-freezed-plugin-config', () => {
         .toContain(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part graphql_models.dart;
+part 'graphql_models.freezed.dart';
 part 'graphql_models.g.dart';
 `);
 
@@ -74,7 +74,7 @@ part 'graphql_models.g.dart';
         .toContain(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part my_file_name.dart;
+part 'my_file_name.freezed.dart';
 part 'my_file_name.g.dart';
 `);
     });
@@ -116,7 +116,7 @@ part 'my_file_name.g.dart';
       ).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @freezed
@@ -160,7 +160,7 @@ class ComplexType with _$ComplexType {
       ).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @freezed
@@ -208,7 +208,7 @@ class PersonType with _$PersonType {
       expect(result).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @unfreezed
@@ -282,7 +282,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
       expect(result).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @unfreezed
@@ -370,7 +370,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
       ).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @freezed

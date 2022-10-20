@@ -10,7 +10,7 @@ describe('flutter-freezed: plugin config', () => {
     expect(result).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 enum Episode{
