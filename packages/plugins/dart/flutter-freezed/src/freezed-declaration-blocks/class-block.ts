@@ -287,7 +287,7 @@ export class FreezedDeclarationBlock {
 
     // append fromJson
     if (this._freezedConfigValue.get('fromJsonToJson')) {
-      block += indent(`factory ${this._name}.fromJson(Map<String, Object?> json) => _${this._name}FromJson(json);\n`);
+      block += indent(`factory ${this._name}.fromJson(Map<String, Object?> json) => _$${this._name}FromJson(json);\n`);
     }
 
     //append end of class definition
