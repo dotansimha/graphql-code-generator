@@ -198,7 +198,7 @@ export class FreezedDeclarationBlock {
     // handle enums differently
     if (this._node.kind === Kind.ENUM_TYPE_DEFINITION) {
       this._shape = this._node.values
-        ?.map((value: EnumValueDefinitionNode) => {
+        ?.map((value: EnumValueDefinitionNode, index: number, values: readonly EnumValueDefinitionNode[]) => {
           shape = indent(this.getEnumComment(value));
 
           if (this._config.camelCasedEnums ?? true) {
@@ -206,6 +206,11 @@ export class FreezedDeclarationBlock {
           } else {
             shape += value.name.value;
           }
+
+          if (index < values.length - 1) {
+            shape += ',';
+          }
+
           return `${shape}\n`;
         })
         .join('');
