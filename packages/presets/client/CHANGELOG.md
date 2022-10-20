@@ -1,5 +1,22 @@
 # @graphql-codegen/client-preset
 
+## 1.1.0
+
+### Minor Changes
+
+- [#8498](https://github.com/dotansimha/graphql-code-generator/pull/8498) [`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b) Thanks [@charlypoly](https://github.com/charlypoly)! - Fragment masking ` $fragmentName` and ` $fragmentRefs` are optionals
+
+### Patch Changes
+
+- [#8500](https://github.com/dotansimha/graphql-code-generator/pull/8500) [`71aae7a92`](https://github.com/dotansimha/graphql-code-generator/commit/71aae7a92f77ec5ce29631b292d84e066219ea35) Thanks [@charlypoly](https://github.com/charlypoly)! - Add warning and errors to prevent unwanted configuration
+
+- Updated dependencies [[`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.0
+  - @graphql-codegen/gql-tag-operations@1.5.5
+  - @graphql-codegen/typescript-operations@2.5.5
+  - @graphql-codegen/typed-document-node@2.3.5
+  - @graphql-codegen/typescript@2.7.5
+
 ## 1.0.7
 
 ### Patch Changes

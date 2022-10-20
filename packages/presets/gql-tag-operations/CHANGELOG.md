@@ -1,5 +1,20 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.7.0
+
+### Minor Changes
+
+- [#8498](https://github.com/dotansimha/graphql-code-generator/pull/8498) [`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b) Thanks [@charlypoly](https://github.com/charlypoly)! - Fragment masking ` $fragmentName` and ` $fragmentRefs` are optionals
+
+### Patch Changes
+
+- Updated dependencies [[`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.0
+  - @graphql-codegen/gql-tag-operations@1.5.5
+  - @graphql-codegen/typescript-operations@2.5.5
+  - @graphql-codegen/typed-document-node@2.3.5
+  - @graphql-codegen/typescript@2.7.5
+
 ## 1.6.0
 
 ### Minor Changes
