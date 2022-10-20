@@ -64,9 +64,19 @@ export type ClientPresetConfig = {
   gqlTagName?: string;
 };
 
+const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/');
+
 export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
+    if (!isOutputFolderLike(options.baseOutputDir)) {
+      throw new Error('[client-preset] target output should be a directory, ex: "src/gql/"');
+    }
+
+    if (options.plugins.length > 0) {
+      throw new Error('[client-preset] providing `plugins` with `preset: "client" leads to duplicated generated types');
+    }
+
     const reexports: Array<string> = [];
 
     // the `client` preset is restricting the config options inherited from `typescript`, `typescript-operations` and others.
@@ -139,7 +149,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       reexports.push('fragment-masking');
 
       fragmentMaskingFileGenerateConfig = {
-        filename: `${options.baseOutputDir}/fragment-masking${fragmentMaskingArtifactFileExtension}`,
+        filename: `${options.baseOutputDir}fragment-masking${fragmentMaskingArtifactFileExtension}`,
         pluginMap: {
           [`fragment-masking`]: fragmentMaskingPlugin,
         },
@@ -163,7 +173,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     if (reexports.length) {
       indexFileGenerateConfig = {
-        filename: `${options.baseOutputDir}/index.ts`,
+        filename: `${options.baseOutputDir}index.ts`,
         pluginMap: {
           [`add`]: addPlugin,
         },
@@ -182,7 +192,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     return [
       {
-        filename: `${options.baseOutputDir}/graphql.ts`,
+        filename: `${options.baseOutputDir}graphql.ts`,
         plugins,
         pluginMap,
         schema: options.schema,
@@ -193,7 +203,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         documents: sources,
       },
       {
-        filename: `${options.baseOutputDir}/gql${gqlArtifactFileExtension}`,
+        filename: `${options.baseOutputDir}gql${gqlArtifactFileExtension}`,
         plugins: genDtsPlugins,
         pluginMap,
         schema: options.schema,
