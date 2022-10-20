@@ -55,13 +55,13 @@ function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, 
       TError = ${this.visitor.config.errorType}
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      _pageParamKey: keyof ${operationVariablesTypes},
+      pageParamKey: keyof ${operationVariablesTypes},
       ${variables},
       ${options}
     ) =>
     ${hookConfig.infiniteQuery.hook}<${operationResultType}, TError, TData>(
       ${generateInfiniteQueryKey(node, hasRequiredVariables)},
-      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})(),
+      (metaData) => fetcher<${operationResultType}, ${operationVariablesTypes}>(dataSource.endpoint, dataSource.fetchParams || {}, ${documentVariableName}, {...variables, [pageParamKey]: metaData.pageParam })(),
       options
     );`;
   }
