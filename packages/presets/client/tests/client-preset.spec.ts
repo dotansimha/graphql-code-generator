@@ -5,17 +5,8 @@ import { validateTs } from '@graphql-codegen/testing';
 import * as fs from 'fs';
 import path from 'path';
 import { preset } from '../src/index.js';
-import { isOutputFolder } from '../src/isOutputFolder.js';
-
-jest.mock('../src/isOutputFolder.js');
 
 describe('client-preset', () => {
-  beforeEach(() => {
-    jest.mocked(isOutputFolder).mockReturnValue(true);
-  });
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
   it('can generate simple examples uppercase names', async () => {
     const result = await executeCodegen({
       schema: [
@@ -29,7 +20,7 @@ describe('client-preset', () => {
       ],
       documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -85,7 +76,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/simple-lowercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -141,7 +132,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/crlf-operation.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -185,7 +176,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -280,7 +271,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/duplicate-operation.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -359,7 +350,7 @@ export * from "./fragment-masking"`);
         ],
         documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -415,7 +406,7 @@ export * from "./fragment-masking"`);
         ],
         documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -441,7 +432,7 @@ export * from "./fragment-masking"`);
         ],
         documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -550,7 +541,7 @@ export * from "./fragment-masking"`);
         ],
         documents: docPath,
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -590,7 +581,7 @@ export * from "./fragment-masking"`);
         ],
         documents: docPath,
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -627,7 +618,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -684,7 +675,7 @@ export * from "./fragment-masking.js"`);
           `,
         ],
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
           },
