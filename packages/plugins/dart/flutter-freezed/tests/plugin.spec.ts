@@ -14,9 +14,9 @@ part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 enum Episode{
-  @JsonKey(name: NEWHOPE) newhope
-  @JsonKey(name: EMPIRE) empire
-  @JsonKey(name: JEDI) jedi
+  @JsonKey(name: 'NEWHOPE') newhope
+  @JsonKey(name: 'EMPIRE') empire
+  @JsonKey(name: 'JEDI') jedi
 }
 
 @freezed

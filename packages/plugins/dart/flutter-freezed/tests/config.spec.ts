@@ -81,9 +81,9 @@ part 'my_file_name.g.dart';
 
     test('the casing of Enum fields ', () => {
       expect(plugin(enumSchema, [], new DefaultFreezedPluginConfig({ camelCasedEnums: true }))).toContain(`enum Episode{
-  @JsonKey(name: NEWHOPE) newhope
-  @JsonKey(name: EMPIRE) empire
-  @JsonKey(name: JEDI) jedi
+  @JsonKey(name: 'NEWHOPE') newhope
+  @JsonKey(name: 'EMPIRE') empire
+  @JsonKey(name: 'JEDI') jedi
 }`);
 
       expect(plugin(enumSchema, [], new DefaultFreezedPluginConfig({ camelCasedEnums: false })))
