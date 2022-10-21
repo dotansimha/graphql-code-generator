@@ -41,4 +41,11 @@ export type ApolloClientHelpersConfig = {
    *
    */
   requirePoliciesForAllTypes?: boolean;
+  /**
+   * @name baseTypesPath
+   * @type string
+   * @description The base schema types file, used to type `FieldPolicy` and `FieldReadFunction`.
+   *
+   */
+  baseTypesPath?: string;
 };

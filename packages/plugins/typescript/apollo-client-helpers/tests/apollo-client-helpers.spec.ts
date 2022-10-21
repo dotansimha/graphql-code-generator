@@ -56,4 +56,25 @@ describe('apollo-client-helpers', () => {
     expect(result).toContain(`Query?:`);
     expect(result).toMatchSnapshot();
   });
+
+  it('Should output typePolicies object with baseTypesPath: gqltypes', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User!
+      }
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+    const result = mergeOutputs([
+      await plugin(schema, [], {
+        baseTypesPath: 'gqltypes',
+      }),
+    ]);
+    expect(result).toContain(
+      `user?: FieldPolicy<Types.Query['user'], Types.Query['user'] | Reference> | FieldReadFunction<Types.Query['user'], Types.Query['user'] | Reference>`
+    );
+    expect(result).toMatchSnapshot();
+  });
 });

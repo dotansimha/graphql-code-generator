@@ -40,7 +40,13 @@ function generateTypePoliciesSignature(
       );
 
       perTypePolicies.push(`export type ${fieldPolicyVarName} = {
-${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFunction<any>`).join(',\n')}
+${fieldsNames
+  .map(fieldName =>
+    config.baseTypesPath
+      ? `\t${fieldName}?: FieldPolicy<Types.${typeName}['${fieldName}'], Types.${typeName}['${fieldName}'] | Reference> | FieldReadFunction<Types.${typeName}['${fieldName}'], Types.${typeName}['${fieldName}'] | Reference>`
+      : `\t${fieldName}?: FieldPolicy<any> | FieldReadFunction<any>`
+  )
+  .join(',\n')}
 };`);
 
       return {
@@ -73,10 +79,16 @@ ${fieldsNames.map(fieldName => `\t${fieldName}?: FieldPolicy<any> | FieldReadFun
 
   return {
     prepend: [
+      config.baseTypesPath
+        ? `import ${config.useTypeImports ? 'type ' : ''}{ Reference } from '@apollo/client';`
+        : null,
       `import ${
         config.useTypeImports ? 'type ' : ''
       }{ FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';`,
-    ],
+      config.baseTypesPath
+        ? `import ${config.useTypeImports ? 'type ' : ''}* as Types from './${config.baseTypesPath}';`
+        : null,
+    ].filter(Boolean),
     content: [...perTypePolicies, rootContent].join('\n'),
   };
 }

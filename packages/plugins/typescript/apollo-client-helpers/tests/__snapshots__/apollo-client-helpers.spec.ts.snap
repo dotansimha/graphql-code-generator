@@ -24,6 +24,32 @@ export type StrictTypedTypePolicies = {
 export type TypedTypePolicies = StrictTypedTypePolicies & TypePolicies;"
 `;
 
+exports[`apollo-client-helpers Should output typePolicies object with baseTypesPath: gqltypes 1`] = `
+"import { Reference } from '@apollo/client';
+import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
+import * as Types from './gqltypes';
+export type QueryKeySpecifier = ('user' | QueryKeySpecifier)[];
+export type QueryFieldPolicy = {
+	user?: FieldPolicy<Types.Query['user'], Types.Query['user'] | Reference> | FieldReadFunction<Types.Query['user'], Types.Query['user'] | Reference>
+};
+export type UserKeySpecifier = ('id' | 'name' | UserKeySpecifier)[];
+export type UserFieldPolicy = {
+	id?: FieldPolicy<Types.User['id'], Types.User['id'] | Reference> | FieldReadFunction<Types.User['id'], Types.User['id'] | Reference>,
+	name?: FieldPolicy<Types.User['name'], Types.User['name'] | Reference> | FieldReadFunction<Types.User['name'], Types.User['name'] | Reference>
+};
+export type StrictTypedTypePolicies = {
+	Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
+		fields?: QueryFieldPolicy,
+	},
+	User?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
+		fields?: UserFieldPolicy,
+	}
+};
+export type TypedTypePolicies = StrictTypedTypePolicies & TypePolicies;"
+`;
+
 exports[`apollo-client-helpers Should output typePolicies object with requireKeyFields: true 1`] = `
 "import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
 export type QueryKeySpecifier = ('user' | QueryKeySpecifier)[];
