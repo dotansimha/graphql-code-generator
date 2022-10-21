@@ -83,14 +83,14 @@ part 'my_file_name.g.dart';
       expect(plugin(enumSchema, [], new DefaultFreezedPluginConfig({ camelCasedEnums: true }))).toContain(`enum Episode{
   @JsonKey(name: 'NEWHOPE') newhope,
   @JsonKey(name: 'EMPIRE') empire,
-  @JsonKey(name: 'JEDI') jedi
+  @JsonKey(name: 'JEDI') jedi,
 }`);
 
       expect(plugin(enumSchema, [], new DefaultFreezedPluginConfig({ camelCasedEnums: false })))
         .toContain(`enum Episode{
   NEWHOPE,
   EMPIRE,
-  JEDI
+  JEDI,
 }`);
     });
 
