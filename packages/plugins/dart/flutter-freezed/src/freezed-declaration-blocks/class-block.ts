@@ -1,13 +1,13 @@
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { EnumValueDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, Kind, NamedTypeNode } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
+import { EnumValueDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, Kind, NamedTypeNode } from 'graphql';
 import { FlutterFreezedPluginConfig } from '../config.js';
 import {
-  getCustomDecorators,
-  transformCustomDecorators,
   FreezedConfigValue,
   FreezedFactoryBlockRepository,
+  getCustomDecorators,
   NodeType,
+  transformCustomDecorators,
 } from '../utils.js';
 import { FreezedFactoryBlock } from './factory-block.js';
 
@@ -198,7 +198,7 @@ export class FreezedDeclarationBlock {
     // handle enums differently
     if (this._node.kind === Kind.ENUM_TYPE_DEFINITION) {
       this._shape = this._node.values
-        ?.map((value: EnumValueDefinitionNode, index: number, values: readonly EnumValueDefinitionNode[]) => {
+        ?.map((value: EnumValueDefinitionNode) => {
           shape = indent(this.getEnumComment(value));
 
           if (this._config.camelCasedEnums ?? true) {
@@ -207,11 +207,7 @@ export class FreezedDeclarationBlock {
             shape += value.name.value;
           }
 
-          if (index < values.length - 1) {
-            shape += ',';
-          }
-
-          return `${shape}\n`;
+          return `${shape},\n`;
         })
         .join('');
       return this;
