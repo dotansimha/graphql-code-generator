@@ -110,14 +110,14 @@ export type FooQueryVariables = Exact<{ [key: string]: never }>;
 export type FooQuery = { __typename?: 'Query'; Tweets?: Array<{ __typename?: 'Tweet'; id: string } | null> | null };
 
 export type LelFragment = { __typename?: 'Tweet'; id: string; body?: string | null } & {
-  ' $fragmentName': 'LelFragment';
+  ' $fragmentName'?: 'LelFragment';
 };
 
 export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
 export type BarQuery = {
   __typename?: 'Query';
-  Tweets?: Array<({ __typename?: 'Tweet' } & { ' $fragmentRefs': { LelFragment: LelFragment } }) | null> | null;
+  Tweets?: Array<({ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }) | null> | null;
 };
 
 export const LelFragmentDoc = {

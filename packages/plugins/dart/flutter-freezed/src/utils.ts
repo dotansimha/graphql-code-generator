@@ -195,7 +195,7 @@ export function addFreezedImportStatements(fileName: string) {
   return [
     "import 'package:freezed_annotation/freezed_annotation.dart';\n",
     "import 'package:flutter/foundation.dart';\n\n",
-    `part ${fileName.replace(/\.dart/g, '')}.dart;\n`,
+    `part '${fileName.replace(/\.dart/g, '')}.freezed.dart';\n`,
     `part '${fileName.replace(/\.dart/g, '')}.g.dart';\n\n`,
   ].join('');
 }

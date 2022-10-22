@@ -10,13 +10,13 @@ describe('flutter-freezed: plugin config', () => {
     expect(result).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 enum Episode{
-  @JsonKey(name: NEWHOPE) newhope
-  @JsonKey(name: EMPIRE) empire
-  @JsonKey(name: JEDI) jedi
+  @JsonKey(name: 'NEWHOPE') newhope,
+  @JsonKey(name: 'EMPIRE') empire,
+  @JsonKey(name: 'JEDI') jedi,
 }
 
 @freezed
@@ -42,7 +42,7 @@ class Movie with _$Movie {
     required String id,
   }) = DeleteMovieInput;
 
-  factory Movie.fromJson(Map<String, Object?> json) => _MovieFromJson(json);
+  factory Movie.fromJson(Map<String, Object?> json) => _$MovieFromJson(json);
 }
 
 @unfreezed
@@ -54,7 +54,7 @@ class CreateMovieInput with _$CreateMovieInput {
     required String title,
   }) = CreateMovieInput;
 
-  factory CreateMovieInput.fromJson(Map<String, Object?> json) => _CreateMovieInputFromJson(json);
+  factory CreateMovieInput.fromJson(Map<String, Object?> json) => _$CreateMovieInputFromJson(json);
 }
 
 @unfreezed
@@ -67,7 +67,7 @@ class UpsertMovieInput with _$UpsertMovieInput {
     required String title,
   }) = UpsertMovieInput;
 
-  factory UpsertMovieInput.fromJson(Map<String, Object?> json) => _UpsertMovieInputFromJson(json);
+  factory UpsertMovieInput.fromJson(Map<String, Object?> json) => _$UpsertMovieInputFromJson(json);
 }
 
 @unfreezed
@@ -80,7 +80,7 @@ class UpdateMovieInput with _$UpdateMovieInput {
     String? title,
   }) = _UpdateMovieInput;
 
-  factory UpdateMovieInput.fromJson(Map<String, Object?> json) => _UpdateMovieInputFromJson(json);
+  factory UpdateMovieInput.fromJson(Map<String, Object?> json) => _$UpdateMovieInputFromJson(json);
 }
 
 @unfreezed
@@ -92,7 +92,7 @@ class DeleteMovieInput with _$DeleteMovieInput {
     required String id,
   }) = DeleteMovieInput;
 
-  factory DeleteMovieInput.fromJson(Map<String, Object?> json) => _DeleteMovieInputFromJson(json);
+  factory DeleteMovieInput.fromJson(Map<String, Object?> json) => _$DeleteMovieInputFromJson(json);
 }
 
 @Freezed(
@@ -111,7 +111,7 @@ class Starship with _$Starship {
     double? length,
   }) = _Starship;
 
-  factory Starship.fromJson(Map<String, Object?> json) => _StarshipFromJson(json);
+  factory Starship.fromJson(Map<String, Object?> json) => _$StarshipFromJson(json);
 }
 
 @freezed
@@ -124,7 +124,7 @@ class MovieCharacter with _$MovieCharacter {
     required List<Episode?> appearsIn,
   }) = _MovieCharacter;
 
-  factory MovieCharacter.fromJson(Map<String, Object?> json) => _MovieCharacterFromJson(json);
+  factory MovieCharacter.fromJson(Map<String, Object?> json) => _$MovieCharacterFromJson(json);
 }
 
 @freezed
@@ -141,7 +141,7 @@ class Human with _$Human {
     int? totalCredits,
   }) = _Human;
 
-  factory Human.fromJson(Map<String, Object?> json) => _HumanFromJson(json);
+  factory Human.fromJson(Map<String, Object?> json) => _$HumanFromJson(json);
 }
 
 @unfreezed
@@ -194,7 +194,7 @@ class SearchResult with _$SearchResult {
     double? length,
   }) = Starship;
 
-  factory SearchResult.fromJson(Map<String, Object?> json) => _SearchResultFromJson(json);
+  factory SearchResult.fromJson(Map<String, Object?> json) => _$SearchResultFromJson(json);
 }
 
 @freezed
@@ -214,7 +214,7 @@ class ComplexType with _$ComplexType {
     required String i,
   }) = _ComplexType;
 
-  factory ComplexType.fromJson(Map<String, Object?> json) => _ComplexTypeFromJson(json);
+  factory ComplexType.fromJson(Map<String, Object?> json) => _$ComplexTypeFromJson(json);
 }
 
 @unfreezed
@@ -226,7 +226,7 @@ class BaseAInput with _$BaseAInput {
     required BaseBInput b,
   }) = _BaseAInput;
 
-  factory BaseAInput.fromJson(Map<String, Object?> json) => _BaseAInputFromJson(json);
+  factory BaseAInput.fromJson(Map<String, Object?> json) => _$BaseAInputFromJson(json);
 }
 
 @unfreezed
@@ -238,7 +238,7 @@ class BaseBInput with _$BaseBInput {
     required BaseCInput c,
   }) = _BaseBInput;
 
-  factory BaseBInput.fromJson(Map<String, Object?> json) => _BaseBInputFromJson(json);
+  factory BaseBInput.fromJson(Map<String, Object?> json) => _$BaseBInputFromJson(json);
 }
 
 @unfreezed
@@ -250,7 +250,7 @@ class BaseCInput with _$BaseCInput {
     required BaseAInput a,
   }) = _BaseCInput;
 
-  factory BaseCInput.fromJson(Map<String, Object?> json) => _BaseCInputFromJson(json);
+  factory BaseCInput.fromJson(Map<String, Object?> json) => _$BaseCInputFromJson(json);
 }
 
 @freezed
@@ -278,7 +278,7 @@ class Base with _$Base {
     required String title,
   }) = CreateMovieInput;
 
-  factory Base.fromJson(Map<String, Object?> json) => _BaseFromJson(json);
+  factory Base.fromJson(Map<String, Object?> json) => _$BaseFromJson(json);
 }`);
   });
 });

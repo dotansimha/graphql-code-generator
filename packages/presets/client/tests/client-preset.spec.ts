@@ -2,7 +2,7 @@ import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { validateTs } from '@graphql-codegen/testing';
-import { readFileSync } from 'fs';
+import * as fs from 'fs';
 import path from 'path';
 import { preset } from '../src/index.js';
 
@@ -20,7 +20,7 @@ describe('client-preset', () => {
       ],
       documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -76,7 +76,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/simple-lowercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -132,7 +132,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/crlf-operation.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -176,7 +176,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -245,7 +245,7 @@ export * from "./fragment-masking"`);
 
       export type BQuery = { __typename?: 'Query', b?: string | null };
 
-      export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName': 'CFragment' };
+      export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
 
       export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -271,7 +271,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/duplicate-operation.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -350,7 +350,7 @@ export * from "./fragment-masking"`);
         ],
         documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -406,7 +406,7 @@ export * from "./fragment-masking"`);
         ],
         documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -432,7 +432,7 @@ export * from "./fragment-masking"`);
         ],
         documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -454,9 +454,9 @@ export * from "./fragment-masking"`);
           infer TType,
           any
         >
-          ? TType extends { ' $fragmentName': infer TKey }
+          ? TType extends { ' $fragmentName'?: infer TKey }
             ? TKey extends string
-              ? { ' $fragmentRefs': { [key in TKey]: TType } }
+              ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
               : never
             : never
           : never;
@@ -541,7 +541,7 @@ export * from "./fragment-masking"`);
         ],
         documents: docPath,
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -553,7 +553,7 @@ export * from "./fragment-masking"`);
 
       const content = mergeOutputs([
         ...result,
-        readFileSync(docPath, 'utf8'),
+        fs.readFileSync(docPath, 'utf8'),
         `
         function App(props: { data: FooQuery }) {
           const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
@@ -581,7 +581,7 @@ export * from "./fragment-masking"`);
         ],
         documents: docPath,
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
             presetConfig: {
@@ -593,7 +593,7 @@ export * from "./fragment-masking"`);
 
       const content = mergeOutputs([
         ...result,
-        readFileSync(docPath, 'utf8'),
+        fs.readFileSync(docPath, 'utf8'),
         `
         function App(props: { data: FoosQuery }) {
           const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);
@@ -618,7 +618,7 @@ export * from "./fragment-masking"`);
       ],
       documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
       generates: {
-        out1: {
+        'out1/': {
           preset,
           plugins: [],
         },
@@ -675,7 +675,7 @@ export * from "./fragment-masking.js"`);
           `,
         ],
         generates: {
-          out1: {
+          'out1/': {
             preset,
             plugins: [],
           },

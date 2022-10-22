@@ -66,7 +66,7 @@ describe('flutter-freezed-plugin-config', () => {
         .toContain(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part graphql_models.dart;
+part 'graphql_models.freezed.dart';
 part 'graphql_models.g.dart';
 `);
 
@@ -74,23 +74,23 @@ part 'graphql_models.g.dart';
         .toContain(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part my_file_name.dart;
+part 'my_file_name.freezed.dart';
 part 'my_file_name.g.dart';
 `);
     });
 
     test('the casing of Enum fields ', () => {
       expect(plugin(enumSchema, [], new DefaultFreezedPluginConfig({ camelCasedEnums: true }))).toContain(`enum Episode{
-  @JsonKey(name: NEWHOPE) newhope
-  @JsonKey(name: EMPIRE) empire
-  @JsonKey(name: JEDI) jedi
+  @JsonKey(name: 'NEWHOPE') newhope,
+  @JsonKey(name: 'EMPIRE') empire,
+  @JsonKey(name: 'JEDI') jedi,
 }`);
 
       expect(plugin(enumSchema, [], new DefaultFreezedPluginConfig({ camelCasedEnums: false })))
         .toContain(`enum Episode{
-  NEWHOPE
-  EMPIRE
-  JEDI
+  NEWHOPE,
+  EMPIRE,
+  JEDI,
 }`);
     });
 
@@ -116,7 +116,7 @@ part 'my_file_name.g.dart';
       ).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @freezed
@@ -135,7 +135,7 @@ class ComplexType with _$ComplexType {
     required String i,
   }) = _ComplexType;
 
-  factory ComplexType.fromJson(Map<String, Object?> json) => _ComplexTypeFromJson(json);
+  factory ComplexType.fromJson(Map<String, Object?> json) => _$ComplexTypeFromJson(json);
 }`);
     });
 
@@ -160,7 +160,7 @@ class ComplexType with _$ComplexType {
       ).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @freezed
@@ -176,7 +176,7 @@ class BaseType with _$BaseType {
     required String compositeForeignKey,
   }) = _BaseType;
 
-  factory BaseType.fromJson(Map<String, Object?> json) => _BaseTypeFromJson(json);
+  factory BaseType.fromJson(Map<String, Object?> json) => _$BaseTypeFromJson(json);
 }
 
 @freezed
@@ -191,7 +191,7 @@ class PersonType with _$PersonType {
     required String compositeForeignKey,
   }) = _PersonType;
 
-  factory PersonType.fromJson(Map<String, Object?> json) => _PersonTypeFromJson(json);
+  factory PersonType.fromJson(Map<String, Object?> json) => _$PersonTypeFromJson(json);
 }`);
     });
 
@@ -208,7 +208,7 @@ class PersonType with _$PersonType {
       expect(result).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @unfreezed
@@ -220,7 +220,7 @@ class RequestOtpInput with _$RequestOtpInput {
     String? phoneNumber,
   }) = _RequestOtpInput;
 
-  factory RequestOtpInput.fromJson(Map<String, Object?> json) => _RequestOtpInputFromJson(json);
+  factory RequestOtpInput.fromJson(Map<String, Object?> json) => _$RequestOtpInputFromJson(json);
 }
 
 @unfreezed
@@ -233,7 +233,7 @@ class VerifyOtpInput with _$VerifyOtpInput {
     required String otpCode,
   }) = _VerifyOtpInput;
 
-  factory VerifyOtpInput.fromJson(Map<String, Object?> json) => _VerifyOtpInputFromJson(json);
+  factory VerifyOtpInput.fromJson(Map<String, Object?> json) => _$VerifyOtpInputFromJson(json);
 }
 
 @freezed
@@ -253,7 +253,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
     required String otpCode,
   }) = VerifyOtpInput;
 
-  factory AuthWithOtpInput.fromJson(Map<String, Object?> json) => _AuthWithOtpInputFromJson(json);
+  factory AuthWithOtpInput.fromJson(Map<String, Object?> json) => _$AuthWithOtpInputFromJson(json);
 }`);
 
       // disabling the default config
@@ -282,7 +282,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
       expect(result).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @unfreezed
@@ -294,7 +294,7 @@ class RequestOtpInput with _$RequestOtpInput {
     String? phoneNumber,
   }) = _RequestOtpInput;
 
-  factory RequestOtpInput.fromJson(Map<String, Object?> json) => _RequestOtpInputFromJson(json);
+  factory RequestOtpInput.fromJson(Map<String, Object?> json) => _$RequestOtpInputFromJson(json);
 }
 
 @unfreezed
@@ -305,7 +305,7 @@ class VerifyOtpInput with _$VerifyOtpInput {
     required String otpCode,
   }) = _VerifyOtpInput;
 
-  factory VerifyOtpInput.fromJson(Map<String, Object?> json) => _VerifyOtpInputFromJson(json);
+  factory VerifyOtpInput.fromJson(Map<String, Object?> json) => _$VerifyOtpInputFromJson(json);
 }
 
 @freezed
@@ -323,7 +323,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
     required String otpCode,
   }) = VerifyOtpInput;
 
-  factory AuthWithOtpInput.fromJson(Map<String, Object?> json) => _AuthWithOtpInputFromJson(json);
+  factory AuthWithOtpInput.fromJson(Map<String, Object?> json) => _$AuthWithOtpInputFromJson(json);
 }`);
     });
 
@@ -370,7 +370,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
       ).toBe(`import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @freezed
@@ -381,7 +381,7 @@ class BaseAInput with _$BaseAInput {
     required BaseBInput b,
   }) = _BaseAInput;
 
-  factory BaseAInput.fromJson(Map<String, Object?> json) => _BaseAInputFromJson(json);
+  factory BaseAInput.fromJson(Map<String, Object?> json) => _$BaseAInputFromJson(json);
 }
 
 @unfreezed
@@ -392,7 +392,7 @@ class BaseBInput with _$BaseBInput {
     required BaseCInput c,
   }) = _BaseBInput;
 
-  factory BaseBInput.fromJson(Map<String, Object?> json) => _BaseBInputFromJson(json);
+  factory BaseBInput.fromJson(Map<String, Object?> json) => _$BaseBInputFromJson(json);
 }
 
 @unfreezed
@@ -403,7 +403,7 @@ class BaseCInput with _$BaseCInput {
     required BaseAInput a,
   }) = _BaseCInput;
 
-  factory BaseCInput.fromJson(Map<String, Object?> json) => _BaseCInputFromJson(json);
+  factory BaseCInput.fromJson(Map<String, Object?> json) => _$BaseCInputFromJson(json);
 }
 
 @Freezed(

@@ -47,6 +47,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
     operationVariablesTypes: string,
     hasRequiredVariables: boolean
   ): string {
+    const pageParamKey = `pageParamKey: keyof ${operationVariablesTypes}`;
     const variables = `variables${hasRequiredVariables ? '' : '?'}: ${operationVariablesTypes}`;
 
     const hookConfig = this.visitor.queryMethodMap;
@@ -58,13 +59,14 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const implHookOuter = this._isReactHook ? `const query = ${typedFetcher}(${documentVariableName})` : '';
     const impl = this._isReactHook
-      ? `(metaData) => query({...variables, ...(metaData.pageParam ?? {})})`
-      : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, ...(metaData.pageParam ?? {})})()`;
+      ? `(metaData) => query({...variables, [pageParamKey]: metaData.pageParam })`
+      : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, [pageParamKey]: metaData.pageParam })()`;
 
     return `export const useInfinite${operationName} = <
       TData = ${operationResultType},
       TError = ${this.visitor.config.errorType}
     >(
+      ${pageParamKey},
       ${variables},
       ${options}
     ) =>{
