@@ -14,8 +14,8 @@ import {
   FreezedConfig,
   FlutterFreezedPluginConfig,
   TypeSpecificFreezedConfig,
-} from './config.js';
-import { FreezedDeclarationBlock, FreezedFactoryBlock } from './freezed-declaration-blocks/index.js';
+} from './config';
+import { FreezedDeclarationBlock, FreezedFactoryBlock } from './freezed-declaration-blocks';
 
 export type FieldType = FieldDefinitionNode | InputValueDefinitionNode;
 
@@ -90,7 +90,10 @@ export function getCustomDecorators(
 
     if (fieldName) {
       const fieldSpecificCustomDecorators = typeConfig?.fields?.[fieldName]?.customDecorators ?? {};
-      customDecorators = { ...customDecorators, ...fieldSpecificCustomDecorators };
+      customDecorators = {
+        ...customDecorators,
+        ...fieldSpecificCustomDecorators,
+      };
     }
   }
 
@@ -135,7 +138,7 @@ export function transformCustomDecorators(
     if (value.mapsToFreezedAs === 'custom') {
       const args = value?.arguments;
       // if the custom directives have arguments,
-      if (args && args !== []) {
+      if (args) {
         // join them with a comma in the parenthesis
         result = [...result, `${key}(${args.join(', ')})\n`];
       } else {
@@ -169,7 +172,7 @@ function directiveToString(directive: DirectiveNode, customDecorators: CustomDec
       .map(a => `${a.name}: ${a.value}`);
 
     // if the args is not empty
-    if (args !== []) {
+    if (args) {
       // returns "@directiveName(argName: argValue, argName: argValue ...)"
       return `@${directive.name.value}(${args?.join(', ')})\n`;
     }
@@ -238,14 +241,21 @@ export class FreezedFactoryBlockRepository {
     return value;
   }
 
-  retrieve(key: string, appliesOn: string, name: string, typeName: string | undefined): string {
+  retrieve(key: string, appliesOn: string, name: string, namedConstructor: string | undefined = undefined): string {
+    // console.log('key:-->', key, 'appliesOn:-->', appliesOn, 'name:-->', name, 'namedConstructor:-->', namedConstructor);
+
     if (this._store[key]) {
       return (
         this._store[key]
+          .setAppliesOn(appliesOn)
+          .setComment()
           .setDecorators(appliesOn, key)
           .setKey(key)
           .setName(name)
-          .setNamedConstructor(typeName)
+          .setNamedConstructor(namedConstructor)
+          .setParameters()
+          .setShape()
+          .setBlock()
           .init()
           .toString() + '\n'
       );
@@ -268,7 +278,10 @@ export class DefaultFreezedPluginConfig implements FlutterFreezedPluginConfig {
       camelCasedEnums: config.camelCasedEnums ?? true,
       customScalars: config.customScalars ?? {},
       fileName: config.fileName ?? 'app_models',
-      globalFreezedConfig: { ...new DefaultFreezedConfig(), ...(config.globalFreezedConfig ?? {}) },
+      globalFreezedConfig: {
+        ...new DefaultFreezedConfig(),
+        ...(config.globalFreezedConfig ?? {}),
+      },
       typeSpecificFreezedConfig: config.typeSpecificFreezedConfig ?? {},
       ignoreTypes: config.ignoreTypes ?? [],
     });
@@ -280,7 +293,6 @@ export class DefaultFreezedConfig implements FreezedConfig {
   alwaysUseJsonKeyName?: boolean;
   copyWith?: boolean;
   customDecorators?: CustomDecorator;
-  defaultUnionConstructor?: boolean;
   equal?: boolean;
   fromJsonToJson?: boolean;
   immutable?: boolean;
@@ -296,14 +308,13 @@ export class DefaultFreezedConfig implements FreezedConfig {
       alwaysUseJsonKeyName: false,
       copyWith: undefined,
       customDecorators: {},
-      defaultUnionConstructor: true,
       equal: undefined,
       fromJsonToJson: true,
       immutable: true,
       makeCollectionsUnmodifiable: undefined,
       mergeInputs: [],
       mutableInputs: true,
-      privateEmptyConstructor: true,
+      privateEmptyConstructor: false,
       unionKey: undefined,
       unionValueCase: undefined,
     });

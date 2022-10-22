@@ -1,10 +1,10 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { GraphQLSchema } from 'graphql';
-import { FlutterFreezedPluginConfig } from './config.js';
-import { FreezedDeclarationBlock } from './freezed-declaration-blocks/index.js';
-import { schemaVisitor } from './schema-visitor.js';
-import { addFreezedImportStatements, DefaultFreezedPluginConfig } from './utils.js';
+import { FlutterFreezedPluginConfig } from './config';
+import { FreezedDeclarationBlock } from './freezed-declaration-blocks';
+import { schemaVisitor } from './schema-visitor';
+import { addFreezedImportStatements, DefaultFreezedPluginConfig } from './utils';
 
 export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
   schema: GraphQLSchema,
@@ -24,13 +24,17 @@ export const plugin: PluginFunction<FlutterFreezedPluginConfig> = (
   );
 
   return (
-    addFreezedImportStatements(config.fileName) +
+    addFreezedImportStatements(config.fileName ?? '') +
     generated
       .map(freezedDeclarationBlock =>
         freezedDeclarationBlock.toString().replace(/==>factory==>.+\n/gm, s => {
           const pattern = s.replace('==>factory==>', '').trim();
+          // console.log('pattern:-->', pattern);
           const [key, appliesOn, name, typeName] = pattern.split('==>');
-          return freezedFactoryBlockRepository.retrieve(key, appliesOn, name, typeName ?? null);
+          if (appliesOn === 'class_factory') {
+            return freezedFactoryBlockRepository.retrieve(key, appliesOn, name);
+          }
+          return freezedFactoryBlockRepository.retrieve(key, appliesOn, name, typeName);
         })
       )
       .join('')

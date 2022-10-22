@@ -5,8 +5,8 @@ import {
   ObjectTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { FlutterFreezedPluginConfig } from './config.js';
-import { FreezedFactoryBlockRepository, transformDefinition } from './utils.js';
+import { FlutterFreezedPluginConfig } from './config';
+import { FreezedFactoryBlockRepository, transformDefinition } from './utils';
 
 export const schemaVisitor = (_schema: GraphQLSchema, config: FlutterFreezedPluginConfig) => {
   const freezedFactoryBlockRepository = new FreezedFactoryBlockRepository();
