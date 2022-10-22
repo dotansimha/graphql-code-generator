@@ -89,6 +89,35 @@ describe('Integration', () => {
     expect(output[4].content).toMatch(importStatement);
   });
 
+  test('should import with respect of useTypeImports config correctly', async () => {
+    const output = await executeCodegen({
+      generates: {
+        './tests/test-files/modules': {
+          schema: './tests/test-files/modules/*/types/*.graphql',
+          plugins: ['typescript', 'typescript-resolvers'],
+          preset: 'graphql-modules',
+          presetConfig: {
+            importBaseTypesFrom: '@types',
+            baseTypesPath: 'global-types.ts',
+            filename: 'module-types.ts',
+            encapsulateModuleTypes: 'none',
+          },
+        },
+      },
+      config: {
+        useTypeImports: true,
+      },
+    });
+
+    const importStatement = `import type * as Types from "@types";`;
+
+    expect(output.length).toBe(5);
+    expect(output[1].content).toMatch(importStatement);
+    expect(output[2].content).toMatch(importStatement);
+    expect(output[3].content).toMatch(importStatement);
+    expect(output[4].content).toMatch(importStatement);
+  });
+
   test('should allow to disable graphql-modules', async () => {
     const output = await executeCodegen({
       generates: {

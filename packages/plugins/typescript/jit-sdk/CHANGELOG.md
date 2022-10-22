@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-jit-sdk
 
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.0
+
 ## 2.1.4
 
 ### Patch Changes

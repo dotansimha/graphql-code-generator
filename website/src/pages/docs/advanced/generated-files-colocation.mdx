@@ -66,7 +66,9 @@ const config: CodegenConfig = {
   schema: 'http://my-graphql-api.com/graphql',
   documents: 'src/**/!(*.generated).{ts,tsx}',
   generates: {
-    'src/types.ts': ['typescript'],
+    'src/types.ts': {
+      plugins: ['typescript'],
+    },
     'src/': {
       preset: 'near-operation-file',
       presetConfig: { extension: '.generated.tsx', baseTypesPath: 'types.ts' },

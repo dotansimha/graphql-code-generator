@@ -466,7 +466,7 @@ export const useCommentQuery = <TData = CommentQuery, TError = unknown>(
   );
 export const useInfiniteCommentQuery = <TData = CommentQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  _pageParamKey: keyof CommentQueryVariables,
+  pageParamKey: keyof CommentQueryVariables,
   variables: CommentQueryVariables,
   options?: UseInfiniteQueryOptions<CommentQuery, TError, TData>
 ) =>
@@ -475,7 +475,7 @@ export const useInfiniteCommentQuery = <TData = CommentQuery, TError = unknown>(
     metaData =>
       fetcher<CommentQuery, CommentQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CommentDocument, {
         ...variables,
-        ...(metaData.pageParam ?? {}),
+        [pageParamKey]: metaData.pageParam,
       })(),
     options
   );
@@ -505,7 +505,7 @@ export const useCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery
   );
 export const useInfiniteCurrentUserForProfileQuery = <TData = CurrentUserForProfileQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  _pageParamKey: keyof CurrentUserForProfileQueryVariables,
+  pageParamKey: keyof CurrentUserForProfileQueryVariables,
   variables?: CurrentUserForProfileQueryVariables,
   options?: UseInfiniteQueryOptions<CurrentUserForProfileQuery, TError, TData>
 ) =>
@@ -516,7 +516,7 @@ export const useInfiniteCurrentUserForProfileQuery = <TData = CurrentUserForProf
         dataSource.endpoint,
         dataSource.fetchParams || {},
         CurrentUserForProfileDocument,
-        { ...variables, ...(metaData.pageParam ?? {}) }
+        { ...variables, [pageParamKey]: metaData.pageParam }
       )(),
     options
   );
@@ -543,7 +543,7 @@ export const useFeedQuery = <TData = FeedQuery, TError = unknown>(
   );
 export const useInfiniteFeedQuery = <TData = FeedQuery, TError = unknown>(
   dataSource: { endpoint: string; fetchParams?: RequestInit },
-  _pageParamKey: keyof FeedQueryVariables,
+  pageParamKey: keyof FeedQueryVariables,
   variables: FeedQueryVariables,
   options?: UseInfiniteQueryOptions<FeedQuery, TError, TData>
 ) =>
@@ -552,7 +552,7 @@ export const useInfiniteFeedQuery = <TData = FeedQuery, TError = unknown>(
     metaData =>
       fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, {
         ...variables,
-        ...(metaData.pageParam ?? {}),
+        [pageParamKey]: metaData.pageParam,
       })(),
     options
   );

@@ -95,6 +95,8 @@ export default withGuildDocs({
       '/plugins/base-visitor': '/docs/custom-codegen/using-visitor',
       '/plugins/typescript/instrospection': '/plugins/other/introspection',
       '/docs/custom-codegen/using-handlebars': '/docs/custom-codegen',
+      '/plugins/presets/near-operation-file': '/plugins/presets/near-operation-file-preset',
+      '/plugins/typescript/near-operation-file': '/plugins/presets/near-operation-file-preset',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({

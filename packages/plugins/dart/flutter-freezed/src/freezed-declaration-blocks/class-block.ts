@@ -1,13 +1,13 @@
 import { indent } from '@graphql-codegen/visitor-plugin-common';
-import { EnumValueDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, Kind, NamedTypeNode } from 'graphql';
 import { camelCase, pascalCase } from 'change-case-all';
+import { EnumValueDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, Kind, NamedTypeNode } from 'graphql';
 import { FlutterFreezedPluginConfig } from '../config.js';
 import {
-  getCustomDecorators,
-  transformCustomDecorators,
   FreezedConfigValue,
   FreezedFactoryBlockRepository,
+  getCustomDecorators,
   NodeType,
+  transformCustomDecorators,
 } from '../utils.js';
 import { FreezedFactoryBlock } from './factory-block.js';
 
@@ -202,11 +202,12 @@ export class FreezedDeclarationBlock {
           shape = indent(this.getEnumComment(value));
 
           if (this._config.camelCasedEnums ?? true) {
-            shape += `@JsonKey(name: ${value.name.value}) ${value.name.value.toLowerCase()}`;
+            shape += `@JsonKey(name: '${value.name.value}') ${value.name.value.toLowerCase()}`;
           } else {
             shape += value.name.value;
           }
-          return `${shape}\n`;
+
+          return `${shape},\n`;
         })
         .join('');
       return this;
@@ -282,7 +283,7 @@ export class FreezedDeclarationBlock {
 
     // append fromJson
     if (this._freezedConfigValue.get('fromJsonToJson')) {
-      block += indent(`factory ${this._name}.fromJson(Map<String, Object?> json) => _${this._name}FromJson(json);\n`);
+      block += indent(`factory ${this._name}.fromJson(Map<String, Object?> json) => _$${this._name}FromJson(json);\n`);
     }
 
     //append end of class definition

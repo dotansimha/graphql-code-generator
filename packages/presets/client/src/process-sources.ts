@@ -15,7 +15,13 @@ export function processSources(sources: Array<Source>, buildName: BuildNameFunct
     for (const definition of document?.definitions ?? []) {
       if (definition?.kind !== `OperationDefinition` && definition?.kind !== 'FragmentDefinition') continue;
 
-      if (definition.name?.kind !== `Name`) continue;
+      if (definition.name?.kind !== `Name`) {
+        if (definition?.kind === `OperationDefinition`) {
+          // eslint-disable-next-line no-console
+          console.warn(`[client-preset] the following anonymous operation is skipped: ${source.rawSDL}`);
+        }
+        continue;
+      }
 
       operations.push({
         initialName: buildName(definition),

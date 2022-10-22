@@ -326,7 +326,7 @@ const config: CodegenConfig = {
       preset: 'gql-tag-operations-preset',
       plugins: [],
     },
-    './dev-test/gql-tag-operations/graphql': {
+    './dev-test/gql-tag-operations/graphql/': {
       schema: './dev-test/gql-tag-operations/schema.graphql',
       documents: './dev-test/gql-tag-operations/src/**/*.ts',
       preset: 'client',
