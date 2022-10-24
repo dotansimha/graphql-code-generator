@@ -86,7 +86,9 @@ ${fieldsNames
         config.useTypeImports ? 'type ' : ''
       }{ FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';`,
       config.baseTypesPath
-        ? `import ${config.useTypeImports ? 'type ' : ''}* as Types from './${config.baseTypesPath}';`
+        ? `import ${config.useTypeImports ? 'type ' : ''}* as Types from './${config.baseTypesPath}${
+            config.emitLegacyCommonJSImports ? '' : '.js'
+          }';`
         : null,
     ].filter(Boolean),
     content: [...perTypePolicies, rootContent].join('\n'),

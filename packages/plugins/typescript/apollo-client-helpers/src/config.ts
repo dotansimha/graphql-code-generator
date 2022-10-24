@@ -48,4 +48,8 @@ export type ApolloClientHelpersConfig = {
    *
    */
   baseTypesPath?: string;
+  /**
+   * @description A flag to disable adding `.js` extension to the output file. Default: `true`.
+   */
+  emitLegacyCommonJSImports?: boolean;
 };

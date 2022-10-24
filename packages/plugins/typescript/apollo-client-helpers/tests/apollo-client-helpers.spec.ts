@@ -77,4 +77,26 @@ describe('apollo-client-helpers', () => {
     );
     expect(result).toMatchSnapshot();
   });
+
+  it('Should output typePolicies object with baseTypesPath: gqltypes and emitLegacyCommonJSImports: true', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User!
+      }
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+    const result = mergeOutputs([
+      await plugin(schema, [], {
+        baseTypesPath: 'gqltypes',
+        emitLegacyCommonJSImports: true,
+      }),
+    ]);
+    expect(result).toContain(
+      `user?: FieldPolicy<Types.Query['user'], Types.Query['user'] | Reference> | FieldReadFunction<Types.Query['user'], Types.Query['user'] | Reference>`
+    );
+    expect(result).toMatchSnapshot();
+  });
 });
