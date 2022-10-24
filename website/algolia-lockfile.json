@@ -2401,7 +2401,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "2a2249bb9739f7dddad1a05315a6fa52",
+    "content": "6dc72a6bc46ae5d0759e41063232de30",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2451,7 +2451,7 @@
         "anchor": "usage-examples"
       }
     ],
-    "content": "125d206758a1d38804a9ca4d4d3d5444",
+    "content": "f0ad645e5139fa4656242ca523459129",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-query",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2653,7 +2653,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "2e7d15dfbbe471e5a3b2dfe60fa94d81",
+    "content": "9215e27eca4f5ff1d3c242ba2472d05d",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-urql",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2711,7 +2711,7 @@
         "anchor": "examples"
       }
     ],
-    "content": "e46ffcdf6a18828be3ffd968b1b63b4c",
+    "content": "98f3426b6eaf24984f747c50a95e6a30",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-vue-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2763,7 +2763,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "af9ef641b5cbbd35ee04c1b29bc1f2bd",
+    "content": "bde6ad4a67f5dc0a655a1958b1494127",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-vue-urql",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
