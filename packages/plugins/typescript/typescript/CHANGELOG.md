@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript
 
+## 2.8.0
+
+### Minor Changes
+
+- [#8390](https://github.com/dotansimha/graphql-code-generator/pull/8390) [`12ecbe067`](https://github.com/dotansimha/graphql-code-generator/commit/12ecbe067b37c340ffef99b96d487931be260f69) Thanks [@Diizzayy](https://github.com/Diizzayy)! - handle undefined namedType when including introspection type definitions
+
 ## 2.7.5
 
 ### Patch Changes
