@@ -6,9 +6,15 @@ import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
-<PluginHeader hasOperationsNote />
+<Callout type="info" emoji="💡">
 
-Instead of using this plugin, it is recommended that you use the [TypedDocumentNode plugin](./typed-document-node) together with the [Vue Apollo library](https://apollo.vuejs.org).
+We now recommend using the `client-preset` package for a **better developer experience** and smaller impact on bundle size.
+
+**Get started on [our "React/Vue" guide](/docs/guides/react-vue).**
+
+</Callout>
+
+<PluginHeader hasOperationsNote />
 
 <PluginApiDocs />
 
