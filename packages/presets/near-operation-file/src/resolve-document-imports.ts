@@ -1,4 +1,4 @@
-import { isUsingTypes, Types, DetailedError } from '@graphql-codegen/plugin-helpers';
+import { isUsingTypes, Types } from '@graphql-codegen/plugin-helpers';
 import {
   generateImportStatement,
   ImportSource,
@@ -88,13 +88,10 @@ export function resolveDocumentImports<T>(
         externalFragments,
       };
     } catch (e) {
-      throw new DetailedError(
-        `Unable to validate GraphQL document!`,
-        `
-  File ${documentFile.location} caused error:
-    ${e.message || e.toString()}
-        `,
-        documentFile.location
+      throw new Error(
+        `Unable to validate GraphQL document! \n
+         File ${documentFile.location} caused error:
+         ${e.message || e.toString()}`
       );
     }
   });
