@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 1.1.1
+
+### Patch Changes
+
+- [#8523](https://github.com/dotansimha/graphql-code-generator/pull/8523) [`3a3202fbb`](https://github.com/dotansimha/graphql-code-generator/commit/3a3202fbb671617d34075040e7aa8129650bbcb1) Thanks [@charlypoly](https://github.com/charlypoly)! - allow non-typescript plugins
+
 ## 1.1.0
 
 ### Minor Changes
