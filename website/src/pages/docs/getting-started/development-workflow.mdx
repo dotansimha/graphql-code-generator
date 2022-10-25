@@ -77,18 +77,24 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'server/src/**/*.graphql',
-  documents: 'client/src/**/*.graphql'
-  generates {
-    'client/src/models.ts': [
-      'typescript',
-      'typescript-operations'
-    ],
-    'server/src/models.ts': [
-      'typescript',
-      'typescript-resolver'
-    ]
+  documents: 'client/src/**/*.graphql',
+  generates: {
+    'client/src/models.ts': ['typescript', 'typescript-operations'],
+    'server/src/models.ts': ['typescript', 'typescript-resolver']
   }
 }
 
 export default config
 ```
+
+## What's next?
+
+Get started with our guides:
+
+- [React and Vue](/docs/guides/react-vue)
+- [Angular](/docs/guides/angular)
+- [Svelte](/docs/guides/svelte)
+- [Apollo and Yoga server](/docs/guides/graphql-server-apollo-yoga)
+- [GraphQL Modules](/docs/guides/graphql-modules)
+
+If your stack is not listed above, please refer to [our plugins directory](/plugins).

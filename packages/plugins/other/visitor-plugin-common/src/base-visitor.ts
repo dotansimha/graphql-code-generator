@@ -47,9 +47,21 @@ export interface RawConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml {2}
-   * config:
-   *   strictScalars: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          strictScalars: true,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   strictScalars?: boolean;
@@ -58,9 +70,21 @@ export interface RawConfig {
    * @default any
    *
    * @exampleMarkdown
-   * ```yaml {2}
-   * config:
-   *   defaultScalarType: unknown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          defaultScalarType: 'unknown'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   defaultScalarType?: string;
@@ -68,11 +92,24 @@ export interface RawConfig {
    * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   scalars:
-   *     DateTime: Date
-   *     JSON: "{ [key: string]: any }"
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          scalars: {
+   *            DateTime: 'Date',
+   *            JSON: '{ [key: string]: any }',
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   scalars?: ScalarsMap;
@@ -91,31 +128,81 @@ export interface RawConfig {
    *
    * @exampleMarkdown
    * ## Override All Names
-   * ```yaml
-   * config:
-   *   namingConvention: change-case-all#lowerCase
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          namingConvention: 'change-case-all#lowerCase',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * ## Upper-case enum values
-   * ```yaml
-   * config:
-   *   namingConvention:
-   *     typeNames: change-case-all#pascalCase
-   *     enumValues: change-case-all#upperCase
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          namingConvention: {
+   *            typeNames: 'change-case-all#pascalCase',
+   *            enumValues: 'change-case-all#upperCase',
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * ## Keep names as is
-   * ```yaml
-   * config:
-   *   namingConvention: keep
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *         namingConvention: 'keep',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * ## Remove Underscores
-   * ```yaml
-   * config:
-   *   namingConvention:
-   *     typeNames: change-case-all#pascalCase
-   *     transformUnderscore: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          namingConvention: {
+   *            typeNames: 'change-case-all#pascalCase',
+   *            transformUnderscore: true
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   namingConvention?: NamingConvention;
@@ -124,9 +211,21 @@ export interface RawConfig {
    * @description Prefixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yaml {2}
-   * config:
-   *   typesPrefix: I
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          typesPrefix: 'I',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   typesPrefix?: string;
@@ -135,9 +234,21 @@ export interface RawConfig {
    * @description Suffixes all the generated types.
    *
    * @exampleMarkdown
-   * ```yaml {2}
-   * config:
-   *   typesSuffix: I
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          typesSuffix: 'I',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   typesSuffix?: string;
@@ -146,9 +257,21 @@ export interface RawConfig {
    * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
    *
    * @exampleMarkdown
-   * ```yaml
-   * config:
-   *   skipTypename: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          skipTypename: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   skipTypename?: boolean;
@@ -158,9 +281,21 @@ export interface RawConfig {
    * in the selection set, and makes it non-optional
    *
    * @exampleMarkdown
-   * ```yaml {2}
-   * config:
-   *   nonOptionalTypename: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          nonOptionalTypename: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   nonOptionalTypename?: boolean;
@@ -171,10 +306,22 @@ export interface RawConfig {
    * @description Will use `import type {}` rather than `import {}` when importing only types. This gives
    * compatibility with TypeScript's "importsNotUsedAsValues": "error" option
    *
-   * @example
-   * ```yaml {2}
-   * config:
-   *   useTypeImports: true
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          useTypeImports: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   useTypeImports?: boolean;

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java-common",
-  "version": "2.2.3",
+  "version": "2.2.5",
   "description": "GraphQL Code Generator utils library for developing Java plugins",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.6.2",
-    "@graphql-codegen/visitor-plugin-common": "2.12.1",
+    "@graphql-codegen/visitor-plugin-common": "2.13.0",
     "auto-bind": "~4.0.0",
     "min-indent": "1.0.1",
     "tslib": "~2.4.0",

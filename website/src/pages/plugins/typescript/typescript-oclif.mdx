@@ -13,20 +13,31 @@ This plugin generates [`oclif`](https://npmjs.com/package/oclif) CLI commands.
 
 Then, make sure you have `typescript` plugin as well in your configuration:
 
-```yaml
-schema: http://localhost:4000
-documents: 'src/commands/**/*.graphql'
-generates:
-  src/types.ts:
-    - typescript
-  src/commands/:
-    preset: near-operation-file
-    presetConfig:
-      extension: .ts
-      baseTypesPath: ../types.ts
-    plugins:
-      - typescript-oclif:
-          handlerPath: ../../handler
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000',
+  documents: 'src/commands/**/*.graphql',
+  generates: {
+    'src/types.ts': { plugins: ['typescript'] },
+    'src/commands/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        extension: '.ts',
+        baseTypesPath: '../types.ts'
+      },
+      plugins: [
+        {
+          'typescript-oclif': {
+            handlerPath: '../../handler'
+          }
+        }
+      ]
+    }
+  }
+}
+export default config
 ```
 
 ## Usage
@@ -111,20 +122,31 @@ export default handler
 First, follow the GraphQL-Code-Generator guide to install it, and make sure to also install
 `@graphql-codegen/typescript-oclif`. Then, change your `codegen.yml` file to look like this:
 
-```yaml
-schema: <path-to-your-schema>
-documents: 'src/commands/**/*.graphql'
-generates:
-  src/types.ts:
-    - typescript
-  src/commands/:
-    preset: near-operation-file
-    presetConfig:
-      extension: .ts
-      baseTypesPath: ../types.ts
-    plugins:
-      - typescript-oclif:
-          client: ../../client
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: '<path-to-your-schema>',
+  documents: 'src/commands/**/*.graphql',
+  generates: {
+    'src/types.ts': { plugins: ['typescript'] },
+    'src/commands/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        extension: '.ts',
+        baseTypesPath: '../types.ts'
+      },
+      plugins: [
+        {
+          'typescript-oclif': {
+            client: '../../client'
+          }
+        }
+      ]
+    }
+  }
+}
+export default config
 ```
 
 Breaking that down:

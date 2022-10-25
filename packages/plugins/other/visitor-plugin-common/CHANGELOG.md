@@ -1,5 +1,17 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.13.0
+
+### Minor Changes
+
+- [#8498](https://github.com/dotansimha/graphql-code-generator/pull/8498) [`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b) Thanks [@charlypoly](https://github.com/charlypoly)! - Fragment masking ` $fragmentName` and ` $fragmentRefs` are optionals
+
+## 2.12.2
+
+### Patch Changes
+
+- [#8432](https://github.com/dotansimha/graphql-code-generator/pull/8432) [`1bd7f771c`](https://github.com/dotansimha/graphql-code-generator/commit/1bd7f771ccb949a5a37395c7c57cb41c19340714) Thanks [@mvestergaard](https://github.com/mvestergaard)! - Remove extension from operations file import
+
 ## 2.12.1
 
 ### Patch Changes

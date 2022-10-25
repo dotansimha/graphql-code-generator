@@ -12,6 +12,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
     const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
     const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
     const requireRootResolvers = getConfigValue(options?.presetConfig.requireRootResolvers, false);
+    const useTypeImports = getConfigValue(options?.config.useTypeImports, false) || false;
 
     const cwd = resolve(options.presetConfig.cwd || process.cwd());
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
@@ -113,6 +114,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                   schema.getMutationType()?.name,
                   schema.getSubscriptionType()?.name,
                 ].filter(Boolean),
+                useTypeImports,
               }),
           },
         },

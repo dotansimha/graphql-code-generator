@@ -106,26 +106,26 @@ export type User = {
 };
 
 export type TweetFragmentFragment = ({ __typename?: 'Tweet'; id: string; body: string } & {
-  ' $fragmentRefs': { TweetAuthorFragmentFragment: TweetAuthorFragmentFragment };
-}) & { ' $fragmentName': 'TweetFragmentFragment' };
+  ' $fragmentRefs'?: { TweetAuthorFragmentFragment: TweetAuthorFragmentFragment };
+}) & { ' $fragmentName'?: 'TweetFragmentFragment' };
 
 export type TweetAuthorFragmentFragment = {
   __typename?: 'Tweet';
   id: string;
   author: { __typename?: 'User'; id: string; username?: string | null };
-} & { ' $fragmentName': 'TweetAuthorFragmentFragment' };
+} & { ' $fragmentName'?: 'TweetAuthorFragmentFragment' };
 
 export type TweetsFragmentFragment = {
   __typename?: 'Query';
   Tweets?: Array<
-    { __typename?: 'Tweet'; id: string } & { ' $fragmentRefs': { TweetFragmentFragment: TweetFragmentFragment } }
+    { __typename?: 'Tweet'; id: string } & { ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment } }
   > | null;
-} & { ' $fragmentName': 'TweetsFragmentFragment' };
+} & { ' $fragmentName'?: 'TweetsFragmentFragment' };
 
 export type TweetAppQueryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TweetAppQueryQuery = { __typename?: 'Query' } & {
-  ' $fragmentRefs': { TweetsFragmentFragment: TweetsFragmentFragment };
+  ' $fragmentRefs'?: { TweetsFragmentFragment: TweetsFragmentFragment };
 };
 
 export const TweetAuthorFragmentFragmentDoc = {

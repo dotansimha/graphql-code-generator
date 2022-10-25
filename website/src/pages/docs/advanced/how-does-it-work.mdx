@@ -9,7 +9,15 @@ Once all GraphQL types (schema types and operations) are identified, GraphQL Cod
 
 This process, applied to the `@graphql-codegen/typescript` plugin, is illustrated below:
 
-![Codegen flow example](../../../../public/assets/illustrations/codegen_flow1.png)
+![Codegen flow example](/assets/illustrations/codegen_flow1.png)
+
+import { Callout } from '@theguild/components'
+
+<Callout>
+**Operations and fragments must have unique names**
+
+GraphQL Code Generator checks for this automatically and will let you know if you have any conflicts.
+</Callout>
 
 ## Example with `@graphql-codegen/typescript`
 

@@ -1,5 +1,117 @@
 # @graphql-codegen/cli
 
+## 2.13.7
+
+### Patch Changes
+
+- [#8481](https://github.com/dotansimha/graphql-code-generator/pull/8481) [`8473682c4`](https://github.com/dotansimha/graphql-code-generator/commit/8473682c48559382b0a3edd4a494aeaf1c5b99ff) Thanks [@charlypoly](https://github.com/charlypoly)! - ensure to generate `codegen.ts` in a typescript setup
+
+## 2.13.6
+
+### Patch Changes
+
+- [#8383](https://github.com/dotansimha/graphql-code-generator/pull/8383) [`c4d9566c7`](https://github.com/dotansimha/graphql-code-generator/commit/c4d9566c792413fa26a537bce268a547c61e5f13) Thanks [@vhenzl](https://github.com/vhenzl)! - Fix `executeHooks` to quote args for shell command
+
+## 2.13.5
+
+### Patch Changes
+
+- [#8452](https://github.com/dotansimha/graphql-code-generator/pull/8452) [`cb1f93618`](https://github.com/dotansimha/graphql-code-generator/commit/cb1f93618b3c92cd092b740973d2469c232c2c00) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@4.3.6` ↗︎](https://www.npmjs.com/package/graphql-config/v/4.3.6) (from `^4.3.5`, in `dependencies`)
+
+- [#8452](https://github.com/dotansimha/graphql-code-generator/pull/8452) [`cb1f93618`](https://github.com/dotansimha/graphql-code-generator/commit/cb1f93618b3c92cd092b740973d2469c232c2c00) Thanks [@charlypoly](https://github.com/charlypoly)! - conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
+
+## 2.13.4
+
+### Patch Changes
+
+- [#8441](https://github.com/dotansimha/graphql-code-generator/pull/8441) [`6785f7f0d`](https://github.com/dotansimha/graphql-code-generator/commit/6785f7f0df6b3eb14d30abf37924791c45a4d586) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Added dependency [`cosmiconfig-typescript-loader@4.1.1` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.1.1) (to `dependencies`)
+  - Removed dependency [`cosmiconfig-typescript-swc-loader@0.0.2` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-swc-loader/v/0.0.2) (from `dependencies`)
+
+- [#8441](https://github.com/dotansimha/graphql-code-generator/pull/8441) [`6785f7f0d`](https://github.com/dotansimha/graphql-code-generator/commit/6785f7f0df6b3eb14d30abf37924791c45a4d586) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(cli): revert to `cosmiconfig-typescript-loader`
+
+## 2.13.3
+
+### Patch Changes
+
+- [#8415](https://github.com/dotansimha/graphql-code-generator/pull/8415) [`15d500776`](https://github.com/dotansimha/graphql-code-generator/commit/15d50077680ff96a8d09cc65acd2f82683e67fb5) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Added dependency [`cosmiconfig-typescript-swc-loader@0.0.2` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-swc-loader/v/0.0.2) (to `dependencies`)
+  - Removed dependency [`cosmiconfig-typescript-loader@4.0.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.0.0) (from `dependencies`)
+
+- [#8415](https://github.com/dotansimha/graphql-code-generator/pull/8415) [`15d500776`](https://github.com/dotansimha/graphql-code-generator/commit/15d50077680ff96a8d09cc65acd2f82683e67fb5) Thanks [@charlypoly](https://github.com/charlypoly)! - feat(cli): drop peerDep on "typescript" by using `cosmiconfig-typescript-swc-loader`
+
+## 2.13.2
+
+### Patch Changes
+
+- [#8427](https://github.com/dotansimha/graphql-code-generator/pull/8427) [`5524ac447`](https://github.com/dotansimha/graphql-code-generator/commit/5524ac447612ff05bfd68f4b758dfcd0fa9e7356) Thanks [@charlypoly](https://github.com/charlypoly)! - Fix issue with `graphql-codegen init` installation wizard
+
+## 2.13.1
+
+### Patch Changes
+
+- [#8405](https://github.com/dotansimha/graphql-code-generator/pull/8405) [`7f7e52bc2`](https://github.com/dotansimha/graphql-code-generator/commit/7f7e52bc22749d1dd6946510856103ab683a1807) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Removed dependency [`@graphql-codegen/client-preset@1.0.1` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/1.0.1) (from `dependencies`)
+
+- [#8405](https://github.com/dotansimha/graphql-code-generator/pull/8405) [`7f7e52bc2`](https://github.com/dotansimha/graphql-code-generator/commit/7f7e52bc22749d1dd6946510856103ab683a1807) Thanks [@charlypoly](https://github.com/charlypoly)! - remove `@graphql-codegen/client-preset` direct dependency
+
+## 2.13.0
+
+### Minor Changes
+
+- [#8302](https://github.com/dotansimha/graphql-code-generator/pull/8302) [`876844e76`](https://github.com/dotansimha/graphql-code-generator/commit/876844e7644a917172f09b3c4eb54a2f4c90e4c6) Thanks [@charlypoly](https://github.com/charlypoly)! - **`@graphql-codegen/gql-tag-operations` and `@graphql-codegen/gql-tag-operations-preset`**
+
+  Introduce a `gqlTagName` configuration option
+
+  ***
+
+  **`@graphql-codegen/client-preset`**
+
+  New preset for GraphQL Code Generator v3, more information on the RFC: https://github.com/dotansimha/graphql-code-generator/issues/8296
+
+  ***
+
+  **`@graphql-codegen/cli`**
+
+  Update init wizard with 3.0 recommendations (`codegen.ts`, `client` preset)
+
+### Patch Changes
+
+- [#8302](https://github.com/dotansimha/graphql-code-generator/pull/8302) [`876844e76`](https://github.com/dotansimha/graphql-code-generator/commit/876844e7644a917172f09b3c4eb54a2f4c90e4c6) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Updated dependency [`@graphql-codegen/plugin-helpers@^2.6.2` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/2.6.2) (from `^2.7.1`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/fetch@^0.3.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.3.0) (from `^0.4.0`, in `dependencies`)
+  - Updated dependency [`cosmiconfig-typescript-loader@4.0.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.0.0) (from `^4.0.0`, in `dependencies`)
+  - Added dependency [`@babel/generator@^7.18.13` ↗︎](https://www.npmjs.com/package/@babel/generator/v/7.18.13) (to `dependencies`)
+  - Added dependency [`@babel/template@^7.18.10` ↗︎](https://www.npmjs.com/package/@babel/template/v/7.18.10) (to `dependencies`)
+  - Added dependency [`@babel/types@^7.18.13` ↗︎](https://www.npmjs.com/package/@babel/types/v/7.18.13) (to `dependencies`)
+  - Added dependency [`@graphql-codegen/client-preset@1.0.1-alpha-20220823170145-c93d8aee3` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/1.0.1) (to `dependencies`)
+- Updated dependencies [[`876844e76`](https://github.com/dotansimha/graphql-code-generator/commit/876844e7644a917172f09b3c4eb54a2f4c90e4c6)]:
+  - @graphql-codegen/client-preset@1.0.1
+
+## 2.12.2
+
+### Patch Changes
+
+- [#8384](https://github.com/dotansimha/graphql-code-generator/pull/8384) [`9d3eedaea`](https://github.com/dotansimha/graphql-code-generator/commit/9d3eedaea6a5a505a8f693378bed44a1648a3a37) Thanks [@charlypoly](https://github.com/charlypoly)! - CLI: properly print error that occurred during hook execution
+
+## 2.12.1
+
+### Patch Changes
+
+- [#8335](https://github.com/dotansimha/graphql-code-generator/pull/8335) [`3e121d92e`](https://github.com/dotansimha/graphql-code-generator/commit/3e121d92ebd563a82dbc367cd3e9194ebe5ca1ee) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.4.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/null) (from `^0.3.0`, in `dependencies`)
+
+- [#8368](https://github.com/dotansimha/graphql-code-generator/pull/8368) [`4113b1bd3`](https://github.com/dotansimha/graphql-code-generator/commit/4113b1bd39f3d32759c68a292e8492a0dd4f7371) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(cli): support ApolloEngine loader in TypeScript config
+
+- Updated dependencies [[`4113b1bd3`](https://github.com/dotansimha/graphql-code-generator/commit/4113b1bd39f3d32759c68a292e8492a0dd4f7371)]:
+  - @graphql-codegen/plugin-helpers@2.7.1
+
 ## 2.12.0
 
 ### Minor Changes

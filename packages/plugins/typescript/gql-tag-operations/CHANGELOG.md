@@ -1,5 +1,62 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.5.5
+
+### Patch Changes
+
+- Updated dependencies [[`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.0
+
+## 1.5.4
+
+### Patch Changes
+
+- Updated dependencies [[`1bd7f771c`](https://github.com/dotansimha/graphql-code-generator/commit/1bd7f771ccb949a5a37395c7c57cb41c19340714)]:
+  - @graphql-codegen/visitor-plugin-common@2.12.2
+
+## 1.5.3
+
+### Patch Changes
+
+- [#8443](https://github.com/dotansimha/graphql-code-generator/pull/8443) [`e2d115146`](https://github.com/dotansimha/graphql-code-generator/commit/e2d11514695ca56674983e8b3b7549cd3b440a5d) Thanks [@charlypoly](https://github.com/charlypoly)! - fix(gql-tag-operations): issues with "no documents" scenario
+
+## 1.5.2
+
+### Patch Changes
+
+- [#8402](https://github.com/dotansimha/graphql-code-generator/pull/8402) [`a76c606e3`](https://github.com/dotansimha/graphql-code-generator/commit/a76c606e3b631ef903d4066e2643bc7f95457e30) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Removed dependency [`graphql-tag@^2.0.0` ↗︎](https://www.npmjs.com/package/graphql-tag/v/2.0.0) (from `peerDependencies`)
+
+## 1.5.1
+
+### Patch Changes
+
+- [#8401](https://github.com/dotansimha/graphql-code-generator/pull/8401) [`4be3dc884`](https://github.com/dotansimha/graphql-code-generator/commit/4be3dc884bebe30e75b91560820d5604c816d9dd) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Removed dependency [`graphql-tag@^2.0.0` ↗︎](https://www.npmjs.com/package/graphql-tag/v/2.0.0) (from `peerDependencies`)
+
+- [#8401](https://github.com/dotansimha/graphql-code-generator/pull/8401) [`4be3dc884`](https://github.com/dotansimha/graphql-code-generator/commit/4be3dc884bebe30e75b91560820d5604c816d9dd) Thanks [@charlypoly](https://github.com/charlypoly)! - Remove unused `graphql-tag` peer dependency
+
+## 1.5.0
+
+### Minor Changes
+
+- [#8302](https://github.com/dotansimha/graphql-code-generator/pull/8302) [`876844e76`](https://github.com/dotansimha/graphql-code-generator/commit/876844e7644a917172f09b3c4eb54a2f4c90e4c6) Thanks [@charlypoly](https://github.com/charlypoly)! - **`@graphql-codegen/gql-tag-operations` and `@graphql-codegen/gql-tag-operations-preset`**
+
+  Introduce a `gqlTagName` configuration option
+
+  ***
+
+  **`@graphql-codegen/client-preset`**
+
+  New preset for GraphQL Code Generator v3, more information on the RFC: https://github.com/dotansimha/graphql-code-generator/issues/8296
+
+  ***
+
+  **`@graphql-codegen/cli`**
+
+  Update init wizard with 3.0 recommendations (`codegen.ts`, `client` preset)
+
 ## 1.4.1
 
 ### Patch Changes

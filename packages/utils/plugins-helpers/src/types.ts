@@ -1,6 +1,7 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
 import type { Profiler } from './profiler.js';
+import type { ApolloEngineOptions } from '@graphql-tools/apollo-engine-loader';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -177,6 +178,10 @@ export namespace Types {
     [globPath: string]: LocalSchemaPathOptions;
   }
 
+  export interface ApolloEngineSchemaOptions {
+    'apollo-engine': ApolloEngineOptions;
+  }
+
   export type SchemaGlobPath = string;
   /**
    * @description A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).
@@ -184,6 +189,7 @@ export namespace Types {
   export type Schema =
     | string
     | UrlSchemaWithOptions
+    | ApolloEngineSchemaOptions
     | LocalSchemaPathWithOptions
     | SchemaGlobPath
     | SchemaWithLoader
@@ -223,7 +229,7 @@ export namespace Types {
     | 'near-operation-file'
     | 'gql-tag-operations'
     | 'graphql-modules'
-    | 'import-types-preset';
+    | 'import-types';
   export type PresetNames = `${PresetNamesBase}-preset` | PresetNamesBase;
 
   /**

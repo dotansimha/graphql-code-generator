@@ -42,13 +42,22 @@ export interface FragmentMatcherConfig {
    * @default es2015
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   path/to/file.json:
-   *     plugins:
-   *       - fragment-matcher
-   *     config:
-   *       module: commonjs
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['fragment-matcher'],
+   *        config: {
+   *          module: 'commonjs',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   module?: 'commonjs' | 'es2015';
@@ -57,13 +66,22 @@ export interface FragmentMatcherConfig {
    * @default 3
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - fragment-matcher
-   *     config:
-   *       apolloClientVersion: 3
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['fragment-matcher'],
+   *        config: {
+   *          apolloClientVersion: 3,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   apolloClientVersion?: 2 | 3;
@@ -72,13 +90,22 @@ export interface FragmentMatcherConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ```yaml {6}
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - fragment-matcher
-   *     config:
-   *       useExplicitTyping: true
+   * ```tsx {10} filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    schema: 'https://localhost:4000/graphql',
+   *    documents: ['src/**\/*.tsx'],
+   *    generates: {
+   *      'path/to/file.json': {
+   *        plugins: ['fragment-matcher'],
+   *        config: {
+   *          useExplicitTyping: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   useExplicitTyping?: boolean;

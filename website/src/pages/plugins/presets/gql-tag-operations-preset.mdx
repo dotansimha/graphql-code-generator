@@ -38,14 +38,20 @@ const TweetsQueryWithFragment = gql(/* GraphQL */ `
 
 In order to use this preset, you need to add the following configuration to your `codegen.yml`:
 
-```yaml
-schema: src/path/to/your/schema.graphql
-documents:
-  - 'src/**/*.ts'
-  - '!src/gql/**/*'
-generates:
-  ./src/gql/:
-    preset: gql-tag-operations-preset
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'src/path/to/your/schema.graphql',
+  documents: ['src/**/*.ts', '!src/gql/**/*'],
+  generates: {
+    './src/gql/': {
+      preset: 'gql-tag-operations-preset',
+      plugins: []
+    }
+  }
+}
+export default config
 ```
 
 Now start your codegen in watch mode via `yarn graphql-codegen --watch`.
@@ -223,17 +229,23 @@ Sometimes the library you are using, let's use `urql` for this example, already 
 
 This can be easily achieved by running the `gql-tag-operations` plugin in module augmentation mode!
 
-```yaml filename="codegen.yml"
-schema: src/path/to/your/schema.graphql
-documents:
-  - 'src/**/*.ts'
-  - '!src/gql/**/*'
-generates:
-  src/gql/:
-    preset: gql-tag-operations-preset
-    presetConfig:
-      # define which module you want to import your gql function from
-      augmentedModuleName: '@urql/core'
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'src/path/to/your/schema.graphql',
+  documents: ['src/**/*.ts', '!src/gql/**/*'],
+  generates: {
+    'src/gql/': {
+      preset: 'gql-tag-operations-preset',
+      plugins: [],
+      presetConfig: {
+        augmentedModuleName: '@urql/core'
+      }
+    }
+  }
+}
+export default config
 ```
 
 When the `augmentedModuleName` option is configured instead of the `./src/gql/index.ts` file a `./src/gql/index.d.ts` file is generated.
@@ -292,17 +304,23 @@ Fragment masking is a powerful tool that allows building scalable UI components,
 
 Fragment masking is enabled via the `fragmentMasking` config option.
 
-```yaml filename="codegen.yml"
-schema: src/path/to/your/schema.graphql
-documents:
-  - 'src/**/*.ts'
-  - '!src/gql/**/*'
-generates:
-  src/gql/:
-    preset: gql-tag-operations-preset
-    presetConfig:
-      # enable fragment masking
-      fragmentMasking: true
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'src/path/to/your/schema.graphql',
+  documents: ['src/**/*.ts', '!src/gql/**/*'],
+  generates: {
+    'src/gql/': {
+      preset: 'gql-tag-operations-preset',
+      plugins: [],
+      presetConfig: {
+        fragmentMasking: true
+      }
+    }
+  }
+}
+export default config
 ```
 
 After enabling fragment masking and re-generating your codegen artifacts you now have access to a `useFragment` function, which is utilized for unmasking dependencies.
@@ -365,35 +383,50 @@ const Tweets = () => {
 
 By default, the data unmask function name is `useFragment`, which follows the React hook naming convention. For React users we recommend keeping that name. If you need to customize the name of the function you can provide the `fragmentMasking.unmaskFunctionName` option.
 
-```yaml filename="codegen.yml"
-schema: src/path/to/your/schema.graphql
-documents:
-  - 'src/**/*.ts'
-  - '!src/gql/**/*'
-generates:
-  src/gql/:
-    preset: gql-tag-operations-preset
-    presetConfig:
-      # enable fragment masking
-      fragmentMasking:
-        unmaskFunctionName: 'getFragment'
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'src/path/to/your/schema.graphql',
+  documents: ['src/**/*.ts', '!src/gql/**/*'],
+  generates: {
+    'src/gql/': {
+      preset: 'gql-tag-operations-preset',
+      plugins: [],
+      presetConfig: {
+        fragmentMasking: {
+          unmaskFunctionName: 'getFragment'
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 ### Module augmentation with fragment masking
 
 Similar to the `gql` module augmentation configuration it is also possible to generate type definitions for the unmask function. The `fragmentMasking.unmaskFunctionName` will be used when doing so.
 
-```yaml filename="codegen.yml"
-schema: src/path/to/your/schema.graphql
-documents:
-  - 'src/**/*.ts'
-  - '!src/gql/**/*'
-generates:
-  src/gql/:
-    preset: gql-tag-operations-preset
-    presetConfig:
-      fragmentMasking:
-        augmentedModuleName: '@something/fragment'
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'src/path/to/your/schema.graphql',
+  documents: ['src/**/*.ts', '!src/gql/**/*'],
+  generates: {
+    'src/gql/': {
+      preset: 'gql-tag-operations-preset',
+      plugins: [],
+      presetConfig: {
+        fragmentMasking: {
+          augmentedModuleName: '@something/fragment'
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 <PluginApiDocs />

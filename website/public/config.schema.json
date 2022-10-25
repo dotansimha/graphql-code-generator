@@ -116,7 +116,7 @@
           "description": "use the same Freezed configuration for every generated output\nDefault value: \"DefaultFreezedConfig\""
         },
         "typeSpecificFreezedConfig": {
-          "$ref": "#/definitions/Record",
+          "$ref": "#/definitions/Record_1",
           "description": "override the `globalFreezedConfig` for specific types. The GraphQL Type name is the key\nDefault value: \"undefined\""
         },
         "ignoreTypes": {
@@ -1408,7 +1408,7 @@
           "type": "string"
         },
         "directiveResolverMappings": {
-          "$ref": "#/definitions/Record_2",
+          "$ref": "#/definitions/Record",
           "description": "Map the usage of a directive into using a specific resolver."
         },
         "allowParentTypeOverride": {
@@ -3442,6 +3442,10 @@
         "fragmentMasking": {
           "description": "Fragment masking hides data from components and only allows accessing the data by using a unmasking function.",
           "anyOf": [{ "$ref": "#/definitions/FragmentMaskingConfig" }, { "type": "boolean" }]
+        },
+        "gqlTagName": {
+          "description": "Specify the name of the \"graphql tag\" function to use\nDefault value: \"\"gql\"\n\nE.g. `graphql` or `gql`.\"",
+          "type": "string"
         }
       }
     },
@@ -3451,6 +3455,7 @@
         { "$ref": "#/definitions/Types.SchemaFromCodeFile" },
         { "$ref": "#/definitions/Types.UrlSchemaWithOptions" },
         { "$ref": "#/definitions/Types.LocalSchemaPathWithOptions" },
+        { "$ref": "#/definitions/Types.ApolloEngineSchemaOptions" },
         {
           "type": "array",
           "items": {
@@ -3460,6 +3465,7 @@
               { "$ref": "#/definitions/Types.SchemaFromCodeFile" },
               { "$ref": "#/definitions/Types.UrlSchemaWithOptions" },
               { "$ref": "#/definitions/Types.LocalSchemaPathWithOptions" },
+              { "$ref": "#/definitions/Types.ApolloEngineSchemaOptions" },
               { "type": "string" }
             ]
           }
@@ -3565,6 +3571,43 @@
         }
       }
     },
+    "Types.ApolloEngineSchemaOptions": {
+      "type": "object",
+      "properties": { "apollo-engine": { "$ref": "#/definitions/ApolloEngineOptions" } }
+    },
+    "ApolloEngineOptions": {
+      "description": "Additional options for loading from Apollo Engine",
+      "type": "object",
+      "properties": {
+        "engine": {
+          "type": "object",
+          "properties": { "endpoint": { "type": "string" }, "apiKey": { "type": "string" } }
+        },
+        "graph": { "type": "string" },
+        "variant": { "type": "string" },
+        "headers": { "$ref": "#/definitions/Record" },
+        "noLocation": { "type": "boolean" },
+        "allowLegacySDLEmptyFields": { "type": "boolean" },
+        "allowLegacySDLImplementsInterfaces": { "type": "boolean" },
+        "experimentalFragmentVariables": { "type": "boolean" },
+        "commentDescriptions": {
+          "description": "Set to `true` in order to convert all GraphQL comments (marked with # sign) to descriptions (\"\"\")\nGraphQL has built-in support for transforming descriptions to comments (with `print`), but not while\nparsing. Turning the flag on will support the other way as well (`parse`)",
+          "type": "boolean"
+        },
+        "assumeValidSDL": {
+          "description": "Set to true to assume the SDL is valid.\n\nDefault: false",
+          "type": "boolean"
+        },
+        "assumeValid": {
+          "description": "When building a schema from a GraphQL service's introspection result, it\nmight be safe to assume the schema is valid. Set to true to assume the\nproduced schema is valid.\n\nDefault: false",
+          "type": "boolean"
+        },
+        "cwd": { "type": "string" },
+        "ignore": { "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }] }
+      }
+    },
+    "__type": { "type": "object" },
+    "Record": { "$ref": "#/definitions/__type" },
     "Types.RequireExtension": { "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }] },
     "Types.InstanceOrArray_1": {
       "anyOf": [
@@ -3591,9 +3634,9 @@
         }
       }
     },
-    "__type": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T" } },
+    "__type_1": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T" } },
     "T": { "type": "object" },
-    "Types.PluginConfig": { "$ref": "#/definitions/__type" },
+    "Types.PluginConfig": { "$ref": "#/definitions/__type_1" },
     "Types.ConfiguredOutput": {
       "additionalProperties": false,
       "type": "object",
@@ -3605,7 +3648,24 @@
         },
         "preset": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.\n\nPresets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file\n\nYou can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
-          "anyOf": [{ "$ref": "#/definitions/Types.OutputPreset" }, { "type": "string" }]
+          "anyOf": [
+            { "$ref": "#/definitions/Types.OutputPreset" },
+            {
+              "enum": [
+                "client",
+                "client-preset",
+                "gql-tag-operations",
+                "gql-tag-operations-preset",
+                "graphql-modules",
+                "graphql-modules-preset",
+                "import-types-preset",
+                "import-types-preset-preset",
+                "near-operation-file",
+                "near-operation-file-preset"
+              ],
+              "type": "string"
+            }
+          ]
         },
         "presetConfig": {
           "description": "If your setup uses Preset to have a more dynamic setup and output, set the configuration object of your preset here.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
@@ -3815,9 +3875,12 @@
         }
       ]
     },
-    "__type_1": { "type": "object", "properties": { "buildGeneratesSection": { "type": "object" } } },
-    "Types.OutputPreset": { "$ref": "#/definitions/__type_1" },
     "__type_2": {
+      "type": "object",
+      "properties": { "buildGeneratesSection": { "type": "object" }, "prepareDocuments": { "type": "object" } }
+    },
+    "Types.OutputPreset": { "$ref": "#/definitions/__type_2" },
+    "__type_3": {
       "type": "object",
       "properties": {
         "afterStart": {
@@ -3864,9 +3927,9 @@
         { "type": "string" }
       ]
     },
-    "__type_3": { "type": "object" },
-    "Types.HookFunction": { "$ref": "#/definitions/__type_3" },
-    "Partial": { "$ref": "#/definitions/__type_2" },
+    "__type_4": { "type": "object" },
+    "Types.HookFunction": { "$ref": "#/definitions/__type_4" },
+    "Partial": { "$ref": "#/definitions/__type_3" },
     "Types.ConfiguredPlugin": {
       "type": "object",
       "additionalProperties": { "$ref": "#/definitions/Types.PluginConfig" },
@@ -3911,8 +3974,8 @@
         "hasura-allow-list": { "$ref": "#/definitions/HasuraAllowListPluginConfig" }
       }
     },
-    "__type_4": { "type": "object" },
-    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_4" },
+    "__type_5": { "type": "object" },
+    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_5" },
     "Array": {
       "type": "array",
       "items": {
@@ -3980,23 +4043,23 @@
         }
       }
     },
-    "__type_5": {
+    "__type_6": {
       "description": "use this option to add annotations/decorators for the the generated output. Also use this to add",
       "type": "object"
     },
-    "CustomDecorator": { "$ref": "#/definitions/__type_5" },
-    "__type_6": { "type": "object" },
-    "Record": { "$ref": "#/definitions/__type_6" },
-    "__type_7": {
+    "CustomDecorator": { "$ref": "#/definitions/__type_6" },
+    "__type_7": { "type": "object" },
+    "Record_1": { "$ref": "#/definitions/__type_7" },
+    "__type_8": {
       "type": "object",
       "properties": {
         "endpoint": { "type": "string" },
-        "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record_1" }, { "type": "string" }] }
+        "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record_2" }, { "type": "string" }] }
       }
     },
-    "__type_8": { "type": "object" },
-    "Record_1": { "$ref": "#/definitions/__type_8" },
-    "HardcodedFetch": { "$ref": "#/definitions/__type_7" },
+    "__type_9": { "type": "object" },
+    "Record_2": { "$ref": "#/definitions/__type_9" },
+    "HardcodedFetch": { "$ref": "#/definitions/__type_8" },
     "ScalarsMap": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
@@ -4008,8 +4071,8 @@
         { "type": "string" }
       ]
     },
-    "__type_9": { "type": "object" },
-    "NamingConventionFn": { "$ref": "#/definitions/__type_9" },
+    "__type_10": { "type": "object" },
+    "NamingConventionFn": { "$ref": "#/definitions/__type_10" },
     "NamingConventionMap": {
       "additionalProperties": false,
       "type": "object",
@@ -4067,14 +4130,14 @@
       }
     },
     "DeclarationKind": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_10": {
+    "__type_11": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_10" },
+    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_11" },
     "JsonAttributesSource": { "enum": ["Newtonsoft.Json", "System.Text.Json"], "type": "string" },
-    "__type_11": {
+    "__type_12": {
       "type": "object",
       "properties": {
         "type": { "type": "string" },
@@ -4084,9 +4147,7 @@
         "arguments": { "type": "string" }
       }
     },
-    "Partial_1": { "$ref": "#/definitions/__type_11" },
-    "__type_12": { "type": "object" },
-    "Record_2": { "$ref": "#/definitions/__type_12" },
+    "Partial_1": { "$ref": "#/definitions/__type_12" },
     "Array_1": { "type": "array", "items": { "type": "string" } },
     "StencilComponentType": { "enum": ["class", "functional"], "type": "string" },
     "FileType": { "enum": [0, 1, 2, 3], "type": "number" },

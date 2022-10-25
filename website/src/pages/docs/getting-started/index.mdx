@@ -2,7 +2,7 @@
 title: Introduction
 ---
 
-import { Tabs, Tab, Callout } from '@theguild/components'
+import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
 
 # Introduction to GraphQL Code Generator
 
@@ -255,16 +255,53 @@ Any mistake on your manually maintained data types ripples in many of your compo
 For this reason, automating and generating the typing of your GraphQL operations will both improve the developer
 experience and stability of your stack.
 
-After [installing](/docs/getting-started/installation) and [configuring](/docs/config-reference/codegen-config) GraphQL Code Generator, our front-end code will be fully-typed and
-up-to-date as follows:
+After installing 3 packages:
+
+<PackageCmd packages={['graphql', '-D typescript', '-D @graphql-codegen/cli', '-D @graphql-codegen/client-preset']} />
+
+and providing a simple configuration:
+
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+   schema: 'https://localhost:4000/graphql',
+   documents: ['src/**/*.tsx'],
+   generates: {
+      './src/gql/': {
+        preset: 'client',
+        plugins: []
+      }
+   }
+}
+export default config
+```
+
+You will no longer need to maintain TypeScript types:
 
 <Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
 <Tab>
 ```tsx
 import { useQuery } from 'urql'
-import { postsQueryDocument } from './graphql/generated'
+import { graphql } from './gql/gql'
+
+// postsQueryDocument is now fully typed!
+const postsQueryDocument = graphql(/* GraphQL */ `
+  query Posts {
+    posts {
+      id
+      title
+      author {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+`)
 
 const Posts = () => {
+  // URQL's `useQuery()` knows how to work with typed graphql documents
   const [result] = useQuery({ query: postsQueryDocument })
 
   // `result` is fully typed!
@@ -275,12 +312,29 @@ const Posts = () => {
 
 <Tab>
 ```tsx
-import { usePosts } from '../graphql/generated'
+import { useQuery } from '@apollo/client';
+import { graphql } from './graphql/gql'
+
+// postsQueryDocument is now fully typed!
+const postsQueryDocument = graphql(/* GraphQL */ `
+  query Posts {
+    posts {
+      id
+      title
+      author {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+`)
 
 const Posts = () => {
-  const { data } = usePosts()
+  // Apollo's `useQuery()` knows how to work with typed graphql documents
+  const [result] = useQuery({ query: postsQueryDocument })
 
-  // `data` is typed!
+  // `result` is fully typed!
   // …
 }
 ```
@@ -288,27 +342,36 @@ const Posts = () => {
 
 <Tab>
 ```vue
-<template>
-  <div class="apollo">
-    <!-- UI … -->
-  </div>
-</template>
-
-<script>
-import { usePostQuery } from '../generated/graphql'
-
-export default {
-  apollo: usePostQuery({
-    // `variables` is properly typed!
-    variables: { id: 1 }
-  }),
-  data() {
-    return {
-      post: undefined
+<script setup lang="ts">
+import { useQuery } from '@vue/apollo-composable';
+import { graphql } from './gql/gql';
+import FilmItem from './components/FilmItem.vue';
+import { computed } from 'vue';
+const { result } = useQuery(
+  graphql(/* GraphQL */ `
+    query Posts {
+      posts {
+        id
+        title
+        author {
+          id
+          firstName
+          lastName
+        }
+      }
     }
-  }
-}
+  `),
+);
+
+// `posts` is properly typed!
+const posts = computed(() => result.value?.posts);
 </script>
+
+<template>
+  <ul>
+    <li v-for="film of films"><FilmItem :film="film" /></li>
+  </ul>
+</template>
 ```
 </Tab>
 
@@ -353,6 +416,12 @@ Now, with simple configuration and an npm/yarn script, a front-end developers be
 - **autocompletion on all queries, mutations and, subscription variables and results**
 
 - **less boilerplate** (thanks to full code generation such as React hooks generation)
+
+<Callout>
+**Operations and fragments must have unique names**
+
+GraphQL Code Generator checks for this automatically and will let you know if you have any conflicts.
+</Callout>
 
 <Callout>
 **How does GraphQL Code Generator work?**
@@ -434,7 +503,7 @@ Given the following structure:
 
 The User module resolvers would be:
 
-```tsx filename="src/modules/user/resolvers.ts"
+```ts filename="src/modules/user/resolvers.ts"
 import { UsersModule } from './generated-types/module-types'
 
 export const resolvers: UsersModule.Resolvers = {
@@ -446,9 +515,14 @@ export const resolvers: UsersModule.Resolvers = {
 
 ## What's next?
 
-Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project.
+Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project or get started with our guides:
+- [React and Vue](/docs/guides/react-vue)
+- [Angular](/docs/guides/angular)
+- [Svelte](/docs/guides/svelte)
+- [Apollo and Yoga server](/docs/guides/graphql-server-apollo-yoga)
+- [GraphQL Modules](/docs/guides/graphql-modules)
 
-Then, you can either read a guide or go over [the list of available plugins](/plugins) to find more plugins that satisfy your needs.
+If your stack is not listed above, please refer to [our plugins directory](/plugins).
 
 If you are experiencing any issues, you can reach us via the following channels:
 

@@ -19,15 +19,21 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       withSmartOperationFunctions: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          withSmartOperationFunctions: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   withSmartOperationFunctions?: boolean;
@@ -45,15 +51,21 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default vue-apollo-smart-ops
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       vueApolloOperationFunctionsImportFrom: vue-apollo-smart-ops
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          vueApolloOperationFunctionsImportFrom: 'vue-apollo-smart-ops'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueApolloOperationFunctionsImportFrom?: 'vue-apollo-smart-ops' | string;
@@ -65,16 +77,22 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default ApolloError
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       vueApolloErrorType: ApolloError
-   *       vueApolloErrorTypeImportFrom: apollo-client
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          vueApolloErrorType: 'ApolloError',
+   *          vueApolloErrorTypeImportFrom: 'apollo-client'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueApolloErrorType?: 'ApolloError' | string;
@@ -86,16 +104,22 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default vue-apollo-smart-ops
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       vueApolloErrorType: ApolloError
-   *       vueApolloErrorTypeImportFrom: apollo-client
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          vueApolloErrorType: 'ApolloError',
+   *          vueApolloErrorTypeImportFrom: 'apollo-client'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueApolloErrorTypeImportFrom?: 'apollo-client' | string;
@@ -110,16 +134,22 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       vueApolloErrorHandlerFunction: handleApolloError
-   *       vueApolloErrorHandlerFunctionImportFrom: ./src/handleApolloError.ts
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          vueApolloErrorHandlerFunction: 'handleApolloError',
+   *          vueApolloErrorHandlerFunctionImportFrom: './src/handleApolloError.ts',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueApolloErrorHandlerFunction?: string;
@@ -130,16 +160,22 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       vueApolloErrorHandlerFunction: handleApolloError
-   *       vueApolloErrorHandlerFunctionImportFrom: ./src/handleApolloError.ts
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          vueApolloErrorHandlerFunction: 'handleApolloError',
+   *          vueApolloErrorHandlerFunctionImportFrom: './src/handleApolloError.ts',
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueApolloErrorHandlerFunctionImportFrom?: string;
@@ -152,16 +188,22 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       vueAppType: Vue
-   *       vueAppTypeImportFrom: vue/types/vue
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          vueAppType: 'Vue',
+   *          vueAppTypeImportFrom: 'vue/types/vue'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueAppType?: string;
@@ -172,16 +214,22 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default undefined
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       vueAppType: Vue
-   *       vueAppTypeImportFrom: vue/types/vue
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          vueAppType: 'Vue',
+   *          vueAppTypeImportFrom: 'vue/types/vue'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   vueAppTypeImportFrom?: string;
@@ -193,15 +241,21 @@ export interface VueApolloSmartOpsRawPluginConfig extends RawClientSideBasePlugi
    * @default true
    *
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   path/to/file.ts:
-   *     plugins:
-   *       - typescript
-   *       - typescript-operations
-   *       - typescript-vue-apollo-smart-ops
-   *     config:
-   *       addDocBlocks: true
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations', 'typescript-vue-apollo-smart-ops'],
+   *        config: {
+   *          addDocBlocks: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   addDocBlocks?: boolean;

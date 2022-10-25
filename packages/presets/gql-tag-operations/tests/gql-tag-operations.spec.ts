@@ -36,13 +36,13 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
-          "\\n  query A {\\n    a\\n  }\\n": graphql.ADocument,
-          "\\n  query B {\\n    b\\n  }\\n": graphql.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": graphql.CFragmentDoc,
+          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
       export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
@@ -91,13 +91,13 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
-          "\\n  query a {\\n    a\\n  }\\n": graphql.ADocument,
-          "\\n  query b {\\n    b\\n  }\\n": graphql.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": graphql.CFragmentDoc,
+          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
       export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
@@ -139,13 +139,13 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
-          "\\n  query a {\\n    a\\n  }\\n": graphql.ADocument,
-          "\\n  query b {\\n    b\\n  }\\n": graphql.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": graphql.CFragmentDoc,
+          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
       export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
@@ -188,13 +188,13 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as types from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
-          "\\n  query A {\\n    a\\n  }\\n": graphql.ADocument,
-          "\\n  query B {\\n    b\\n  }\\n": graphql.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": graphql.CFragmentDoc,
+          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
       export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
@@ -283,11 +283,11 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql';
+      import * as types from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
-          "\\n  query a {\\n    a\\n  }\\n": graphql.ADocument,
+          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
       };
 
       export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
@@ -379,9 +379,9 @@ describe('gql-tag-operations-preset', () => {
           infer TType,
           any
         >
-          ? TType extends { ' $fragmentName': infer TKey }
+          ? TType extends { ' $fragmentName'?: infer TKey }
             ? TKey extends string
-              ? { ' $fragmentRefs': { [key in TKey]: TType } }
+              ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
               : never
             : never
           : never;
@@ -477,9 +477,9 @@ describe('gql-tag-operations-preset', () => {
           infer TType,
           any
         >
-          ? TType extends { ' $fragmentName': infer TKey }
+          ? TType extends { ' $fragmentName'?: infer TKey }
             ? TKey extends string
-              ? { ' $fragmentRefs': { [key in TKey]: TType } }
+              ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
               : never
             : never
           : never;
@@ -665,9 +665,9 @@ describe('gql-tag-operations-preset', () => {
           infer TType,
           any
         >
-          ? TType extends { ' $fragmentName': infer TKey }
+          ? TType extends { ' $fragmentName'?: infer TKey }
             ? TKey extends string
-              ? { ' $fragmentRefs': { [key in TKey]: TType } }
+              ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
               : never
             : never
           : never;
@@ -727,13 +727,13 @@ describe('gql-tag-operations-preset', () => {
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      import * as graphql from './graphql.js';
+      import * as types from './graphql.js';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
       const documents = {
-          "\\n  query A {\\n    a\\n  }\\n": graphql.ADocument,
-          "\\n  query B {\\n    b\\n  }\\n": graphql.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": graphql.CFragmentDoc,
+          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
       export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];

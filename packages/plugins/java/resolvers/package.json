@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java-resolvers",
-  "version": "2.3.3",
+  "version": "2.3.5",
   "description": "GraphQL Code Generator plugin for generating resolvers signature for Java backends",
   "repository": {
     "type": "git",
@@ -13,9 +13,9 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/java-common": "^2.2.3",
+    "@graphql-codegen/java-common": "^2.2.5",
     "@graphql-codegen/plugin-helpers": "^2.6.2",
-    "@graphql-codegen/visitor-plugin-common": "2.12.1",
+    "@graphql-codegen/visitor-plugin-common": "2.13.0",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {

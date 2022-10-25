@@ -7,6 +7,14 @@ import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
+<Callout type="info" emoji="💡">
+
+We now recommend using the `client-preset` package for a **better developer experience** and smaller impact on bundle size.
+
+**Get started on [our "React/Vue" guide](/docs/guides/react-vue).**
+
+</Callout>
+
 <PluginHeader hasOperationsNote />
 <PluginApiDocs />
 
@@ -21,17 +29,22 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 
 By default, this plugin will generate a `fetcher` based on the environment global `fetch` definition.
 
-```yaml
-schema: MY_SCHEMA_PATH
-documents: './src/**/*.graphql'
-generates:
-  ./generates.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher: fetch
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'MY_SCHEMA_PATH',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generates.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      config: {
+        fetcher: 'fetch'
+      }
+    }
+  }
+}
+export default config
 ```
 
 To use the generated hooks, import it, and then specify the endpoint and optionally `fetchParams`:
@@ -55,56 +68,83 @@ export const MyComponent = () => {
 
 If you wish to avoid specifying `endpoint` and `fetchParams` on each hook usage, you can specify those in the `codegen.yml` file:
 
-```yaml
-schema: MY_SCHEMA_PATH
-documents: './src/**/*.graphql'
-generates:
-  ./generates.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher:
-        endpoint: 'http://localhost:3000/graphql'
-        fetchParams:
-          headers:
-            My-Header: SomeValue
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'MY_SCHEMA_PATH',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generates.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      config: {
+        fetcher: {
+          endpoint: 'http://localhost:3000/graphql',
+          fetchParams: {
+            headers: {
+              'My-Header': 'SomeValue'
+            }
+          }
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 And if you wish to have more control over the value, or even provide it in runtime, you can use environment variables:
 
-```yaml
-schema: MY_SCHEMA_PATH
-documents: './src/**/*.graphql'
-generates:
-  ./generates.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher:
-        endpoint: 'process.env.ENDPOINT'
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'MY_SCHEMA_PATH',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generates.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      config: {
+        fetcher: {
+          endpoint: 'process.env.ENDPOINT'
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 You can even use a custom variable from your code, and add custom imports with `add` plugin:
 
-```yaml
-schema: MY_SCHEMA_PATH
-documents: './src/**/*.graphql'
-generates:
-  ./generates.ts:
-    plugins:
-      - add:
-          content: "import { endpointUrl, fetchParams } from './my-config';"
-      - typescript
-      - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher:
-        endpoint: 'endpointUrl'
-        fetchParams: 'fetchParams'
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'MY_SCHEMA_PATH',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generates.ts': {
+      plugins: [
+        {
+          add: {
+            content: "import { endpointUrl, fetchParams } from './my-config';"
+          }
+        },
+        'typescript',
+        'typescript-operations',
+        'typescript-react-query'
+      ],
+      config: {
+        fetcher: {
+          endpoint: 'endpointUrl',
+          fetchParams: 'fetchParams'
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 The generated hooks doesn't require you to specify anything, you can just use it as-is:
@@ -121,17 +161,22 @@ export const MyComponent = () => {
 
 If you are using `graphql-request`, you can set `fetcher` to `graphql-request`, and then the generated React Hook will expect you to pass the `GraphQLClient` instance (created by `graphql-request` library).
 
-```yaml
-schema: MY_SCHEMA_PATH
-documents: './src/**/*.graphql'
-generates:
-  ./generates.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher: graphql-request
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'MY_SCHEMA_PATH',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generates.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      config: {
+        fetcher: 'graphql-request'
+      }
+    }
+  }
+}
+export default config
 ```
 
 And the, while using, provide your `client` instance:
@@ -149,24 +194,30 @@ export const MyComponent = () => {
 
 If you wish to create a custom fetcher, you can provide your own function as a Mapper string (`file#identifier`). Codegen will take care of importing it and use it as a fetcher.
 
-```yaml
-schema: MY_SCHEMA_PATH
-documents: './src/**/*.graphql'
-generates:
-  ./generates.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher:
-        func: './my-file#myFetcher'
-        isReactHook: false # optional, defaults to false, controls the function's signature. Read below
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'MY_SCHEMA_PATH',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generates.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      config: {
+        fetcher: {
+          func: './my-file#myFetcher',
+          isReactHook: false // optional, defaults to false, controls the function's signature. Read below
+        }
+      }
+    }
+  }
+}
+export default config
 ```
 
 As a shortcut, the `fetcher` property may also directly contain the function as a mapper string:
 
-```yaml
+```ts filename="codegen.ts"
 # …
 config:
   fetcher: './my-file#myFetcher' # isReactHook is false here (the default version)

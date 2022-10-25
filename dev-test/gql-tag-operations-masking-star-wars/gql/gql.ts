@@ -1,12 +1,12 @@
 /* eslint-disable */
-import * as graphql from './graphql.js';
+import * as types from './graphql.js';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
   '\n  query HeroDetailsWithFragment($episode: Episode) {\n    hero(episode: $episode) {\n      ...HeroDetails\n    }\n  }\n':
-    graphql.HeroDetailsWithFragmentDocument,
+    types.HeroDetailsWithFragmentDocument,
   '\n  fragment HeroDetails on Character {\n    __typename\n    name\n    ... on Human {\n      height\n    }\n    ... on Droid {\n      primaryFunction\n    }\n  }\n':
-    graphql.HeroDetailsFragmentDoc,
+    types.HeroDetailsFragmentDoc,
 };
 
 export function gql(

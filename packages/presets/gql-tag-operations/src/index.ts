@@ -28,43 +28,103 @@ export type GqlTagConfig = {
    * E.g. `graphql-tag` or `@urql/core`.
    *
    * @exampleMarkdown
-   * ```yaml {5}
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       augmentedModuleName: '@urql/core'
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'gql-tag-operations',
+   *        plugins: [],
+   *        presetConfig: {
+   *          augmentedModuleName: '@urql/core'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   augmentedModuleName?: string;
   /**
    * @description Fragment masking hides data from components and only allows accessing the data by using a unmasking function.
    * @exampleMarkdown
-   * ```yaml
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       fragmentMasking: true
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'gql-tag-operations',
+   *        plugins: [],
+   *        presetConfig: {
+   *          fragmentMasking: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    *
    * When using the `augmentedModuleName` option, the unmask function will by default NOT be imported from the same module. It will still be generated to a `index.ts` file. You can, however, specify to resolve the unmasking function from an an augmented module by using the `augmentedModuleName` object sub-config.
    * @exampleMarkdown
-   * ```yaml {6-7}
-   * generates:
-   *   gql/:
-   *     preset: gql-tag-operations-preset
-   *     presetConfig:
-   *       augmentedModuleName: '@urql/core'
-   *       fragmentMasking:
-   *         augmentedModuleName: '@urql/fragment'
+   * ```ts filename="codegen.ts" {10-13}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'gql-tag-operations',
+   *        plugins: [],
+   *        presetConfig: {
+   *          augmentedModuleName: '@urql/core',
+   *          fragmentMasking: {
+   *            augmentedModuleName: '@urql/fragment',
+   *          },
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
    * ```
    */
   fragmentMasking?: FragmentMaskingConfig | boolean;
+  /**
+   * @description Specify the name of the "graphql tag" function to use
+   * @default "gql"
+   *
+   * E.g. `graphql` or `gql`.
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts" {10}
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        preset: 'gql-tag-operations',
+   *        plugins: [],
+   *        presetConfig: {
+   *          gqlTagName: 'graphql'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  gqlTagName?: string;
 };
 
 export const preset: Types.OutputPreset<GqlTagConfig> = {
   buildGeneratesSection: options => {
+    // TODO: add link?
+    // eslint-disable-next-line no-console
+    console.warn('DEPRECATED: `gql-tag-operations-preset` is deprecated in favor of `client-preset`.');
     /** when not using augmentation stuff must be re-exported. */
     const reexports: Array<string> = [];
 
@@ -190,6 +250,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         config: {
           ...config,
           augmentedModuleName: options.presetConfig.augmentedModuleName,
+          gqlTagName: options.presetConfig.gqlTagName || 'gql',
         },
         documents: sources,
       },
