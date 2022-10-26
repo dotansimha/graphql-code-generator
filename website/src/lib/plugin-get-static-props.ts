@@ -1,7 +1,7 @@
 import { PACKAGES } from '@/lib/plugins';
 import { compileMdx } from 'nextra/compile';
 import { transformDocs } from '@/lib/transform';
-import { fetchNpmInfo } from '@/lib/fetch-npm-info';
+import { fetchPackageInfo } from '@theguild/components';
 import { parse } from 'node:path';
 import { format } from 'date-fns';
 
@@ -14,18 +14,13 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
     throw new Error(`Unknown "${identifier}" plugin identifier`);
   }
   const { npmPackage } = plugin;
-  const { readme, updatedAt } = await fetchNpmInfo(npmPackage);
+  const { readme, updatedAt } = await fetchPackageInfo(npmPackage);
 
   const generatedDocs = transformDocs();
   const source = generatedDocs.docs[identifier] || readme.replaceAll('```yml', '```yaml') || '';
 
   const [mdx, mdxHeader] = await Promise.all([
-    compileMdx(source, {
-      mdxOptions: {
-        outputFormat: 'function-body',
-        jsx: false,
-      },
-    }),
+    compileMdx(source),
     compileMdx(
       `
 |Package name|Weekly Downloads|Version|License|Updated|
@@ -36,20 +31,12 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
       )}|
 
 ### Installation
-`,
-      {
-        mdxOptions: {
-          outputFormat: 'function-body',
-          jsx: false,
-        },
-      }
+`
     ),
   ]);
 
   return {
     props: {
-      // We add an `ssg` field to the page props,
-      // which will be provided to the Nextra `useSSG` hook.
       ssg: {
         npmPackage,
         compiledSource: mdx.result,
