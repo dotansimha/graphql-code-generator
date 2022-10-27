@@ -1,8 +1,7 @@
 {
-  "index": {
-    "title": "Plugins",
+  "*": {
     "theme": {
-      "layout": "raw"
+      "layout": "default"
     }
   },
   "typescript": "TypeScript",
