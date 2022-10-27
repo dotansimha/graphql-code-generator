@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 2.13.8
+
+### Patch Changes
+
+- [#8535](https://github.com/dotansimha/graphql-code-generator/pull/8535) [`88aa38ff9`](https://github.com/dotansimha/graphql-code-generator/commit/88aa38ff9eb94b66d783a4af3116d9d3313fdbfd) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/load@7.8.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/load/v/7.8.0) (from `^7.7.1`, in `dependencies`)
+
+- [#8535](https://github.com/dotansimha/graphql-code-generator/pull/8535) [`88aa38ff9`](https://github.com/dotansimha/graphql-code-generator/commit/88aa38ff9eb94b66d783a4af3116d9d3313fdbfd) Thanks [@charlypoly](https://github.com/charlypoly)! - Upgrade `@graphql-tools/load` to get benefits of debug mode
+
 ## 2.13.7
 
 ### Patch Changes
