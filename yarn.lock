@@ -1810,13 +1810,23 @@
     unixify "1.0.0"
     valid-url "1.0.9"
 
-"@graphql-tools/load@7.7.6", "@graphql-tools/load@^7.5.5", "@graphql-tools/load@^7.7.1":
+"@graphql-tools/load@7.7.6":
   version "7.7.6"
   resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.7.6.tgz#9aa232a82c0ba3353f22fa0edc80c612ee6b5b80"
   integrity sha512-4dWBZhc14Z7QHICABHaL2MGBRMmJ+tKNYPcQBQQYLo22ArApWCBQ73tkDMhyM9M2GXteJBPsxcwb0LaOau30zQ==
   dependencies:
     "@graphql-tools/schema" "9.0.3"
     "@graphql-tools/utils" "8.11.0"
+    p-limit "3.1.0"
+    tslib "^2.4.0"
+
+"@graphql-tools/load@7.8.0", "@graphql-tools/load@^7.5.5":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/load/-/load-7.8.0.tgz#bd4d2e2a5117de9a60f9691a218217e96afc2ea7"
+  integrity sha512-l4FGgqMW0VOqo+NMYizwV8Zh+KtvVqOf93uaLo9wJ3sS3y/egPCgxPMDJJ/ufQZG3oZ/0oWeKt68qop3jY0yZg==
+  dependencies:
+    "@graphql-tools/schema" "9.0.4"
+    "@graphql-tools/utils" "8.12.0"
     p-limit "3.1.0"
     tslib "^2.4.0"
 
@@ -1844,12 +1854,20 @@
     "@graphql-tools/utils" "8.10.1"
     tslib "^2.4.0"
 
-"@graphql-tools/merge@8.3.5", "@graphql-tools/merge@^8.2.6":
+"@graphql-tools/merge@8.3.5":
   version "8.3.5"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.3.5.tgz#6360a05759c05f00a68b18a83295a2663f4b9324"
   integrity sha512-NunMCiYNK5GVJewhqQKsUnTFKSsScmZX6Lvf/LLxCDwczMH2Xi4ifRtb2GSQaX1+TYV4Rj/BAE8VUvO3tKIUhQ==
   dependencies:
     "@graphql-tools/utils" "8.11.0"
+    tslib "^2.4.0"
+
+"@graphql-tools/merge@8.3.6", "@graphql-tools/merge@^8.2.6":
+  version "8.3.6"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.3.6.tgz#97a936d4c8e8f935e58a514bb516c476437b5b2c"
+  integrity sha512-uUBokxXi89bj08P+iCvQk3Vew4vcfL5ZM6NTylWi8PIpoq4r5nJ625bRuN8h2uubEdRiH8ntN9M4xkd/j7AybQ==
+  dependencies:
+    "@graphql-tools/utils" "8.12.0"
     tslib "^2.4.0"
 
 "@graphql-tools/merge@^6.2.4":
@@ -1932,13 +1950,23 @@
     tslib "^2.4.0"
     value-or-promise "1.0.11"
 
-"@graphql-tools/schema@9.0.3", "@graphql-tools/schema@^9.0.0":
+"@graphql-tools/schema@9.0.3":
   version "9.0.3"
   resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-9.0.3.tgz#2c7e73433b3a792ca74ab08ccbc0755eefbf967f"
   integrity sha512-nMnrvhxZ/NxpEjiyO72L9ZKbhRlFTwan60v0otYde+tS2Ww/c7y4FL9fQTXev5ZNnSeV/WAeybpis2pMNfTbOA==
   dependencies:
     "@graphql-tools/merge" "8.3.5"
     "@graphql-tools/utils" "8.11.0"
+    tslib "^2.4.0"
+    value-or-promise "1.0.11"
+
+"@graphql-tools/schema@9.0.4", "@graphql-tools/schema@^9.0.0":
+  version "9.0.4"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-9.0.4.tgz#1a74608b57abf90fae6fd929d25e5482c57bc05d"
+  integrity sha512-B/b8ukjs18fq+/s7p97P8L1VMrwapYc3N2KvdG/uNThSazRRn8GsBK0Nr+FH+mVKiUfb4Dno79e3SumZVoHuOQ==
+  dependencies:
+    "@graphql-tools/merge" "8.3.6"
+    "@graphql-tools/utils" "8.12.0"
     tslib "^2.4.0"
     value-or-promise "1.0.11"
 
@@ -3440,15 +3468,15 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@16.11.58", "@types/node@^16.9.2":
-  version "16.11.58"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.58.tgz#0a3698dee3492617a8d5fe7998d18d7520b63026"
-  integrity sha512-uMVxJ111wpHzkx/vshZFb6Qni3BOMnlWLq7q9jrwej7Yw/KvjsEbpxCCxw+hLKxexFMc8YmpG8J9tnEe/rKsIg==
-
-"@types/node@18.7.23":
+"@types/node@*", "@types/node@18.7.23":
   version "18.7.23"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.23.tgz#75c580983846181ebe5f4abc40fe9dfb2d65665f"
   integrity sha512-DWNcCHolDq0ZKGizjx2DZjR/PqsYwAcYUJmfMWqtVU2MBMG5Mo+xFZrhGId5r/O5HOuMPyQEcM6KUBp5lBZZBg==
+
+"@types/node@16.11.58", "@types/node@^16.9.2":
+  version "16.11.58"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.58.tgz#0a3698dee3492617a8d5fe7998d18d7520b63026"
+  integrity sha512-uMVxJ111wpHzkx/vshZFb6Qni3BOMnlWLq7q9jrwej7Yw/KvjsEbpxCCxw+hLKxexFMc8YmpG8J9tnEe/rKsIg==
 
 "@types/node@^10.1.0":
   version "10.17.60"
