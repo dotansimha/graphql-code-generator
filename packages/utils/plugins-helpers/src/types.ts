@@ -16,6 +16,8 @@ export namespace Types {
       [name: string]: CodegenPlugin;
     };
     skipDocumentsValidation?: Types.SkipDocumentsValidationOptions;
+    // Defaults to `graphql-tools` using `validateGraphQlDocuments()`
+    documentsValidator?: 'graphql-tools' | 'codegen';
     pluginContext?: { [key: string]: any };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
