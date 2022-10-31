@@ -1,4 +1,4 @@
-
+/
 /docs -> /docs/getting-started
 /docs/advanced -> /docs/advanced/generated-files-colocation
 /docs/advanced/generated-files-colocation
@@ -69,6 +69,8 @@
 /docs/presets -> /plugins
 /docs/presets/presets-index -> /plugins
 /docs/tags -> /docs/getting-started
+/home -> /
+/live-demo -> /
 /plugins
 /plugins/add -> /plugins/other/add
 /plugins/base-visitor -> /docs/custom-codegen/using-visitor
