@@ -1,6 +1,6 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { isDocumentNode, LoadDocumentError, Source } from '@graphql-tools/utils';
-import { DocumentNode, GraphQLSchema, isSchema, Kind, validate, ValidationRule } from 'graphql';
+import { isDocumentNode } from '@graphql-tools/utils';
+import { DocumentNode, GraphQLSchema, isSchema, Kind } from 'graphql';
 
 export function isObjectMap(obj: any): obj is Types.PluginConfig<any> {
   return obj && typeof obj === 'object' && !Array.isArray(obj);
@@ -83,32 +83,4 @@ export function extractHashFromSchema(schema: GraphQLSchema): string | null {
   }
 
   return (schema.extensions['hash'] as string) ?? null;
-}
-
-export function fastValidateGraphQLDocuments(
-  schema: GraphQLSchema,
-  documentFiles: Source[],
-  effectiveRules?: ValidationRule[]
-): Promise<readonly LoadDocumentError[]> {
-  const document: DocumentNode = {
-    kind: Kind.DOCUMENT,
-    definitions: documentFiles.flatMap(df => df.document.definitions),
-  };
-  const errors = validate(schema, document, effectiveRules);
-  if (errors) {
-    return Promise.reject(
-      errors.reduce((acc, e) => {
-        if (!acc[e.name]) {
-          acc[e.name] = {
-            filePath: e.name,
-            errors: [],
-          };
-        }
-        acc[e.name].errors.push(e);
-        return acc;
-      }, {})
-    );
-  } else {
-    return Promise.resolve([]);
-  }
 }

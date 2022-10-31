@@ -14,7 +14,6 @@ import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from
 import { mergeSchemas } from '@graphql-tools/schema';
 import {
   extractHashFromSchema,
-  fastValidateGraphQLDocuments,
   getSkipDocumentsValidationOption,
   hasFederationSpec,
   pickFlag,
@@ -100,9 +99,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         .join(',');
 
       return options.cache('documents-validation', cacheKey, () =>
-        options.documentsValidator === 'codegen'
-          ? fastValidateGraphQLDocuments(schemaInstance, [...documents, ...fragments], rules)
-          : validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules)
+        validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules)
       );
     }, 'Validate documents against schema');
     checkValidationErrors(errors);
