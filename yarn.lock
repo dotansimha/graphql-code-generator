@@ -2033,6 +2033,13 @@
   dependencies:
     tslib "^2.4.0"
 
+"@graphql-tools/utils@9.0.0-alpha-20221031144042-b669677e":
+  version "9.0.0-alpha-20221031144042-b669677e"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-9.0.0-alpha-20221031144042-b669677e.tgz#9ed7ec5691f01a6d7f07a5bc7d290065b1053479"
+  integrity sha512-ebeYBTsMjqVr2wuDtQt3d/OnUMl6ESO8k9bE/Cf3eXWlikBmdjleSYLDk39RNlMUuadlMdvZUHDm79XGCN75jw==
+  dependencies:
+    tslib "^2.4.0"
+
 "@graphql-tools/utils@^6.2.4":
   version "6.2.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.2.4.tgz#38a2314d2e5e229ad4f78cca44e1199e18d55856"
