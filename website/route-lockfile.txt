@@ -19,11 +19,12 @@
 /docs/custom-codegen/contributing
 /docs/custom-codegen/extend-schema
 /docs/custom-codegen/plugin-structure
+/docs/custom-codegen/using-handlebars -> /docs/custom-codegen
 /docs/custom-codegen/using-visitor
 /docs/custom-codegen/validate-configuration
 /docs/custom-codegen/write-your-plugin -> /docs/custom-codegen
 /docs/generated-config/base-documents-visitor -> /plugins
-/docs/generated-config/base-visitor -> /plugins
+/docs/generated-config/base-visitor -> /docs/custom-codegen/using-visitor
 /docs/getting-started
 /docs/getting-started/codegen-config -> /docs/config-reference/codegen-config
 /docs/getting-started/config-field -> /docs/config-reference/config-field
@@ -41,11 +42,13 @@
 /docs/getting-startedinstallation -> /docs/getting-started
 /docs/guides/angular
 /docs/guides/flutter-freezed
+/docs/guides/front-end-typescript-only -> /docs/guides/react-vue
 /docs/guides/further-reading
 /docs/guides/graphql-modules
 /docs/guides/graphql-server-apollo-yoga
 /docs/guides/react -> /docs/guides/react-vue
 /docs/guides/react-vue
+/docs/guides/react-vue-angular -> /docs/guides/react-vue
 /docs/guides/svelte
 /docs/guides/vue -> /docs/guides/react-vue
 /docs/integrations -> /plugins
@@ -63,10 +66,13 @@
 /docs/plugins/typescript-common -> /plugins/typescript/typescript
 /docs/plugins/typescript-graphql-requesttypescript-graphql-request -> /plugins/typescript/typescript-graphql-request
 /docs/plugins/typescript-server -> /plugins/typescript/typescript-resolvers
+/docs/presets -> /plugins
 /docs/presets/presets-index -> /plugins
 /docs/tags -> /docs/getting-started
 /plugins
 /plugins/add -> /plugins/other/add
+/plugins/base-visitor -> /docs/custom-codegen/using-visitor
+/plugins/c-sharp -> /plugins/c-sharp/c-sharp-operations
 /plugins/c-sharp-operations -> /plugins/c-sharp/c-sharp-operations
 /plugins/c-sharp/c-sharp-operations
 /plugins/core -> /plugins
@@ -109,9 +115,12 @@
 /plugins/other/typescript-operations -> /plugins/typescript/typescript-operations
 /plugins/other/urql-introspection
 /plugins/presets -> /plugins
+/plugins/presets/client -> /docs/guides/react-vue
+/plugins/presets/client-preset -> /docs/guides/react-vue
 /plugins/presets/gql-tag-operations-preset
 /plugins/presets/graphql-modules-preset
 /plugins/presets/import-types-preset
+/plugins/presets/near-operation-file -> /plugins/presets/near-operation-file-preset
 /plugins/presets/near-operation-file-preset
 /plugins/reason-client -> /plugins/other/reason-client
 /plugins/relay-operation-optimizer -> /plugins/typescript/relay-operation-optimizer
@@ -128,6 +137,7 @@
 /plugins/typescript-generic-sdk -> /plugins/typescript/typescript-generic-sdk
 /plugins/typescript-graphql-files-modules -> /plugins/typescript/typescript-graphql-files-modules
 /plugins/typescript-graphql-request -> /plugins/typescript/typescript-graphql-request
+/plugins/typescript-mock-data -> /plugins/typescript/typescript-mock-data
 /plugins/typescript-mongodb -> /plugins/typescript/typescript-mongodb
 /plugins/typescript-msw -> /plugins/typescript/typescript-msw
 /plugins/typescript-oclif -> /plugins/typescript/typescript-oclif
@@ -146,11 +156,15 @@
 /plugins/typescript-vue-apollo -> /plugins/typescript/typescript-vue-apollo
 /plugins/typescript-vue-apollo-smart-ops -> /plugins/typescript/typescript-vue-apollo-smart-ops
 /plugins/typescript-vue-urql -> /plugins/typescript/typescript-vue-urql
+/plugins/typescript/add -> /plugins/other/add
 /plugins/typescript/fragment-matcher -> /plugins/other/fragment-matcher
+/plugins/typescript/instrospection -> /plugins/other/introspection
 /plugins/typescript/named-operations-object
+/plugins/typescript/near-operation-file -> /plugins/presets/near-operation-file-preset
 /plugins/typescript/relay-operation-optimizer
 /plugins/typescript/typed-document-node
 /plugins/typescript/typescript
+/plugins/typescript/typescript-add -> /plugins/other/add
 /plugins/typescript/typescript-apollo-angular
 /plugins/typescript/typescript-apollo-client-helpers
 /plugins/typescript/typescript-apollo-next
@@ -158,6 +172,7 @@
 /plugins/typescript/typescript-generic-sdk
 /plugins/typescript/typescript-graphql-files-modules
 /plugins/typescript/typescript-graphql-request
+/plugins/typescript/typescript-mock-data
 /plugins/typescript/typescript-mongodb
 /plugins/typescript/typescript-msw
 /plugins/typescript/typescript-oclif
