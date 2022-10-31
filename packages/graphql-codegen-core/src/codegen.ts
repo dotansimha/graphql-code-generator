@@ -115,7 +115,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       );
     }, 'Validate documents against schema');
 
-    if (errors) {
+    if (errors.length > 0) {
       throw new Error(
         `GraphQL Document Validation failed with ${errors.length} errors;
   ${errors.map((error, index) => `Error ${index}: ${error.stack}`).join('\n\n')}`
