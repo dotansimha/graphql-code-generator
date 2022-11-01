@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index.js';
-import { schema } from '../../../typescript/resolvers/tests/common.js';
+import { resolversTestingSchema } from '@graphql-codegen/testing';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor.js';
 
@@ -132,7 +132,7 @@ describe('Flow Resolvers Plugin', () => {
   });
 
   it('Should generate basic type resolvers', () => {
-    const result = plugin(schema, [], {}, { outputFile: '' });
+    const result = plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(result).toMatchSnapshot();
   });
@@ -156,7 +156,7 @@ describe('Flow Resolvers Plugin', () => {
   });
 
   it('Should generate ResolversParentTypes', () => {
-    const result = plugin(schema, [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
+    const result = plugin(resolversTestingSchema, [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
       /** Mapping between all available schema types and the resolvers parents */

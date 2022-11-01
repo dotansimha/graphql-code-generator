@@ -1,12 +1,12 @@
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
-import { schema, validate } from './common.js';
+import { resolversTestingSchema, resolversTestingValidate } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 import { buildSchema } from 'graphql';
 
 describe('ResolversTypes', () => {
   it('Should build ResolversTypes object when there are no mappers', async () => {
-    const result = await plugin(schema, [], {}, { outputFile: '' });
+    const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
@@ -29,7 +29,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with simple mappers', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -247,7 +247,7 @@ describe('ResolversTypes', () => {
       }
     `;
 
-    await validate(
+    await resolversTestingValidate(
       mergeOutputs([usage, result]),
       {
         scalars: {
@@ -260,7 +260,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with defaultMapper set using {T}', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -290,7 +290,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with defaultMapper set using {T} with external identifier', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -321,7 +321,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with mapper set for concrete type using {T} with external identifier', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -422,12 +422,12 @@ describe('ResolversTypes', () => {
       }
     `;
 
-    await validate(mergeOutputs([result, usage]), config, testSchema);
+    await resolversTestingValidate(mergeOutputs([result, usage]), config, testSchema);
   });
 
   it('Should build ResolversTypes with mapper set for concrete type using renamed external identifier', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -460,7 +460,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with mapper set for concrete type using renamed external identifier (with default)', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -494,7 +494,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with mapper set for concrete type using renamed external identifier (with default) and type import', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -531,7 +531,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with defaultMapper set', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -565,7 +565,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with external mappers', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -598,7 +598,7 @@ describe('ResolversTypes', () => {
 
   it('Should handle {T} in a mapper', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -708,7 +708,7 @@ describe('ResolversTypes', () => {
 
   it('Should generate basic type resolvers with external mappers', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -785,12 +785,12 @@ describe('ResolversTypes', () => {
         somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should generate basic type resolvers with external mappers using same imported type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -868,13 +868,13 @@ describe('ResolversTypes', () => {
         somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should generate the correct resolvers when used with mappers with interfaces', async () => {
     const spy = jest.spyOn(console, 'warn').mockImplementation();
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -949,14 +949,14 @@ describe('ResolversTypes', () => {
         somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
-    await validate(mergeOutputs([result, `type MyNodeType = {};`]));
+    await resolversTestingValidate(mergeOutputs([result, `type MyNodeType = {};`]));
 
     spy.mockRestore();
   });
 
   it('Should generate basic type resolvers with defaultMapper set to any', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -1019,12 +1019,12 @@ describe('ResolversTypes', () => {
         somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should generate basic type resolvers with defaultMapper set to external identifier', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -1089,12 +1089,12 @@ describe('ResolversTypes', () => {
         somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, "somethingChanged", ParentType, ContextType>;
       };
     `);
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should replace using Omit when non-mapped type is pointing to mapped type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -1122,12 +1122,12 @@ describe('ResolversTypes', () => {
       Int: ResolverTypeWrapper<Scalars['Int']>;
       Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
     };`);
-    await validate(mergeOutputs([result, 'type MyOtherTypeCustom = {};']));
+    await resolversTestingValidate(mergeOutputs([result, 'type MyOtherTypeCustom = {};']));
   });
 
   it('Should not replace using Omit when non-mapped type is pointing to mapped type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -1156,11 +1156,11 @@ describe('ResolversTypes', () => {
       Int: ResolverTypeWrapper<Scalars['Int']>;
       Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
     };`);
-    await validate(mergeOutputs([result, `type MyTypeCustom = {}; type MyOtherTypeCustom = {};`]));
+    await resolversTestingValidate(mergeOutputs([result, `type MyTypeCustom = {}; type MyOtherTypeCustom = {};`]));
   });
 
   it('Should build ResolversTypes object when there are no mappers', async () => {
-    const result = await plugin(schema, [], {}, { outputFile: '' });
+    const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
@@ -1184,7 +1184,7 @@ describe('ResolversTypes', () => {
 
   it('should support namespaces', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -1238,7 +1238,7 @@ describe('ResolversTypes', () => {
 
   it('should support namespaces in contextType', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -1256,7 +1256,7 @@ describe('ResolversTypes', () => {
 
   it('should support namespaces in defaultMapper', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         defaultMapper: './my-file#MyNamespace#MyDefaultMapper',
@@ -1307,7 +1307,7 @@ describe('ResolversTypes', () => {
 
   it('should support namespaces in rootValueType', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -1359,7 +1359,7 @@ describe('ResolversTypes', () => {
 
   it('should support namespaces and {T} placeholder', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         defaultMapper: './my-file#MyNamespace#MyDefaultMapper<{T}>',
