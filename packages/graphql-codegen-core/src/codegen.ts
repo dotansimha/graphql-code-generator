@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules, DocumentNode } from 'graphql';
 import { executePlugin } from './execute-plugin.js';
-import { checkValidationErrors, validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
+import { validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
 
 import { mergeSchemas } from '@graphql-tools/schema';
 import {
@@ -89,7 +89,13 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       const schemaHash = extractHashFromSchema(schemaInstance);
 
       if (!schemaHash || !options.cache || documents.some(d => typeof d.hash !== 'string')) {
-        return validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules);
+        return Promise.resolve(
+          validateGraphQlDocuments(
+            schemaInstance,
+            [...documents.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
+            rules
+          )
+        );
       }
 
       const cacheKey = [schemaHash]
@@ -98,10 +104,22 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         .join(',');
 
       return options.cache('documents-validation', cacheKey, () =>
-        validateGraphQlDocuments(schemaInstance, [...documents, ...fragments], rules)
+        Promise.resolve(
+          validateGraphQlDocuments(
+            schemaInstance,
+            [...documents.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
+            rules
+          )
+        )
       );
     }, 'Validate documents against schema');
-    checkValidationErrors(errors);
+
+    if (errors.length > 0) {
+      throw new Error(
+        `GraphQL Document Validation failed with ${errors.length} errors;
+  ${errors.map((error, index) => `Error ${index}: ${error.stack}`).join('\n\n')}`
+      );
+    }
   }
 
   const prepend: Set<string> = new Set<string>();

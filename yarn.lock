@@ -2017,6 +2017,13 @@
   dependencies:
     tslib "^2.4.0"
 
+"@graphql-tools/utils@9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-9.0.0.tgz#4e75680d29e866b3de293b4bc9fa4a40aeae0085"
+  integrity sha512-kaCwyWnURxMsYbxzkfylLqFFelu83jKk3BJOOy0GIuxEtgXVS9v7Y/tojljo69Q+jaZ2YxAi3+d8IpM+hx768A==
+  dependencies:
+    tslib "^2.4.0"
+
 "@graphql-tools/utils@^6.2.4":
   version "6.2.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.2.4.tgz#38a2314d2e5e229ad4f78cca44e1199e18d55856"
