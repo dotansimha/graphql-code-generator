@@ -1,12 +1,10 @@
 import {
-  DetailedError,
   Types,
   CodegenPlugin,
   normalizeOutputParam,
   normalizeInstanceOrArray,
   normalizeConfig,
   getCachedDocumentNodeFromSchema,
-  isDetailedError,
 } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
 
@@ -51,7 +49,7 @@ const makeDefaultLoader = (from: string) => {
   };
 };
 
-type Ctx = { errors: DetailedError[] | Error[] };
+type Ctx = { errors: Error[] };
 
 function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
   const cache = new Map<string, Promise<unknown>>();
@@ -123,9 +121,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     const generateKeys = Object.keys(config.generates || {});
 
     if (generateKeys.length === 0) {
-      throw new DetailedError(
-        'Invalid Codegen Configuration!',
-        `
+      throw new Error(
+        `Invalid Codegen Configuration! \n
         Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
 
         It should looks like that:
@@ -136,8 +133,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
           my-file.ts:
             - plugin1
             - plugin2
-            - plugin3
-        `
+            - plugin3`
       );
     }
 
@@ -145,9 +141,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       const output = (generates[filename] = normalizeOutputParam(config.generates[filename]));
 
       if (!output.preset && (!output.plugins || output.plugins.length === 0)) {
-        throw new DetailedError(
-          'Invalid Codegen Configuration!',
-          `
+        throw new Error(
+          `Invalid Codegen Configuration! \n
           Please make sure that your codegen config file has defined plugins list for output "${filename}".
 
           It should looks like that:
@@ -173,9 +168,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
             (generates[filename].schema as unknown as any[]).length === 0)
       )
     ) {
-      throw new DetailedError(
-        'Invalid Codegen Configuration!',
-        `
+      throw new Error(
+        `Invalid Codegen Configuration! \n
         Please make sure that your codegen config file contains either the "schema" field
         or every generated file has its own "schema" field.
 
@@ -419,11 +413,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   }
 
   if (executedContext.errors.length > 0) {
-    const errors = executedContext.errors.map(subErr =>
-      isDetailedError(subErr)
-        ? `${subErr.message} for "${subErr.source}"${subErr.details}`
-        : subErr.message || subErr.toString()
-    );
+    const errors = executedContext.errors.map(subErr => subErr.message || subErr.toString());
     const newErr = new AggregateError(executedContext.errors, `${errors.join('\n\n')}`);
     // Best-effort to all stack traces for debugging
     newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
