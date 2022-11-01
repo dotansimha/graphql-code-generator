@@ -1,4 +1,4 @@
-import { DetailedError, Types, CodegenPlugin, Profiler, createNoopProfiler } from '@graphql-codegen/plugin-helpers';
+import { Types, CodegenPlugin, Profiler, createNoopProfiler } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
 
 export interface ExecutePluginOptions {
@@ -17,9 +17,8 @@ export interface ExecutePluginOptions {
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
   if (!plugin || !plugin.plugin || typeof plugin.plugin !== 'function') {
-    throw new DetailedError(
-      `Invalid Custom Plugin "${options.name}"`,
-      `
+    throw new Error(
+      `Invalid Custom Plugin "${options.name}" \n
         Plugin ${options.name} does not export a valid JS object with "plugin" function.
 
         Make sure your custom plugin is written in the following form:
@@ -54,9 +53,8 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
         `Plugin ${options.name} validate`
       );
     } catch (e) {
-      throw new DetailedError(
-        `Plugin "${options.name}" validation failed:`,
-        `
+      throw new Error(
+        `Plugin "${options.name}" validation failed: \n
             ${e.message}
           `
       );

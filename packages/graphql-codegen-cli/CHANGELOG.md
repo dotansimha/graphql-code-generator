@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 2.13.9
+
+### Patch Changes
+
+- [#8525](https://github.com/dotansimha/graphql-code-generator/pull/8525) [`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127) Thanks [@charlypoly](https://github.com/charlypoly)! - remove `DetailledError`, not supported by Listr renderer
+
+- Updated dependencies [[`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127)]:
+  - @graphql-codegen/core@2.6.3
+  - @graphql-codegen/plugin-helpers@2.7.2
+
 ## 2.13.8
 
 ### Patch Changes

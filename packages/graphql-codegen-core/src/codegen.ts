@@ -1,5 +1,4 @@
 import {
-  DetailedError,
   Types,
   isComplexPluginOutput,
   federationSpec,
@@ -301,10 +300,8 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
         .join('');
 
       const definitionKindName = kind.replace('Definition', '').toLowerCase();
-      throw new DetailedError(
-        `Not all ${definitionKindName}s have an unique name: ${duplicated.join(', ')}`,
-        `
-          Not all ${definitionKindName}s have an unique name
+      throw new Error(
+        `Not all ${definitionKindName}s have an unique name: ${duplicated.join(', ')}: \n
           ${list}
         `
       );

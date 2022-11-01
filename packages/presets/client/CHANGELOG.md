@@ -1,5 +1,23 @@
 # @graphql-codegen/client-preset
 
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.1
+  - @graphql-codegen/plugin-helpers@2.7.2
+  - @graphql-codegen/gql-tag-operations@1.5.6
+  - @graphql-codegen/typescript-operations@2.5.6
+  - @graphql-codegen/typed-document-node@2.3.6
+  - @graphql-codegen/typescript@2.8.1
+
+## 1.1.2
+
+### Patch Changes
+
+- [#8545](https://github.com/dotansimha/graphql-code-generator/pull/8545) [`3e7792486`](https://github.com/dotansimha/graphql-code-generator/commit/3e7792486e088a0dc10a0e3e4f5e0dff2ca031de) Thanks [@tojump](https://github.com/tojump)! - Forward dedupeFragments config option
+
 ## 1.1.1
 
 ### Patch Changes
