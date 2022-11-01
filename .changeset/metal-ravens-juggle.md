@@ -1,5 +1,5 @@
 ---
-'@graphql-codegen/plugin-helpers': minor
+'@graphql-codegen/testing': minor
 ---
 
 `mockGraphQLServer`, resolvers common testing helpers and fixtures, typing updates
