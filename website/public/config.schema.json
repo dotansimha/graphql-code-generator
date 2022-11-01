@@ -3658,8 +3658,8 @@
                 "gql-tag-operations-preset",
                 "graphql-modules",
                 "graphql-modules-preset",
+                "import-types",
                 "import-types-preset",
-                "import-types-preset-preset",
                 "near-operation-file",
                 "near-operation-file-preset"
               ],

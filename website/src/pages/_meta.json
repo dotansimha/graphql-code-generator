@@ -2,19 +2,20 @@
   "index": {
     "title": "Home",
     "type": "page",
+    "display": "hidden",
     "theme": {
       "layout": "raw"
     }
   },
   "docs": {
     "title": "Docs",
-    "type": "page",
-    "theme": {
-      "toc": true
-    }
+    "type": "page"
   },
   "plugins": {
     "title": "Plugins",
-    "type": "page"
+    "type": "page",
+    "theme": {
+      "layout": "raw"
+    }
   }
 }

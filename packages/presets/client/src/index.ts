@@ -73,8 +73,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       throw new Error('[client-preset] target output should be a directory, ex: "src/gql/"');
     }
 
-    if (options.plugins.length > 0) {
-      throw new Error('[client-preset] providing `plugins` with `preset: "client" leads to duplicated generated types');
+    if (options.plugins.length > 0 && Object.keys(options.plugins).some(p => p.startsWith('typescript'))) {
+      throw new Error(
+        '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types'
+      );
     }
 
     const reexports: Array<string> = [];

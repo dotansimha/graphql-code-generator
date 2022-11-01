@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "2.13.7",
+  "version": "2.13.8",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
@@ -51,7 +51,7 @@
     "@graphql-tools/github-loader": "^7.3.6",
     "@graphql-tools/graphql-file-loader": "^7.5.0",
     "@graphql-tools/json-file-loader": "^7.4.1",
-    "@graphql-tools/load": "^7.7.1",
+    "@graphql-tools/load": "7.8.0",
     "@graphql-tools/prisma-loader": "^7.2.7",
     "@graphql-tools/url-loader": "^7.13.2",
     "@graphql-tools/utils": "^8.9.0",
