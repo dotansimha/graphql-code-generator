@@ -1325,6 +1325,18 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-plugins",
+    "headings": [],
+    "toc": [],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.the-guild.dev/graphql/codegen//plugins",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [],
+    "source": "Code Generator",
+    "title": "Plugins",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-plugins-c-sharp-c-sharp-operations",
     "headings": [],
     "toc": [],
@@ -1396,20 +1408,6 @@
     ],
     "source": "Code Generator",
     "title": "resolvers",
-    "type": "Documentation"
-  },
-  {
-    "objectID": "code-generator-plugins-index",
-    "headings": [],
-    "toc": [],
-    "content": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "https://www.the-guild.dev/graphql/codegen/plugins/index",
-    "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins"
-    ],
-    "source": "Code Generator",
-    "title": "Plugins",
     "type": "Documentation"
   },
   {
@@ -1932,7 +1930,7 @@
     "objectID": "code-generator-plugins-typescript-typescript-apollo-client-helpers",
     "headings": [],
     "toc": [],
-    "content": "ace34d8f77a55f5963d5341886f73d3d",
+    "content": "4f4dd979d97c52e9a21c09f132dbfa9c",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-apollo-client-helpers",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2268,7 +2266,7 @@
         "anchor": "example"
       }
     ],
-    "content": "b04b1a404a35147da19fbefd0b94d745",
+    "content": "42405b6fe5eb3afdb08a4035e6fac941",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-mongodb",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [

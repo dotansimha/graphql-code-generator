@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 1.1.2
+
+### Patch Changes
+
+- [#8545](https://github.com/dotansimha/graphql-code-generator/pull/8545) [`3e7792486`](https://github.com/dotansimha/graphql-code-generator/commit/3e7792486e088a0dc10a0e3e4f5e0dff2ca031de) Thanks [@tojump](https://github.com/tojump)! - Forward dedupeFragments config option
+
 ## 1.1.1
 
 ### Patch Changes

@@ -8,14 +8,14 @@ Make sure that you add both the `graphql` and `@graphql-codegen/cli` packages in
 
 ## Global Installation
 
-<Callout type="warning" emoji="⚠️">
+<Callout type="warning">
 Please avoid installing `graphql`, `@graphql-codegen/cli`, and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
 
 </Callout>
 
 ## Monorepo Project
 
-<Callout type="warning" emoji="⚠️">
+<Callout type="warning">
 If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and files. This might break and fail in case of hoisting.
 
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.

@@ -4,7 +4,7 @@ import { compareDesc } from 'date-fns';
 import { MarketplaceSearch } from '@theguild/components';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { PACKAGES, ALL_TAGS, Icon, icons } from '@/lib/plugins';
-import { fetchNpmInfo } from '@/lib/fetch-npm-info';
+import { fetchPackageInfo } from '@theguild/components';
 
 type Plugin = {
   title: string;
@@ -22,7 +22,7 @@ export const getStaticProps = async () => {
   const categoryEntries = Object.entries(CategoryToPackages);
   const plugins: Plugin[] = await Promise.all(
     Object.entries(PACKAGES).map(async ([identifier, { npmPackage, title, icon, tags }]) => {
-      const { readme, createdAt, updatedAt, description, weeklyNPMDownloads = 0 } = await fetchNpmInfo(npmPackage);
+      const { readme, createdAt, updatedAt, description, weeklyNPMDownloads = 0 } = await fetchPackageInfo(npmPackage);
       const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || [];
 
       return {
