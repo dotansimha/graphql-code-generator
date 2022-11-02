@@ -312,8 +312,9 @@ const Posts = () => {
 
 <Tab>
 ```tsx
-import { useQuery } from '@apollo/client';
-import { graphql } from './graphql/gql'
+import { request } from 'graphql-request'
+import { useQuery } from '@tanstack/react-query'
+import { graphql } from './gql/gql'
 
 // postsQueryDocument is now fully typed!
 const postsQueryDocument = graphql(/* GraphQL */ `
@@ -331,10 +332,13 @@ const postsQueryDocument = graphql(/* GraphQL */ `
 `)
 
 const Posts = () => {
-  // Apollo's `useQuery()` knows how to work with typed graphql documents
-  const [result] = useQuery({ query: postsQueryDocument })
+  // React Query `useQuery()` knows how to work with typed graphql documents
+  const { data } = useQuery<PostQuery>('posts', async () => {
+    const { posts } = await request(endpoint, postsQueryDocument)
+    return posts
+  })
 
-  // `result` is fully typed!
+  // `data` is fully typed!
   // …
 }
 ```

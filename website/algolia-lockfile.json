@@ -3,7 +3,7 @@
     "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
-    "content": "1e44a9e9b2b56f2e033237b8ae1b4b53",
+    "content": "3acc7ec8e9af47ae98948dcdcd585098",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/advanced/generated-files-colocation",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -827,7 +827,7 @@
         "anchor": "guide"
       }
     ],
-    "content": "34f2713d8fd427777e511eba348f8643",
+    "content": "6a2bcfe8ccfff7843c9ef430a8c79e6e",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-server-apollo-yoga",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -909,7 +909,7 @@
         "anchor": "sveltekit-native"
       }
     ],
-    "content": "b3382a3b4cb84794e7242516e2bbfdae",
+    "content": "950158d5611bdc1ef3bcdbfc03f61d7f",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/svelte",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1325,6 +1325,18 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-plugins",
+    "headings": [],
+    "toc": [],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.the-guild.dev/graphql/codegen//plugins",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [],
+    "source": "Code Generator",
+    "title": "Plugins",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-plugins-c-sharp-c-sharp-operations",
     "headings": [],
     "toc": [],
@@ -1396,20 +1408,6 @@
     ],
     "source": "Code Generator",
     "title": "resolvers",
-    "type": "Documentation"
-  },
-  {
-    "objectID": "code-generator-plugins-index",
-    "headings": [],
-    "toc": [],
-    "content": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "https://www.the-guild.dev/graphql/codegen/plugins/index",
-    "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins"
-    ],
-    "source": "Code Generator",
-    "title": "Plugins",
     "type": "Documentation"
   },
   {
@@ -1537,7 +1535,7 @@
         "anchor": "how-to-use"
       }
     ],
-    "content": "deb67b8f2caf922c36be46f875469a64",
+    "content": "affd319a0306b89570e7bf91a7e79166",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/fragment-matcher",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1932,7 +1930,7 @@
     "objectID": "code-generator-plugins-typescript-typescript-apollo-client-helpers",
     "headings": [],
     "toc": [],
-    "content": "ace34d8f77a55f5963d5341886f73d3d",
+    "content": "4f4dd979d97c52e9a21c09f132dbfa9c",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-apollo-client-helpers",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2268,7 +2266,7 @@
         "anchor": "example"
       }
     ],
-    "content": "b04b1a404a35147da19fbefd0b94d745",
+    "content": "42405b6fe5eb3afdb08a4035e6fac941",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-mongodb",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2401,7 +2399,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "2a2249bb9739f7dddad1a05315a6fa52",
+    "content": "6dc72a6bc46ae5d0759e41063232de30",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2451,7 +2449,7 @@
         "anchor": "usage-examples"
       }
     ],
-    "content": "125d206758a1d38804a9ca4d4d3d5444",
+    "content": "f0ad645e5139fa4656242ca523459129",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-query",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2653,7 +2651,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "2e7d15dfbbe471e5a3b2dfe60fa94d81",
+    "content": "9215e27eca4f5ff1d3c242ba2472d05d",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-urql",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2711,7 +2709,7 @@
         "anchor": "examples"
       }
     ],
-    "content": "e46ffcdf6a18828be3ffd968b1b63b4c",
+    "content": "98f3426b6eaf24984f747c50a95e6a30",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-vue-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2763,7 +2761,7 @@
         "anchor": "usage-example"
       }
     ],
-    "content": "af9ef641b5cbbd35ee04c1b29bc1f2bd",
+    "content": "bde6ad4a67f5dc0a655a1958b1494127",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-vue-urql",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [

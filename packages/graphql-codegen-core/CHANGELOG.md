@@ -1,5 +1,31 @@
 # @graphql-codegen/core
 
+## 2.6.5
+
+### Patch Changes
+
+- [#8556](https://github.com/dotansimha/graphql-code-generator/pull/8556) [`64e553c3f`](https://github.com/dotansimha/graphql-code-generator/commit/64e553c3f62618a2aedf122d292e2700fd93d6e1) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/utils@9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.8.0`, in `dependencies`)
+
+## 2.6.4
+
+### Patch Changes
+
+- [#8548](https://github.com/dotansimha/graphql-code-generator/pull/8548) [`516170ef6`](https://github.com/dotansimha/graphql-code-generator/commit/516170ef6cb636c950d560ddf12fa1d2f7ee1c57) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.8.0`, in `dependencies`)
+
+- [#8548](https://github.com/dotansimha/graphql-code-generator/pull/8548) [`516170ef6`](https://github.com/dotansimha/graphql-code-generator/commit/516170ef6cb636c950d560ddf12fa1d2f7ee1c57) Thanks [@charlypoly](https://github.com/charlypoly)! - Improve codegen documents and schema validation
+
+## 2.6.3
+
+### Patch Changes
+
+- [#8525](https://github.com/dotansimha/graphql-code-generator/pull/8525) [`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127) Thanks [@charlypoly](https://github.com/charlypoly)! - remove `DetailledError`, not supported by Listr renderer
+
+- Updated dependencies [[`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127)]:
+  - @graphql-codegen/plugin-helpers@2.7.2
+
 ## 2.6.2
 
 ### Patch Changes

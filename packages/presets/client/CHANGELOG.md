@@ -1,5 +1,46 @@
 # @graphql-codegen/client-preset
 
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.1
+  - @graphql-codegen/plugin-helpers@2.7.2
+  - @graphql-codegen/gql-tag-operations@1.5.6
+  - @graphql-codegen/typescript-operations@2.5.6
+  - @graphql-codegen/typed-document-node@2.3.6
+  - @graphql-codegen/typescript@2.8.1
+
+## 1.1.2
+
+### Patch Changes
+
+- [#8545](https://github.com/dotansimha/graphql-code-generator/pull/8545) [`3e7792486`](https://github.com/dotansimha/graphql-code-generator/commit/3e7792486e088a0dc10a0e3e4f5e0dff2ca031de) Thanks [@tojump](https://github.com/tojump)! - Forward dedupeFragments config option
+
+## 1.1.1
+
+### Patch Changes
+
+- [#8523](https://github.com/dotansimha/graphql-code-generator/pull/8523) [`3a3202fbb`](https://github.com/dotansimha/graphql-code-generator/commit/3a3202fbb671617d34075040e7aa8129650bbcb1) Thanks [@charlypoly](https://github.com/charlypoly)! - allow non-typescript plugins
+
+## 1.1.0
+
+### Minor Changes
+
+- [#8498](https://github.com/dotansimha/graphql-code-generator/pull/8498) [`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b) Thanks [@charlypoly](https://github.com/charlypoly)! - Fragment masking ` $fragmentName` and ` $fragmentRefs` are optionals
+
+### Patch Changes
+
+- [#8500](https://github.com/dotansimha/graphql-code-generator/pull/8500) [`71aae7a92`](https://github.com/dotansimha/graphql-code-generator/commit/71aae7a92f77ec5ce29631b292d84e066219ea35) Thanks [@charlypoly](https://github.com/charlypoly)! - Add warning and errors to prevent unwanted configuration
+
+- Updated dependencies [[`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.0
+  - @graphql-codegen/gql-tag-operations@1.5.5
+  - @graphql-codegen/typescript-operations@2.5.5
+  - @graphql-codegen/typed-document-node@2.3.5
+  - @graphql-codegen/typescript@2.7.5
+
 ## 1.0.7
 
 ### Patch Changes

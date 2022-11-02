@@ -1,8 +1,7 @@
-import { validateTs } from '@graphql-codegen/testing';
+import { validateTs, resolversTestingSchema, resolversTestingValidate } from '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index.js';
 import { plugin as tsPlugin } from '../../typescript/src/index.js';
-import { schema, validate } from './common.js';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor.js';
 
@@ -72,7 +71,7 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should use StitchingResolver when its active on config', async () => {
-    const result = await plugin(schema, [], { noSchemaStitching: false }, { outputFile: '' });
+    const result = await plugin(resolversTestingSchema, [], { noSchemaStitching: false }, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`export type StitchingResolver<TResult, TParent, TContext, TArgs>`);
     expect(result.content).toBeSimilarStringTo(`
@@ -82,7 +81,7 @@ describe('TypeScript Resolvers Plugin', () => {
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   describe('Config', () => {
@@ -90,8 +89,8 @@ describe('TypeScript Resolvers Plugin', () => {
       const config = {
         onlyResolveTypeForInterfaces: true,
       };
-      const result = await plugin(schema, [], config, { outputFile: '' });
-      const content = await validate(result, config, schema);
+      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
+      const content = await resolversTestingValidate(result, config, resolversTestingSchema);
 
       expect(content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
@@ -105,9 +104,9 @@ describe('TypeScript Resolvers Plugin', () => {
         useIndexSignature: true,
         optionalInfoArgument: true,
       };
-      const result = await plugin(schema, [], config, { outputFile: '' });
+      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
 
-      const content = await validate(result, config, schema);
+      const content = await resolversTestingValidate(result, config, resolversTestingSchema);
 
       expect(content).not.toContain(`info: `);
       expect(content).toContain(`info?: `);
@@ -120,12 +119,12 @@ describe('TypeScript Resolvers Plugin', () => {
         useIndexSignature: true,
         allowParentTypeOverride: true,
       };
-      const result = await plugin(schema, [], config, { outputFile: '' });
+      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
 
-      const content = await validate(
+      const content = await resolversTestingValidate(
         result,
         config,
-        schema,
+        resolversTestingSchema,
         `
         export const myTypeResolvers: MyTypeResolvers<{}, { parentOverride: boolean }> = {
           foo: (parentValue) => {
@@ -148,7 +147,7 @@ describe('TypeScript Resolvers Plugin', () => {
         useIndexSignature: true,
         namespacedImportName: 'Types',
       };
-      const result = await plugin(schema, [], config, { outputFile: '' });
+      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
       const content = mergeOutputs([result]);
       expect(content).toMatchSnapshot();
     });
@@ -166,7 +165,7 @@ describe('TypeScript Resolvers Plugin', () => {
 ) => Promise<TResult> | TResult;`,
         },
       };
-      const result = await plugin(schema, [], config, { outputFile: '' });
+      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
       expect(result.content).toBeSimilarStringTo(`
 export type ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> =
 (
@@ -193,7 +192,7 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
     });
 
     it('makeResolverTypeCallable - should remove ResolverWithResolve type from resolver union', async () => {
-      const result = await plugin(schema, [], { makeResolverTypeCallable: true }, { outputFile: '' });
+      const result = await plugin(resolversTestingSchema, [], { makeResolverTypeCallable: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
@@ -206,11 +205,11 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
 
-      await validate(result);
+      await resolversTestingValidate(result);
     });
 
     it('makeResolverTypeCallable - adds ResolverWithResolve type to resolver union when set to false', async () => {
-      const result = await plugin(schema, [], { makeResolverTypeCallable: false }, { outputFile: '' });
+      const result = await plugin(resolversTestingSchema, [], { makeResolverTypeCallable: false }, { outputFile: '' });
 
       expect(result.content).not.toBeSimilarStringTo(`
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
@@ -223,7 +222,7 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
 
-      await validate(result);
+      await resolversTestingValidate(result);
     });
   });
 
@@ -234,7 +233,7 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
         authenticated: `../resolver-types.ts#AuthenticatedResolver`,
       },
     };
-    const result = await plugin(schema, [], config, { outputFile: '' });
+    const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
     expect(result.prepend).toContain(
       "import { AuthenticatedResolver as ResolverFnAuthenticated } from '../resolver-types.ts';"
     );
@@ -273,7 +272,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
         noSchemaStitching: true,
       };
       const result = await plugin(testSchema, [], config, { outputFile: '' });
-      const mergedOutput = await validate(
+      const mergedOutput = await resolversTestingValidate(
         result,
         config,
         testSchema,
@@ -314,7 +313,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
       const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-      const mergedOutput = await validate(
+      const mergedOutput = await resolversTestingValidate(
         result,
         config,
         testSchema,
@@ -357,7 +356,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
       const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-      const mergedOutput = await validate(
+      const mergedOutput = await resolversTestingValidate(
         result,
         config,
         testSchema,
@@ -408,7 +407,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
       const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-      const mergedOutput = await validate(
+      const mergedOutput = await resolversTestingValidate(
         result,
         config,
         testSchema,
@@ -457,7 +456,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
       const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-      const mergedOutput = await validate(
+      const mergedOutput = await resolversTestingValidate(
         result,
         config,
         testSchema,
@@ -493,7 +492,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
   it('Should allow to override ResolverTypeWrapper signature', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -507,7 +506,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
   it('Should have default value for ResolverTypeWrapper signature', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -520,18 +519,18 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
   it('Should not warn when noSchemaStitching is not defined', async () => {
     const spy = jest.spyOn(console, 'warn').mockImplementation();
-    const result = await plugin(schema, [], {}, { outputFile: '' });
+    const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(spy).not.toHaveBeenCalled();
 
     spy.mockRestore();
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should disable StitchingResolver on demand', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         noSchemaStitching: true,
@@ -557,7 +556,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
         ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Default values of args and compatibility with typescript plugin', async () => {
@@ -630,7 +629,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
   it('Should allow to generate optional __resolveType', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       { optionalResolveType: true },
       { outputFile: '' }
@@ -651,7 +650,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
   });
 
   it('Should generate basic type resolvers', async () => {
-    const result = await plugin(schema, [], {}, { outputFile: '' });
+    const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
@@ -718,12 +717,12 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should generate basic type resolvers with avoidOptionals', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       { avoidOptionals: true },
       { outputFile: '' }
@@ -793,12 +792,12 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should allow to override context with simple identifier', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         contextType: 'MyCustomCtx',
@@ -866,12 +865,12 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
 
-    await validate(mergeOutputs([result, `type MyCustomCtx = {};`]));
+    await resolversTestingValidate(mergeOutputs([result, `type MyCustomCtx = {};`]));
   });
 
   it('Should with correctly with addUnderscoreToArgsType set to true', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         addUnderscoreToArgsType: true,
@@ -882,12 +881,12 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toContain('MyType_WithArgsArgs');
     expect(result.content).not.toContain('MyTypeWithArgsArgs');
 
-    await validate(mergeOutputs([result]));
+    await resolversTestingValidate(mergeOutputs([result]));
   });
 
   it('Should allow to override context with mapped context type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         contextType: './my-file#MyCustomCtx',
@@ -957,12 +956,12 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('Should allow to override context with mapped context type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         contextType: './my-file#MyCustomCtx',
@@ -1032,11 +1031,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
   it('Should allow to override context with mapped context type as default export', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         contextType: './my-file#default',
@@ -1106,11 +1105,11 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
   it('Should allow to override context with mapped context type as default export with type import', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         contextType: './my-file#default',
@@ -1181,12 +1180,12 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('should generate named custom field level context type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         fieldContextTypes: [
@@ -1219,7 +1218,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
   it('should generate named custom field level context type for field with directive', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         directiveContextTypes: ['authenticated#./my-file#AuthenticatedContext'],
@@ -1242,7 +1241,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
   it('should generate named custom field level context type for field with directive and context type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         directiveContextTypes: ['authenticated#./my-file#AuthenticatedContext'],
@@ -1266,7 +1265,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
   it('should generate named custom field level context type for field with directive and field context type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         directiveContextTypes: ['authenticated#./my-file#AuthenticatedContext'],
@@ -1295,7 +1294,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.prepend).toContain(
       `import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`
     );
-    await validate(result, {}, schema);
+    await resolversTestingValidate(result, {}, resolversTestingSchema);
   });
 
   it('Should generate the correct imports when schema has no scalars', async () => {
@@ -1303,7 +1302,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result.prepend).not.toContain(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
-    await validate(result, {}, testSchema);
+    await resolversTestingValidate(result, {}, testSchema);
   });
 
   it('Should generate the correct imports when customResolveInfo defined in config', async () => {
@@ -1319,7 +1318,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.prepend).toContain(`import { GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`);
     expect(result.prepend).toContain(`import { MyGraphQLResolveInfo as GraphQLResolveInfo } from './my-type';`);
-    await validate(result, {}, testSchema);
+    await resolversTestingValidate(result, {}, testSchema);
   });
 
   describe('Should generate the correct imports when customResolverFn defined in config', () => {
@@ -1336,7 +1335,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
       expect(result.prepend).toContain(`import { MyResolverFn as ResolverFn } from './my-type';`);
       expect(result.prepend).toContain(`export { ResolverFn };`);
-      await validate(result, {}, testSchema);
+      await resolversTestingValidate(result, {}, testSchema);
     });
 
     it('./my-type#ResolverFn', async () => {
@@ -1352,7 +1351,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
       expect(result.prepend).toContain(`import { ResolverFn } from './my-type';`);
       expect(result.prepend).toContain(`export { ResolverFn };`);
-      await validate(result, {}, testSchema);
+      await resolversTestingValidate(result, {}, testSchema);
     });
 
     it(`definition directly`, async () => {
@@ -1374,7 +1373,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       )) as Types.ComplexPluginOutput;
 
       expect(result.prepend).toContain(`export type ResolverFn<TResult, TParent, TContext, TArgs> = ${fnDefinition}`);
-      await validate(result, {}, testSchema);
+      await resolversTestingValidate(result, {}, testSchema);
     });
 
     it(`ok with default`, async () => {
@@ -1389,7 +1388,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
       expect(result.content).toContain(defaultResolverFn);
-      await validate(result, {}, testSchema);
+      await resolversTestingValidate(result, {}, testSchema);
     });
   });
 
@@ -1427,7 +1426,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const testSchema = buildSchema(`type MyType { f(a: String): String }`);
     const config = { typesPrefix: 'T' };
     const result = await plugin(testSchema, [], config, { outputFile: '' });
-    const o = await validate(result, config, testSchema);
+    const o = await resolversTestingValidate(result, config, testSchema);
 
     expect(o).toContain(
       `f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, Partial<TMyTypeFArgs>>;`
@@ -1442,7 +1441,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(result.content).toBeSimilarStringTo(
       `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, Partial<MyTypeFArgs>>;`
     );
-    await validate(result, {}, testSchema);
+    await resolversTestingValidate(result, {}, testSchema);
   });
 
   // dotansimha/graphql-code-generator#3322
@@ -1453,7 +1452,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(result.content).toBeSimilarStringTo(
       `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;`
     );
-    await validate(result, {}, testSchema);
+    await resolversTestingValidate(result, {}, testSchema);
   });
 
   it('should generate Resolvers interface', async () => {
@@ -2222,7 +2221,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         typesSuffix: 'QL',
       };
       const output = await plugin(testSchema, [], config, { outputFile: 'graphql.ts' });
-      const o = await validate(output, config, testSchema);
+      const o = await resolversTestingValidate(output, config, testSchema);
       expect(o).not.toContain(
         `user?: Resolver<Maybe<ResolversTypesQL['User']>, ParentType, ContextType, RequireFields<QueryQLuserArgs, '_id'>>;`
       );
@@ -2254,7 +2253,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         constEnums: true,
       };
       const output = await plugin(testSchema, [], config, { outputFile: 'graphql.ts' });
-      const o = await validate(output, config, testSchema);
+      const o = await resolversTestingValidate(output, config, testSchema);
 
       expect(o).toBeSimilarStringTo(`
       export const enum Test {
@@ -2410,7 +2409,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
   it('Should generate resolvers with replaced internalResolversPrefix if specified', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       { internalResolversPrefix: '' },
       { outputFile: '' }
@@ -2434,7 +2433,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       };
     `);
 
-    await validate(result);
+    await resolversTestingValidate(result);
   });
 
   it('#7005 - avoidOptionals should preserve optional resolvers', async () => {

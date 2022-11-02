@@ -366,7 +366,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ## Disable all export from a file
    *
    * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *  import type { CodegenConfig } from '@graphql-codegen/cli'
    *
    *  const config: CodegenConfig = {
    *    // ...
@@ -375,11 +375,11 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *        plugins: ['typescript'],
    *        config: {
    *          noExport: true
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
+   *        }
+   *      }
+   *    }
+   *  }
+   *  export default config
    * ```
    */
   noExport?: boolean;
