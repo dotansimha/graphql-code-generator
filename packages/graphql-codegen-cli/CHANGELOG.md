@@ -1,5 +1,14 @@
 # @graphql-codegen/cli
 
+## 2.13.11
+
+### Patch Changes
+
+- [#8556](https://github.com/dotansimha/graphql-code-generator/pull/8556) [`64e553c3f`](https://github.com/dotansimha/graphql-code-generator/commit/64e553c3f62618a2aedf122d292e2700fd93d6e1) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Updated dependency [`@graphql-codegen/core@2.6.4` ↗︎](https://www.npmjs.com/package/@graphql-codegen/core/v/2.6.4) (from `2.6.3`, in `dependencies`)
+- Updated dependencies [[`64e553c3f`](https://github.com/dotansimha/graphql-code-generator/commit/64e553c3f62618a2aedf122d292e2700fd93d6e1)]:
+  - @graphql-codegen/core@2.6.5
+
 ## 2.13.10
 
 ### Patch Changes
