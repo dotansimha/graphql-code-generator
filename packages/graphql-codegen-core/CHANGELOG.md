@@ -1,5 +1,12 @@
 # @graphql-codegen/core
 
+## 2.6.5
+
+### Patch Changes
+
+- [#8556](https://github.com/dotansimha/graphql-code-generator/pull/8556) [`64e553c3f`](https://github.com/dotansimha/graphql-code-generator/commit/64e553c3f62618a2aedf122d292e2700fd93d6e1) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/utils@9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.8.0`, in `dependencies`)
+
 ## 2.6.4
 
 ### Patch Changes
