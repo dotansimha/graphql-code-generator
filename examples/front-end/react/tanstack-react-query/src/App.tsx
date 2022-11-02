@@ -18,10 +18,12 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 `);
 
 function App() {
-  const { data } = useQuery(['films'], async () =>
-    request('https://swapi-graphql.netlify.app/.netlify/functions/index', allFilmsWithVariablesQueryDocument, {
-      first: 10,
-    })
+  const { data } = useQuery(['films', { first: 10 }] as const, async ({ queryKey }) =>
+    request(
+      'https://swapi-graphql.netlify.app/.netlify/functions/index',
+      allFilmsWithVariablesQueryDocument,
+      queryKey[1]
+    )
   );
 
   return (
