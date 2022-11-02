@@ -1740,6 +1740,27 @@
     auto-bind "~4.0.0"
     tslib "~2.4.0"
 
+"@graphql-codegen/flutter-freezed@2.11.2":
+  version "2.11.2"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/flutter-freezed/-/flutter-freezed-2.11.2.tgz#c8f1d8c7d25ea1c9038b614e23710dd9dc1f160d"
+  integrity sha512-jXZgLHW3ngXIIBNdUPWz4At9lpm5192EKrf0xrRdXlrqRnMD2gIXQirXRrx1nu8a7Oy/MlOzxc2Td7OsJQDGjQ==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    "@graphql-codegen/schema-ast" "^2.5.0"
+    "@graphql-codegen/visitor-plugin-common" "2.13.1"
+    auto-bind "~4.0.0"
+    change-case-all "1.0.14"
+    tslib "~2.4.0"
+
+"@graphql-codegen/hasura-allow-list@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/hasura-allow-list/-/hasura-allow-list-2.0.0.tgz#1e927868fcca01cd34b2d39ddc3e6b0279b06b00"
+  integrity sha512-676npnBzYXCj4JOCRiSBqzHxvEWjgoS2bsh8xTXsZDWVT45/Tkz/acC3H4eQpXe+P7ou7tZnWy7mI2oBrHe3ew==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.6.2"
+    tslib "~2.4.0"
+    yaml "^1.10.2"
+
 "@graphql-codegen/import-types-preset@2.2.6":
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/import-types-preset/-/import-types-preset-2.2.6.tgz#aab292d93f79bffc09bc12a51843c3272b526475"
@@ -1802,6 +1823,25 @@
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.7.2"
     "@graphql-codegen/visitor-plugin-common" "2.13.1"
+    tslib "~2.4.0"
+
+"@graphql-codegen/kotlin@2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/kotlin/-/kotlin-2.3.6.tgz#5f1ad297ebc546f129940d625722f88aca01a675"
+  integrity sha512-O9MaCpgBd3KUdZTD5x987JzFLD+NdJHDs9H36LwS1BoKRAr89usXXWL71rB26SnFDUAtbTiE7FMaqX8NpRwPvQ==
+  dependencies:
+    "@graphql-codegen/java-common" "^2.2.6"
+    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    "@graphql-codegen/visitor-plugin-common" "2.13.1"
+    tslib "~2.4.0"
+
+"@graphql-codegen/named-operations-object@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/named-operations-object/-/named-operations-object-2.3.1.tgz#9553c94c4c97b3de306c3c6c4c6713157227f299"
+  integrity sha512-RVjt+1CbVzFUsWerWZaywkYJexeccwDYtPotnZODCem7fTkdBbto6q82jhXRMbsknnjRx/yeFlVkaG9PqrBZZw==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.6.2"
+    change-case-all "1.0.14"
     tslib "~2.4.0"
 
 "@graphql-codegen/near-operation-file-preset@2.4.4":
@@ -1975,6 +2015,15 @@
     "@graphql-codegen/visitor-plugin-common" "2.13.1"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
+    tslib "~2.4.0"
+
+"@graphql-codegen/urql-introspection@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/urql-introspection/-/urql-introspection-2.2.1.tgz#97baaf09bf91b044a21dd6715af22e0ba6d829ec"
+  integrity sha512-/KjHSf4dQNoYZZ+G10b3lbw304ik9xHzRf/syNvoYehmwdYE5J7RnO1v1Cz78LDm2NEdsFas6vJHi0sJd/pOHg==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.6.2"
+    "@urql/introspection" "^0.3.2"
     tslib "~2.4.0"
 
 "@graphql-tools/apollo-engine-loader@7.3.13", "@graphql-tools/apollo-engine-loader@^7.3.6":
@@ -3956,6 +4005,11 @@
   dependencies:
     "@urql/core" ">=3.0.0"
     wonka "^6.0.0"
+
+"@urql/introspection@^0.3.2":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.3.tgz#5bcedfebd515161eecf9b193169c2765bf5674f1"
+  integrity sha512-tekSLLqWnusfV6V7xaEnLJQSdXOD/lWy7f8JYQwrX+88Md+voGSCSx5WJXI7KLBN3Tat2OV08tAr8UROykls4Q==
 
 "@vercel/ncc@^0.34.0":
   version "0.34.0"
