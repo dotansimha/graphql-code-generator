@@ -475,7 +475,7 @@ export const useInfiniteCommentQuery = <TData = CommentQuery, TError = unknown>(
     metaData =>
       fetcher<CommentQuery, CommentQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CommentDocument, {
         ...variables,
-        [pageParamKey]: metaData.pageParam,
+        ...(metaData.pageParam ? { [pageParamKey]: metaData.pageParam } : {}),
       })(),
     options
   );
@@ -516,7 +516,7 @@ export const useInfiniteCurrentUserForProfileQuery = <TData = CurrentUserForProf
         dataSource.endpoint,
         dataSource.fetchParams || {},
         CurrentUserForProfileDocument,
-        { ...variables, [pageParamKey]: metaData.pageParam }
+        { ...variables, ...(metaData.pageParam ? { [pageParamKey]: metaData.pageParam } : {}) }
       )(),
     options
   );
@@ -552,7 +552,7 @@ export const useInfiniteFeedQuery = <TData = FeedQuery, TError = unknown>(
     metaData =>
       fetcher<FeedQuery, FeedQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, FeedDocument, {
         ...variables,
-        [pageParamKey]: metaData.pageParam,
+        ...(metaData.pageParam ? { [pageParamKey]: metaData.pageParam } : {}),
       })(),
     options
   );
