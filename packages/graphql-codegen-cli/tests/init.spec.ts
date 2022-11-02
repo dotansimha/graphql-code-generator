@@ -7,7 +7,6 @@ import { resolve } from 'path';
 import { init } from '../src/init/index.js';
 import { Tags } from '../src/init/types.js';
 import { guessTargets } from '../src/init/targets.js';
-import { plugins } from '../src/init/plugins.js';
 import { bold } from '../src/init/helpers.js';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
 
