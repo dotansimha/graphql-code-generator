@@ -1,6 +1,5 @@
 dev-test/githunt-invalid/invalid.graphql
 packages/graphql-codegen-cli/tests/test-documents/invalid-schema.graphql
-packages/plugins/flow/flow/tests/flow.js
 packages/presets/gql-tag-operations/tests/fixtures/crlf-operation.ts
 dist/
 .next/

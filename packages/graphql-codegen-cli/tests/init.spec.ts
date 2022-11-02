@@ -520,16 +520,6 @@ describe('init', () => {
       expect(selected).toContainEqual('typescript-stencil-apollo');
     });
   });
-
-  describe('plugins', () => {
-    it('should have correct plugin and package names', async () => {});
-    plugins.forEach(pkg => {
-      const { name } = require(`../../plugins/${pkg.pathInRepo}/package.json`);
-
-      expect(pkg.package.replace('@graphql-codegen/', '')).toEqual(pkg.value);
-      expect(pkg.package).toEqual(name);
-    });
-  });
 });
 
 function useInputs(inputs: {
