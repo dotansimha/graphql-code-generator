@@ -9,7 +9,7 @@ body:
 
         ## Is it related to a community plugin?
 
-        All request linked to a "Community plugin" (as defined below) should [be addressed on the `dotansimha/graphql-code-generator-community` repository](https://github.com/dotansimha/graphql-code-generator-community/issues/new?assignees=&labels=&template=feature-request.md).
+        All request linked to a "Community plugin" (as defined below) should [be addressed on the `dotansimha/graphql-code-generator-community` repository](https://github.com/dotansimha/graphql-code-generator-community/issues/new?assignees=&labels=&template=bug_report.yml).
 
         <details>
           <summary>Community plugins:</summary>
@@ -46,36 +46,33 @@ body:
 
         ---
   - type: dropdown
-    id: download
+    id: packages
     attributes:
       label: Which packages are impacted by your issue?
-      required: false
       multiple: true
       options:
-        - @graphql-codegen/cli
-        - @graphql-codegen/core
-        - @graphql-codegen/add
-        - @graphql-codegen/fragment-matcher
-        - @graphql-codegen/introspection
-        - @graphql-codegen/schema-ast
-        - @graphql-codegen/time
-        - @graphql-codegen/visitor-plugin-common
-        - @graphql-codegen/typescript-document-nodes
-        - @graphql-codegen/gql-tag-operations
-        - @graphql-codegen/typescript-operations
-        - @graphql-codegen/typescript-resolvers
-        - @graphql-codegen/typescript-rtk-query
-        - @graphql-codegen/typed-document-node
-        - @graphql-codegen/typescript
-        - @graphql-codegen/client-preset
-        - @graphql-codegen/gql-tag-operations-preset
-        - @graphql-codegen/graphql-modules-preset
-        - @graphql-codegen/testing
-        - @graphql-codegen/plugin-helpers
-  validations:
-    required: true
-  validations:
-    required: true
+        - '@graphql-codegen/cli'
+        - '@graphql-codegen/core'
+        - '@graphql-codegen/add'
+        - '@graphql-codegen/fragment-matcher'
+        - '@graphql-codegen/introspection'
+        - '@graphql-codegen/schema-ast'
+        - '@graphql-codegen/time'
+        - '@graphql-codegen/visitor-plugin-common'
+        - '@graphql-codegen/typescript-document-nodes'
+        - '@graphql-codegen/gql-tag-operations'
+        - '@graphql-codegen/typescript-operations'
+        - '@graphql-codegen/typescript-resolvers'
+        - '@graphql-codegen/typescript-rtk-query'
+        - '@graphql-codegen/typed-document-node'
+        - '@graphql-codegen/typescript'
+        - '@graphql-codegen/client-preset'
+        - '@graphql-codegen/gql-tag-operations-preset'
+        - '@graphql-codegen/graphql-modules-preset'
+        - '@graphql-codegen/testing'
+        - '@graphql-codegen/plugin-helpers'
+    validations:
+      required: false
   - type: markdown
     attributes:
       value: |
