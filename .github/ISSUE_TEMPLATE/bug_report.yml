@@ -6,6 +6,79 @@ body:
       value: |
         Thank you for reporting an issue :pray:.
 
+
+        ## Is it related to a community plugin?
+
+        All request linked to a "Community plugin" (as defined below) should [be addressed on the `dotansimha/graphql-code-generator-community` repository](https://github.com/dotansimha/graphql-code-generator-community/issues/new?assignees=&labels=&template=feature-request.md).
+
+        <details>
+          <summary>Community plugins:</summary>
+
+        - `@graphql-codegen/typescript-react-apollo`
+        - `@graphql-codegen/typescript-graphql-request`
+        - `@graphql-codegen/typescript-apollo-angular`
+        - `@graphql-codegen/typescript-apollo-client-helpers`
+        - `@graphql-codegen/typescript-react-query`
+        - `@graphql-codegen/typescript-urql`
+        - `@graphql-codegen/named-operations-object`
+        - `@graphql-codegen/urql-introspection`
+        - `@graphql-codegen/flow-resolvers`
+        - `@graphql-codegen/typescript-vue-apollo`
+        - `@graphql-codegen/typescript-rtk-query`
+        - `@graphql-codegen/flow-operations`
+        - `@graphql-codegen/typescript-msw`
+        - `@graphql-codegen/typescript-mongodb`
+        - `@graphql-codegen/typescript-type-graphql`
+        - `@graphql-codegen/jsdoc`
+        - `@graphql-codegen/typescript-vue-urql`
+        - `@graphql-codegen/kotlin`
+        - `@graphql-codegen/typescript-vue-apollo-smart-ops`
+        - `@graphql-codegen/java`
+        - `@graphql-codegen/c-sharp-operations`
+        - `@graphql-codegen/hasura-allow-list`
+        - `@graphql-codegen/typescript-stencil-apollo`
+        - `@graphql-codegen/relay-operation-optimizer`
+        - `@graphql-codegen/typescript-oclif`
+        - `@graphql-codegen/java-resolvers`
+        - `@graphql-codegen/java-apollo-android`
+
+        </details>
+
+        ---
+  - type: dropdown
+    id: download
+    attributes:
+      label: Which packages are impacted by your issue?
+      required: false
+      multiple: true
+      options:
+        - @graphql-codegen/cli
+        - @graphql-codegen/core
+        - @graphql-codegen/add
+        - @graphql-codegen/fragment-matcher
+        - @graphql-codegen/introspection
+        - @graphql-codegen/schema-ast
+        - @graphql-codegen/time
+        - @graphql-codegen/visitor-plugin-common
+        - @graphql-codegen/typescript-document-nodes
+        - @graphql-codegen/gql-tag-operations
+        - @graphql-codegen/typescript-operations
+        - @graphql-codegen/typescript-resolvers
+        - @graphql-codegen/typescript-rtk-query
+        - @graphql-codegen/typed-document-node
+        - @graphql-codegen/typescript
+        - @graphql-codegen/client-preset
+        - @graphql-codegen/gql-tag-operations-preset
+        - @graphql-codegen/graphql-modules-preset
+        - @graphql-codegen/testing
+        - @graphql-codegen/plugin-helpers
+  validations:
+    required: true
+  validations:
+    required: true
+  - type: markdown
+    attributes:
+      value: |
         The issues on this repo are being tracked and monitored according to our [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow), Before submitting a new bug/issue, please check the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow)
 
         After reading the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow), Check out and update the current state of this issue:
