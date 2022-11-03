@@ -36,7 +36,7 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-react-query',
   },
   {
-    file: '../node_modules/@graphql-codegen/typescript-rtk-query/src/config.ts',
+    file: '../node_modules/@graphql-codegen/typescript-rtk-query/typings/config.d.ts',
     identifier: 'RTKConfig',
     name: 'typescript-rtk-query',
   },
