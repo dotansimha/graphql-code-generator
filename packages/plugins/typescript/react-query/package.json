@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-react-query",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use React-Query Hooks based on GraphQL operations",
   "repository": {
     "type": "git",
