@@ -32,7 +32,7 @@ export class CustomMapperFetcher implements FetcherRenderer {
             asDefault: this._mapper.default,
           },
         ],
-        this.visitor.config.useTypeImports
+        false
       );
     }
 
