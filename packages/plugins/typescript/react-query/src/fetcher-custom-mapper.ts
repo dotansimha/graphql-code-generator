@@ -59,8 +59,8 @@ export class CustomMapperFetcher implements FetcherRenderer {
     const typedFetcher = this.getFetcherFnName(operationResultType, operationVariablesTypes);
     const implHookOuter = this._isReactHook ? `const query = ${typedFetcher}(${documentVariableName})` : '';
     const impl = this._isReactHook
-      ? `(metaData) => query({...variables, [pageParamKey]: metaData.pageParam })`
-      : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, [pageParamKey]: metaData.pageParam })()`;
+      ? `(metaData) => query({...variables, ...(metaData.pageParam ? {[pageParamKey]: metaData.pageParam} : {})})`
+      : `(metaData) => ${typedFetcher}(${documentVariableName}, {...variables, ...(metaData.pageParam ? {[pageParamKey]: metaData.pageParam} : {})})()`;
 
     return `export const useInfinite${operationName} = <
       TData = ${operationResultType},

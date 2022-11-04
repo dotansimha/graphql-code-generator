@@ -40,7 +40,7 @@ export const useInfiniteTestQuery = <
     const query = useCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument)
     return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => query({...variables, [pageParamKey]: metaData.pageParam }),
+      (metaData) => query({...variables, ...(metaData.pageParam ? {[pageParamKey]: metaData.pageParam} : {})}),
       options
     )};
 
@@ -102,7 +102,7 @@ export const useInfiniteTestQuery = <
     
     return useInfiniteQuery<TTestQuery, TError, TData>(
       variables === undefined ? ['test.infinite'] : ['test.infinite', variables],
-      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, [pageParamKey]: metaData.pageParam })(),
+      (metaData) => myCustomFetcher<TTestQuery, TTestQueryVariables>(TestDocument, {...variables, ...(metaData.pageParam ? {[pageParamKey]: metaData.pageParam} : {})})(),
       options
     )};
 
