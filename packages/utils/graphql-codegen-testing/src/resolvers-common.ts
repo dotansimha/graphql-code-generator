@@ -3,7 +3,7 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { buildSchema } from 'graphql';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 
-export const schema = buildSchema(/* GraphQL */ `
+export const resolversTestingSchema = buildSchema(/* GraphQL */ `
   type MyType {
     foo: String! @authenticated
     otherType: MyOtherType
@@ -46,10 +46,10 @@ export const schema = buildSchema(/* GraphQL */ `
   directive @authenticated on FIELD_DEFINITION
 `);
 
-export const validate = async (
+export const resolversTestingValidate = async (
   content: Types.PluginOutput,
   config: any = {},
-  pluginSchema = schema,
+  pluginSchema = resolversTestingSchema,
   additionalCode = ''
 ) => {
   const mergedContent = mergeOutputs([

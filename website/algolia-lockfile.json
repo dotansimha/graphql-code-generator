@@ -3,7 +3,7 @@
     "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
-    "content": "1e44a9e9b2b56f2e033237b8ae1b4b53",
+    "content": "3acc7ec8e9af47ae98948dcdcd585098",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/advanced/generated-files-colocation",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -827,7 +827,7 @@
         "anchor": "guide"
       }
     ],
-    "content": "34f2713d8fd427777e511eba348f8643",
+    "content": "6a2bcfe8ccfff7843c9ef430a8c79e6e",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-server-apollo-yoga",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -909,7 +909,7 @@
         "anchor": "sveltekit-native"
       }
     ],
-    "content": "b3382a3b4cb84794e7242516e2bbfdae",
+    "content": "950158d5611bdc1ef3bcdbfc03f61d7f",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/svelte",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1535,7 +1535,7 @@
         "anchor": "how-to-use"
       }
     ],
-    "content": "deb67b8f2caf922c36be46f875469a64",
+    "content": "affd319a0306b89570e7bf91a7e79166",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/fragment-matcher",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [

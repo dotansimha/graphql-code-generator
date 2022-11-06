@@ -1,5 +1,14 @@
 # @graphql-codegen/flow-resolvers
 
+## 2.4.4
+
+### Patch Changes
+
+- Updated dependencies [[`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.1
+  - @graphql-codegen/plugin-helpers@2.7.2
+  - @graphql-codegen/flow@2.3.6
+
 ## 2.4.3
 
 ### Patch Changes

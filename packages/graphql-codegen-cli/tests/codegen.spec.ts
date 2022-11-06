@@ -112,7 +112,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toBe('Invalid Codegen Configuration!');
+        expect(e.message).toMatch('Invalid Codegen Configuration!');
       }
     });
 
@@ -143,7 +143,7 @@ describe('Codegen Executor', () => {
         expect(output.length).toBe(1);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).not.toBe('Invalid Codegen Configuration!');
+        expect(e.message).not.toMatch('Invalid Codegen Configuration!');
       }
     });
 
@@ -159,7 +159,7 @@ describe('Codegen Executor', () => {
 
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
-        expect(e.message).toBe('Invalid Codegen Configuration!');
+        expect(e.message).toMatch('Invalid Codegen Configuration!');
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
       }
     });
@@ -177,7 +177,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toBe('Invalid Codegen Configuration!');
+        expect(e.message).toMatch('Invalid Codegen Configuration!');
       }
     });
 

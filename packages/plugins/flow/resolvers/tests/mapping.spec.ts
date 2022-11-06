@@ -1,5 +1,5 @@
 import '@graphql-codegen/testing';
-import { schema } from '../../../typescript/resolvers/tests/common.js';
+import { resolversTestingSchema } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 import { buildSchema } from 'graphql';
 import { validateFlow as validate } from '../../flow/tests/validate-flow.js';
@@ -7,7 +7,7 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('ResolversTypes', () => {
   it('Should build ResolversTypes object when there are no mappers', async () => {
-    const result = await plugin(schema, [], {}, { outputFile: '' });
+    const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
@@ -30,7 +30,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with simple mappers', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -62,7 +62,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with defaultMapper set', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -95,7 +95,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with external mappers', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -201,7 +201,7 @@ describe('ResolversTypes', () => {
 
   it('Should generate basic type resolvers with external mappers', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -283,7 +283,7 @@ describe('ResolversTypes', () => {
 
   it('Should generate basic type resolvers with external mappers using same imported type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -366,7 +366,7 @@ describe('ResolversTypes', () => {
   it('Should generate the correct resolvers when used with mappers with interfaces', async () => {
     const spy = jest.spyOn(console, 'warn').mockImplementation();
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -448,7 +448,7 @@ describe('ResolversTypes', () => {
 
   it('Should generate basic type resolvers with defaultMapper set to any', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         defaultMapper: 'any',
@@ -526,7 +526,7 @@ describe('ResolversTypes', () => {
 
   it('Should generate basic type resolvers with defaultMapper set to external identifier', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         defaultMapper: './my-file#MyBaseType',
@@ -606,7 +606,7 @@ describe('ResolversTypes', () => {
 
   it('Should replace using Omit when non-mapped type is pointing to mapped type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -638,7 +638,7 @@ describe('ResolversTypes', () => {
 
   it('Should not replace using Omit when non-mapped type is pointing to mapped type', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         mappers: {
@@ -670,7 +670,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with defaultMapper set using {T}', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         defaultMapper: '$Shape<{T}>',
@@ -699,7 +699,7 @@ describe('ResolversTypes', () => {
 
   it('Should build ResolversTypes with defaultMapper set using {T} with external identifier', async () => {
     const result = (await plugin(
-      schema,
+      resolversTestingSchema,
       [],
       {
         defaultMapper: './my-wrapper#CustomPartial<{T}>',
