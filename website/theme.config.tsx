@@ -1,21 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint sort-keys: error */
-import { CodeGeneratorLogo, defineConfig, Giscus, useTheme } from '@theguild/components';
+import { defineConfig, Giscus, useTheme } from '@theguild/components';
 import { useRouter } from 'next/router';
-
-const siteName = 'GraphQL Code Generator';
 
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website', // base URL for the docs repository
-  logo: (
-    <>
-      <CodeGeneratorLogo className="mr-1.5 h-9 w-9" />
-      <div>
-        <h1 className="md:text-md text-sm font-medium">{siteName}</h1>
-        <h2 className="hidden text-xs sm:block">Generate anything from GraphQL schema / operations</h2>
-      </div>
-    </>
-  ),
   main({ children }) {
     const { resolvedTheme } = useTheme();
     const { route } = useRouter();
@@ -39,5 +28,5 @@ export default defineConfig({
       </>
     );
   },
-  siteName,
+  siteName: 'CODEGEN',
 });
