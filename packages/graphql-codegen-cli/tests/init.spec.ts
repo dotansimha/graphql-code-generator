@@ -7,7 +7,6 @@ import { resolve } from 'path';
 import { init } from '../src/init/index.js';
 import { Tags } from '../src/init/types.js';
 import { guessTargets } from '../src/init/targets.js';
-import { plugins } from '../src/init/plugins.js';
 import { bold } from '../src/init/helpers.js';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
 
@@ -518,16 +517,6 @@ describe('init', () => {
       expect(selected).toContainEqual('typescript');
       expect(selected).toContainEqual('typescript-operations');
       expect(selected).toContainEqual('typescript-stencil-apollo');
-    });
-  });
-
-  describe('plugins', () => {
-    it('should have correct plugin and package names', async () => {});
-    plugins.forEach(pkg => {
-      const { name } = require(`../../plugins/${pkg.pathInRepo}/package.json`);
-
-      expect(pkg.package.replace('@graphql-codegen/', '')).toEqual(pkg.value);
-      expect(pkg.package).toEqual(name);
     });
   });
 });

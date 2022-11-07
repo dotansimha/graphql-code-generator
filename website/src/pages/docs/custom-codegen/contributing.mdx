@@ -5,9 +5,9 @@ import { Callout } from '@theguild/components'
 When your new plugin is ready, you can either:
 
 - maintain it in your repo and npm package
-- contribute and make it part of the GraphQL Code Generator repo
+- contribute and make it part of the GraphQL Code Generator community repo ([`dotansimha/graphql-code-generator-community`](dotansimha/graphql-code-generator-community))
 
-Our repository contains plugins for all languages and platforms.
+The GraphQL Code Generator community repository contains plugins for all languages and platforms.
 If your plugin could be helpful for others, please consider creating a PR and maintaining it in our repo.
 Doing so will also promise to run your tests against the latest core changes and make sure that no breaking changes affect your plugin.
 
@@ -29,11 +29,11 @@ GraphQL Code Generator uses the following stack to manage the source code:
 
 ## 2. Fork and Clone
 
-Start by [creating a Fork in GitHub](https://help.github.com/en/github/getting-started-with-github/fork-a-repo); this will allow you to make changes and push them quickly later.
+Start by [creating a Fork of the `dotansimha/graphql-code-generator-community` repository](https://help.github.com/en/github/getting-started-with-github/fork-a-repo); this will allow you to make changes and push them quickly later: [`dotansimha/graphql-code-generator-community`](dotansimha/graphql-code-generator-community).
 
 Then, use Git [to clone](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github) your newly created fork repository.
 
-It's also recommended to create a new Git branch at this point, from `master` branch.
+It's also recommended to create a new Git branch at this point, from `main` branch.
 
 ## 3. Install Dependencies
 
@@ -65,7 +65,7 @@ The command above will make sure to build all common/core packages, and will mak
 
 To add your plugin, start by creating a directory for it. All existing plugins are located under `packages/plugins/` directory, so add it there.
 
-Now, create a simple `package.json` (or, you can [copy from other plugins](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/typescript/typescript/package.json)…)
+Now, create a simple `package.json` (or, you can [copy from other plugins](https://github.com/dotansimha/graphql-code-generator-community/blob/main/packages/plugins/typescript/react-apollo/package.json)…)
 
 Make sure to follow the following instructions:
 
@@ -196,7 +196,7 @@ yarn test
 
 You can also test the integration of your plugin with the codegen core and cli, the integration with other plugins and the output for some complex schemas and operations.
 
-To do that, make sure everything is built by using `yarn build` in the root directory, then you can use it in `./dev-test/codegen.yml`, and run `yarn generate:examples` in the project root directory to run it.
+To do that, make sure everything is built by using `yarn build` in the root directory, then you can use it in `./dev-test/codegen.ts`, and run `yarn generate:examples` in the project root directory to run it.
 
 ## 9. Documentation
 
@@ -250,32 +250,37 @@ export const pluginsConfigurations: PluginConfig[] = [
   automatically based on your TypeScript types.
 </Callout>
 
-## 10. Website & Plugins Hub
+## 10. Feature your plugin on the Plugins Hub
 
-To add your plugin to the website and [Plugins page](/plugins), add your plugin package information in `website/src/lib/plugins.ts`:
+To add your plugin to the [Plugins hub](/plugins), please follow those steps:
 
-```ts
-const PACKAGES: Package<Tags>[] = [
-  {
-    identifier: 'my-plugin', // package id, will be used for the url slug
-    title: 'my-plugin', // page title
-    npmPackage: '@graphql-codegen/my-plugin', // name of the npm package
-    icon: codegenIcon, // you can specify a custom icon, or use codegen's
-    tags: ['plugin', 'utilities'] // add tags for the search engine
-  }
-  // …
-]
-```
+<Callout type="info">
+  Each plugin belongs to a category (ex: `@graphql-codegen/typescript-react-apollo` belongs to the `typescript` category).
+
+Please find the proper category for your plugin (usually based on the target language: TypeScript, Flow, Java, etc).
+
+</Callout>
+
+1. Create a `.mdx` to the proper folder of `website/src/pages/plugins/`, under the proper category.
+
+   For example, the `@graphql-codegen/typescript-react-apollo` plugin has a page at `website/src/pages/plugins/typescript/typescript-react-apollo.mdx`.
+
+<br />
+
+2. Add your plugin's package as a dependency of the `website/package.json` and run `yarn install` at the root of the repository.
+
+<br />
+
+3. Update the `website/src/lib/plugins-docs.ts` file by adding your plugin to the `pluginsConfigurations` array.
+
+You must provide the relative link to your plugin typing definition. You will find examples with the existing plugins.
+
+<br />
+
+4. Each plugin belongs to a category (ex: `@graphql-codegen/typescript-react-apollo` belongs to the `typescript` category). Make sure that your plugin is assigned to the proper category by updating the `website/src/category-to-packages.mjs` file:
 
 Go ahead to `website` directory and run the website using `yarn dev`.
 
-Your plugin page should be available in `http://localhost:3000/plugins/my-plugin`
+Your plugin page should be available in `http://localhost:3000/plugins/<category>/<plugin-name>`.
 
-## 11. Add it to the live demo (optional)
-
-Our website has a live demo on the main page for most plugins, and you can add it there if you wish.
-
-To add a new example to the live demo, start by making sure that your plugin package is available for the website:
-
-1. Edit `website/package.json` and add your plugin package under `dependencies`.
-2. Add your example under `website/src/components/live-demo/examples.ts` - you can add a custom schema, documents and configuration.
+Example for `@graphql-codegen/typescript-react-apollo`: `http://localhost:3000/plugins/typescript/typescript-react-apollo`
