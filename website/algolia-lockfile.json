@@ -1120,8 +1120,7 @@
       "7. Test your plugin",
       "8. Integration",
       "9. Documentation",
-      "10. Website & Plugins Hub",
-      "11. Add it to the live demo (optional)"
+      "10. Feature your plugin on the Plugins Hub"
     ],
     "toc": [
       {
@@ -1171,16 +1170,11 @@
       },
       {
         "children": [],
-        "title": "10. Website & Plugins Hub",
-        "anchor": "10-website--plugins-hub"
-      },
-      {
-        "children": [],
-        "title": "11. Add it to the live demo (optional)",
-        "anchor": "11-add-it-to-the-live-demo-optional"
+        "title": "10. Feature your plugin on the Plugins Hub",
+        "anchor": "10-feature-your-plugin-on-the-plugins-hub"
       }
     ],
-    "content": "8e1af57cd4b189da7eaade01fedce0e2",
+    "content": "d658bb02376551d76a8a3228ef53e7b2",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/contributing",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
