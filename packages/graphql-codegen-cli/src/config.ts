@@ -21,9 +21,6 @@ import { createHash } from 'crypto';
 
 const { lstat } = promises;
 
-// #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
-const tsLoader = TypeScriptLoader({ transpileOnly: true });
-
 export type CodegenConfig = Types.Config;
 
 export type YamlCliFlags = {
@@ -77,6 +74,8 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
     }
 
     if (ext === 'ts') {
+      // #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
+      const tsLoader = TypeScriptLoader({ transpileOnly: true });
       return tsLoader(filepath, content);
     }
   }
