@@ -2635,6 +2635,29 @@ describe('TypeScript', () => {
         `);
       });
 
+      it('forces type declaration kind', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], { declarationKind: 'interface' }, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
+        `);
+      });
+
       it('raises exception for type with non-optional fields', async () => {
         const schema = buildSchema(
           /* GraphQL */ `
