@@ -6,7 +6,7 @@
   "scripts": {
     "postbuild": "npx next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "start": "next start",
-    "build": "yarn generate-json-config && next build && next export",
+    "build": "yarn generate-json-config && next build && next-sitemap --config next-sitemap.config.cjs && next export",
     "dev": "next",
     "lint": "eslint --ignore-path .gitignore --ext js,jsx,cjs,mjs,ts,tsx,cts,mts .",
     "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
