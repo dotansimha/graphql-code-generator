@@ -624,6 +624,8 @@ export class BaseTypesVisitor<
   }
 
   getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    // Since a oneOf declaration is always a union
+    // we have to force a type declaration kind.
     const declarationKind = 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
