@@ -8,15 +8,19 @@ import config from '../next.config.mjs';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const sitemapPath = path.join(__dirname, '..', 'public', 'sitemap.xml');
+console.log(`sitemapPath`, sitemapPath);
 const lockfilePath = path.join(__dirname, '..', 'route-lockfile.txt');
+console.log(`lockfilePath`, lockfilePath);
 
 async function main() {
   const parser = new XMLParser();
+  console.log(`parser`, parser);
 
   const d = parser.parse(fs.readFileSync(sitemapPath, 'utf-8'));
+  console.log(`d`, d);
 
   const routes = d.urlset.url.map(url =>
-    url.loc.replace(process.env.SITE_URL || `https://www.graphql-code-generator.com`, ``)
+    url.loc.replace(process.env.SITE_URL || `https://the-guild.dev/graphql/codegen`, ``)
   );
 
   const redirectsPointingToNonExistingStuff = [];
