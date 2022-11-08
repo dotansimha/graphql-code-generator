@@ -2635,7 +2635,29 @@ describe('TypeScript', () => {
         `);
       });
 
-      it('forces type declaration kind', async () => {
+      it('respects configured declaration kind with single field', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], { declarationKind: 'interface' }, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export interface Input {
+            int: Scalars['Int'];
+          }
+        `);
+      });
+
+      it('forces declaration kind of type with multiple fields', async () => {
         const schema = buildSchema(
           /* GraphQL */ `
           input Input @oneOf {

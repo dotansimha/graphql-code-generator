@@ -624,9 +624,9 @@ export class BaseTypesVisitor<
   }
 
   getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
-    // Since oneOf declarations (almost) always result in a
-    // union, we have to force a declaration kind of `type`.
-    const declarationKind = 'type';
+    // As multiple fields always result in a union, we have
+    // to force a declaration kind of `type` in this case
+    const declarationKind = node.fields.length === 1 ? this._parsedConfig.declarationKind.input : 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
