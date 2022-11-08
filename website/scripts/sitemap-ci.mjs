@@ -16,7 +16,7 @@ async function main() {
   const d = parser.parse(fs.readFileSync(sitemapPath, 'utf-8'));
 
   const routes = d.urlset.url.map(url =>
-    url.loc.replace(process.env.SITE_URL || `https://the-guild.dev/graphql/codegen`, ``)
+    url.loc.replace(process.env.SITE_URL || `https://www.graphql-code-generator.com`, ``)
   );
 
   const redirectsPointingToNonExistingStuff = [];
