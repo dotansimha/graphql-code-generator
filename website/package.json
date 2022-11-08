@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postbuild": "npx next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "start": "next start",
     "build": "yarn generate-json-config && next build && next-sitemap --config next-sitemap.config.cjs && next export",
     "dev": "next",
