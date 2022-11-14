@@ -1,5 +1,15 @@
 # @graphql-codegen/core
 
+## 2.6.6
+
+### Patch Changes
+
+- [#8606](https://github.com/dotansimha/graphql-code-generator/pull/8606) [`45eb2b18a`](https://github.com/dotansimha/graphql-code-generator/commit/45eb2b18adf25366248bf8d67ef696431db5ee0e) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@^9.1.1` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.1.1) (from `9.0.0`, in `dependencies`)
+
+- [#8606](https://github.com/dotansimha/graphql-code-generator/pull/8606) [`45eb2b18a`](https://github.com/dotansimha/graphql-code-generator/commit/45eb2b18adf25366248bf8d67ef696431db5ee0e) Thanks [@charlypoly](https://github.com/charlypoly)! - Fix validation issue on fragment/ops naming conflict
+
 ## 2.6.5
 
 ### Patch Changes
