@@ -2382,13 +2382,6 @@
   dependencies:
     tslib "^2.4.0"
 
-"@graphql-tools/utils@9.1.1-alpha-20221114104920-29baff95":
-  version "9.1.1-alpha-20221114104920-29baff95"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-9.1.1-alpha-20221114104920-29baff95.tgz#e7b8490469e9a0052cf0453134597df4aec405f1"
-  integrity sha512-aMIgtTokMtFn2/d7WhP17G5piEumD/8ntnustUWJs0OlGCAPC7ztCKLizGWCpyg/QL7LONLhGsG2FAbQFtkGog==
-  dependencies:
-    tslib "^2.4.0"
-
 "@graphql-tools/utils@^6.2.4":
   version "6.2.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.2.4.tgz#38a2314d2e5e229ad4f78cca44e1199e18d55856"
@@ -2397,6 +2390,13 @@
     "@ardatan/aggregate-error" "0.0.6"
     camel-case "4.1.1"
     tslib "~2.0.1"
+
+"@graphql-tools/utils@^9.1.1":
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-9.1.1.tgz#b47ea8f0d18c038c5c1c429e72caa5c25039fbab"
+  integrity sha512-DXKLIEDbihK24fktR2hwp/BNIVwULIHaSTNTNhXS+19vgT50eX9wndx1bPxGwHnVBOONcwjXy0roQac49vdt/w==
+  dependencies:
+    tslib "^2.4.0"
 
 "@graphql-tools/wrap@8.5.1":
   version "8.5.1"
