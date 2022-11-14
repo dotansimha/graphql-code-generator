@@ -39,7 +39,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.7.2",
     "@graphql-tools/schema": "^9.0.0",
-    "@graphql-tools/utils": "9.0.0",
+    "@graphql-tools/utils": "^9.1.1",
     "tslib": "~2.4.0"
   },
   "main": "dist/cjs/index.js",
