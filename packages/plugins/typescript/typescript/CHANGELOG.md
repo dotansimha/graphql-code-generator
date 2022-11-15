@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript
 
+## 2.8.2
+
+### Patch Changes
+
+- [#8586](https://github.com/dotansimha/graphql-code-generator/pull/8586) [`ef4c2c9c2`](https://github.com/dotansimha/graphql-code-generator/commit/ef4c2c9c233c68830f10eb4c167c7cceead27122) Thanks [@levrik](https://github.com/levrik)! - Fix incompatibility between `@oneOf` input types and declaration kind other than `type`
+
+- Updated dependencies [[`ef4c2c9c2`](https://github.com/dotansimha/graphql-code-generator/commit/ef4c2c9c233c68830f10eb4c167c7cceead27122)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.2
+
 ## 2.8.1
 
 ### Patch Changes
