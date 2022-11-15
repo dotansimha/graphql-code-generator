@@ -43,7 +43,28 @@ All the below code examples are available in our [repository `examples/front-end
 
 For most GraphQL clients and frameworks (React, Vue), install the following packages:
 
-<PackageCmd packages={['graphql', '-D typescript', '-D @graphql-codegen/cli', '-D @graphql-codegen/client-preset']} />
+**For Yarn:**
+
+```bash
+yarn add graphql
+yarn add -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+```
+
+**For npm:**
+
+```bash
+npm i -S graphql
+yarn i -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+```
+
+**For pnpm:**
+
+```bash
+pnpm i graphql @graphql-typed-document-node/core
+pnpm i -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+```
+
+<br />
 
 Then provide the corresponding framework-specific configuration:
 
