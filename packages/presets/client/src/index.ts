@@ -27,7 +27,7 @@ export type ClientPresetConfig = {
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {
-   *          preset: 'front-end',
+   *          preset: 'client',
    *          presetConfig: {
    *            fragmentMasking: false,
    *          }
@@ -51,7 +51,7 @@ export type ClientPresetConfig = {
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {
-   *          preset: 'front-end',
+   *          preset: 'client',
    *          presetConfig: {
    *            gqlTagName: 'gql',
    *          }
