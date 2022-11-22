@@ -4,7 +4,7 @@ import { defineConfig, Giscus, useTheme } from '@theguild/components';
 import { useRouter } from 'next/router';
 
 export default defineConfig({
-  docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website', // base URL for the docs repository
+  docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
   main({ children }) {
     const { resolvedTheme } = useTheme();
     const { route } = useRouter();
