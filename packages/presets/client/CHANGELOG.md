@@ -1,5 +1,12 @@
 # @graphql-codegen/client-preset
 
+## 1.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`00ddc9368`](https://github.com/dotansimha/graphql-code-generator/commit/00ddc9368211a4511b9f80d543d57c85fff840cb)]:
+  - @graphql-codegen/gql-tag-operations@1.5.8
+
 ## 1.1.4
 
 ### Patch Changes
