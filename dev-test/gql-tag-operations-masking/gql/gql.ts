@@ -57,7 +57,7 @@ export function gql(
  * ```
  *
  * The query argument is unknown!
- * Please regenerate the types or restart the typescript language server.
+ * Please regenerate the types.
  **/
 export function gql(source: string): unknown;
 

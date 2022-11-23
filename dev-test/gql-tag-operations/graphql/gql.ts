@@ -47,7 +47,7 @@ export function graphql(
  * ```
  *
  * The query argument is unknown!
- * Please regenerate the types or restart the typescript language server.
+ * Please regenerate the types.
  **/
 export function graphql(source: string): unknown;
 

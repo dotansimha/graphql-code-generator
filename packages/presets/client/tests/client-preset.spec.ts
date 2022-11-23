@@ -40,17 +40,49 @@ export * from "./fragment-masking"`);
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel-plugin for production.
+       */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+      **/
       export function graphql(source: string): unknown;
+
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
       }
@@ -96,17 +128,49 @@ export * from "./fragment-masking"`);
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel-plugin for production.
+       */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+      **/
       export function graphql(source: string): unknown;
+
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
       }
@@ -144,17 +208,49 @@ export * from "./fragment-masking"`);
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel-plugin for production.
+       */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+      **/
       export function graphql(source: string): unknown;
+
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
       }
@@ -193,17 +289,49 @@ export * from "./fragment-masking"`);
       import * as types from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel-plugin for production.
+       */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+      **/
       export function graphql(source: string): unknown;
+
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
       }
@@ -284,22 +412,48 @@ export * from "./fragment-masking"`);
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
-      "/* eslint-disable */
-      import * as types from './graphql';
-      import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+    "/* eslint-disable */
+    import * as types from './graphql';
+    import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-      const documents = {
-          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
-      };
+    /**
+     * Map of all GraphQL operations in the project.
+     *
+     * This map has several performance disadvantages:
+     * 1. It is not tree-shakeable, so it will include all operations in the project.
+     * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+     * 3. It does not support dead code elimination, so it will add unused operations.
+     *
+     * Therefore it is highly recommended to use the babel-plugin for production.
+     */
+    const documents = {
+        "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
+    };
 
-      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+    /**
+     * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+     */
+    export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
 
-      export function graphql(source: string): unknown;
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
+    /**
+     * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+     *
+     *
+     * @example
+     * \`\`\`ts
+     * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+     * \`\`\`
+     *
+     * The query argument is unknown!
+     * Please regenerate the types.
+    **/
+    export function graphql(source: string): unknown;
 
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    export function graphql(source: string) {
+      return (documents as any)[source] ?? {};
+    }
+
+    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
@@ -370,27 +524,59 @@ export * from "./fragment-masking"`);
       expect(indexFile.content).toMatchInlineSnapshot(`"export * from "./gql""`);
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "/* eslint-disable */
-        import * as types from './graphql';
-        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      "/* eslint-disable */
+      import * as types from './graphql';
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-        const documents = {
-            "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
-            "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
-            "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
-        };
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel-plugin for production.
+       */
+      const documents = {
+          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+      };
 
-        export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-        export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-        export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
-        export function graphql(source: string): unknown;
-        export function graphql(source: string) {
-          return (documents as any)[source] ?? {};
-        }
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+      **/
+      export function graphql(source: string): unknown;
 
-        export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
-      `);
+      export function graphql(source: string) {
+        return (documents as any)[source] ?? {};
+      }
+
+      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    `);
     });
 
     it('fragmentMasking: {}', async () => {
@@ -639,17 +825,49 @@ export * from "./fragment-masking.js"`);
       import * as types from './graphql.js';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel-plugin for production.
+       */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
       };
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
       export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+      **/
       export function graphql(source: string): unknown;
+
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
       }
@@ -697,14 +915,26 @@ export * from "./fragment-masking.js"`);
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
         const documents = [];
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         *
+         *
+         * @example
+         * \`\`\`ts
+         * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+         * \`\`\`
+         *
+         * The query argument is unknown!
+         * Please regenerate the types.
+        **/
         export function graphql(source: string): unknown;
+
         export function graphql(source: string) {
           return (documents as any)[source] ?? {};
         }
 
         export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
       `);
-
       // graphql.ts
       const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(graphqlFile).toBeDefined();
