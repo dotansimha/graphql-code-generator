@@ -18,11 +18,13 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
 
   const generatedDocs = transformDocs();
   const source = generatedDocs.docs[identifier] || readme.replaceAll('```yml', '```yaml') || '';
+  const title = plugin.title ?? '';
 
   const [mdx, mdxHeader] = await Promise.all([
     compileMdx(source),
     compileMdx(
       `
+      # ${title}
 |Package name|Weekly Downloads|Version|License|Updated|
 |-|-|-|-|-|
 |[\`${npmPackage}\`](https://npmjs.com/package/${npmPackage})|![Downloads](https://badgen.net/npm/dw/${npmPackage} "Downloads")|![Version](https://badgen.net/npm/v/${npmPackage} "Version")|![License](https://badgen.net/npm/license/${npmPackage} "License")|${format(
