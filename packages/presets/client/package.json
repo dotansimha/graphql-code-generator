@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/client-preset",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "GraphQL Code Generator preset for client.",
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "@graphql-codegen/typed-document-node": "^2.3.7",
     "@graphql-codegen/typescript": "^2.8.2",
     "@graphql-codegen/typescript-operations": "^2.5.7",
-    "@graphql-codegen/gql-tag-operations": "1.5.7",
+    "@graphql-codegen/gql-tag-operations": "1.5.8",
     "@graphql-codegen/plugin-helpers": "^2.7.2",
     "@graphql-codegen/visitor-plugin-common": "^2.13.2",
     "@graphql-typed-document-node/core": "3.1.1",

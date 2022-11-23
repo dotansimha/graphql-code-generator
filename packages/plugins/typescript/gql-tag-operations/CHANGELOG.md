@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.5.8
+
+### Patch Changes
+
+- [#8633](https://github.com/dotansimha/graphql-code-generator/pull/8633) [`00ddc9368`](https://github.com/dotansimha/graphql-code-generator/commit/00ddc9368211a4511b9f80d543d57c85fff840cb) Thanks [@jantimon](https://github.com/jantimon)! - provide jsdoc comments for better IDE support
+
 ## 1.5.7
 
 ### Patch Changes
