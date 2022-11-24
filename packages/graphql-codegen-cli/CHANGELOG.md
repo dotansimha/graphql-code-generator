@@ -1,5 +1,18 @@
 # @graphql-codegen/cli
 
+## 2.14.0
+
+### Minor Changes
+
+- [#8647](https://github.com/dotansimha/graphql-code-generator/pull/8647) [`40a6761a6`](https://github.com/dotansimha/graphql-code-generator/commit/40a6761a602fca592c6f4f0653c819e8debe007b) Thanks [@charlypoly](https://github.com/charlypoly)! - Enable support for loading TS files with import assertions
+
+### Patch Changes
+
+- [#8647](https://github.com/dotansimha/graphql-code-generator/pull/8647) [`40a6761a6`](https://github.com/dotansimha/graphql-code-generator/commit/40a6761a602fca592c6f4f0653c819e8debe007b) Thanks [@charlypoly](https://github.com/charlypoly)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/code-file-loader@^7.3.13` ↗︎](https://www.npmjs.com/package/@graphql-tools/code-file-loader/v/7.3.13) (from `^7.3.1`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/git-loader@^7.2.13` ↗︎](https://www.npmjs.com/package/@graphql-tools/git-loader/v/7.2.13) (from `^7.2.1`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/github-loader@^7.3.20` ↗︎](https://www.npmjs.com/package/@graphql-tools/github-loader/v/7.3.20) (from `^7.3.6`, in `dependencies`)
+
 ## 2.13.12
 
 ### Patch Changes
