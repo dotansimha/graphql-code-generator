@@ -89,11 +89,12 @@ export async function generate(
             await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
             await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
 
-            const basedir = dirname(result.filename);
-            await mkdirp(basedir);
             const absolutePath = isAbsolute(result.filename)
               ? result.filename
               : join(input.cwd || process.cwd(), result.filename);
+
+            const basedir = dirname(absolutePath);
+            await mkdirp(basedir);
 
             await writeFile(absolutePath, content);
             recentOutputHash.set(result.filename, currentHash);
