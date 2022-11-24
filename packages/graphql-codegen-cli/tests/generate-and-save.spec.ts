@@ -49,8 +49,8 @@ describe('generate-and-save', () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
     // forces file to exist
-    const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(async file => file === filename);
+    const fileReadSpy = jest.spyOn(fs, 'readFile');
+    fileReadSpy.mockImplementation(async () => '');
 
     const output = await generate(
       {
@@ -71,7 +71,7 @@ describe('generate-and-save', () => {
 
     expect(output.length).toBe(1);
     // makes sure it checks if file is there
-    expect(fileExistsSpy).toHaveBeenCalledWith(filename);
+    expect(fileReadSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
     expect(writeSpy).not.toHaveBeenCalled();
   });
@@ -105,8 +105,8 @@ describe('generate-and-save', () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
     // forces file to exist
-    const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(async file => file === filename);
+    const fileReadSpy = jest.spyOn(fs, 'readFile');
+    fileReadSpy.mockImplementation(async () => '');
 
     const output = await generate(
       {
@@ -126,7 +126,7 @@ describe('generate-and-save', () => {
 
     expect(output.length).toBe(1);
     // makes sure it checks if file is there
-    expect(fileExistsSpy).toHaveBeenCalledWith(filename);
+    expect(fileReadSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
     expect(writeSpy).not.toHaveBeenCalled();
   });
@@ -136,9 +136,6 @@ describe('generate-and-save', () => {
     const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
     const readSpy = jest.spyOn(fs, 'readFile').mockImplementation();
     readSpy.mockImplementation(async _f => '');
-    // forces file to exist
-    const fileExistsSpy = jest.spyOn(fs, 'fileExists');
-    fileExistsSpy.mockImplementation(async file => file === filename);
 
     const output = await generate(
       {
