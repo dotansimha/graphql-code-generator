@@ -383,11 +383,10 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
               },
               // It doesn't stop when one of tasks failed, to finish at least some of outputs
               exitOnError: false,
-              concurrent: cpus().length,
             };
           });
 
-          return task.newListr(generateTasks);
+          return task.newListr(generateTasks, { concurrent: cpus().length });
         },
       },
     ],
