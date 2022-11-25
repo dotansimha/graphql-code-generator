@@ -512,6 +512,10 @@ export namespace Types {
       globalIdentifier?: string;
     };
     /**
+     * @description A flag to prettify generated files before save. Works only if the prettier npm package is installed.
+     */
+    prettier?: boolean;
+    /**
      * @description Specifies scripts to run when events are happening in the codegen core.
      * Hooks defined on that level will effect all output files.
      *
