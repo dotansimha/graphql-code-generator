@@ -1,5 +1,13 @@
 # @graphql-codegen/cli
 
+## 2.14.1
+
+### Patch Changes
+
+- [#8642](https://github.com/dotansimha/graphql-code-generator/pull/8642) [`5afa923e8`](https://github.com/dotansimha/graphql-code-generator/commit/5afa923e8e4e8db9bbd602e8abf6a193761a282d) Thanks [@jantimon](https://github.com/jantimon)! - faster type generation
+
+- [#8653](https://github.com/dotansimha/graphql-code-generator/pull/8653) [`d0bc51283`](https://github.com/dotansimha/graphql-code-generator/commit/d0bc51283bb7e496f8933511a8ff5ac2ba547bc8) Thanks [@saihaj](https://github.com/saihaj)! - fix bad concurrency config
+
 ## 2.14.0
 
 ### Minor Changes
