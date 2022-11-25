@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@graphql-codegen/cli": "2.14.0",
+    "@graphql-codegen/cli": "2.14.1",
     "@graphql-codegen/gql-tag-operations-preset": "1.7.0"
   },
   "dependencies": {
