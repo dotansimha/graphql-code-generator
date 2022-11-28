@@ -153,9 +153,7 @@ export const FilmFragment = graphql(/* GraphQL */ `
   }
 `)
 
-const Film = (props: {
-  film: FragmentType<typeof FilmFragment>
-}) => {
+const Film = (props: { film: FragmentType<typeof FilmFragment> }) => {
   const film = useFragment(FilmFragment, props.film)
   // `film` is of type `FilmItemFragment` 🎉
   return (
@@ -202,7 +200,7 @@ export default config
 To get a Fragment's type is achieved by importingimport the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
 
 ```tsx filename="src/Film.tsx" {1, 8, 15}
-import { FilmItemFragment } from './gql';
+import { FilmItemFragment } from './gql'
 
 const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {
@@ -214,7 +212,7 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
       }
     }
   }
-`);
+`)
 
 function myFilmHelper(film: FilmItemFragment) {
   // ...
@@ -235,34 +233,34 @@ A React component that relies on Fragment Masking won't accept "plain object" as
 // ...
 
 type ProfileNameProps = {
-  profile: FragmentType<typeof ProfileName_PersonFragmentDoc>;
-};
+  profile: FragmentType<typeof ProfileName_PersonFragmentDoc>
+}
 
 const ProfileName = ({ profile }: ProfileNameProps) => {
-  const { name } = useFragment(ProfileName_PersonFragmentDoc, profile);
+  const { name } = useFragment(ProfileName_PersonFragmentDoc, profile)
   return (
     <div>
       <h1>Person Name: {name}</h1>
     </div>
-  );
-};
+  )
+}
 ```
 
 ```tsx filename="ProfileName.spec.ts" {8}
 // ...
 
-describe("<ProfileName />", () => {
-  it("renders correctly", () => {
-    const profile = { name: "Adam" };
+describe('<ProfileName />', () => {
+  it('renders correctly', () => {
+    const profile = { name: 'Adam' }
     render(
       <ProfileName
         profile={profile} // <-- this will throw TypeScript errors
       />
-    );
+    )
 
-    expect(screen.getByText("Person Name: Adam")).toBeInTheDocument();
-  });
-});
+    expect(screen.getByText('Person Name: Adam')).toBeInTheDocument()
+  })
+})
 ```
 
 Since the component expect to receive "Masked data", you will need to import the `makeFragmentData()` helper to "build" some masked data, as follow:
@@ -271,19 +269,14 @@ Since the component expect to receive "Masked data", you will need to import the
 // ...
 import { makeFragmentData } from '../gql'
 
-describe("<ProfileName />", () => {
-  it("renders correctly", () => {
-    const profile = { name: "Adam" };
-    render(
-      <ProfileName
-        profile={makeFragmentData(profile, ProfileName_PersonFragmentDoc)}
-      />
-    );
+describe('<ProfileName />', () => {
+  it('renders correctly', () => {
+    const profile = { name: 'Adam' }
+    render(<ProfileName profile={makeFragmentData(profile, ProfileName_PersonFragmentDoc)} />)
 
-    expect(screen.getByText("Person Name: Adam")).toBeInTheDocument();
-  });
-});
-
+    expect(screen.getByText('Person Name: Adam')).toBeInTheDocument()
+  })
+})
 ```
 
 ### How to disable Fragment Masking
