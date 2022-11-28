@@ -12,6 +12,14 @@ export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocume
     : never
   : never;`;
 
+const makeFragmentDataHelper = `
+export function makeFragmentData<
+  F extends DocumentNode,
+  FT extends ResultOf<F>
+>(data: FT, _fragment: F): FragmentType<F> {
+  return data as FragmentType<F>;
+}`;
+
 const defaultUnmaskFunctionName = 'useFragment';
 
 const modifyType = (rawType: string, opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }) =>
@@ -67,10 +75,18 @@ export const plugin: PluginFunction<{
 }> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
-  } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`;
+  } { TypedDocumentNode as DocumentNode, ResultOf } from '@graphql-typed-document-node/core';\n`;
 
   if (augmentedModuleName == null) {
-    return [documentNodeImport, `\n`, fragmentTypeHelper, `\n`, createUnmaskFunction(unmaskFunctionName)].join(``);
+    return [
+      documentNodeImport,
+      `\n`,
+      fragmentTypeHelper,
+      `\n`,
+      createUnmaskFunction(unmaskFunctionName),
+      `\n`,
+      makeFragmentDataHelper,
+    ].join(``);
   }
 
   return [
@@ -80,6 +96,8 @@ export const plugin: PluginFunction<{
       ...fragmentTypeHelper.split(`\n`),
       `\n`,
       ...createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join('\n').split('\n'),
+      `\n`,
+      makeFragmentDataHelper,
     ]
       .map(line => (line === `\n` || line === '' ? line : `  ${line}`))
       .join(`\n`),
