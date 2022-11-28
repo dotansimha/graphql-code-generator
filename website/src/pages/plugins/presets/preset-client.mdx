@@ -1,0 +1,337 @@
+---
+title: client-preset
+---
+
+import { Callout } from '@theguild/components'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
+
+<PluginHeader />
+
+---
+
+The `client-preset` provides typed GraphQL operations (Query, Mutation Subscription) by perfectly integrating with your favorite GraphQL clients:
+
+- **React**
+
+  - `@apollo/client` (since `3.2.0`, not when using React Components (`<Query>`))
+  - `@urql/core` (since `1.15.0`)
+  - `@urql/preact` (since `1.4.0`)
+  - `urql` (since `1.11.0`)
+  - `graphql-request` (since `5.0.0`)
+  - `react-query` (with `graphql-request@5.x`)
+  - `swr` (with `graphql-request@5.x`)
+
+- **Vue**
+  - `@vue/apollo-composable` (since `4.0.0-alpha.13`)
+  - `villus` (since `1.0.0-beta.8`)
+  - `@urql/vue` (since `1.11.0`)
+
+If your stack is not listed above, please refer to our framework/language specific plugins in the left navigation.
+
+## Getting started
+
+For step-by-step instructions, please [refer to our dedicated guide](/docs/guides/react-vue).
+
+## Config API
+
+The `client` preset allows the following `config` options:
+
+- [`scalars`](/plugins/typescript/typescript#config-api-reference): Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
+- [`strictScalars`](/plugins/typescript/typescript#config-api-reference): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
+- [`namingConvention`](/plugins/typescript/typescript#config-api-reference): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
+- [`useTypeImports`](/plugins/typescript/typescript#config-api-reference): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's `"importsNotUsedAsValues": "error"` option.
+- [`skipTypename`](/plugins/typescript/typescript#config-api-reference): Does not add `__typename` to the generated types, unless it was specified in the selection set.
+- [`enumsAsTypes`](/plugins/typescript/typescript#config-api-reference): Generates enum as TypeScript `type` instead of `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`
+- [`arrayInputCoercion`](/plugins/typescript/typescript-operations#config-api-reference): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
+
+For more information or feature request, please [refer to the repository discussions](https://github.com/dotansimha/graphql-code-generator/discussions).
+
+## Fragment Masking
+
+As explained in [our guide](/docs/guides/react-vue), the `client-preset` comes with Fragment Masking enabled by default.
+
+This section covers this concept and associated options in details.
+
+### Embrace Fragment Masking principles
+
+Fragment Masking helps expressing components data-dependencies with GraphQL Fragments.
+
+By doing so, we ensure that the tree of data is properly passed down to the good components, without "leaking" of data.
+It also allow to colocate the Fragment definitions with their components counterparts:
+
+```tsx filename="src/Film.tsx" {4-11}
+import { FragmentType, useFragment } from './gql/fragment-masking'
+import { graphql } from '../src/gql'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+const Film = (props: { film: FragmentType<typeof FilmFragment> }) => {
+  const film = useFragment(FilmFragment, props.film)
+  return (
+    <div>
+      <h3>{film.title}</h3>
+      <p>{film.releaseDate}</p>
+    </div>
+  )
+}
+
+export default Film
+```
+
+For a deeper and more visual explanation of Fragment Masking, please refer to [Laurin](https://twitter.com/n1rual)'s article: [Unleash the power of Fragments with GraphQL Codegen
+](https://the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen)
+
+For a introduction on how to design your GraphQL Query to leverage Fragment Masking, please refer to [our guide](/docs/guides/react-vue).
+
+#### The `FragmentType<T>` type
+
+As explained in [our guide](/docs/guides/react-vue), the top-level GraphQL Query should include the fragment (`...FilmItem`) and pass down the data to child components.
+
+At the component props definition level, the `FragmentType<T>` type ensures that the passed data contains the required fragment (here: `FilmFragment` aka `FilmItem` in GraphQL).
+
+```tsx filename="src/Film.tsx" {14-15}
+import { FragmentType, useFragment } from './gql/fragment-masking'
+import { graphql } from '../src/gql'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+const Film = (props: {
+  /* the passed `film` property contains a valid `FilmItem` fragment 🎉 */
+  film: FragmentType<typeof FilmFragment>
+}) => {
+  const film = useFragment(FilmFragment, props.film)
+  return (
+    <div>
+      <h3>{film.title}</h3>
+      <p>{film.releaseDate}</p>
+    </div>
+  )
+}
+
+export default Film
+```
+
+<Callout type="warning">
+**`FragmentType<T>` is not the Fragment's type**
+
+A common misconception is too mix `FragmentType<T>` and the Fragment's type.
+You might need to get the Fragment's type directly, for example, for helper functions or testing.
+In this scenario, you will need to import it from the generated files, as described in the next section.
+
+</Callout>
+
+#### The `useFragment()` helper
+
+The `useFragment()` function helps narrowing down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
+
+```tsx filename="src/Film.tsx" {16-17}
+import { FragmentType, useFragment } from './gql/fragment-masking'
+import { graphql } from '../src/gql'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+const Film = (props: {
+  film: FragmentType<typeof FilmFragment>
+}) => {
+  const film = useFragment(FilmFragment, props.film)
+  // `film` is of type `FilmItemFragment` 🎉
+  return (
+    <div>
+      <h3>{film.title}</h3>
+      <p>{film.releaseDate}</p>
+    </div>
+  )
+}
+
+export default Film
+```
+
+<Callout type="info">
+**`useFragment()` is not a React hook**
+
+`useFragment()` can be used without following React's rules of hooks.
+To avoid any issue with ESLint, we recommend changing its naming to `getFragmentData()` by setting the proper `unmaskFunctionName` value:
+
+```ts filename="codegen.ts" {10-12}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx', '!src/gql/**/*'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: [],
+      presetConfig: {
+        fragmentMasking: { unmaskFunctionName: 'getFragmentData' }
+      }
+    }
+  }
+}
+
+export default config
+```
+
+</Callout>
+
+### Getting a Fragment's type
+
+To get a Fragment's type is achieved by importingimport the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
+
+```tsx filename="src/Film.tsx" {1, 8, 15}
+import { FilmItemFragment } from './gql';
+
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          ...FilmItem
+        }
+      }
+    }
+  }
+`);
+
+function myFilmHelper(film: FilmItemFragment) {
+  // ...
+}
+```
+
+### Fragment Masking with nested Fragments
+
+When dealing with nested Fragments, the `useFragment()` should also be used in a "nested way".
+
+You can find a complete working example here: [Nested Fragment example on GitHub](https://github.com/charlypoly/codegen-repros/blob/master/client-preset-nested-fragments-interface/src/App.tsx).
+
+### Fragment Masking and testing
+
+A React component that relies on Fragment Masking won't accept "plain object" as follows:
+
+```tsx filename="ProfileName.spec.ts" {4}
+// ...
+
+type ProfileNameProps = {
+  profile: FragmentType<typeof ProfileName_PersonFragmentDoc>;
+};
+
+const ProfileName = ({ profile }: ProfileNameProps) => {
+  const { name } = useFragment(ProfileName_PersonFragmentDoc, profile);
+  return (
+    <div>
+      <h1>Person Name: {name}</h1>
+    </div>
+  );
+};
+```
+
+```tsx filename="ProfileName.spec.ts" {8}
+// ...
+
+describe("<ProfileName />", () => {
+  it("renders correctly", () => {
+    const profile = { name: "Adam" };
+    render(
+      <ProfileName
+        profile={profile} // <-- this will throw TypeScript errors
+      />
+    );
+
+    expect(screen.getByText("Person Name: Adam")).toBeInTheDocument();
+  });
+});
+```
+
+Since the component expect to receive "Masked data", you will need to import the `makeFragmentData()` helper to "build" some masked data, as follow:
+
+```tsx filename="ProfileName.spec.ts" {9}
+// ...
+import { makeFragmentData } from '../gql'
+
+describe("<ProfileName />", () => {
+  it("renders correctly", () => {
+    const profile = { name: "Adam" };
+    render(
+      <ProfileName
+        profile={makeFragmentData(profile, ProfileName_PersonFragmentDoc)}
+      />
+    );
+
+    expect(screen.getByText("Person Name: Adam")).toBeInTheDocument();
+  });
+});
+
+```
+
+### How to disable Fragment Masking
+
+`client-preset`'s Fragment Masking can be disabled as follow:
+
+```ts filename="codegen.ts" {10-12}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx', '!src/gql/**/*'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: [],
+      presetConfig: {
+        fragmentMasking: false
+      }
+    }
+  }
+}
+
+export default config
+```
+
+## Reducing bundle size: Babel plugin
+
+Large scale projects might want to enable code splitting or tree shaking on the `client-preset` generated files.
+
+The `client-preset` comes with a Babel plugin that enables it.
+
+To configure it, update (or create) your `.babelrc.js` as follow:
+
+```js filename=".babelrc.js"
+const { babelOptimizerPlugin } = require('@graphql-codegen/client-preset')
+
+module.exports = {
+  presets: ['react-app'],
+  plugins: [[babelOptimizerPlugin, { artifactDirectory: './src/gql' }]]
+}
+```
+
+Note that you will need to provide the `artifactDirectory` path that should be the same as the one configured in your `codegen.ts`
+
+<Callout type="info">
+**SWC plugin**
+
+A SWC plugin is planned for Next.js users, stay tuned by [following the releases](https://github.com/dotansimha/graphql-code-generator/releases).
+
+</Callout>
