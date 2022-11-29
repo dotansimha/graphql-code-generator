@@ -165,6 +165,12 @@ export const PACKAGES: Record<
     icon: 'codegen',
     tags: ['preset', 'utilities'],
   },
+  'preset-client': {
+    title: 'Client preset',
+    npmPackage: '@graphql-codegen/client-preset',
+    icon: 'codegen',
+    tags: ['preset', 'next', 'react', 'urql', 'typescript', 'vue'],
+  },
   introspection: {
     title: 'Introspection',
     npmPackage: '@graphql-codegen/introspection',

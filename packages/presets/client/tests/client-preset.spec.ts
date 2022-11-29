@@ -633,7 +633,7 @@ export * from "./fragment-masking"`);
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        "import { TypedDocumentNode as DocumentNode, ResultOf } from '@graphql-typed-document-node/core';
 
 
         export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
@@ -673,7 +673,14 @@ export * from "./fragment-masking"`);
         ): TType | ReadonlyArray<TType> | null | undefined {
           return fragmentType as any
         }
-        "
+
+
+        export function makeFragmentData<
+          F extends DocumentNode,
+          FT extends ResultOf<F>
+        >(data: FT, _fragment: F): FragmentType<F> {
+          return data as FragmentType<F>;
+        }"
       `);
 
       expect(gqlFile.content).toBeSimilarStringTo(`
