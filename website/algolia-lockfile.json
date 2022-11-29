@@ -1804,6 +1804,74 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-plugins-presets-preset-client",
+    "headings": [
+      "Getting started",
+      "Config API",
+      "Fragment Masking",
+      "Reducing bundle size: Babel plugin"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Getting started",
+        "anchor": "getting-started"
+      },
+      {
+        "children": [],
+        "title": "Config API",
+        "anchor": "config-api"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Getting a Fragment's type",
+                "anchor": "getting-a-fragments-type"
+              },
+              {
+                "children": [],
+                "title": "Fragment Masking with nested Fragments",
+                "anchor": "fragment-masking-with-nested-fragments"
+              },
+              {
+                "children": [],
+                "title": "Fragment Masking and testing",
+                "anchor": "fragment-masking-and-testing"
+              },
+              {
+                "children": [],
+                "title": "How to disable Fragment Masking",
+                "anchor": "how-to-disable-fragment-masking"
+              }
+            ],
+            "title": "Embrace Fragment Masking principles",
+            "anchor": "embrace-fragment-masking-principles"
+          }
+        ],
+        "title": "Fragment Masking",
+        "anchor": "fragment-masking"
+      },
+      {
+        "children": [],
+        "title": "Reducing bundle size: Babel plugin",
+        "anchor": "reducing-bundle-size-babel-plugin"
+      }
+    ],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/preset-client",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Plugins",
+      "Presets"
+    ],
+    "source": "Code Generator",
+    "title": "client-preset",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-plugins-typescript-named-operations-object",
     "headings": [
       "How to use?"
