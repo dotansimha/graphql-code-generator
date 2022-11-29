@@ -3411,10 +3411,10 @@
     lodash "^4.17.21"
     remove-markdown "0.5.0"
 
-"@theguild/components@4.3.6":
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.3.6.tgz#0a56ca87e04ecb281dfec4a9d42036939999e243"
-  integrity sha512-d31sH22IqolPMzjuOOnbEw6DRp6j+6Pkf3u4fZZlG9fh87lKma/VyH2TL5SvGxQipyy3tF1oojUMW3i4GMioXA==
+"@theguild/components@4.3.7":
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.3.7.tgz#f3baed9911745fb3d05d7b7cd08afeebd38d4ace"
+  integrity sha512-3SgIOfl7rJZC49nVNQIiLSITzAEhV95bFFZbDWPrXwyhUXDtCTLRdYUyN+qj41ZeX3e7gbkJgGkWr2uDBcx65A==
   dependencies:
     "@algolia/autocomplete-js" "1.7.3"
     "@algolia/autocomplete-plugin-algolia-insights" "1.7.3"
@@ -3426,7 +3426,7 @@
     "@radix-ui/react-navigation-menu" "1.1.1"
     algoliasearch "4.14.2"
     clsx "1.2.1"
-    focus-trap-react "10.0.0"
+    focus-trap-react "10.0.1"
     mermaid "9.1.7"
     next-videos "1.5.0"
     nextra "2.0.0-beta.41"
@@ -3435,7 +3435,7 @@
     react-paginate "8.1.4"
     react-player "2.11.0"
     remark-mdx-disable-explicit-jsx "0.1.0"
-    search-insights "2.2.1"
+    search-insights "2.2.3"
     semver "^7.3.8"
     unist-util-visit "4.1.1"
     use-debounce "8.0.4"
@@ -7565,20 +7565,20 @@ flow-parser@0.186.0:
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.186.0.tgz#ef6f4c7a3d8eb29fdd96e1d1f651b7ccb210f8e9"
   integrity sha512-QaPJczRxNc/yvp3pawws439VZ/vHGq+i1/mZ3bEdSaRy8scPgZgiWklSB6jN7y5NR9sfgL4GGIiBcMXTj3Opqg==
 
-focus-trap-react@10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-10.0.0.tgz#9e41ddd0b869db577dfe670611648d97736b9188"
-  integrity sha512-I0tReLdpmCwWuVb6YAmOD+S9KHj0GrlIWmnVJf61j2NHxiIg7DbrsabPmtPC+1yzGJrsy+/iTZiqXtStjlBQcA==
+focus-trap-react@10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-10.0.1.tgz#5a50333f9753355765fcd7b83c6d2a59c5716c65"
+  integrity sha512-Av+O4JCT4/WnY25jnaOu1rysqhaD9aAhqAxxcrJbgKciZToIFmPng/WOrLJ1yHe6ntNmx1g0WhdeDfNCL1dmfA==
   dependencies:
-    focus-trap "^7.0.0"
-    tabbable "^6.0.0"
+    focus-trap "^7.1.0"
+    tabbable "^6.0.1"
 
-focus-trap@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-7.0.0.tgz#4e2cd9aab5b673e2cbad945c52bd232f6160c2cb"
-  integrity sha512-uT4Bl8TwU+5vVAx/DHil/1eVS54k9unqhK/vGy2KSh7esPmqgC0koAB9J2sJ+vtj8+vmiFyGk2unLkhNLQaxoA==
+focus-trap@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-7.1.0.tgz#3226e977d76b1fd555c2e4f7ff91f10371f0f2cc"
+  integrity sha512-CuJvwUBfJCWcU6fc4xr3UwMF5vWnox4isXAixCwrPzCsPKOQjP9T+nTlYT2t+vOmQL8MOQ16eim99XhjQHAuiQ==
   dependencies:
-    tabbable "^6.0.0"
+    tabbable "^6.0.1"
 
 focus-visible@^5.2.0:
   version "5.2.0"
@@ -12099,10 +12099,10 @@ scuid@^1.1.0:
   resolved "https://registry.yarnpkg.com/scuid/-/scuid-1.1.0.tgz#d3f9f920956e737a60f72d0e4ad280bf324d5dab"
   integrity sha512-MuCAyrGZcTLfQoH2XoBlQ8C6bzwN88XT/0slOGz0pn8+gIP85BOAfYa44ZXQUTOwRwPU0QvgU+V+OSajl/59Xg==
 
-search-insights@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/search-insights/-/search-insights-2.2.1.tgz#9c93344fbae5fbf2f88c1a81b46b4b5d888c11f7"
-  integrity sha512-JDfVGZbKqTtiKVZjAVbkNw9C9f0ib80yx6Ea17M3z4RvPmuD0GYWXuFwA9++dpbreBEMH4TC3lQ29Zq7O4b5oA==
+search-insights@2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/search-insights/-/search-insights-2.2.3.tgz#3ef11cc622261887d0a95d91d84eebb5e63fe6b3"
+  integrity sha512-fXwC0QzkBGZuGTb6FoQG+iLS81wljYuBU4Sco4TGTgp5boVkiKZeFqPV0e5h5++5QncTU2FQrQ+G3ILnqEa3yA==
 
 section-matter@^1.0.0:
   version "1.0.0"
@@ -12745,10 +12745,10 @@ synckit@^0.8.1:
     "@pkgr/utils" "^2.3.0"
     tslib "^2.4.0"
 
-tabbable@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.0.0.tgz#7f95ea69134e9335979092ba63866fe67b521b01"
-  integrity sha512-SxhZErfHc3Yozz/HLAl/iPOxuIj8AtUw13NRewVOjFW7vbsqT1f3PuiHrPQbUkRcLNEgAedAv2DnjLtzynJXiw==
+tabbable@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.0.1.tgz#427a09b13c83ae41eed3e88abb76a4af28bde1a6"
+  integrity sha512-SYJSIgeyXW7EuX1ytdneO5e8jip42oHWg9xl/o3oTYhmXusZVgiA+VlPvjIN+kHii9v90AmzTZEBcsEvuAY+TA==
 
 tailwindcss@^3.1.8:
   version "3.1.8"
