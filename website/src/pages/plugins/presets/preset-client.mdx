@@ -11,7 +11,7 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 
 ---
 
-The `client-preset` provides typed GraphQL operations (Query, Mutation Subscription) by perfectly integrating with your favorite GraphQL clients:
+The `client-preset` provides typed GraphQL operations (Query, Mutation and Subscription) by perfectly integrating with your favorite GraphQL clients:
 
 - **React**
 
@@ -58,7 +58,7 @@ This section covers this concept and associated options in details.
 
 Fragment Masking helps expressing components data-dependencies with GraphQL Fragments.
 
-By doing so, we ensure that the tree of data is properly passed down to the good components, without "leaking" of data.
+By doing so, we ensure that the tree of data is properly passed down to the components without "leaking" data.
 It also allow to colocate the Fragment definitions with their components counterparts:
 
 ```tsx filename="src/Film.tsx" {4-11}
@@ -197,7 +197,7 @@ export default config
 
 ### Getting a Fragment's type
 
-To get a Fragment's type is achieved by importingimport the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
+To get a Fragment's type is achieved by importing the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
 
 ```tsx filename="src/Film.tsx" {1, 8, 15}
 import { FilmItemFragment } from './gql'
