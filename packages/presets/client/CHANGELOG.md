@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 1.2.0
+
+### Minor Changes
+
+- [#8657](https://github.com/dotansimha/graphql-code-generator/pull/8657) [`4b96035a8`](https://github.com/dotansimha/graphql-code-generator/commit/4b96035a8e0abca6715db586e8915ae968c403c6) Thanks [@charlypoly](https://github.com/charlypoly)! - Export a testing helper: `makeFragmentData(data, fragment)`
+
 ## 1.1.5
 
 ### Patch Changes
