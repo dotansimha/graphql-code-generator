@@ -248,7 +248,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected flattenSelectionSet(
-    selections: ReadonlyArray<SelectionNode>
+    selections: ReadonlyArray<SelectionNode>,
+    parentSchemaType?: GraphQLObjectType<any, any>
   ): Map<string, Array<SelectionNode | FragmentSpreadUsage>> {
     const selectionNodesByTypeName = new Map<string, Array<SelectionNode | FragmentSpreadUsage>>();
     const inlineFragmentSelections: InlineFragmentNode[] = [];
@@ -270,10 +271,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     }
 
     if (fieldNodes.length) {
-      inlineFragmentSelections.push(this._createInlineFragmentForFieldNodes(this._parentSchemaType, fieldNodes));
+      inlineFragmentSelections.push(
+        this._createInlineFragmentForFieldNodes(parentSchemaType ?? this._parentSchemaType, fieldNodes)
+      );
     }
 
-    this._collectInlineFragments(this._parentSchemaType, inlineFragmentSelections, selectionNodesByTypeName);
+    this._collectInlineFragments(
+      parentSchemaType ?? this._parentSchemaType,
+      inlineFragmentSelections,
+      selectionNodesByTypeName
+    );
     const fragmentsUsage = this.buildFragmentSpreadsUsage(fragmentSpreads);
 
     for (const [typeName, records] of Object.entries(fragmentsUsage)) {
@@ -513,7 +520,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           fragmentType.getTypes().find(objectType => objectType.name === parentSchemaType.name))
       ) {
         // also process fields from fragment that apply for this parentType
-        const flatten = this.flattenSelectionSet(selectionNode.selectionNodes);
+        const flatten = this.flattenSelectionSet(selectionNode.selectionNodes, parentSchemaType);
         const typeNodes = flatten.get(parentSchemaType.name) ?? [];
         selectionNodes.push(...typeNodes);
         for (const iinterface of parentSchemaType.getInterfaces()) {
