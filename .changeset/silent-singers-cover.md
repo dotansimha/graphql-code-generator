@@ -1,5 +1,5 @@
 ---
-'@graphql-codegen/cli': major
+'@graphql-codegen/cli': minor
 ---
 
 register TypeScriptLoader when needed
