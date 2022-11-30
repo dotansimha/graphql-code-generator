@@ -5881,6 +5881,70 @@ function test(q: GetEntityBrandDataQuery): void {
         "
       `);
     });
+
+    it('#6874 - generates types when parent type differs from spread fragment member types and preResolveTypes=true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Animal {
+          name: String!
+        }
+        type Bat implements Animal {
+          name: String!
+          features: BatFeatures!
+        }
+        type BatFeatures {
+          color: String!
+          wingspan: Int!
+        }
+        type Snake implements Animal {
+          name: String!
+          features: SnakeFeatures!
+        }
+        type SnakeFeatures {
+          color: String!
+          length: Int!
+        }
+        type Error {
+          message: String!
+        }
+        union SnakeResult = Snake | Error
+        type Query {
+          snake: SnakeResult!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SnakeQuery {
+          snake {
+            ... on Snake {
+              name
+              ...AnimalFragment
+            }
+          }
+        }
+        fragment AnimalFragment on Animal {
+          ... on Bat {
+            features {
+              color
+              wingspan
+            }
+          }
+          ... on Snake {
+            features {
+              color
+              length
+            }
+          }
+        }
+      `);
+
+      const config = { preResolveTypes: true };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toMatchSnapshot();
+    });
   });
 
   describe('conditional directives handling', () => {
