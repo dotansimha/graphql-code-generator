@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.15.0
+
+### Minor Changes
+
+- [#8590](https://github.com/dotansimha/graphql-code-generator/pull/8590) [`2c7fa51c6`](https://github.com/dotansimha/graphql-code-generator/commit/2c7fa51c628a0337f2abfe1b91fe00c6d5fbe749) Thanks [@Diizzayy](https://github.com/Diizzayy)! - register TypeScriptLoader when needed
+
 ## 2.14.1
 
 ### Patch Changes
