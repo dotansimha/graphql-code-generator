@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-operations
 
+## 2.5.8
+
+### Patch Changes
+
+- [#8664](https://github.com/dotansimha/graphql-code-generator/pull/8664) [`62f655452`](https://github.com/dotansimha/graphql-code-generator/commit/62f6554520955dd675e11c920f35ef9bf0aaeffe) Thanks [@jdmoody](https://github.com/jdmoody)! - Fix issue where selection set flattening uses the wrong parent type
+
+- Updated dependencies [[`62f655452`](https://github.com/dotansimha/graphql-code-generator/commit/62f6554520955dd675e11c920f35ef9bf0aaeffe)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.3
+  - @graphql-codegen/typescript@2.8.3
+
 ## 2.5.7
 
 ### Patch Changes

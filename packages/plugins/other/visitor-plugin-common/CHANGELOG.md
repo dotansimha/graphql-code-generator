@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.13.3
+
+### Patch Changes
+
+- [#8664](https://github.com/dotansimha/graphql-code-generator/pull/8664) [`62f655452`](https://github.com/dotansimha/graphql-code-generator/commit/62f6554520955dd675e11c920f35ef9bf0aaeffe) Thanks [@jdmoody](https://github.com/jdmoody)! - Fix issue where selection set flattening uses the wrong parent type
+
 ## 2.13.2
 
 ### Patch Changes
