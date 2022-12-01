@@ -999,6 +999,61 @@ export * from "./gql.js";`);
     expect(graphqlFile).toBeDefined();
   });
 
+  it.only('should dedupe fragments - #8670', async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            user(id: ID!): User!
+            event(id: ID!): Event!
+          }
+
+          type User {
+            id: ID!
+            username: String!
+            email: String!
+          }
+
+          type Event {
+            id: ID!
+            owner: User!
+            attendees: [User!]!
+          }
+        `,
+      ],
+      documents: [
+        /* GraphQL */ `
+          fragment SharedComponentFragment on User {
+            id
+            username
+          }
+
+          fragment EventHeaderComponentFragment on Event {
+            owner {
+              ...SharedComponentFragment
+            }
+          }
+
+          query EventQuery($eventId: ID!) {
+            event(id: $eventId) {
+              ...EventHeaderComponentFragment
+              attendees {
+                ...SharedComponentFragment
+              }
+            }
+          }
+        `,
+      ],
+      generates: {
+        'out1/': {
+          preset,
+          plugins: [],
+        },
+      },
+    });
+    const output = mergeOutputs([...result]);
+  });
+
   describe('when no operations are found', () => {
     it('still generates the helper `graphql()` (or under another `presetConfig.gqlTagName` name) function', async () => {
       const result = await executeCodegen({
