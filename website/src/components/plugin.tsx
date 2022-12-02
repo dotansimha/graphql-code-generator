@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
-import { useSSG } from 'nextra/ssg';
-import { PackageCmd } from '@theguild/components';
+import { PackageCmd, useSSG } from '@theguild/components';
 import { MDXRemote } from 'next-mdx-remote';
 import ClientNote from './client-note.mdx';
 
