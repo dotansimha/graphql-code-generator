@@ -20,7 +20,7 @@
     "dependency-graph": "^0.11.0",
     "graphql-tag": "^2.11.0",
     "parse-filepath": "^1.0.2",
-    "change-case-all": "1.0.14",
+    "change-case-all": "1.0.15",
     "tslib": "~2.4.0"
   },
   "peerDependencies": {
