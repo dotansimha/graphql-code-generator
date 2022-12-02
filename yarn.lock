@@ -1941,10 +1941,10 @@
     change-case-all "1.0.14"
     tslib "~2.4.0"
 
-"@graphql-codegen/typescript-react-query@4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-query/-/typescript-react-query-4.0.5.tgz#17e3da9afee4bfd28735a355022d67247c1fbea0"
-  integrity sha512-zg0bKtaeyE1Jym7CAXhnNSvXuV3qqF+tuMbM2xhjn9ZTZY0UB2ae743lZkLUEY382KL2NpuyNh8rr1ngNRbk/Q==
+"@graphql-codegen/typescript-react-query@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-query/-/typescript-react-query-4.0.6.tgz#2f8e4abc2a842e0bd07bcc001b247b6264efe95d"
+  integrity sha512-8eXpv6EzyMSji6RmO/txdBVHRb/dwJCIeMUuR7sMhKn2m0kXffrJL9v3u4AR7pdMsME4NChF3hb53PF1tHBSRw==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.7.2"
     "@graphql-codegen/visitor-plugin-common" "2.13.1"
@@ -3768,15 +3768,15 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@18.7.23":
-  version "18.7.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.23.tgz#75c580983846181ebe5f4abc40fe9dfb2d65665f"
-  integrity sha512-DWNcCHolDq0ZKGizjx2DZjR/PqsYwAcYUJmfMWqtVU2MBMG5Mo+xFZrhGId5r/O5HOuMPyQEcM6KUBp5lBZZBg==
-
-"@types/node@16.11.58", "@types/node@^16.9.2":
+"@types/node@*", "@types/node@16.11.58", "@types/node@^16.9.2":
   version "16.11.58"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.58.tgz#0a3698dee3492617a8d5fe7998d18d7520b63026"
   integrity sha512-uMVxJ111wpHzkx/vshZFb6Qni3BOMnlWLq7q9jrwej7Yw/KvjsEbpxCCxw+hLKxexFMc8YmpG8J9tnEe/rKsIg==
+
+"@types/node@18.7.23":
+  version "18.7.23"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.23.tgz#75c580983846181ebe5f4abc40fe9dfb2d65665f"
+  integrity sha512-DWNcCHolDq0ZKGizjx2DZjR/PqsYwAcYUJmfMWqtVU2MBMG5Mo+xFZrhGId5r/O5HOuMPyQEcM6KUBp5lBZZBg==
 
 "@types/node@^10.1.0":
   version "10.17.60"
