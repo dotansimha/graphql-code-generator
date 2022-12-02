@@ -22,7 +22,7 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
 
   const [mdx, mdxHeader] = await Promise.all([
     compileMdx(source, {
-      unstable_defaultShowCopyCode: true
+      unstable_defaultShowCopyCode: true,
     }),
     compileMdx(
       `
