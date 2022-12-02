@@ -21,7 +21,9 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
   const title = plugin.title ?? '';
 
   const [mdx, mdxHeader] = await Promise.all([
-    compileMdx(source),
+    compileMdx(source, {
+      unstable_defaultShowCopyCode: true,
+    }),
     compileMdx(
       `
       # ${title}

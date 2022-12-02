@@ -1,10 +1,8 @@
 import { useMemo } from 'react';
-import { useSSG } from 'nextra/ssg';
 import { compareDesc } from 'date-fns';
-import { MarketplaceSearch } from '@theguild/components';
+import { MarketplaceSearch, useSSG, fetchPackageInfo } from '@theguild/components';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { PACKAGES, ALL_TAGS, Icon, icons } from '@/lib/plugins';
-import { fetchPackageInfo } from '@theguild/components';
 
 type Plugin = {
   title: string;
