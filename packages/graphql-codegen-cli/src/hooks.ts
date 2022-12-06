@@ -15,40 +15,6 @@ const DEFAULT_HOOKS: Types.LifecycleHooksDefinition = {
   beforeAllFileWrite: [],
 };
 
-function normalizeHooks(_hooks: Partial<Types.LifecycleHooksDefinition>): {
-  [key in keyof Types.LifecycleHooksDefinition]: (string | Types.HookFunction)[];
-} {
-  const keys = Object.keys({
-    ...DEFAULT_HOOKS,
-    ..._hooks,
-  });
-
-  return keys.reduce(
-    (prev: { [key in keyof Types.LifecycleHooksDefinition]: (string | Types.HookFunction)[] }, hookName: string) => {
-      if (typeof _hooks[hookName] === 'string') {
-        return {
-          ...prev,
-          [hookName]: [_hooks[hookName]] as string[],
-        };
-      }
-      if (typeof _hooks[hookName] === 'function') {
-        return {
-          ...prev,
-          [hookName]: [_hooks[hookName]],
-        };
-      }
-      if (Array.isArray(_hooks[hookName])) {
-        return {
-          ...prev,
-          [hookName]: _hooks[hookName] as string[],
-        };
-      }
-      return prev;
-    },
-    {} as { [key in keyof Types.LifecycleHooksDefinition]: (string | Types.HookFunction)[] }
-  );
-}
-
 function execShellCommand(cmd: string): Promise<string> {
   return new Promise((resolve, reject) => {
     exec(
@@ -94,7 +60,10 @@ async function executeHooks(
 }
 
 export const lifecycleHooks = (_hooks: Partial<Types.LifecycleHooksDefinition> = {}) => {
-  const hooks = normalizeHooks(_hooks);
+  const hooks = {
+    ...DEFAULT_HOOKS,
+    ..._hooks,
+  };
 
   return {
     afterStart: async (): Promise<void> => executeHooks('afterStart', hooks.afterStart),
