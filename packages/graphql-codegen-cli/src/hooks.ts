@@ -4,7 +4,7 @@ import { exec } from 'child_process';
 import { delimiter, sep } from 'path';
 import { quote } from 'shell-quote';
 
-const DEFAULT_HOOKS: Types.LifecycleHooksDefinition<string[]> = {
+const DEFAULT_HOOKS: Types.LifecycleHooksDefinition = {
   afterStart: [],
   beforeDone: [],
   onWatchTriggered: [],
@@ -15,35 +15,38 @@ const DEFAULT_HOOKS: Types.LifecycleHooksDefinition<string[]> = {
   beforeAllFileWrite: [],
 };
 
-function normalizeHooks(
-  _hooks: Partial<Types.LifecycleHooksDefinition>
-): Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]> {
+function normalizeHooks(_hooks: Partial<Types.LifecycleHooksDefinition>): {
+  [key in keyof Types.LifecycleHooksDefinition]: (string | Types.HookFunction)[];
+} {
   const keys = Object.keys({
     ...DEFAULT_HOOKS,
     ..._hooks,
   });
 
-  return keys.reduce((prev: Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>, hookName: string) => {
-    if (typeof _hooks[hookName] === 'string') {
-      return {
-        ...prev,
-        [hookName]: [_hooks[hookName]] as string[],
-      };
-    }
-    if (typeof _hooks[hookName] === 'function') {
-      return {
-        ...prev,
-        [hookName]: [_hooks[hookName]],
-      };
-    }
-    if (Array.isArray(_hooks[hookName])) {
-      return {
-        ...prev,
-        [hookName]: _hooks[hookName] as string[],
-      };
-    }
-    return prev;
-  }, {} as Types.LifecycleHooksDefinition<(string | Types.HookFunction)[]>);
+  return keys.reduce(
+    (prev: { [key in keyof Types.LifecycleHooksDefinition]: (string | Types.HookFunction)[] }, hookName: string) => {
+      if (typeof _hooks[hookName] === 'string') {
+        return {
+          ...prev,
+          [hookName]: [_hooks[hookName]] as string[],
+        };
+      }
+      if (typeof _hooks[hookName] === 'function') {
+        return {
+          ...prev,
+          [hookName]: [_hooks[hookName]],
+        };
+      }
+      if (Array.isArray(_hooks[hookName])) {
+        return {
+          ...prev,
+          [hookName]: _hooks[hookName] as string[],
+        };
+      }
+      return prev;
+    },
+    {} as { [key in keyof Types.LifecycleHooksDefinition]: (string | Types.HookFunction)[] }
+  );
 }
 
 function execShellCommand(cmd: string): Promise<string> {
@@ -72,10 +75,11 @@ function execShellCommand(cmd: string): Promise<string> {
 
 async function executeHooks(
   hookName: string,
-  scripts: (string | Types.HookFunction)[] = [],
+  _scripts: Types.LifeCycleHookValue = [],
   args: string[] = []
 ): Promise<void> {
   debugLog(`Running lifecycle hook "${hookName}" scripts...`);
+  const scripts = Array.isArray(_scripts) ? _scripts : [_scripts];
 
   const quotedArgs = quote(args);
   for (const script of scripts) {
