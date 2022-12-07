@@ -1,5 +1,20 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.7.2
+
+### Patch Changes
+
+- [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a) Thanks [@saihaj](https://github.com/saihaj)! - fix the version of `@graphql-codegen/plugin-helpers@3.1.1`
+
+- Updated dependencies [[`307a5d350`](https://github.com/dotansimha/graphql-code-generator/commit/307a5d350643dd065d228b04ef3b4bd70cac0e81), [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a)]:
+  - @graphql-codegen/plugin-helpers@3.1.1
+  - @graphql-codegen/add@3.2.3
+  - @graphql-codegen/visitor-plugin-common@2.13.5
+  - @graphql-codegen/gql-tag-operations@1.5.11
+  - @graphql-codegen/typescript-operations@2.5.10
+  - @graphql-codegen/typed-document-node@2.3.10
+  - @graphql-codegen/typescript@2.8.5
+
 ## 1.7.1
 
 ### Patch Changes
