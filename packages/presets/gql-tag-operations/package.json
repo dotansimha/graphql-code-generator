@@ -24,7 +24,7 @@
     "@graphql-codegen/typescript": "^2.8.4",
     "@graphql-codegen/typescript-operations": "^2.5.9",
     "@graphql-codegen/gql-tag-operations": "^1.5.10",
-    "@graphql-codegen/plugin-helpers": "^3.0.0",
+    "@graphql-codegen/plugin-helpers": "^3.1.0",
     "@graphql-codegen/visitor-plugin-common": "^2.13.4",
     "@graphql-tools/utils": "^8.8.0",
     "tslib": "~2.4.0"
