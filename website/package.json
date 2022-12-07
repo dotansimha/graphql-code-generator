@@ -26,7 +26,7 @@
     "@graphql-codegen/add": "3.2.2",
     "@graphql-codegen/c-sharp": "4.3.1",
     "@graphql-codegen/c-sharp-operations": "2.3.1",
-    "@graphql-codegen/cli": "2.15.1",
+    "@graphql-codegen/cli": "2.16.0",
     "@graphql-codegen/core": "2.6.7",
     "@graphql-codegen/flow": "2.3.6",
     "@graphql-codegen/flow-operations": "2.3.6",
