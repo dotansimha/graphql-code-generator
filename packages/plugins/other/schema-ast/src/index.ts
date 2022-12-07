@@ -130,8 +130,12 @@ export const validate: PluginValidateFn<any> = async (
 ) => {
   const singlePlugin = allPlugins.length === 1;
 
-  if (singlePlugin && extname(outputFile) !== '.graphql') {
-    throw new Error(`Plugin "schema-ast" requires extension to be ".graphql"!`);
+  const allowedExtensions = ['.graphql', '.gql'];
+  const isAllowedExtension = allowedExtensions.includes(extname(outputFile));
+
+  if (singlePlugin && !isAllowedExtension) {
+    const allowedExtensionsOutput = allowedExtensions.map(extension => `"${extension}"`).join(' or ');
+    throw new Error(`Plugin "schema-ast" requires extension to be ${allowedExtensionsOutput}!`);
   }
 };
 
