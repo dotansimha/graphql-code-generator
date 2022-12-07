@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 3.1.1
+
+### Patch Changes
+
+- [`307a5d350`](https://github.com/dotansimha/graphql-code-generator/commit/307a5d350643dd065d228b04ef3b4bd70cac0e81) Thanks [@saihaj](https://github.com/saihaj)! - Something went wrong in old relesae so this will ensure we have a good bump on all packages
+
 ## 3.1.0
 
 ### Minor Changes

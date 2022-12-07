@@ -1,5 +1,16 @@
 # @graphql-codegen/typescript
 
+## 2.8.5
+
+### Patch Changes
+
+- [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a) Thanks [@saihaj](https://github.com/saihaj)! - fix the version of `@graphql-codegen/plugin-helpers@3.1.1`
+
+- Updated dependencies [[`fedd71cbb`](https://github.com/dotansimha/graphql-code-generator/commit/fedd71cbb7f37440a59032d942cb228df78d52e5), [`307a5d350`](https://github.com/dotansimha/graphql-code-generator/commit/307a5d350643dd065d228b04ef3b4bd70cac0e81), [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a)]:
+  - @graphql-codegen/schema-ast@2.6.0
+  - @graphql-codegen/plugin-helpers@3.1.1
+  - @graphql-codegen/visitor-plugin-common@2.13.5
+
 ## 2.8.4
 
 ### Patch Changes
