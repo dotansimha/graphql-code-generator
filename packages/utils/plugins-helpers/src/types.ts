@@ -523,8 +523,14 @@ export namespace Types {
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
   export type PluginOutput = string | ComplexPluginOutput;
   export type HookFunction = (...args: any[]) => void | Promise<void>;
+  export type HookAlterFunction = (...args: any[]) => void | string | Promise<void | string>;
 
   export type LifeCycleHookValue = string | HookFunction | (string | HookFunction)[];
+  export type LifeCycleAlterHookValue =
+    | string
+    | HookFunction
+    | HookAlterFunction
+    | (string | HookFunction | HookAlterFunction)[];
 
   /**
    * @description All available lifecycle hooks
@@ -565,11 +571,14 @@ export namespace Types {
      */
     afterAllFileWrite: LifeCycleHookValue;
     /**
-     * @description Triggered before a file is written to the file-system. Executed with the path for the file.
+     * @description Triggered before a file is written to the file-system.
+     * Executed with the path and content for the file.
+     *
+     * Returning a string will override the content of the file.
      *
      * If the content of the file hasn't changed since last execution - this hooks won't be triggered.
      */
-    beforeOneFileWrite: LifeCycleHookValue;
+    beforeOneFileWrite: LifeCycleAlterHookValue;
     /**
      * @description Executed after the codegen has done creating the output and before writing the files to the file-system.
      *

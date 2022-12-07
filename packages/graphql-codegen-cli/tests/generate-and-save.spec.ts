@@ -213,4 +213,28 @@ describe('generate-and-save', () => {
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
   });
+  test('should allow to alter the content with the beforeOneFileWrite hook', async () => {
+    const filename = 'modify.ts';
+    const writeSpy = jest.spyOn(fs, 'writeFile').mockImplementation();
+
+    const output = await generate(
+      {
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          [filename]: {
+            plugins: ['typescript'],
+            hooks: {
+              beforeOneFileWrite: [() => 'new content'],
+            },
+          },
+        },
+      },
+      true
+    );
+
+    expect(output.length).toBe(1);
+    expect(output[0].content).toMatch('new content');
+    // makes sure it doesn't write a new file
+    expect(writeSpy).toHaveBeenCalled();
+  });
 });
