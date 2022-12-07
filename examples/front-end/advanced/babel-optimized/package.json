@@ -16,7 +16,7 @@
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.9",
     "babel-jest": "27.5.1",
-    "babel-loader": "8.2.5",
+    "babel-loader": "8.3.0",
     "babel-plugin-named-asset-import": "0.3.8",
     "babel-preset-react-app": "10.0.1",
     "bfj": "7.0.2",
