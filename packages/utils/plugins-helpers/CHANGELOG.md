@@ -1,5 +1,19 @@
 # @graphql-codegen/plugin-helpers
 
+## 3.0.0
+
+### Major Changes
+
+- [#8652](https://github.com/dotansimha/graphql-code-generator/pull/8652) [`c802a0c0b`](https://github.com/dotansimha/graphql-code-generator/commit/c802a0c0b775cfabc5ace3e7fb6655540c6c4d84) Thanks [@jantimon](https://github.com/jantimon)! - improve typings for life cycle hooks
+
+### Patch Changes
+
+- [#8686](https://github.com/dotansimha/graphql-code-generator/pull/8686) [`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`change-case-all@1.0.15` ↗︎](https://www.npmjs.com/package/change-case-all/v/1.0.15) (from `1.0.14`, in `dependencies`)
+
+- [#8661](https://github.com/dotansimha/graphql-code-generator/pull/8661) [`f79a00e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f79a00e8ae073eab426ca08795c924e716123482) Thanks [@jantimon](https://github.com/jantimon)! - refactor hook execution
+
 ## 2.7.2
 
 ### Patch Changes
