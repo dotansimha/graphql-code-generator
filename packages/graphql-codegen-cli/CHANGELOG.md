@@ -1,5 +1,16 @@
 # @graphql-codegen/cli
 
+## 2.16.0
+
+### Minor Changes
+
+- [#8662](https://github.com/dotansimha/graphql-code-generator/pull/8662) [`c0183810f`](https://github.com/dotansimha/graphql-code-generator/commit/c0183810f0178aec6f49ab8a6f35f7adc4d9f13e) Thanks [@jantimon](https://github.com/jantimon)! - the life cycle hook beforeOneFileWrite is now able to modify the generated content
+
+### Patch Changes
+
+- Updated dependencies [[`c0183810f`](https://github.com/dotansimha/graphql-code-generator/commit/c0183810f0178aec6f49ab8a6f35f7adc4d9f13e)]:
+  - @graphql-codegen/plugin-helpers@3.1.0
+
 ## 2.15.1
 
 ### Patch Changes
