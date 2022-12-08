@@ -510,6 +510,10 @@ export namespace Types {
        * @description Overrides the name of the default GraphQL name identifier.
        */
       globalIdentifier?: string;
+      /**
+       * @description Allows to use a global identifier instead of a module import.
+       */
+      globalGqlIdentifierName?: string | string[];
     };
     /**
      * @description Specifies scripts to run when events are happening in the codegen core.
@@ -591,20 +595,20 @@ export namespace Types {
 
   export type SkipDocumentsValidationOptions =
     | {
-        /**
-         * @description Allows you to skip specific rules while validating the documents.
-         * See all the rules; https://github.com/graphql/graphql-js/tree/main/src/validation/rules
-         */
-        ignoreRules?: string[];
-        /**
-         * @description Ignore duplicate documents validation
-         */
-        skipDuplicateValidation?: boolean;
-        /**
-         * @description Skip document validation entirely against the schema
-         */
-        skipValidationAgainstSchema?: boolean;
-      }
+      /**
+       * @description Allows you to skip specific rules while validating the documents.
+       * See all the rules; https://github.com/graphql/graphql-js/tree/main/src/validation/rules
+       */
+      ignoreRules?: string[];
+      /**
+       * @description Ignore duplicate documents validation
+       */
+      skipDuplicateValidation?: boolean;
+      /**
+       * @description Skip document validation entirely against the schema
+       */
+      skipValidationAgainstSchema?: boolean;
+    }
     | boolean;
 }
 
