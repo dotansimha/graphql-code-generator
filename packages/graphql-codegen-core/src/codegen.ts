@@ -20,6 +20,7 @@ import {
   shouldValidateDocumentsAgainstSchema,
   shouldValidateDuplicateDocuments,
 } from './utils.js';
+import { transformDocuments } from './transform-document.js';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -72,7 +73,18 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const schemaDocumentNode =
     mergeNeeded || !options.schema ? getCachedDocumentNodeFromSchema(schemaInstance) : options.schema;
 
-  if (schemaInstance && documents.length > 0 && shouldValidateDocumentsAgainstSchema(skipDocumentsValidation)) {
+  const transformedDocuments = await transformDocuments({
+    ...options,
+    schema: schemaDocumentNode,
+    schemaAst: schemaInstance,
+    profiler,
+  });
+
+  if (
+    schemaInstance &&
+    transformedDocuments.length > 0 &&
+    shouldValidateDocumentsAgainstSchema(skipDocumentsValidation)
+  ) {
     const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
     if (typeof skipDocumentsValidation === 'object' && skipDocumentsValidation.ignoreRules) {
       ignored.push(...asArray(skipDocumentsValidation.ignoreRules));
@@ -88,18 +100,18 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       const rules = specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)));
       const schemaHash = extractHashFromSchema(schemaInstance);
 
-      if (!schemaHash || !options.cache || documents.some(d => typeof d.hash !== 'string')) {
+      if (!schemaHash || !options.cache || transformedDocuments.some(d => typeof d.hash !== 'string')) {
         return Promise.resolve(
           validateGraphQlDocuments(
             schemaInstance,
-            [...documents.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
+            [...transformedDocuments.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
             rules
           )
         );
       }
 
       const cacheKey = [schemaHash]
-        .concat(documents.map(doc => doc.hash))
+        .concat(transformedDocuments.map(doc => doc.hash))
         .concat(JSON.stringify(fragments))
         .join(',');
 
@@ -107,7 +119,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         Promise.resolve(
           validateGraphQlDocuments(
             schemaInstance,
-            [...documents.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
+            [...transformedDocuments.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
             rules
           )
         )
@@ -148,7 +160,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
               parentConfig: options.config,
               schema: schemaDocumentNode,
               schemaAst: schemaInstance,
-              documents: options.documents,
+              documents: transformedDocuments,
               outputFilename: options.filename,
               allPlugins: options.plugins,
               skipDocumentsValidation: options.skipDocumentsValidation,
