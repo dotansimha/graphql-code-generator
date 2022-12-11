@@ -1086,4 +1086,81 @@ describe('Codegen Executor', () => {
     const output = await executeCodegen(config);
     expect(output[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
   });
+
+  describe('Document Transform', () => {
+    it('Should transform documents', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransformPlugins: ['./tests/custom-plugins/document-transform.js'],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('export type BarQuery');
+    });
+
+    it('Should accept config in per-plugin', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransformPlugins: [
+              {
+                './tests/custom-plugins/document-transform-config.js': {
+                  queryName: 'test',
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('export type TestQuery');
+    });
+
+    it('Should allow plugin context to be accessed and modified', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': {
+            documentTransformPlugins: ['./tests/custom-plugins/document-transform-context.js'],
+            plugins: ['./tests/custom-plugins/document-transform-context.js'],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('Hello world!');
+    });
+
+    it('Should execute validation before transform documents and throw when it fails', async () => {
+      try {
+        await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
+          generates: {
+            'out1.ts': {
+              plugins: ['typescript'],
+              documentTransformPlugins: ['./tests/custom-plugins/document-transform-validation.js'],
+            },
+          },
+        });
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
+        expect(e.message).toContain(
+          'Document transform "./tests/custom-plugins/document-transform-validation.js" validation failed'
+        );
+        expect(e.message).toContain('Invalid!');
+      }
+    });
+  });
 });

@@ -207,6 +207,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
         },
         documents: [],
+        documentTransformPlugins: options.documentTransformPlugins,
       };
     }
 
@@ -230,6 +231,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         schema: options.schema,
         config: {},
         documents: [],
+        documentTransformPlugins: options.documentTransformPlugins,
       };
     }
 
@@ -241,6 +243,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         schema: options.schema,
         config,
         documents: sources,
+        documentTransformPlugins: options.documentTransformPlugins,
       },
       {
         filename: `${options.baseOutputDir}/gql${gqlArtifactFileExtension}`,
@@ -253,6 +256,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
           gqlTagName: options.presetConfig.gqlTagName || 'gql',
         },
         documents: sources,
+        documentTransformPlugins: options.documentTransformPlugins,
       },
       ...(fragmentMaskingFileGenerateConfig ? [fragmentMaskingFileGenerateConfig] : []),
       ...(indexFileGenerateConfig ? [indexFileGenerateConfig] : []),

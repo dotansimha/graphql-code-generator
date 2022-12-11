@@ -19,6 +19,7 @@ export namespace Types {
     pluginContext?: { [key: string]: any };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
+    documentTransformPlugins?: ConfiguredDocumentTransformPlugin[];
   }
 
   export type FileOutput = {
@@ -232,6 +233,9 @@ export namespace Types {
     | 'import-types';
   export type PresetNames = `${PresetNamesBase}-preset` | PresetNamesBase;
 
+  export interface ConfiguredDocumentTransformPlugin {
+    [name: string]: { config: PluginConfig; plugin: CodegenPlugin };
+  }
   /**
    * @additionalProperties false
    */
@@ -316,6 +320,11 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
+    /**
+     * @description Specifies plugins that have the transformDocuments function.
+     * Document transform plugin changes documents before executing plugins.
+     */
+    documentTransformPlugins?: OutputConfig[];
   }
 
   /* Output Builder Preset */
@@ -340,6 +349,7 @@ export namespace Types {
     };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
+    documentTransformPlugins: ConfiguredDocumentTransformPlugin[];
   };
 
   export type OutputPreset<TPresetConfig = any> = {
@@ -643,4 +653,10 @@ export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
   addToSchema?: AddToSchemaResult | ((config: T) => AddToSchemaResult);
   validate?: PluginValidateFn;
+  transformDocuments?: TransformDocumentsFunction<T>;
+  validateBeforeTransformDocuments?: PluginValidateFn;
 }
+
+export type TransformDocumentsFunction<T = any> = (
+  ...params: Parameters<PluginFunction<T>>
+) => Types.Promisable<Types.DocumentFile[]>;

@@ -316,6 +316,14 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
                           };
 
+                          const documentTransformPlugins = await Promise.all(
+                            normalizeConfig(outputConfig.documentTransformPlugins).map(async pluginConfig => {
+                              const name = Object.keys(pluginConfig)[0];
+                              const plugin = await getPluginByName(name, pluginLoader);
+                              return { [name]: { plugin, config: Object.values(pluginConfig)[0] } };
+                            })
+                          );
+
                           const outputs: Types.GenerateOptions[] = preset
                             ? await context.profiler.run(
                                 async () =>
@@ -330,6 +338,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                     pluginMap,
                                     pluginContext,
                                     profiler: context.profiler,
+                                    documentTransformPlugins,
                                   }),
                                 `Build Generates Section: ${filename}`
                               )
@@ -344,6 +353,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                   pluginMap,
                                   pluginContext,
                                   profiler: context.profiler,
+                                  documentTransformPlugins,
                                 },
                               ];
 
