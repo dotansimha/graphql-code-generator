@@ -68,7 +68,7 @@ export async function generate(
               return;
             }
 
-            const content = result.content || '';
+            let content = result.content || '';
             const currentHash = hash(content);
 
             if (previousHash && currentHash === previousHash) {
@@ -86,9 +86,6 @@ export async function generate(
               return;
             }
 
-            await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
-            await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-
             const absolutePath = isAbsolute(result.filename)
               ? result.filename
               : join(input.cwd || process.cwd(), result.filename);
@@ -96,7 +93,22 @@ export async function generate(
             const basedir = dirname(absolutePath);
             await mkdirp(basedir);
 
-            await writeFile(absolutePath, content);
+            content = await lifecycleHooks(result.hooks).beforeOneFileWrite(absolutePath, content);
+            content = await lifecycleHooks(config.hooks).beforeOneFileWrite(absolutePath, content);
+
+            if (content !== result.content) {
+              result.content = content;
+              // compare the prettified content with the previous hash
+              // to compare the content with an existing prettified file
+              if (hash(content) === previousHash) {
+                debugLog(`Skipping file (${result.filename}) writing due to indentical hash after prettier...`);
+                // the modified content is NOT stored in recentOutputHash
+                // so a diff can already be detected before executing the hook
+                return;
+              }
+            }
+
+            await writeFile(absolutePath, result.content);
             recentOutputHash.set(result.filename, currentHash);
 
             await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);

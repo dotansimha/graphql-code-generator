@@ -880,7 +880,7 @@
         "anchor": "appendix-ii-compatibility"
       }
     ],
-    "content": "fb5c6a848b2128ed1ca2c2b3ee8a9f1a",
+    "content": "3b3df3483e43c7dade311fde5b623acc",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1792,7 +1792,7 @@
         "anchor": "example"
       }
     ],
-    "content": "12b91414300aa46b5026c0fb8fb5901d",
+    "content": "ca008e0b0ebc2a4a8f064da8960fbeca",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [

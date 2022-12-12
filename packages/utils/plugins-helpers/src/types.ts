@@ -533,51 +533,62 @@ export namespace Types {
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
   export type PluginOutput = string | ComplexPluginOutput;
   export type HookFunction = (...args: any[]) => void | Promise<void>;
+  export type HookAlterFunction = (...args: any[]) => void | string | Promise<void | string>;
+
+  export type LifeCycleHookValue = string | HookFunction | (string | HookFunction)[];
+  export type LifeCycleAlterHookValue =
+    | string
+    | HookFunction
+    | HookAlterFunction
+    | (string | HookFunction | HookAlterFunction)[];
 
   /**
    * @description All available lifecycle hooks
    * @additionalProperties false
    */
-  export type LifecycleHooksDefinition<T = string | HookFunction | (string | HookFunction)[]> = {
+  export type LifecycleHooksDefinition = {
     /**
      * @description Triggered with no arguments when the codegen starts (after the `codegen.yml` has beed parsed).
      *
      * Specify a shell command to run.
      */
-    afterStart: T;
+    afterStart: LifeCycleHookValue;
     /**
      * @description Triggered with no arguments, right before the codegen closes, or when watch mode is stopped.
      *
      * Specify a shell command to run.
      */
-    beforeDone: T;
+    beforeDone: LifeCycleHookValue;
     /**
      * @description Triggered every time a file changes when using watch mode.
      * Triggered with two arguments: the type of the event (for example, `changed`) and the path of the file.
      */
-    onWatchTriggered: T;
+    onWatchTriggered: LifeCycleHookValue;
     /**
      * @description Triggered in case of a general error in the codegen. The argument is a string containing the error.
      */
-    onError: T;
+    onError: LifeCycleHookValue;
     /**
      * @description Triggered after a file is written to the file-system. Executed with the path for the file.
      * If the content of the file hasn't changed since last execution - this hooks won't be triggered.
      *
      * > This is a very useful hook, you can use it for integration with Prettier or other linters.
      */
-    afterOneFileWrite: T;
+    afterOneFileWrite: LifeCycleHookValue;
     /**
      * @description Executed after writing all the files to the file-system.
      * Triggered with multiple arguments - paths for all files.
      */
-    afterAllFileWrite: T;
+    afterAllFileWrite: LifeCycleHookValue;
     /**
-     * @description Triggered before a file is written to the file-system. Executed with the path for the file.
+     * @description Triggered before a file is written to the file-system.
+     * Executed with the path and content for the file.
+     *
+     * Returning a string will override the content of the file.
      *
      * If the content of the file hasn't changed since last execution - this hooks won't be triggered.
      */
-    beforeOneFileWrite: T;
+    beforeOneFileWrite: LifeCycleAlterHookValue;
     /**
      * @description Executed after the codegen has done creating the output and before writing the files to the file-system.
      *
@@ -585,7 +596,7 @@ export namespace Types {
      *
      * > Not all the files will be actually written to the file-system, because this is triggered before checking if the file has changed since last execution.
      */
-    beforeAllFileWrite: T;
+    beforeAllFileWrite: LifeCycleHookValue;
   };
 
   export type SkipDocumentsValidationOptions =
