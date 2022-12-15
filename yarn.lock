@@ -3423,10 +3423,10 @@
     lodash "^4.17.21"
     remove-markdown "0.5.0"
 
-"@theguild/components@4.4.3":
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.4.3.tgz#f8edbbb7d1874a228881ddf5dc5b8bc26eb13b3c"
-  integrity sha512-qamPepdT898Y0qHYpn/su7Q7PEUIqKh0SDEyN3fBDora6JKIqB2MWt/T//9xKx53Lp9dEzcoYgnXAsmjYViHZg==
+"@theguild/components@4.4.4":
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.4.4.tgz#8f4c49aaffa1fc21838cd476000e957ee8ad2103"
+  integrity sha512-RYIv/2gaoxw1nS7c5qvrNKnByNAAphRiA5ZbUVAmYPnJO5LBPjUCTkJKuscu0ZWMgAe7Nk53EdahIPQOpEGuNA==
   dependencies:
     "@algolia/autocomplete-js" "1.7.3"
     "@algolia/autocomplete-plugin-algolia-insights" "1.7.3"
@@ -3439,6 +3439,7 @@
     algoliasearch "4.14.2"
     clsx "1.2.1"
     focus-trap-react "10.0.2"
+    fuzzy "^0.1.3"
     mermaid "9.2.2"
     next-videos "1.5.0"
     nextra "2.0.0-beta.43"
@@ -3450,7 +3451,7 @@
     search-insights "2.2.3"
     semver "^7.3.8"
     unist-util-visit "4.1.1"
-    use-debounce "8.0.4"
+    use-debounce "9.0.2"
 
 "@theguild/prettier-config@0.1.1":
   version "0.1.1"
@@ -3780,15 +3781,15 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@18.7.23":
-  version "18.7.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.23.tgz#75c580983846181ebe5f4abc40fe9dfb2d65665f"
-  integrity sha512-DWNcCHolDq0ZKGizjx2DZjR/PqsYwAcYUJmfMWqtVU2MBMG5Mo+xFZrhGId5r/O5HOuMPyQEcM6KUBp5lBZZBg==
-
-"@types/node@16.11.58", "@types/node@^16.9.2":
+"@types/node@*", "@types/node@16.11.58", "@types/node@^16.9.2":
   version "16.11.58"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.58.tgz#0a3698dee3492617a8d5fe7998d18d7520b63026"
   integrity sha512-uMVxJ111wpHzkx/vshZFb6Qni3BOMnlWLq7q9jrwej7Yw/KvjsEbpxCCxw+hLKxexFMc8YmpG8J9tnEe/rKsIg==
+
+"@types/node@18.7.23":
+  version "18.7.23"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.23.tgz#75c580983846181ebe5f4abc40fe9dfb2d65665f"
+  integrity sha512-DWNcCHolDq0ZKGizjx2DZjR/PqsYwAcYUJmfMWqtVU2MBMG5Mo+xFZrhGId5r/O5HOuMPyQEcM6KUBp5lBZZBg==
 
 "@types/node@^10.1.0":
   version "10.17.60"
@@ -7765,6 +7766,11 @@ functions-have-names@^1.2.2:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/functions-have-names/-/functions-have-names-1.2.3.tgz#0404fe4ee2ba2f607f0e0ec3c80bae994133b834"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
+
+fuzzy@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/fuzzy/-/fuzzy-0.1.3.tgz#4c76ec2ff0ac1a36a9dccf9a00df8623078d4ed8"
+  integrity sha512-/gZffu4ykarLrCiP3Ygsa86UAo1E5vEVlvTrpkKywXSbP9Xhln3oSp9QSV57gEq3JFFpGJ4GZ+5zdEp3FcUh4w==
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
@@ -13492,10 +13498,10 @@ urql@3.0.3:
     "@urql/core" "^3.0.3"
     wonka "^6.0.0"
 
-use-debounce@8.0.4:
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-8.0.4.tgz#27e93b2f010bd0b8ad06e9fc7de891d9ee5d6b8e"
-  integrity sha512-fGqsYQzl8kLHF2QpQSgIwgOgJmnh6j5L6SIzQiHdLfwp3q1egUL3btq5Bg2SJysH6A0ILLgT2IqXZKoNJr0nFw==
+use-debounce@9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-9.0.2.tgz#2883982ec1eb79affec46f14047244057b78161c"
+  integrity sha512-QLyB0sxt9F5AisGDrUybCRJSLE60bTQR0yXc+IebNGUu1GCXwii1zsZl82mPGdWqDVQy7+1FKMLHQUixxf5Nbw==
 
 use-sync-external-store@^1.2.0:
   version "1.2.0"
