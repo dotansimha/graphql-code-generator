@@ -283,11 +283,13 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       /** custom enum */
-      export type MyEnum =
+      export const MyEnumValues = [
         /** this is a */
-        | 'A'
+        'A',
         /** this is b */
-        | 'B';`);
+        'B',
+      ] as const;
+      export type MyEnum = typeof MyEnumValues[number];`);
     });
 
     it('Should work with directives', async () => {
@@ -483,9 +485,11 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum =
-        | 'A'
-        | 'B';`);
+      export const MyEnumValues = [
+        'A',
+        'B',
+      ] as const;
+      export type MyEnum = typeof MyEnumValues[number];`);
     });
 
     it('Should not work when config is false', async () => {
@@ -507,11 +511,13 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       /** custom enum */
-      export type MyEnum =
+      export const MyEnumValues = [
         /** this is a */
-        | 'A'
+        'A',
         /** this is b */
-        | 'B';`);
+        'B',
+      ] as const;
+      export type MyEnum = typeof MyEnumValues[number];`);
     });
   });
 
@@ -1207,9 +1213,11 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        export type MyEnum =
-          | 'A'
-          | 'B';
+        export const MyEnumValues = [
+          'A',
+          'B',
+        ] as const;
+        export type MyEnum = typeof MyEnumValues[number];
       `);
       validateTs(result);
     });
@@ -1228,9 +1236,11 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        export type MyEnum =
-          | 'BOOP'
-          | 'B';
+        export const MyEnumValues = [
+          'BOOP',
+          'B',
+        ] as const;
+        export type MyEnum = typeof MyEnumValues[number];
       `);
       validateTs(result);
     });
@@ -1255,11 +1265,13 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-      export type MyEnum =
-        | 'A'
-        | 'B'
-        | '%future added value'
-    `);
+        export const MyEnumValues = [
+          'A',
+          'B',
+          '%future added value',
+        ] as const;
+        export type MyEnum = typeof MyEnumValues[number];
+      `);
       expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
           __typename?: 'MyType';
