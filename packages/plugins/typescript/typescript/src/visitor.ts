@@ -357,7 +357,7 @@ export class TsVisitor<
     };
 
     const withFutureAddedValue = [
-      this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
+      this.config.futureProofEnums ? [indent(wrapWithSingleQuotes('%future added value'))] : [],
     ];
 
     const enumTypeName = this.convertName(node, {
@@ -365,24 +365,27 @@ export class TsVisitor<
     });
 
     if (this.config.enumsAsTypes) {
-      return new DeclarationBlock(this._declarationBlockConfig)
+      const enumValues = new DeclarationBlock(this._declarationBlockConfig)
         .export()
-        .asKind('type')
+        .asKind('const')
         .withComment(node.description as any as string)
-        .withName(enumTypeName)
+        .withName(`${enumTypeName}Values`)
         .withContent(
-          '\n' +
+          '[\n' +
             node.values
               .map(enumOption => {
                 const name = enumOption.name as unknown as string;
                 const enumValue: string | number = getValueFromConfig(name) ?? name;
                 const comment = transformComment(enumOption.description as any as string, 1);
-
-                return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
+                return comment + indent(wrapWithSingleQuotes(enumValue));
               })
               .concat(...withFutureAddedValue)
-              .join('\n')
+              .join(',\n') +
+            ',\n] as const'
         ).string;
+
+      const typeName = `export type ${enumTypeName} = typeof ${enumTypeName}Values[number];`;
+      return [enumValues, typeName].join('\n');
     }
 
     if (this.config.numericEnums) {
