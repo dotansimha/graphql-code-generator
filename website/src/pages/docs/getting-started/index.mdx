@@ -75,7 +75,7 @@ const postsQueryDocument = /* GraphQL */ `
 `
 
 const Posts = () => {
-  const [result] = useQuery<PostQuery>({ query: postsQueryDocument })
+  const [result] = useQuery<PostsQuery>({ query: postsQueryDocument })
 
   // …
 }
