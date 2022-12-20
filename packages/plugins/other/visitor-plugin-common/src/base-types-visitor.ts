@@ -796,13 +796,17 @@ export class BaseTypesVisitor<
     sourceIdentifier: string | null,
     sourceFile: string | null
   ): string[] {
-    const importStatement = this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile);
-
-    if (importIdentifier !== sourceIdentifier || sourceIdentifier !== typeIdentifier) {
-      return [importStatement, `import ${typeIdentifier} = ${sourceIdentifier};`];
+    if (importIdentifier !== sourceIdentifier) {
+      // use namespace import to dereference nested enum
+      // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
+      return [
+        this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile),
+        `import ${typeIdentifier} = ${sourceIdentifier};`,
+      ];
+    } else if (sourceIdentifier !== typeIdentifier) {
+      return [this._buildTypeImport(`${sourceIdentifier} as ${typeIdentifier}`, sourceFile)];
     }
-
-    return [importStatement];
+    return [this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile)];
   }
 
   public getEnumsImports(): string[] {

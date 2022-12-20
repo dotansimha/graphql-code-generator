@@ -3308,7 +3308,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should build enum correctly with custom imported enum from namspace with different name', async () => {
+    it('Should build enum correctly with custom imported enum from namespace with different name', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
       const result = (await plugin(
         schema,
@@ -3325,7 +3325,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should build enum correctly with custom imported enum from namspace with same name', async () => {
+    it('Should build enum correctly with custom imported enum from namespace with same name', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
       const result = (await plugin(
         schema,
@@ -3352,8 +3352,7 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
-      expect(result.prepend).toContain(`import { MyCustomEnum } from './my-file';`);
-      expect(result.prepend).toContain(`import MyEnum = MyCustomEnum;`);
+      expect(result.prepend).toContain(`import { MyCustomEnum as MyEnum } from './my-file';`);
       expect(result.content).toContain(`export { MyEnum };`);
 
       validateTs(result);
@@ -3387,7 +3386,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toContain(`export { MyEnum };`);
       expect(result.content).toContain(`export { MyEnum2 };`);
-      expect(result.prepend).toContain(`import MyEnum2 = MyEnum2X;`);
+      expect(result.prepend).toContain(`import { MyEnum2X as MyEnum2 } from './my-file';`);
 
       validateTs(result);
     });
@@ -3401,6 +3400,8 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
+      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
       expect(result.content).toContain(`export { MyEnum };`);
       expect(result.content).toContain(`export { MyEnum2 };`);
 
