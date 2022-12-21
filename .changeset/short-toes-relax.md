@@ -10,7 +10,7 @@
 Add a feature to transform documents.
 
 Plugin will have the following functions:
-```my-plugin.js
+```js
 module.exports = {
   plugin: () => {
     return 'hello'
@@ -46,7 +46,7 @@ export default config
 
 For example, to remove a `@localOnlyDirective` directive from documents:
 
-```my-plugin.js
+```js
 const { visit, print } = require('graphql')
 
 module.exports = {
