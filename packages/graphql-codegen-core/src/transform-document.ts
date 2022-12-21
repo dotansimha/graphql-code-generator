@@ -2,19 +2,19 @@ import { createNoopProfiler, Types } from '@graphql-codegen/plugin-helpers';
 import { buildASTSchema, GraphQLSchema } from 'graphql';
 
 export async function transformDocuments(options: Types.GenerateOptions): Promise<Types.DocumentFile[]> {
-  const documentTransformPlugins = options.documentTransformPlugins || [];
+  const documentTransforms = options.documentTransforms || [];
   let documents = options.documents;
-  if (documentTransformPlugins.length === 0) {
+  if (documentTransforms.length === 0) {
     return documents;
   }
 
   const profiler = options.profiler ?? createNoopProfiler();
   const outputSchema: GraphQLSchema = options.schemaAst || buildASTSchema(options.schema, options.config as any);
 
-  for (const documentTransformPlugin of documentTransformPlugins) {
-    const name = Object.keys(documentTransformPlugin)[0];
-    const transformPlugin = documentTransformPlugin[name].plugin;
-    const pluginConfig = documentTransformPlugin[name].config;
+  for (const documentTransform of documentTransforms) {
+    const name = Object.keys(documentTransform)[0];
+    const transformPlugin = documentTransform[name].plugin;
+    const pluginConfig = documentTransform[name].config;
 
     const config =
       typeof pluginConfig !== 'object'
