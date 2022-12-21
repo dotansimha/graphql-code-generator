@@ -129,17 +129,13 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       [`typescript-operations`]: typescriptOperationPlugin,
       [`typed-document-node`]: {
         ...typedDocumentNodePlugin,
-        ...(isPersistedOperations
-          ? {
-              plugin: async (...args: Parameters<PluginFunction>) => {
-                try {
-                  return await typedDocumentNodePlugin.plugin(...args);
-                } finally {
-                  tdnFinished.resolve();
-                }
-              },
-            }
-          : {}),
+        plugin: async (...args: Parameters<PluginFunction>) => {
+          try {
+            return await typedDocumentNodePlugin.plugin(...args);
+          } finally {
+            tdnFinished.resolve();
+          }
+        },
       },
       [`gen-dts`]: gqlTagPlugin,
     };
