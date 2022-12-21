@@ -19,7 +19,7 @@ export namespace Types {
     pluginContext?: { [key: string]: any };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
-    documentTransformPlugins?: ConfiguredDocumentTransformPlugin[];
+    documentTransforms?: ConfiguredDocumentTransform[];
   }
 
   export type FileOutput = {
@@ -233,7 +233,7 @@ export namespace Types {
     | 'import-types';
   export type PresetNames = `${PresetNamesBase}-preset` | PresetNamesBase;
 
-  export interface ConfiguredDocumentTransformPlugin {
+  export interface ConfiguredDocumentTransform {
     [name: string]: { config: PluginConfig; plugin: CodegenPlugin };
   }
   /**
@@ -324,7 +324,7 @@ export namespace Types {
      * @description Specifies plugins that have the transformDocuments function.
      * Document transform plugin changes documents before executing plugins.
      */
-    documentTransformPlugins?: OutputConfig[];
+    documentTransforms?: OutputConfig[];
   }
 
   /* Output Builder Preset */
@@ -349,7 +349,7 @@ export namespace Types {
     };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
-    documentTransformPlugins: ConfiguredDocumentTransformPlugin[];
+    documentTransforms: ConfiguredDocumentTransform[];
   };
 
   export type OutputPreset<TPresetConfig = any> = {

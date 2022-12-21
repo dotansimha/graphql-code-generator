@@ -1095,7 +1095,7 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             plugins: ['typescript', 'typescript-operations'],
-            documentTransformPlugins: ['./tests/custom-plugins/document-transform.js'],
+            documentTransforms: ['./tests/custom-plugins/document-transform.js'],
           },
         },
       });
@@ -1111,7 +1111,7 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             plugins: ['typescript', 'typescript-operations'],
-            documentTransformPlugins: [
+            documentTransforms: [
               {
                 './tests/custom-plugins/document-transform-config.js': {
                   queryName: 'test',
@@ -1132,7 +1132,7 @@ describe('Codegen Executor', () => {
         documents: `query root { f }`,
         generates: {
           'out1.ts': {
-            documentTransformPlugins: ['./tests/custom-plugins/document-transform-context.js'],
+            documentTransforms: ['./tests/custom-plugins/document-transform-context.js'],
             plugins: ['./tests/custom-plugins/document-transform-context.js'],
           },
         },
@@ -1149,7 +1149,7 @@ describe('Codegen Executor', () => {
           generates: {
             'out1.ts': {
               plugins: ['typescript'],
-              documentTransformPlugins: ['./tests/custom-plugins/document-transform-validation.js'],
+              documentTransforms: ['./tests/custom-plugins/document-transform-validation.js'],
             },
           },
         });
