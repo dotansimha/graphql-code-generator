@@ -111,11 +111,11 @@ impl VisitMut for GraphQLVisitor {
                     };
 
                     let raw = match &quasis[0].cooked {
-                        Some(cooked) => cooked.to_string(),
+                        Some(cooked) => cooked,
                         None => return,
                     };
 
-                    let graphql_ast = match parse_query::<&str>(raw.as_str()) {
+                    let graphql_ast = match parse_query::<&str>(raw) {
                         Ok(ast) => ast,
                         Err(e) => {
                             let error = format!("Error parsing graphql query: {:?}", e);
