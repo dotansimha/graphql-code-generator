@@ -4,6 +4,7 @@ import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
 import { DepGraph } from 'dependency-graph';
+import * as crypto from 'node:crypto';
 import {
   FragmentDefinitionNode,
   FragmentSpreadNode,
@@ -18,7 +19,6 @@ import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import { generateFragmentImportStatement } from './imports.js';
 import { LoadedFragment, ParsedImport } from './types.js';
 import { buildScalarsFromConfig, getConfigValue } from './utils.js';
-import * as crypto from 'node:crypto';
 
 gqlTag.enableExperimentalFragmentVariables();
 
