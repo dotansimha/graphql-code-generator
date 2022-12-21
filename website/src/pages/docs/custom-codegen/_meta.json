@@ -4,5 +4,6 @@
   "validate-configuration": "Validate Configuration",
   "extend-schema": "Extend Schema",
   "using-visitor": "Using Visitor Pattern",
+  "document-transform": "Document Transform",
   "contributing": "Contributing"
 }
