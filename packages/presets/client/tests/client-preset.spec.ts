@@ -1070,4 +1070,85 @@ export * from "./fragment-masking.js";`);
       expect(graphqlFile).toBeDefined();
     });
   });
+
+  describe('persisted operations', () => {
+    it('can generate persisted documents json file', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            plugins: [],
+            presetConfig: {
+              persistedOperations: true,
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "0f7ebe7dd4065f092a50eb072800a61bd4ff812b": "query A {\\n  a\\n}",
+          "2d0e30c7c6652379b404709ccc8eca2ceb420572": "query B {\\n  b\\n}",
+          "5d4fb2f872591b281d45519b6beec6fc0bb5bd3e": "fragment C on Query {\\n  c\\n}"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']>;
+          b?: Maybe<Scalars['String']>;
+          c?: Maybe<Scalars['String']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"__hash":"5d4fb2f872591b281d45519b6beec6fc0bb5bd3e","kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__hash":"0f7ebe7dd4065f092a50eb072800a61bd4ff812b","kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__hash":"2d0e30c7c6652379b404709ccc8eca2ceb420572","kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+      `);
+    });
+  });
 });
