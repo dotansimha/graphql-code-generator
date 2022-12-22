@@ -46,8 +46,6 @@ export const plugin: PluginFunction<{
       code.push(
         [
           ...getDocumentRegistryChunk(sourcesWithOperations),
-          `\n`,
-          ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
         ].join('')
       );
     } else {
@@ -67,13 +65,28 @@ export const plugin: PluginFunction<{
         `**/\n`,
         `export function ${gqlTagName}(source: string): unknown;\n`,
         `\n`,
+      ].join('')
+    );
+
+    if (sourcesWithOperations.length > 0) {
+      code.push(
+        [
+          ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
+          `\n`,
+        ].join('')
+      );
+    }
+
+    code.push(
+      [
         `export function ${gqlTagName}(source: string) {\n`,
         `  return (documents as any)[source] ?? {};\n`,
         `}\n`,
         `\n`,
         ...documentTypePartial,
       ].join('')
-    );
+    )
+
     return code.join('');
   }
 
