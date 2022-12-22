@@ -85,7 +85,7 @@ export const plugin: PluginFunction<{
         `\n`,
         ...documentTypePartial,
       ].join('')
-    )
+    );
 
     return code.join('');
   }
