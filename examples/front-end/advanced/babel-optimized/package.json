@@ -59,7 +59,7 @@
     "terser-webpack-plugin": "5.3.6",
     "web-vitals": "2.1.4",
     "webpack": "5.75.0",
-    "webpack-dev-server": "4.10.0",
+    "webpack-dev-server": "4.11.1",
     "webpack-manifest-plugin": "4.1.1",
     "workbox-webpack-plugin": "6.5.4"
   },
