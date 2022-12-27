@@ -1,5 +1,15 @@
 # @graphql-codegen/plugin-helpers
 
+## 3.1.2
+
+### Patch Changes
+
+- [#8771](https://github.com/dotansimha/graphql-code-generator/pull/8771) [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.8.0`, in `dependencies`)
+
+- [#8718](https://github.com/dotansimha/graphql-code-generator/pull/8718) [`6c6b6f2df`](https://github.com/dotansimha/graphql-code-generator/commit/6c6b6f2df88a3a37b437a25320dab5590f033316) Thanks [@AaronBuxbaum](https://github.com/AaronBuxbaum)! - Add `globalGqlIdentifierName` to the types
+
 ## 3.1.1
 
 ### Patch Changes
