@@ -510,6 +510,10 @@ export namespace Types {
        * @description Overrides the name of the default GraphQL name identifier.
        */
       globalIdentifier?: string;
+      /**
+       * @description Allows to use a global identifier instead of a module import.
+       */
+      globalGqlIdentifierName?: string | string[];
     };
     /**
      * @description Specifies scripts to run when events are happening in the codegen core.
