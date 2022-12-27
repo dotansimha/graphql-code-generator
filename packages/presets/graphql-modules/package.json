@@ -17,7 +17,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^3.1.1",
     "@graphql-codegen/visitor-plugin-common": "2.13.5",
-    "@graphql-tools/utils": "^8.8.0",
+    "@graphql-tools/utils": "^9.0.0",
     "parse-filepath": "^1.0.2",
     "change-case-all": "1.0.15",
     "tslib": "~2.4.0"
