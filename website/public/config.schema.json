@@ -648,6 +648,10 @@
           "description": "If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "omitEmptyFragments": {
+          "description": "If set to true, it will not export empty fragment spread sub-types",
+          "type": "boolean"
+        },
         "experimentalFragmentVariables": {
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
           "type": "boolean"
@@ -3150,6 +3154,10 @@
         },
         "exportFragmentSpreadSubTypes": {
           "description": "If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "omitEmptyFragments": {
+          "description": "If set to true, it will not export empty fragment spread sub-types",
           "type": "boolean"
         },
         "experimentalFragmentVariables": {

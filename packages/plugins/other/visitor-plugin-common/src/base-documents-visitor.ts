@@ -36,6 +36,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   omitOperationSuffix: boolean;
   namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
+  omitEmptyFragments: boolean;
   skipTypeNameForRoot: boolean;
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
@@ -134,6 +135,11 @@ export interface RawDocumentsConfig extends RawTypesConfig {
   exportFragmentSpreadSubTypes?: boolean;
   /**
    * @default false
+   * @description If set to true, it will not export empty fragment spread sub-types
+   */
+  omitEmptyFragments?: boolean;
+  /**
+   * @default false
    * @description If set to true, it will enable support for parsing variables on fragments.
    */
   experimentalFragmentVariables?: boolean;
@@ -167,6 +173,7 @@ export class BaseDocumentsVisitor<
   ) {
     super(rawConfig, {
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
+      omitEmptyFragments: !!rawConfig.omitEmptyFragments,
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       preResolveTypes: getConfigValue(rawConfig.preResolveTypes, true),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),

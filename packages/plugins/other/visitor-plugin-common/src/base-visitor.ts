@@ -27,6 +27,7 @@ export interface ParsedConfig {
   typesPrefix: string;
   typesSuffix: string;
   addTypename: boolean;
+  omitEmptyFragments: boolean;
   nonOptionalTypename: boolean;
   externalFragments: LoadedFragment[];
   fragmentImports: ImportDeclaration<FragmentImport>[];
@@ -334,6 +335,10 @@ export interface RawConfig {
   /**
    * @ignore
    */
+  omitEmptyFragments?: boolean;
+  /**
+   * @ignore
+   */
   fragmentImports?: ImportDeclaration<FragmentImport>[];
   /**
    * @ignore
@@ -378,6 +383,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       typesSuffix: rawConfig.typesSuffix || '',
+      omitEmptyFragments: !!rawConfig.omitEmptyFragments,
       externalFragments: rawConfig.externalFragments || [],
       fragmentImports: rawConfig.fragmentImports || [],
       addTypename: !rawConfig.skipTypename,

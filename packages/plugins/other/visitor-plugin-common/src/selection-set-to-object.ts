@@ -305,7 +305,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
    */
   protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
     if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
-      return { grouped: {}, mustAddEmptyObject: true };
+      return { grouped: {}, mustAddEmptyObject: !this._config.omitEmptyFragments };
     }
 
     const selectionNodesByTypeName = this.flattenSelectionSet(this._selectionSet.selections);
@@ -336,7 +336,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         if (transformedSet) {
           prev[typeName].push(transformedSet);
         } else {
-          mustAddEmptyObject = true;
+          mustAddEmptyObject = !this._config.omitEmptyFragments;
         }
 
         return prev;
@@ -677,7 +677,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
         if (possibleFields.length === 0) {
-          if (!this._config.addTypename) {
+          if (!this._config.addTypename && !this._config.omitEmptyFragments) {
             return { name: declarationName, content: this.getEmptyObjectType() };
           }
 
