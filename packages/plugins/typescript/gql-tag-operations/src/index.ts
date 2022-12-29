@@ -43,11 +43,7 @@ export const plugin: PluginFunction<{
     ];
 
     if (sourcesWithOperations.length > 0) {
-      code.push(
-        [
-          ...getDocumentRegistryChunk(sourcesWithOperations),
-        ].join('')
-      );
+      code.push([...getDocumentRegistryChunk(sourcesWithOperations)].join(''));
     } else {
       code.push('const documents = [];');
     }
@@ -70,10 +66,7 @@ export const plugin: PluginFunction<{
 
     if (sourcesWithOperations.length > 0) {
       code.push(
-        [
-          ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports),
-          `\n`,
-        ].join('')
+        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports), `\n`].join('')
       );
     }
 
