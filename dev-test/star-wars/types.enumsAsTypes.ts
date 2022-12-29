@@ -63,14 +63,16 @@ export type DroidFriendsConnectionArgs = {
 };
 
 /** The episodes in the Star Wars trilogy */
-export type Episode =
+export const EpisodeValues = [
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
-  | 'EMPIRE'
+  'EMPIRE',
   /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
-  | 'JEDI'
+  'JEDI',
   /** Star Wars Episode IV: A New Hope, released in 1977. */
-  | 'NEWHOPE';
+  'NEWHOPE',
+] as const;
 
+export type Episode = typeof EpisodeValues[number];
 /** A connection object for a character's friends */
 export type FriendsConnection = {
   __typename?: 'FriendsConnection';
@@ -128,12 +130,14 @@ export type HumanHeightArgs = {
 };
 
 /** Units of height */
-export type LengthUnit =
+export const LengthUnitValues = [
   /** Primarily used in the United States */
-  | 'FOOT'
+  'FOOT',
   /** The standard unit around the world */
-  | 'METER';
+  'METER',
+] as const;
 
+export type LengthUnit = typeof LengthUnitValues[number];
 /** The mutation type, represents all updates we can make to our data */
 export type Mutation = {
   __typename?: 'Mutation';
