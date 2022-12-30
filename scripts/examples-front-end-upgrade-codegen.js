@@ -25,7 +25,7 @@ const { exec } = require('child_process');
 
               console.log(`${cwd}: Started`);
               exec(
-                `yarn add -D typescript @graphql-codegen/cli@${codegenCLIversion} @graphql-codegen/client-preset@${clientPresetVersion}; yarn codegen`,
+                `yarn add -D typescript ts-node @graphql-codegen/cli@${codegenCLIversion} @graphql-codegen/client-preset@${clientPresetVersion}; yarn codegen`,
                 { cwd },
                 (err, stdout) => {
                   if (err) {
