@@ -33,7 +33,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       const baseType = getBaseType(fieldObj.type);
       let typeToUse = baseType.name;
 
-      const useInnerType = field.isConditional && isNonNullType(fieldObj.type);
+      const useInnerType = (field.isConditional || field.isIncremental) && isNonNullType(fieldObj.type);
       const innerType = useInnerType ? removeNonNullWrapper(fieldObj.type) : undefined;
 
       if (isEnumType(baseType)) {
@@ -47,7 +47,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       const name = this.config.formatNamedField(
         field.fieldName,
         useInnerType ? innerType : fieldObj.type,
-        field.isConditional
+        field.isConditional,
+        field.isIncremental
       );
       const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
 

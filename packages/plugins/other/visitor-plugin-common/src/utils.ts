@@ -25,7 +25,7 @@ import {
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -408,7 +408,7 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
 };
 
 export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
-  fields: FieldNode[];
+  fields: (FieldNode & FragmentDirectives)[];
   spreads: FragmentSpreadNode[];
   inlines: InlineFragmentNode[];
 } {
@@ -436,6 +436,11 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
 export function hasConditionalDirectives(field: FieldNode): boolean {
   const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
   return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
+}
+
+export function hasIncrementalDeliveryDirectives(field: FieldNode & FragmentDirectives): boolean {
+  const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
+  return field.fragmentDirectives?.some(directive => INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {

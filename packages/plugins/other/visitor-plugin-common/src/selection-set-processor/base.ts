@@ -1,7 +1,7 @@
 import { GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLOutputType } from 'graphql';
 import { AvoidOptionalsConfig, ConvertNameFn, ScalarsMap } from '../types.js';
 
-export type PrimitiveField = { isConditional: boolean; fieldName: string };
+export type PrimitiveField = { isConditional: boolean; isIncremental: boolean; fieldName: string };
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
@@ -12,7 +12,12 @@ export type SelectionSetProcessorConfig = {
   convertName: ConvertNameFn<any>;
   enumPrefix: boolean | null;
   scalars: ScalarsMap;
-  formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null, isConditional?: boolean): string;
+  formatNamedField(
+    name: string,
+    type?: GraphQLOutputType | GraphQLNamedType | null,
+    isConditional?: boolean,
+    isIncremental?: boolean
+  ): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
   avoidOptionals?: AvoidOptionalsConfig;
 };
