@@ -6434,6 +6434,571 @@ function test(q: GetEntityBrandDataQuery): void {
     });
   });
 
+  describe('incremental delivery directive handling', () => {
+    it('should mark fields in deferred fragments as optional (preResolveTypes: true)', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          widgetPreference: String!
+          clearanceLevel: String!
+          favoriteFood: String!
+          leastFavoriteFood: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+          widgetPreference
+        }
+
+        fragment FoodFragment on User {
+          favoriteFood
+          leastFavoriteFood
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Test a secondary named fragment defer
+            ...FoodFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: true },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserQuery = {
+          __typename?: 'Query',
+          user: {
+            __typename?: 'User',
+            email?: string,
+            clearanceLevel: string,
+            name: string,
+            widgetCount?: number,
+            widgetPreference?: string,
+            favoriteFood?: string,
+            leastFavoriteFood?: string,
+            address?: {
+              __typename?: 'Address',
+              street1: string
+            },
+            phone: {
+              __typename?: 'Phone',
+              home: string
+            },
+            employment: {
+              __typename?: 'Employment',
+              title: string
+            }
+          }
+        };
+      `);
+    });
+
+    it('should mark fields in deferred fragments as optional using MakeOptional (preResolveTypes: false)', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: false },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type WidgetFragmentFragment = (
+          { __typename?: 'User' }
+          & Pick<User, 'widgetCount'>
+        );
+
+        export type EmploymentFragmentFragment = (
+          { __typename?: 'User' }
+          & { employment: (
+            { __typename?: 'Employment' }
+            & Pick<Employment, 'title'>
+          ) }
+        );
+
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type UserQuery = (
+          { __typename?: 'Query' }
+          & { user: (
+            { __typename?: 'User' }
+            & MakeOptional<Pick<User, 'email' | 'clearanceLevel' | 'name' | 'widgetCount'>, 'email' | 'widgetCount'>
+            & { address?: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ), phone: (
+              { __typename?: 'Phone' }
+              & Pick<Phone, 'home'>
+            ), employment: (
+              { __typename?: 'Employment' }
+              & Pick<Employment, 'title'>
+            ) }
+          ) }
+        );
+      `);
+    });
+
+    it('should mark fields in deferred fragments as optional using MakeMaybe (avoidOptionals: true)', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+          preResolveTypes: false,
+        },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type WidgetFragmentFragment = (
+          { __typename?: 'User' }
+          & Pick<User, 'widgetCount'>
+        );
+
+        export type EmploymentFragmentFragment = (
+          { __typename?: 'User' }
+          & { employment: (
+            { __typename?: 'Employment' }
+            & Pick<Employment, 'title'>
+          ) }
+        );
+
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type UserQuery = (
+          { __typename?: 'Query' }
+          & { user: (
+            { __typename?: 'User' }
+            & MakeMaybe<Pick<User, 'email' | 'clearanceLevel' | 'name' | 'widgetCount'>, 'email' | 'widgetCount'>
+            & { address?: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ), phone: (
+              { __typename?: 'Phone' }
+              & Pick<Phone, 'home'>
+            ), employment: (
+              { __typename?: 'Employment' }
+              & Pick<Employment, 'title'>
+            ) }
+          ) }
+        );
+      `);
+    });
+
+    it('should support "preResolveTypes: true" and "avoidOptionals: true" together', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+          preResolveTypes: true,
+        },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserQuery = {
+          __typename?: 'Query',
+          user: {
+            __typename?: 'User',
+            email?: string,
+            clearanceLevel: string,
+            name: string,
+            widgetCount?: number,
+            address?: {
+              __typename?: 'Address',
+              street1: string
+            },
+            phone: {
+              __typename?: 'Phone',
+              home: string
+            },
+            employment: {
+              __typename?: 'Employment',
+              title: string
+            }
+          }
+        };
+      `);
+    });
+
+    it('should resolve optionals according to maybeValue together with avoidOptionals and deferred fragments', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+          maybeValue: "T | 'specialType'",
+          avoidOptionals: true,
+        },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserQuery = {
+          __typename?: 'Query',
+          user: {
+            __typename?: 'User',
+            email?: string,
+            clearanceLevel: string,
+            name: string,
+            widgetCount?: number,
+            address?: {
+              __typename?: 'Address',
+              street1: string | 'specialType'
+            },
+            phone: {
+              __typename?: 'Phone',
+              home: string
+            },
+            employment: {
+              __typename?: 'Employment',
+              title: string
+            }
+          }
+        };
+      `);
+    });
+  });
+
   it('handles unnamed queries', async () => {
     const ast = parse(/* GraphQL */ `
       query {

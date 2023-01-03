@@ -23,19 +23,19 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
         useTypesPrefix: true,
       });
 
-    let hasConditionals = false;
-    const conditilnalsList: string[] = [];
+    let hasOptional = false;
+    const optionalList: string[] = [];
     let resString = `Pick<${parentName}, ${fields
       .map(field => {
-        if (field.isConditional) {
-          hasConditionals = true;
-          conditilnalsList.push(field.fieldName);
+        if (field.isConditional || field.isIncremental) {
+          hasOptional = true;
+          optionalList.push(field.fieldName);
         }
         return `'${field.fieldName}'`;
       })
       .join(' | ')}>`;
 
-    if (hasConditionals) {
+    if (hasOptional) {
       const avoidOptional =
         // TODO: check type and exec only if relevant
         this.config.avoidOptionals === true ||
@@ -47,7 +47,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       const transform = avoidOptional ? 'MakeMaybe' : 'MakeOptional';
       resString = `${
         this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''
-      }${transform}<${resString}, ${conditilnalsList.map(field => `'${field}'`).join(' | ')}>`;
+      }${transform}<${resString}, ${optionalList.map(field => `'${field}'`).join(' | ')}>`;
     }
     return [resString];
   }

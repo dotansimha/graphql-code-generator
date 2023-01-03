@@ -34,12 +34,19 @@ import {
   PrimitiveField,
   ProcessResult,
 } from './selection-set-processor/base.js';
-import { ConvertNameFn, GetFragmentSuffixFn, LoadedFragment, NormalizedScalarsMap } from './types.js';
+import {
+  ConvertNameFn,
+  FragmentDirectives,
+  GetFragmentSuffixFn,
+  LoadedFragment,
+  NormalizedScalarsMap,
+} from './types.js';
 import {
   DeclarationBlock,
   getFieldNodeNameValue,
   getPossibleTypes,
   hasConditionalDirectives,
+  hasIncrementalDeliveryDirectives,
   mergeSelectionSets,
   separateSelectionSet,
 } from './utils.js';
@@ -50,6 +57,8 @@ type FragmentSpreadUsage = {
   onType: string;
   selectionNodes: Array<SelectionNode>;
 };
+
+type CollectedFragmentNode = (SelectionNode | FragmentSpreadUsage | DirectiveNode) & FragmentDirectives;
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -99,8 +108,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
    */
   _collectInlineFragments(
     parentType: GraphQLNamedType,
-    nodes: InlineFragmentNode[],
-    types: Map<string, Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>>
+    nodes: Array<InlineFragmentNode & FragmentDirectives>,
+    types: Map<string, Array<CollectedFragmentNode>>
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
@@ -112,8 +121,18 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
         const directives = (node.directives as DirectiveNode[]) || undefined;
 
+        // When we collect the selection sets of inline fragments we need to
+        // make sure directives on the inline fragments are stored in a way
+        // that can be associated back to the fields in the fragment, to
+        // support things like making those fields optional when deferring a
+        // fragment (using @defer).
+        const fieldsWithFragmentDirectives: CollectedFragmentNode[] = fields.map(field => ({
+          ...field,
+          fragmentDirectives: field.fragmentDirectives || directives,
+        }));
+
         if (isObjectType(typeOnSchema)) {
-          this._appendToTypeMap(types, typeOnSchema.name, fields);
+          this._appendToTypeMap(types, typeOnSchema.name, fieldsWithFragmentDirectives);
           this._appendToTypeMap(types, typeOnSchema.name, spreadsUsage[typeOnSchema.name]);
           this._appendToTypeMap(types, typeOnSchema.name, directives);
           this._collectInlineFragments(typeOnSchema, inlines, types);
@@ -232,11 +251,18 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
           selectionNodesByTypeName[possibleType.name] ||= [];
 
+          const selectionNodes = fragmentSpreadObject.node.selectionSet.selections.map(selectionNode => {
+            return {
+              ...selectionNode,
+              fragmentDirectives: [...(spread.directives || [])],
+            };
+          });
+
           selectionNodesByTypeName[possibleType.name].push({
             fragmentName: spread.name.value,
             typeName: usage,
             onType: fragmentSpreadObject.onType,
-            selectionNodes: [...fragmentSpreadObject.node.selectionSet.selections],
+            selectionNodes,
           });
         }
       }
@@ -253,7 +279,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const inlineFragmentSelections: InlineFragmentNode[] = [];
     const fieldNodes: FieldNode[] = [];
     const fragmentSpreads: FragmentSpreadNode[] = [];
-
     for (const selection of selections) {
       switch (selection.kind) {
         case Kind.FIELD:
@@ -288,7 +313,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return selectionNodesByTypeName;
   }
 
-  private _appendToTypeMap<T = SelectionNode>(types: Map<string, Array<T>>, typeName: string, nodes: Array<T>): void {
+  private _appendToTypeMap<T = CollectedFragmentNode>(
+    types: Map<string, Array<T>>,
+    typeName: string,
+    nodes: Array<T>
+  ): void {
     if (!types.has(typeName)) {
       types.set(typeName, []);
     }
@@ -442,7 +471,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     // ensure we mutate no function params
     selectionNodes = [...selectionNodes];
     let inlineFragmentConditional = false;
-
     for (const selectionNode of selectionNodes) {
       if ('kind' in selectionNode) {
         if (selectionNode.kind === 'Field') {
@@ -529,9 +557,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
+      const isIncremental = hasIncrementalDeliveryDirectives(field);
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
-        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional),
+        name: this._processor.config.formatNamedField(
+          field.name.value,
+          selectedFieldType,
+          isConditional,
+          isIncremental
+        ),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
@@ -558,6 +592,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
           isConditional: hasConditionalDirectives(field),
+          isIncremental: hasIncrementalDeliveryDirectives(field),
           fieldName: field.name.value,
         }))
       ),
