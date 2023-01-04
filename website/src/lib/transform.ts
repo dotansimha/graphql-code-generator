@@ -73,7 +73,7 @@ export function transformDocs() {
         oneOf: pluginsConfigurations.reduce<TJS.DefinitionOrBoolean[]>((prev, p) => {
           const description = `${
             (schema.definitions![p.identifier] as TJS.Definition).description || ''
-          }\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/${
+          }\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/${
             p.name
           }\n\n=> Make sure to include "@graphql-codegen/${
             p.name
