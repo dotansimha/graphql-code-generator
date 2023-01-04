@@ -57,19 +57,6 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -81,6 +68,19 @@ describe('gql-tag-operations-preset', () => {
        * Please regenerate the types.
       **/
       export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -144,19 +144,6 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -168,6 +155,19 @@ describe('gql-tag-operations-preset', () => {
        * Please regenerate the types.
       **/
       export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -224,19 +224,6 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -248,6 +235,19 @@ describe('gql-tag-operations-preset', () => {
        * Please regenerate the types.
       **/
       export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -305,19 +305,6 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -329,6 +316,19 @@ describe('gql-tag-operations-preset', () => {
        * Please regenerate the types.
       **/
       export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -430,11 +430,6 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -446,6 +441,11 @@ describe('gql-tag-operations-preset', () => {
        * Please regenerate the types.
       **/
       export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -902,19 +902,6 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -926,6 +913,19 @@ describe('gql-tag-operations-preset', () => {
        * Please regenerate the types.
       **/
       export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};

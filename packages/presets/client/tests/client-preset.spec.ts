@@ -58,19 +58,6 @@ export * from "./fragment-masking"`);
 
       /**
        * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -82,6 +69,19 @@ export * from "./fragment-masking"`);
        * Please regenerate the types.
       **/
       export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
@@ -146,19 +146,6 @@ export * from "./fragment-masking"`);
 
       /**
        * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -170,6 +157,19 @@ export * from "./fragment-masking"`);
        * Please regenerate the types.
       **/
       export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
@@ -226,19 +226,6 @@ export * from "./fragment-masking"`);
 
       /**
        * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -250,6 +237,19 @@ export * from "./fragment-masking"`);
        * Please regenerate the types.
       **/
       export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
@@ -307,19 +307,6 @@ export * from "./fragment-masking"`);
 
       /**
        * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -331,6 +318,19 @@ export * from "./fragment-masking"`);
        * Please regenerate the types.
       **/
       export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
@@ -436,19 +436,6 @@ export * from "./fragment-masking"`);
 
       /**
        * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -460,6 +447,19 @@ export * from "./fragment-masking"`);
        * Please regenerate the types.
       **/
       export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
@@ -556,11 +556,6 @@ export * from "./fragment-masking"`);
 
     /**
      * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-     */
-    export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-
-    /**
-     * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
      *
      *
      * @example
@@ -572,6 +567,11 @@ export * from "./fragment-masking"`);
      * Please regenerate the types.
     **/
     export function graphql(source: string): unknown;
+
+    /**
+     * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+     */
+    export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
 
     export function graphql(source: string) {
       return (documents as any)[source] ?? {};
@@ -670,19 +670,6 @@ export * from "./fragment-masking"`);
 
       /**
        * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -694,6 +681,19 @@ export * from "./fragment-masking"`);
        * Please regenerate the types.
       **/
       export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
@@ -974,19 +974,6 @@ export * from "./fragment-masking.js"`);
 
       /**
        * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -998,6 +985,19 @@ export * from "./fragment-masking.js"`);
        * Please regenerate the types.
       **/
       export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
       export function graphql(source: string) {
         return (documents as any)[source] ?? {};
