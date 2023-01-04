@@ -1,5 +1,16 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.6.0
+
+### Minor Changes
+
+- [#8763](https://github.com/dotansimha/graphql-code-generator/pull/8763) [`2a33fc774`](https://github.com/dotansimha/graphql-code-generator/commit/2a33fc7741f7a9532bef68606666d4e3db7785a3) Thanks [@ElvisUpUp](https://github.com/ElvisUpUp)! - change the client-preset generated template
+
+### Patch Changes
+
+- Updated dependencies [[`eb454d06c`](https://github.com/dotansimha/graphql-code-generator/commit/eb454d06c977f11f7d4a7b0b07eb80f8fd590560)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.7
+
 ## 1.5.12
 
 ### Patch Changes
