@@ -34,7 +34,7 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
         'MMM do, yyyy'
       )}|
 
-### Installation
+## Installation
 `
     ),
   ]);
