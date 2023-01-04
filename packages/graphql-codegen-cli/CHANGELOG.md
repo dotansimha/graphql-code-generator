@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 2.16.3
+
+### Patch Changes
+
+- [#8779](https://github.com/dotansimha/graphql-code-generator/pull/8779) [`ad5d83313`](https://github.com/dotansimha/graphql-code-generator/commit/ad5d83313fe146f0593df7ae2efa3c35459e577a) Thanks [@louisscruz](https://github.com/louisscruz)! - add ts-node as a peerDependency
+
 ## 2.16.2
 
 ### Patch Changes

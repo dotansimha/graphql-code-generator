@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-resolvers
 
+## 2.7.12
+
+### Patch Changes
+
+- Updated dependencies [[`eb454d06c`](https://github.com/dotansimha/graphql-code-generator/commit/eb454d06c977f11f7d4a7b0b07eb80f8fd590560)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.7
+  - @graphql-codegen/typescript@2.8.7
+
 ## 2.7.11
 
 ### Patch Changes

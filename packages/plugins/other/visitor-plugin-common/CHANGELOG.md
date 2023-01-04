@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.13.7
+
+### Patch Changes
+
+- [#8755](https://github.com/dotansimha/graphql-code-generator/pull/8755) [`eb454d06c`](https://github.com/dotansimha/graphql-code-generator/commit/eb454d06c977f11f7d4a7b0b07eb80f8fd590560) Thanks [@schmod](https://github.com/schmod)! - avoid using TypeScript namespace imports for enums
+
 ## 2.13.6
 
 ### Patch Changes
