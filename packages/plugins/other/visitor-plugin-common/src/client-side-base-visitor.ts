@@ -13,6 +13,7 @@ import {
   OperationDefinitionNode,
   print,
   DefinitionNode,
+  visit,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
@@ -364,7 +365,31 @@ export class ClientSideBaseVisitor<
       }
     }
 
-    const operation = print({ kind: Kind.DOCUMENT, definitions: allDefinitions });
+    /**
+     * This removes all client specific directives/fields from the document
+     * that the server does not know about.
+     * In a future version this should be more configurable.
+     * If you look at this and want to customize it.
+     * Send a PR :)
+     */
+    const sanitizedDocument = visit(
+      { kind: Kind.DOCUMENT, definitions: allDefinitions },
+      {
+        [Kind.FIELD](field) {
+          if (field.directives.some(directive => directive.name.value === 'client')) {
+            return null;
+          }
+        },
+        [Kind.DIRECTIVE](directive) {
+          if (directive.name.value === 'connection') {
+            return null;
+          }
+        },
+      }
+    );
+
+    const operation = print(sanitizedDocument);
+
     const shasum = crypto.createHash('sha1');
     shasum.update(operation);
     const hash = shasum.digest('hex');
