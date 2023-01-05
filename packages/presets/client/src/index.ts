@@ -62,7 +62,21 @@ export type ClientPresetConfig = {
    */
   gqlTagName?: string;
   /** Persisted operations */
-  persistedOperations?: boolean;
+  persistedOperations?:
+    | boolean
+    | {
+        /**
+         * @description Behavior for the output file.
+         * @default 'embedHashInDocument'
+         * "embedHashInDocument" will add a property within the `DocumentNode` with the hash of the operation.
+         * "replaceDocumentWithHash" will fully replace the `DocumentNode` with the hash of the operation.
+         */
+        mode?: 'embedHashInDocument' | 'replaceDocumentWithHash';
+        /**
+         * @description Name of the property that will be added to the `DocumentNode` with the hash of the operation.
+         */
+        hashPropertyName?: string;
+      };
 };
 
 const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/');
@@ -80,7 +94,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       );
     }
 
-    const isPersistedOperations = options.presetConfig?.persistedOperations ?? false;
+    const isPersistedOperations = !!options.presetConfig?.persistedOperations ?? false;
 
     const reexports: Array<string> = [];
 
@@ -146,9 +160,19 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {
-          unstable_onPersistedOperation: isPersistedOperations
-            ? (hash: string, documentString: string) => {
-                persistedOperations.set(hash, documentString);
+          unstable_persistedOperations: isPersistedOperations
+            ? {
+                onPersistedOperation(hash: string, documentString: string) {
+                  persistedOperations.set(hash, documentString);
+                },
+                mode:
+                  (typeof options.presetConfig.persistedOperations === 'object' &&
+                    options.presetConfig.persistedOperations.mode) ||
+                  'embedHashInDocument',
+                hashPropertyName:
+                  (typeof options.presetConfig.persistedOperations === 'object' &&
+                    options.presetConfig.persistedOperations.hashPropertyName) ||
+                  '__hash',
               }
             : undefined,
         },

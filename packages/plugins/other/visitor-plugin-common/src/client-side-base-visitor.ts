@@ -14,6 +14,7 @@ import {
   print,
   DefinitionNode,
   visit,
+  DocumentNode,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
@@ -32,6 +33,8 @@ export enum DocumentMode {
 }
 
 const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
+
+const stablePrintDocumentNode = (documentNode: DocumentNode): string => print(documentNode).replace(/\s+/g, ' ');
 
 export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
@@ -231,8 +234,14 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   pureMagicComment?: boolean;
   optimizeDocumentNode: boolean;
   experimentalFragmentVariables?: boolean;
-  unstable_onPersistedOperation?: (hash: string, operationString: string) => void;
+  unstable_persistedOperations?: Unstable_PersistedOperationsConfig;
 }
+
+type Unstable_PersistedOperationsConfig = {
+  onPersistedOperation: (hash: string, documentString: string) => void;
+  mode: 'embedHashInDocument' | 'replaceDocumentWithHash';
+  hashPropertyName: string;
+};
 
 export class ClientSideBaseVisitor<
   TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig,
@@ -243,7 +252,7 @@ export class ClientSideBaseVisitor<
   protected _additionalImports: string[] = [];
   protected _imports = new Set<string>();
 
-  private _onPersistedOperation?: (hash: string, operationString: string) => void;
+  private _persistedOperations?: Unstable_PersistedOperationsConfig;
 
   constructor(
     protected _schema: GraphQLSchema,
@@ -277,10 +286,8 @@ export class ClientSideBaseVisitor<
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
       ...additionalConfig,
     } as any);
-
     this._documents = documents;
-    this._onPersistedOperation = (rawConfig as any).unstable_onPersistedOperation;
-
+    this._persistedOperations = (rawConfig as any).unstable_persistedOperations;
     autoBind(this);
   }
 
@@ -364,7 +371,6 @@ export class ClientSideBaseVisitor<
         allDefinitions.push(fragmentRecord.node);
       }
     }
-
     /**
      * This removes all client specific directives/fields from the document
      * that the server does not know about.
@@ -376,7 +382,7 @@ export class ClientSideBaseVisitor<
       { kind: Kind.DOCUMENT, definitions: allDefinitions },
       {
         [Kind.FIELD](field) {
-          if (field.directives.some(directive => directive.name.value === 'client')) {
+          if (field.directives?.some(directive => directive.name.value === 'client')) {
             return null;
           }
         },
@@ -388,13 +394,12 @@ export class ClientSideBaseVisitor<
       }
     );
 
-    const operation = print(sanitizedDocument);
-
+    const operation = stablePrintDocumentNode(sanitizedDocument);
     const shasum = crypto.createHash('sha1');
     shasum.update(operation);
     const hash = shasum.digest('hex');
 
-    this._onPersistedOperation(hash, operation);
+    this._persistedOperations.onPersistedOperation(hash, operation);
 
     return hash;
   }
@@ -428,22 +433,32 @@ export class ClientSideBaseVisitor<
           ...fragments.map(name => `...${name}.definitions`),
         ].join();
 
-        let hash: string | undefined;
+        let hashPropertyStr = '';
 
-        if (this._onPersistedOperation) {
-          hash = this._generateDocumentNodeHash(gqlObj.definitions, fragments);
+        if (this._persistedOperations) {
+          const hash = this._generateDocumentNodeHash(gqlObj.definitions, fragments);
+          hashPropertyStr = `${this._persistedOperations.hashPropertyName}": "${hash}", `;
+          if (this._persistedOperations.mode === 'replaceDocumentWithHash') {
+            return `{${hashPropertyStr}}`;
+          }
         }
 
-        return `{${hash ? `"__hash": "${hash}", ` : ''}"kind":"${Kind.DOCUMENT}", "definitions":[${definitions}]}`;
+        return `{${hashPropertyStr}"kind":"${Kind.DOCUMENT}", "definitions":[${definitions}]}`;
       }
 
       let hash: string | undefined;
 
-      if (this._onPersistedOperation) {
+      if (this._persistedOperations) {
         hash = this._generateDocumentNodeHash(gqlObj.definitions, fragments);
+
+        if (this._persistedOperations.mode === 'replaceDocumentWithHash') {
+          return JSON.stringify({ [this._persistedOperations.hashPropertyName]: hash });
+        }
+
+        return JSON.stringify({ [this._persistedOperations.hashPropertyName]: hash, ...gqlObj });
       }
 
-      return JSON.stringify({ __hash: hash, ...gqlObj });
+      return JSON.stringify(gqlObj);
     }
 
     if (this.config.documentMode === DocumentMode.string) {
