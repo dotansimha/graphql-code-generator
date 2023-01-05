@@ -360,7 +360,15 @@ export class ClientSideBaseVisitor<
     return documentStr;
   }
 
-  private _generateDocumentNodeHash(definitions: ReadonlyArray<DefinitionNode>, fragmentNames: Array<string>): string {
+  private _generateDocumentNodeHash(
+    definitions: ReadonlyArray<DefinitionNode>,
+    fragmentNames: Array<string>
+  ): string | undefined {
+    // If the document does not contain any executable operation, we don't need to hash it
+    if (definitions.every(def => def.kind !== Kind.OPERATION_DEFINITION)) {
+      return undefined;
+    }
+
     const allDefinitions = [...definitions];
 
     for (const fragment of fragmentNames) {
