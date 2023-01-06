@@ -66,7 +66,7 @@ describe('gql-tag-operations-preset', () => {
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function gql(source: string): unknown;
 
       /**
@@ -153,7 +153,7 @@ describe('gql-tag-operations-preset', () => {
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function gql(source: string): unknown;
 
       /**
@@ -233,7 +233,7 @@ describe('gql-tag-operations-preset', () => {
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function gql(source: string): unknown;
 
       /**
@@ -314,7 +314,7 @@ describe('gql-tag-operations-preset', () => {
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function gql(source: string): unknown;
 
       /**
@@ -439,7 +439,7 @@ describe('gql-tag-operations-preset', () => {
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function gql(source: string): unknown;
 
       /**
@@ -559,12 +559,12 @@ describe('gql-tag-operations-preset', () => {
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-        ): ReadonlyArray<TType> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined;
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
         ): TType | ReadonlyArray<TType> | null | undefined {
-          return fragmentType as any
+          return fragmentType as any;
         }
         "
       `);
@@ -657,12 +657,12 @@ describe('gql-tag-operations-preset', () => {
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-        ): ReadonlyArray<TType> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined;
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
         ): TType | ReadonlyArray<TType> | null | undefined {
-          return fragmentType as any
+          return fragmentType as any;
         }
         "
       `);
@@ -689,14 +689,14 @@ describe('gql-tag-operations-preset', () => {
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-      ): ReadonlyArray<TType> | null | undefined
+      ): ReadonlyArray<TType> | null | undefined;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
       ): TType | ReadonlyArray<TType> | null | undefined {
-        return fragmentType as any
+        return fragmentType as any;
       }
       `);
     });
@@ -911,7 +911,7 @@ describe('gql-tag-operations-preset', () => {
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function gql(source: string): unknown;
 
       /**
