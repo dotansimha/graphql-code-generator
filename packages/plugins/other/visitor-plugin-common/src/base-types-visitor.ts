@@ -1,50 +1,50 @@
 import {
   DirectiveDefinitionNode,
+  DirectiveNode,
   EnumTypeDefinitionNode,
   EnumValueDefinitionNode,
   FieldDefinitionNode,
+  GraphQLEnumType,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
   InterfaceTypeDefinitionNode,
+  isEnumType,
+  Kind,
   ListTypeNode,
   NamedTypeNode,
   NameNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
-  UnionTypeDefinitionNode,
   StringValueNode,
-  isEnumType,
-  DirectiveNode,
-  Kind,
-  GraphQLEnumType,
+  UnionTypeDefinitionNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
-import { DEFAULT_SCALARS } from './scalars.js';
 import { normalizeDeclarationKind } from './declaration-kinds.js';
-import {
-  EnumValuesMap,
-  NormalizedScalarsMap,
-  DeclarationKindConfig,
-  DeclarationKind,
-  ParsedEnumValuesMap,
-  DirectiveArgumentAndInputFieldMappings,
-  ParsedDirectiveArgumentAndInputFieldMappings,
-} from './types.js';
-import {
-  transformComment,
-  DeclarationBlock,
-  DeclarationBlockConfig,
-  indent,
-  wrapWithSingleQuotes,
-  getConfigValue,
-  buildScalarsFromConfig,
-  isOneOfInputObjectType,
-} from './utils.js';
-import { OperationVariablesToObject } from './variables-to-object.js';
 import { parseEnumValues } from './enum-values.js';
 import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import {
+  DeclarationKind,
+  DeclarationKindConfig,
+  DirectiveArgumentAndInputFieldMappings,
+  EnumValuesMap,
+  NormalizedScalarsMap,
+  ParsedDirectiveArgumentAndInputFieldMappings,
+  ParsedEnumValuesMap,
+} from './types.js';
+import {
+  buildScalarsFromConfig,
+  DeclarationBlock,
+  DeclarationBlockConfig,
+  getConfigValue,
+  indent,
+  isOneOfInputObjectType,
+  transformComment,
+  wrapWithSingleQuotes,
+} from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;

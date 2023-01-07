@@ -1,8 +1,8 @@
-import { validateTs } from '@graphql-codegen/testing';
-import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { plugin } from '../src/index.js';
-import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
+import { buildClientSchema, buildSchema, parse } from 'graphql';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
+import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));

@@ -1,19 +1,19 @@
-import { NormalizedScalarsMap } from './types.js';
 import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars.js';
-import { DeclarationBlock, DeclarationBlockConfig, getConfigValue, buildScalarsFromConfig } from './utils.js';
-import {
-  GraphQLSchema,
-  FragmentDefinitionNode,
-  OperationDefinitionNode,
-  VariableDefinitionNode,
-  OperationTypeNode,
-} from 'graphql';
-import { SelectionSetToObject } from './selection-set-to-object.js';
-import { OperationVariablesToObject } from './variables-to-object.js';
-import { BaseVisitor } from './base-visitor.js';
-import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor.js';
 import { pascalCase } from 'change-case-all';
+import {
+  FragmentDefinitionNode,
+  GraphQLSchema,
+  OperationDefinitionNode,
+  OperationTypeNode,
+  VariableDefinitionNode,
+} from 'graphql';
+import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor.js';
+import { BaseVisitor } from './base-visitor.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { SelectionSetToObject } from './selection-set-to-object.js';
+import { NormalizedScalarsMap } from './types.js';
+import { buildScalarsFromConfig, DeclarationBlock, DeclarationBlockConfig, getConfigValue } from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   switch (operation) {

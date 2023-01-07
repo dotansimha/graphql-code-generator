@@ -1,10 +1,10 @@
 import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import {
-  NamingConvention,
   LoadedFragment,
+  NamingConvention,
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLSchema, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
+import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
 import { TypeScriptDocumentNodesVisitor } from './visitor.js';
 
 /**

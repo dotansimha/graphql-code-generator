@@ -1,21 +1,21 @@
+import { extname } from 'path';
 import {
+  getCachedDocumentNodeFromSchema,
+  PluginFunction,
+  PluginValidateFn,
+  removeFederation,
+  Types,
+} from '@graphql-codegen/plugin-helpers';
+import {
+  buildASTSchema,
+  extendSchema,
   GraphQLSchema,
   parse,
-  extendSchema,
+  print,
   printIntrospectionSchema,
   printSchema,
   visit,
-  buildASTSchema,
-  print,
 } from 'graphql';
-import {
-  PluginFunction,
-  PluginValidateFn,
-  Types,
-  removeFederation,
-  getCachedDocumentNodeFromSchema,
-} from '@graphql-codegen/plugin-helpers';
-import { extname } from 'path';
 
 /**
  * @description This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.

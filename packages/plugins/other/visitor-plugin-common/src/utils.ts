@@ -1,31 +1,31 @@
 import {
-  NameNode,
-  Kind,
-  TypeNode,
-  NamedTypeNode,
-  GraphQLObjectType,
-  GraphQLNamedType,
-  isScalarType,
-  GraphQLSchema,
-  GraphQLScalarType,
-  StringValueNode,
-  SelectionSetNode,
   FieldNode,
-  SelectionNode,
   FragmentSpreadNode,
+  GraphQLInputObjectType,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLOutputType,
+  GraphQLScalarType,
+  GraphQLSchema,
   InlineFragmentNode,
+  isAbstractType,
+  isInputObjectType,
+  isListType,
   isNonNullType,
   isObjectType,
-  isListType,
-  isAbstractType,
-  GraphQLOutputType,
-  isInputObjectType,
-  GraphQLInputObjectType,
+  isScalarType,
+  Kind,
+  NamedTypeNode,
+  NameNode,
+  SelectionNode,
+  SelectionSetNode,
+  StringValueNode,
+  TypeNode,
 } from 'graphql';
-import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types.js';
-import { DEFAULT_SCALARS } from './scalars.js';
-import { parseMapper } from './mappers.js';
 import { RawConfig } from './base-visitor.js';
+import { parseMapper } from './mappers.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {

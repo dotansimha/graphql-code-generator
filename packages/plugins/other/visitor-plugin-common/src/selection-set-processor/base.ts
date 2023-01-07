@@ -1,5 +1,5 @@
-import { ScalarsMap, ConvertNameFn, AvoidOptionalsConfig } from '../types.js';
-import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType, GraphQLNamedType } from 'graphql';
+import { GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLOutputType } from 'graphql';
+import { AvoidOptionalsConfig, ConvertNameFn, ScalarsMap } from '../types.js';
 
 export type PrimitiveField = { isConditional: boolean; fieldName: string };
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };

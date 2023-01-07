@@ -1,21 +1,21 @@
-import { Types, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
-import {
-  parse,
-  visit,
-  GraphQLSchema,
-  TypeInfo,
-  GraphQLNamedType,
-  visitWithTypeInfo,
-  getNamedType,
-  isIntrospectionType,
-  DocumentNode,
-  printIntrospectionSchema,
-  isObjectType,
-} from 'graphql';
-import { TsVisitor } from './visitor.js';
-import { TsIntrospectionVisitor } from './introspection-visitor.js';
-import { TypeScriptPluginConfig } from './config.js';
+import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
+import {
+  DocumentNode,
+  getNamedType,
+  GraphQLNamedType,
+  GraphQLSchema,
+  isIntrospectionType,
+  isObjectType,
+  parse,
+  printIntrospectionSchema,
+  TypeInfo,
+  visit,
+  visitWithTypeInfo,
+} from 'graphql';
+import { TypeScriptPluginConfig } from './config.js';
+import { TsIntrospectionVisitor } from './introspection-visitor.js';
+import { TsVisitor } from './visitor.js';
 
 export * from './typescript-variables-to-object.js';
 export * from './visitor.js';

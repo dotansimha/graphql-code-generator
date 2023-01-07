@@ -1,13 +1,13 @@
-import { Types, PluginValidateFn, PluginFunction, oldVisit } from '@graphql-codegen/plugin-helpers';
-import { concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
-import { TypeScriptTypedDocumentNodesConfig } from './config.js';
 import { extname } from 'path';
+import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import {
-  LoadedFragment,
-  RawClientSideBasePluginConfig,
   DocumentMode,
+  LoadedFragment,
   optimizeOperations,
+  RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
+import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
+import { TypeScriptTypedDocumentNodesConfig } from './config.js';
 import { TypeScriptDocumentNodesVisitor } from './visitor.js';
 
 export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (

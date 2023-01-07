@@ -1,55 +1,54 @@
-import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor.js';
-import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars.js';
-import {
-  NormalizedScalarsMap,
-  EnumValuesMap,
-  ParsedEnumValuesMap,
-  DeclarationKind,
-  ConvertOptions,
-  AvoidOptionalsConfig,
-} from './types.js';
-import {
-  DeclarationBlock,
-  DeclarationBlockConfig,
-  indent,
-  getBaseTypeNode,
-  getConfigValue,
-  stripMapperTypeInterpolation,
-  OMIT_TYPE,
-  REQUIRE_FIELDS_TYPE,
-  wrapTypeWithModifiers,
-  buildScalarsFromConfig,
-} from './utils.js';
-import {
-  NameNode,
-  ListTypeNode,
-  NamedTypeNode,
-  FieldDefinitionNode,
-  ObjectTypeDefinitionNode,
-  GraphQLSchema,
-  NonNullTypeNode,
-  UnionTypeDefinitionNode,
-  ScalarTypeDefinitionNode,
-  InterfaceTypeDefinitionNode,
-  isObjectType,
-  isInterfaceType,
-  isNonNullType,
-  isUnionType,
-  GraphQLNamedType,
-  isEnumType,
-  DirectiveDefinitionNode,
-  GraphQLObjectType,
-  InputValueDefinitionNode,
-  EnumTypeDefinitionNode,
-  ASTNode,
-} from 'graphql';
-
-import { OperationVariablesToObject } from './variables-to-object.js';
-import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers.js';
-import { parseEnumValues } from './enum-values.js';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
+import autoBind from 'auto-bind';
+import {
+  ASTNode,
+  DirectiveDefinitionNode,
+  EnumTypeDefinitionNode,
+  FieldDefinitionNode,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLSchema,
+  InputValueDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  isEnumType,
+  isInterfaceType,
+  isNonNullType,
+  isObjectType,
+  isUnionType,
+  ListTypeNode,
+  NamedTypeNode,
+  NameNode,
+  NonNullTypeNode,
+  ObjectTypeDefinitionNode,
+  ScalarTypeDefinitionNode,
+  UnionTypeDefinitionNode,
+} from 'graphql';
+import { BaseVisitor, BaseVisitorConvertOptions, ParsedConfig, RawConfig } from './base-visitor.js';
+import { parseEnumValues } from './enum-values.js';
+import { buildMapperImport, ExternalParsedMapper, ParsedMapper, parseMapper, transformMappers } from './mappers.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import {
+  AvoidOptionalsConfig,
+  ConvertOptions,
+  DeclarationKind,
+  EnumValuesMap,
+  NormalizedScalarsMap,
+  ParsedEnumValuesMap,
+} from './types.js';
+import {
+  buildScalarsFromConfig,
+  DeclarationBlock,
+  DeclarationBlockConfig,
+  getBaseTypeNode,
+  getConfigValue,
+  indent,
+  OMIT_TYPE,
+  REQUIRE_FIELDS_TYPE,
+  stripMapperTypeInterpolation,
+  wrapTypeWithModifiers,
+} from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
