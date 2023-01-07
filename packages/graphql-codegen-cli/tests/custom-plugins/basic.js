@@ -1,5 +1,5 @@
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin(_schema, _documents, _config) {
     return 'plugin';
   },
 };

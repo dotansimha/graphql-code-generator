@@ -23,7 +23,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       );
     }
 
-    if (!options.schemaAst || !options.schemaAst.extensions.sources) {
+    if (!options.schemaAst?.extensions.sources) {
       throw new Error(`Preset "graphql-modules" requires to use GraphQL SDL`);
     }
 

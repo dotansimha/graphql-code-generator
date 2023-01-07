@@ -249,7 +249,7 @@ export function buildModule(
 
     for (const kind in registry) {
       const k = kind as RegistryKeys;
-      if (registry.hasOwnProperty(k) && resolverKeys.includes(k as any)) {
+      if (Object.hasOwn(registry, k) && resolverKeys.includes(k as any)) {
         const types = registry[k];
 
         types.forEach(typeName => {
@@ -283,7 +283,7 @@ export function buildModule(
 
     // Type.Field
     for (const typeName in picks.objects) {
-      if (picks.objects.hasOwnProperty(typeName)) {
+      if (Object.hasOwn(picks.objects, typeName)) {
         const fields = picks.objects[typeName];
         const lines = [wildcardField].concat(fields.map(field => printResolveMiddlewareRecord(field)));
 

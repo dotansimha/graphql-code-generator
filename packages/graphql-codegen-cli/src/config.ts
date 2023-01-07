@@ -489,7 +489,7 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
   );
 }
 
-export function shouldEmitLegacyCommonJSImports(config: Types.Config, outputPath: string): boolean {
+export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
   const globalValue = config.emitLegacyCommonJSImports === undefined ? true : Boolean(config.emitLegacyCommonJSImports);
   // const outputConfig = config.generates[outputPath];
 

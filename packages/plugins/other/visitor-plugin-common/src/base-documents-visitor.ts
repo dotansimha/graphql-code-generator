@@ -214,7 +214,7 @@ export class BaseDocumentsVisitor<
   }
 
   private handleAnonymousOperation(node: OperationDefinitionNode): string {
-    const name = node.name && node.name.value;
+    const name = node.name?.value;
 
     if (name) {
       return this.convertName(name, {

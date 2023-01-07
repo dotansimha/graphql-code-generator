@@ -203,7 +203,7 @@ export class ApolloFederation {
   private hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, node: FieldDefinitionNode): boolean {
     const fields = this.providesMap[isObjectType(objectType) ? objectType.name : objectType.name.value];
 
-    if (fields && fields.length) {
+    if (fields?.length) {
       return fields.includes(node.name.value);
     }
 

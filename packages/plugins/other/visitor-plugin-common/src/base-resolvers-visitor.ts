@@ -717,7 +717,7 @@ export class BaseResolversVisitor<
       const isRootType = this._rootTypeNames.has(typeName);
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
-      const hasDefaultMapper = Boolean(this.config.defaultMapper && this.config.defaultMapper.type);
+      const hasDefaultMapper = Boolean(this.config.defaultMapper?.type);
 
       if (isRootType) {
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
@@ -994,7 +994,7 @@ export class BaseResolversVisitor<
       addMapper(this.config.rootValueType.source, this.config.rootValueType.import, this.config.rootValueType.default);
     }
 
-    if (this.config.defaultMapper && this.config.defaultMapper.isExternal) {
+    if (this.config.defaultMapper?.isExternal) {
       const identifier = stripMapperTypeInterpolation(this.config.defaultMapper.import);
       addMapper(this.config.defaultMapper.source, identifier, this.config.defaultMapper.default);
     }
@@ -1426,7 +1426,7 @@ export class BaseResolversVisitor<
 
     const name = this.convertName(node, { suffix: this.config.resolverTypeSuffix });
     this._collectedResolvers[rawTypeName] = name;
-    const hasExplicitValues = this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues;
+    const hasExplicitValues = this.config.enumValues[rawTypeName]?.mappedValues;
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()

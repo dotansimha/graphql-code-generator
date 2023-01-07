@@ -99,7 +99,7 @@ export class OperationVariablesToObject {
         typeValue = overrideType;
       } else if (this._scalars[typeName]) {
         typeValue = this.getScalar(typeName);
-      } else if (this._enumValues[typeName] && this._enumValues[typeName].sourceFile) {
+      } else if (this._enumValues[typeName]?.sourceFile) {
         typeValue = this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
       } else {
         typeValue = `${prefix}${this._convertName(baseType, {
@@ -124,7 +124,7 @@ export class OperationVariablesToObject {
     throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 
-  protected formatFieldString(fieldName: string, isNonNullType: boolean, _hasDefaultValue: boolean): string {
+  protected formatFieldString(fieldName: string, _isNonNullType: boolean, _hasDefaultValue: boolean): string {
     return fieldName;
   }
 

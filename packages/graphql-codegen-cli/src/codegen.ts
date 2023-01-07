@@ -217,7 +217,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                     : outputConfig.preset
                   : null;
 
-                if (preset && preset.prepareDocuments) {
+                if (preset?.prepareDocuments) {
                   outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
                 }
 
@@ -314,7 +314,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
-                            emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, filename),
+                            emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
                           };
 
                           const outputs: Types.GenerateOptions[] = preset

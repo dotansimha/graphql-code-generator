@@ -3,10 +3,7 @@ module.exports = {
   extends: ['@theguild'],
   rules: {
     'no-empty': 'off',
-    'no-prototype-builtins': 'off',
-    'no-useless-constructor': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
@@ -26,11 +23,11 @@ module.exports = {
     'unicorn/filename-case': 'off',
     'import/extensions': 'off',
     'import/no-default-export': 'off',
+    'logical-assignment-operators': 'off',
     // todo: enable in v3
     'unicorn/prefer-node-protocol': 'off',
   },
   env: {
-    es6: true,
     node: true,
   },
   overrides: [
@@ -44,8 +41,13 @@ module.exports = {
         jest: true,
       },
       rules: {
-        '@typescript-eslint/no-unused-vars': 'off',
         'import/no-extraneous-dependencies': 'off',
+      },
+    },
+    {
+      files: '**/tests/fixtures/*.ts',
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'off',
       },
     },
   ],

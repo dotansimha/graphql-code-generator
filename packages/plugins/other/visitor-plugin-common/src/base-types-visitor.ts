@@ -561,8 +561,7 @@ export class BaseTypesVisitor<
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
-      const comment =
-        scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+      const comment = scalarType?.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
       const { scalar } = this._parsedConfig.declarationKind;
 
       return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
@@ -837,7 +836,7 @@ export class BaseTypesVisitor<
     const enumName = node.name as any as string;
 
     // In case of mapped external enum string
-    if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
+    if (this.config.enumValues[enumName]?.sourceFile) {
       return null;
     }
 
@@ -883,8 +882,7 @@ export class BaseTypesVisitor<
           typeof schemaEnumValue !== 'undefined' ? schemaEnumValue : (enumOption.name as any);
 
         if (
-          this.config.enumValues[typeName] &&
-          this.config.enumValues[typeName].mappedValues &&
+          this.config.enumValues[typeName]?.mappedValues &&
           typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined'
         ) {
           enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
@@ -1001,7 +999,7 @@ export class BaseTypesVisitor<
     return typeToUse;
   }
 
-  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+  ListType(node: ListTypeNode, _key, _parent, _path, _ancestors): string {
     const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);

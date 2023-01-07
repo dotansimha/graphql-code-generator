@@ -304,7 +304,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
   protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
-    if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
+    if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
 

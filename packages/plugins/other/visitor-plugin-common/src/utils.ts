@@ -301,7 +301,7 @@ export function buildScalars(
         } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
           const value = parseMapper(scalarsMapping[name], name);
           result[name] = value;
-        } else if (scalarsMapping && scalarsMapping[name]) {
+        } else if (scalarsMapping?.[name]) {
           result[name] = {
             isExternal: false,
             type: JSON.stringify(scalarsMapping[name]),
