@@ -5,7 +5,6 @@ import { diff } from 'jest-diff';
 import { expect } from '@jest/globals';
 
 declare global {
-  // eslint-disable-next-line no-redeclare
   namespace jest {
     interface Matchers<R, T> {
       /**

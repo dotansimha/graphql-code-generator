@@ -27,6 +27,26 @@ module.exports = {
       'error',
       { devDependencies: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts'] },
     ],
+
+    // todo: enable
+    'simple-import-sort/imports': 'off',
+    'import/newline-after-import': 'off',
+    'unicorn/prefer-node-protocol': 'off',
+    'no-restricted-syntax': 'off',
+    'unicorn/filename-case': 'off',
+    'import/extensions': 'off',
+    'no-implicit-coercion': 'off',
+    'unicorn/numeric-separators-style': 'off',
+    'import/no-default-export': 'off',
+    'unicorn/no-lonely-if': 'off',
+    'unicorn/no-useless-spread': 'off',
+    'simple-import-sort/exports': 'off',
+    'unicorn/no-array-push-push': 'off',
+    'no-else-return': 'off',
+    'no-undef': 'off',
+    'import/first': 'off',
+    'n/no-restricted-import': 'off',
+    'import/no-duplicates': 'off',
   },
   env: {
     es6: true,
@@ -45,5 +65,5 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ['dist', 'node_modules', 'dev-test', 'website', 'test-files', 'examples/front-end'],
+  ignorePatterns: ['dist', 'node_modules', 'dev-test', 'website', 'test-files', 'examples/front-end', '.bob'],
 };
