@@ -1,3 +1,4 @@
+import { Source } from '@graphql-tools/utils';
 import {
   DefinitionNode,
   DocumentNode,
@@ -7,7 +8,6 @@ import {
   NamedTypeNode,
   TypeNode,
 } from 'graphql';
-import { Source } from '@graphql-tools/utils';
 import parse from 'parse-filepath';
 
 const sep = '/';

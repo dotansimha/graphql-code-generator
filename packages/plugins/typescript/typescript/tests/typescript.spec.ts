@@ -1,6 +1,6 @@
+import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { buildSchema, parse, GraphQLSchema, GraphQLObjectType, GraphQLEnumType } from 'graphql';
+import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript', () => {
