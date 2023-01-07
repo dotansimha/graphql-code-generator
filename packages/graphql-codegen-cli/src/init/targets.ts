@@ -4,9 +4,7 @@ import { Tags } from './types.js';
 
 export async function guessTargets(): Promise<Record<Tags, boolean>> {
   const pkg = JSON.parse(
-    readFileSync(resolve(process.cwd(), 'package.json'), {
-      encoding: 'utf-8',
-    })
+    readFileSync(resolve(process.cwd(), 'package.json'), 'utf8')
   );
   const dependencies = Object.keys({
     ...pkg.dependencies,

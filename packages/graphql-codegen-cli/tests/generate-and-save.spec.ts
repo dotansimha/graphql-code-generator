@@ -173,7 +173,7 @@ describe('generate-and-save', () => {
     import gql from 'graphql-tag';
     const MyQuery = gql\`query MyQuery { f }\`;
   `,
-      {}
+      'utf8'
     );
     const generateOnce: () => Promise<Types.FileOutput[]> = () =>
       generate(

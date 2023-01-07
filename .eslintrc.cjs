@@ -23,11 +23,9 @@ module.exports = {
     ],
 
     // todo: enable
-    'no-restricted-syntax': 'off',
     'unicorn/filename-case': 'off',
     'import/extensions': 'off',
     'import/no-default-export': 'off',
-    'n/no-restricted-import': 'off',
   },
   env: {
     es6: true,

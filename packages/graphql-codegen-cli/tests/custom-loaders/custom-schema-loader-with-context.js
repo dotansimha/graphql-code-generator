@@ -4,5 +4,5 @@ const { join } = require('path');
 
 module.exports = function (schemaString, config) {
   config.pluginContext.hello = 'world';
-  return buildSchema(readFileSync(join(process.cwd(), schemaString), { encoding: 'utf-8' }));
+  return buildSchema(readFileSync(join(process.cwd(), schemaString), 'utf8'));
 };

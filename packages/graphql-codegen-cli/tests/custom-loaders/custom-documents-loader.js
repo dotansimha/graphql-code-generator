@@ -5,5 +5,5 @@ const { join } = require('path');
 module.exports = function (docString, config) {
   global.CUSTOM_DOCUMENT_LOADER_CALLED = true;
 
-  return parse(readFileSync(join(process.cwd(), docString), { encoding: 'utf-8' }));
+  return parse(readFileSync(join(process.cwd(), docString), 'utf8'));
 };

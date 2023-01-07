@@ -76,9 +76,7 @@ const schema = makeExecutableSchema({
       ...(await prettier.resolveConfig(process.cwd())),
       parser: 'typescript',
     }),
-    {
-      encoding: 'utf-8',
-    }
+    'utf8'
   );
   console.log('done generating.');
 })().catch(err => {
