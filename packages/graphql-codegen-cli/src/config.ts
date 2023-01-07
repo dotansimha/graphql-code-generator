@@ -121,9 +121,9 @@ export async function loadCodegenConfig({
   packageProp,
   loaders: customLoaders,
 }: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
-  configFilePath = configFilePath || process.cwd();
-  moduleName = moduleName || 'codegen';
-  packageProp = packageProp || moduleName;
+  configFilePath ||= process.cwd();
+  moduleName ||= 'codegen';
+  packageProp ||= moduleName;
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces || []),
     packageProp,
