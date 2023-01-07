@@ -26,6 +26,8 @@ module.exports = {
     'unicorn/filename-case': 'off',
     'import/extensions': 'off',
     'import/no-default-export': 'off',
+    // todo: enable in v3
+    'unicorn/prefer-node-protocol': 'off',
   },
   env: {
     es6: true,
@@ -37,17 +39,7 @@ module.exports = {
       extends: '@theguild/eslint-config/react',
     },
     {
-      files: ['packages/**'],
-      // todo: enable in v3
-      rules: { 'unicorn/prefer-node-protocol': 'off' },
-    },
-    {
-      files: [
-        '**/tests/**/*.{js,ts}',
-        '**/graphql-codegen-testing/**/*.ts',
-        '*.spec.ts',
-        'packages/graphql-codegen-cli/tests/test-files/*.tsx',
-      ],
+      files: ['**/tests/**/*.{js,ts,tsx}', '**/graphql-codegen-testing/**/*.ts', '*.spec.ts'],
       env: {
         jest: true,
       },

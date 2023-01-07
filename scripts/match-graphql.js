@@ -1,6 +1,6 @@
-const { writeFileSync } = require('node:fs');
-const { resolve } = require('node:path');
-const { argv, cwd } = require('node:process');
+const { writeFileSync } = require('fs');
+const { resolve } = require('path');
+const { argv, cwd } = require('process');
 
 const pkgPath = resolve(cwd(), './package.json');
 
