@@ -291,4 +291,4 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   };
 };
 
-export { TypeScriptResolversVisitor, TypeScriptResolversPluginConfig };
+export { TypeScriptResolversPluginConfig, TypeScriptResolversVisitor };

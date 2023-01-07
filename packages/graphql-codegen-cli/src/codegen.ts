@@ -217,10 +217,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                     : outputConfig.preset
                   : null;
 
-                if (preset) {
-                  if (preset.prepareDocuments) {
-                    outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
-                  }
+                if (preset && preset.prepareDocuments) {
+                  outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
                 }
 
                 return subTask.newListr(
@@ -352,10 +350,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                           const process = async (outputArgs: Types.GenerateOptions) => {
                             const output = await codegen({
-                              ...{
-                                ...outputArgs,
-                                emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
-                              },
+                              ...outputArgs,
+                              emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
                               cache,
                             });
                             result.push({

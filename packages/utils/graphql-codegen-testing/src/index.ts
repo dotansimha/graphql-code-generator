@@ -89,6 +89,6 @@ export function useMonorepo({ dirname }: { dirname: string }) {
   };
 }
 
-export * from './typescript.js';
 export * from './mock-graphql-server.js';
 export * from './resolvers-common.js';
+export * from './typescript.js';
