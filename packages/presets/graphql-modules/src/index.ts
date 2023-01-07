@@ -71,7 +71,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       schemaAst: options.schemaAst!,
     };
 
-    const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, '');
+    const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, options.config.emitLegacyCommonJSImports ? '' : '.js');
     const baseTypesDir = stripFilename(baseOutput.filename);
 
     // One file per each module
