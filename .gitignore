@@ -5,18 +5,18 @@
 coverage
 *.log
 node_modules/
-temp
+temp/
 junit.xml
 dist/
 .bob/
 out.txt
 .cache
 tsconfig.tsbuildinfo
-.yarn
+.yarn/
 recompile.sh
 
 .next/
-out
+out/
 website/public/sitemap.xml
 website/public/_redirects
 .eslintcache

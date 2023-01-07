@@ -25,6 +25,7 @@ module.exports = {
     'import/no-default-export': 'off',
     // todo: enable in v3
     'unicorn/prefer-node-protocol': 'off',
+    'prefer-object-has-own': 'off',
   },
   env: {
     node: true,

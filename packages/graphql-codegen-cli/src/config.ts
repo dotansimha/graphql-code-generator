@@ -145,9 +145,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
   const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
 
   if (graphqlConfig) {
-    return new CodegenContext({
-      graphqlConfig,
-    });
+    return new CodegenContext({ graphqlConfig });
   }
 
   const result = await loadCodegenConfig({ configFilePath });
@@ -203,7 +201,7 @@ export function buildOptions() {
       alias: 'watch',
       describe:
         'Watch for changes and execute generation automatically. You can also specify a glob expression for custom watch list.',
-      coerce: (watch: any) => {
+      coerce(watch: any) {
         if (watch === 'false') {
           return false;
         }

@@ -82,8 +82,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const cache = createCache();
 
   function wrapTask(task: () => void | Promise<void>, source: string, taskName: string, ctx: Ctx) {
-    return () => {
-      return context.profiler.run(async () => {
+    return () =>
+      context.profiler.run(async () => {
         try {
           await Promise.resolve().then(() => task());
         } catch (error) {
@@ -95,7 +95,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
           throw error;
         }
       }, taskName);
-    };
   }
 
   async function normalize() {
@@ -203,7 +202,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
             return {
               title,
-              task: async (_, subTask) => {
+              async task(_, subTask) {
                 let outputSchemaAst: GraphQLSchema;
                 let outputSchema: DocumentNode;
                 const outputFileTemplateConfig = outputConfig.config || {};
@@ -400,7 +399,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   // All the errors throw in `listr2` are collected in context
   // Running tasks doesn't throw anything
   const executedContext = await tasks.run();
-
   if (config.debug) {
     // if we have debug logs, make sure to print them before throwing the errors
     printLogs();

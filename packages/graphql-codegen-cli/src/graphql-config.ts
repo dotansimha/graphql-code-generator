@@ -61,7 +61,7 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
 
   try {
     for (const projectName in config.projects) {
-      if (Object.hasOwn(config.projects, projectName)) {
+      if (Object.prototype.hasOwnProperty.call(config.projects, projectName)) {
         const project = config.projects[projectName];
 
         if (project.hasExtension('codegen')) {
