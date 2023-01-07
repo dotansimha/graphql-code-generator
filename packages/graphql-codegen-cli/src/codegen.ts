@@ -351,6 +351,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           const process = async (outputArgs: Types.GenerateOptions) => {
                             const output = await codegen({
                               ...outputArgs,
+                              // @ts-expect-error todo: fix 'emitLegacyCommonJSImports' does not exist in type 'GenerateOptions'
                               emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
                               cache,
                             });

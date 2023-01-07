@@ -186,11 +186,12 @@ export function getOutputDefaultValue(answers: Answers) {
 export function getDocumentsDefaultValue(answers: Answers) {
   if (answers.targets.includes(Tags.vue)) {
     return 'src/**/*.vue';
-  } else if (answers.targets.includes(Tags.angular)) {
-    return 'src/**/*.ts';
-  } else if (answers.targets.includes(Tags.client)) {
-    return 'src/**/*.tsx';
-  } else {
-    return 'src/**/*.graphql';
   }
+  if (answers.targets.includes(Tags.angular)) {
+    return 'src/**/*.ts';
+  }
+  if (answers.targets.includes(Tags.client)) {
+    return 'src/**/*.tsx';
+  }
+  return 'src/**/*.graphql';
 }
