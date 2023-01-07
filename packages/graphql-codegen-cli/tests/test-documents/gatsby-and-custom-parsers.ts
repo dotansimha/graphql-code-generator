@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
-import { graphql } from 'gatsby';
 import { parser } from 'custom-graphql-parser';
+import { graphql } from 'gatsby';
+import gql from 'graphql-tag';
 
 export const fragmentA = gql`
   fragment FragmentA on MyType {

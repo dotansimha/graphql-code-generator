@@ -1,8 +1,8 @@
-import { oneLine, stripIndent } from 'common-tags';
-import { resolve } from 'path';
 import { existsSync } from 'fs';
-import { diff } from 'jest-diff';
+import { resolve } from 'path';
 import { expect } from '@jest/globals';
+import { oneLine, stripIndent } from 'common-tags';
+import { diff } from 'jest-diff';
 
 declare global {
   namespace jest {

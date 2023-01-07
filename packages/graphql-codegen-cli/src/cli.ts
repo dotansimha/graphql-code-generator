@@ -1,7 +1,7 @@
-import { generate } from './generate-and-save.js';
-import { init } from './init/index.js';
 import { createContext } from './config.js';
+import { generate } from './generate-and-save.js';
 import { lifecycleHooks } from './hooks.js';
+import { init } from './init/index.js';
 
 export async function runCli(cmd: string): Promise<number> {
   await ensureGraphQlPackage();

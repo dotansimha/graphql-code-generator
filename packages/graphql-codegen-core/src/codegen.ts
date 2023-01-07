@@ -1,16 +1,15 @@
 import {
-  Types,
-  isComplexPluginOutput,
-  federationSpec,
-  getCachedDocumentNodeFromSchema,
   AddToSchemaResult,
   createNoopProfiler,
+  federationSpec,
+  getCachedDocumentNodeFromSchema,
+  isComplexPluginOutput,
+  Types,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules, DocumentNode } from 'graphql';
-import { executePlugin } from './execute-plugin.js';
-import { validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
-
 import { mergeSchemas } from '@graphql-tools/schema';
+import { asArray, Source, validateGraphQlDocuments } from '@graphql-tools/utils';
+import { DefinitionNode, DocumentNode, Kind, NameNode, print, specifiedRules, visit } from 'graphql';
+import { executePlugin } from './execute-plugin.js';
 import {
   extractHashFromSchema,
   getSkipDocumentsValidationOption,

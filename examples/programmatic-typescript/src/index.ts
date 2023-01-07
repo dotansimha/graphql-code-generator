@@ -1,11 +1,7 @@
 /* eslint-disable no-console */
-
 import { promises } from 'fs';
-import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
-import gql from 'graphql-tag';
-import prettier from 'prettier';
-
 import { codegen } from '@graphql-codegen/core';
+import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNode from '@graphql-codegen/typed-document-node';
 import * as typescript from '@graphql-codegen/typescript';
 import * as typescriptOperations from '@graphql-codegen/typescript-operations';
@@ -13,7 +9,8 @@ import * as typescriptResolvers from '@graphql-codegen/typescript-resolvers';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { loadDocuments } from '@graphql-tools/load';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-
+import gql from 'graphql-tag';
+import prettier from 'prettier';
 import type { Resolvers } from './gql.generated.js';
 
 const schema = makeExecutableSchema({

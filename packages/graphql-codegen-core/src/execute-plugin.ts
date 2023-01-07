@@ -1,5 +1,5 @@
-import { Types, CodegenPlugin, Profiler, createNoopProfiler } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
+import { CodegenPlugin, createNoopProfiler, Profiler, Types } from '@graphql-codegen/plugin-helpers';
+import { buildASTSchema, DocumentNode, GraphQLSchema } from 'graphql';
 
 export interface ExecutePluginOptions {
   name: string;

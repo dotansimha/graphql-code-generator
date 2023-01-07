@@ -2,13 +2,13 @@ jest.mock('../src/utils/get-latest-version.ts', () => {
   return { getLatestVersion: () => Promise.resolve('1.0.0') };
 });
 
-import bddStdin from 'bdd-stdin';
 import { resolve } from 'path';
-import { init } from '../src/init/index.js';
-import { Tags } from '../src/init/types.js';
-import { guessTargets } from '../src/init/targets.js';
+import bddStdin from 'bdd-stdin';
 import { bold } from '../src/init/helpers.js';
+import { init } from '../src/init/index.js';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
+import { guessTargets } from '../src/init/targets.js';
+import { Tags } from '../src/init/types.js';
 
 jest.mock('fs');
 const { version } = require('../package.json');

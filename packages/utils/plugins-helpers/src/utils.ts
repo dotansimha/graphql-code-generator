@@ -1,4 +1,4 @@
-import { GraphQLOutputType, GraphQLNamedType, GraphQLNonNull, GraphQLList, isListType, isNonNullType } from 'graphql';
+import { GraphQLList, GraphQLNamedType, GraphQLNonNull, GraphQLOutputType, isListType, isNonNullType } from 'graphql';
 import { Types } from './types.js';
 
 export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOutput>): string {

@@ -1,20 +1,20 @@
+import { dirname, join, resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { compressToEncodedURIComponent } from 'lz-string';
 import {
-  ModuleResolutionKind,
-  ScriptTarget,
-  JsxEmit,
-  ModuleKind,
-  createSourceFile,
-  flattenDiagnosticMessageText,
+  CompilerOptions,
   createCompilerHost,
   createProgram,
-  ScriptKind,
-  CompilerOptions,
+  createSourceFile,
   Diagnostic,
+  flattenDiagnosticMessageText,
+  JsxEmit,
+  ModuleKind,
+  ModuleResolutionKind,
+  ScriptKind,
+  ScriptTarget,
   ScriptTarget as ScriptTargetType,
 } from 'typescript';
-import { resolve, join, dirname } from 'path';
-import { compressToEncodedURIComponent } from 'lz-string';
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,

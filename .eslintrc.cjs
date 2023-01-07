@@ -29,8 +29,6 @@ module.exports = {
     ],
 
     // todo: enable
-    'simple-import-sort/imports': 'off',
-    'import/newline-after-import': 'off',
     'unicorn/prefer-node-protocol': 'off',
     'no-restricted-syntax': 'off',
     'unicorn/filename-case': 'off',
