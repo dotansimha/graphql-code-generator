@@ -36,7 +36,6 @@ module.exports = {
     // 'import/no-default-export': 'off',
     // 'no-undef': 'off',
     // 'n/no-restricted-import': 'off',
-    // 'import/no-duplicates': 'off',
   },
   env: {
     es6: true,
