@@ -969,9 +969,7 @@ export class BaseResolversVisitor<
 
     const addMapper = (source: string, identifier: string, asDefault: boolean) => {
       if (!this.isMapperImported(groupedMappers, identifier, source)) {
-        if (!groupedMappers[source]) {
-          groupedMappers[source] = [];
-        }
+        groupedMappers[source] ||= [];
 
         groupedMappers[source].push({ identifier, asDefault });
       }

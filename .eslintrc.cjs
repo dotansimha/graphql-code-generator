@@ -23,7 +23,6 @@ module.exports = {
     'unicorn/filename-case': 'off',
     'import/extensions': 'off',
     'import/no-default-export': 'off',
-    'logical-assignment-operators': 'off',
     // todo: enable in v3
     'unicorn/prefer-node-protocol': 'off',
   },

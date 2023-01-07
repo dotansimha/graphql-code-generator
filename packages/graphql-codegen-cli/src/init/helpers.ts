@@ -76,16 +76,12 @@ export async function writePackage(answers: Answers, configLocation: string) {
   const pkg = JSON.parse(pkgContent);
   const { indent } = detectIndent(pkgContent);
 
-  if (!pkg.scripts) {
-    pkg.scripts = {};
-  }
+  pkg.scripts ||= {};
 
   pkg.scripts[answers.script] = `graphql-codegen --config ${configLocation}`;
 
   // plugin
-  if (!pkg.devDependencies) {
-    pkg.devDependencies = {};
-  }
+  pkg.devDependencies ||= {};
 
   await Promise.all(
     (answers.plugins || []).map(async plugin => {

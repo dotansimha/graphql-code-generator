@@ -78,9 +78,7 @@ export function hasFederationSpec(schemaOrAST: GraphQLSchema | DocumentNode) {
 }
 
 export function extractHashFromSchema(schema: GraphQLSchema): string | null {
-  if (!schema.extensions) {
-    schema.extensions = {};
-  }
+  schema.extensions ||= {};
 
   return (schema.extensions['hash'] as string) ?? null;
 }

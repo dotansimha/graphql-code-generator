@@ -378,9 +378,7 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.fields) {
-      if (!picksObj[name]) {
-        picksObj[name] = [];
-      }
+      picksObj[name] ||= [];
 
       node.fields.forEach(field => {
         picksObj[name].push(field.name.value);
@@ -392,9 +390,7 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.values) {
-      if (!picks.enums[name]) {
-        picks.enums[name] = [];
-      }
+      picks.enums[name] ||= [];
 
       node.values.forEach(field => {
         picks.enums[name].push(field.name.value);

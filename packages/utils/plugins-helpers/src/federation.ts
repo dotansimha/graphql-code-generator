@@ -271,9 +271,7 @@ export class ApolloFederation {
             .reduce((prev, curr) => [...prev, ...curr], []);
           const ofType = getBaseType(field.type);
 
-          if (!providesMap[ofType.name]) {
-            providesMap[ofType.name] = [];
-          }
+          providesMap[ofType.name] ||= [];
 
           providesMap[ofType.name].push(...provides);
         });

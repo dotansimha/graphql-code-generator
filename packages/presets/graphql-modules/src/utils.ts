@@ -153,9 +153,7 @@ export function groupSourcesByModule(sources: Source[], basePath: string): Recor
       // PERF: we could guess the module by matching source.location with a list of already resolved paths
       const mod = extractModuleDirectory(source.location, basePath);
 
-      if (!grouped[mod]) {
-        grouped[mod] = [];
-      }
+      grouped[mod] ||= [];
 
       grouped[mod].push(source);
     }

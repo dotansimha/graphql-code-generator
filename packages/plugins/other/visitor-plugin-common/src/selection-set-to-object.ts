@@ -230,9 +230,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             possibleTypesForFragment.length === 1 ? null : possibleType.name
           );
 
-          if (!selectionNodesByTypeName[possibleType.name]) {
-            selectionNodesByTypeName[possibleType.name] = [];
-          }
+          selectionNodesByTypeName[possibleType.name] ||= [];
 
           selectionNodesByTypeName[possibleType.name].push({
             fragmentName: spread.name.value,
@@ -326,9 +324,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
 
-        if (!prev[typeName]) {
-          prev[typeName] = [];
-        }
+        prev[typeName] ||= [];
 
         const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
         const transformedSet = this.selectionSetStringFromFields(fields);
