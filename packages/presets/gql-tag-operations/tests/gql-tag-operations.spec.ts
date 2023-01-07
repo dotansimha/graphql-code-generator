@@ -1,8 +1,8 @@
-import { validateTs } from '@graphql-codegen/testing';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { preset } from '../src/index.js';
 
 describe('gql-tag-operations-preset', () => {

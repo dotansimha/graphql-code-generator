@@ -1,8 +1,8 @@
-import { useState, useEffect, ReactElement } from 'react';
-import { useTheme, Image } from '@theguild/components';
+import { ReactElement, useEffect, useState } from 'react';
+import { Image, useTheme } from '@theguild/components';
 import Select from 'react-select';
-import { EXAMPLES } from './examples';
 import { icons } from '@/lib/plugins';
+import { EXAMPLES } from './examples';
 import { generate } from './generate';
 import LiveDemoEditors from './LiveDemoEditors';
 

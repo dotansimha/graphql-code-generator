@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
-import { useTheme } from '@theguild/components';
 import MonacoEditor from '@monaco-editor/react';
+import { useTheme } from '@theguild/components';
 import { canUseDOM } from '@/utils';
 
 const Editor = ({

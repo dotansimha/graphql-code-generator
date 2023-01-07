@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as TJS from 'typescript-json-schema';
 import { PluginConfig, PresetConfig } from './plugins-docs';
 
