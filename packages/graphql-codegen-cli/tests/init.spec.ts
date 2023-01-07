@@ -1,7 +1,3 @@
-jest.mock('../src/utils/get-latest-version.ts', () => {
-  return { getLatestVersion: () => Promise.resolve('1.0.0') };
-});
-
 import { resolve } from 'path';
 import bddStdin from 'bdd-stdin';
 import { bold } from '../src/init/helpers.js';
@@ -9,6 +5,10 @@ import { init } from '../src/init/index.js';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
 import { guessTargets } from '../src/init/targets.js';
 import { Tags } from '../src/init/types.js';
+
+jest.mock('../src/utils/get-latest-version.ts', () => {
+  return { getLatestVersion: () => Promise.resolve('1.0.0') };
+});
 
 jest.mock('fs');
 const { version } = require('../package.json');

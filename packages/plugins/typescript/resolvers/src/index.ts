@@ -67,8 +67,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
       if (config.makeResolverTypeCallable) {
         defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
       } else {
-        defsToInclude.push(resolverWithResolve);
-        defsToInclude.push(`${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+        defsToInclude.push(resolverWithResolve, `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
       }
 
       directiveResolverMappings[directiveName] = resolverTypeName;
@@ -113,18 +112,19 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
       };`);
     }
 
-    defsToInclude.push(`export type ReferenceResolver<TResult, TReference, TContext> = (
+    defsToInclude.push(
+      `export type ReferenceResolver<TResult, TReference, TContext> = (
       reference: TReference,
       context: TContext,
       info${optionalSignForInfoArg}: GraphQLResolveInfo
-    ) => Promise<TResult> | TResult;`);
-
-    defsToInclude.push(`
+    ) => Promise<TResult> | TResult;`,
+      `
       type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
       type NullableCheck<T, S> = ${namespacedImportPrefix}Maybe<T> extends T ? ${namespacedImportPrefix}Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
       type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
       export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
-    `);
+    `
+    );
   }
 
   if (!config.makeResolverTypeCallable) {

@@ -964,7 +964,7 @@ export class BaseTypesVisitor<
         return null;
       })
       .reverse()
-      .find(a => !!a);
+      .find(a => Boolean(a));
 
     return type || null;
   }

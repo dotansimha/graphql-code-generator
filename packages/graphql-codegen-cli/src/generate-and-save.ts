@@ -144,7 +144,7 @@ export async function generate(
 }
 
 function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.overwrite === undefined ? true : !!config.overwrite;
+  const globalValue = config.overwrite === undefined ? true : Boolean(config.overwrite);
   const outputConfig = config.generates[outputPath];
 
   if (!outputConfig) {

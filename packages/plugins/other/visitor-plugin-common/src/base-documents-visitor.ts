@@ -175,7 +175,7 @@ export class BaseDocumentsVisitor<
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
       addTypename: !rawConfig.skipTypename,
-      globalNamespace: !!rawConfig.globalNamespace,
+      globalNamespace: Boolean(rawConfig.globalNamespace),
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       ...((additionalConfig || {}) as any),
@@ -223,7 +223,7 @@ export class BaseDocumentsVisitor<
       });
     }
 
-    return this.convertName(this._unnamedCounter++ + '', {
+    return this.convertName(String(this._unnamedCounter++), {
       prefix: 'Unnamed_',
       suffix: '_',
       useTypesPrefix: false,

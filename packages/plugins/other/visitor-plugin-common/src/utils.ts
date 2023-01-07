@@ -52,7 +52,7 @@ export function block(array) {
 export function wrapWithSingleQuotes(value: string | number | NameNode, skipNumericCheck = false): string {
   if (skipNumericCheck) {
     if (typeof value === 'number') {
-      return `${value}`;
+      return String(value);
     }
     return `'${value}'`;
   }
@@ -61,7 +61,7 @@ export function wrapWithSingleQuotes(value: string | number | NameNode, skipNume
     typeof value === 'number' ||
     (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
   ) {
-    return `${value}`;
+    return String(value);
   }
 
   return `'${value}'`;
@@ -149,7 +149,7 @@ export class DeclarationBlock {
   }
 
   withComment(comment: string | StringValueNode | null, disabled = false): DeclarationBlock {
-    const nonEmptyComment = isStringValueNode(comment) ? !!comment.value : !!comment;
+    const nonEmptyComment = Boolean(isStringValueNode(comment) ? comment.value : comment);
 
     if (nonEmptyComment && !disabled) {
       this._comment = transformComment(comment, 0);
@@ -218,7 +218,7 @@ export class DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
       const before = '{' + blockWrapper;
       const after = blockWrapper + '}';
-      const block = [before, this._block, after].filter(val => !!val).join('\n');
+      const block = [before, this._block, after].filter(val => Boolean(val)).join('\n');
 
       if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer(block)})`;

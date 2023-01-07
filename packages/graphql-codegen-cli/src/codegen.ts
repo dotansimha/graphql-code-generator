@@ -197,7 +197,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         task: (ctx, task) => {
           const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
             const outputConfig = generates[filename];
-            const hasPreset = !!outputConfig.preset;
+            const hasPreset = Boolean(outputConfig.preset);
 
             const title = `Generate to ${filename}`;
 
@@ -407,7 +407,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   if (executedContext.errors.length > 0) {
     const errors = executedContext.errors.map(subErr => subErr.message || subErr.toString());
-    const newErr = new AggregateError(executedContext.errors, `${errors.join('\n\n')}`);
+    const newErr = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
     // Best-effort to all stack traces for debugging
     newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
     throw newErr;

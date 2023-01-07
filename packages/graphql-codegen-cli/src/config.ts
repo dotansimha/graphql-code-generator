@@ -210,7 +210,7 @@ export function buildOptions() {
         if (typeof watch === 'string' || Array.isArray(watch)) {
           return watch;
         }
-        return !!watch;
+        return Boolean(watch);
       },
     },
     r: {
@@ -490,7 +490,7 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
 }
 
 export function shouldEmitLegacyCommonJSImports(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : !!config.emitLegacyCommonJSImports;
+  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : Boolean(config.emitLegacyCommonJSImports);
   // const outputConfig = config.generates[outputPath];
 
   // if (!outputConfig) {

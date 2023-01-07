@@ -102,8 +102,7 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
     } else if (possibleTargets.Flow) {
       tags.push(Tags.flow);
     } else if (possibleTargets.Node) {
-      tags.push(Tags.typescript);
-      tags.push(Tags.flow);
+      tags.push(Tags.typescript, Tags.flow);
     }
     return tags;
   }

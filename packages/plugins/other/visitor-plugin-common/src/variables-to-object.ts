@@ -79,7 +79,7 @@ export class OperationVariablesToObject {
         return null;
       })
       .reverse()
-      .find(a => !!a);
+      .find(a => Boolean(a));
 
     return type || null;
   }
