@@ -1,0 +1,49 @@
+module.exports = {
+  root: true,
+  extends: ['@theguild'],
+  rules: {
+    'no-empty': 'off',
+    'no-console': 'error',
+    'no-prototype-builtins': 'off',
+    'no-useless-constructor': 'off',
+    'no-unused-vars': 'off',
+    'object-shorthand': ['error', 'always'],
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    '@typescript-eslint/no-namespace': 'off',
+    'no-unreachable-loop': 'error',
+    '@typescript-eslint/no-empty-interface': 'off',
+    'prefer-arrow-callback': 'error',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    'no-lonely-if': 'error',
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts'] },
+    ],
+  },
+  env: {
+    es6: true,
+    node: true,
+  },
+  overrides: [
+    {
+      files: ['**/tests/**/*.ts', '**/graphql-codegen-testing/**/*.ts', '*.spec.ts'],
+      env: {
+        jest: true,
+      },
+      rules: {
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
+  ignorePatterns: ['dist', 'node_modules', 'dev-test', 'website', 'test-files', 'examples/front-end'],
+};
