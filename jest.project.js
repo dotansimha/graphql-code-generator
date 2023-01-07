@@ -1,4 +1,5 @@
 const { resolve } = require('path');
+// eslint-disable-next-line import/no-extraneous-dependencies -- false positive
 const { pathsToModuleNameMapper } = require('ts-jest');
 
 const ROOT_DIR = __dirname;

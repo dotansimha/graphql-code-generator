@@ -37,16 +37,24 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/tests/**/*.ts', '**/graphql-codegen-testing/**/*.ts', '*.spec.ts'],
+      files: ['website/**'],
+      extends: '@theguild/eslint-config/react',
+    },
+    {
+      files: [
+        '**/tests/**/*.{js,ts}',
+        '**/graphql-codegen-testing/**/*.ts',
+        '*.spec.ts',
+        'packages/graphql-codegen-cli/tests/test-files/*.tsx',
+      ],
       env: {
         jest: true,
       },
       rules: {
-        'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         'import/no-extraneous-dependencies': 'off',
       },
     },
   ],
-  ignorePatterns: ['dist', 'node_modules', 'dev-test', 'test-files', 'examples/front-end', '.bob'],
+  ignorePatterns: ['dev-test', 'examples/front-end', 'website'],
 };
