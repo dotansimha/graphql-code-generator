@@ -17,7 +17,7 @@ export function setSilentLogger() {
 }
 
 export function useWinstonLogger() {
-  if (logger && logger.levels) {
+  if (logger?.levels) {
     return;
   }
 

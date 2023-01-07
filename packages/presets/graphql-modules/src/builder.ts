@@ -249,7 +249,7 @@ export function buildModule(
 
     for (const kind in registry) {
       const k = kind as RegistryKeys;
-      if (registry.hasOwnProperty(k) && resolverKeys.includes(k as any)) {
+      if (Object.prototype.hasOwnProperty.call(registry, k) && resolverKeys.includes(k as any)) {
         const types = registry[k];
 
         types.forEach(typeName => {
@@ -283,7 +283,7 @@ export function buildModule(
 
     // Type.Field
     for (const typeName in picks.objects) {
-      if (picks.objects.hasOwnProperty(typeName)) {
+      if (Object.prototype.hasOwnProperty.call(picks.objects, typeName)) {
         const fields = picks.objects[typeName];
         const lines = [wildcardField].concat(fields.map(field => printResolveMiddlewareRecord(field)));
 
@@ -378,9 +378,7 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.fields) {
-      if (!picksObj[name]) {
-        picksObj[name] = [];
-      }
+      picksObj[name] ||= [];
 
       node.fields.forEach(field => {
         picksObj[name].push(field.name.value);
@@ -392,9 +390,7 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.values) {
-      if (!picks.enums[name]) {
-        picks.enums[name] = [];
-      }
+      picks.enums[name] ||= [];
 
       node.values.forEach(field => {
         picks.enums[name].push(field.name.value);

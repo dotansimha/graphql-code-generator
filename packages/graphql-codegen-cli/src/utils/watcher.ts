@@ -78,7 +78,7 @@ export const createWatcher = (
       .map(filename => ({ filename, config: normalizeOutputParam(config.generates[filename]) }))
       .forEach(entry => {
         if (entry.config.preset) {
-          const extension = entry.config.presetConfig && entry.config.presetConfig.extension;
+          const extension = entry.config.presetConfig?.extension;
           if (extension) {
             ignored.push(join(entry.filename, '**', '*' + extension));
           }

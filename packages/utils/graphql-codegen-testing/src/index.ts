@@ -6,7 +6,7 @@ import { diff } from 'jest-diff';
 
 declare global {
   namespace jest {
-    interface Matchers<R, T> {
+    interface Matchers<R> {
       /**
        * Normalizes whitespace and performs string comparisons
        */
@@ -37,7 +37,7 @@ expect.extend({
     const diffString = diff(stripIndent`${expected}`, stripIndent`${received}`, {
       expand: this.expand,
     });
-    const hasExpect = diffString && diffString.includes('- Expect');
+    const hasExpect = diffString?.includes('- Expect');
 
     const message = hasExpect
       ? `Difference:\n\n${diffString}`

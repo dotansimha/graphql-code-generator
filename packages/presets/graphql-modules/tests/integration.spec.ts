@@ -33,35 +33,23 @@ describe('Integration', () => {
   // In this test, we make sure executeCodegen passes on a list of Sources as an extension
   // This is very important
   test('should generate a base output and 4 for modules', async () => {
-    try {
-      const output = await executeCodegen(options);
+    const output = await executeCodegen(options);
 
-      expect(output.length).toBe(5);
-      expect(normalize(output[0].filename)).toMatch(normalize(`/modules/global-types.ts`));
-      expect(normalize(output[1].filename)).toMatch(normalize(`/modules/blog/module-types.ts`));
-      expect(normalize(output[2].filename)).toMatch(normalize(`/modules/common/module-types.ts`));
-      expect(normalize(output[3].filename)).toMatch(normalize(`/modules/dotanions/module-types.ts`));
-      expect(normalize(output[4].filename)).toMatch(normalize(`/modules/users/module-types.ts`));
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      throw e;
-    }
+    expect(output.length).toBe(5);
+    expect(normalize(output[0].filename)).toMatch(normalize(`/modules/global-types.ts`));
+    expect(normalize(output[1].filename)).toMatch(normalize(`/modules/blog/module-types.ts`));
+    expect(normalize(output[2].filename)).toMatch(normalize(`/modules/common/module-types.ts`));
+    expect(normalize(output[3].filename)).toMatch(normalize(`/modules/dotanions/module-types.ts`));
+    expect(normalize(output[4].filename)).toMatch(normalize(`/modules/users/module-types.ts`));
   });
 
   test('should not duplicate type even if type and extend type are in the same module', async () => {
-    try {
-      const output = await executeCodegen(options);
+    const output = await executeCodegen(options);
 
-      const userResolversStr = `export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;`;
-      const nbOfTimeUserResolverFound = output[4].content.split(userResolversStr).length - 1;
+    const userResolversStr = `export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;`;
+    const nbOfTimeUserResolverFound = output[4].content.split(userResolversStr).length - 1;
 
-      expect(nbOfTimeUserResolverFound).toBe(1);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      throw e;
-    }
+    expect(nbOfTimeUserResolverFound).toBe(1);
   });
 
   test('should allow to override importBaseTypesFrom correctly', async () => {

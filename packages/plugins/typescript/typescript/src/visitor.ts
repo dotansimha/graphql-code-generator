@@ -341,14 +341,13 @@ export class TsVisitor<
     const enumName = node.name as any as string;
 
     // In case of mapped external enum string
-    if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
+    if (this.config.enumValues[enumName]?.sourceFile) {
       return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
     }
 
     const getValueFromConfig = (enumValue: string | number) => {
       if (
-        this.config.enumValues[enumName] &&
-        this.config.enumValues[enumName].mappedValues &&
+        this.config.enumValues[enumName]?.mappedValues &&
         typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
       ) {
         return this.config.enumValues[enumName].mappedValues[enumValue];

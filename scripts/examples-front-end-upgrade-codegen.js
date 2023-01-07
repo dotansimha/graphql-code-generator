@@ -1,7 +1,4 @@
 /* eslint-disable no-console */
-const { writeFileSync } = require('node:fs');
-const { resolve } = require('node:path');
-const { argv, cwd } = require('node:process');
 const { exec } = require('node:child_process');
 
 // Usage: node ./scripts/examples-front-end-upgrade-codegen.js 2.12.0-alpha-20220830143058-6693f3074 1.0.1-alpha-20220830093424-2a4853976
@@ -10,8 +7,7 @@ const { exec } = require('node:child_process');
   // eslint-disable-next-line import/no-extraneous-dependencies
   const { globby } = await import('globby');
 
-  const codegenCLIversion = argv[2];
-  const clientPresetVersion = argv[3];
+  const [, , codegenCLIversion, clientPresetVersion] = process.argv;
 
   globby('./examples/front-end/**/package.json', {
     ignore: ['./examples/front-end/**/node_modules/**', './examples/front-end/**/dist/**'],

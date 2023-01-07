@@ -8,6 +8,7 @@ const pkg = require(pkgPath);
 
 const version = argv[2];
 
+// eslint-disable-next-line logical-assignment-operators -- can be removed after drop support of Node.js 12
 pkg.resolutions = pkg.resolutions || {};
 if (pkg.resolutions.graphql.startsWith(version)) {
   // eslint-disable-next-line no-console

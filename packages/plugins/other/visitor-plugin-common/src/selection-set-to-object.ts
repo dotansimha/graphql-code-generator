@@ -230,9 +230,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             possibleTypesForFragment.length === 1 ? null : possibleType.name
           );
 
-          if (!selectionNodesByTypeName[possibleType.name]) {
-            selectionNodesByTypeName[possibleType.name] = [];
-          }
+          selectionNodesByTypeName[possibleType.name] ||= [];
 
           selectionNodesByTypeName[possibleType.name].push({
             fragmentName: spread.name.value,
@@ -304,7 +302,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
   protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
-    if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
+    if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
 
@@ -326,9 +324,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
 
-        if (!prev[typeName]) {
-          prev[typeName] = [];
-        }
+        prev[typeName] ||= [];
 
         const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
         const transformedSet = this.selectionSetStringFromFields(fields);

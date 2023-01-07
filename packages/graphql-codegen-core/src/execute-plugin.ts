@@ -16,7 +16,7 @@ export interface ExecutePluginOptions {
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
-  if (!plugin || !plugin.plugin || typeof plugin.plugin !== 'function') {
+  if (!plugin?.plugin || typeof plugin.plugin !== 'function') {
     throw new Error(
       `Invalid Custom Plugin "${options.name}" \n
         Plugin ${options.name} does not export a valid JS object with "plugin" function.

@@ -121,9 +121,9 @@ export async function loadCodegenConfig({
   packageProp,
   loaders: customLoaders,
 }: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
-  configFilePath = configFilePath || process.cwd();
-  moduleName = moduleName || 'codegen';
-  packageProp = packageProp || moduleName;
+  configFilePath ||= process.cwd();
+  moduleName ||= 'codegen';
+  packageProp ||= moduleName;
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces || []),
     packageProp,
@@ -145,9 +145,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
   const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
 
   if (graphqlConfig) {
-    return new CodegenContext({
-      graphqlConfig,
-    });
+    return new CodegenContext({ graphqlConfig });
   }
 
   const result = await loadCodegenConfig({ configFilePath });
@@ -203,7 +201,7 @@ export function buildOptions() {
       alias: 'watch',
       describe:
         'Watch for changes and execute generation automatically. You can also specify a glob expression for custom watch list.',
-      coerce: (watch: any) => {
+      coerce(watch: any) {
         if (watch === 'false') {
           return false;
         }
@@ -489,7 +487,7 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
   );
 }
 
-export function shouldEmitLegacyCommonJSImports(config: Types.Config, outputPath: string): boolean {
+export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
   const globalValue = config.emitLegacyCommonJSImports === undefined ? true : Boolean(config.emitLegacyCommonJSImports);
   // const outputConfig = config.generates[outputPath];
 

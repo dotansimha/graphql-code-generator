@@ -16,10 +16,10 @@ export async function getPresetByName(
     try {
       const loaded = await loader(moduleName);
 
-      if (loaded && loaded.preset) {
+      if (loaded?.preset) {
         return loaded.preset;
       }
-      if (loaded && loaded.default) {
+      if (loaded?.default) {
         return loaded.default;
       }
 

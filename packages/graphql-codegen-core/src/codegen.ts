@@ -236,15 +236,11 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
     deduplicatedDefinitions: Set<DefinitionNode>
   ) {
     if (typeof node.name !== 'undefined') {
-      if (!definitionMap[node.kind]) {
-        definitionMap[node.kind] = {};
-      }
-      if (!definitionMap[node.kind][node.name.value]) {
-        definitionMap[node.kind][node.name.value] = {
-          paths: new Set(),
-          contents: new Set(),
-        };
-      }
+      definitionMap[node.kind] ||= {};
+      definitionMap[node.kind][node.name.value] ||= {
+        paths: new Set(),
+        contents: new Set(),
+      };
 
       const definitionKindMap = definitionMap[node.kind];
 
