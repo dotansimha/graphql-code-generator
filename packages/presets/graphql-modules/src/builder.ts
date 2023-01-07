@@ -1,34 +1,34 @@
-import {
-  visit,
-  DocumentNode,
-  ObjectTypeDefinitionNode,
-  ObjectTypeExtensionNode,
-  Kind,
-  TypeDefinitionNode,
-  TypeExtensionNode,
-  EnumTypeDefinitionNode,
-  EnumTypeExtensionNode,
-  InputObjectTypeDefinitionNode,
-  InputObjectTypeExtensionNode,
-  GraphQLSchema,
-  isScalarType,
-  InterfaceTypeDefinitionNode,
-  InterfaceTypeExtensionNode,
-} from 'graphql';
+import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { pascalCase } from 'change-case-all';
 import {
-  unique,
-  withQuotes,
-  buildBlock,
-  pushUnique,
-  concatByKey,
-  uniqueByKey,
-  createObject,
-  collectUsedTypes,
-  indent,
-} from './utils.js';
+  DocumentNode,
+  EnumTypeDefinitionNode,
+  EnumTypeExtensionNode,
+  GraphQLSchema,
+  InputObjectTypeDefinitionNode,
+  InputObjectTypeExtensionNode,
+  InterfaceTypeDefinitionNode,
+  InterfaceTypeExtensionNode,
+  isScalarType,
+  Kind,
+  ObjectTypeDefinitionNode,
+  ObjectTypeExtensionNode,
+  TypeDefinitionNode,
+  TypeExtensionNode,
+  visit,
+} from 'graphql';
 import { ModulesConfig } from './config.js';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import {
+  buildBlock,
+  collectUsedTypes,
+  concatByKey,
+  createObject,
+  indent,
+  pushUnique,
+  unique,
+  uniqueByKey,
+  withQuotes,
+} from './utils.js';
 
 type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
 type Registry = Record<RegistryKeys, string[]>;

@@ -1,5 +1,5 @@
 /* eslint-disable no-inner-declarations */
-import { RawResolversConfig, ParsedResolversConfig } from './base-resolvers-visitor.js';
+import { ParsedResolversConfig, RawResolversConfig } from './base-resolvers-visitor.js';
 import { DirectiveArgumentAndInputFieldMappings, ParsedDirectiveArgumentAndInputFieldMappings } from './types.js';
 
 export type ParsedMapper = InternalParsedMapper | ExternalParsedMapper;

@@ -1,5 +1,5 @@
-import { resolve } from 'path';
 import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { Tags } from './types.js';
 
 export async function guessTargets(): Promise<Record<Tags, boolean>> {

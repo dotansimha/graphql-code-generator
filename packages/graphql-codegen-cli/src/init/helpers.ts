@@ -1,13 +1,13 @@
-import chalk from 'chalk';
-import { resolve, relative } from 'path';
-import { writeFileSync, readFileSync } from 'fs';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import detectIndent from 'detect-indent';
-import { Answers, Tags } from './types.js';
-import { getLatestVersion } from '../utils/get-latest-version.js';
-import template from '@babel/template';
+import { readFileSync, writeFileSync } from 'fs';
+import { relative, resolve } from 'path';
 import generate from '@babel/generator';
+import template from '@babel/template';
 import * as t from '@babel/types';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import chalk from 'chalk';
+import detectIndent from 'detect-indent';
+import { getLatestVersion } from '../utils/get-latest-version.js';
+import { Answers, Tags } from './types.js';
 
 function jsObjectToBabelObjectExpression<T extends object>(obj: T): ReturnType<typeof t.objectExpression> {
   const objExp = t.objectExpression([]);

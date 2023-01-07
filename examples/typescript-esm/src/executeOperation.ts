@@ -1,7 +1,7 @@
+import * as https from 'node:https';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import type { ExecutionResult } from 'graphql';
 import { print } from 'graphql';
-import * as https from 'node:https';
 
 export function executeOperation<TResult, TVariables>(
   url: string,

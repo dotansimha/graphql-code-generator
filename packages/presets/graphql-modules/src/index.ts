@@ -1,10 +1,10 @@
+import { join, relative, resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { concatAST, isScalarType } from 'graphql';
-import { resolve, relative, join } from 'path';
-import { groupSourcesByModule, stripFilename, normalize, isGraphQLPrimitive } from './utils.js';
 import { buildModule } from './builder.js';
 import { ModulesConfig } from './config.js';
-import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { groupSourcesByModule, isGraphQLPrimitive, normalize, stripFilename } from './utils.js';
 
 export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {

@@ -1,8 +1,8 @@
 import '@graphql-codegen/testing';
-import { parse } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
-import { plugin } from '../src/index.js';
+import { parse } from 'graphql';
 import { TypeScriptResolversPluginConfig } from '../src/config.js';
+import { plugin } from '../src/index.js';
 
 function generate({ schema, config }: { schema: string; config: TypeScriptResolversPluginConfig }) {
   return codegen({

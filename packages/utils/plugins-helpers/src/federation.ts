@@ -1,20 +1,20 @@
+import { astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
 import {
-  GraphQLSchema,
-  parse,
-  FieldDefinitionNode,
-  ObjectTypeDefinitionNode,
-  DirectiveNode,
-  StringValueNode,
-  GraphQLObjectType,
-  isObjectType,
-  GraphQLNamedType,
   DefinitionNode,
+  DirectiveNode,
+  FieldDefinitionNode,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLSchema,
+  isObjectType,
+  ObjectTypeDefinitionNode,
   OperationDefinitionNode,
+  parse,
+  StringValueNode,
 } from 'graphql';
 import merge from 'lodash/merge.js';
-import { getBaseType } from './utils.js';
-import { MapperKind, mapSchema, astFromObjectType, getRootTypeNames } from '@graphql-tools/utils';
 import { oldVisit } from './index.js';
+import { getBaseType } from './utils.js';
 
 /**
  * Federation Spec

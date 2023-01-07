@@ -1,6 +1,6 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { Source } from '@graphql-tools/utils';
+import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 
 export type OperationOrFragment = {
   initialName: string;

@@ -1,23 +1,23 @@
-import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
+import { createHash } from 'crypto';
+import { promises } from 'fs';
+import { createRequire } from 'module';
 import { resolve } from 'path';
 import {
-  Types,
-  Profiler,
-  createProfiler,
   createNoopProfiler,
+  createProfiler,
   getCachedDocumentNodeFromSchema,
+  Profiler,
+  Types,
 } from '@graphql-codegen/plugin-helpers';
-import { env } from 'string-env-interpolation';
-import yargs from 'yargs';
+import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
+import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
+import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
 import { GraphQLConfig } from 'graphql-config';
-import { findAndLoadGraphQLConfig } from './graphql-config.js';
-import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load.js';
-import { GraphQLSchema, print, GraphQLSchemaExtensions } from 'graphql';
+import { env } from 'string-env-interpolation';
 import yaml from 'yaml';
-import { createRequire } from 'module';
-import { promises } from 'fs';
-import { createHash } from 'crypto';
+import yargs from 'yargs';
+import { findAndLoadGraphQLConfig } from './graphql-config.js';
+import { defaultDocumentsLoadOptions, defaultSchemaLoadOptions, loadDocuments, loadSchema } from './load.js';
 
 const { lstat } = promises;
 

@@ -1,4 +1,5 @@
 import { sortPrependValues } from '../src/codegen.js';
+
 describe('sortPrependValues', () => {
   it('Should sort and use the correct order', () => {
     const strings: string[] = [`import `, '/* comment */', `// This is a comment`];

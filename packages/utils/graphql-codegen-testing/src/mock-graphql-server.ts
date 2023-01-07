@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql';
-import nock from 'nock';
 import { getGraphQLParameters, processRequest as processGraphQLHelixRequest } from 'graphql-helix';
+import nock from 'nock';
 
 export function mockGraphQLServer({
   schema,

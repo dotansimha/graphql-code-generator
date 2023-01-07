@@ -1,5 +1,5 @@
-import { transformFileSync } from '@babel/core';
 import * as path from 'path';
+import { transformFileSync } from '@babel/core';
 import babelPlugin from '../src/babel.js';
 
 describe('gql-tag-operations-preset > babelPlugin', () => {

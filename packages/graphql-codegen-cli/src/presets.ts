@@ -1,5 +1,5 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
 import { resolve } from 'path';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 export async function getPresetByName(
   name: string,

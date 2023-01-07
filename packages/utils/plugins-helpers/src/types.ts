@@ -1,7 +1,7 @@
-import { GraphQLSchema, DocumentNode } from 'graphql';
-import { Source } from '@graphql-tools/utils';
-import type { Profiler } from './profiler.js';
 import type { ApolloEngineOptions } from '@graphql-tools/apollo-engine-loader';
+import { Source } from '@graphql-tools/utils';
+import { DocumentNode, GraphQLSchema } from 'graphql';
+import type { Profiler } from './profiler.js';
 
 export namespace Types {
   export interface GenerateOptions {

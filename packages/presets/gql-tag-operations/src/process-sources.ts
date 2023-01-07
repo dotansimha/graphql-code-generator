@@ -1,5 +1,5 @@
+import { OperationOrFragment, SourceWithOperations } from '@graphql-codegen/gql-tag-operations';
 import { Source } from '@graphql-tools/utils';
-import { SourceWithOperations, OperationOrFragment } from '@graphql-codegen/gql-tag-operations';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 
 export type BuildNameFunction = (type: OperationDefinitionNode | FragmentDefinitionNode) => string;

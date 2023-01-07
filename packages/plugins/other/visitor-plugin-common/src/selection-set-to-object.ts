@@ -1,48 +1,48 @@
+import { createHash } from 'crypto';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { getRootTypes } from '@graphql-tools/utils';
+import autoBind from 'auto-bind';
 import {
-  SelectionSetNode,
-  Kind,
+  DirectiveNode,
   FieldNode,
   FragmentSpreadNode,
-  InlineFragmentNode,
-  GraphQLNamedType,
-  isObjectType,
-  isUnionType,
-  isInterfaceType,
-  GraphQLSchema,
   GraphQLField,
-  SchemaMetaFieldDef,
-  TypeMetaFieldDef,
-  SelectionNode,
-  isListType,
-  isNonNullType,
+  GraphQLNamedType,
   GraphQLObjectType,
   GraphQLOutputType,
+  GraphQLSchema,
+  InlineFragmentNode,
+  isInterfaceType,
+  isListType,
+  isNonNullType,
+  isObjectType,
   isTypeSubTypeOf,
-  DirectiveNode,
+  isUnionType,
+  Kind,
+  SchemaMetaFieldDef,
+  SelectionNode,
+  SelectionSetNode,
+  TypeMetaFieldDef,
 } from 'graphql';
-import {
-  getPossibleTypes,
-  separateSelectionSet,
-  getFieldNodeNameValue,
-  DeclarationBlock,
-  mergeSelectionSets,
-  hasConditionalDirectives,
-} from './utils.js';
-import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types.js';
-import { BaseVisitorConvertOptions } from './base-visitor.js';
-import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor.js';
+import { BaseVisitorConvertOptions } from './base-visitor.js';
 import {
+  BaseSelectionSetProcessor,
   LinkField,
+  NameAndType,
   PrimitiveAliasedFields,
   PrimitiveField,
-  BaseSelectionSetProcessor,
   ProcessResult,
-  NameAndType,
 } from './selection-set-processor/base.js';
-import autoBind from 'auto-bind';
-import { getRootTypes } from '@graphql-tools/utils';
-import { createHash } from 'crypto';
+import { ConvertNameFn, GetFragmentSuffixFn, LoadedFragment, NormalizedScalarsMap } from './types.js';
+import {
+  DeclarationBlock,
+  getFieldNodeNameValue,
+  getPossibleTypes,
+  hasConditionalDirectives,
+  mergeSelectionSets,
+  separateSelectionSet,
+} from './utils.js';
 
 type FragmentSpreadUsage = {
   fragmentName: string;

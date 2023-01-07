@@ -1,23 +1,23 @@
-import { Types } from './types.js';
 import {
-  FragmentDefinitionNode,
-  visit,
-  DocumentNode,
-  isListType,
-  VariableDefinitionNode,
-  isObjectType,
-  FieldNode,
-  Kind,
-  InputValueDefinitionNode,
-  GraphQLSchema,
-  OperationDefinitionNode,
-  isNonNullType,
-  GraphQLOutputType,
   ASTNode,
-  InlineFragmentNode,
-  SelectionSetNode,
+  DocumentNode,
+  FieldNode,
+  FragmentDefinitionNode,
   GraphQLObjectType,
+  GraphQLOutputType,
+  GraphQLSchema,
+  InlineFragmentNode,
+  InputValueDefinitionNode,
+  isListType,
+  isNonNullType,
+  isObjectType,
+  Kind,
+  OperationDefinitionNode,
+  SelectionSetNode,
+  VariableDefinitionNode,
+  visit,
 } from 'graphql';
+import { Types } from './types.js';
 import { getBaseType } from './utils.js';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {

@@ -1,6 +1,6 @@
-import { useMonorepo } from '@graphql-codegen/testing';
-import { executeCodegen } from '@graphql-codegen/cli';
 import { normalize } from 'path';
+import { executeCodegen } from '@graphql-codegen/cli';
+import { useMonorepo } from '@graphql-codegen/testing';
 
 const monorepo = useMonorepo({
   dirname: __dirname,

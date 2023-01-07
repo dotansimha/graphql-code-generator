@@ -1,8 +1,8 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { debugLog } from './utils/debugging.js';
 import { exec } from 'child_process';
 import { delimiter, sep } from 'path';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { quote } from 'shell-quote';
+import { debugLog } from './utils/debugging.js';
 
 const DEFAULT_HOOKS: Types.LifecycleHooksDefinition = {
   afterStart: [],

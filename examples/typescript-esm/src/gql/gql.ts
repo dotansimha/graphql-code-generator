@@ -1,6 +1,5 @@
-/* eslint-disable */
-import * as graphql from './graphql.js';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import * as graphql from './graphql.js';
 
 const documents = {
   '\n  query AllPeopleQuery {\n    allPeople(first: 5) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n':

@@ -1,20 +1,20 @@
-import { TypeScriptResolversPluginConfig } from './config.js';
+import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 import {
+  BaseResolversVisitor,
+  DeclarationKind,
+  getConfigValue,
+  ParsedResolversConfig,
+} from '@graphql-codegen/visitor-plugin-common';
+import autoBind from 'auto-bind';
+import {
+  EnumTypeDefinitionNode,
   FieldDefinitionNode,
+  GraphQLSchema,
   ListTypeNode,
   NamedTypeNode,
   NonNullTypeNode,
-  GraphQLSchema,
-  EnumTypeDefinitionNode,
 } from 'graphql';
-import autoBind from 'auto-bind';
-import {
-  ParsedResolversConfig,
-  BaseResolversVisitor,
-  getConfigValue,
-  DeclarationKind,
-} from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
+import { TypeScriptResolversPluginConfig } from './config.js';
 
 export const ENUM_RESOLVERS_SIGNATURE =
   'export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };';

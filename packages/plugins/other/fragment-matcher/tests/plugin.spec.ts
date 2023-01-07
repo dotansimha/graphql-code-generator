@@ -1,9 +1,7 @@
 import '@graphql-codegen/testing';
-
 import { codegen } from '@graphql-codegen/core';
 import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
-
 import { plugin, validate } from '../src/index.js';
 
 const schema = buildASTSchema(gql`

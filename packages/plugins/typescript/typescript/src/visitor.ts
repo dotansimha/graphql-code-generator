@@ -1,32 +1,32 @@
 import {
+  AvoidOptionalsConfig,
+  BaseTypesVisitor,
+  DeclarationBlock,
+  DeclarationKind,
+  getConfigValue,
+  indent,
+  isOneOfInputObjectType,
+  normalizeAvoidOptionals,
+  ParsedTypesConfig,
   transformComment,
   wrapWithSingleQuotes,
-  DeclarationBlock,
-  indent,
-  BaseTypesVisitor,
-  ParsedTypesConfig,
-  getConfigValue,
-  DeclarationKind,
-  normalizeAvoidOptionals,
-  AvoidOptionalsConfig,
-  isOneOfInputObjectType,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptPluginConfig } from './config.js';
 import autoBind from 'auto-bind';
 import {
-  FieldDefinitionNode,
-  NamedTypeNode,
-  ListTypeNode,
-  NonNullTypeNode,
   EnumTypeDefinitionNode,
-  Kind,
-  InputValueDefinitionNode,
-  GraphQLSchema,
-  isEnumType,
-  UnionTypeDefinitionNode,
+  FieldDefinitionNode,
   GraphQLObjectType,
+  GraphQLSchema,
+  InputValueDefinitionNode,
+  isEnumType,
+  Kind,
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
   TypeDefinitionNode,
+  UnionTypeDefinitionNode,
 } from 'graphql';
+import { TypeScriptPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object.js';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {

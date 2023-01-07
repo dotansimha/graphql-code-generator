@@ -1,14 +1,14 @@
-import { parseMapper } from '@graphql-codegen/visitor-plugin-common';
 import {
-  Types,
-  PluginFunction,
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
   oldVisit,
+  PluginFunction,
+  Types,
 } from '@graphql-codegen/plugin-helpers';
+import { parseMapper } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema } from 'graphql';
-import { TypeScriptResolversVisitor } from './visitor.js';
 import { TypeScriptResolversPluginConfig } from './config.js';
+import { TypeScriptResolversVisitor } from './visitor.js';
 
 const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 

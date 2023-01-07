@@ -1,22 +1,22 @@
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
+import { basename, extname } from 'path';
+import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
+import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import autoBind from 'auto-bind';
+import { pascalCase } from 'change-case-all';
+import { DepGraph } from 'dependency-graph';
 import {
   FragmentDefinitionNode,
-  print,
-  OperationDefinitionNode,
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
+  OperationDefinitionNode,
+  print,
 } from 'graphql';
-import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue, buildScalarsFromConfig } from './utils.js';
-import { LoadedFragment, ParsedImport } from './types.js';
-import { basename, extname } from 'path';
-import { pascalCase } from 'change-case-all';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import { generateFragmentImportStatement } from './imports.js';
-import { optimizeDocumentNode } from '@graphql-tools/optimize';
+import { LoadedFragment, ParsedImport } from './types.js';
+import { buildScalarsFromConfig, getConfigValue } from './utils.js';
 
 gqlTag.enableExperimentalFragmentVariables();
 

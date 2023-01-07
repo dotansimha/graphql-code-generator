@@ -1,4 +1,4 @@
-import { RawTypesConfig, AvoidOptionalsConfig } from '@graphql-codegen/visitor-plugin-common';
+import { AvoidOptionalsConfig, RawTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates the base TypeScript types, based on your GraphQL schema.

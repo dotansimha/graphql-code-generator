@@ -1,25 +1,23 @@
-import {
-  Types,
-  CodegenPlugin,
-  normalizeOutputParam,
-  normalizeInstanceOrArray,
-  normalizeConfig,
-  getCachedDocumentNodeFromSchema,
-} from '@graphql-codegen/plugin-helpers';
+import fs from 'fs';
+import { createRequire } from 'module';
+import { cpus } from 'os';
+import path from 'path';
 import { codegen } from '@graphql-codegen/core';
-
+import {
+  CodegenPlugin,
+  getCachedDocumentNodeFromSchema,
+  normalizeConfig,
+  normalizeInstanceOrArray,
+  normalizeOutputParam,
+  Types,
+} from '@graphql-codegen/plugin-helpers';
 import { AggregateError } from '@graphql-tools/utils';
-
-import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
+import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
+import { Listr, ListrTask } from 'listr2';
+import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
-import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
-import fs from 'fs';
-import path from 'path';
-import { cpus } from 'os';
-import { createRequire } from 'module';
-import { Listr, ListrTask } from 'listr2';
 
 /**
  * Poor mans ESM detection.
