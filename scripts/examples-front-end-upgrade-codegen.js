@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-const { writeFileSync } = require('fs');
-const { resolve } = require('path');
-const { argv, cwd } = require('process');
-const { exec } = require('child_process');
+const { writeFileSync } = require('node:fs');
+const { resolve } = require('node:path');
+const { argv, cwd } = require('node:process');
+const { exec } = require('node:child_process');
 
 // Usage: node ./scripts/examples-front-end-upgrade-codegen.js 2.12.0-alpha-20220830143058-6693f3074 1.0.1-alpha-20220830093424-2a4853976
 

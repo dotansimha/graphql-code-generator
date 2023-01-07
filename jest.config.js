@@ -1,5 +1,5 @@
 const PROJECTS = false;
-const CI = !!process.env.CI;
+const CI = Boolean(process.env.CI);
 
 module.exports =
   !PROJECTS || CI

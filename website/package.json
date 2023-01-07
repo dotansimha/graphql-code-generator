@@ -7,7 +7,6 @@
     "start": "next start",
     "build": "yarn generate-json-config && next build && next-sitemap --config next-sitemap.config.cjs && next export",
     "dev": "next",
-    "lint": "eslint --ignore-path .gitignore --ext js,jsx,cjs,mjs,ts,tsx,cts,mts .",
     "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
   },
   "devDependencies": {
@@ -17,7 +16,6 @@
     "@types/jsonpath": "0.2.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.21",
-    "eslint-config-next": "13.0.5",
     "fast-xml-parser": "4.0.10",
     "jsonpath": "1.1.1",
     "prettier-plugin-tailwindcss": "0.2.0"

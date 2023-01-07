@@ -803,7 +803,8 @@ export class BaseTypesVisitor<
         this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile),
         `import ${typeIdentifier} = ${sourceIdentifier};`,
       ];
-    } else if (sourceIdentifier !== typeIdentifier) {
+    }
+    if (sourceIdentifier !== typeIdentifier) {
       return [this._buildTypeImport(`${sourceIdentifier} as ${typeIdentifier}`, sourceFile)];
     }
     return [this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile)];
@@ -964,7 +965,7 @@ export class BaseTypesVisitor<
         return null;
       })
       .reverse()
-      .find(a => !!a);
+      .find(a => Boolean(a));
 
     return type || null;
   }

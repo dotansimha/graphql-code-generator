@@ -253,7 +253,7 @@ export class ClientSideBaseVisitor<
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       documentNodeImport: rawConfig.documentNodeImport || null,
-      noExport: !!rawConfig.noExport,
+      noExport: Boolean(rawConfig.noExport),
       importOperationTypesFrom: getConfigValue(rawConfig.importOperationTypesFrom, null),
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       documentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
@@ -336,7 +336,7 @@ export class ClientSideBaseVisitor<
       if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
         return '';
       }
-      return `${fragments.map(name => '${' + name + '}').join('\n')}`;
+      return String(fragments.map(name => '${' + name + '}').join('\n'));
     }
 
     return '';

@@ -104,7 +104,7 @@ export function validateTs(
         errors.push(`${line + 1},${character + 1}: ${message} ->
     ${contents.split('\n')[line]}`);
       } else {
-        errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
       }
     });
   } else {
@@ -126,7 +126,7 @@ export function validateTs(
           errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
         } else {
-          errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+          errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
         }
       });
     }
@@ -223,7 +223,7 @@ export function compileTs(
         errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
       } else {
-        errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
       }
     });
 

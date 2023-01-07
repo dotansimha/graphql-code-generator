@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import path from 'node:path';
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import * as TJS from 'typescript-json-schema';
-import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
 import { generateDocs } from './docs-generator';
+import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
 
 const tsConfig = JSON.parse(readFileSync(path.join(process.cwd(), 'tsconfig.json'), 'utf8'));
 

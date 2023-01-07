@@ -3,11 +3,7 @@ import { resolve } from 'path';
 import { Tags } from './types.js';
 
 export async function guessTargets(): Promise<Record<Tags, boolean>> {
-  const pkg = JSON.parse(
-    readFileSync(resolve(process.cwd(), 'package.json'), {
-      encoding: 'utf-8',
-    })
-  );
+  const pkg = JSON.parse(readFileSync(resolve(process.cwd(), 'package.json'), 'utf8'));
   const dependencies = Object.keys({
     ...pkg.dependencies,
     ...pkg.devDependencies,

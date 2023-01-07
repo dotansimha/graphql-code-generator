@@ -1,9 +1,8 @@
-import { ReactElement, useEffect, useState } from 'react';
-
-import Editor from './Editor';
 import { basename } from 'path';
-import classes from './styles.module.css';
+import { ReactElement, useEffect, useState } from 'react';
 import classnames from 'classnames';
+import Editor from './Editor';
+import classes from './styles.module.css';
 
 const CodegenOutput = ({ outputArray, editorProps, error }): ReactElement => {
   const [index, setIndex] = useState(0);

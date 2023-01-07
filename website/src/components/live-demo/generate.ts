@@ -1,9 +1,9 @@
-import { load } from 'js-yaml';
 import { codegen } from '@graphql-codegen/core';
 import { parse } from 'graphql';
+import { load } from 'js-yaml';
+import { canUseDOM } from '@/utils';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';
 import { normalizeConfig } from './utils';
-import { canUseDOM } from '@/utils';
 
 if (canUseDOM) {
   process.hrtime = () => [0, 0]; // Fix error - TypeError: process.hrtime is not a function

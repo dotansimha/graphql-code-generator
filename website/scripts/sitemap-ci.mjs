@@ -1,6 +1,6 @@
-import { XMLParser } from 'fast-xml-parser';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { XMLParser } from 'fast-xml-parser';
 import config from '../next.config.mjs';
 
 const parser = new XMLParser();

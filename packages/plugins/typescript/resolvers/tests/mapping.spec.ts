@@ -1,4 +1,3 @@
-import '@graphql-codegen/testing';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { resolversTestingSchema, resolversTestingValidate } from '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';

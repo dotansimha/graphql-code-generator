@@ -159,7 +159,7 @@ export const plugin: PluginFunction = async (
 
   const filterUnionAndInterfaceTypes = type => type.kind === 'UNION' || type.kind === 'INTERFACE';
   const createPossibleTypesCollection = (acc, type) => {
-    return { ...acc, ...{ [type.name]: type.possibleTypes.map(possibleType => possibleType.name) } };
+    return { ...acc, [type.name]: type.possibleTypes.map(possibleType => possibleType.name) };
   };
 
   const filteredData: IntrospectionResultData | PossibleTypesResultData =

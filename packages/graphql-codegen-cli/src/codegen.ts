@@ -197,7 +197,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         task: (ctx, task) => {
           const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
             const outputConfig = generates[filename];
-            const hasPreset = !!outputConfig.preset;
+            const hasPreset = Boolean(outputConfig.preset);
 
             const title = `Generate to ${filename}`;
 
@@ -217,10 +217,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                     : outputConfig.preset
                   : null;
 
-                if (preset) {
-                  if (preset.prepareDocuments) {
-                    outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
-                  }
+                if (preset && preset.prepareDocuments) {
+                  outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
                 }
 
                 return subTask.newListr(
@@ -352,10 +350,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                           const process = async (outputArgs: Types.GenerateOptions) => {
                             const output = await codegen({
-                              ...{
-                                ...outputArgs,
-                                emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
-                              },
+                              ...outputArgs,
+                              // @ts-expect-error todo: fix 'emitLegacyCommonJSImports' does not exist in type 'GenerateOptions'
+                              emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
                               cache,
                             });
                             result.push({
@@ -411,7 +408,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
   if (executedContext.errors.length > 0) {
     const errors = executedContext.errors.map(subErr => subErr.message || subErr.toString());
-    const newErr = new AggregateError(executedContext.errors, `${errors.join('\n\n')}`);
+    const newErr = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
     // Best-effort to all stack traces for debugging
     newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
     throw newErr;

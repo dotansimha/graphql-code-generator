@@ -1,4 +1,3 @@
-import '@graphql-codegen/testing';
 import * as fs from 'fs';
 import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';

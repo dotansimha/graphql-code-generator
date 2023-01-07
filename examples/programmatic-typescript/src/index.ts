@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { promises } from 'fs';
+import { promises } from 'node:fs';
 import { codegen } from '@graphql-codegen/core';
 import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNode from '@graphql-codegen/typed-document-node';
@@ -76,9 +76,7 @@ const schema = makeExecutableSchema({
       ...(await prettier.resolveConfig(process.cwd())),
       parser: 'typescript',
     }),
-    {
-      encoding: 'utf-8',
-    }
+    'utf8'
   );
   console.log('done generating.');
 })().catch(err => {

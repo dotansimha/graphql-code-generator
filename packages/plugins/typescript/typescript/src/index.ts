@@ -17,10 +17,10 @@ import { TypeScriptPluginConfig } from './config.js';
 import { TsIntrospectionVisitor } from './introspection-visitor.js';
 import { TsVisitor } from './visitor.js';
 
-export * from './typescript-variables-to-object.js';
-export * from './visitor.js';
 export * from './config.js';
 export * from './introspection-visitor.js';
+export * from './typescript-variables-to-object.js';
+export * from './visitor.js';
 
 export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,

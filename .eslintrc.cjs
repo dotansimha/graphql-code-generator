@@ -3,18 +3,13 @@ module.exports = {
   extends: ['@theguild'],
   rules: {
     'no-empty': 'off',
-    'no-console': 'error',
     'no-prototype-builtins': 'off',
     'no-useless-constructor': 'off',
-    'no-unused-vars': 'off',
-    'object-shorthand': ['error', 'always'],
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-namespace': 'off',
-    'no-unreachable-loop': 'error',
     '@typescript-eslint/no-empty-interface': 'off',
-    'prefer-arrow-callback': 'error',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -22,29 +17,17 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/ban-types': 'off',
-    'no-lonely-if': 'error',
     'import/no-extraneous-dependencies': [
       'error',
       { devDependencies: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts'] },
     ],
 
     // todo: enable
-    'unicorn/prefer-node-protocol': 'off',
-    'no-restricted-syntax': 'off',
     'unicorn/filename-case': 'off',
     'import/extensions': 'off',
-    'no-implicit-coercion': 'off',
-    'unicorn/numeric-separators-style': 'off',
     'import/no-default-export': 'off',
-    'unicorn/no-lonely-if': 'off',
-    'unicorn/no-useless-spread': 'off',
-    'simple-import-sort/exports': 'off',
-    'unicorn/no-array-push-push': 'off',
-    'no-else-return': 'off',
-    'no-undef': 'off',
-    'import/first': 'off',
-    'n/no-restricted-import': 'off',
-    'import/no-duplicates': 'off',
+    // todo: enable in v3
+    'unicorn/prefer-node-protocol': 'off',
   },
   env: {
     es6: true,
@@ -52,16 +35,19 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/tests/**/*.ts', '**/graphql-codegen-testing/**/*.ts', '*.spec.ts'],
+      files: ['website/**'],
+      extends: '@theguild/eslint-config/react',
+    },
+    {
+      files: ['**/tests/**/*.{js,ts,tsx}', '**/graphql-codegen-testing/**/*.ts', '*.spec.ts'],
       env: {
         jest: true,
       },
       rules: {
-        'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         'import/no-extraneous-dependencies': 'off',
       },
     },
   ],
-  ignorePatterns: ['dist', 'node_modules', 'dev-test', 'website', 'test-files', 'examples/front-end', '.bob'],
+  ignorePatterns: ['dev-test', 'examples/front-end', 'website'],
 };

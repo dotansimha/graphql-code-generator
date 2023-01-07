@@ -60,9 +60,7 @@ export default config;
   } else {
     content = ext === 'json' ? JSON.stringify(config) : YAML.stringify(config);
   }
-  writeFileSync(fullPath, content, {
-    encoding: 'utf-8',
-  });
+  writeFileSync(fullPath, content, 'utf8');
 
   return {
     relativePath,
@@ -74,9 +72,7 @@ export default config;
 export async function writePackage(answers: Answers, configLocation: string) {
   // script
   const pkgPath = resolve(process.cwd(), 'package.json');
-  const pkgContent = readFileSync(pkgPath, {
-    encoding: 'utf-8',
-  });
+  const pkgContent = readFileSync(pkgPath, 'utf8');
   const pkg = JSON.parse(pkgContent);
   const { indent } = detectIndent(pkgContent);
 
