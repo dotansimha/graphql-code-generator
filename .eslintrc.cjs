@@ -23,12 +23,10 @@ module.exports = {
     ],
 
     // todo: enable
-    'unicorn/prefer-node-protocol': 'off',
     'no-restricted-syntax': 'off',
     'unicorn/filename-case': 'off',
     'import/extensions': 'off',
     'import/no-default-export': 'off',
-    'no-undef': 'off',
     'n/no-restricted-import': 'off',
   },
   env: {
@@ -39,6 +37,11 @@ module.exports = {
     {
       files: ['website/**'],
       extends: '@theguild/eslint-config/react',
+    },
+    {
+      files: ['packages/**'],
+      // todo: enable in v3
+      rules: { 'unicorn/prefer-node-protocol': 'off' },
     },
     {
       files: [

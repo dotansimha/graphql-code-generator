@@ -1,4 +1,4 @@
-const { resolve } = require('path');
+const { resolve } = require('node:path');
 // eslint-disable-next-line import/no-extraneous-dependencies -- false positive
 const { pathsToModuleNameMapper } = require('ts-jest');
 

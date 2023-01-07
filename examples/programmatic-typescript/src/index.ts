@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { promises } from 'fs';
+import { promises } from 'node:fs';
 import { codegen } from '@graphql-codegen/core';
 import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNode from '@graphql-codegen/typed-document-node';
