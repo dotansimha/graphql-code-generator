@@ -58,7 +58,7 @@ export const plugin: PluginFunction<{
         ' * ```\n *\n',
         ` * The query argument is unknown!\n`,
         ` * Please regenerate the types.\n`,
-        `**/\n`,
+        ` */\n`,
         `export function ${gqlTagName}(source: string): unknown;\n`,
         `\n`,
       ].join('')

@@ -184,7 +184,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         plugins: [
           {
             [`add`]: {
-              content: reexports.map(moduleName => `export * from "./${moduleName}${reexportsExtension}"`).join('\n'),
+              content: reexports.map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`).join('\n'),
             },
           },
         ],

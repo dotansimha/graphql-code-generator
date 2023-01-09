@@ -29,8 +29,8 @@ describe('client-preset', () => {
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./gql"
-export * from "./fragment-masking"`);
+    expect(indexFile.content).toEqual(`export * from "./gql";
+export * from "./fragment-masking";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -66,7 +66,7 @@ export * from "./fragment-masking"`);
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function graphql(source: string): unknown;
 
       /**
@@ -117,8 +117,8 @@ export * from "./fragment-masking"`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./gql"
-export * from "./fragment-masking"`);
+    expect(indexFile.content).toEqual(`export * from "./gql";
+export * from "./fragment-masking";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -154,7 +154,7 @@ export * from "./fragment-masking"`);
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function graphql(source: string): unknown;
 
       /**
@@ -234,7 +234,7 @@ export * from "./fragment-masking"`);
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function graphql(source: string): unknown;
 
       /**
@@ -315,7 +315,7 @@ export * from "./fragment-masking"`);
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function graphql(source: string): unknown;
 
       /**
@@ -444,7 +444,7 @@ export * from "./fragment-masking"`);
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function graphql(source: string): unknown;
 
       /**
@@ -564,7 +564,7 @@ export * from "./fragment-masking"`);
      *
      * The query argument is unknown!
      * Please regenerate the types.
-    **/
+     */
     export function graphql(source: string): unknown;
 
     /**
@@ -644,7 +644,7 @@ export * from "./fragment-masking"`);
       expect(fileNames).toContain('out1/graphql.ts');
 
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toMatchInlineSnapshot(`"export * from "./gql""`);
+      expect(indexFile.content).toMatchInlineSnapshot(`"export * from "./gql";"`);
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
@@ -678,7 +678,7 @@ export * from "./fragment-masking"`);
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function graphql(source: string): unknown;
 
       /**
@@ -789,12 +789,12 @@ export * from "./fragment-masking"`);
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-        ): ReadonlyArray<TType> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined;
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
         ): TType | ReadonlyArray<TType> | null | undefined {
-          return fragmentType as any
+          return fragmentType as any;
         }
 
 
@@ -828,14 +828,14 @@ export * from "./fragment-masking"`);
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-      ): ReadonlyArray<TType> | null | undefined
+      ): ReadonlyArray<TType> | null | undefined;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
       ): TType | ReadonlyArray<TType> | null | undefined {
-        return fragmentType as any
+        return fragmentType as any;
       }
       `);
     });
@@ -945,8 +945,8 @@ export * from "./fragment-masking"`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./gql.js"
-export * from "./fragment-masking.js"`);
+    expect(indexFile.content).toEqual(`export * from "./gql.js";
+export * from "./fragment-masking.js";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -982,7 +982,7 @@ export * from "./fragment-masking.js"`);
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function graphql(source: string): unknown;
 
       /**
@@ -1034,8 +1034,8 @@ export * from "./fragment-masking.js"`);
       expect(result).toHaveLength(4);
       // index.ts (re-exports)
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./gql.js"
-export * from "./fragment-masking.js"`);
+      expect(indexFile.content).toEqual(`export * from "./gql.js";
+export * from "./fragment-masking.js";`);
 
       // gql.ts
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -1056,7 +1056,7 @@ export * from "./fragment-masking.js"`);
          *
          * The query argument is unknown!
          * Please regenerate the types.
-        **/
+         */
         export function graphql(source: string): unknown;
 
         export function graphql(source: string) {

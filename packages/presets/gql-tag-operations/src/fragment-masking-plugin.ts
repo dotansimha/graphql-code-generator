@@ -51,9 +51,10 @@ const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskF
 ];
 
 const createUnmaskFunction = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-${createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join(';\n')}
-${createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'with-list' })} {
-  return fragmentType as any
+${createUnmaskFunctionTypeDefinitions(unmaskFunctionName)
+  .concat(createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'with-list' }))
+  .join(';\n')} {
+  return fragmentType as any;
 }
 `;
 
