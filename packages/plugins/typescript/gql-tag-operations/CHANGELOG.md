@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations
 
+## 1.6.1
+
+### Patch Changes
+
+- [#8796](https://github.com/dotansimha/graphql-code-generator/pull/8796) [`902451601`](https://github.com/dotansimha/graphql-code-generator/commit/902451601b5edf9cb7768e57f332fe6ade79c20a) Thanks [@shmax](https://github.com/shmax)! - remove extra asterisk and add missing semicolon in generated output
+
 ## 1.6.0
 
 ### Minor Changes

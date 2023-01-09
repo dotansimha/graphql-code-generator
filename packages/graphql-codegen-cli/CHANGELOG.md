@@ -1,5 +1,16 @@
 # @graphql-codegen/cli
 
+## 2.16.4
+
+### Patch Changes
+
+- [#8770](https://github.com/dotansimha/graphql-code-generator/pull/8770) [`4774247e9`](https://github.com/dotansimha/graphql-code-generator/commit/4774247e9d29838075660d0e08c6b3c6ea57689f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@4.4.0` ↗︎](https://www.npmjs.com/package/graphql-config/v/4.4.0) (from `4.3.6`, in `dependencies`)
+
+- [#8790](https://github.com/dotansimha/graphql-code-generator/pull/8790) [`fe12b4826`](https://github.com/dotansimha/graphql-code-generator/commit/fe12b4826d666ef69c38cd72bdd44f1bb262caf6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/fetch@^0.6.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.0) (from `^0.5.0`, in `dependencies`)
+
 ## 2.16.3
 
 ### Patch Changes
