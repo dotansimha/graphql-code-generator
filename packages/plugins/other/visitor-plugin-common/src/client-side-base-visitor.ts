@@ -1,5 +1,6 @@
 import { basename, extname } from 'path';
 import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
+import { printExecutableGraphQLDocument } from '@graphql-tools/documents';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
@@ -14,7 +15,6 @@ import {
   print,
   DefinitionNode,
   visit,
-  DocumentNode,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
@@ -33,8 +33,6 @@ export enum DocumentMode {
 }
 
 const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
-
-const stablePrintDocumentNode = (documentNode: DocumentNode): string => print(documentNode).replace(/\s+/g, ' ');
 
 export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
@@ -373,6 +371,7 @@ export class ClientSideBaseVisitor<
 
     for (const fragment of fragmentNames) {
       const fragmentRecord = this._fragments.find(
+        // TODO: this is very ugly :)
         f => f.name === fragment.substring(0, fragment.length - 'FragmentDoc'.length)
       );
       if (fragmentRecord) {
@@ -402,7 +401,7 @@ export class ClientSideBaseVisitor<
       }
     );
 
-    const operation = stablePrintDocumentNode(sanitizedDocument);
+    const operation = printExecutableGraphQLDocument(sanitizedDocument);
     const shasum = crypto.createHash('sha1');
     shasum.update(operation);
     const hash = shasum.digest('hex');
