@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { basename, extname } from 'path';
 import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
 import { printExecutableGraphQLDocument } from '@graphql-tools/documents';
@@ -5,15 +6,14 @@ import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
 import { DepGraph } from 'dependency-graph';
-import * as crypto from 'node:crypto';
 import {
+  DefinitionNode,
   FragmentDefinitionNode,
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
   OperationDefinitionNode,
   print,
-  DefinitionNode,
   visit,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
