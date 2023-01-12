@@ -1863,10 +1863,10 @@
     change-case-all "1.0.14"
     tslib "~2.4.0"
 
-"@graphql-codegen/near-operation-file-preset@2.4.4":
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/near-operation-file-preset/-/near-operation-file-preset-2.4.4.tgz#1ac2f143d6f10f9ce9abf552853e5d0645fe16c5"
-  integrity sha512-aDc0IM7cjDXx0yDJwRKIVb3PNM5oZEYnM52WwlXmkAP8+mGi3YpcfuwP69fAccA3Ua5/UYMDtS2y86B3GjfVNA==
+"@graphql-codegen/near-operation-file-preset@2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/near-operation-file-preset/-/near-operation-file-preset-2.5.0.tgz#987d9bb8d0101e944b9afc406b77d098a4c1e978"
+  integrity sha512-S9PNJP5tTkUWBQ6inbviOsTREzsMxYVqJGrtPcIdMWkKLZAAItAfAb60klB1T64vt6Oru+nUf8IYUNrchJ8MYg==
   dependencies:
     "@graphql-codegen/add" "^3.2.1"
     "@graphql-codegen/plugin-helpers" "^2.7.2"

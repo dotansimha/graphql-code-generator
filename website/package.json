@@ -37,7 +37,7 @@
     "@graphql-codegen/java-resolvers": "2.3.6",
     "@graphql-codegen/kotlin": "2.3.6",
     "@graphql-codegen/jsdoc": "2.3.6",
-    "@graphql-codegen/near-operation-file-preset": "2.4.4",
+    "@graphql-codegen/near-operation-file-preset": "2.5.0",
     "@graphql-codegen/schema-ast": "2.6.1",
     "@graphql-codegen/time": "3.2.3",
     "@graphql-codegen/typed-document-node": "2.3.12",
