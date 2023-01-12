@@ -91,6 +91,7 @@ export default withGuildDocs({
       '/docs/custom-codegen/using-handlebars': '/docs/custom-codegen',
       '/plugins/presets/near-operation-file': '/plugins/presets/near-operation-file-preset',
       '/plugins/typescript/near-operation-file': '/plugins/presets/near-operation-file-preset',
+      '/typescript/typescript-resolvers': '/plugins/typescript/typescript-resolvers'
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({
