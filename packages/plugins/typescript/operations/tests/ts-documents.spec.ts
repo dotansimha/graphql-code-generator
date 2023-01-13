@@ -5945,6 +5945,54 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toMatchSnapshot();
     });
+
+    it('#8793 selecting __typename should not be optional', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Animal {
+          name: String!
+        }
+        type Bat implements Animal {
+          name: String!
+          features: BatFeatures!
+        }
+        type BatFeatures {
+          color: String!
+          wingspan: Int!
+        }
+        type Snake implements Animal {
+          name: String!
+          features: SnakeFeatures!
+        }
+        type SnakeFeatures {
+          color: String!
+          length: Int!
+        }
+        type Error {
+          message: String!
+        }
+        union SnakeResult = Snake | Error
+        type Query {
+          snake: SnakeResult!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SnakeQuery {
+          __typename
+          snake {
+            __typename
+          }
+        }
+      `);
+
+      const config = { preResolveTypes: true };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toMatchSnapshot();
+    });
   });
 
   describe('conditional directives handling', () => {
