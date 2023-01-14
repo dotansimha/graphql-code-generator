@@ -532,7 +532,7 @@ export class ClientSideBaseVisitor<
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
-            if (this.config.emitLegacyCommonJSImports) {
+            if (!this.config.emitLegacyCommonJSImports) {
               documentPath += '.js';
             }
 
