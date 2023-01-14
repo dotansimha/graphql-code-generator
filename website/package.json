@@ -10,7 +10,7 @@
     "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/algolia": "1.0.2",
+    "@theguild/algolia": "1.1.0",
     "@theguild/tailwind-config": "0.2.1",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
@@ -65,7 +65,7 @@
     "@graphql-codegen/hasura-allow-list": "2.0.0",
     "@graphql-codegen/urql-introspection": "2.2.1",
     "@monaco-editor/react": "4.4.6",
-    "@theguild/components": "4.4.4",
+    "@theguild/components": "4.5.0",
     "classnames": "2.3.2",
     "date-fns": "2.29.3",
     "dedent": "0.7.0",
