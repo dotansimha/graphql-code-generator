@@ -67,7 +67,7 @@ export type ClientPresetConfig = {
    * Generate metadata for a executable document node and embed it in the emitted code.
    */
   onDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
-  /** Persisted operations */
+  /** Persisted operations configuration. */
   persistedOperations?:
     | boolean
     | {
