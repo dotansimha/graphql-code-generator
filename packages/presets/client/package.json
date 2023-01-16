@@ -27,6 +27,7 @@
     "@graphql-codegen/plugin-helpers": "^3.1.2",
     "@graphql-codegen/visitor-plugin-common": "^2.13.7",
     "@graphql-typed-document-node/core": "3.1.1",
+    "@graphql-tools/documents": "0.1.0-alpha-20230109070251-4be4b310",
     "@graphql-tools/utils": "^9.0.0",
     "tslib": "~2.4.0"
   },

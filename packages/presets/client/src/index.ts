@@ -5,8 +5,10 @@ import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { DocumentNode } from 'graphql';
 import babelOptimizerPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
+import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
 
 export type FragmentMaskingConfig = {
@@ -61,6 +63,10 @@ export type ClientPresetConfig = {
    * ```
    */
   gqlTagName?: string;
+  /**
+   * Generate metadata for a executable document node and embed it in the emitted code.
+   */
+  onDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
   /** Persisted operations */
   persistedOperations?:
     | boolean
@@ -69,7 +75,7 @@ export type ClientPresetConfig = {
          * @description Behavior for the output file.
          * @default 'embedHashInDocument'
          * "embedHashInDocument" will add a property within the `DocumentNode` with the hash of the operation.
-         * "replaceDocumentWithHash" will fully replace the `DocumentNode` with the hash of the operation.
+         * "replaceDocumentWithHash" will fully drop the document definition.
          */
         mode?: 'embedHashInDocument' | 'replaceDocumentWithHash';
         /**
@@ -124,7 +130,20 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       fragmentMaskingConfig = {};
     }
 
+    const onDocumentNodeHook = options.presetConfig.onDocumentNode ?? null;
     const isMaskingFragments = fragmentMaskingConfig != null;
+
+    const persistedOperations = options.presetConfig.persistedOperations
+      ? {
+          hashPropertyName:
+            (typeof options.presetConfig.persistedOperations === 'object' &&
+              options.presetConfig.persistedOperations.hashPropertyName) ||
+            'hash',
+          omitDefinitions:
+            (typeof options.presetConfig.persistedOperations === 'object' &&
+              options.presetConfig.persistedOperations.mode) === 'replaceDocumentWithHash' || false,
+        }
+      : null;
 
     const sourcesWithOperations = processSources(options.documents, node => {
       if (node.kind === 'FragmentDefinition') {
@@ -135,7 +154,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const sources = sourcesWithOperations.map(({ source }) => source);
 
     const tdnFinished = createDeferred();
-    const persistedOperations = new Map<string, string>();
+    const persistedOperationsMap = new Map<string, string>();
 
     const pluginMap = {
       ...options.pluginMap,
@@ -155,27 +174,30 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       [`gen-dts`]: gqlTagPlugin,
     };
 
+    function onDocumentNode(documentNode: DocumentNode) {
+      const meta = onDocumentNodeHook?.(documentNode);
+      if (persistedOperations) {
+        const documentString = normalizeAndPrintDocumentNode(documentNode);
+        const hash = generateDocumentHash(documentString);
+        persistedOperationsMap.set(hash, documentString);
+        return { ...meta, [persistedOperations.hashPropertyName]: hash };
+      }
+
+      if (meta) {
+        return meta;
+      }
+
+      return undefined;
+    }
+
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
       { [`typescript`]: {} },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {
-          unstable_persistedOperations: isPersistedOperations
-            ? {
-                onPersistedOperation(hash: string, documentString: string) {
-                  persistedOperations.set(hash, documentString);
-                },
-                mode:
-                  (typeof options.presetConfig.persistedOperations === 'object' &&
-                    options.presetConfig.persistedOperations.mode) ||
-                  'embedHashInDocument',
-                hashPropertyName:
-                  (typeof options.presetConfig.persistedOperations === 'object' &&
-                    options.presetConfig.persistedOperations.hashPropertyName) ||
-                  '__hash',
-              }
-            : undefined,
+          unstable_onDocumentNode: onDocumentNode,
+          unstable_omitDefinitions: persistedOperations?.omitDefinitions ?? false,
         },
       },
       ...options.plugins,
@@ -280,7 +302,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
                   plugin: async () => {
                     await tdnFinished.promise;
                     return {
-                      content: JSON.stringify(Object.fromEntries(persistedOperations.entries()), null, 2),
+                      content: JSON.stringify(Object.fromEntries(persistedOperationsMap.entries()), null, 2),
                     };
                   },
                 },

@@ -917,6 +917,7 @@ export * from "./fragment-masking";`);
         }
         `,
       ]);
+
       validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
     });
   });
@@ -1145,8 +1146,8 @@ export * from "./fragment-masking.js";`);
         export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
-        export const ADocument = {"__hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f","kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
-        export const BDocument = {"__hash":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608","kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+        export const ADocument = {"__meta__":{"hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
 
@@ -1225,8 +1226,8 @@ export * from "./fragment-masking.js";`);
         export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {} as unknown as DocumentNode<CFragment, unknown>;
-        export const ADocument = {"__hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"} as unknown as DocumentNode<AQuery, AQueryVariables>;
-        export const BDocument = {"__hash":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+        export const ADocument = {"__meta__":{"hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"}} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"}} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
 
@@ -1305,8 +1306,8 @@ export * from "./fragment-masking.js";`);
         export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
-        export const ADocument = {"custom_property_name":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f","kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
-        export const BDocument = {"custom_property_name":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608","kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+        export const ADocument = {"__meta__":{"custom_property_name":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"custom_property_name":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
   });

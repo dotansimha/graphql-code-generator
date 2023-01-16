@@ -14,7 +14,6 @@
   "dependencies": {
     "@graphql-tools/optimize": "^1.3.0",
     "@graphql-codegen/plugin-helpers": "^3.1.2",
-    "@graphql-tools/documents": "0.1.0-alpha-20230109070251-4be4b310",
     "@graphql-tools/relay-operation-optimizer": "^6.5.0",
     "@graphql-tools/utils": "^9.0.0",
     "auto-bind": "~4.0.0",

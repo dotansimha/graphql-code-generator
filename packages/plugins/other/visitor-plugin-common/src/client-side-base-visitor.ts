@@ -1,20 +1,18 @@
-import * as crypto from 'crypto';
 import { basename, extname } from 'path';
 import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
-import { printExecutableGraphQLDocument } from '@graphql-tools/documents';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
 import { DepGraph } from 'dependency-graph';
 import {
   DefinitionNode,
+  DocumentNode,
   FragmentDefinitionNode,
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
   OperationDefinitionNode,
   print,
-  visit,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
@@ -232,14 +230,13 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   pureMagicComment?: boolean;
   optimizeDocumentNode: boolean;
   experimentalFragmentVariables?: boolean;
-  unstable_persistedOperations?: Unstable_PersistedOperationsConfig;
+  unstable_onDocumentNode?: Unstable_OnDocumentNode;
+  unstable_omitDefinitions?: boolean;
 }
 
-type Unstable_PersistedOperationsConfig = {
-  onPersistedOperation: (hash: string, documentString: string) => void;
-  mode: 'embedHashInDocument' | 'replaceDocumentWithHash';
-  hashPropertyName: string;
-};
+type DocumentNodeMeta = Record<string, unknown>;
+
+type Unstable_OnDocumentNode = (documentNode: DocumentNode) => void | DocumentNodeMeta;
 
 export class ClientSideBaseVisitor<
   TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig,
@@ -250,7 +247,8 @@ export class ClientSideBaseVisitor<
   protected _additionalImports: string[] = [];
   protected _imports = new Set<string>();
 
-  private _persistedOperations?: Unstable_PersistedOperationsConfig;
+  private _onDocumentNode?: Unstable_OnDocumentNode;
+  private _omitDefinitions?: boolean;
 
   constructor(
     protected _schema: GraphQLSchema,
@@ -285,7 +283,8 @@ export class ClientSideBaseVisitor<
       ...additionalConfig,
     } as any);
     this._documents = documents;
-    this._persistedOperations = (rawConfig as any).unstable_persistedOperations;
+    this._onDocumentNode = (rawConfig as any).unstable_onDocumentNode;
+    this._omitDefinitions = (rawConfig as any).unstable_omitDefinitions;
     autoBind(this);
   }
 
@@ -358,10 +357,10 @@ export class ClientSideBaseVisitor<
     return documentStr;
   }
 
-  private _generateDocumentNodeHash(
+  private _generateDocumentNodeMeta(
     definitions: ReadonlyArray<DefinitionNode>,
     fragmentNames: Array<string>
-  ): string | undefined {
+  ): DocumentNodeMeta | void {
     // If the document does not contain any executable operation, we don't need to hash it
     if (definitions.every(def => def.kind !== Kind.OPERATION_DEFINITION)) {
       return undefined;
@@ -378,37 +377,10 @@ export class ClientSideBaseVisitor<
         allDefinitions.push(fragmentRecord.node);
       }
     }
-    /**
-     * This removes all client specific directives/fields from the document
-     * that the server does not know about.
-     * In a future version this should be more configurable.
-     * If you look at this and want to customize it.
-     * Send a PR :)
-     */
-    const sanitizedDocument = visit(
-      { kind: Kind.DOCUMENT, definitions: allDefinitions },
-      {
-        [Kind.FIELD](field) {
-          if (field.directives?.some(directive => directive.name.value === 'client')) {
-            return null;
-          }
-        },
-        [Kind.DIRECTIVE](directive) {
-          if (directive.name.value === 'connection') {
-            return null;
-          }
-        },
-      }
-    );
 
-    const operation = printExecutableGraphQLDocument(sanitizedDocument);
-    const shasum = crypto.createHash('sha1');
-    shasum.update(operation);
-    const hash = shasum.digest('hex');
+    const documentNode: DocumentNode = { kind: Kind.DOCUMENT, definitions: allDefinitions };
 
-    this._persistedOperations.onPersistedOperation(hash, operation);
-
-    return hash;
+    return this._onDocumentNode(documentNode);
   }
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
@@ -442,27 +414,32 @@ export class ClientSideBaseVisitor<
 
         let hashPropertyStr = '';
 
-        if (this._persistedOperations) {
-          const hash = this._generateDocumentNodeHash(gqlObj.definitions, fragments);
-          hashPropertyStr = `${this._persistedOperations.hashPropertyName}": "${hash}", `;
-          if (this._persistedOperations.mode === 'replaceDocumentWithHash') {
-            return `{${hashPropertyStr}}`;
+        if (this._onDocumentNode) {
+          const meta = this._generateDocumentNodeMeta(gqlObj.definitions, fragments);
+          if (meta) {
+            hashPropertyStr = `"__meta__": ${JSON.stringify(meta)}, `;
+            if (this._omitDefinitions === true) {
+              return `{${hashPropertyStr}}`;
+            }
           }
         }
 
         return `{${hashPropertyStr}"kind":"${Kind.DOCUMENT}", "definitions":[${definitions}]}`;
       }
 
-      let hash: string | undefined;
+      let meta: DocumentNodeMeta | void;
 
-      if (this._persistedOperations) {
-        hash = this._generateDocumentNodeHash(gqlObj.definitions, fragments);
+      if (this._onDocumentNode) {
+        meta = this._generateDocumentNodeMeta(gqlObj.definitions, fragments);
+        const metaNodePartial = { ['__meta__']: meta };
 
-        if (this._persistedOperations.mode === 'replaceDocumentWithHash') {
-          return JSON.stringify({ [this._persistedOperations.hashPropertyName]: hash });
+        if (this._omitDefinitions === true) {
+          return JSON.stringify(metaNodePartial);
         }
 
-        return JSON.stringify({ [this._persistedOperations.hashPropertyName]: hash, ...gqlObj });
+        if (meta) {
+          return JSON.stringify({ ...metaNodePartial, ...gqlObj });
+        }
       }
 
       return JSON.stringify(gqlObj);
