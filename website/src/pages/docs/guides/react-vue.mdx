@@ -516,21 +516,60 @@ The `client` preset allows the following `config` options:
 
 ## Appendix I: React Query with a custom fetcher setup
 
-The use of `@tanstack/react-query` along with `graphql-request@^5` is highly recommended due to GraphQL Code Generator integration with `graphql-request@^5`:
+The use of `@tanstack/react-query` along with `graphql-request@^5` is highly recommended due to GraphQL Code Generator integration with `graphql-request@^5`.
 
-```ts
-// `data` is properly typed, inferred from `allFilmsWithVariablesQueryDocument` type
-const { data } = useQuery(['films'], async () =>
-  request(
-    'https://swapi-graphql.netlify.app/.netlify/functions/index',
+Create a file with the following helper function within your project:
+
+```ts filename="useGraphQL helper function"
+import request from 'graphql-request'
+import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { useQuery, type UseQueryResult } from '@tanstack/react-query'
+
+export function useGraphQL<TResult, TVariables>(
+  document: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): UseQueryResult<TResult> {
+  return useQuery([(document.definitions[0] as any).name.value, variables], async ({ queryKey }) =>
+    request(
+      'https://swapi-graphql.netlify.app/.netlify/functions/index',
+      document,
+      queryKey[1] ? queryKey[1] : undefined
+    )
+  )
+}
+```
+
+Then write type-safe code like the following:
+
+```ts filename="Application Code"
+import { useGraphQL } from './use-graphql.js'
+import { gql } from './generated/grahql.js'
+
+const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          title
+        }
+      }
+    }
+  }
+`)
+
+function App() {
+  // `data` is properly typed, inferred from `allFilmsWithVariablesQueryDocument` type
+  const { data } = useGraphQL(
     allFilmsWithVariablesQueryDocument,
     // variables are also properly type-checked.
     { first: 10 }
   )
-)
+
+  // ... further component code
+}
 ```
 
-In order to infer the result type from a given GraphQL document, we added to `graphql-request@^5` the support for `TypedDocumentNode` documents, an enhanced version of `graphql`'s `DocumentNode` type.
+In case you do not want to use `graphql-request` with `@tanstack/react-query`, you can write and type your own custom fetcher function.
 
 GraphQL Code Generator, via the `client` preset, generates GraphQL documents similar to the following:
 
@@ -546,23 +585,73 @@ A `TypedDocumentNode<R, V>` type carry 2 Generic arguments: the type of the Grap
 
 To implement your own React Query fetcher while preserving the GraphQL document type inference, it should implement a function signature that extract the result type and use it as a return type, as showcased below:
 
-```ts
-const query: TypedDocumentNode<{ greetings: string }, never | Record<any, never>> = parse(/* GraphQL */ `
-  query greetings {
-    greetings
+```ts filename="Custom fetcher function and useGraphQL hook implementation"
+import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { useQuery, type UseQueryResult } from '@tanstack/react-query'
+import { print, type ExecutionResult } from 'graphql'
+
+/** Your custom fetcher function */
+async function customFetcher<TResult, TVariables>(
+  url: string,
+  document: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): Promise<TResult> {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: print(document),
+      variables
+    })
+  })
+  if (response.status !== 200) {
+    throw new Error(`Failed to fetch: ${response.statusText}. Body: ${await response.text()}`)
+  }
+
+  return await response.json()
+}
+
+export function useGraphQL<TResult, TVariables>(
+  document: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): UseQueryResult<ExecutionResult<TResult>> {
+  return useQuery([(document.definitions[0] as any).name.value, variables], () =>
+    customFetcher('https://swapi-graphql.netlify.app/.netlify/functions/index', document, variables)
+  )
+}
+```
+
+Then write type-safe code like the following:
+
+```ts filename="Application Code"
+import { useGraphQL } from './use-graphql.js'
+import { gql } from './generated/grahql.js'
+
+const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          title
+        }
+      }
+    }
   }
 `)
 
-const myFetcher = <D, V>(document: TypedDocumentNode<D, V>): D => {
-  // ... parses the document and fetches the data ...
+function App() {
+  // `data` is properly typed, inferred from `allFilmsWithVariablesQueryDocument` type
+  const { data } = useGraphQL(
+    allFilmsWithVariablesQueryDocument,
+    // variables are also properly type-checked.
+    { first: 10 }
+  )
+
+  // ... further component code
 }
-
-const { data } = useQuery(['greetings'], () => myFetcher(query))
 ```
-
-The type-checking on variables arguments can be added to your custom React Query fetcher by following the same inference principles.
-
-Feel free [to reach out on GitHub discussions](https://github.com/dotansimha/graphql-code-generator/discussions) if you need any help in typing a custom React Query fetcher.
 
 <br />
 

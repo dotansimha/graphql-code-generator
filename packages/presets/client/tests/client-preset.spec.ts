@@ -1100,7 +1100,7 @@ export * from "./fragment-masking.js";`);
           preset,
           plugins: [],
           presetConfig: {
-            onDocumentNode(node) {
+            onExecutableDocumentNode(node) {
               return {
                 cacheKeys: [node.definitions[0].name.value],
               };
@@ -1419,7 +1419,7 @@ export * from "./fragment-masking.js";`);
             plugins: [],
             presetConfig: {
               persistedOperations: true,
-              onDocumentNode(node) {
+              onExecutableDocumentNode(node) {
                 return {
                   cacheKeys: [node.definitions[0].name.value],
                 };

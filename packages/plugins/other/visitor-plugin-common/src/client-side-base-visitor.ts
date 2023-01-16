@@ -230,13 +230,13 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   pureMagicComment?: boolean;
   optimizeDocumentNode: boolean;
   experimentalFragmentVariables?: boolean;
-  unstable_onDocumentNode?: Unstable_OnDocumentNode;
+  unstable_onExecutableDocumentNode?: Unstable_OnExecutableDocumentNode;
   unstable_omitDefinitions?: boolean;
 }
 
-type DocumentNodeMeta = Record<string, unknown>;
+type ExecutableDocumentNodeMeta = Record<string, unknown>;
 
-type Unstable_OnDocumentNode = (documentNode: DocumentNode) => void | DocumentNodeMeta;
+type Unstable_OnExecutableDocumentNode = (documentNode: DocumentNode) => void | ExecutableDocumentNodeMeta;
 
 export class ClientSideBaseVisitor<
   TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig,
@@ -247,7 +247,7 @@ export class ClientSideBaseVisitor<
   protected _additionalImports: string[] = [];
   protected _imports = new Set<string>();
 
-  private _onDocumentNode?: Unstable_OnDocumentNode;
+  private _onExecutableDocumentNode?: Unstable_OnExecutableDocumentNode;
   private _omitDefinitions?: boolean;
   private _fragments: Map<string, LoadedFragment>;
 
@@ -284,7 +284,7 @@ export class ClientSideBaseVisitor<
       ...additionalConfig,
     } as any);
     this._documents = documents;
-    this._onDocumentNode = (rawConfig as any).unstable_onDocumentNode;
+    this._onExecutableDocumentNode = (rawConfig as any).unstable_onExecutableDocumentNode;
     this._omitDefinitions = (rawConfig as any).unstable_omitDefinitions;
     this._fragments = new Map(fragments.map(fragment => [fragment.name, fragment]));
     autoBind(this);
@@ -356,7 +356,7 @@ export class ClientSideBaseVisitor<
   private _generateDocumentNodeMeta(
     definitions: ReadonlyArray<DefinitionNode>,
     fragmentNames: Array<string>
-  ): DocumentNodeMeta | void {
+  ): ExecutableDocumentNodeMeta | void {
     // If the document does not contain any executable operation, we don't need to hash it
     if (definitions.every(def => def.kind !== Kind.OPERATION_DEFINITION)) {
       return undefined;
@@ -373,7 +373,7 @@ export class ClientSideBaseVisitor<
 
     const documentNode: DocumentNode = { kind: Kind.DOCUMENT, definitions: allDefinitions };
 
-    return this._onDocumentNode(documentNode);
+    return this._onExecutableDocumentNode(documentNode);
   }
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
@@ -411,7 +411,7 @@ export class ClientSideBaseVisitor<
 
         let hashPropertyStr = '';
 
-        if (this._onDocumentNode) {
+        if (this._onExecutableDocumentNode) {
           const meta = this._generateDocumentNodeMeta(gqlObj.definitions, fragmentNames);
           if (meta) {
             hashPropertyStr = `"__meta__": ${JSON.stringify(meta)}, `;
@@ -424,9 +424,9 @@ export class ClientSideBaseVisitor<
         return `{${hashPropertyStr}"kind":"${Kind.DOCUMENT}", "definitions":[${definitions}]}`;
       }
 
-      let meta: DocumentNodeMeta | void;
+      let meta: ExecutableDocumentNodeMeta | void;
 
-      if (this._onDocumentNode) {
+      if (this._onExecutableDocumentNode) {
         meta = this._generateDocumentNodeMeta(gqlObj.definitions, fragmentNames);
         const metaNodePartial = { ['__meta__']: meta };
 

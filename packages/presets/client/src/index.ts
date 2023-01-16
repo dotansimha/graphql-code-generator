@@ -66,7 +66,7 @@ export type ClientPresetConfig = {
   /**
    * Generate metadata for a executable document node and embed it in the emitted code.
    */
-  onDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
+  onExecutableDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
   /** Persisted operations configuration. */
   persistedOperations?:
     | boolean
@@ -130,7 +130,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       fragmentMaskingConfig = {};
     }
 
-    const onDocumentNodeHook = options.presetConfig.onDocumentNode ?? null;
+    const onExecutableDocumentNodeHook = options.presetConfig.onExecutableDocumentNode ?? null;
     const isMaskingFragments = fragmentMaskingConfig != null;
 
     const persistedOperations = options.presetConfig.persistedOperations
@@ -174,8 +174,9 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       [`gen-dts`]: gqlTagPlugin,
     };
 
-    function onDocumentNode(documentNode: DocumentNode) {
-      const meta = onDocumentNodeHook?.(documentNode);
+    function onExecutableDocumentNode(documentNode: DocumentNode) {
+      const meta = onExecutableDocumentNodeHook?.(documentNode);
+
       if (persistedOperations) {
         const documentString = normalizeAndPrintDocumentNode(documentNode);
         const hash = generateDocumentHash(documentString);
@@ -196,7 +197,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {
-          unstable_onDocumentNode: onDocumentNode,
+          unstable_onExecutableDocumentNode: onExecutableDocumentNode,
           unstable_omitDefinitions: persistedOperations?.omitDefinitions ?? false,
         },
       },
