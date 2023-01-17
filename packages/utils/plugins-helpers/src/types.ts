@@ -505,7 +505,7 @@ export namespace Types {
       /**
        * @description Configures the magic GraphQL comments to look for. The default is `GraphQL`.
        */
-      magicComment?: string;
+      gqlMagicComment?: string;
       /**
        * @description Overrides the name of the default GraphQL name identifier.
        */
