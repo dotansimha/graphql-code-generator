@@ -89,7 +89,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   public createNext(
     parentSchemaType: GraphQLNamedType,
     selectionSet: SelectionSetNode,
-    fieldName?: string
+    name?: string
   ): SelectionSetToObject {
     return new SelectionSetToObject(
       this._processor,
@@ -102,7 +102,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       parentSchemaType,
       selectionSet,
       this,
-      fieldName
+      name
     );
   }
 
@@ -667,25 +667,27 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       return this.getUnknownType();
     }
     if (this._config.generateIntermediateTypes && this._name) {
-      const fieldPath = this.buildPath(prefix).join('_');
+      const currentFieldPath = this._buildPath(prefix);
       const groupedEntries = Object.entries(grouped);
       if (groupedEntries.length == 1) {
+        // if the field is only of one possible type there is no need to suffix the generated entry with the type
         const [declaredTypeName, values] = groupedEntries[0];
-        this.pushIntermediaryDeclaration(fieldPath, values.join(' & '));
+        this.pushIntermediaryDeclaration(currentFieldPath, values.join(' & '));
         return this.processGroupedSelection(
           {
-            [declaredTypeName]: [fieldPath],
+            [declaredTypeName]: [currentFieldPath],
           },
           mustAddEmptyObject
         );
       }
+      // if the field can be of different types we need to introduce type specific intermediary types
       return this.processGroupedSelection(
         Object.entries(grouped).reduce((result, [declaredTypeName, values]) => {
           const relevant = values.filter(Boolean);
           if (relevant.length === 0) {
             return result;
           }
-          const typeName = `${fieldPath}_${declaredTypeName}`;
+          const typeName = `${currentFieldPath}_${declaredTypeName}`;
           this.pushIntermediaryDeclaration(typeName, relevant.join(' & '));
           result[declaredTypeName] = [typeName];
           return result;
@@ -715,27 +717,35 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     );
   }
 
-  protected buildPath(prefix = ''): string[] | undefined {
+  protected _buildPath(base = ''): string | undefined {
+    const path = this._path();
+    if (path) {
+      const relativePath = path.join('_');
+      if (base) {
+        return `${base}_${relativePath}`;
+      }
+      return relativePath;
+    }
+    return undefined;
+  }
+
+  /**
+   * Returns the path of this instance if available.
+   *
+   * @protected
+   */
+  protected _path(): string[] | undefined {
     if (!this._parent) {
       if (this._name) {
-        if (prefix) {
-          return [prefix, this._name];
-        }
         return [this._name];
-      }
-      if (prefix) {
-        return [prefix];
       }
       return undefined;
     }
-    const result = this._parent.buildPath(prefix);
+    const result = this._parent._path();
     if (this._name) {
       if (result) {
         result.push(this._name);
         return result;
-      }
-      if (prefix) {
-        return [prefix, this._name];
       }
       return [this._name];
     }
@@ -764,7 +774,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     fragmentSuffix: string,
     declarationBlockConfig
   ): string {
-    const { grouped } = this._buildGroupedSelections(fragmentName);
+    const fragmentTypeName = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
+
+    const { grouped } = this._buildGroupedSelections(fragmentTypeName);
 
     const subTypes: { name: string; content: string }[] = Object.keys(grouped)
       .map(typeName => {
@@ -782,8 +794,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         return { name: declarationName, content: possibleFields.join(' & ') };
       })
       .filter(Boolean);
-
-    const fragmentTypeName = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
     const fragmentMaskPartial =
       this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName'?: '${fragmentTypeName}' }` : '';
 

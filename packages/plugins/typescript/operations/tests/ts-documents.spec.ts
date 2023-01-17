@@ -6602,10 +6602,10 @@ export type LoginMutation = { __typename?: 'Mutation', login?: LoginMutation_log
       });
 
       expect(content).toBeSimilarStringTo(`
-export type UserFields_profile = { __typename?: 'Profile', age?: number | null };
+export type UserFieldsFragment_profile = { __typename?: 'Profile', age?: number | null };
 
 
-export type UserFieldsFragment = { __typename?: 'User', id: string, username: string, profile?: UserFields_profile | null };
+export type UserFieldsFragment = { __typename?: 'User', id: string, username: string, profile?: UserFieldsFragment_profile | null };
       `);
       await validate(content, config);
     });
@@ -6667,7 +6667,7 @@ export type LoginMutation = (
       });
 
       expect(content).toBeSimilarStringTo(`
-export type UserFields_profile = (
+export type UserFieldsFragment_profile = (
   { __typename?: 'Profile' }
   & Pick<Profile, 'age'>
 );
@@ -6676,7 +6676,7 @@ export type UserFields_profile = (
 export type UserFieldsFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username'>
-  & { profile?: Maybe<UserFields_profile> }
+  & { profile?: Maybe<UserFieldsFragment_profile> }
 );
       `);
       await validate(content, config);
