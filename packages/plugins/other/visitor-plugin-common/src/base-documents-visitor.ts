@@ -266,8 +266,9 @@ export class BaseDocumentsVisitor<
       fragmentSuffix,
       this._declarationBlockConfig
     );
+    const prerequisites = this._selectionSetToObject.flushIntermediaryTypeDeclarations(this._declarationBlockConfig);
     return [
-      this._selectionSetToObject.flushIntermediaryTypeDeclarations(this._declarationBlockConfig),
+      prerequisites,
       fragmentResult,
       this.config.experimentalFragmentVariables
         ? new DeclarationBlock({
