@@ -106,9 +106,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     );
   }
 
-  protected pushIntermediaryDeclaration(typeName: string, contents: string) {
+  /**
+   * We push intermediary declarations to the top most element.
+   *
+   * @param typeName the intermediary declaration to push
+   * @param contents the contents for the intermediary declaration
+   * @protected
+   */
+  protected _pushIntermediaryDeclaration(typeName: string, contents: string) {
     if (this._parent) {
-      return this._parent.pushIntermediaryDeclaration(typeName, contents);
+      return this._parent._pushIntermediaryDeclaration(typeName, contents);
     }
     this._intermediaryDeclarations ||= {};
     this._intermediaryDeclarations[typeName] = contents;
@@ -672,7 +679,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       if (groupedEntries.length == 1) {
         // if the field is only of one possible type there is no need to suffix the generated entry with the type
         const [declaredTypeName, values] = groupedEntries[0];
-        this.pushIntermediaryDeclaration(baseTypeName, values.join(' & '));
+        this._pushIntermediaryDeclaration(baseTypeName, values.join(' & '));
         return this.processGroupedSelection(
           {
             [declaredTypeName]: [baseTypeName],
@@ -688,7 +695,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             return result;
           }
           const typeName = `${baseTypeName}_${declaredTypeName}`;
-          this.pushIntermediaryDeclaration(typeName, relevant.join(' & '));
+          this._pushIntermediaryDeclaration(typeName, relevant.join(' & '));
           result[declaredTypeName] = [typeName];
           return result;
         }, {}),
