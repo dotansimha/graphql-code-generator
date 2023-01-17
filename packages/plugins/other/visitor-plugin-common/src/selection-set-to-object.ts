@@ -667,15 +667,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       return this.getUnknownType();
     }
     if (this._config.generateIntermediateTypes && this._name) {
-      const currentFieldPath = this._buildPath(prefix);
+      const baseTypeName = this._formatCurrentPath(prefix, '_');
       const groupedEntries = Object.entries(grouped);
       if (groupedEntries.length == 1) {
         // if the field is only of one possible type there is no need to suffix the generated entry with the type
         const [declaredTypeName, values] = groupedEntries[0];
-        this.pushIntermediaryDeclaration(currentFieldPath, values.join(' & '));
+        this.pushIntermediaryDeclaration(baseTypeName, values.join(' & '));
         return this.processGroupedSelection(
           {
-            [declaredTypeName]: [currentFieldPath],
+            [declaredTypeName]: [baseTypeName],
           },
           mustAddEmptyObject
         );
@@ -687,7 +687,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           if (relevant.length === 0) {
             return result;
           }
-          const typeName = `${currentFieldPath}_${declaredTypeName}`;
+          const typeName = `${baseTypeName}_${declaredTypeName}`;
           this.pushIntermediaryDeclaration(typeName, relevant.join(' & '));
           result[declaredTypeName] = [typeName];
           return result;
@@ -717,12 +717,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     );
   }
 
-  protected _buildPath(base = ''): string | undefined {
+  protected _formatCurrentPath(base = '', separator = '_'): string | undefined {
     const path = this._path();
     if (path) {
-      const relativePath = path.join('_');
+      const relativePath = path.join(separator);
       if (base) {
-        return `${base}_${relativePath}`;
+        return `${base}${separator}${relativePath}`;
       }
       return relativePath;
     }
