@@ -6553,4 +6553,133 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
   });
+
+  describe('generateIntermediaryTypes', () => {
+    it('appropriately generates subtypes for a query with types preresolving', async () => {
+      const ast = parse(/* GraphQL */ `
+        mutation login {
+          login(username: "1", password: "2") {
+            id
+            username
+            profile {
+              age
+            }
+          }
+        }
+      `);
+      const config = { generateIntermediateTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+export type LoginMutation_login_profile = { __typename?: 'Profile', age?: number | null };
+
+
+export type LoginMutation_login = { __typename?: 'User', id: string, username: string, profile?: LoginMutation_login_profile | null };
+
+
+export type LoginMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login?: LoginMutation_login | null };
+      `);
+      await validate(content, config);
+    });
+    it('appropriately generates subtypes for a fragment with types preresolving', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+        }
+      `);
+      const config = { generateIntermediateTypes: true };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+export type UserFields_profile = { __typename?: 'Profile', age?: number | null };
+
+
+export type UserFieldsFragment = { __typename?: 'User', id: string, username: string, profile?: UserFields_profile | null };
+      `);
+      await validate(content, config);
+    });
+
+    it('appropriately generates subtypes for a query', async () => {
+      const ast = parse(/* GraphQL */ `
+        mutation login {
+          login(username: "1", password: "2") {
+            id
+            username
+            profile {
+              age
+            }
+          }
+        }
+      `);
+      const config = { generateIntermediateTypes: true, preResolveTypes: false };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+export type LoginMutation_login_profile = (
+   { __typename?: 'Profile' }
+   & Pick<Profile, 'age'>
+ );
+
+
+export type LoginMutation_login = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username'>
+  & { profile?: Maybe<LoginMutation_login_profile> }
+);
+
+
+export type LoginMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LoginMutation = (
+  { __typename?: 'Mutation' }
+  & { login?: Maybe<LoginMutation_login> }
+);
+      `);
+      await validate(content, config);
+    });
+    it('appropriately generates subtypes for a fragment', async () => {
+      const ast = parse(/* GraphQL */ `
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+        }
+      `);
+      const config = { generateIntermediateTypes: true, preResolveTypes: false };
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+export type UserFields_profile = (
+  { __typename?: 'Profile' }
+  & Pick<Profile, 'age'>
+);
+
+
+export type UserFieldsFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username'>
+  & { profile?: Maybe<UserFields_profile> }
+);
+      `);
+      await validate(content, config);
+    });
+  });
 });

@@ -39,6 +39,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   skipTypeNameForRoot: boolean;
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
+  generateIntermediateTypes: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -143,6 +144,31 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    */
   mergeFragmentTypes?: boolean;
 
+  /**
+   * @description Ensures that each object field gets assigned a corresponding intermediary type
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Generate intermediary types
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-operations'],
+   *        config: {
+   *          generateIntermediateTypes: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  generateIntermediateTypes?: boolean;
+
   // The following are internal, and used by presets
   /**
    * @ignore
@@ -235,8 +261,14 @@ export class BaseDocumentsVisitor<
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value);
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.getFragmentSuffix(node);
+    const fragmentResult = selectionSet.transformFragmentSelectionSetToTypes(
+      node.name.value,
+      fragmentSuffix,
+      this._declarationBlockConfig
+    );
     return [
-      selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig),
+      this._selectionSetToObject.flushIntermediaryTypeDeclarations(this._declarationBlockConfig),
+      fragmentResult,
       this.config.experimentalFragmentVariables
         ? new DeclarationBlock({
             ...this._declarationBlockConfig,
@@ -275,15 +307,17 @@ export class BaseDocumentsVisitor<
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix = this.getOperationSuffix(name, operationType);
 
+    const operationTypeName = this.convertName(name, {
+      suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
+    });
+
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(
-        this.convertName(name, {
-          suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
-        })
-      )
-      .withContent(selectionSet.transformSelectionSet()).string;
+      .withName(operationTypeName)
+      .withContent(selectionSet.transformSelectionSet(operationTypeName)).string;
+
+    const prerequisites = this._selectionSetToObject.flushIntermediaryTypeDeclarations(this._declarationBlockConfig);
 
     const operationVariables = new DeclarationBlock({
       ...this._declarationBlockConfig,
@@ -298,6 +332,6 @@ export class BaseDocumentsVisitor<
       )
       .withBlock(visitedOperationVariables).string;
 
-    return [operationVariables, operationResult].filter(r => r).join('\n\n');
+    return [prerequisites, operationVariables, operationResult].filter(r => r).join('\n\n');
   }
 }

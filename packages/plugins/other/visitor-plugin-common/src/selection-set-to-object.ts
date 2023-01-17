@@ -19,6 +19,7 @@ import {
   isTypeSubTypeOf,
   isUnionType,
   Kind,
+  NameNode,
   SchemaMetaFieldDef,
   SelectionNode,
   SelectionSetNode,
@@ -37,6 +38,7 @@ import {
 import { ConvertNameFn, GetFragmentSuffixFn, LoadedFragment, NormalizedScalarsMap } from './types.js';
 import {
   DeclarationBlock,
+  DeclarationBlockConfig,
   getFieldNodeNameValue,
   getPossibleTypes,
   hasConditionalDirectives,
@@ -66,6 +68,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   protected _linksFields: LinkField[] = [];
   protected _queriedForTypename = false;
 
+  protected _intermediaryDeclarations?: Record<string, string>;
+
   constructor(
     protected _processor: BaseSelectionSetProcessor<any>,
     protected _scalars: NormalizedScalarsMap,
@@ -75,12 +79,18 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     protected _loadedFragments: LoadedFragment[],
     protected _config: Config,
     protected _parentSchemaType?: GraphQLNamedType,
-    protected _selectionSet?: SelectionSetNode
+    protected _selectionSet?: SelectionSetNode,
+    protected _parent?: SelectionSetToObject<Config>,
+    protected _name?: string
   ) {
     autoBind(this);
   }
 
-  public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
+  public createNext(
+    parentSchemaType: GraphQLNamedType,
+    selectionSet: SelectionSetNode,
+    fieldName?: string
+  ): SelectionSetToObject {
     return new SelectionSetToObject(
       this._processor,
       this._scalars,
@@ -90,8 +100,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       this._loadedFragments,
       this._config,
       parentSchemaType,
-      selectionSet
+      selectionSet,
+      this,
+      fieldName
     );
+  }
+
+  protected pushIntermediaryDeclaration(typeName: string, contents: string) {
+    if (this._parent) {
+      return this._parent.pushIntermediaryDeclaration(typeName, contents);
+    }
+    this._intermediaryDeclarations ||= {};
+    this._intermediaryDeclarations[typeName] = contents;
+    return;
   }
 
   /**
@@ -301,7 +322,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   /**
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
-  protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
+  protected _buildGroupedSelections(prefix = ''): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
     if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
@@ -326,7 +347,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         prev[typeName] ||= [];
 
-        const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
+        const { fields } = this.buildSelectionSet(prefix, schemaType, selectionNodes);
         const transformedSet = this.selectionSetStringFromFields(fields);
 
         if (transformedSet) {
@@ -362,7 +383,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
       const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
 
-      const { typeInfo, fields } = this.buildSelectionSet(schemaType, selectionNodes);
+      const { typeInfo, fields } = this.buildSelectionSet(prefix, schemaType, selectionNodes);
 
       const key = this.selectionSetStringFromFields(fields);
       prev[key] = {
@@ -422,6 +443,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected buildSelectionSet(
+    prefix: string,
     parentSchemaType: GraphQLObjectType,
     selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>
   ) {
@@ -527,9 +549,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     }
 
     const linkFields: LinkField[] = [];
+    const prefixFactory: (fieldName: NameNode) => string = prefix
+      ? fieldName => `${prefix}_${fieldName.value}`
+      : fieldName => fieldName.value;
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
-      const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
+      const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet, prefixFactory(field.name));
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
@@ -632,8 +657,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return mustAddEmptyObject ? ' | ' + this.getEmptyObjectType() : ``;
   }
 
-  public transformSelectionSet(): string {
-    const { grouped, mustAddEmptyObject } = this._buildGroupedSelections();
+  public transformSelectionSet(prefix = ''): string {
+    const { grouped, mustAddEmptyObject } = this._buildGroupedSelections(prefix);
 
     // This might happen in case we have an interface, that is being queries, without any GraphQL
     // "type" that implements it. It will lead to a runtime error, but we aim to try to reflect that in
@@ -641,7 +666,37 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     if (Object.keys(grouped).length === 0) {
       return this.getUnknownType();
     }
+    if (this._config.generateIntermediateTypes && this._name) {
+      const fieldPath = this.buildPath(prefix).join('_');
+      const groupedEntries = Object.entries(grouped);
+      if (groupedEntries.length == 1) {
+        const [declaredTypeName, values] = groupedEntries[0];
+        this.pushIntermediaryDeclaration(fieldPath, values.join(' & '));
+        return this.processGroupedSelection(
+          {
+            [declaredTypeName]: [fieldPath],
+          },
+          mustAddEmptyObject
+        );
+      }
+      return this.processGroupedSelection(
+        Object.entries(grouped).reduce((result, [declaredTypeName, values]) => {
+          const relevant = values.filter(Boolean);
+          if (relevant.length === 0) {
+            return result;
+          }
+          const typeName = `${fieldPath}_${declaredTypeName}`;
+          this.pushIntermediaryDeclaration(typeName, relevant.join(' & '));
+          result[declaredTypeName] = [typeName];
+          return result;
+        }, {}),
+        mustAddEmptyObject
+      );
+    }
+    return this.processGroupedSelection(grouped, mustAddEmptyObject);
+  }
 
+  protected processGroupedSelection(grouped: Record<string, string[]>, mustAddEmptyObject: boolean): string {
     return (
       Object.keys(grouped)
         .map(typeName => {
@@ -660,12 +715,56 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     );
   }
 
+  protected buildPath(prefix = ''): string[] | undefined {
+    if (!this._parent) {
+      if (this._name) {
+        if (prefix) {
+          return [prefix, this._name];
+        }
+        return [this._name];
+      }
+      if (prefix) {
+        return [prefix];
+      }
+      return undefined;
+    }
+    const result = this._parent.buildPath(prefix);
+    if (this._name) {
+      if (result) {
+        result.push(this._name);
+        return result;
+      }
+      if (prefix) {
+        return [prefix, this._name];
+      }
+      return [this._name];
+    }
+    return result;
+  }
+
+  public flushIntermediaryTypeDeclarations(declarationBlockConfig: DeclarationBlockConfig): string {
+    if (!this._intermediaryDeclarations) {
+      return '';
+    }
+    const result = Object.entries(this._intermediaryDeclarations)
+      .map(([typeName, contents]) => {
+        return new DeclarationBlock(declarationBlockConfig)
+          .export()
+          .asKind('type')
+          .withName(typeName)
+          .withContent(contents).string;
+      })
+      .join('\n\n');
+    this._intermediaryDeclarations = undefined;
+    return result;
+  }
+
   public transformFragmentSelectionSetToTypes(
     fragmentName: string,
     fragmentSuffix: string,
     declarationBlockConfig
   ): string {
-    const { grouped } = this._buildGroupedSelections();
+    const { grouped } = this._buildGroupedSelections(fragmentName);
 
     const subTypes: { name: string; content: string }[] = Object.keys(grouped)
       .map(typeName => {
