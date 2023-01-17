@@ -6567,7 +6567,7 @@ function test(q: GetEntityBrandDataQuery): void {
           }
         }
       `);
-      const config = { generateIntermediateTypes: true };
+      const config = { generateIntermediaryTypes: true };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -6596,7 +6596,7 @@ export type LoginMutation = { __typename?: 'Mutation', login?: LoginMutation_log
           }
         }
       `);
-      const config = { generateIntermediateTypes: true };
+      const config = { generateIntermediaryTypes: true };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -6622,7 +6622,7 @@ export type UserFieldsFragment = { __typename?: 'User', id: string, username: st
           }
         }
       `);
-      const config = { generateIntermediateTypes: true, preResolveTypes: false };
+      const config = { generateIntermediaryTypes: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -6661,7 +6661,7 @@ export type LoginMutation = (
           }
         }
       `);
-      const config = { generateIntermediateTypes: true, preResolveTypes: false };
+      const config = { generateIntermediaryTypes: true, preResolveTypes: false };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });

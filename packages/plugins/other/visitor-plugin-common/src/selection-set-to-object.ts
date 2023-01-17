@@ -673,7 +673,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     if (Object.keys(grouped).length === 0) {
       return this.getUnknownType();
     }
-    if (this._config.generateIntermediateTypes && this._name) {
+    if (this._config.generateIntermediaryTypes && this._name) {
       const baseTypeName = this._formatCurrentPath(prefix, '_');
       const groupedEntries = Object.entries(grouped);
       if (groupedEntries.length == 1) {

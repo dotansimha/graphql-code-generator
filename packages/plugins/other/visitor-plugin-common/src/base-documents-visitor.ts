@@ -39,7 +39,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   skipTypeNameForRoot: boolean;
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
-  generateIntermediateTypes: boolean;
+  generateIntermediaryTypes: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -159,7 +159,7 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    *      'path/to/file.ts': {
    *        plugins: ['typescript-operations'],
    *        config: {
-   *          generateIntermediateTypes: true
+   *          generateIntermediaryTypes: true
    *        },
    *      },
    *    },
@@ -167,7 +167,7 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    *  export default config;
    * ```
    */
-  generateIntermediateTypes?: boolean;
+  generateIntermediaryTypes?: boolean;
 
   // The following are internal, and used by presets
   /**
