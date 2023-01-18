@@ -4049,10 +4049,10 @@ value-or-promise@1.0.11, value-or-promise@^1.0.11:
   resolved "https://registry.yarnpkg.com/value-or-promise/-/value-or-promise-1.0.11.tgz#3e90299af31dd014fe843fe309cefa7c1d94b140"
   integrity sha512-41BrgH+dIbCFXClcSapVs5M6GkENd3gQOJpEfPDNa71LsUGMXDL0jMWpI/Rh7WhX+Aalfz2TTS3Zt5pUsbnhLg==
 
-villus@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/villus/-/villus-2.0.1.tgz#3aa666d16ca817357009cc4033bc099312027751"
-  integrity sha512-SVzPzxhXQz1aKdT1gHgy5eDc1YwrRvFi0EKmCuL/WhHm7N992Xobj90x+qzIyAxjQXo9Jlb5rpKyYjTsv+NM7g==
+villus@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/villus/-/villus-2.1.0.tgz#fa7af554d35d27884ae1d71e4a702a8bbd0370af"
+  integrity sha512-3xXbsZC+mlnA8h+tNHdeaXyzjDpnuA2SeuNsZrO95QKiInMOOQTGcKkCKSLWfBye4k5B06k64pENTV9D4xfDcQ==
 
 vite@3.0.5:
   version "3.0.5"
