@@ -13,7 +13,7 @@
     "@apollo/client": "^3.6.9",
     "@graphql-codegen/client-preset": "1.0.2",
     "graphql": "16.6.0",
-    "villus": "2.0.1",
+    "villus": "2.1.0",
     "vue": "3.2.37"
   },
   "devDependencies": {
