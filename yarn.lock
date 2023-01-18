@@ -2548,10 +2548,10 @@
     "@repeaterjs/repeater" "^3.0.4"
     tslib "^2.3.1"
 
-"@headlessui/react@^1.6.6":
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.4.tgz#ba7f50fda20667276ee84fcd4c2a459aa26187e3"
-  integrity sha512-D8n5yGCF3WIkPsjEYeM8knn9jQ70bigGGb5aUvN6y4BGxcT3OcOQOKcM3zRGllRCZCFxCZyQvYJF6ZE7bQUOyQ==
+"@headlessui/react@^1.7.7":
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.7.tgz#d6f8708d8943ae8ebb1a6929108234e4515ac7e8"
+  integrity sha512-BqDOd/tB9u2tA0T3Z0fn18ktw+KbVwMnkxxsGPIH2hzssrQhKB5n/6StZOyvLYP/FsYtvuXfi9I0YowKPv2c1w==
   dependencies:
     client-only "^0.0.1"
 
@@ -2988,10 +2988,10 @@
     "@napi-rs/simple-git-win32-arm64-msvc" "0.1.8"
     "@napi-rs/simple-git-win32-x64-msvc" "0.1.8"
 
-"@next/bundle-analyzer@13.1.1":
-  version "13.1.1"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-13.1.1.tgz#f36108dcb953ea518253df5eb9e175642f78b04a"
-  integrity sha512-zxC/MOj7gDjvQffHT4QZqcPe1Ny+e6o3wethCZn3liSElMA+kxgEopbziTUXdrvJcd/porq+3Itc8P+gxE/xog==
+"@next/bundle-analyzer@13.1.2":
+  version "13.1.2"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-13.1.2.tgz#323dac32849f30a3319741c18edb3cdc6458822a"
+  integrity sha512-wY/ZEmnFDbn/eJiGzOxTppTDZWfsiXz/QqdJ8cqU7mByAJg6TEY35b3JFDu5AxSf2g1e7yQ6LfRrPr7sy07ogw==
   dependencies:
     webpack-bundle-analyzer "4.7.0"
 
@@ -3453,17 +3453,17 @@
     lodash.sortby "^4.7.0"
     remove-markdown "^0.5.0"
 
-"@theguild/components@4.5.0":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.0.tgz#3f6c89410013f795f20d743ef22e39885e623681"
-  integrity sha512-pOvJBnfsZPCrFrhMDEoyNhv7GTRfraFCkFER3bw4YpEVhBC+sI40Y1SgzRQRnOm89arZuokArqwLxIw2c8Y4vA==
+"@theguild/components@4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.1.tgz#8e70a8ff12787465d745763166a5c6fecdbda330"
+  integrity sha512-Sbjh9EbKFO/LyeJvbFniZ3BHSkD3WlspCJhJra+IoTMZCxSJpTSD7l9R59YpKvpowFpy92f2jfI0sSedic4e2g==
   dependencies:
     "@algolia/autocomplete-js" "1.7.4"
     "@algolia/autocomplete-plugin-algolia-insights" "1.7.4"
     "@algolia/autocomplete-plugin-query-suggestions" "1.7.4"
     "@algolia/autocomplete-theme-classic" "1.7.4"
     "@giscus/react" "2.2.6"
-    "@next/bundle-analyzer" "13.1.1"
+    "@next/bundle-analyzer" "13.1.2"
     "@radix-ui/react-navigation-menu" "1.1.1"
     algoliasearch "4.14.3"
     clsx "1.2.1"
@@ -3471,8 +3471,8 @@
     fuzzy "^0.1.3"
     mermaid "9.3.0"
     next-videos "1.5.0"
-    nextra "2.0.3"
-    nextra-theme-docs "2.0.3"
+    nextra "2.2.4"
+    nextra-theme-docs "2.2.4"
     react-instantsearch-dom "6.38.3"
     react-paginate "8.1.4"
     react-player "2.11.0"
@@ -3480,7 +3480,7 @@
     search-insights "2.2.3"
     semver "^7.3.8"
     unist-util-visit "4.1.1"
-    use-debounce "9.0.2"
+    use-debounce "9.0.3"
 
 "@theguild/eslint-config@0.6.0":
   version "0.6.0"
@@ -8075,13 +8075,6 @@ hast-util-to-estree@^2.0.0:
     unist-util-position "^4.0.0"
     zwitch "^2.0.0"
 
-hast-util-to-string@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/hast-util-to-string/-/hast-util-to-string-2.0.0.tgz#b008b0a4ea472bf34dd390b7eea1018726ae152a"
-  integrity sha512-02AQ3vLhuH3FisaMM+i/9sm4OXGSq1UhOOCpTLLQtHdL3tZt7qil69r8M8iDkZYyC0HCFylcYoP+8IO7ddta1A==
-  dependencies:
-    "@types/hast" "^2.0.0"
-
 hast-util-to-text@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/hast-util-to-text/-/hast-util-to-text-3.1.2.tgz#ecf30c47141f41e91a5d32d0b1e1859fd2ac04f2"
@@ -10546,7 +10539,7 @@ negotiator@0.6.3:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz#58e323a72fedc0d6f9cd4d31fe49f51479590ccd"
   integrity sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==
 
-next-mdx-remote@4.2.1:
+next-mdx-remote@4.2.1, next-mdx-remote@^4.2.0:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/next-mdx-remote/-/next-mdx-remote-4.2.1.tgz#1aee0207b029487100ef49740be210595fe04e50"
   integrity sha512-PcVF1r5XTBjiNVXw0GyaIcOwQsklHo36+7ycfmtJb52TIkT0nM4Hzv4wgJwNg7+jvTbap99qWsMwdKUYR9WxAA==
@@ -10606,44 +10599,44 @@ next@13.0.6:
     "@next/swc-win32-ia32-msvc" "13.0.6"
     "@next/swc-win32-x64-msvc" "13.0.6"
 
-nextra-theme-docs@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.0.3.tgz#bac879e3e7f19890b95864398ca0a5265ac563f7"
-  integrity sha512-BN0NOzYNMQNLU8PMRKVtgOitLC2jFubMA9O8b3gNhr+5/Uny6MTDwuSAVO7G7z830b6dNaRqrMA84iVRS+2LaQ==
+nextra-theme-docs@2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.2.4.tgz#4ac98c47cae659db3e55bc089ee8058f0d29cfce"
+  integrity sha512-Q+erj04aN/MFT3qvq0+vYaNzFtnPRJUzJVmbIVRG7+VsnZwO/nC3MhZ6iSPBmCKKPumpTMf7bJVdGrO/HrYVRQ==
   dependencies:
-    "@headlessui/react" "^1.6.6"
-    "@mdx-js/react" "^2.1.5"
+    "@headlessui/react" "^1.7.7"
     "@popperjs/core" "^2.11.6"
     clsx "^1.2.1"
     flexsearch "^0.7.21"
     focus-visible "^5.2.0"
     git-url-parse "^13.1.0"
-    github-slugger "^2.0.0"
     intersection-observer "^0.12.2"
     match-sorter "^6.3.1"
     next-seo "^5.5.0"
     next-themes "^0.2.1"
     scroll-into-view-if-needed "^3.0.0"
+    zod "^3.20.2"
 
-nextra@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.0.3.tgz#9075523d7113e17303881164c108d30832e720aa"
-  integrity sha512-GttZMwfHiVcrnVMnN2PKq2mS6YoQ0zrbzRYS838WYfzUpjIPCR6L8rJbAEd00kcrJNM1MvSCxONOTqGDDjW7YA==
+nextra@2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.2.4.tgz#389804a431636d4313d420fbce0354ae33ff4cf3"
+  integrity sha512-aDTiFj2JGIYwiTdxf7TQQsdb9ZM1y6eWRcRBXAKpy8LrsZU/TSePPc+LPV0hA3rKhOq+2Q361Mwwff0uUyTCyg==
   dependencies:
     "@mdx-js/mdx" "^2.1.5"
+    "@mdx-js/react" "^2.1.5"
     "@napi-rs/simple-git" "^0.1.8"
     github-slugger "^2.0.0"
     graceful-fs "^4.2.10"
     gray-matter "^4.0.3"
     katex "^0.16.4"
+    next-mdx-remote "^4.2.0"
     p-limit "^3.1.0"
     rehype-katex "^6.0.2"
-    rehype-mdx-title "^2.0.0"
-    rehype-pretty-code "0.6.0"
+    rehype-pretty-code "0.9.2"
     remark-gfm "^3.0.1"
     remark-math "^5.1.1"
     remark-reading-time "^2.0.1"
-    shiki "0.12.1"
+    shiki "^0.12.1"
     slash "^3.0.0"
     title "^3.5.3"
     unist-util-visit "^4.1.1"
@@ -11985,17 +11978,6 @@ rehype-katex@^6.0.2:
     unist-util-remove-position "^4.0.0"
     unist-util-visit "^4.0.0"
 
-rehype-mdx-title@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/rehype-mdx-title/-/rehype-mdx-title-2.0.0.tgz#f5ab8c273150f5b395f5029c97bf440c8c33376a"
-  integrity sha512-IemxnNjM+mrABwH2V0UQjg5YULJmN55dF+zEajmoDgjnuAESIIm54iSKR0VwKpFrvQ9hWLn88RTr2deqwSOw0A==
-  dependencies:
-    "@types/hast" "^2.0.0"
-    estree-util-is-identifier-name "^2.0.0"
-    hast-util-to-string "^2.0.0"
-    unified "^10.0.0"
-    unist-util-visit "^4.0.0"
-
 rehype-parse@^8.0.0:
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/rehype-parse/-/rehype-parse-8.0.4.tgz#3d17c9ff16ddfef6bbcc8e6a25a99467b482d688"
@@ -12006,10 +11988,10 @@ rehype-parse@^8.0.0:
     parse5 "^6.0.0"
     unified "^10.0.0"
 
-rehype-pretty-code@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/rehype-pretty-code/-/rehype-pretty-code-0.6.0.tgz#22031de9bbb028f531ad9cf2ffc9d4aa902d4407"
-  integrity sha512-VfntYoWYOBVURXYDdB8p/E1sZTm2W5ry89fJyY94WJAo1jUH/5sVhDC7cX5PPnksMyW9PYMxRLNfjkBpSgJrzQ==
+rehype-pretty-code@0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/rehype-pretty-code/-/rehype-pretty-code-0.9.2.tgz#c73fd7051eb59a9d1fdba845d356cd1d99f5455b"
+  integrity sha512-l369pvBK6ihBEuy2+VDpHU+zbbY8I+Z4LiyIOunHAt3xyw6selaOFKc/DnX94jI5OJb3+NgjbOxXx2yaAypjZw==
   dependencies:
     hash-obj "^4.0.0"
     nanoid "^4.0.0"
@@ -12482,7 +12464,7 @@ shell-quote@^1.7.3:
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.3.tgz#aa40edac170445b9a431e17bb62c0b881b9c4123"
   integrity sha512-Vpfqwm4EnqGdlsBFNmHhxhElJYrdfcxPThu+ryKS5J8L/fhAwLazFZtq+S+TWZ9ANj2piSQLGj6NQg+lKPmxrw==
 
-shiki@0.12.1:
+shiki@^0.12.1:
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.12.1.tgz#26fce51da12d055f479a091a5307470786f300cd"
   integrity sha512-aieaV1m349rZINEBkjxh2QbBvFFQOlgqYTNtCal82hHj4dDZ76oMlQIX+C7ryerBTDiga3e5NfH6smjdJ02BbQ==
@@ -13666,10 +13648,10 @@ urql@3.0.3:
     "@urql/core" "^3.0.3"
     wonka "^6.0.0"
 
-use-debounce@9.0.2:
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-9.0.2.tgz#2883982ec1eb79affec46f14047244057b78161c"
-  integrity sha512-QLyB0sxt9F5AisGDrUybCRJSLE60bTQR0yXc+IebNGUu1GCXwii1zsZl82mPGdWqDVQy7+1FKMLHQUixxf5Nbw==
+use-debounce@9.0.3:
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-9.0.3.tgz#bac660c19ab7b38662e08608fee23c7ad303f532"
+  integrity sha512-FhtlbDtDXILJV7Lix5OZj5yX/fW1tzq+VrvK1fnT2bUrPOGruU9Rw8NCEn+UI9wopfERBEZAOQ8lfeCJPllgnw==
 
 use-isomorphic-layout-effect@^1.1.2:
   version "1.1.2"
@@ -14187,10 +14169,10 @@ zen-observable@0.8.15, zen-observable@^0.8.0:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zod@^3.17.3:
-  version "3.17.3"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.17.3.tgz#86abbc670ff0063a4588d85a4dcc917d6e4af2ba"
-  integrity sha512-4oKP5zvG6GGbMlqBkI5FESOAweldEhSOZ6LI6cG+JzUT7ofj1ZOC0PJudpQOpT1iqOFpYYtX5Pw0+o403y4bcg==
+zod@^3.17.3, zod@^3.20.2:
+  version "3.20.2"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.20.2.tgz#068606642c8f51b3333981f91c0a8ab37dfc2807"
+  integrity sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==
 
 zwitch@^2.0.0:
   version "2.0.2"
