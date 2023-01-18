@@ -2133,6 +2133,14 @@
     tslib "~2.4.0"
     value-or-promise "1.0.11"
 
+"@graphql-tools/documents@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/documents/-/documents-0.1.0.tgz#9c27faea5a17ab271dbd99edd8d52eee0e43573e"
+  integrity sha512-1WQeovHv5S1M3xMzQxbSrG3yl6QOnsq2JUBnlg5/0aMM5R4GNMx6Ms+ROByez/dnuA81kstRuSK+2qpe+GaRIw==
+  dependencies:
+    lodash.sortby "^4.7.0"
+    tslib "^2.4.0"
+
 "@graphql-tools/executor-graphql-ws@0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@graphql-tools/executor-graphql-ws/-/executor-graphql-ws-0.0.5.tgz#eb81fb72ef1eb095be1b2d377b846bff6bf6d102"
