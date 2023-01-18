@@ -2128,10 +2128,10 @@
     tslib "~2.4.0"
     value-or-promise "1.0.11"
 
-"@graphql-tools/documents@0.1.0-alpha-20230109070251-4be4b310":
-  version "0.1.0-alpha-20230109070251-4be4b310"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/documents/-/documents-0.1.0-alpha-20230109070251-4be4b310.tgz#665fbab63aaaaa6929f68c0b4a6b3dff054e5d59"
-  integrity sha512-Shd7yrIYp1ox1SD1HjuhFbQxiAUoD0247wlGzA4Tc3fTEeg/Ok9mmuD/0tH5bwTTAZj7jyqrwatPf5CUZbRKww==
+"@graphql-tools/documents@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/documents/-/documents-0.1.0.tgz#9c27faea5a17ab271dbd99edd8d52eee0e43573e"
+  integrity sha512-1WQeovHv5S1M3xMzQxbSrG3yl6QOnsq2JUBnlg5/0aMM5R4GNMx6Ms+ROByez/dnuA81kstRuSK+2qpe+GaRIw==
   dependencies:
     lodash.sortby "^4.7.0"
     tslib "^2.4.0"
