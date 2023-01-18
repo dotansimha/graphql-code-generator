@@ -1,8 +1,8 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
-import { TypeScriptDocumentsVisitor } from './visitor.js';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
+import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
+import { TypeScriptDocumentsVisitor } from './visitor.js';
 
 export { TypeScriptDocumentsPluginConfig } from './config.js';
 

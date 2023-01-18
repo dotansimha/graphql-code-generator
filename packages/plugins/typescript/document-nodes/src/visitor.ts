@@ -1,14 +1,14 @@
-import { TypeScriptDocumentNodesRawPluginConfig } from './index.js';
-import autoBind from 'auto-bind';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import {
+  ClientSideBasePluginConfig,
+  ClientSideBaseVisitor,
   getConfigValue,
   LoadedFragment,
-  ClientSideBaseVisitor,
   NamingConvention,
-  ClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
+import autoBind from 'auto-bind';
 import { GraphQLSchema } from 'graphql';
+import { TypeScriptDocumentNodesRawPluginConfig } from './index.js';
 
 export interface TypeScriptDocumentNodesPluginConfig extends ClientSideBasePluginConfig {
   namingConvention: NamingConvention;

@@ -1,21 +1,21 @@
+import { extname } from 'path';
 import {
+  getCachedDocumentNodeFromSchema,
+  PluginFunction,
+  PluginValidateFn,
+  removeFederation,
+  Types,
+} from '@graphql-codegen/plugin-helpers';
+import {
+  buildASTSchema,
+  extendSchema,
   GraphQLSchema,
   parse,
-  extendSchema,
+  print,
   printIntrospectionSchema,
   printSchema,
   visit,
-  buildASTSchema,
-  print,
 } from 'graphql';
-import {
-  PluginFunction,
-  PluginValidateFn,
-  Types,
-  removeFederation,
-  getCachedDocumentNodeFromSchema,
-} from '@graphql-codegen/plugin-helpers';
-import { extname } from 'path';
 
 /**
  * @description This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.
@@ -130,8 +130,12 @@ export const validate: PluginValidateFn<any> = async (
 ) => {
   const singlePlugin = allPlugins.length === 1;
 
-  if (singlePlugin && extname(outputFile) !== '.graphql') {
-    throw new Error(`Plugin "schema-ast" requires extension to be ".graphql"!`);
+  const allowedExtensions = ['.graphql', '.gql'];
+  const isAllowedExtension = allowedExtensions.includes(extname(outputFile));
+
+  if (singlePlugin && !isAllowedExtension) {
+    const allowedExtensionsOutput = allowedExtensions.map(extension => `"${extension}"`).join(' or ');
+    throw new Error(`Plugin "schema-ast" requires extension to be ${allowedExtensionsOutput}!`);
   }
 };
 

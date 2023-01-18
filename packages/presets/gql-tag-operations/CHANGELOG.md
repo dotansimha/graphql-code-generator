@@ -1,5 +1,56 @@
 # @graphql-codegen/gql-tag-operations-preset
 
+## 1.7.4
+
+### Patch Changes
+
+- [#8796](https://github.com/dotansimha/graphql-code-generator/pull/8796) [`902451601`](https://github.com/dotansimha/graphql-code-generator/commit/902451601b5edf9cb7768e57f332fe6ade79c20a) Thanks [@shmax](https://github.com/shmax)! - remove extra asterisk and add missing semicolon in generated output
+
+- Updated dependencies [[`902451601`](https://github.com/dotansimha/graphql-code-generator/commit/902451601b5edf9cb7768e57f332fe6ade79c20a)]:
+  - @graphql-codegen/gql-tag-operations@1.6.1
+
+## 1.7.3
+
+### Patch Changes
+
+- [#8771](https://github.com/dotansimha/graphql-code-generator/pull/8771) [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/utils@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.8.0`, in `dependencies`)
+- Updated dependencies [[`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`6c6b6f2df`](https://github.com/dotansimha/graphql-code-generator/commit/6c6b6f2df88a3a37b437a25320dab5590f033316)]:
+  - @graphql-codegen/gql-tag-operations@1.5.12
+  - @graphql-codegen/plugin-helpers@3.1.2
+  - @graphql-codegen/visitor-plugin-common@2.13.6
+  - @graphql-codegen/typescript-operations@2.5.11
+  - @graphql-codegen/typed-document-node@2.3.11
+  - @graphql-codegen/typescript@2.8.6
+
+## 1.7.2
+
+### Patch Changes
+
+- [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a) Thanks [@saihaj](https://github.com/saihaj)! - fix the version of `@graphql-codegen/plugin-helpers@3.1.1`
+
+- Updated dependencies [[`307a5d350`](https://github.com/dotansimha/graphql-code-generator/commit/307a5d350643dd065d228b04ef3b4bd70cac0e81), [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a)]:
+  - @graphql-codegen/plugin-helpers@3.1.1
+  - @graphql-codegen/add@3.2.3
+  - @graphql-codegen/visitor-plugin-common@2.13.5
+  - @graphql-codegen/gql-tag-operations@1.5.11
+  - @graphql-codegen/typescript-operations@2.5.10
+  - @graphql-codegen/typed-document-node@2.3.10
+  - @graphql-codegen/typescript@2.8.5
+
+## 1.7.1
+
+### Patch Changes
+
+- Updated dependencies [[`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22), [`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22), [`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22), [`f79a00e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f79a00e8ae073eab426ca08795c924e716123482), [`c802a0c0b`](https://github.com/dotansimha/graphql-code-generator/commit/c802a0c0b775cfabc5ace3e7fb6655540c6c4d84)]:
+  - @graphql-codegen/plugin-helpers@3.0.0
+  - @graphql-codegen/typed-document-node@2.3.9
+  - @graphql-codegen/visitor-plugin-common@2.13.4
+  - @graphql-codegen/add@3.2.2
+  - @graphql-codegen/gql-tag-operations@1.5.10
+  - @graphql-codegen/typescript-operations@2.5.9
+  - @graphql-codegen/typescript@2.8.4
+
 ## 1.7.0
 
 ### Minor Changes
@@ -138,7 +189,7 @@
 
 - 1479233df: The plugin now generates an `gql.ts` file for the `gql` function, whose contents are re-exported from the `index.ts` file. In module augmentation mode the `index.ts` file is omitted and only a `gql.d.ts` file is generated.
 
-  Support for fragment masking via the new `fragmentMasking` configuration option. [Check out the Fragment Masking Documentation](https://graphql-code-generator.com/plugins/gql-tag-operations-preset#fragment-masking).
+  Support for fragment masking via the new `fragmentMasking` configuration option. [Check out the Fragment Masking Documentation](https://the-guild.dev/graphql/codegen/plugins/gql-tag-operations-preset#fragment-masking).
 
 ### Patch Changes
 

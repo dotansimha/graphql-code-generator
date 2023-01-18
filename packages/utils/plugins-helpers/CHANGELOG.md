@@ -1,5 +1,41 @@
 # @graphql-codegen/plugin-helpers
 
+## 3.1.2
+
+### Patch Changes
+
+- [#8771](https://github.com/dotansimha/graphql-code-generator/pull/8771) [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.8.0`, in `dependencies`)
+
+- [#8718](https://github.com/dotansimha/graphql-code-generator/pull/8718) [`6c6b6f2df`](https://github.com/dotansimha/graphql-code-generator/commit/6c6b6f2df88a3a37b437a25320dab5590f033316) Thanks [@AaronBuxbaum](https://github.com/AaronBuxbaum)! - Add `globalGqlIdentifierName` to the types
+
+## 3.1.1
+
+### Patch Changes
+
+- [`307a5d350`](https://github.com/dotansimha/graphql-code-generator/commit/307a5d350643dd065d228b04ef3b4bd70cac0e81) Thanks [@saihaj](https://github.com/saihaj)! - Something went wrong in old relesae so this will ensure we have a good bump on all packages
+
+## 3.1.0
+
+### Minor Changes
+
+- [#8662](https://github.com/dotansimha/graphql-code-generator/pull/8662) [`c0183810f`](https://github.com/dotansimha/graphql-code-generator/commit/c0183810f0178aec6f49ab8a6f35f7adc4d9f13e) Thanks [@jantimon](https://github.com/jantimon)! - the life cycle hook beforeOneFileWrite is now able to modify the generated content
+
+## 3.0.0
+
+### Major Changes
+
+- [#8652](https://github.com/dotansimha/graphql-code-generator/pull/8652) [`c802a0c0b`](https://github.com/dotansimha/graphql-code-generator/commit/c802a0c0b775cfabc5ace3e7fb6655540c6c4d84) Thanks [@jantimon](https://github.com/jantimon)! - improve typings for life cycle hooks
+
+### Patch Changes
+
+- [#8686](https://github.com/dotansimha/graphql-code-generator/pull/8686) [`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`change-case-all@1.0.15` ↗︎](https://www.npmjs.com/package/change-case-all/v/1.0.15) (from `1.0.14`, in `dependencies`)
+
+- [#8661](https://github.com/dotansimha/graphql-code-generator/pull/8661) [`f79a00e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f79a00e8ae073eab426ca08795c924e716123482) Thanks [@jantimon](https://github.com/jantimon)! - refactor hook execution
+
 ## 2.7.2
 
 ### Patch Changes

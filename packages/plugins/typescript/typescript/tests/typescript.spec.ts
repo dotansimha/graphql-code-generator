@@ -1,6 +1,6 @@
+import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { buildSchema, parse, GraphQLSchema, GraphQLObjectType, GraphQLEnumType } from 'graphql';
+import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript', () => {
@@ -2635,6 +2635,51 @@ describe('TypeScript', () => {
         `);
       });
 
+      it('respects configured declaration kind with single field', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], { declarationKind: 'interface' }, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export interface Input {
+            int: Scalars['Int'];
+          }
+        `);
+      });
+
+      it('forces declaration kind of type with multiple fields', async () => {
+        const schema = buildSchema(
+          /* GraphQL */ `
+          input Input @oneOf {
+            int: Int
+            boolean: Boolean
+          }
+
+          type Query {
+            foo(input: Input!): Boolean!
+          }
+        `.concat(oneOfDirectiveDefinition)
+        );
+
+        const result = await plugin(schema, [], { declarationKind: 'interface' }, { outputFile: '' });
+
+        expect(result.content).toBeSimilarStringTo(`
+          export type Input =
+            { int: Scalars['Int']; boolean?: never; }
+            | { int?: never; boolean: Scalars['Boolean']; };
+        `);
+      });
+
       it('raises exception for type with non-optional fields', async () => {
         const schema = buildSchema(
           /* GraphQL */ `
@@ -3263,7 +3308,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should build enum correctly with custom imported enum from namspace with different name', async () => {
+    it('Should build enum correctly with custom imported enum from namespace with different name', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
       const result = (await plugin(
         schema,
@@ -3280,7 +3325,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should build enum correctly with custom imported enum from namspace with same name', async () => {
+    it('Should build enum correctly with custom imported enum from namespace with same name', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
       const result = (await plugin(
         schema,
@@ -3307,8 +3352,7 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
-      expect(result.prepend).toContain(`import { MyCustomEnum } from './my-file';`);
-      expect(result.prepend).toContain(`import MyEnum = MyCustomEnum;`);
+      expect(result.prepend).toContain(`import { MyCustomEnum as MyEnum } from './my-file';`);
       expect(result.content).toContain(`export { MyEnum };`);
 
       validateTs(result);
@@ -3342,7 +3386,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toContain(`export { MyEnum };`);
       expect(result.content).toContain(`export { MyEnum2 };`);
-      expect(result.prepend).toContain(`import MyEnum2 = MyEnum2X;`);
+      expect(result.prepend).toContain(`import { MyEnum2X as MyEnum2 } from './my-file';`);
 
       validateTs(result);
     });
@@ -3356,6 +3400,8 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
+      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
       expect(result.content).toContain(`export { MyEnum };`);
       expect(result.content).toContain(`export { MyEnum2 };`);
 

@@ -1,28 +1,25 @@
-import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
+import { createHash } from 'crypto';
+import { promises } from 'fs';
+import { createRequire } from 'module';
 import { resolve } from 'path';
 import {
-  Types,
-  Profiler,
-  createProfiler,
   createNoopProfiler,
+  createProfiler,
   getCachedDocumentNodeFromSchema,
+  Profiler,
+  Types,
 } from '@graphql-codegen/plugin-helpers';
-import { env } from 'string-env-interpolation';
-import yargs from 'yargs';
+import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
+import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
+import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
 import { GraphQLConfig } from 'graphql-config';
-import { findAndLoadGraphQLConfig } from './graphql-config.js';
-import { loadSchema, loadDocuments, defaultSchemaLoadOptions, defaultDocumentsLoadOptions } from './load.js';
-import { GraphQLSchema, print, GraphQLSchemaExtensions } from 'graphql';
+import { env } from 'string-env-interpolation';
 import yaml from 'yaml';
-import { createRequire } from 'module';
-import { promises } from 'fs';
-import { createHash } from 'crypto';
+import yargs from 'yargs';
+import { findAndLoadGraphQLConfig } from './graphql-config.js';
+import { defaultDocumentsLoadOptions, defaultSchemaLoadOptions, loadDocuments, loadSchema } from './load.js';
 
 const { lstat } = promises;
-
-// #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
-const tsLoader = TypeScriptLoader({ transpileOnly: true });
 
 export type CodegenConfig = Types.Config;
 
@@ -77,6 +74,8 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
     }
 
     if (ext === 'ts') {
+      // #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
+      const tsLoader = TypeScriptLoader({ transpileOnly: true });
       return tsLoader(filepath, content);
     }
   }
@@ -122,9 +121,9 @@ export async function loadCodegenConfig({
   packageProp,
   loaders: customLoaders,
 }: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
-  configFilePath = configFilePath || process.cwd();
-  moduleName = moduleName || 'codegen';
-  packageProp = packageProp || moduleName;
+  configFilePath ||= process.cwd();
+  moduleName ||= 'codegen';
+  packageProp ||= moduleName;
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName).concat(additionalSearchPlaces || []),
     packageProp,
@@ -146,9 +145,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
   const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
 
   if (graphqlConfig) {
-    return new CodegenContext({
-      graphqlConfig,
-    });
+    return new CodegenContext({ graphqlConfig });
   }
 
   const result = await loadCodegenConfig({ configFilePath });
@@ -204,14 +201,14 @@ export function buildOptions() {
       alias: 'watch',
       describe:
         'Watch for changes and execute generation automatically. You can also specify a glob expression for custom watch list.',
-      coerce: (watch: any) => {
+      coerce(watch: any) {
         if (watch === 'false') {
           return false;
         }
         if (typeof watch === 'string' || Array.isArray(watch)) {
           return watch;
         }
-        return !!watch;
+        return Boolean(watch);
       },
     },
     r: {
@@ -490,8 +487,8 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
   );
 }
 
-export function shouldEmitLegacyCommonJSImports(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : !!config.emitLegacyCommonJSImports;
+export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
+  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : Boolean(config.emitLegacyCommonJSImports);
   // const outputConfig = config.generates[outputPath];
 
   // if (!outputConfig) {

@@ -23,7 +23,8 @@
           "description": "A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.\nYou can use one of the following:\n\n- Path to a local `.graphql` file\n- Path to a code file (for example: `.js` or `.tsx`) containing GraphQL operation strings.\n- Glob expression pointing to multiple `.graphql` files\n- Glob expression pointing to multiple code files\n- Inline string containing GraphQL SDL operation definition\n\nYou can specify either a single file, or multiple.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/documents-field"
         },
         "config": {
-          "$ref": "#/definitions/Types.PluginConfig",
+          "type": "object",
+          "additionalProperties": true,
           "description": "Configuration object containing key => value that will be passes to the plugins.\nSpecifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.\n\nThe options may vary depends on what plugins you are using.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/config-field"
         },
         "generates": {
@@ -31,8 +32,8 @@
           "type": "object",
           "additionalProperties": {
             "anyOf": [
-              { "$ref": "#/definitions/Types.ConfiguredOutput" },
-              { "type": "array", "items": { "$ref": "#/definitions/Types.ConfiguredPlugin" } }
+              { "type": "array", "items": { "$ref": "#/definitions/Types.ConfiguredPlugin" } },
+              { "$ref": "#/definitions/Types.ConfiguredOutput" }
             ]
           }
         },
@@ -85,6 +86,10 @@
             "globalIdentifier": {
               "description": "Overrides the name of the default GraphQL name identifier.",
               "type": "string"
+            },
+            "globalGqlIdentifierName": {
+              "description": "Allows to use a global identifier instead of a module import.",
+              "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }]
             }
           }
         },
@@ -166,6 +171,14 @@
           "description": "If false, it will work with `@tanstack/react-query`, default value is true.\nDefault value: \"true\"",
           "type": "boolean"
         },
+        "namingConvention": {
+          "$ref": "#/definitions/NamingConvention",
+          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
+        },
+        "operationResultSuffix": {
+          "description": "Adds a suffix to generated operation result type names\nDefault value: \"\"",
+          "type": "string"
+        },
         "dedupeOperationSuffix": {
           "description": "Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.\nDefault value: \"false\"",
           "type": "boolean"
@@ -173,10 +186,6 @@
         "omitOperationSuffix": {
           "description": "Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.\nDefault value: \"false\"",
           "type": "boolean"
-        },
-        "operationResultSuffix": {
-          "description": "Adds a suffix to generated operation result type names\nDefault value: \"\"",
-          "type": "string"
         },
         "documentVariablePrefix": {
           "description": "Changes the GraphQL operations variables prefix.\nDefault value: \"\"",
@@ -194,16 +203,38 @@
           "description": "Changes the GraphQL fragments variables suffix.\nDefault value: \"FragmentDoc\"",
           "type": "string"
         },
-        "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "pureMagicComment": {
           "description": "This config adds PURE magic comment to the static variables to enforce treeshaking for your bundler.\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "optimizeDocumentNode": {
+          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "experimentalFragmentVariables": {
           "description": "If set to true, it will enable support for parsing variables on fragments.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
+        },
+        "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
+        "typesSuffix": { "description": "Suffixes all the generated types.\nDefault value: \"\"", "type": "string" },
+        "nonOptionalTypename": {
+          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "dedupeFragments": {
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "inlineFragmentTypes": {
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
+        },
+        "emitLegacyCommonJSImports": {
+          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "strictScalars": {
@@ -214,34 +245,8 @@
           "description": "Allows you to override the type that unknown scalars will have.\nDefault value: \"any\"",
           "type": "string"
         },
-        "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
-          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
-        },
-        "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
-          "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
-        },
-        "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
-        "typesSuffix": { "description": "Suffixes all the generated types.\nDefault value: \"\"", "type": "string" },
         "skipTypename": {
           "description": "Does not add `__typename` to the generated types, unless it was specified in the selection set.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
-        "nonOptionalTypename": {
-          "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional\nDefault value: \"false\"",
-          "type": "boolean"
-        },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
-        "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
         }
       }
@@ -378,8 +383,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -444,7 +449,7 @@
           "type": "boolean"
         },
         "enumsAsTypes": {
-          "description": "Generates enum as TypeScript `type` instead of `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`\nDefault value: \"false\"",
+          "description": "Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns\nDefault value: \"false\"",
           "type": "boolean"
         },
         "numericEnums": {
@@ -480,7 +485,7 @@
           "type": "string"
         },
         "inputMaybeValue": {
-          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override it's definition.\nDefault value: \"Maybe<T>\"",
+          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override its definition.\nDefault value: \"Maybe<T>\"",
           "type": "string"
         },
         "noExport": {
@@ -552,11 +557,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
+          "$ref": "#/definitions/ScalarsMap_1",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
+          "$ref": "#/definitions/NamingConvention_1",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -578,8 +583,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -720,11 +725,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
+          "$ref": "#/definitions/ScalarsMap_1",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
+          "$ref": "#/definitions/NamingConvention_1",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -746,8 +751,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -796,11 +801,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
+          "$ref": "#/definitions/ScalarsMap_1",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
+          "$ref": "#/definitions/NamingConvention_1",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -822,8 +827,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -901,7 +906,7 @@
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode",
+          "$ref": "#/definitions/DocumentMode_1",
           "description": "Declares how DocumentNode are created:\n\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
@@ -933,11 +938,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
+          "$ref": "#/definitions/ScalarsMap_1",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
+          "$ref": "#/definitions/NamingConvention_1",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -959,8 +964,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -1009,7 +1014,7 @@
           "type": "boolean"
         },
         "enumsAsTypes": {
-          "description": "Generates enum as TypeScript `type` instead of `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`\nDefault value: \"false\"",
+          "description": "Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns\nDefault value: \"false\"",
           "type": "boolean"
         },
         "numericEnums": {
@@ -1117,11 +1122,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
+          "$ref": "#/definitions/ScalarsMap_1",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
+          "$ref": "#/definitions/NamingConvention_1",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -1143,8 +1148,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -1303,8 +1308,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -1374,8 +1379,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -1514,11 +1519,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
+          "$ref": "#/definitions/ScalarsMap_1",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
+          "$ref": "#/definitions/NamingConvention_1",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -1540,8 +1545,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -1700,8 +1705,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -1828,8 +1833,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2003,8 +2008,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2129,8 +2134,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2281,8 +2286,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2405,8 +2410,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2525,8 +2530,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2539,7 +2544,7 @@
       "type": "object",
       "properties": {
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention",
+          "$ref": "#/definitions/NamingConvention_1",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "namePrefix": { "description": "Adds prefix to the name\nDefault value: \"\"", "type": "string" },
@@ -2597,7 +2602,7 @@
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode",
+          "$ref": "#/definitions/DocumentMode_1",
           "description": "Declares how DocumentNode are created:\n\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
@@ -2629,7 +2634,7 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap",
+          "$ref": "#/definitions/ScalarsMap_1",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -2651,8 +2656,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2723,8 +2728,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2791,8 +2796,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2808,7 +2813,7 @@
           "type": "string"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap",
+          "$ref": "#/definitions/EnumValuesMap_1",
           "description": "Overrides the default value of enum values declared in your GraphQL schema."
         },
         "listType": {
@@ -2858,8 +2863,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -2884,13 +2889,13 @@
           "type": "boolean"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap",
+          "$ref": "#/definitions/EnumValuesMap_1",
           "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
         },
         "declarationKind": {
           "description": "Overrides the default output for various GraphQL elements.",
           "anyOf": [
-            { "$ref": "#/definitions/DeclarationKindConfig" },
+            { "$ref": "#/definitions/DeclarationKindConfig_1" },
             { "enum": ["abstract class", "class", "interface", "type"], "type": "string" }
           ]
         },
@@ -2927,7 +2932,7 @@
           "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
         },
         "directiveArgumentAndInputFieldMappings": {
-          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings_1",
           "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
         },
         "directiveArgumentAndInputFieldMappingTypeSuffix": {
@@ -2969,8 +2974,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -3017,14 +3022,14 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.\nDefault value: \"false\"",
-          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig" }, { "type": "boolean" }]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig_1" }, { "type": "boolean" }]
         },
         "showUnusedMappers": {
           "description": "Warns about unused mappers.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap",
+          "$ref": "#/definitions/EnumValuesMap_1",
           "description": "Overrides the default value of enum values declared in your GraphQL schema, supported\nin this plugin because of the need for integration with `typescript` package.\nSee documentation under `typescript` plugin for more information and examples."
         },
         "resolverTypeWrapperSignature": {
@@ -3099,8 +3104,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -3165,13 +3170,13 @@
           "type": "boolean"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap",
+          "$ref": "#/definitions/EnumValuesMap_1",
           "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
         },
         "declarationKind": {
           "description": "Overrides the default output for various GraphQL elements.",
           "anyOf": [
-            { "$ref": "#/definitions/DeclarationKindConfig" },
+            { "$ref": "#/definitions/DeclarationKindConfig_1" },
             { "enum": ["abstract class", "class", "interface", "type"], "type": "string" }
           ]
         },
@@ -3208,7 +3213,7 @@
           "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
         },
         "directiveArgumentAndInputFieldMappings": {
-          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings_1",
           "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
         },
         "directiveArgumentAndInputFieldMappingTypeSuffix": {
@@ -3250,8 +3255,8 @@
           "type": "boolean"
         },
         "inlineFragmentTypes": {
-          "$ref": "#/definitions/InlineFragmentTypeOptions",
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\""
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
@@ -3456,20 +3461,7 @@
         { "$ref": "#/definitions/Types.UrlSchemaWithOptions" },
         { "$ref": "#/definitions/Types.LocalSchemaPathWithOptions" },
         { "$ref": "#/definitions/Types.ApolloEngineSchemaOptions" },
-        {
-          "type": "array",
-          "items": {
-            "description": "A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).",
-            "anyOf": [
-              { "$ref": "#/definitions/Types.SchemaWithLoader" },
-              { "$ref": "#/definitions/Types.SchemaFromCodeFile" },
-              { "$ref": "#/definitions/Types.UrlSchemaWithOptions" },
-              { "$ref": "#/definitions/Types.LocalSchemaPathWithOptions" },
-              { "$ref": "#/definitions/Types.ApolloEngineSchemaOptions" },
-              { "type": "string" }
-            ]
-          }
-        },
+        { "type": "array", "items": { "$ref": "#/definitions/Types.Schema" } },
         { "type": "string" }
       ]
     },
@@ -3608,14 +3600,22 @@
     },
     "__type": { "type": "object" },
     "Record": { "$ref": "#/definitions/__type" },
+    "Types.Schema": {
+      "description": "A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).",
+      "anyOf": [
+        { "$ref": "#/definitions/Types.SchemaWithLoader" },
+        { "$ref": "#/definitions/Types.SchemaFromCodeFile" },
+        { "$ref": "#/definitions/Types.UrlSchemaWithOptions" },
+        { "$ref": "#/definitions/Types.LocalSchemaPathWithOptions" },
+        { "$ref": "#/definitions/Types.ApolloEngineSchemaOptions" },
+        { "type": "string" }
+      ]
+    },
     "Types.RequireExtension": { "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }] },
     "Types.InstanceOrArray_1": {
       "anyOf": [
         { "$ref": "#/definitions/Types.CustomDocumentLoader" },
-        {
-          "type": "array",
-          "items": { "anyOf": [{ "$ref": "#/definitions/Types.CustomDocumentLoader" }, { "type": "string" }] }
-        },
+        { "type": "array", "items": { "$ref": "#/definitions/Types.OperationDocument" } },
         { "type": "string" }
       ]
     },
@@ -3634,9 +3634,54 @@
         }
       }
     },
-    "__type_1": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T" } },
+    "Types.OperationDocument": {
+      "anyOf": [{ "$ref": "#/definitions/Types.CustomDocumentLoader" }, { "type": "string" }]
+    },
+    "Types.ConfiguredPlugin": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T" } },
+      "properties": {
+        "flutter-freezed": { "$ref": "#/definitions/FlutterFreezedPluginConfig" },
+        "typescript-react-query": { "$ref": "#/definitions/ReactQueryRawPluginConfig" },
+        "typescript-rtk-query": { "$ref": "#/definitions/RTKConfig" },
+        "typescript-generic-sdk": { "$ref": "#/definitions/RawGenericSdkPluginConfig" },
+        "typescript-apollo-client-helpers": { "$ref": "#/definitions/ApolloClientHelpersConfig" },
+        "add": { "$ref": "#/definitions/AddPluginConfig" },
+        "time": { "$ref": "#/definitions/TimePluginConfig" },
+        "typescript": { "$ref": "#/definitions/TypeScriptPluginConfig" },
+        "typescript-operations": { "$ref": "#/definitions/TypeScriptDocumentsPluginConfig" },
+        "c-sharp": { "$ref": "#/definitions/CSharpResolversPluginRawConfig" },
+        "c-sharp-operations": { "$ref": "#/definitions/CSharpOperationsRawPluginConfig" },
+        "schema-ast": { "$ref": "#/definitions/SchemaASTConfig" },
+        "typescript-type-graphql": { "$ref": "#/definitions/TypeGraphQLPluginConfig" },
+        "typescript-graphql-files-modules": { "$ref": "#/definitions/TypeScriptFilesModulesPluginConfig" },
+        "named-operations-object": { "$ref": "#/definitions/NamedOperationsObjectPluginConfig" },
+        "typescript-graphql-request": { "$ref": "#/definitions/RawGraphQLRequestPluginConfig" },
+        "typescript-mongodb": { "$ref": "#/definitions/TypeScriptMongoPluginConfig" },
+        "typescript-resolvers": { "$ref": "#/definitions/TypeScriptResolversPluginConfig" },
+        "typescript-apollo-angular": { "$ref": "#/definitions/ApolloAngularRawPluginConfig" },
+        "typescript-urql": { "$ref": "#/definitions/UrqlRawPluginConfig" },
+        "typescript-react-apollo": { "$ref": "#/definitions/ReactApolloRawPluginConfig" },
+        "typescript-vue-apollo": { "$ref": "#/definitions/VueApolloRawPluginConfig" },
+        "typescript-vue-apollo-smart-ops": { "$ref": "#/definitions/VueApolloSmartOpsRawPluginConfig" },
+        "typescript-vue-urql": { "$ref": "#/definitions/VueUrqlRawPluginConfig" },
+        "typescript-stencil-apollo": { "$ref": "#/definitions/StencilApolloRawPluginConfig" },
+        "typescript-document-nodes": { "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig" },
+        "typescript-msw": { "$ref": "#/definitions/MSWConfig" },
+        "java-apollo-android": { "$ref": "#/definitions/JavaApolloAndroidPluginConfig" },
+        "java-resolvers": { "$ref": "#/definitions/JavaResolversPluginRawConfig" },
+        "java": { "$ref": "#/definitions/JavaResolversPluginRawConfig" },
+        "kotlin": { "$ref": "#/definitions/KotlinResolversPluginRawConfig" },
+        "flow": { "$ref": "#/definitions/FlowPluginConfig" },
+        "flow-resolvers": { "$ref": "#/definitions/FlowResolversPluginConfig" },
+        "flow-operations": { "$ref": "#/definitions/FlowDocumentsPluginConfig" },
+        "introspection": { "$ref": "#/definitions/IntrospectionPluginConfig" },
+        "fragment-matcher": { "$ref": "#/definitions/FragmentMatcherConfig" },
+        "urql-introspection": { "$ref": "#/definitions/UrqlIntrospectionConfig" },
+        "hasura-allow-list": { "$ref": "#/definitions/HasuraAllowListPluginConfig" }
+      }
+    },
     "T": { "type": "object" },
-    "Types.PluginConfig": { "$ref": "#/definitions/__type_1" },
     "Types.ConfiguredOutput": {
       "additionalProperties": false,
       "type": "object",
@@ -3875,49 +3920,51 @@
         }
       ]
     },
-    "__type_2": {
+    "__type_1": {
       "type": "object",
       "properties": { "buildGeneratesSection": { "type": "object" }, "prepareDocuments": { "type": "object" } }
     },
-    "Types.OutputPreset": { "$ref": "#/definitions/__type_2" },
+    "Types.OutputPreset": { "$ref": "#/definitions/__type_1" },
+    "__type_2": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T" } },
+    "Types.PluginConfig": { "$ref": "#/definitions/__type_2" },
     "__type_3": {
       "type": "object",
       "properties": {
         "afterStart": {
-          "$ref": "#/definitions/T_1",
+          "$ref": "#/definitions/Types.LifeCycleHookValue",
           "description": "Triggered with no arguments when the codegen starts (after the `codegen.yml` has beed parsed).\n\nSpecify a shell command to run."
         },
         "beforeDone": {
-          "$ref": "#/definitions/T_1",
+          "$ref": "#/definitions/Types.LifeCycleHookValue",
           "description": "Triggered with no arguments, right before the codegen closes, or when watch mode is stopped.\n\nSpecify a shell command to run."
         },
         "onWatchTriggered": {
-          "$ref": "#/definitions/T_1",
+          "$ref": "#/definitions/Types.LifeCycleHookValue",
           "description": "Triggered every time a file changes when using watch mode.\nTriggered with two arguments: the type of the event (for example, `changed`) and the path of the file."
         },
         "onError": {
-          "$ref": "#/definitions/T_1",
+          "$ref": "#/definitions/Types.LifeCycleHookValue",
           "description": "Triggered in case of a general error in the codegen. The argument is a string containing the error."
         },
         "afterOneFileWrite": {
-          "$ref": "#/definitions/T_1",
+          "$ref": "#/definitions/Types.LifeCycleHookValue",
           "description": "Triggered after a file is written to the file-system. Executed with the path for the file.\nIf the content of the file hasn't changed since last execution - this hooks won't be triggered.\n\n> This is a very useful hook, you can use it for integration with Prettier or other linters."
         },
         "afterAllFileWrite": {
-          "$ref": "#/definitions/T_1",
+          "$ref": "#/definitions/Types.LifeCycleHookValue",
           "description": "Executed after writing all the files to the file-system.\nTriggered with multiple arguments - paths for all files."
         },
         "beforeOneFileWrite": {
-          "$ref": "#/definitions/T_1",
-          "description": "Triggered before a file is written to the file-system. Executed with the path for the file.\n\nIf the content of the file hasn't changed since last execution - this hooks won't be triggered."
+          "$ref": "#/definitions/Types.LifeCycleAlterHookValue",
+          "description": "Triggered before a file is written to the file-system.\nExecuted with the path and content for the file.\n\nReturning a string will override the content of the file.\n\nIf the content of the file hasn't changed since last execution - this hooks won't be triggered."
         },
         "beforeAllFileWrite": {
-          "$ref": "#/definitions/T_1",
+          "$ref": "#/definitions/Types.LifeCycleHookValue",
           "description": "Executed after the codegen has done creating the output and before writing the files to the file-system.\n\nTriggered with multiple arguments - paths for all relevant files.\n\n> Not all the files will be actually written to the file-system, because this is triggered before checking if the file has changed since last execution."
         }
       }
     },
-    "T_1": {
+    "Types.LifeCycleHookValue": {
       "anyOf": [
         { "$ref": "#/definitions/Types.HookFunction" },
         {
@@ -3929,53 +3976,28 @@
     },
     "__type_4": { "type": "object" },
     "Types.HookFunction": { "$ref": "#/definitions/__type_4" },
-    "Partial": { "$ref": "#/definitions/__type_3" },
-    "Types.ConfiguredPlugin": {
-      "type": "object",
-      "additionalProperties": { "$ref": "#/definitions/Types.PluginConfig" },
-      "properties": {
-        "flutter-freezed": { "$ref": "#/definitions/FlutterFreezedPluginConfig" },
-        "typescript-react-query": { "$ref": "#/definitions/ReactQueryRawPluginConfig" },
-        "typescript-rtk-query": { "$ref": "#/definitions/RTKConfig" },
-        "typescript-generic-sdk": { "$ref": "#/definitions/RawGenericSdkPluginConfig" },
-        "typescript-apollo-client-helpers": { "$ref": "#/definitions/ApolloClientHelpersConfig" },
-        "add": { "$ref": "#/definitions/AddPluginConfig" },
-        "time": { "$ref": "#/definitions/TimePluginConfig" },
-        "typescript": { "$ref": "#/definitions/TypeScriptPluginConfig" },
-        "typescript-operations": { "$ref": "#/definitions/TypeScriptDocumentsPluginConfig" },
-        "c-sharp": { "$ref": "#/definitions/CSharpResolversPluginRawConfig" },
-        "c-sharp-operations": { "$ref": "#/definitions/CSharpOperationsRawPluginConfig" },
-        "schema-ast": { "$ref": "#/definitions/SchemaASTConfig" },
-        "typescript-type-graphql": { "$ref": "#/definitions/TypeGraphQLPluginConfig" },
-        "typescript-graphql-files-modules": { "$ref": "#/definitions/TypeScriptFilesModulesPluginConfig" },
-        "named-operations-object": { "$ref": "#/definitions/NamedOperationsObjectPluginConfig" },
-        "typescript-graphql-request": { "$ref": "#/definitions/RawGraphQLRequestPluginConfig" },
-        "typescript-mongodb": { "$ref": "#/definitions/TypeScriptMongoPluginConfig" },
-        "typescript-resolvers": { "$ref": "#/definitions/TypeScriptResolversPluginConfig" },
-        "typescript-apollo-angular": { "$ref": "#/definitions/ApolloAngularRawPluginConfig" },
-        "typescript-urql": { "$ref": "#/definitions/UrqlRawPluginConfig" },
-        "typescript-react-apollo": { "$ref": "#/definitions/ReactApolloRawPluginConfig" },
-        "typescript-vue-apollo": { "$ref": "#/definitions/VueApolloRawPluginConfig" },
-        "typescript-vue-apollo-smart-ops": { "$ref": "#/definitions/VueApolloSmartOpsRawPluginConfig" },
-        "typescript-vue-urql": { "$ref": "#/definitions/VueUrqlRawPluginConfig" },
-        "typescript-stencil-apollo": { "$ref": "#/definitions/StencilApolloRawPluginConfig" },
-        "typescript-document-nodes": { "$ref": "#/definitions/TypeScriptDocumentNodesRawPluginConfig" },
-        "typescript-msw": { "$ref": "#/definitions/MSWConfig" },
-        "java-apollo-android": { "$ref": "#/definitions/JavaApolloAndroidPluginConfig" },
-        "java-resolvers": { "$ref": "#/definitions/JavaResolversPluginRawConfig" },
-        "java": { "$ref": "#/definitions/JavaResolversPluginRawConfig" },
-        "kotlin": { "$ref": "#/definitions/KotlinResolversPluginRawConfig" },
-        "flow": { "$ref": "#/definitions/FlowPluginConfig" },
-        "flow-resolvers": { "$ref": "#/definitions/FlowResolversPluginConfig" },
-        "flow-operations": { "$ref": "#/definitions/FlowDocumentsPluginConfig" },
-        "introspection": { "$ref": "#/definitions/IntrospectionPluginConfig" },
-        "fragment-matcher": { "$ref": "#/definitions/FragmentMatcherConfig" },
-        "urql-introspection": { "$ref": "#/definitions/UrqlIntrospectionConfig" },
-        "hasura-allow-list": { "$ref": "#/definitions/HasuraAllowListPluginConfig" }
-      }
+    "Types.LifeCycleAlterHookValue": {
+      "anyOf": [
+        { "$ref": "#/definitions/Types.HookFunction" },
+        { "$ref": "#/definitions/Types.HookAlterFunction" },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/Types.HookFunction" },
+              { "$ref": "#/definitions/Types.HookAlterFunction" },
+              { "type": "string" }
+            ]
+          }
+        },
+        { "type": "string" }
+      ]
     },
     "__type_5": { "type": "object" },
-    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_5" },
+    "Types.HookAlterFunction": { "$ref": "#/definitions/__type_5" },
+    "Partial": { "$ref": "#/definitions/__type_3" },
+    "__type_6": { "type": "object" },
+    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_6" },
     "Array": {
       "type": "array",
       "items": {
@@ -4043,27 +4065,23 @@
         }
       }
     },
-    "__type_6": {
+    "__type_7": {
       "description": "use this option to add annotations/decorators for the the generated output. Also use this to add",
       "type": "object"
     },
-    "CustomDecorator": { "$ref": "#/definitions/__type_6" },
-    "__type_7": { "type": "object" },
-    "Record_1": { "$ref": "#/definitions/__type_7" },
-    "__type_8": {
+    "CustomDecorator": { "$ref": "#/definitions/__type_7" },
+    "__type_8": { "type": "object" },
+    "Record_1": { "$ref": "#/definitions/__type_8" },
+    "__type_9": {
       "type": "object",
       "properties": {
         "endpoint": { "type": "string" },
         "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record_2" }, { "type": "string" }] }
       }
     },
-    "__type_9": { "type": "object" },
-    "Record_2": { "$ref": "#/definitions/__type_9" },
-    "HardcodedFetch": { "$ref": "#/definitions/__type_8" },
-    "ScalarsMap": {
-      "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
-      "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
-    },
+    "__type_10": { "type": "object" },
+    "Record_2": { "$ref": "#/definitions/__type_10" },
+    "HardcodedFetch": { "$ref": "#/definitions/__type_9" },
     "NamingConvention": {
       "anyOf": [
         { "$ref": "#/definitions/NamingConventionFn" },
@@ -4071,8 +4089,8 @@
         { "type": "string" }
       ]
     },
-    "__type_10": { "type": "object" },
-    "NamingConventionFn": { "$ref": "#/definitions/__type_10" },
+    "__type_11": { "type": "object" },
+    "NamingConventionFn": { "$ref": "#/definitions/__type_11" },
     "NamingConventionMap": {
       "additionalProperties": false,
       "type": "object",
@@ -4082,7 +4100,10 @@
         "transformUnderscore": { "type": "boolean" }
       }
     },
-    "InlineFragmentTypeOptions": { "enum": ["combine", "inline", "mask"], "type": "string" },
+    "ScalarsMap": {
+      "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
+      "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
+    },
     "DocumentMode": {
       "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
       "type": "string"
@@ -4130,14 +4151,40 @@
       }
     },
     "DeclarationKind": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_11": {
+    "__type_12": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_11" },
+    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_12" },
+    "ScalarsMap_1": {
+      "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
+      "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
+    },
+    "NamingConvention_1": {
+      "anyOf": [
+        { "$ref": "#/definitions/NamingConventionFn_1" },
+        { "$ref": "#/definitions/NamingConventionMap_1" },
+        { "type": "string" }
+      ]
+    },
+    "__type_13": { "type": "object" },
+    "NamingConventionFn_1": { "$ref": "#/definitions/__type_13" },
+    "NamingConventionMap_1": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "enumValues": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn_1" }, { "type": "string" }] },
+        "typeNames": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn_1" }, { "type": "string" }] },
+        "transformUnderscore": { "type": "boolean" }
+      }
+    },
     "JsonAttributesSource": { "enum": ["Newtonsoft.Json", "System.Text.Json"], "type": "string" },
-    "__type_12": {
+    "DocumentMode_1": {
+      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
+      "type": "string"
+    },
+    "__type_14": {
       "type": "object",
       "properties": {
         "type": { "type": "string" },
@@ -4147,13 +4194,62 @@
         "arguments": { "type": "string" }
       }
     },
-    "Partial_1": { "$ref": "#/definitions/__type_12" },
+    "Partial_1": { "$ref": "#/definitions/__type_14" },
     "Array_1": { "type": "array", "items": { "type": "string" } },
     "StencilComponentType": { "enum": ["class", "functional"], "type": "string" },
     "FileType": { "enum": [0, 1, 2, 3], "type": "number" },
-    "__type_13": { "type": "object" },
-    "FragmentImportFromFn": { "$ref": "#/definitions/__type_13" },
-    "__type_14": {
+    "EnumValuesMap_1": {
+      "description": "A raw configuration for enumValues map - can be represented with a single string value for a file path,\na map between enum name and a file path, or a map between enum name and an object with explicit enum values.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "allOf": [
+                  { "type": "object", "additionalProperties": { "type": ["string", "number"] } },
+                  { "$ref": "#/definitions/AdditionalProps_1" }
+                ]
+              },
+              { "type": "string" }
+            ]
+          }
+        },
+        { "type": "string" }
+      ]
+    },
+    "AdditionalProps_1": { "type": "object" },
+    "DeclarationKindConfig_1": {
+      "type": "object",
+      "properties": {
+        "directive": { "$ref": "#/definitions/DeclarationKind_1" },
+        "scalar": { "$ref": "#/definitions/DeclarationKind_1" },
+        "input": { "$ref": "#/definitions/DeclarationKind_1" },
+        "type": { "$ref": "#/definitions/DeclarationKind_1" },
+        "interface": { "$ref": "#/definitions/DeclarationKind_1" },
+        "arguments": { "$ref": "#/definitions/DeclarationKind_1" }
+      }
+    },
+    "DeclarationKind_1": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
+    "__type_15": {
+      "description": "A map between the GraphQL directive name and the identifier that should be used",
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "DirectiveArgumentAndInputFieldMappings_1": { "$ref": "#/definitions/__type_15" },
+    "AvoidOptionalsConfig_1": {
+      "type": "object",
+      "properties": {
+        "field": { "type": "boolean" },
+        "object": { "type": "boolean" },
+        "inputValue": { "type": "boolean" },
+        "defaultValue": { "type": "boolean" },
+        "resolvers": { "type": "boolean" }
+      }
+    },
+    "__type_16": { "type": "object" },
+    "FragmentImportFromFn": { "$ref": "#/definitions/__type_16" },
+    "__type_17": {
       "type": "object",
       "properties": {
         "augmentedModuleName": {
@@ -4166,7 +4262,7 @@
         }
       }
     },
-    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_14" },
+    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_17" },
     "GeneratedPluginsMap": {
       "anyOf": [
         {

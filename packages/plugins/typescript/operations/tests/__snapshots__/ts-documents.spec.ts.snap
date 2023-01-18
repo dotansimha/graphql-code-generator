@@ -133,6 +133,28 @@ function test(q: QQuery) {
     }"
 `;
 
+exports[`TypeScript Operations Plugin Issues #6874 - generates types when parent type differs from spread fragment member types and preResolveTypes=true 1`] = `
+"export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SnakeQueryQuery = { __typename?: 'Query', snake: { __typename?: 'Snake', name: string, features: { __typename?: 'SnakeFeatures', color: string, length: number } } | { __typename?: 'Error' } };
+
+type AnimalFragment_Bat_Fragment = { __typename?: 'Bat', features: { __typename?: 'BatFeatures', color: string, wingspan: number } };
+
+type AnimalFragment_Snake_Fragment = { __typename?: 'Snake', features: { __typename?: 'SnakeFeatures', color: string, length: number } };
+
+export type AnimalFragmentFragment = AnimalFragment_Bat_Fragment | AnimalFragment_Snake_Fragment;
+"
+`;
+
+exports[`TypeScript Operations Plugin Issues #8793 selecting __typename should not be optional 1`] = `
+"export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SnakeQueryQuery = { __typename: 'Query', snake: { __typename: 'Snake' } | { __typename: 'Error' } };
+"
+`;
+
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using both inline fragment and spread over type 1`] = `
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

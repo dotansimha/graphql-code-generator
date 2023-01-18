@@ -1,5 +1,5 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { resolve } from 'path';
+import { CodegenPlugin, Types } from '@graphql-codegen/plugin-helpers';
 
 export async function getPluginByName(
   name: string,

@@ -1,34 +1,34 @@
-import {
-  visit,
-  DocumentNode,
-  ObjectTypeDefinitionNode,
-  ObjectTypeExtensionNode,
-  Kind,
-  TypeDefinitionNode,
-  TypeExtensionNode,
-  EnumTypeDefinitionNode,
-  EnumTypeExtensionNode,
-  InputObjectTypeDefinitionNode,
-  InputObjectTypeExtensionNode,
-  GraphQLSchema,
-  isScalarType,
-  InterfaceTypeDefinitionNode,
-  InterfaceTypeExtensionNode,
-} from 'graphql';
+import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { pascalCase } from 'change-case-all';
 import {
-  unique,
-  withQuotes,
-  buildBlock,
-  pushUnique,
-  concatByKey,
-  uniqueByKey,
-  createObject,
-  collectUsedTypes,
-  indent,
-} from './utils.js';
+  DocumentNode,
+  EnumTypeDefinitionNode,
+  EnumTypeExtensionNode,
+  GraphQLSchema,
+  InputObjectTypeDefinitionNode,
+  InputObjectTypeExtensionNode,
+  InterfaceTypeDefinitionNode,
+  InterfaceTypeExtensionNode,
+  isScalarType,
+  Kind,
+  ObjectTypeDefinitionNode,
+  ObjectTypeExtensionNode,
+  TypeDefinitionNode,
+  TypeExtensionNode,
+  visit,
+} from 'graphql';
 import { ModulesConfig } from './config.js';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import {
+  buildBlock,
+  collectUsedTypes,
+  concatByKey,
+  createObject,
+  indent,
+  pushUnique,
+  unique,
+  uniqueByKey,
+  withQuotes,
+} from './utils.js';
 
 type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' | 'enums';
 type Registry = Record<RegistryKeys, string[]>;
@@ -249,7 +249,7 @@ export function buildModule(
 
     for (const kind in registry) {
       const k = kind as RegistryKeys;
-      if (registry.hasOwnProperty(k) && resolverKeys.includes(k as any)) {
+      if (Object.prototype.hasOwnProperty.call(registry, k) && resolverKeys.includes(k as any)) {
         const types = registry[k];
 
         types.forEach(typeName => {
@@ -283,7 +283,7 @@ export function buildModule(
 
     // Type.Field
     for (const typeName in picks.objects) {
-      if (picks.objects.hasOwnProperty(typeName)) {
+      if (Object.prototype.hasOwnProperty.call(picks.objects, typeName)) {
         const fields = picks.objects[typeName];
         const lines = [wildcardField].concat(fields.map(field => printResolveMiddlewareRecord(field)));
 
@@ -378,9 +378,7 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.fields) {
-      if (!picksObj[name]) {
-        picksObj[name] = [];
-      }
+      picksObj[name] ||= [];
 
       node.fields.forEach(field => {
         picksObj[name].push(field.name.value);
@@ -392,9 +390,7 @@ export function buildModule(
     const name = node.name.value;
 
     if (node.values) {
-      if (!picks.enums[name]) {
-        picks.enums[name] = [];
-      }
+      picks.enums[name] ||= [];
 
       node.values.forEach(field => {
         picks.enums[name].push(field.name.value);

@@ -1,13 +1,12 @@
-import { lifecycleHooks } from './hooks.js';
+import { createHash } from 'crypto';
+import { dirname, isAbsolute, join } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen.js';
-import { createWatcher } from './utils/watcher.js';
-import { fileExists, readFile, writeFile, unlinkFile } from './utils/file-system.js';
-import mkdirp from 'mkdirp';
-import { dirname, join, isAbsolute } from 'path';
-import { debugLog } from './utils/debugging.js';
 import { CodegenContext, ensureContext } from './config.js';
-import { createHash } from 'crypto';
+import { lifecycleHooks } from './hooks.js';
+import { debugLog } from './utils/debugging.js';
+import { mkdirp, readFile, unlinkFile, writeFile } from './utils/file-system.js';
+import { createWatcher } from './utils/watcher.js';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 
@@ -57,41 +56,61 @@ export async function generate(
       () =>
         Promise.all(
           generationResult.map(async (result: Types.FileOutput) => {
-            const exists = await fileExists(result.filename);
+            const previousHash = recentOutputHash.get(result.filename) || (await hashFile(result.filename));
+            const exists = previousHash !== null;
+
+            // Store previous hash to avoid reading from disk again
+            if (previousHash) {
+              recentOutputHash.set(result.filename, previousHash);
+            }
 
             if (!shouldOverwrite(config, result.filename) && exists) {
               return;
             }
 
-            const content = result.content || '';
+            let content = result.content || '';
             const currentHash = hash(content);
-            let previousHash = recentOutputHash.get(result.filename);
-
-            if (!previousHash && exists) {
-              previousHash = hash(await readFile(result.filename));
-            }
 
             if (previousHash && currentHash === previousHash) {
               debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
               return;
-            } else if (context.checkMode) {
+            }
+
+            // skip updating file in dry mode
+            if (context.checkMode) {
               context.checkModeStaleFiles.push(result.filename);
-              return; // skip updating file in dry mode
+              return;
             }
 
             if (content.length === 0) {
               return;
             }
 
-            recentOutputHash.set(result.filename, currentHash);
-            const basedir = dirname(result.filename);
-            await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
-            await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
-            await mkdirp(basedir);
             const absolutePath = isAbsolute(result.filename)
               ? result.filename
               : join(input.cwd || process.cwd(), result.filename);
+
+            const basedir = dirname(absolutePath);
+            await mkdirp(basedir);
+
+            content = await lifecycleHooks(result.hooks).beforeOneFileWrite(absolutePath, content);
+            content = await lifecycleHooks(config.hooks).beforeOneFileWrite(absolutePath, content);
+
+            if (content !== result.content) {
+              result.content = content;
+              // compare the prettified content with the previous hash
+              // to compare the content with an existing prettified file
+              if (hash(content) === previousHash) {
+                debugLog(`Skipping file (${result.filename}) writing due to indentical hash after prettier...`);
+                // the modified content is NOT stored in recentOutputHash
+                // so a diff can already be detected before executing the hook
+                return;
+              }
+            }
+
             await writeFile(absolutePath, result.content);
+            recentOutputHash.set(result.filename, currentHash);
+
             await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
             await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
           })
@@ -125,7 +144,7 @@ export async function generate(
 }
 
 function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.overwrite === undefined ? true : !!config.overwrite;
+  const globalValue = config.overwrite === undefined ? true : Boolean(config.overwrite);
   const outputConfig = config.generates[outputPath];
 
   if (!outputConfig) {
@@ -142,4 +161,17 @@ function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
 
 function isConfiguredOutput(output: any): output is Types.ConfiguredOutput {
   return typeof output.plugins !== 'undefined';
+}
+
+async function hashFile(filePath: string): Promise<string | null> {
+  try {
+    return hash(await readFile(filePath));
+  } catch (err) {
+    if (err && err.code === 'ENOENT') {
+      // return null if file does not exist
+      return null;
+    }
+    // rethrow unexpected errors
+    throw err;
+  }
 }

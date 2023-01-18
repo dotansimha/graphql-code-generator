@@ -1,14 +1,13 @@
 import * as addPlugin from '@graphql-codegen/add';
+import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
-import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
-
-import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import { processSources } from './process-sources.js';
+import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import babelPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
+import { processSources } from './process-sources.js';
 
 export type FragmentMaskingConfig = {
   /**

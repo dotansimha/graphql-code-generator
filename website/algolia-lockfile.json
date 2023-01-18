@@ -677,7 +677,7 @@
     "objectID": "code-generator-docs-guides-angular",
     "headings": [],
     "toc": [],
-    "content": "fd2fd70d2466c34852ad426ecca37c39",
+    "content": "bc107acc079747cf01d6af2118913221",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/angular",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -880,7 +880,7 @@
         "anchor": "appendix-ii-compatibility"
       }
     ],
-    "content": "3f066f5680c2f24af247b8682038fb03",
+    "content": "93a7f1749a22be8fad86f9bdceee42d6",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1792,7 +1792,7 @@
         "anchor": "example"
       }
     ],
-    "content": "12b91414300aa46b5026c0fb8fb5901d",
+    "content": "ca008e0b0ebc2a4a8f064da8960fbeca",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1801,6 +1801,74 @@
     ],
     "source": "Code Generator",
     "title": "near-operation-file",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-plugins-presets-preset-client",
+    "headings": [
+      "Getting started",
+      "Config API",
+      "Fragment Masking",
+      "Reducing bundle size: Babel plugin"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Getting started",
+        "anchor": "getting-started"
+      },
+      {
+        "children": [],
+        "title": "Config API",
+        "anchor": "config-api"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Getting a Fragment's type",
+                "anchor": "getting-a-fragments-type"
+              },
+              {
+                "children": [],
+                "title": "Fragment Masking with nested Fragments",
+                "anchor": "fragment-masking-with-nested-fragments"
+              },
+              {
+                "children": [],
+                "title": "Fragment Masking and testing",
+                "anchor": "fragment-masking-and-testing"
+              },
+              {
+                "children": [],
+                "title": "How to disable Fragment Masking",
+                "anchor": "how-to-disable-fragment-masking"
+              }
+            ],
+            "title": "Embrace Fragment Masking principles",
+            "anchor": "embrace-fragment-masking-principles"
+          }
+        ],
+        "title": "Fragment Masking",
+        "anchor": "fragment-masking"
+      },
+      {
+        "children": [],
+        "title": "Reducing bundle size: Babel plugin",
+        "anchor": "reducing-bundle-size-babel-plugin"
+      }
+    ],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/preset-client",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Plugins",
+      "Presets"
+    ],
+    "source": "Code Generator",
+    "title": "client-preset",
     "type": "Documentation"
   },
   {

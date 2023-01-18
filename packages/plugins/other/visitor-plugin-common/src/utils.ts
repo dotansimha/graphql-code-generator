@@ -1,31 +1,31 @@
 import {
-  NameNode,
-  Kind,
-  TypeNode,
-  NamedTypeNode,
-  GraphQLObjectType,
-  GraphQLNamedType,
-  isScalarType,
-  GraphQLSchema,
-  GraphQLScalarType,
-  StringValueNode,
-  SelectionSetNode,
   FieldNode,
-  SelectionNode,
   FragmentSpreadNode,
+  GraphQLInputObjectType,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLOutputType,
+  GraphQLScalarType,
+  GraphQLSchema,
   InlineFragmentNode,
+  isAbstractType,
+  isInputObjectType,
+  isListType,
   isNonNullType,
   isObjectType,
-  isListType,
-  isAbstractType,
-  GraphQLOutputType,
-  isInputObjectType,
-  GraphQLInputObjectType,
+  isScalarType,
+  Kind,
+  NamedTypeNode,
+  NameNode,
+  SelectionNode,
+  SelectionSetNode,
+  StringValueNode,
+  TypeNode,
 } from 'graphql';
-import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types.js';
-import { DEFAULT_SCALARS } from './scalars.js';
-import { parseMapper } from './mappers.js';
 import { RawConfig } from './base-visitor.js';
+import { parseMapper } from './mappers.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -52,7 +52,7 @@ export function block(array) {
 export function wrapWithSingleQuotes(value: string | number | NameNode, skipNumericCheck = false): string {
   if (skipNumericCheck) {
     if (typeof value === 'number') {
-      return `${value}`;
+      return String(value);
     }
     return `'${value}'`;
   }
@@ -61,7 +61,7 @@ export function wrapWithSingleQuotes(value: string | number | NameNode, skipNume
     typeof value === 'number' ||
     (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
   ) {
-    return `${value}`;
+    return String(value);
   }
 
   return `'${value}'`;
@@ -149,7 +149,7 @@ export class DeclarationBlock {
   }
 
   withComment(comment: string | StringValueNode | null, disabled = false): DeclarationBlock {
-    const nonEmptyComment = isStringValueNode(comment) ? !!comment.value : !!comment;
+    const nonEmptyComment = Boolean(isStringValueNode(comment) ? comment.value : comment);
 
     if (nonEmptyComment && !disabled) {
       this._comment = transformComment(comment, 0);
@@ -218,7 +218,7 @@ export class DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
       const before = '{' + blockWrapper;
       const after = blockWrapper + '}';
-      const block = [before, this._block, after].filter(val => !!val).join('\n');
+      const block = [before, this._block, after].filter(val => Boolean(val)).join('\n');
 
       if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer(block)})`;
@@ -301,7 +301,7 @@ export function buildScalars(
         } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
           const value = parseMapper(scalarsMapping[name], name);
           result[name] = value;
-        } else if (scalarsMapping && scalarsMapping[name]) {
+        } else if (scalarsMapping?.[name]) {
           result[name] = {
             isExternal: false,
             type: JSON.stringify(scalarsMapping[name]),

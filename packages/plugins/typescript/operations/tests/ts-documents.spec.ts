@@ -1,8 +1,8 @@
-import { validateTs } from '@graphql-codegen/testing';
-import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { plugin } from '../src/index.js';
-import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
+import { buildClientSchema, buildSchema, parse } from 'graphql';
+import { plugin as tsPlugin } from '../../typescript/src/index.js';
+import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
@@ -5880,6 +5880,118 @@ function test(q: GetEntityBrandDataQuery): void {
         export type PeopleInfoFragment = PeopleInfo_Character_Fragment | PeopleInfo_Jedi_Fragment | PeopleInfo_Droid_Fragment;
         "
       `);
+    });
+
+    it('#6874 - generates types when parent type differs from spread fragment member types and preResolveTypes=true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Animal {
+          name: String!
+        }
+        type Bat implements Animal {
+          name: String!
+          features: BatFeatures!
+        }
+        type BatFeatures {
+          color: String!
+          wingspan: Int!
+        }
+        type Snake implements Animal {
+          name: String!
+          features: SnakeFeatures!
+        }
+        type SnakeFeatures {
+          color: String!
+          length: Int!
+        }
+        type Error {
+          message: String!
+        }
+        union SnakeResult = Snake | Error
+        type Query {
+          snake: SnakeResult!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SnakeQuery {
+          snake {
+            ... on Snake {
+              name
+              ...AnimalFragment
+            }
+          }
+        }
+        fragment AnimalFragment on Animal {
+          ... on Bat {
+            features {
+              color
+              wingspan
+            }
+          }
+          ... on Snake {
+            features {
+              color
+              length
+            }
+          }
+        }
+      `);
+
+      const config = { preResolveTypes: true };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toMatchSnapshot();
+    });
+
+    it('#8793 selecting __typename should not be optional', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Animal {
+          name: String!
+        }
+        type Bat implements Animal {
+          name: String!
+          features: BatFeatures!
+        }
+        type BatFeatures {
+          color: String!
+          wingspan: Int!
+        }
+        type Snake implements Animal {
+          name: String!
+          features: SnakeFeatures!
+        }
+        type SnakeFeatures {
+          color: String!
+          length: Int!
+        }
+        type Error {
+          message: String!
+        }
+        union SnakeResult = Snake | Error
+        type Query {
+          snake: SnakeResult!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query SnakeQuery {
+          __typename
+          snake {
+            __typename
+          }
+        }
+      `);
+
+      const config = { preResolveTypes: true };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toMatchSnapshot();
     });
   });
 

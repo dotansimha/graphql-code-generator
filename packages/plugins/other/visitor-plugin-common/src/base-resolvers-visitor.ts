@@ -1,55 +1,54 @@
-import { ParsedConfig, RawConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor.js';
-import autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars.js';
-import {
-  NormalizedScalarsMap,
-  EnumValuesMap,
-  ParsedEnumValuesMap,
-  DeclarationKind,
-  ConvertOptions,
-  AvoidOptionalsConfig,
-} from './types.js';
-import {
-  DeclarationBlock,
-  DeclarationBlockConfig,
-  indent,
-  getBaseTypeNode,
-  getConfigValue,
-  stripMapperTypeInterpolation,
-  OMIT_TYPE,
-  REQUIRE_FIELDS_TYPE,
-  wrapTypeWithModifiers,
-  buildScalarsFromConfig,
-} from './utils.js';
-import {
-  NameNode,
-  ListTypeNode,
-  NamedTypeNode,
-  FieldDefinitionNode,
-  ObjectTypeDefinitionNode,
-  GraphQLSchema,
-  NonNullTypeNode,
-  UnionTypeDefinitionNode,
-  ScalarTypeDefinitionNode,
-  InterfaceTypeDefinitionNode,
-  isObjectType,
-  isInterfaceType,
-  isNonNullType,
-  isUnionType,
-  GraphQLNamedType,
-  isEnumType,
-  DirectiveDefinitionNode,
-  GraphQLObjectType,
-  InputValueDefinitionNode,
-  EnumTypeDefinitionNode,
-  ASTNode,
-} from 'graphql';
-
-import { OperationVariablesToObject } from './variables-to-object.js';
-import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper, buildMapperImport } from './mappers.js';
-import { parseEnumValues } from './enum-values.js';
 import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
+import autoBind from 'auto-bind';
+import {
+  ASTNode,
+  DirectiveDefinitionNode,
+  EnumTypeDefinitionNode,
+  FieldDefinitionNode,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLSchema,
+  InputValueDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  isEnumType,
+  isInterfaceType,
+  isNonNullType,
+  isObjectType,
+  isUnionType,
+  ListTypeNode,
+  NamedTypeNode,
+  NameNode,
+  NonNullTypeNode,
+  ObjectTypeDefinitionNode,
+  ScalarTypeDefinitionNode,
+  UnionTypeDefinitionNode,
+} from 'graphql';
+import { BaseVisitor, BaseVisitorConvertOptions, ParsedConfig, RawConfig } from './base-visitor.js';
+import { parseEnumValues } from './enum-values.js';
+import { buildMapperImport, ExternalParsedMapper, ParsedMapper, parseMapper, transformMappers } from './mappers.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import {
+  AvoidOptionalsConfig,
+  ConvertOptions,
+  DeclarationKind,
+  EnumValuesMap,
+  NormalizedScalarsMap,
+  ParsedEnumValuesMap,
+} from './types.js';
+import {
+  buildScalarsFromConfig,
+  DeclarationBlock,
+  DeclarationBlockConfig,
+  getBaseTypeNode,
+  getConfigValue,
+  indent,
+  OMIT_TYPE,
+  REQUIRE_FIELDS_TYPE,
+  stripMapperTypeInterpolation,
+  wrapTypeWithModifiers,
+} from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -718,7 +717,7 @@ export class BaseResolversVisitor<
       const isRootType = this._rootTypeNames.has(typeName);
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
-      const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
+      const hasDefaultMapper = Boolean(this.config.defaultMapper?.type);
 
       if (isRootType) {
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
@@ -953,10 +952,14 @@ export class BaseResolversVisitor<
   }
 
   protected isMapperImported(groupedMappers: GroupedMappers, identifier: string, source: string): boolean {
-    const exists = !groupedMappers[source] ? false : !!groupedMappers[source].find(m => m.identifier === identifier);
-    const existsFromEnums = !!Object.keys(this.config.enumValues)
-      .map(key => this.config.enumValues[key])
-      .find(o => o.sourceFile === source && o.typeIdentifier === identifier);
+    const exists = !groupedMappers[source]
+      ? false
+      : Boolean(groupedMappers[source].find(m => m.identifier === identifier));
+    const existsFromEnums = Boolean(
+      Object.keys(this.config.enumValues)
+        .map(key => this.config.enumValues[key])
+        .find(o => o.sourceFile === source && o.typeIdentifier === identifier)
+    );
 
     return exists || existsFromEnums;
   }
@@ -966,9 +969,7 @@ export class BaseResolversVisitor<
 
     const addMapper = (source: string, identifier: string, asDefault: boolean) => {
       if (!this.isMapperImported(groupedMappers, identifier, source)) {
-        if (!groupedMappers[source]) {
-          groupedMappers[source] = [];
-        }
+        groupedMappers[source] ||= [];
 
         groupedMappers[source].push({ identifier, asDefault });
       }
@@ -991,7 +992,7 @@ export class BaseResolversVisitor<
       addMapper(this.config.rootValueType.source, this.config.rootValueType.import, this.config.rootValueType.default);
     }
 
-    if (this.config.defaultMapper && this.config.defaultMapper.isExternal) {
+    if (this.config.defaultMapper?.isExternal) {
       const identifier = stripMapperTypeInterpolation(this.config.defaultMapper.import);
       addMapper(this.config.defaultMapper.source, identifier, this.config.defaultMapper.default);
     }
@@ -1176,7 +1177,7 @@ export class BaseResolversVisitor<
 
       if (argsType !== null) {
         const argsToForceRequire = original.arguments.filter(
-          arg => !!arg.defaultValue || arg.type.kind === 'NonNullType'
+          arg => Boolean(arg.defaultValue) || arg.type.kind === 'NonNullType'
         );
 
         if (argsToForceRequire.length > 0) {
@@ -1423,7 +1424,7 @@ export class BaseResolversVisitor<
 
     const name = this.convertName(node, { suffix: this.config.resolverTypeSuffix });
     this._collectedResolvers[rawTypeName] = name;
-    const hasExplicitValues = this.config.enumValues[rawTypeName] && this.config.enumValues[rawTypeName].mappedValues;
+    const hasExplicitValues = this.config.enumValues[rawTypeName]?.mappedValues;
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()

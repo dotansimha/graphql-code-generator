@@ -1,4 +1,4 @@
-import { parse, buildSchema } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import { isUsingTypes } from '../src/helpers.js';
 
 describe('isUsingTypes', () => {

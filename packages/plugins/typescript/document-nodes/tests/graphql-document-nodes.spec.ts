@@ -1,7 +1,7 @@
+import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { parse } from 'graphql';
 import { plugin } from '../src/index.js';
-import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('graphql-codegen typescript-graphql-document-nodes', () => {
   it('Should generate simple module with one file', async () => {

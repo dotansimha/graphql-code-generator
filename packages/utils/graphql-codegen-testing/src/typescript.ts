@@ -1,20 +1,20 @@
+import { dirname, join, resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { compressToEncodedURIComponent } from 'lz-string';
 import {
-  ModuleResolutionKind,
-  ScriptTarget,
-  JsxEmit,
-  ModuleKind,
-  createSourceFile,
-  flattenDiagnosticMessageText,
+  CompilerOptions,
   createCompilerHost,
   createProgram,
-  ScriptKind,
-  CompilerOptions,
+  createSourceFile,
   Diagnostic,
+  flattenDiagnosticMessageText,
+  JsxEmit,
+  ModuleKind,
+  ModuleResolutionKind,
+  ScriptKind,
+  ScriptTarget,
   ScriptTarget as ScriptTargetType,
 } from 'typescript';
-import { resolve, join, dirname } from 'path';
-import { compressToEncodedURIComponent } from 'lz-string';
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,
@@ -104,7 +104,7 @@ export function validateTs(
         errors.push(`${line + 1},${character + 1}: ${message} ->
     ${contents.split('\n')[line]}`);
       } else {
-        errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
       }
     });
   } else {
@@ -126,7 +126,7 @@ export function validateTs(
           errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
         } else {
-          errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+          errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
         }
       });
     }
@@ -223,7 +223,7 @@ export function compileTs(
         errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
       } else {
-        errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
       }
     });
 

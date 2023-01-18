@@ -1,9 +1,8 @@
-import { validate, plugin } from '../src/index.js';
-import { buildSchema, parse, versionInfo } from 'graphql';
 import '@graphql-codegen/testing';
-import { Types } from '@graphql-codegen/plugin-helpers';
-
 import { codegen } from '@graphql-codegen/core';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import { buildSchema, parse, versionInfo } from 'graphql';
+import { plugin, validate } from '../src/index.js';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
@@ -23,7 +22,7 @@ describe('Schema AST', () => {
         throw new Error(SHOULD_THROW_ERROR);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_THROW_ERROR);
-        expect(e.message).toBe('Plugin "schema-ast" requires extension to be ".graphql"!');
+        expect(e.message).toBe('Plugin "schema-ast" requires extension to be ".graphql" or ".gql"!');
       }
     });
 
@@ -45,8 +44,23 @@ describe('Schema AST', () => {
       }
     });
 
-    it('Should allow graphql extension when its the only plugin', async () => {
+    it('Should allow .graphql extension when its the only plugin', async () => {
       const fileName = 'output.graphql';
+      const plugins: Types.ConfiguredPlugin[] = [
+        {
+          'schema-ast': {},
+        },
+      ];
+
+      try {
+        await validate(null, null, null, fileName, plugins);
+      } catch (e) {
+        expect(true).toBeFalsy();
+      }
+    });
+
+    it('Should allow .gql extension when its the only plugin', async () => {
+      const fileName = 'output.gql';
       const plugins: Types.ConfiguredPlugin[] = [
         {
           'schema-ast': {},

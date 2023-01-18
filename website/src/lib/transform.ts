@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import path from 'node:path';
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import * as TJS from 'typescript-json-schema';
-import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
 import { generateDocs } from './docs-generator';
+import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
 
 const tsConfig = JSON.parse(readFileSync(path.join(process.cwd(), 'tsconfig.json'), 'utf8'));
 
@@ -73,7 +72,7 @@ export function transformDocs() {
         oneOf: pluginsConfigurations.reduce<TJS.DefinitionOrBoolean[]>((prev, p) => {
           const description = `${
             (schema.definitions![p.identifier] as TJS.Definition).description || ''
-          }\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/${
+          }\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/${
             p.name
           }\n\n=> Make sure to include "@graphql-codegen/${
             p.name

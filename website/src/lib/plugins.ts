@@ -1,9 +1,12 @@
 import { StaticImageData } from 'next/image';
 import angularIcon from '../../public/assets/img/icons/angular.svg';
 import apolloIcon from '../../public/assets/img/icons/apollo.svg';
+import codegenIcon from '../../public/assets/img/icons/codegen.svg';
 import csharpIcon from '../../public/assets/img/icons/csharp.svg';
+import dartIcon from '../../public/assets/img/icons/dart.svg';
 import flowIcon from '../../public/assets/img/icons/flow.svg';
 import graphqlIcon from '../../public/assets/img/icons/graphql.svg';
+import hasuraIcon from '../../public/assets/img/icons/hasura.svg';
 import javaIcon from '../../public/assets/img/icons/java.svg';
 import mongodbIcon from '../../public/assets/img/icons/mongodb.png';
 import nodeJsIcon from '../../public/assets/img/icons/nodejs.svg';
@@ -12,10 +15,7 @@ import reactQueryIcon from '../../public/assets/img/icons/react-query.svg';
 import typeGraphqlIcon from '../../public/assets/img/icons/type-graphql.png';
 import typescriptIcon from '../../public/assets/img/icons/typescript.svg';
 import urqlIcon from '../../public/assets/img/icons/urql.svg';
-import codegenIcon from '../../public/assets/img/icons/codegen.svg';
-import hasuraIcon from '../../public/assets/img/icons/hasura.svg';
 import vueIcon from '../../public/assets/img/icons/vue.svg';
-import dartIcon from '../../public/assets/img/icons/dart.svg';
 import graphqlModulesIcon from 'https://graphql-modules.com/assets/subheader-logo.svg';
 import reasonClientIcon from 'https://pbs.twimg.com/profile_images/1004185780313395200/ImZxrDWf_400x400.jpg';
 import mswIcon from 'https://raw.githubusercontent.com/mswjs/msw/HEAD/media/msw-logo.svg';
@@ -164,6 +164,12 @@ export const PACKAGES: Record<
     npmPackage: '@graphql-codegen/import-types-preset',
     icon: 'codegen',
     tags: ['preset', 'utilities'],
+  },
+  'preset-client': {
+    title: 'Client preset',
+    npmPackage: '@graphql-codegen/client-preset',
+    icon: 'codegen',
+    tags: ['preset', 'next', 'react', 'urql', 'typescript', 'vue'],
   },
   introspection: {
     title: 'Introspection',

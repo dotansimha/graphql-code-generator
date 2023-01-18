@@ -1,9 +1,9 @@
-import inquirer from 'inquirer';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import inquirer from 'inquirer';
+import { bold, writeConfig, writePackage } from './helpers.js';
 import { getQuestions } from './questions.js';
 import { guessTargets } from './targets.js';
 import { Answers, Tags } from './types.js';
-import { writeConfig, writePackage, bold } from './helpers.js';
 
 function log(...msgs: string[]) {
   // eslint-disable-next-line no-console

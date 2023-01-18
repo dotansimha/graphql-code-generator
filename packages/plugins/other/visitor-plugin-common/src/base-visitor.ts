@@ -1,18 +1,18 @@
+import autoBind from 'auto-bind';
+import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { FragmentImport, ImportDeclaration } from './imports.js';
+import { convertFactory } from './naming.js';
 import {
-  ScalarsMap,
-  ParsedScalarsMap,
-  NamingConvention,
   ConvertFn,
   ConvertOptions,
-  LoadedFragment,
-  NormalizedScalarsMap,
   DeclarationKind,
+  LoadedFragment,
+  NamingConvention,
+  NormalizedScalarsMap,
+  ParsedScalarsMap,
+  ScalarsMap,
 } from './types.js';
 import { DeclarationBlockConfig } from './utils.js';
-import autoBind from 'auto-bind';
-import { convertFactory } from './naming.js';
-import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { ImportDeclaration, FragmentImport } from './imports.js';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -381,13 +381,13 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       externalFragments: rawConfig.externalFragments || [],
       fragmentImports: rawConfig.fragmentImports || [],
       addTypename: !rawConfig.skipTypename,
-      nonOptionalTypename: !!rawConfig.nonOptionalTypename,
-      useTypeImports: !!rawConfig.useTypeImports,
-      dedupeFragments: !!rawConfig.dedupeFragments,
-      allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
+      nonOptionalTypename: Boolean(rawConfig.nonOptionalTypename),
+      useTypeImports: Boolean(rawConfig.useTypeImports),
+      dedupeFragments: Boolean(rawConfig.dedupeFragments),
+      allowEnumStringTypes: Boolean(rawConfig.allowEnumStringTypes),
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       emitLegacyCommonJSImports:
-        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
+        rawConfig.emitLegacyCommonJSImports === undefined ? true : Boolean(rawConfig.emitLegacyCommonJSImports),
       ...((additionalConfig || {}) as any),
     };
 
@@ -412,8 +412,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   }
 
   public convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
-    const useTypesPrefix = typeof (options && options.useTypesPrefix) === 'boolean' ? options.useTypesPrefix : true;
-    const useTypesSuffix = typeof (options && options.useTypesSuffix) === 'boolean' ? options.useTypesSuffix : true;
+    const useTypesPrefix = typeof options?.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+    const useTypesSuffix = typeof options?.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
 
     let convertedName = '';
 

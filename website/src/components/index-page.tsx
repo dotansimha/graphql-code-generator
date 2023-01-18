@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
-import { HeroGradient, HeroIllustration, NPMBadge } from '@theguild/components';
 import dynamic from 'next/dynamic';
+import { HeroGradient, HeroIllustration, NPMBadge } from '@theguild/components';
 import gqlCodegenCover from '../../public/assets/illustrations/gql-codegen-cover.svg';
 import gqlGenerateCodeIllustration from '../../public/assets/illustrations/gql-generate-code-illustration.svg';
 import gqlWatchForChangesIllustration from '../../public/assets/illustrations/gql-watch-for-changes-illustration.svg';

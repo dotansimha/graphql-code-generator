@@ -22,3 +22,4 @@ website/src/pages/plugins/presets/near-operation-file-preset.mdx
 examples/**/gql/**
 
 website/algolia-lockfile.json
+temp/

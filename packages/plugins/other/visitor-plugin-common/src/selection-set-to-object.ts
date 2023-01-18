@@ -1,48 +1,48 @@
+import { createHash } from 'crypto';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { getRootTypes } from '@graphql-tools/utils';
+import autoBind from 'auto-bind';
 import {
-  SelectionSetNode,
-  Kind,
+  DirectiveNode,
   FieldNode,
   FragmentSpreadNode,
-  InlineFragmentNode,
-  GraphQLNamedType,
-  isObjectType,
-  isUnionType,
-  isInterfaceType,
-  GraphQLSchema,
   GraphQLField,
-  SchemaMetaFieldDef,
-  TypeMetaFieldDef,
-  SelectionNode,
-  isListType,
-  isNonNullType,
+  GraphQLNamedType,
   GraphQLObjectType,
   GraphQLOutputType,
+  GraphQLSchema,
+  InlineFragmentNode,
+  isInterfaceType,
+  isListType,
+  isNonNullType,
+  isObjectType,
   isTypeSubTypeOf,
-  DirectiveNode,
+  isUnionType,
+  Kind,
+  SchemaMetaFieldDef,
+  SelectionNode,
+  SelectionSetNode,
+  TypeMetaFieldDef,
 } from 'graphql';
-import {
-  getPossibleTypes,
-  separateSelectionSet,
-  getFieldNodeNameValue,
-  DeclarationBlock,
-  mergeSelectionSets,
-  hasConditionalDirectives,
-} from './utils.js';
-import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types.js';
-import { BaseVisitorConvertOptions } from './base-visitor.js';
-import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor.js';
+import { BaseVisitorConvertOptions } from './base-visitor.js';
 import {
+  BaseSelectionSetProcessor,
   LinkField,
+  NameAndType,
   PrimitiveAliasedFields,
   PrimitiveField,
-  BaseSelectionSetProcessor,
   ProcessResult,
-  NameAndType,
 } from './selection-set-processor/base.js';
-import autoBind from 'auto-bind';
-import { getRootTypes } from '@graphql-tools/utils';
-import { createHash } from 'crypto';
+import { ConvertNameFn, GetFragmentSuffixFn, LoadedFragment, NormalizedScalarsMap } from './types.js';
+import {
+  DeclarationBlock,
+  getFieldNodeNameValue,
+  getPossibleTypes,
+  hasConditionalDirectives,
+  mergeSelectionSets,
+  separateSelectionSet,
+} from './utils.js';
 
 type FragmentSpreadUsage = {
   fragmentName: string;
@@ -230,9 +230,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             possibleTypesForFragment.length === 1 ? null : possibleType.name
           );
 
-          if (!selectionNodesByTypeName[possibleType.name]) {
-            selectionNodesByTypeName[possibleType.name] = [];
-          }
+          selectionNodesByTypeName[possibleType.name] ||= [];
 
           selectionNodesByTypeName[possibleType.name].push({
             fragmentName: spread.name.value,
@@ -248,7 +246,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected flattenSelectionSet(
-    selections: ReadonlyArray<SelectionNode>
+    selections: ReadonlyArray<SelectionNode>,
+    parentSchemaType?: GraphQLObjectType<any, any>
   ): Map<string, Array<SelectionNode | FragmentSpreadUsage>> {
     const selectionNodesByTypeName = new Map<string, Array<SelectionNode | FragmentSpreadUsage>>();
     const inlineFragmentSelections: InlineFragmentNode[] = [];
@@ -270,10 +269,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     }
 
     if (fieldNodes.length) {
-      inlineFragmentSelections.push(this._createInlineFragmentForFieldNodes(this._parentSchemaType, fieldNodes));
+      inlineFragmentSelections.push(
+        this._createInlineFragmentForFieldNodes(parentSchemaType ?? this._parentSchemaType, fieldNodes)
+      );
     }
 
-    this._collectInlineFragments(this._parentSchemaType, inlineFragmentSelections, selectionNodesByTypeName);
+    this._collectInlineFragments(
+      parentSchemaType ?? this._parentSchemaType,
+      inlineFragmentSelections,
+      selectionNodesByTypeName
+    );
     const fragmentsUsage = this.buildFragmentSpreadsUsage(fragmentSpreads);
 
     for (const [typeName, records] of Object.entries(fragmentsUsage)) {
@@ -297,7 +302,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
   protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
-    if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
+    if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
 
@@ -319,9 +324,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
 
-        if (!prev[typeName]) {
-          prev[typeName] = [];
-        }
+        prev[typeName] ||= [];
 
         const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
         const transformedSet = this.selectionSetStringFromFields(fields);
@@ -513,7 +516,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           fragmentType.getTypes().find(objectType => objectType.name === parentSchemaType.name))
       ) {
         // also process fields from fragment that apply for this parentType
-        const flatten = this.flattenSelectionSet(selectionNode.selectionNodes);
+        const flatten = this.flattenSelectionSet(selectionNode.selectionNodes, parentSchemaType);
         const typeNodes = flatten.get(parentSchemaType.name) ?? [];
         selectionNodes.push(...typeNodes);
         for (const iinterface of parentSchemaType.getInterfaces()) {
