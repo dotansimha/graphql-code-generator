@@ -18,7 +18,7 @@ We currently support and maintain [these plugins](https://the-guild.dev/graphql/
 
 > You can find the complete instructions in [GraphQL Code Generator website](https://the-guild.dev/graphql/codegen/docs/getting-started/installation).
 
-Start by installing the basic deps of GraphQL Codegen;
+Start by installing the basic deps of GraphQL Codegen:
 
 ```bash
 yarn add graphql
@@ -47,7 +47,7 @@ If this is your first time contributing to this project, please do read our [Con
 
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
-For a contribution guide specific to this project, please refer to: http://the-guild.dev/graphql/codegen/docs/custom-codegen/contributing
+For a contribution guide specific to this project, please refer to: http://the-guild.dev/graphql/codegen/docs/custom-codegen/contributing.
 
 ## Code of Conduct
 
