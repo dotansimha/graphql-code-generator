@@ -1169,7 +1169,7 @@ export * from "./fragment-masking.js";`);
             preset,
             plugins: [],
             presetConfig: {
-              persistedOperations: true,
+              persistedDocuments: true,
             },
           },
         },
@@ -1247,7 +1247,7 @@ export * from "./fragment-masking.js";`);
             preset,
             plugins: [],
             presetConfig: {
-              persistedOperations: {
+              persistedDocuments: {
                 mode: 'replaceDocumentWithHash',
               },
             },
@@ -1327,7 +1327,7 @@ export * from "./fragment-masking.js";`);
             preset,
             plugins: [],
             presetConfig: {
-              persistedOperations: {
+              persistedDocuments: {
                 hashPropertyName: 'custom_property_name',
               },
             },
@@ -1418,7 +1418,7 @@ export * from "./fragment-masking.js";`);
             preset,
             plugins: [],
             presetConfig: {
-              persistedOperations: true,
+              persistedDocuments: true,
               onExecutableDocumentNode(node) {
                 return {
                   cacheKeys: [node.definitions[0].name.value],

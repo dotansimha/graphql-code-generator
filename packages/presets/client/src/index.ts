@@ -68,7 +68,7 @@ export type ClientPresetConfig = {
    */
   onExecutableDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
   /** Persisted operations configuration. */
-  persistedOperations?:
+  persistedDocuments?:
     | boolean
     | {
         /**
@@ -101,7 +101,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     }
 
     // eslint-disable-next-line no-implicit-coercion
-    const isPersistedOperations = !!options.presetConfig?.persistedOperations ?? false;
+    const isPersistedOperations = !!options.presetConfig?.persistedDocuments ?? false;
 
     const reexports: Array<string> = [];
 
@@ -133,15 +133,15 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const onExecutableDocumentNodeHook = options.presetConfig.onExecutableDocumentNode ?? null;
     const isMaskingFragments = fragmentMaskingConfig != null;
 
-    const persistedOperations = options.presetConfig.persistedOperations
+    const persistedDocuments = options.presetConfig.persistedDocuments
       ? {
           hashPropertyName:
-            (typeof options.presetConfig.persistedOperations === 'object' &&
-              options.presetConfig.persistedOperations.hashPropertyName) ||
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.hashPropertyName) ||
             'hash',
           omitDefinitions:
-            (typeof options.presetConfig.persistedOperations === 'object' &&
-              options.presetConfig.persistedOperations.mode) === 'replaceDocumentWithHash' || false,
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.mode) === 'replaceDocumentWithHash' || false,
         }
       : null;
 
@@ -154,7 +154,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const sources = sourcesWithOperations.map(({ source }) => source);
 
     const tdnFinished = createDeferred();
-    const persistedOperationsMap = new Map<string, string>();
+    const persistedDocumentsMap = new Map<string, string>();
 
     const pluginMap = {
       ...options.pluginMap,
@@ -177,11 +177,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     function onExecutableDocumentNode(documentNode: DocumentNode) {
       const meta = onExecutableDocumentNodeHook?.(documentNode);
 
-      if (persistedOperations) {
+      if (persistedDocuments) {
         const documentString = normalizeAndPrintDocumentNode(documentNode);
         const hash = generateDocumentHash(documentString);
-        persistedOperationsMap.set(hash, documentString);
-        return { ...meta, [persistedOperations.hashPropertyName]: hash };
+        persistedDocumentsMap.set(hash, documentString);
+        return { ...meta, [persistedDocuments.hashPropertyName]: hash };
       }
 
       if (meta) {
@@ -198,7 +198,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       {
         [`typed-document-node`]: {
           unstable_onExecutableDocumentNode: onExecutableDocumentNode,
-          unstable_omitDefinitions: persistedOperations?.omitDefinitions ?? false,
+          unstable_omitDefinitions: persistedDocuments?.omitDefinitions ?? false,
         },
       },
       ...options.plugins,
@@ -303,7 +303,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
                   plugin: async () => {
                     await tdnFinished.promise;
                     return {
-                      content: JSON.stringify(Object.fromEntries(persistedOperationsMap.entries()), null, 2),
+                      content: JSON.stringify(Object.fromEntries(persistedDocumentsMap.entries()), null, 2),
                     };
                   },
                 },
