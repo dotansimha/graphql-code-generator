@@ -19,7 +19,7 @@ const config: CodegenConfig = {
       preset: 'client',
       plugins: [],
       presetConfig: {
-        persistedOperations: true,
+        persistedDocuments: true,
       }
     }
   }
