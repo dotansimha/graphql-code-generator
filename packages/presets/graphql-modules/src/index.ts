@@ -91,7 +91,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         schema: options.schema,
         documents: [],
         plugins: [
-          ...options.plugins.filter(p => typeof p === 'object' && Boolean(p.add)),
+          ...options.plugins.filter(p => typeof p === 'object' && !!p.add),
           {
             'graphql-modules-plugin': {},
           },

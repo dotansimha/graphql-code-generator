@@ -265,7 +265,7 @@ export class ClientSideBaseVisitor<
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       documentNodeImport: rawConfig.documentNodeImport || null,
-      noExport: Boolean(rawConfig.noExport),
+      noExport: !!rawConfig.noExport,
       importOperationTypesFrom: getConfigValue(rawConfig.importOperationTypesFrom, null),
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       documentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),

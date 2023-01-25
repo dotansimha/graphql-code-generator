@@ -18,7 +18,7 @@ export async function generate(config: string, schema: string, documents?: strin
     const runConfigurations = [];
 
     for (const [filename, outputOptions] of Object.entries(generates)) {
-      const hasPreset = Boolean(outputOptions.preset);
+      const hasPreset = !!outputOptions.preset;
       const plugins = normalizeConfig(outputOptions.plugins || outputOptions);
       const outputConfig = outputOptions.config;
       const pluginMap = {};

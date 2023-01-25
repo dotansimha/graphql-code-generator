@@ -5,7 +5,7 @@ const { pathsToModuleNameMapper } = require('ts-jest');
 const ROOT_DIR = __dirname;
 const TSCONFIG = resolve(ROOT_DIR, 'tsconfig.json');
 const tsconfig = require(TSCONFIG);
-const CI = Boolean(process.env.CI);
+const CI = !!process.env.CI;
 
 module.exports = ({ dirname, projectMode = true }) => {
   const pkg = require(resolve(dirname, 'package.json'));

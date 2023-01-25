@@ -149,7 +149,7 @@ export class DeclarationBlock {
   }
 
   withComment(comment: string | StringValueNode | null, disabled = false): DeclarationBlock {
-    const nonEmptyComment = Boolean(isStringValueNode(comment) ? comment.value : comment);
+    const nonEmptyComment = !!(isStringValueNode(comment) ? comment.value : comment);
 
     if (nonEmptyComment && !disabled) {
       this._comment = transformComment(comment, 0);
@@ -218,7 +218,7 @@ export class DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
       const before = '{' + blockWrapper;
       const after = blockWrapper + '}';
-      const block = [before, this._block, after].filter(val => Boolean(val)).join('\n');
+      const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer(block)})`;
