@@ -381,13 +381,13 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       externalFragments: rawConfig.externalFragments || [],
       fragmentImports: rawConfig.fragmentImports || [],
       addTypename: !rawConfig.skipTypename,
-      nonOptionalTypename: Boolean(rawConfig.nonOptionalTypename),
-      useTypeImports: Boolean(rawConfig.useTypeImports),
-      dedupeFragments: Boolean(rawConfig.dedupeFragments),
-      allowEnumStringTypes: Boolean(rawConfig.allowEnumStringTypes),
+      nonOptionalTypename: !!rawConfig.nonOptionalTypename,
+      useTypeImports: !!rawConfig.useTypeImports,
+      dedupeFragments: !!rawConfig.dedupeFragments,
+      allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       emitLegacyCommonJSImports:
-        rawConfig.emitLegacyCommonJSImports === undefined ? true : Boolean(rawConfig.emitLegacyCommonJSImports),
+        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       ...((additionalConfig || {}) as any),
     };
 

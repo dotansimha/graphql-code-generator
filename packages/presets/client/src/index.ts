@@ -100,7 +100,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       );
     }
 
-    // eslint-disable-next-line no-implicit-coercion
     const isPersistedOperations = !!options.presetConfig?.persistedDocuments ?? false;
 
     const reexports: Array<string> = [];

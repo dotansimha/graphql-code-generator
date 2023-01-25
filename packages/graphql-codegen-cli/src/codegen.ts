@@ -196,7 +196,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         task: (ctx, task) => {
           const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
             const outputConfig = generates[filename];
-            const hasPreset = Boolean(outputConfig.preset);
+            const hasPreset = !!outputConfig.preset;
 
             const title = `Generate to ${filename}`;
 

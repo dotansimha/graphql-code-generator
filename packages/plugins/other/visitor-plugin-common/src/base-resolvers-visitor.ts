@@ -717,7 +717,7 @@ export class BaseResolversVisitor<
       const isRootType = this._rootTypeNames.has(typeName);
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
-      const hasDefaultMapper = Boolean(this.config.defaultMapper?.type);
+      const hasDefaultMapper = !!this.config.defaultMapper?.type;
 
       if (isRootType) {
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
@@ -952,14 +952,10 @@ export class BaseResolversVisitor<
   }
 
   protected isMapperImported(groupedMappers: GroupedMappers, identifier: string, source: string): boolean {
-    const exists = !groupedMappers[source]
-      ? false
-      : Boolean(groupedMappers[source].find(m => m.identifier === identifier));
-    const existsFromEnums = Boolean(
-      Object.keys(this.config.enumValues)
-        .map(key => this.config.enumValues[key])
-        .find(o => o.sourceFile === source && o.typeIdentifier === identifier)
-    );
+    const exists = !groupedMappers[source] ? false : !!groupedMappers[source].find(m => m.identifier === identifier);
+    const existsFromEnums = !!Object.keys(this.config.enumValues)
+      .map(key => this.config.enumValues[key])
+      .find(o => o.sourceFile === source && o.typeIdentifier === identifier);
 
     return exists || existsFromEnums;
   }
@@ -1177,7 +1173,7 @@ export class BaseResolversVisitor<
 
       if (argsType !== null) {
         const argsToForceRequire = original.arguments.filter(
-          arg => Boolean(arg.defaultValue) || arg.type.kind === 'NonNullType'
+          arg => !!arg.defaultValue || arg.type.kind === 'NonNullType'
         );
 
         if (argsToForceRequire.length > 0) {

@@ -16,7 +16,7 @@ export interface ExternalParsedMapper {
 }
 
 export function isExternalMapperType(m: ParsedMapper): m is ExternalParsedMapper {
-  return Boolean((m as ExternalParsedMapper).import);
+  return !!(m as ExternalParsedMapper).import;
 }
 
 enum MapperKind {
