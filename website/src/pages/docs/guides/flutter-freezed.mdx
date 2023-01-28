@@ -99,36 +99,36 @@ class RequestOtpInput with _$RequestOtpInput {
   factory RequestOtpInput.fromJson(Map<String, dynamic> json) => _$RequestOtpInputFromJson(json);
 }
 
-  @unfreezed
-  class VerifyOtpInput with _$VerifyOtpInput {
-    const VerifyOtpInput._();
+@unfreezed
+class VerifyOtpInput with _$VerifyOtpInput {
+  const VerifyOtpInput._();
 
-    const factory VerifyOtpInput({
-      String? email,
-      String? phoneNumber,
-      required String otpCode,
-    }) = _VerifyOtpInput;
+  const factory VerifyOtpInput({
+    String? email,
+    String? phoneNumber,
+    required String otpCode,
+  }) = _VerifyOtpInput;
 
-    factory VerifyOtpInput.fromJson(Map<String, dynamic> json) => _$VerifyOtpInputFromJson(json);
-  }
+  factory VerifyOtpInput.fromJson(Map<String, dynamic> json) => _$VerifyOtpInputFromJson(json);
+}
 
-  @freezed
-  class AuthWithOtpInput with _$AuthWithOtpInput {
-    const AuthWithOtpInput._();
+@freezed
+class AuthWithOtpInput with _$AuthWithOtpInput {
+  const AuthWithOtpInput._();
 
-    const factory AuthWithOtpInput.requestOtpInput({
-      String? email,
-      String? phoneNumber,
-    }) = RequestOtpInput;
+  const factory AuthWithOtpInput.requestOtpInput({
+    String? email,
+    String? phoneNumber,
+  }) = RequestOtpInput;
 
-    const factory AuthWithOtpInput.verifyOtpInput({
-      String? email,
-      String? phoneNumber,
-      required String otpCode,
-    }) = VerifyOtpInput;
+  const factory AuthWithOtpInput.verifyOtpInput({
+    String? email,
+    String? phoneNumber,
+    required String otpCode,
+  }) = VerifyOtpInput;
 
-    factory AuthWithOtpInput.fromJson(Map<String, dynamic> json) => _$AuthWithOtpInputFromJson(json);
-  }
+  factory AuthWithOtpInput.fromJson(Map<String, dynamic> json) => _$AuthWithOtpInputFromJson(json);
+}
 ```
 
 ## Getting started
@@ -175,14 +175,21 @@ node_modules/
 
 <PackageCmd packages={['graphql', '-D typescript', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
 
-7. Create a `codegen.yml` file at the root of the Flutter project with the following:
+7. Create a `codegen.ts` file at the root of the Flutter project with the following:
 
-```yaml
-schema: './schema.graphql'
-generates:
-  ./lib/data/models/app_models.dart:
-    plugins:
-      - flutter-freezed
+```ts filename='codegen.ts'
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+ generates: {
+   'lib/data/models/app_models.dart': {
+     plugins: {
+       'flutter-freezed': {},
+     },
+   },
+ },
+};
+export default config;
 ```
 
 8. Generate your freezed models with the following command and chill 🍻:
@@ -196,6 +203,8 @@ npm run generate
 To configure the plugin, you need to first understand how to use Patterns
 to configure specific GraphQL Types and its fields and also apply
 a config option globally to all GraphQL Types and fields.
+
+This plugin is heavily documented so please take a look into the `tests` directory to learn more.
 
 Also, understanding how the generated output is identified helps in granular configuration
 
@@ -487,8 +496,6 @@ Manually typing out a pattern may be prone to typos and invalid patterns therefo
 
 The patterns themselves are readable and easy to manually type it out in the config but its RECOMMENDED that you the builder methods. However, along with builder methods, the [`TypeFieldName`]() class also exports the Regular Expression(RegExp) used to test the patterns for a match as well as matcher methods. You can use these to find out if you manually typed out patterns would work with this plugin.
 
-@exampleMarkdown
-
 ## Usage for Graphql Types
 
 ### Configuring specific Graphql Types
@@ -528,9 +535,9 @@ You can explicitly list out the names of the fields of the Graphql Types that yo
 
 ```ts
 const pattern = Pattern.forFieldNamesOfTypeName([
-  [Droid, [id, name, friends]], // individual
-  [Human, [id, name, title]], // individual
-  [Starship, [name, length]] // individual
+  [Droid, [id, name, friends]],
+  [Human, [id, name, title]],
+  [Starship, [name, length]]
 ])
 console.log(pattern) // "Droid.[id,name,friends];Human.[id,name,title];Starship.[name,length];"
 ```
@@ -550,9 +557,9 @@ In the example below, the `id` and the `name` fields will be excluded from the c
 
 ```ts
 const pattern = Pattern.forAllFieldNamesExcludeFieldNamesOfTypeName([
-  [Droid, [id, name, friends]], // individual
-  [Human, [id, name, title]], // individual
-  [Starship, [name, length]] // individual
+  [Droid, [id, name, friends]],
+  [Human, [id, name, title]],
+  [Starship, [name, length]]
 ])
 console.log(pattern) // "Droid.@*FieldNames-[id,name,friends];Human.@*FieldNames-[id,name,title];Starship.@*FieldNames-[name,length];"
 ```
