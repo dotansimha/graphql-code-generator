@@ -2,14 +2,14 @@ import { PackageCmd, Callout, Tabs, Tab } from '@theguild/components'
 
 # Guide: GraphQL Yoga / Apollo Server with Server Preset
 
-GraphQL Code Generator's server preset, `@eddeee888/gcg-typescript-resolver-files`, helps GraphQL APIs work at any scale by enforcing best practices such as type-safety and schema module coventions.
+GraphQL Code Generator's server preset, `@eddeee888/gcg-typescript-resolver-files`, helps GraphQL APIs work at any scale by enforcing best practices such as type-safety and schema module conventions.
 
 ## Guide
 
-A GraphQL API such as GraphQL Yoga or Apollo Server is the central system where many teams develop their own features without blocking other teams. However, teams may have different standards and practices that can lead to frictions. The server preset has features to help solve these issues:
+A GraphQL API such as GraphQL Yoga or Apollo Server is the central system where many teams develop their own features without blocking other teams. However, teams may have different standards and practices that can lead to friction. The server preset has features to help solve these issues:
 
 - **Type safety:** Resolvers are strictly generated and typed to eliminate the chance of unimplemented resolvers.
-- **Schema module coventions:** These conventions make ownership clear at both domain and code level to help teams focus better.
+- **Schema module conventions:** These conventions make ownership clear at domain and code levels to help teams focus.
 
 ### Setup
 
@@ -28,7 +28,7 @@ The server preset works best when the schema is split into smaller modules. This
 │   │   │   ├── schema.graphql
 ```
 
-Here's the content of each module schema:
+Here's the content of each schema module:
 
 ```graphql
 # src/schema/base.graphql
@@ -83,9 +83,9 @@ export default config
 
 <Callout type="info">
 
-**Remove other `@graphql-codegen/typescript` and `@graphql-codegen/typescript-resolvers` setup**
+**Remove existing `@graphql-codegen/typescript` and `@graphql-codegen/typescript-resolvers` config**
 
-The server preset comes with these plugins built-in with better defaults. You can override the defaults using [typesPluginsConfig option](https://github.com/eddeee888/graphql-code-generator-plugins/tree/master/packages/typescript-resolver-files#config).
+The server preset comes with these plugins built-in with stricter defaults. You can override the defaults using the [typesPluginsConfig option](https://github.com/eddeee888/graphql-code-generator-plugins/tree/master/packages/typescript-resolver-files#config).
 
 </Callout>
 
@@ -220,7 +220,7 @@ export const resolvers: Resolvers = {
 }
 ```
 
-The server preset handles all resolver types and wireups. So, you only need to implement your business logic.
+The server preset handles all resolver types and imports. So, you only need to implement your resolver logic.
 
 ### Conventions to Support Schema Modules
 
@@ -248,13 +248,18 @@ GraphQL does not have a lot of scalars by default. Luckily, [graphql-scalars](ht
 
 The server preset automatically uses scalar implementation from `graphql-scalars` if it finds a matching name.
 
-Simply update your schema:
+First, install `graphql-scalars`:
 
-```graphql filename="src/schema/base.graphql" {4}
+<PackageCmd packages={['graphql-scalars']} />
+
+Then, add a scalar to your schema:
+
+```graphql filename="src/schema/base.graphql" {4,5}
 type Query
 type Mutation
 
-scalar DateTime # https://github.com/Urigo/graphql-scalars/blob/master/src/scalars/iso-date/DateTime.ts
+# https://github.com/Urigo/graphql-scalars/blob/master/src/scalars/iso-date/DateTime.ts
+scalar DateTime
 ```
 
 Running codegen automatically imports the scalar implementation into the resolver map:
@@ -303,9 +308,9 @@ The type of any custom scalar is `any` by default. Without the server preset, yo
 
 #### Adding Mappers
 
-Mappers allows returning a different object interface in the resolvers. Object type's field resolvers are used to return the final value to clients.
+Mappers allow returning a different object interface in the resolvers. Object type's field resolvers are used to return the final value to clients.
 
-With the server preset, you can add mappers by exporting interfaces or types with `Mapper` suffix from `*.mappers.ts` files in appropriate module:
+With the server preset, you can add mappers by exporting interfaces or types with `Mapper` suffix from `*.mappers.ts` files in appropriate modules:
 
 ```ts filename="src/schema/user/schema.mappers.ts"
 export interface UserMapper {
@@ -315,7 +320,7 @@ export interface UserMapper {
 }
 ```
 
-Running codegen automatically imports and use this mapper in schema types:
+Running codegen automatically imports and uses this mapper in schema types:
 
 ```ts filename="src/schema/types.generated.ts" {2,6,11}
 // ... other imports
