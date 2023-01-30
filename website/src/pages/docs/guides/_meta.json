@@ -4,6 +4,7 @@
   "svelte": "Svelte / Kit",
   "flutter-freezed": "Dart/Flutter",
   "graphql-server-apollo-yoga": "Apollo Server / GraphQL Yoga",
+  "api-testing": "API Testing",
   "graphql-modules": "GraphQL Modules",
   "further-reading": "Further Reading"
 }

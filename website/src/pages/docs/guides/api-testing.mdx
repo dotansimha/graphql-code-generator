@@ -1,0 +1,231 @@
+import { Callout, PackageCmd } from '@theguild/components'
+
+# Guide: API Testing
+
+GraphQL Code Generator can generate typed results for your GraphQL operations.
+
+<br />
+
+This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index), you can [find the complete `schema.graphql` in our repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+
+<Callout type="info">
+
+Refer to [GraphQL Codegen - Yoga example](https://github.com/dotansimha/graphql-code-generator/tree/feat-esm-client-preset/examples/yoga-tests) for a fully running example using [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server).
+
+</Callout>
+
+This tutorial uses GraphQL Yoga, but the practices are applyable to testing any GraphQL server.
+
+## Installation
+
+Install the following dependencies:
+
+<PackageCmd packages={['graphql-yoga']} />
+
+Install the following development dependencies:
+
+<PackageCmd
+  packages={[
+    '-D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset jest @babel/core @babel/preset-env @babel/preset-typescript @graphql-codegen/client-preset babel-jest @graphql-typed-document-node/core'
+  ]}
+/>
+
+## Setup
+
+First create the following files with the boilerplate project set up.
+
+```json filename="./tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "Node16",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"]
+}
+```
+
+```js filename="./babel.config.js"
+module.exports = {
+  presets: [
+    ['@babel/preset-env', { targets: { node: process.versions.node.split('.')[0] } }],
+    '@babel/preset-typescript'
+  ]
+}
+```
+
+```js filename="./jest.config.js"
+module.exports = {
+  transform: { '^.+\\.ts': 'babel-jest' }
+}
+```
+
+Next, create the `codegen.ts` file.
+
+```ts filename="./codegen.ts"
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: './src/yoga.ts',
+  documents: ['src/**/*.ts'],
+  generates: {
+    './src/gql/': {
+      plugins: [],
+      preset: 'client-preset'
+    }
+  }
+}
+
+export default config
+```
+
+Up next, create a simple GraphQL Yoga server with a `Query` and `Mutation` root type.
+
+```ts filename="./src/yoga.ts"
+import { createSchema, createYoga } from 'graphql-yoga'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String!
+    }
+
+    type Mutation {
+      echo(message: String!): String!
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'Hello world!'
+    },
+    Mutation: {
+      echo: (_, args) => args.message
+    }
+  }
+})
+
+export const yoga = createYoga({
+  schema
+})
+```
+
+## Writing tests
+
+Now that we have a GraphQL Yoga server, we can write some tests.
+
+```ts filename="./src/yoga.spec.ts"
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { type ExecutionResult, print } from 'graphql'
+import { graphql } from './gql'
+import { yoga } from './yoga'
+
+function executeOperation<TResult, TVariables>(
+  operation: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): Promise<ExecutionResult<TResult>> {
+  return Promise.resolve(
+    yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        query: print(operation),
+        variables: variables ?? undefined
+      })
+    })
+  ).then(response => response.json())
+}
+
+describe('Yoga Tests', () => {
+  it('execute query operation', async () => {
+    const HelloQuery = graphql(/* GraphQL */ `
+      query HelloQuery {
+        hello
+      }
+    `)
+
+    const result = await executeOperation(HelloQuery)
+
+    expect(result.data?.hello).toEqual('Hello world!')
+  })
+
+  it('execute mutation operation', async () => {
+    const EchoMutation = graphql(/* GraphQL */ `
+      mutation EchoMutation($message: String!) {
+        echo(message: $message)
+      }
+    `)
+
+    const result = await executeOperation(EchoMutation, {
+      message: 'Ohayoo!'
+    })
+
+    expect(result.data?.echo).toEqual('Ohayoo!')
+  })
+
+  it('execute mutation operation (variant)', async () => {
+    const EchoMutation = graphql(/* GraphQL */ `
+      mutation EchoMutation($message: String!) {
+        echo(message: $message)
+      }
+    `)
+
+    const result = await executeOperation(EchoMutation, {
+      message: 'Konbanwa'
+    })
+
+    expect(result.data?.echo).toEqual('Konbanwa')
+  })
+})
+```
+
+We can then generate the types for the referenced GraphQL operation using the GraphQL Code Generator CLI.
+
+```bash
+npx graphql-codegen
+```
+
+As the command was run, the TypeScript errors within the test file should have disappeared.
+
+For convenience and writing tests it is recommended to run GraphQL Code Generator in watch mode.
+
+```bash
+npx graphql-codegen --watch
+```
+
+You can then run the tests using `npx jest` (or `npx jest --watch`) for watch mode.
+
+```ts filename="Typed Execution Result helper function"
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { type ExecutionResult, print } from 'graphql'
+import { graphql } from './gql'
+
+function executeOperation<TResult, TVariables>(
+  operation: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): Promise<ExecutionResult<TResult>> {
+  return Promise.resolve(
+    yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        query: print(operation),
+        variables: variables ?? undefined
+      })
+    })
+  ).then(response => response.json())
+}
+```
+
+The `executeOperation` function is a helper function that executes a GraphQL operation and returns a typed result.
+It can be used in any context, wether it is tests or server to server communication.
+
+## Conclusion
+
+GraphQL Code Generator can enhance the developer experience by generating GraphQL operation types for unit and integration tests .
