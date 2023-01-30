@@ -689,6 +689,47 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-guides-api-testing",
+    "headings": [
+      "Installation",
+      "Setup",
+      "Writing tests",
+      "Conclusion"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Installation",
+        "anchor": "installation"
+      },
+      {
+        "children": [],
+        "title": "Setup",
+        "anchor": "setup"
+      },
+      {
+        "children": [],
+        "title": "Writing tests",
+        "anchor": "writing-tests"
+      },
+      {
+        "children": [],
+        "title": "Conclusion",
+        "anchor": "conclusion"
+      }
+    ],
+    "content": "35f8433bafa37bd981a47349feadaa59",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/api-testing",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Guides"
+    ],
+    "source": "Code Generator",
+    "title": "API Testing",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-guides-flutter-freezed",
     "headings": [
       "TL;DR",
