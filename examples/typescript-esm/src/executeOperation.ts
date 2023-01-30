@@ -26,7 +26,7 @@ export function executeOperation<TResult, TVariables>(
     request.write(
       JSON.stringify({
         query: print(operation),
-        variables: variables != null ? variables : undefined,
+        variables: variables == null ? undefined : variables,
       })
     );
     request.end();

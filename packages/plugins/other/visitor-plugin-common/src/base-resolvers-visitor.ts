@@ -952,7 +952,7 @@ export class BaseResolversVisitor<
   }
 
   protected isMapperImported(groupedMappers: GroupedMappers, identifier: string, source: string): boolean {
-    const exists = !groupedMappers[source] ? false : !!groupedMappers[source].find(m => m.identifier === identifier);
+    const exists = groupedMappers[source] ? !!groupedMappers[source].find(m => m.identifier === identifier) : false;
     const existsFromEnums = !!Object.keys(this.config.enumValues)
       .map(key => this.config.enumValues[key])
       .find(o => o.sourceFile === source && o.typeIdentifier === identifier);
