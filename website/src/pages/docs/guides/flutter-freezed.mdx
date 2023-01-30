@@ -178,18 +178,18 @@ node_modules/
 7. Create a `codegen.ts` file at the root of the Flutter project with the following:
 
 ```ts filename='codegen.ts'
-import type { CodegenConfig } from '@graphql-codegen/cli';
+import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
- generates: {
-   'lib/data/models/app_models.dart': {
-     plugins: {
-       'flutter-freezed': {},
-     },
-   },
- },
-};
-export default config;
+  generates: {
+    'lib/data/models/app_models.dart': {
+      plugins: {
+        'flutter-freezed': {}
+      }
+    }
+  }
+}
+export default config
 ```
 
 8. Generate your freezed models with the following command and chill 🍻:
