@@ -29,8 +29,8 @@ describe('client-preset', () => {
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./gql";
-export * from "./fragment-masking";`);
+    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+export * from "./gql";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -117,8 +117,8 @@ export * from "./fragment-masking";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./gql";
-export * from "./fragment-masking";`);
+    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+export * from "./gql";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -756,7 +756,7 @@ export * from "./fragment-masking";`);
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "import { TypedDocumentNode as DocumentNode, ResultOf } from '@graphql-typed-document-node/core';
+        "import { ResultOf, TypedDocumentNode as DocumentNode,  } from '@graphql-typed-document-node/core';
 
 
         export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
@@ -946,8 +946,8 @@ export * from "./fragment-masking";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./gql.js";
-export * from "./fragment-masking.js";`);
+    expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+export * from "./gql.js";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -1035,8 +1035,8 @@ export * from "./fragment-masking.js";`);
       expect(result).toHaveLength(4);
       // index.ts (re-exports)
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./gql.js";
-export * from "./fragment-masking.js";`);
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+export * from "./gql.js";`);
 
       // gql.ts
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
