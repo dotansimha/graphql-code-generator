@@ -130,13 +130,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       const pluginPackage = options.pluginMap[name];
       const pluginConfig = plugin[name] || {};
 
-      const execConfig =
-        typeof pluginConfig !== 'object'
-          ? pluginConfig
-          : {
-              ...options.config,
-              ...pluginConfig,
-            };
+      const execConfig = typeof pluginConfig === 'object' ? { ...options.config, ...pluginConfig } : pluginConfig;
 
       const result = await profiler.run(
         () =>

@@ -5,9 +5,10 @@ import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import babelPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { processSources } from './process-sources.js';
+
+export { default as babelPlugin } from './babel.js';
 
 export type FragmentMaskingConfig = {
   /**
@@ -258,5 +259,3 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
     ];
   },
 };
-
-export { babelPlugin };

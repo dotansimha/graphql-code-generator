@@ -59,7 +59,7 @@ export function wrapWithSingleQuotes(value: string | number | NameNode, skipNume
 
   if (
     typeof value === 'number' ||
-    (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
+    (typeof value === 'string' && !Number.isNaN(parseInt(value)) && parseFloat(value).toString() === value)
   ) {
     return String(value);
   }
@@ -232,7 +232,7 @@ export class DeclarationBlock {
     }
 
     return stripTrailingSpaces(
-      (this._comment ? this._comment : '') +
+      (this._comment || '') +
         result +
         (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
           ? ''
