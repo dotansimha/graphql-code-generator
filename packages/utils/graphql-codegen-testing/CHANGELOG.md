@@ -1,5 +1,12 @@
 # @graphql-codegen/testing
 
+## 1.18.3
+
+### Patch Changes
+
+- [#8836](https://github.com/dotansimha/graphql-code-generator/pull/8836) [`4fa0a566e`](https://github.com/dotansimha/graphql-code-generator/commit/4fa0a566e1b5253c303ea2a4b5cbbf7c12ca3677) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`nock@13.3.0` ↗︎](https://www.npmjs.com/package/nock/v/13.3.0) (from `13.2.9`, in `dependencies`)
+
 ## 1.18.2
 
 ### Patch Changes
