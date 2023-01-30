@@ -44,7 +44,7 @@
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
     "graphql-helix": "1.13.0",
-    "nock": "13.2.9",
+    "nock": "13.3.0",
     "tslib": "~2.4.0"
   },
   "devDependencies": {
