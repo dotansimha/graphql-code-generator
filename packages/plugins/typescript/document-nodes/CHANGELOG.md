@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-document-nodes
 
+## 2.3.13
+
+### Patch Changes
+
+- Updated dependencies [[`a98198524`](https://github.com/dotansimha/graphql-code-generator/commit/a9819852443884b43de7c15040ccffc205f9177a)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.8
+
 ## 2.3.12
 
 ### Patch Changes

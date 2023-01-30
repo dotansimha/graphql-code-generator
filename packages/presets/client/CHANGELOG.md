@@ -1,5 +1,119 @@
 # @graphql-codegen/client-preset
 
+## 1.3.0
+
+### Minor Changes
+
+- [#8757](https://github.com/dotansimha/graphql-code-generator/pull/8757) [`4f290aa72`](https://github.com/dotansimha/graphql-code-generator/commit/4f290aa7279a05ffa40920c1c9e5e5b37c164335) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add support for persisted documents.
+
+  You can now generate and embed a persisted documents hash for the executable documents.
+
+  ```ts
+  /** codegen.ts */
+  import { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+    documents: ['src/**/*.tsx'],
+    ignoreNoDocuments: true, // for better experience with the watcher
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        plugins: [],
+        presetConfig: {
+          persistedDocuments: true,
+        },
+      },
+    },
+  };
+
+  export default config;
+  ```
+
+  This will generate `./src/gql/persisted-documents.json` (dictionary of hashes with their operation string).
+
+  In addition to that each generated document node will have a `__meta__.hash` property.
+
+  ```ts
+  import { gql } from './gql.js';
+
+  const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+    query allFilmsWithVariablesQuery($first: Int!) {
+      allFilms(first: $first) {
+        edges {
+          node {
+            ...FilmItem
+          }
+        }
+      }
+    }
+  `);
+
+  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__']['hash']);
+  ```
+
+- [#8757](https://github.com/dotansimha/graphql-code-generator/pull/8757) [`4f290aa72`](https://github.com/dotansimha/graphql-code-generator/commit/4f290aa7279a05ffa40920c1c9e5e5b37c164335) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add support for embedding metadata in the document AST.
+
+  It is now possible to embed metadata (e.g. for your GraphQL client within the emitted code).
+
+  ```ts
+  /** codegen.ts */
+  import { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+    documents: ['src/**/*.tsx'],
+    ignoreNoDocuments: true, // for better experience with the watcher
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        plugins: [],
+        presetConfig: {
+          onExecutableDocumentNode(documentNode) {
+            return {
+              operation: documentNode.definitions[0].operation,
+              name: documentNode.definitions[0].name.value,
+            };
+          },
+        },
+      },
+    },
+  };
+
+  export default config;
+  ```
+
+  You can then access the metadata via the `__meta__` property on the document node.
+
+  ```ts
+  import { gql } from './gql.js';
+
+  const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+    query allFilmsWithVariablesQuery($first: Int!) {
+      allFilms(first: $first) {
+        edges {
+          node {
+            ...FilmItem
+          }
+        }
+      }
+    }
+  `);
+
+  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__']);
+  ```
+
+### Patch Changes
+
+- [#8757](https://github.com/dotansimha/graphql-code-generator/pull/8757) [`4f290aa72`](https://github.com/dotansimha/graphql-code-generator/commit/4f290aa7279a05ffa40920c1c9e5e5b37c164335) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+  - Added dependency [`@graphql-tools/documents@^0.1.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/documents/v/0.1.0) (to `dependencies`)
+- Updated dependencies [[`a98198524`](https://github.com/dotansimha/graphql-code-generator/commit/a9819852443884b43de7c15040ccffc205f9177a)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.8
+  - @graphql-codegen/gql-tag-operations@1.6.2
+  - @graphql-codegen/typescript-operations@2.5.13
+  - @graphql-codegen/typed-document-node@2.3.13
+  - @graphql-codegen/typescript@2.8.8
+
 ## 1.2.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 2.13.8
+
+### Patch Changes
+
+- [#8816](https://github.com/dotansimha/graphql-code-generator/pull/8816) [`a98198524`](https://github.com/dotansimha/graphql-code-generator/commit/a9819852443884b43de7c15040ccffc205f9177a) Thanks [@charle692](https://github.com/charle692)! - Fix issue where visitor-plugin-common emitted ESM imports for Operations when emitLegacyCommonJSImports is true
+
 ## 2.13.7
 
 ### Patch Changes
