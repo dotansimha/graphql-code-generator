@@ -1,5 +1,5 @@
 import { codegen } from '@graphql-codegen/core';
-import { parse } from 'graphql';
+import { GraphQLError, parse } from 'graphql';
 import { load } from 'js-yaml';
 import { canUseDOM } from '@/utils';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';

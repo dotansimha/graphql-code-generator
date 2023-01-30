@@ -1,10 +1,10 @@
 import { basename } from 'path';
 import { ReactElement, useEffect, useState } from 'react';
 import classnames from 'classnames';
-import Editor from './Editor';
+import { Editor } from './Editor';
 import classes from './styles.module.css';
 
-const CodegenOutput = ({ outputArray, editorProps, error }): ReactElement => {
+export function CodegenOutput({ outputArray, editorProps, error }): ReactElement {
   const [index, setIndex] = useState(0);
   const editorContent = error || outputArray?.[index].content || '';
 
@@ -33,6 +33,4 @@ const CodegenOutput = ({ outputArray, editorProps, error }): ReactElement => {
       <Editor {...editorProps} value={editorContent} />
     </>
   );
-};
-
-export default CodegenOutput;
+}

@@ -1,14 +1,14 @@
 import { ReactElement } from 'react';
 import { Image } from '@theguild/components';
 import { load } from 'js-yaml';
-import CodegenOutput from './CodegenOutput';
-import Editor from './Editor';
+import { CodegenOutput } from './CodegenOutput';
+import { Editor } from './Editor';
 import { getMode } from './formatter';
 import gqlCodegenIcon from '../../../public/assets/img/gql-codegen-icon.svg';
 import graphqlLogo from '../../../public/assets/img/GraphQL_Logo.svg';
 import classes from './styles.module.css';
 
-const LiveDemoEditors = ({
+export function LiveDemoEditors({
   setSchema,
   schema,
   setDocuments,
@@ -17,7 +17,7 @@ const LiveDemoEditors = ({
   config,
   error,
   output,
-}): ReactElement => {
+}): ReactElement {
   let mode = null;
 
   try {
@@ -66,6 +66,4 @@ const LiveDemoEditors = ({
       </div>
     </div>
   );
-};
-
-export default LiveDemoEditors;
+}

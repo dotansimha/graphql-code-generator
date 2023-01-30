@@ -18,7 +18,7 @@ build.dependsOn yarn
 
 Then, create a `package.json` file in your project root, with the following content:
 
-```json
+```json filename="package.json"
 {
   "name": "java-app",
   "scripts": {
@@ -38,7 +38,7 @@ Then, create a `package.json` file in your project root, with the following cont
 
 Then, create `codegen.yml` file in your root directory, pointing to your schema, and add the plugins you need. For example:
 
-```yaml
+```yaml filename="codegen.yml"
 schema: src/main/resources/schema.graphqls
 generates:
   src/main/java/com/my-name/my-app/generated/File.java:
@@ -47,7 +47,7 @@ generates:
 
 Also, make sure you add the following to your `.gitignore` file:
 
-```text
+```gitignore filename=".gitignore"
 yarn.lock
 node_modules
 ```
