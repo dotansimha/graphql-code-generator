@@ -29,7 +29,7 @@
     "@graphql-codegen/flow": "2.3.6",
     "@graphql-codegen/flow-operations": "2.3.6",
     "@graphql-codegen/flow-resolvers": "2.4.4",
-    "@graphql-codegen/flutter-freezed": "^3.0.0",
+    "@graphql-codegen/flutter-freezed": "^3.0.1",
     "@graphql-codegen/fragment-matcher": "3.3.3",
     "@graphql-codegen/hasura-allow-list": "2.0.0",
     "@graphql-codegen/import-types-preset": "2.2.6",

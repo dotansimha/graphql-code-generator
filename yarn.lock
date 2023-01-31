@@ -1756,16 +1756,16 @@
     auto-bind "~4.0.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/flutter-freezed@2.11.2":
-  version "2.11.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/flutter-freezed/-/flutter-freezed-2.11.2.tgz#c8f1d8c7d25ea1c9038b614e23710dd9dc1f160d"
-  integrity sha512-jXZgLHW3ngXIIBNdUPWz4At9lpm5192EKrf0xrRdXlrqRnMD2gIXQirXRrx1nu8a7Oy/MlOzxc2Td7OsJQDGjQ==
+"@graphql-codegen/flutter-freezed@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/flutter-freezed/-/flutter-freezed-3.0.1.tgz#7f58fe4574c037ffa8fc50d95e39d099eb295fce"
+  integrity sha512-1kbQc2P+ZosybXGG6JRlhp0vP/ZUmoarDgW2zKLNaaWuCghlNeFt/UXd6eDGj6Q9cfeCsJKGzZu1ynVxNXSe+A==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    "@graphql-codegen/plugin-helpers" "^3.0.0"
     "@graphql-codegen/schema-ast" "^2.5.0"
     "@graphql-codegen/visitor-plugin-common" "2.13.1"
     auto-bind "~4.0.0"
-    change-case-all "1.0.14"
+    change-case-all "1.0.15"
     tslib "~2.4.0"
 
 "@graphql-codegen/hasura-allow-list@2.0.0":
