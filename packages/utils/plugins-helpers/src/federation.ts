@@ -234,7 +234,7 @@ export class ApolloFederation {
         Field(node) {
           return {
             name: node.name.value,
-            selection: node.selectionSet ? node.selectionSet : true,
+            selection: node.selectionSet || true,
           } as SelectionSetField;
         },
         Document(node) {

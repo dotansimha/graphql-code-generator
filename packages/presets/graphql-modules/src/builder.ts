@@ -151,7 +151,7 @@ export function buildModule(
       '\n}';
   }
 
-  return [...(!shouldDeclare ? imports : []), content].filter(Boolean).join('\n');
+  return [...(shouldDeclare ? [] : imports), content].filter(Boolean).join('\n');
 
   /**
    * A dictionary of fields to pick from an object

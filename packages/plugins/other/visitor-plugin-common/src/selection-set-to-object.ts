@@ -446,15 +446,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     for (const selectionNode of selectionNodes) {
       if ('kind' in selectionNode) {
         if (selectionNode.kind === 'Field') {
-          if (!selectionNode.selectionSet) {
-            if (selectionNode.alias) {
-              primitiveAliasFields.set(selectionNode.alias.value, selectionNode);
-            } else if (selectionNode.name.value === '__typename') {
-              requireTypename = true;
-            } else {
-              primitiveFields.set(selectionNode.name.value, selectionNode);
-            }
-          } else {
+          if (selectionNode.selectionSet) {
             let selectedField: GraphQLField<any, any, any> = null;
 
             const fields = parentSchemaType.getFields();
@@ -470,12 +462,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
             const fieldName = getFieldNodeNameValue(selectionNode);
             let linkFieldNode = linkFieldSelectionSets.get(fieldName);
-            if (!linkFieldNode) {
-              linkFieldNode = {
-                selectedFieldType: selectedField.type,
-                field: selectionNode,
-              };
-            } else {
+            if (linkFieldNode) {
               linkFieldNode = {
                 ...linkFieldNode,
                 field: {
@@ -483,8 +470,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
                   selectionSet: mergeSelectionSets(linkFieldNode.field.selectionSet, selectionNode.selectionSet),
                 },
               };
+            } else {
+              linkFieldNode = {
+                selectedFieldType: selectedField.type,
+                field: selectionNode,
+              };
             }
             linkFieldSelectionSets.set(fieldName, linkFieldNode);
+          } else if (selectionNode.alias) {
+            primitiveAliasFields.set(selectionNode.alias.value, selectionNode);
+          } else if (selectionNode.name.value === '__typename') {
+            requireTypename = true;
+          } else {
+            primitiveFields.set(selectionNode.name.value, selectionNode);
           }
         } else if (selectionNode.kind === 'Directive') {
           if (['skip', 'include'].includes(selectionNode?.name?.value)) {

@@ -689,6 +689,47 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-guides-api-testing",
+    "headings": [
+      "Installation",
+      "Setup",
+      "Writing tests",
+      "Conclusion"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Installation",
+        "anchor": "installation"
+      },
+      {
+        "children": [],
+        "title": "Setup",
+        "anchor": "setup"
+      },
+      {
+        "children": [],
+        "title": "Writing tests",
+        "anchor": "writing-tests"
+      },
+      {
+        "children": [],
+        "title": "Conclusion",
+        "anchor": "conclusion"
+      }
+    ],
+    "content": "904c10a560f427f5526c048a3c040689",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/api-testing",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Guides"
+    ],
+    "source": "Code Generator",
+    "title": "API Testing",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-guides-flutter-freezed",
     "headings": [
       "TL;DR",
@@ -697,6 +738,10 @@
       "TODO:",
       "Demo",
       "Getting started",
+      "Configuring the plugin",
+      "Patterns",
+      "Usage for Graphql Types",
+      "Usage for fields of Graphql Types",
       "PRs are welcomed"
     ],
     "toc": [
@@ -731,12 +776,102 @@
         "anchor": "getting-started"
       },
       {
+        "children": [
+          {
+            "children": [],
+            "title": "Identifying the building blocks",
+            "anchor": "identifying-the-building-blocks"
+          }
+        ],
+        "title": "Configuring the plugin",
+        "anchor": "configuring-the-plugin"
+      },
+      {
+        "children": [],
+        "title": "Patterns",
+        "anchor": "patterns"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Configuring all Graphql Types",
+                "anchor": "configuring-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring all Graphql Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              }
+            ],
+            "title": "Configuring specific Graphql Types",
+            "anchor": "configuring-specific-graphql-types"
+          }
+        ],
+        "title": "Usage for Graphql Types",
+        "anchor": "usage-for-graphql-types"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Configuring all fields of a specific Graphql Type",
+                "anchor": "configuring-all-fields-of-a-specific-graphql-type"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields except those specified in the exclusion list of FieldNames for a specific GraphQL Type",
+                "anchor": "configuring-all-fields-except-those-specified-in-the-exclusion-list-of-fieldnames-for-a-specific-graphql-type"
+              },
+              {
+                "children": [],
+                "title": "Configuring specific fields of all Graphql Types",
+                "anchor": "configuring-specific-fields-of-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields of all Graphql Types",
+                "anchor": "configuring-all-fields-of-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields except those specified in the exclusion list of FieldNames for all GraphQL Types",
+                "anchor": "configuring-all-fields-except-those-specified-in-the-exclusion-list-of-fieldnames-for-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring specific fields of all GraphQL Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-specific-fields-of-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields of all GraphQL Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-all-fields-of-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields except those specified in the exclusion list of FieldNames of all GraphQL Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-all-fields-except-those-specified-in-the-exclusion-list-of-fieldnames-of-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              }
+            ],
+            "title": "Configuring specific fields of a specific Graphql Type",
+            "anchor": "configuring-specific-fields-of-a-specific-graphql-type"
+          }
+        ],
+        "title": "Usage for fields of Graphql Types",
+        "anchor": "usage-for-fields-of-graphql-types"
+      },
+      {
         "children": [],
         "title": "PRs are welcomed",
         "anchor": "prs-are-welcomed"
       }
     ],
-    "content": "1d89192805c6db0fd057532f7a70d379",
+    "content": "4f05871c4076fcee9ebaf95898b61b70",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/flutter-freezed",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [

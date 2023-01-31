@@ -6,10 +6,11 @@ import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode } from 'graphql';
-import babelOptimizerPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
+
+export { default as babelOptimizerPlugin } from './babel.js';
 
 export type FragmentMaskingConfig = {
   /** @description Name of the function that should be used for unmasking a masked fragment property.
@@ -255,7 +256,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         plugins: [
           {
             [`add`]: {
-              content: reexports.map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`).join('\n'),
+              content: reexports
+                .sort()
+                .map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`)
+                .join('\n'),
             },
           },
         ],
@@ -318,8 +322,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     ];
   },
 };
-
-export { babelOptimizerPlugin };
 
 type Deferred<T = void> = {
   resolve: (value: T) => void;

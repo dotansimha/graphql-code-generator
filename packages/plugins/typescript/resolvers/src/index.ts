@@ -55,7 +55,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
         } else {
           prepend.push(
             `${importType} { ${parsedMapper.import} ${
-              parsedMapper.import !== resolverFnName ? `as ${resolverFnName} ` : ''
+              parsedMapper.import === resolverFnName ? '' : `as ${resolverFnName} `
             }} from '${parsedMapper.source}';`
           );
         }
@@ -166,7 +166,7 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
       } else {
         prepend.push(
           `${importType} { ${parsedMapper.import} ${
-            parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''
+            parsedMapper.import === 'ResolverFn' ? '' : 'as ResolverFn '
           }} from '${parsedMapper.source}';`
         );
       }
@@ -268,7 +268,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
       }
       prepend.push(
         `${importType} { ${parsedMapper.import} ${
-          parsedMapper.import !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''
+          parsedMapper.import === 'GraphQLResolveInfo' ? '' : 'as GraphQLResolveInfo'
         } } from '${parsedMapper.source}';`
       );
     } else {

@@ -4,7 +4,7 @@ import { PackageCmd, Callout } from '@theguild/components'
 
 Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
 
-Currrently this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work is ongoing to make it way easier to work with GraphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL]()
+Currently this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work is ongoing to make it way easier to work with GraphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL](https://www.kitql.dev/)
 
 ## TL;DR
 
@@ -84,7 +84,7 @@ This is the generated output:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part app_models.dart;
+part 'app_models.freezed.dart';
 part 'app_models.g.dart';
 
 @unfreezed
@@ -96,7 +96,7 @@ class RequestOtpInput with _$RequestOtpInput {
     String? phoneNumber,
   }) = _RequestOtpInput;
 
-  factory RequestOtpInput.fromJson(Map<String, Object?> json) => _RequestOtpInputFromJson(json);
+  factory RequestOtpInput.fromJson(Map<String, dynamic> json) => _$RequestOtpInputFromJson(json);
 }
 
 @unfreezed
@@ -109,14 +109,12 @@ class VerifyOtpInput with _$VerifyOtpInput {
     required String otpCode,
   }) = _VerifyOtpInput;
 
-  factory VerifyOtpInput.fromJson(Map<String, Object?> json) => _VerifyOtpInputFromJson(json);
+  factory VerifyOtpInput.fromJson(Map<String, dynamic> json) => _$VerifyOtpInputFromJson(json);
 }
 
 @freezed
 class AuthWithOtpInput with _$AuthWithOtpInput {
   const AuthWithOtpInput._();
-
-  const factory AuthWithOtpInput() = _AuthWithOtpInput;
 
   const factory AuthWithOtpInput.requestOtpInput({
     String? email,
@@ -129,7 +127,7 @@ class AuthWithOtpInput with _$AuthWithOtpInput {
     required String otpCode,
   }) = VerifyOtpInput;
 
-  factory AuthWithOtpInput.fromJson(Map<String, Object?> json) => _AuthWithOtpInputFromJson(json);
+  factory AuthWithOtpInput.fromJson(Map<String, dynamic> json) => _$AuthWithOtpInputFromJson(json);
 }
 ```
 
@@ -148,15 +146,12 @@ Inside your Flutter project root folder:
 
 2. Install [json_serializable](https://pub.dev/packages/json_serializable) in your flutter project
 
-3. Download your GraphQL schema in graphql format and place it at the root of your Flutter project
+3. Download your GraphQL schema in graphql format and place it at the root of your Flutter project using a tool like [get-graphql-schema](https://www.npmjs.com/package/get-graphql-schema)
 
 ```sh
-npm install -g graphqurl
+npm install -g get-graphql-schema
 
-gq < graphql-endpoint > --introspect > schema.graphql
-
-# if your graphql endpoint requires authentication:
-gq < graphql-endpoint > -H "Authorization: Bearer <token>" --introspect > schema.graphql
+get-graphql-schema https://your-graphql-endpoint > schema.graphql
 ```
 
 4. Add the following to the `.gitignore` file:
@@ -166,14 +161,12 @@ gq < graphql-endpoint > -H "Authorization: Bearer <token>" --introspect > schema
 node_modules/
 ```
 
-5. Create a `package.json` file at the root of the Flutter project with the following:
+5. Create a node project with `npm init -y` and add a script to run the generator:
 
 ```json
 {
-  "name": "GraphQL Code Generator Flutter Freezed",
-  "version": "1.0.0",
   "scripts": {
-    "flutter-freezed": "graphql-codegen"
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -182,20 +175,454 @@ node_modules/
 
 <PackageCmd packages={['graphql', '-D typescript', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
 
-7. Create a `codegen.yml` file at the root of the Flutter project with the following:
+7. Create a `codegen.ts` file at the root of the Flutter project with the following:
 
-```yaml
-schema: './schema.graphql'
-generates:
-  ./lib/data/models/app_models.dart:
-    plugins:
-      - flutter-freezed
+```ts filename='codegen.ts'
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  generates: {
+    'lib/data/models/app_models.dart': {
+      plugins: {
+        'flutter-freezed': {}
+      }
+    }
+  }
+}
+export default config
 ```
 
 8. Generate your freezed models with the following command and chill 🍻:
 
 ```bash
-npm run flutter-freezed
+npm run generate
+```
+
+## Configuring the plugin
+
+To configure the plugin, you need to first understand how to use Patterns
+to configure specific GraphQL Types and its fields and also apply
+a config option globally to all GraphQL Types and fields.
+
+This plugin is heavily documented so please take a look into the `tests` directory to learn more.
+
+Also, understanding how the generated output is identified helps in granular configuration
+
+Using the schema below:
+
+```graphql filename='schema.graphql'
+enum Episode {
+  NEWHOPE
+  EMPIRE
+  JEDI
+}
+
+type Actor {
+  name: String!
+  appearsIn: [Episode]!
+}
+
+type Starship {
+  id: ID!
+  name: String!
+  length: Float
+}
+
+interface Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+}
+
+type Human implements Character {
+  id: ID!
+  name: String!
+  friends: [Actor]
+  appearsIn: [Episode]!
+  totalCredits: Int
+}
+
+type Droid implements Character {
+  id: ID!
+  name: String!
+  friends: [Actor]
+  appearsIn: [Episode]!
+  primaryFunction: String
+}
+
+union SearchResult = Human | Droid | Starship
+```
+
+With the following configuration:
+
+```ts filename='codegen.ts'
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'lib/data/models/app_models.dart': {
+      plugins: {
+        'flutter-freezed': Config.create({
+          defaultValues: [
+            [FieldNamePattern.forFieldNamesOfAllTypeNames([friends]), '[]', ['union_factory_parameter']],
+            [FieldNamePattern.forFieldNamesOfAllTypeNames([appearsIn]), '[]', ['default_factory_parameter']]
+          ],
+          deprecated: [
+            [FieldNamePattern.forAllFieldNamesOfTypeName([Actor]), ['default_factory_parameter']],
+            [TypeNamePattern.forTypeNames(SearchResultDroid), ['union_factory']]
+          ],
+          final: [[FieldNamePattern.forFieldNamesOfAllTypeNames([id, name]), ['parameter']]],
+          mergeTypes: {
+            Human: ['Actor'],
+            Actor: ['Human']
+          },
+          immutable: TypeNamePattern.forAllTypeNamesExcludeTypeNames([Actor, Human])
+        })
+      }
+    }
+  }
+}
+```
+
+Generates output below:
+
+```dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+
+part 'app_models.freezed.dart';
+part 'app_models.g.dart';
+
+enum Episode { // @1
+  @JsonKey(name: 'NEWHOPE')
+  newhope // @1.i
+  @JsonKey(name: 'EMPIRE')
+  empire // @1.ii
+  @JsonKey(name: 'JEDI')
+  jedi // @1.iii
+}
+
+@unfreezed
+class Actor with _$Actor { // @2
+  const Actor._();
+
+  factory Actor({ // @2.a
+    @deprecated
+    required final String name, // @2.a.i
+    @deprecated
+    @Default([])
+    required List<Episode?> appearsIn, // @2.a.ii
+  }) = _Actor;
+
+  const factory Actor.human({ // @2.b
+    required final String id, // @2.b.i
+    required final String name, // @2.b.ii
+    List<Actor?>? friends, // @2.b.iii
+    required List<Episode?> appearsIn, // @2.b.iv
+    int? totalCredits, // @2.b.v
+  }) = Human; // @2.b.1
+
+  factory Actor.fromJson(Map<String, dynamic> json) => _$ActorFromJson(json);
+}
+
+@freezed
+class Starship with _$Starship { // @3
+  const Starship._();
+
+  const factory Starship({ // @3.a
+    required final String id, // @3.a.i
+    required final String name, // @3.a.ii
+    double? length, // @3.a.iii
+  }) = _Starship;
+
+  factory Starship.fromJson(Map<String, dynamic> json) => _$StarshipFromJson(json);
+}
+
+@unfreezed
+class Human with _$Human { // @4
+  const Human._();
+
+  factory Human({ // @4.a
+    required final String id, // @4.a.i
+    required final String name, // @4.a.ii
+    List<Actor?>? friends, // @4.a.iii
+    @Default([])
+    required List<Episode?> appearsIn, // @4.a.iv
+    int? totalCredits, // @4.a.v
+  }) = _Human;
+
+  const factory Human.actor({ // @4.b
+    required final String name, // @4.b.i
+    required List<Episode?> appearsIn, // @4.b.ii
+  }) = Actor; // @4.b.1
+
+  factory Human.fromJson(Map<String, dynamic> json) => _$HumanFromJson(json);
+}
+
+@freezed
+class Droid with _$Droid { // @5
+  const Droid._();
+
+  const factory Droid({, // @5.a
+    required final String id, // @5.a.i
+    required final String name, // @5.a.ii
+    List<Actor?>? friends, // @5.a.iii
+    @Default([])
+    required List<Episode?> appearsIn, // @5.a.iv
+    String? primaryFunction, // @5.a.v
+  }) = _Droid;
+
+  factory Droid.fromJson(Map<String, dynamic> json) => _$DroidFromJson(json);
+}
+
+@freezed
+class SearchResult with _$SearchResult { // @6
+  const SearchResult._(); // @6.1
+
+  const factory SearchResult.human({ // @6.a
+    required final String id, // @6.a.i
+    required final String name, // @6.a.ii
+    @Default([])
+    List<Actor?>? friends, // @6.a.iii
+    required List<Episode?> appearsIn, // @6.a.iv
+    int? totalCredits,// @6.a.v
+  }) = Human; // @6.a.1
+
+  @deprecated
+  const factory SearchResult.droid({ // @6.b
+    required final String id, // @6.b.i
+    required final String name, // @6.b.ii
+    @Default([])
+    List<Actor?>? friends, // @6.b.iii
+    required List<Episode?> appearsIn, // @6.b.iv
+    String? primaryFunction, // @6.b.v
+  }) = Droid; // @6.a.2
+
+  const factory SearchResult.starship({ // @6.c
+    required final String id, // @6.c.i
+    required final String name, // @6.c.ii
+    double? length, // @6.c.iii
+  }) = Starship; // @6.a.3
+
+  factory SearchResult.fromJson(Map<String, dynamic> json) => _$SearchResultFromJson(json);
+}
+```
+
+### Identifying the building blocks
+
+The generated output consists of several blocks enabling you to specify a configuration
+targetting a specific block.
+
+> All `APPLIES_ON_*` values are exported from the `plugin-config` module of this package.
+
+`@1`: is the `enum` block. Use `APPLIES_ON_ENUM` to configure this block.
+
+`@1.i` to `@1.iii` makes up the `enum_value` block. Use `APPLIES_ON_ENUM_VALUE` to configure this block
+
+`@2` to `@6` are the `class` blocks. Use `APPLIES_ON_CLASS ` to configure these blocks.
+
+There are 2 types of factory constructors in each class:
+
+1. The Default Factory Constructor: Created automatically for each GraphQL Type.
+   Use `APPLIES_ON_DEFAULT_FACTORY` to configure these blocks.
+   `@2.a` to `@5.a` are the default factory constructors.
+
+2. The Named Factory: There are 2 types of named factory constructors:
+
+- Merged Factory Constructors: created manually by merging two different GraphQL Types in the config.
+  See `config.mergeTypes` above. Use `APPLIES_ON_MERGED_FACTORY` to configure these block
+  `@2.b` and `@4.b` are the merged factory constructors.
+
+- Union Factory Constructors: created automatically from a GraphQL Union Type.
+  Each GraphQL Type in the Union is generated as a named factory in the class of the GraphQL Union Type.
+  Use `APPLIES_ON_UNION_FACTORY` to configure these factories
+  `@6.a`, `@6.b` and `@6.c` are the merged factory constructors.
+
+Use `APPLIES_ON_NAMED_FACTORY ` to configure both merged and union factories.
+
+Use `APPLIES_ON_FACTORY ` to configure all factories.
+
+> Each `class` block has exactly one default factory constructor and maybe one or more named factory constructors.
+
+The fields of the GraphQL Type are generated as parameters to the factory constructors:
+
+There are 3 types of parameters are generated depending on the type of factory constructors:
+
+1. Parameters found in the default_factory are called `default_factory_parameter`.
+   Use `APPLIES_ON_DEFAULT_FACTORY_PARAMETERS` to configure these parameters
+   The following are all default factory parameters:
+
+- `@2.a.i` to `@2.a.iii`
+- `@3.a.i` to `@3.a.iii`
+- `@4.a.i` to `@4.a.v`
+- `@5.a.i` to `@5.a.v`
+
+2. Parameters found on the merged_factory are called `merged_factory_parameter`.
+   Use `APPLIES_ON_MERGED_FACTORY_PARAMETERS` to configure these parameters
+   The following are all merged factory parameters:
+
+- `@2.b.i` to `@2.b.v`
+- `@4.b.i` and `@4.b.ii`
+
+3. Parameters found in the union_factory are called `union_factory_parameter`.
+   Use `APPLIES_ON_UNION_FACTORY_PARAMETERS` to configure these parameters.
+   The following are all merged factory parameters:
+
+- `@6.a.i` to `@6.a.v`
+- `@6.b.i` to `@6.b.v`
+- `@6.c.i` to `@6.c.iii`
+
+Use `APPLIES_ON_NAMED_FACTORY_PARAMETERS ` to configure both merged and union factor parameters
+
+Use `APPLIES_ON_PARAMETERS ` to configure all parameters
+
+## Patterns
+
+A compact string of patterns used in the config for granular configuration for each Graphql Type and/or its fieldNames
+
+The string can contain more than one pattern, each pattern ends with a semi-colon (`;`).
+
+A dot (`.`) separates the TypeName from the FieldNames in each pattern
+
+To apply an option to all Graphql Types or fields, use the allTypeNames (`@*TypeNames`) and allFieldNames (`@*FieldNames`) tokens respectively
+
+Wherever you use the allTypeNames and the allFieldNames, know very well that you can make some exceptions. After all, to every rule, there is an exception
+
+A **square bracket** (`[]`) is used to specify what should be included and a **negated square bracket** (`-[]`) is used to specify what should be excluded
+
+Manually typing out a pattern may be prone to typos and invalid patterns therefore the [`TypeFieldName`]() class exports some builder methods which you can use in your plugin config file.
+
+The patterns themselves are readable and easy to manually type it out in the config but its RECOMMENDED that you the builder methods. However, along with builder methods, the [`TypeFieldName`]() class also exports the Regular Expression(RegExp) used to test the patterns for a match as well as matcher methods. You can use these to find out if you manually typed out patterns would work with this plugin.
+
+## Usage for Graphql Types
+
+### Configuring specific Graphql Types
+
+You can explicitly list out the names of the Graphql Types that you want to configure.
+
+```ts
+const pattern = Pattern.forTypeNames([Droid, Starship])
+console.log(pattern) // "Droid;Starship;"
+```
+
+### Configuring all Graphql Types
+
+Instead of manually listing out **all** the types in the Graphql Schema, use the allTypeNames (`@*TypeNames`) to configure all the Graphql Types in the Schema
+
+```ts
+const pattern = Pattern.forAllTypeNames()
+console.log(pattern) // "@*TypeNames;"
+```
+
+### Configuring all Graphql Types except those specified in the exclusion list of TypeNames
+
+You can configure all GraphQL Types except those specified.
+
+The example below configures all the Graphql Types in the Schema except the `Droid` and `Starship` Graphql Types
+
+```ts
+const pattern = Pattern.forAllTypeNamesExcludeTypeNames([Droid, Starship])
+console.log(pattern) // "@*TypeNames-[Droid,Starship];"
+```
+
+## Usage for fields of Graphql Types
+
+### Configuring specific fields of a specific Graphql Type
+
+You can explicitly list out the names of the fields of the Graphql Types that you want to configure.
+
+```ts
+const pattern = Pattern.forFieldNamesOfTypeName([
+  [Droid, [id, name, friends]],
+  [Human, [id, name, title]],
+  [Starship, [name, length]]
+])
+console.log(pattern) // "Droid.[id,name,friends];Human.[id,name,title];Starship.[name,length];"
+```
+
+### Configuring all fields of a specific Graphql Type
+
+Instead of manually listing out **all the fields** of the Graphql Type, use the allFieldNames (`@*FieldNames`) to configure all the fields of the Graphql Type.
+
+```ts
+const pattern = Pattern.forAllFieldNamesOfTypeName([Droid, Movie])
+console.log(pattern) // "Droid.@*FieldNames;Movie.@*FieldNames;"
+```
+
+### Configuring all fields except those specified in the exclusion list of FieldNames for a specific GraphQL Type
+
+In the example below, the `id` and the `name` fields will be excluded from the configuration while all the remaining fields of the `Droid` Graphql Type will be configured
+
+```ts
+const pattern = Pattern.forAllFieldNamesExcludeFieldNamesOfTypeName([
+  [Droid, [id, name, friends]],
+  [Human, [id, name, title]],
+  [Starship, [name, length]]
+])
+console.log(pattern) // "Droid.@*FieldNames-[id,name,friends];Human.@*FieldNames-[id,name,title];Starship.@*FieldNames-[name,length];"
+```
+
+### Configuring specific fields of all Graphql Types
+
+When you use the allTypeNames (`@*TypeNames`), you can specify the fields to be configured. If field name that doesn't exists for a given Graphql Type, it would simply be ignored.
+
+The example below configures the `id` and `name` fields of all Graphql Types
+
+```ts
+const pattern = Pattern.forFieldNamesOfAllTypeNames([id, name, friends])
+console.log(pattern) // "@*TypeNames.[id,name,friends];"
+```
+
+### Configuring all fields of all Graphql Types
+
+Using the allFieldNames (`@*FieldNames`) on the allTypeNames (`@*TypeNames`), you can configure all fields of all the Graphql Types in the Schema
+
+```ts
+const pattern = Pattern.forAllFieldNamesOfAllTypeNames()
+console.log(pattern) // "@*TypeNames.@*FieldNames;"
+```
+
+### Configuring all fields except those specified in the exclusion list of FieldNames for all GraphQL Types
+
+As always, you can make some exception when you use the allFieldNames (`@*FieldNames`) to except some fields from the configuration.
+
+In the example below, the `id` and the `name` fields will be excluded from the configuration while all the remaining fields of all Graphql Type will be configured
+
+```ts
+const pattern = Pattern.forAllFieldNamesExcludeFieldNamesOfAllTypeNames([id, name, friends])
+console.log(pattern) // "@*TypeNames.@*FieldNames-[id,name,friends];"
+```
+
+### Configuring specific fields of all GraphQL Types except those specified in the exclusion list of TypeNames
+
+In the example below, the `id` and `name` fields will be configured for all the Graphql Types in the Schema except`Droid` and `Starship`
+
+```ts
+const pattern = Pattern.forFieldNamesOfAllTypeNamesExcludeTypeNames([Droid, Human], [id, name, friends])
+console.log(pattern) // "@*TypeNames-[Droid,Human].[id,name,friends];"
+```
+
+### Configuring all fields of all GraphQL Types except those specified in the exclusion list of TypeNames
+
+In the example below, all fields of all Graphql Types in the Schema except for the fields of `Droid` and `Starship` will be excluded from the configuration while all the remaining fields of all Graphql Type will be configured
+
+```ts
+ * const pattern = Pattern.forAllFieldNamesOfAllTypeNamesExcludeTypeNames([Droid, Human]);
+ * console.log(pattern); // "@*TypeNames-[Droid,Human].@*FieldNames;"
+```
+
+### Configuring all fields except those specified in the exclusion list of FieldNames of all GraphQL Types except those specified in the exclusion list of TypeNames
+
+In the example below, the `id` and the `name` fields of `Droid` or `Starship` will be excluded from the configuration while all the **remaining fields** of all Graphql Types(including `Droid` and `Starship`) will be configured
+
+```ts
+const pattern = Pattern.forAllFieldNamesExcludeFieldNamesOfAllTypeNamesExcludeTypeNames(
+  [Droid, Human],
+  [id, name, friends]
+)
+console.log(pattern) // "@*TypeNames-[Droid,Human].@*FieldNames-[id,name,friends];"
 ```
 
 ## PRs are welcomed

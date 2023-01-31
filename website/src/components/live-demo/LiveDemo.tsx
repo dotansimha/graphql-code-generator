@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { icons } from '@/lib/plugins';
 import { EXAMPLES } from './examples';
 import { generate } from './generate';
-import LiveDemoEditors from './LiveDemoEditors';
+import { LiveDemoEditors } from './LiveDemoEditors';
 
 const groupedExamples = Object.entries(EXAMPLES).map(([catName, category]) => ({
   label: catName,
@@ -16,8 +16,7 @@ function useCodegen(config: string, schema: string, documents?: string, template
   const [output, setOutput] = useState(null);
 
   useEffect(() => {
-    async function run() {
-      const result = await generate(config, schema, documents);
+    generate(config, schema, documents).then(result => {
       if (typeof result === 'string') {
         setOutput(null);
         setError(result);
@@ -25,15 +24,10 @@ function useCodegen(config: string, schema: string, documents?: string, template
         setOutput(result);
         setError(null);
       }
-    }
-
-    run();
+    });
   }, [config, schema, documents, templateName]);
 
-  return {
-    error,
-    output,
-  };
+  return { error, output };
 }
 
 const DEFAULT_EXAMPLE = {
@@ -42,8 +36,8 @@ const DEFAULT_EXAMPLE = {
 } as const;
 
 export default function LiveDemo(): ReactElement {
-  const { theme } = useTheme();
-  const isDarkTheme = theme === 'dark';
+  const { resolvedTheme } = useTheme();
+  const isDarkTheme = resolvedTheme === 'dark';
   const [template, setTemplate] = useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
   const [schema, setSchema] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
   const [documents, setDocuments] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);
