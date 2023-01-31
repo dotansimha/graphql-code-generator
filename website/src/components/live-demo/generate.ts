@@ -1,11 +1,10 @@
 import { codegen } from '@graphql-codegen/core';
 import { GraphQLError, parse } from 'graphql';
 import { load } from 'js-yaml';
-import { canUseDOM } from '@/utils';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';
 import { normalizeConfig } from './utils';
 
-if (canUseDOM) {
+if (typeof window !== 'undefined') {
   process.hrtime = () => [0, 0]; // Fix error - TypeError: process.hrtime is not a function
   window.global = window; // type-graphql error - global is not defined
 }

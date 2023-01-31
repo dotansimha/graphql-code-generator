@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import { useTheme } from '@theguild/components';
-import { canUseDOM } from '@/utils';
 
 export function Editor({
   value,
@@ -12,13 +11,9 @@ export function Editor({
   lang: string;
   value: string;
   readOnly?: boolean;
-  onEdit: (value?: string) => void;
-}): ReactElement | null {
+  onEdit?: (value?: string) => void;
+}): ReactElement {
   const { resolvedTheme } = useTheme();
-  if (!canUseDOM) {
-    return null;
-  }
-
   return (
     <MonacoEditor
       height="40vh"
