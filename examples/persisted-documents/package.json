@@ -1,9 +1,10 @@
 {
-  "name": "example-yoga-tests",
+  "name": "example-persisted-documents",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "graphql-yoga": "3.4.0"
+    "graphql-yoga": "3.4.0",
+    "@graphql-yoga/plugin-persisted-operations": "1.4.1"
   },
   "devDependencies": {
     "@graphql-typed-document-node/core": "3.1.1",
