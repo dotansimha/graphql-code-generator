@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@graphql-codegen/client-preset": "1.0.2",
+    "@graphql-codegen/client-preset": "1.3.0",
     "@tanstack/react-query": "4.0.10",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.4.0",
@@ -19,7 +19,7 @@
     "web-vitals": "2.1.4"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.13.3",
+    "@graphql-codegen/cli": "2.16.5",
     "typescript": "4.8.4"
   },
   "scripts": {
