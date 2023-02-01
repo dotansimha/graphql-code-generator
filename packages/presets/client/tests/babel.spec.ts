@@ -9,19 +9,22 @@ describe('client-preset > babelPlugin', () => {
       babelrc: false,
       configFile: false,
     }).code;
+
     expect(result).toMatchInlineSnapshot(`
       "import { CFragmentDoc } from "./graphql";
       import { BDocument } from "./graphql";
       import { ADocument } from "./graphql";
-
       /* eslint-disable @typescript-eslint/ban-ts-comment */
       //@ts-ignore
-      import gql from 'gql-tag'; //@ts-ignore
+      import gql from 'gql-tag';
 
-      const A = ADocument; //@ts-ignore
+      //@ts-ignore
+      const A = ADocument;
 
-      const B = BDocument; //@ts-ignore
+      //@ts-ignore
+      const B = BDocument;
 
+      //@ts-ignore
       const C = CFragmentDoc;"
     `);
   });
@@ -35,15 +38,17 @@ describe('client-preset > babelPlugin', () => {
       "import { CFragmentDoc } from "../graphql";
       import { BDocument } from "../graphql";
       import { ADocument } from "../graphql";
-
       /* eslint-disable @typescript-eslint/ban-ts-comment */
       //@ts-ignore
-      import gql from 'gql-tag'; //@ts-ignore
+      import gql from 'gql-tag';
 
-      const A = ADocument; //@ts-ignore
+      //@ts-ignore
+      const A = ADocument;
 
-      const B = BDocument; //@ts-ignore
+      //@ts-ignore
+      const B = BDocument;
 
+      //@ts-ignore
       const C = CFragmentDoc;"
     `);
   });
