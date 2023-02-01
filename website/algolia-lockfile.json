@@ -574,7 +574,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "56a87bc49e9abb85cfb614303829a193",
+    "content": "41786066f495360a40a759b9189260e5",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/installation",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": ["Docs", "Getting Started"],
@@ -844,12 +844,52 @@
         "anchor": "guide"
       }
     ],
-    "content": "6a2bcfe8ccfff7843c9ef430a8c79e6e",
+    "content": "a0ff097c981da163f3f0c21966dc42d6",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-server-apollo-yoga",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Apollo Server / GraphQL Yoga",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-docs-guides-graphql-server-apollo-yoga-with-server-preset",
+    "headings": [
+      "Guide"
+    ],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Generate Files",
+                "anchor": "generate-files"
+              },
+              {
+                "children": [],
+                "title": "Conventions to Support Schema Modules",
+                "anchor": "conventions-to-support-schema-modules"
+              }
+            ],
+            "title": "Setup",
+            "anchor": "setup"
+          }
+        ],
+        "title": "Guide",
+        "anchor": "guide"
+      }
+    ],
+    "content": "2d0f27b778aaf6af9064e16f9e527a80",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-server-apollo-yoga-with-server-preset",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Guides"
+    ],
+    "source": "Code Generator",
+    "title": "Apollo Server / GraphQL Yoga with Server Preset",
     "type": "Documentation"
   },
   {
