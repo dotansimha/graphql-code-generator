@@ -309,10 +309,10 @@ export default config
 Persisted documents (often also referred to as persisted queries or persisted documents) is a technique for reducing client to server upstream traffic by sending a unique identifier instead of the full GraphQL document.
 It is also commonly used to reduce the size of the client bundle as well as to improve security by preventing the client from sending and executing arbitrary GraphQL operations.
 
-<Highlight>
+<Callout type="info">
   You can find [a functional example using GraphQL Yoga within our Codegen Examples on
   GitHub](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/persisted-documents).
-</Highlight>
+</Callout>
 
 Persisted documents can be enabled by setting the `persistedDocuments` option to `true`:
 
@@ -372,7 +372,7 @@ console.log(HelloQuery['__meta__']['hash'])
 
 This hash can be used in the network layer of your GraphQL client to send the document hash instead of the document string.
 
-<Callout>
+<Callout type="info">
   Note that the server you sent the document hash to must be able to resolve the document hash to the document string.
 </Callout>
 
