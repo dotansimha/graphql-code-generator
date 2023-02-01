@@ -46,7 +46,7 @@
     "@graphql-codegen/core": "^2.6.8",
     "@graphql-codegen/plugin-helpers": "^3.1.2",
     "@graphql-tools/apollo-engine-loader": "^7.3.6",
-    "@graphql-tools/code-file-loader": "^7.3.13",
+    "@graphql-tools/code-file-loader": "^7.3.17",
     "@graphql-tools/git-loader": "^7.2.13",
     "@graphql-tools/github-loader": "^7.3.20",
     "@graphql-tools/graphql-file-loader": "^7.5.0",
