@@ -17,8 +17,8 @@
     "@types/babel__template": "7.4.1"
   },
   "dependencies": {
-    "@babel/helper-plugin-utils": "^7.14.5",
-    "@babel/template": "^7.15.4",
+    "@babel/helper-plugin-utils": "^7.20.2",
+    "@babel/template": "^7.20.7",
     "@graphql-codegen/add": "^3.2.3",
     "@graphql-codegen/typed-document-node": "^2.3.13",
     "@graphql-codegen/typescript": "^2.8.8",
