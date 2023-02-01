@@ -1,5 +1,5 @@
 ---
-'@graphql-codegen/cli': major
+'@graphql-codegen/cli': patch
 ---
 
-Fix PluckConfig Overwrite Problem By Upgrade Dep Version.
+Fix PluckConfig overwrite problem.
