@@ -6,19 +6,14 @@
     "content": "3acc7ec8e9af47ae98948dcdcd585098",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/advanced/generated-files-colocation",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Advanced Usage"
-    ],
+    "hierarchy": ["Docs", "Advanced Usage"],
     "source": "Code Generator",
     "title": "Generated files colocation",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-advanced-usage-how-does-it-work",
-    "headings": [
-      "Example with `@graphql-codegen/typescript`"
-    ],
+    "headings": ["Example with `@graphql-codegen/typescript`"],
     "toc": [
       {
         "children": [],
@@ -29,10 +24,7 @@
     "content": "8a7ab80fcd7350c251b0aa1f92d0e3a2",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/advanced/how-does-it-work",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Advanced Usage"
-    ],
+    "hierarchy": ["Docs", "Advanced Usage"],
     "source": "Code Generator",
     "title": "How does it work?",
     "type": "Documentation"
@@ -44,20 +36,14 @@
     "content": "042c1533a36a671659613f323cafc888",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/advanced/profiler",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Advanced Usage"
-    ],
+    "hierarchy": ["Docs", "Advanced Usage"],
     "source": "Code Generator",
     "title": "Profiler",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-advanced-usage-programmatic-usage",
-    "headings": [
-      "Basic Programmatic Usage",
-      "Using the CLI instead of `core`"
-    ],
+    "headings": ["Basic Programmatic Usage", "Using the CLI instead of `core`"],
     "toc": [
       {
         "children": [],
@@ -73,10 +59,7 @@
     "content": "18d45c846ec05b26ec0ec37c9c8f190f",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/advanced/programmatic-usage",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Advanced Usage"
-    ],
+    "hierarchy": ["Docs", "Advanced Usage"],
     "source": "Code Generator",
     "title": "Programmatic Usage",
     "type": "Documentation"
@@ -132,10 +115,7 @@
     "content": "7ad15783187cd47d7219dc1ed6a7fe19",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/codegen-config",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "codegen.ts",
     "type": "Documentation"
@@ -147,22 +127,14 @@
     "content": "e51f75119aa3976643dab38b6adbb060",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/config-field",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "plugin config",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-config-reference-documents-field",
-    "headings": [
-      "How to use it?",
-      "Available Formats",
-      "GraphQL Tag Pluck",
-      "Custom Document Loader"
-    ],
+    "headings": ["How to use it?", "Available Formats", "GraphQL Tag Pluck", "Custom Document Loader"],
     "toc": [
       {
         "children": [
@@ -222,21 +194,14 @@
     "content": "5b4ed527ab88af33e917f63360c91f39",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/documents-field",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "documents field",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-config-reference-lifecycle-hooks",
-    "headings": [
-      "How to use?",
-      "Root Level",
-      "Output Level"
-    ],
+    "headings": ["How to use?", "Root Level", "Output Level"],
     "toc": [
       {
         "children": [],
@@ -299,20 +264,14 @@
     "content": "ab30f7e90736312a2ef5e545669cae47",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/lifecycle-hooks",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "Lifecycle Hooks",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-config-reference-multiproject-config",
-    "headings": [
-      "Configuration file format",
-      "Command to generate files"
-    ],
+    "headings": ["Configuration file format", "Command to generate files"],
     "toc": [
       {
         "children": [],
@@ -328,10 +287,7 @@
     "content": "5a75079d9328107dbf018c8ba6b8416f",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/multiproject-config",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "Multi Project",
     "type": "Documentation"
@@ -343,21 +299,14 @@
     "content": "b187ca7d3cc785ac08dcba58ad616052",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/naming-convention",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "Naming Convention",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-config-reference-require-field",
-    "headings": [
-      "How to use it?",
-      "TypeScript Support",
-      "Specifying from the command line"
-    ],
+    "headings": ["How to use it?", "TypeScript Support", "Specifying from the command line"],
     "toc": [
       {
         "children": [],
@@ -384,21 +333,14 @@
     "content": "62621d3e772063542e27c5304ec7e65a",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/require-field",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "require field",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-config-reference-schema-field",
-    "headings": [
-      "How to use it?",
-      "Available formats",
-      "Custom Schema Loader"
-    ],
+    "headings": ["How to use it?", "Available formats", "Custom Schema Loader"],
     "toc": [
       {
         "children": [
@@ -489,22 +431,14 @@
     "content": "e3e3b8836c9ddd92648655b93b84c3c2",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/schema-field",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Config Reference"
-    ],
+    "hierarchy": ["Docs", "Config Reference"],
     "source": "Code Generator",
     "title": "schema field",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-getting-started-development-workflow",
-    "headings": [
-      "Scripts Integration",
-      "Watch Mode",
-      "Monorepo and Yarn Workspaces",
-      "What's next?"
-    ],
+    "headings": ["Scripts Integration", "Watch Mode", "Monorepo and Yarn Workspaces", "What's next?"],
     "toc": [
       {
         "children": [],
@@ -530,22 +464,14 @@
     "content": "241d25c61530cb506ca80af52932b631",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/development-workflow",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Getting Started"
-    ],
+    "hierarchy": ["Docs", "Getting Started"],
     "source": "Code Generator",
     "title": "Development workflow",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-getting-started-esm-typescript-usage",
-    "headings": [
-      "Codegen Configuration",
-      "TypeScript Compiler Options",
-      "Package adjustments",
-      "Conclusion"
-    ],
+    "headings": ["Codegen Configuration", "TypeScript Compiler Options", "Package adjustments", "Conclusion"],
     "toc": [
       {
         "children": [],
@@ -571,20 +497,14 @@
     "content": "0d2a1a5e2eb4715d7f952af900fb9d9f",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/esm-typescript-usage",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Getting Started"
-    ],
+    "hierarchy": ["Docs", "Getting Started"],
     "source": "Code Generator",
     "title": "ESM TypeScript usage",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-getting-started-index",
-    "headings": [
-      "The perfect GraphQL Developer Experience",
-      "What's next?"
-    ],
+    "headings": ["The perfect GraphQL Developer Experience", "What's next?"],
     "toc": [
       {
         "children": [
@@ -612,22 +532,14 @@
     "content": "66b3c192f2a033c11156a1a9e7b024a2",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/index",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Getting Started"
-    ],
+    "hierarchy": ["Docs", "Getting Started"],
     "source": "Code Generator",
     "title": "Introduction",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-getting-started-installation",
-    "headings": [
-      "Global Installation",
-      "Monorepo Project",
-      "Setup",
-      "What's next?"
-    ],
+    "headings": ["Global Installation", "Monorepo Project", "Setup", "What's next?"],
     "toc": [
       {
         "children": [],
@@ -665,10 +577,7 @@
     "content": "56a87bc49e9abb85cfb614303829a193",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/installation",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Getting Started"
-    ],
+    "hierarchy": ["Docs", "Getting Started"],
     "source": "Code Generator",
     "title": "Installation",
     "type": "Documentation"
@@ -680,22 +589,14 @@
     "content": "bc107acc079747cf01d6af2118913221",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/angular",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Angular",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-guides-api-testing",
-    "headings": [
-      "Installation",
-      "Setup",
-      "Writing tests",
-      "Conclusion"
-    ],
+    "headings": ["Installation", "Setup", "Writing tests", "Conclusion"],
     "toc": [
       {
         "children": [],
@@ -721,10 +622,7 @@
     "content": "69db450d89a647f83f7e768065562d6a",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/api-testing",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "API Testing",
     "type": "Documentation"
@@ -874,21 +772,14 @@
     "content": "4f05871c4076fcee9ebaf95898b61b70",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/flutter-freezed",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Dart/Flutter",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-guides-further-reading",
-    "headings": [
-      "For front-end applications",
-      "For GraphQL servers",
-      "Stay up-to-date with GraphQL"
-    ],
+    "headings": ["For front-end applications", "For GraphQL servers", "Stay up-to-date with GraphQL"],
     "toc": [
       {
         "children": [
@@ -921,10 +812,7 @@
     "content": "792d396908e7f40465cc6edae08c0f84",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/further-reading",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Further Reading",
     "type": "Documentation"
@@ -936,20 +824,14 @@
     "content": "12951c96b46d8695659ab65c1b32e081",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-modules",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "GraphQL Modules",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-guides-graphql-server-apollo-yoga",
-    "headings": [
-      "Video tutorial",
-      "Guide"
-    ],
+    "headings": ["Video tutorial", "Guide"],
     "toc": [
       {
         "children": [],
@@ -965,10 +847,7 @@
     "content": "6a2bcfe8ccfff7843c9ef430a8c79e6e",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-server-apollo-yoga",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Apollo Server / GraphQL Yoga",
     "type": "Documentation"
@@ -1018,20 +897,14 @@
     "content": "93a7f1749a22be8fad86f9bdceee42d6",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "React / Vue",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-guides-svelte",
-    "headings": [
-      "Svelte Apollo",
-      "SvelteKit Native"
-    ],
+    "headings": ["Svelte Apollo", "SvelteKit Native"],
     "toc": [
       {
         "children": [],
@@ -1047,10 +920,7 @@
     "content": "950158d5611bdc1ef3bcdbfc03f61d7f",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/svelte",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
+    "hierarchy": ["Docs", "Guides"],
     "source": "Code Generator",
     "title": "Svelte / Kit",
     "type": "Documentation"
@@ -1062,10 +932,7 @@
     "content": "b75a40f72486ce89e69013fe0534ff8f",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/integrations/apollo-local-state",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Integrations"
-    ],
+    "hierarchy": ["Docs", "Integrations"],
     "source": "Code Generator",
     "title": "apollo-local-state",
     "type": "Documentation"
@@ -1077,10 +944,7 @@
     "content": "aded4d90122700837990432cf31ca6b4",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/integrations/create-react-app",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Integrations"
-    ],
+    "hierarchy": ["Docs", "Integrations"],
     "source": "Code Generator",
     "title": "create-react-app",
     "type": "Documentation"
@@ -1092,19 +956,14 @@
     "content": "78111eb85e54ca2e8b692ecca9289fc0",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/integrations/federation",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Integrations"
-    ],
+    "hierarchy": ["Docs", "Integrations"],
     "source": "Code Generator",
     "title": "Apollo Federation",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-integrations-gatsby",
-    "headings": [
-      "Community Plugins"
-    ],
+    "headings": ["Community Plugins"],
     "toc": [
       {
         "children": [],
@@ -1115,21 +974,14 @@
     "content": "4585c0f9c374e73f40b25b0035be3fb6",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/integrations/gatsby",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Integrations"
-    ],
+    "hierarchy": ["Docs", "Integrations"],
     "source": "Code Generator",
     "title": "Gatsby",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-integrations-prettier",
-    "headings": [
-      "Prettier",
-      "TSLint",
-      "ESLint"
-    ],
+    "headings": ["Prettier", "TSLint", "ESLint"],
     "toc": [
       {
         "children": [],
@@ -1150,10 +1002,7 @@
     "content": "e370a10aa198649e9365aaf534978d3c",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/integrations/prettier",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Integrations"
-    ],
+    "hierarchy": ["Docs", "Integrations"],
     "source": "Code Generator",
     "title": "Prettier & Linters",
     "type": "Documentation"
@@ -1165,20 +1014,14 @@
     "content": "3a94f89e7c40e5e9c35d77fe4e46a869",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/integrations/vscode",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Integrations"
-    ],
+    "hierarchy": ["Docs", "Integrations"],
     "source": "Code Generator",
     "title": "VSCode Extension",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-migration-guides-from-0-13",
-    "headings": [
-      "What has changed?",
-      "How to migrate?"
-    ],
+    "headings": ["What has changed?", "How to migrate?"],
     "toc": [
       {
         "children": [],
@@ -1194,21 +1037,14 @@
     "content": "6febb172b4c56568fafd5b8fa6394240",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/migration/from-0-13",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Migration Guides"
-    ],
+    "hierarchy": ["Docs", "Migration Guides"],
     "source": "Code Generator",
     "title": "v0.13 -> v0.17",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-migration-guides-from-0-18",
-    "headings": [
-      "What has changed?",
-      "How to migrate?",
-      "Breaking Changes & Semver"
-    ],
+    "headings": ["What has changed?", "How to migrate?", "Breaking Changes & Semver"],
     "toc": [
       {
         "children": [
@@ -1235,10 +1071,7 @@
     "content": "d33d9f4f6e0cd69c5a10ab7db2003a37",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/migration/from-0-18",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Migration Guides"
-    ],
+    "hierarchy": ["Docs", "Migration Guides"],
     "source": "Code Generator",
     "title": "v0.18 -> v1.0",
     "type": "Documentation"
@@ -1312,10 +1145,7 @@
     "content": "d658bb02376551d76a8a3228ef53e7b2",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/contributing",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Writing Plugins"
-    ],
+    "hierarchy": ["Docs", "Writing Plugins"],
     "source": "Code Generator",
     "title": "Contributing",
     "type": "Documentation"
@@ -1327,10 +1157,7 @@
     "content": "f7cf903c681c2156c319e593d56ec6d6",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/extend-schema",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Writing Plugins"
-    ],
+    "hierarchy": ["Docs", "Writing Plugins"],
     "source": "Code Generator",
     "title": "Extend Schema",
     "type": "Documentation"
@@ -1342,10 +1169,7 @@
     "content": "2e91a8d03380fe061291a059d61dae4b",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/index",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Writing Plugins"
-    ],
+    "hierarchy": ["Docs", "Writing Plugins"],
     "source": "Code Generator",
     "title": "What are Plugins?",
     "type": "Documentation"
@@ -1389,20 +1213,14 @@
     "content": "72a5b6733ad1887d1ceddf6782062485",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/plugin-structure",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Writing Plugins"
-    ],
+    "hierarchy": ["Docs", "Writing Plugins"],
     "source": "Code Generator",
     "title": "Plugin structure",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-docs-writing-plugins-using-visitor",
-    "headings": [
-      "Basic Visitor",
-      "Codegen and Visitors"
-    ],
+    "headings": ["Basic Visitor", "Codegen and Visitors"],
     "toc": [
       {
         "children": [],
@@ -1418,10 +1236,7 @@
     "content": "a8b9aaf4e633c30cb77a21c4f3355b89",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/using-visitor",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Writing Plugins"
-    ],
+    "hierarchy": ["Docs", "Writing Plugins"],
     "source": "Code Generator",
     "title": "Using Visitor Pattern",
     "type": "Documentation"
@@ -1433,10 +1248,7 @@
     "content": "cc51c395115ce18f2ef55f3a859cc5c1",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/validate-configuration",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Writing Plugins"
-    ],
+    "hierarchy": ["Docs", "Writing Plugins"],
     "source": "Code Generator",
     "title": "Validate Configuration",
     "type": "Documentation"
@@ -1472,10 +1284,7 @@
     "content": "f8e1010d5593a30997755c3d0bedd4fc",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/c-sharp/c-sharp-operations",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "C-Sharp"
-    ],
+    "hierarchy": ["Plugins", "C-Sharp"],
     "source": "Code Generator",
     "title": "operations",
     "type": "Documentation"
@@ -1487,10 +1296,7 @@
     "content": "9cec7baf25d43eb5eeaeca180fc429dd",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/dart/flutter-freezed",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "dart"
-    ],
+    "hierarchy": ["Plugins", "dart"],
     "source": "Code Generator",
     "title": "flutter-freezed",
     "type": "Documentation"
@@ -1502,19 +1308,14 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/flow/flow-operations",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Flow"
-    ],
+    "hierarchy": ["Plugins", "Flow"],
     "source": "Code Generator",
     "title": "operations",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-flow-flow-resolvers",
-    "headings": [
-      "Enum Resolvers"
-    ],
+    "headings": ["Enum Resolvers"],
     "toc": [
       {
         "children": [
@@ -1531,19 +1332,14 @@
     "content": "4c17e00926226f0d719f61c3c4533c57",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/flow/flow-resolvers",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Flow"
-    ],
+    "hierarchy": ["Plugins", "Flow"],
     "source": "Code Generator",
     "title": "resolvers",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-java-java",
-    "headings": [
-      "How to use"
-    ],
+    "headings": ["How to use"],
     "toc": [
       {
         "children": [],
@@ -1554,20 +1350,14 @@
     "content": "89b9aa593f8f02ac821d085fb5b5dc52",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/java/java",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Java"
-    ],
+    "hierarchy": ["Plugins", "Java"],
     "source": "Code Generator",
     "title": "java",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-java-java-apollo-android",
-    "headings": [
-      "Prepare your env",
-      "Usage"
-    ],
+    "headings": ["Prepare your env", "Usage"],
     "toc": [
       {
         "children": [],
@@ -1583,10 +1373,7 @@
     "content": "db158d2260d449b0669fe12052f446ee",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/java/java-apollo-android",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Java"
-    ],
+    "hierarchy": ["Plugins", "Java"],
     "source": "Code Generator",
     "title": "java-apollo-android",
     "type": "Documentation"
@@ -1598,19 +1385,14 @@
     "content": "718d0ec8cf302ad52e24484183940a09",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/java/java-resolvers",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Java"
-    ],
+    "hierarchy": ["Plugins", "Java"],
     "source": "Code Generator",
     "title": "java-resolvers",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-java-kotlin",
-    "headings": [
-      "Prepare your environment"
-    ],
+    "headings": ["Prepare your environment"],
     "toc": [
       {
         "children": [],
@@ -1621,19 +1403,14 @@
     "content": "3d790ede1f02e856919906b07610e63a",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/java/kotlin",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Java"
-    ],
+    "hierarchy": ["Plugins", "Java"],
     "source": "Code Generator",
     "title": "kotlin",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-other-add",
-    "headings": [
-      "Examples"
-    ],
+    "headings": ["Examples"],
     "toc": [
       {
         "children": [],
@@ -1644,19 +1421,14 @@
     "content": "8c263bce0f9f01745743527244c1915b",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/add",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "add",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-other-fragment-matcher",
-    "headings": [
-      "How to use?"
-    ],
+    "headings": ["How to use?"],
     "toc": [
       {
         "children": [],
@@ -1667,19 +1439,14 @@
     "content": "affd319a0306b89570e7bf91a7e79166",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/fragment-matcher",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "fragment-matcher",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-other-hasura-allow-list",
-    "headings": [
-      "Examples"
-    ],
+    "headings": ["Examples"],
     "toc": [
       {
         "children": [],
@@ -1690,10 +1457,7 @@
     "content": "da843767640ecface054b7ed58aa5ca0",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/hasura-allow-list",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "hasura-allow-list",
     "type": "Documentation"
@@ -1705,10 +1469,7 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/introspection",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "introspection",
     "type": "Documentation"
@@ -1720,20 +1481,14 @@
     "content": "8d63df848873c568288034b9a04341d9",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/jsdoc",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "jsdoc",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-other-reason-client",
-    "headings": [
-      "Examples",
-      "Usage & Documentation"
-    ],
+    "headings": ["Examples", "Usage & Documentation"],
     "toc": [
       {
         "children": [],
@@ -1749,19 +1504,14 @@
     "content": "76754855f52dd45444ccd21c0bd13395",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/reason-client",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "reason-client",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-other-schema-ast",
-    "headings": [
-      "Examples"
-    ],
+    "headings": ["Examples"],
     "toc": [
       {
         "children": [],
@@ -1772,10 +1522,7 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/schema-ast",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "schema-ast",
     "type": "Documentation"
@@ -1787,19 +1534,14 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/time",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "time",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-other-urql-introspection",
-    "headings": [
-      "How to use?"
-    ],
+    "headings": ["How to use?"],
     "toc": [
       {
         "children": [],
@@ -1810,10 +1552,7 @@
     "content": "ebd6d02bf0af200bab76fdbb9ebde7c1",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/other/urql-introspection",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "other"
-    ],
+    "hierarchy": ["Plugins", "other"],
     "source": "Code Generator",
     "title": "urql-introspection",
     "type": "Documentation"
@@ -1863,20 +1602,14 @@
     "content": "08b583069e04fbb0dc34b64b683047d3",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/gql-tag-operations-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Presets"
-    ],
+    "hierarchy": ["Plugins", "Presets"],
     "source": "Code Generator",
     "title": "gql-tag-operations",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-presets-graphql-modules-preset",
-    "headings": [
-      "Usage Example",
-      "Using without GraphQL-Modules"
-    ],
+    "headings": ["Usage Example", "Using without GraphQL-Modules"],
     "toc": [
       {
         "children": [],
@@ -1892,10 +1625,7 @@
     "content": "daa276296e71d35e90fd941c330a5f90",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/graphql-modules-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Presets"
-    ],
+    "hierarchy": ["Plugins", "Presets"],
     "source": "Code Generator",
     "title": "graphql-modules",
     "type": "Documentation"
@@ -1907,19 +1637,14 @@
     "content": "82e2197c055bf1b9c552763180663368",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/import-types-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Presets"
-    ],
+    "hierarchy": ["Plugins", "Presets"],
     "source": "Code Generator",
     "title": "import-types",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-presets-near-operation-file-preset",
-    "headings": [
-      "Example"
-    ],
+    "headings": ["Example"],
     "toc": [
       {
         "children": [],
@@ -1930,22 +1655,14 @@
     "content": "ca008e0b0ebc2a4a8f064da8960fbeca",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Presets"
-    ],
+    "hierarchy": ["Plugins", "Presets"],
     "source": "Code Generator",
     "title": "near-operation-file",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-presets-preset-client",
-    "headings": [
-      "Getting started",
-      "Config API",
-      "Fragment Masking",
-      "Reducing bundle size: Babel plugin"
-    ],
+    "headings": ["Getting started", "Config API", "Fragment Masking", "Reducing bundle size: Babel plugin"],
     "toc": [
       {
         "children": [],
@@ -1998,19 +1715,14 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/preset-client",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "Presets"
-    ],
+    "hierarchy": ["Plugins", "Presets"],
     "source": "Code Generator",
     "title": "client-preset",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-named-operations-object",
-    "headings": [
-      "How to use?"
-    ],
+    "headings": ["How to use?"],
     "toc": [
       {
         "children": [
@@ -2033,20 +1745,14 @@
     "content": "03cb3f7ac5fb547142c74d2b837ffce7",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/named-operations-object",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "named-operations-object",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-relay-operation-optimizer",
-    "headings": [
-      "List of Features",
-      "Usage"
-    ],
+    "headings": ["List of Features", "Usage"],
     "toc": [
       {
         "children": [],
@@ -2062,10 +1768,7 @@
     "content": "fab2fda63167aa7a42391068ac00654d",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/relay-operation-optimizer",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "relay-operation-optimizer",
     "type": "Documentation"
@@ -2077,10 +1780,7 @@
     "content": "9d073d78f8596d086d613b4dcf80e940",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typed-document-node",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "typed-document-node",
     "type": "Documentation"
@@ -2092,19 +1792,14 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "typescript",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-apollo-angular",
-    "headings": [
-      "How to use?"
-    ],
+    "headings": ["How to use?"],
     "toc": [
       {
         "children": [],
@@ -2115,10 +1810,7 @@
     "content": "e05e0a1ac6ea1c04a7e63c86b3fff31e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-apollo-angular",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "apollo-angular",
     "type": "Documentation"
@@ -2130,20 +1822,14 @@
     "content": "4f4dd979d97c52e9a21c09f132dbfa9c",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-apollo-client-helpers",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "apollo-client-helpers",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-apollo-next",
-    "headings": [
-      "Motivations",
-      "API Reference"
-    ],
+    "headings": ["Motivations", "API Reference"],
     "toc": [
       {
         "children": [],
@@ -2306,19 +1992,14 @@
     "content": "35af6bccc2898308e9d27d89584483f5",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-apollo-next",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "apollo-next",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-document-nodes",
-    "headings": [
-      "Usage"
-    ],
+    "headings": ["Usage"],
     "toc": [
       {
         "children": [],
@@ -2329,19 +2010,14 @@
     "content": "02705b1d40bb30b50c369aec5ac78776",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-document-nodes",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "document-nodes",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-generic-sdk",
-    "headings": [
-      "Usage"
-    ],
+    "headings": ["Usage"],
     "toc": [
       {
         "children": [],
@@ -2352,20 +2028,14 @@
     "content": "94a3b175316353e1c8f130701593e81b",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-generic-sdk",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "generic-sdk",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-graphql-files-modules",
-    "headings": [
-      "Pre-Requirements",
-      "Example"
-    ],
+    "headings": ["Pre-Requirements", "Example"],
     "toc": [
       {
         "children": [],
@@ -2381,20 +2051,14 @@
     "content": "5e88aefb663a8879bb9f01bc979b802b",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-graphql-files-modules",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "graphql-files-modules",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-graphql-request",
-    "headings": [
-      "Usage Example",
-      "Simple Request Middleware"
-    ],
+    "headings": ["Usage Example", "Simple Request Middleware"],
     "toc": [
       {
         "children": [],
@@ -2416,10 +2080,7 @@
     "content": "a0936fc75ce222f43cec96dbdfc3dc29",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-graphql-request",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "graphql-request",
     "type": "Documentation"
@@ -2431,21 +2092,14 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-mock-data",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "typescript-mock-data",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-mongodb",
-    "headings": [
-      "Usage Example",
-      "Directives",
-      "Example"
-    ],
+    "headings": ["Usage Example", "Directives", "Example"],
     "toc": [
       {
         "children": [],
@@ -2466,10 +2120,7 @@
     "content": "42405b6fe5eb3afdb08a4035e6fac941",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-mongodb",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "mongodb",
     "type": "Documentation"
@@ -2481,20 +2132,14 @@
     "content": "c28caf4ff20017c18be2ce95f58c3e9e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-msw",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "msw",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-oclif",
-    "headings": [
-      "Usage",
-      "Advanced Features"
-    ],
+    "headings": ["Usage", "Advanced Features"],
     "toc": [
       {
         "children": [
@@ -2544,10 +2189,7 @@
     "content": "99fdcf1f4d53adcf319ce55a273e2ae4",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-oclif",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "oclif",
     "type": "Documentation"
@@ -2559,19 +2201,14 @@
     "content": "d41d8cd98f00b204e9800998ecf8427e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-operations",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "operations",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-react-apollo",
-    "headings": [
-      "Usage Example"
-    ],
+    "headings": ["Usage Example"],
     "toc": [
       {
         "children": [
@@ -2599,19 +2236,14 @@
     "content": "6dc72a6bc46ae5d0759e41063232de30",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "react-apollo",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-react-query",
-    "headings": [
-      "Usage Examples"
-    ],
+    "headings": ["Usage Examples"],
     "toc": [
       {
         "children": [
@@ -2649,10 +2281,7 @@
     "content": "f0ad645e5139fa4656242ca523459129",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-query",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "react-query",
     "type": "Documentation"
@@ -2702,19 +2331,14 @@
     "content": "205c80dcd676dba7f4004389202d2d40",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "resolvers",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-rtk-query",
-    "headings": [
-      "Usage Examples"
-    ],
+    "headings": ["Usage Examples"],
     "toc": [
       {
         "children": [
@@ -2737,19 +2361,14 @@
     "content": "3907473a457c2d82137ae00d4272ad6d",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-rtk-query",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "rtk-query",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-stencil-apollo",
-    "headings": [
-      "Usage Example"
-    ],
+    "headings": ["Usage Example"],
     "toc": [
       {
         "children": [],
@@ -2760,20 +2379,14 @@
     "content": "af9ef641b5cbbd35ee04c1b29bc1f2bd",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-stencil-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "stencil-apollo",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-svelte-apollo",
-    "headings": [
-      "API Reference",
-      "Usage Example"
-    ],
+    "headings": ["API Reference", "Usage Example"],
     "toc": [
       {
         "children": [
@@ -2813,10 +2426,7 @@
     "content": "3e792df5a76621e4ce572720c6a8e92b",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-svelte-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "svelte-apollo",
     "type": "Documentation"
@@ -2828,19 +2438,14 @@
     "content": "df4706f394ae64859ab80b2b98eb6550",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-type-graphql",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "type-graphql",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-urql",
-    "headings": [
-      "Usage Example"
-    ],
+    "headings": ["Usage Example"],
     "toc": [
       {
         "children": [],
@@ -2851,20 +2456,14 @@
     "content": "9215e27eca4f5ff1d3c242ba2472d05d",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-urql",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "urql",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-validation-schema",
-    "headings": [
-      "Examples",
-      "Usage & Documentation"
-    ],
+    "headings": ["Examples", "Usage & Documentation"],
     "toc": [
       {
         "children": [],
@@ -2880,19 +2479,14 @@
     "content": "fc56876c0394716f728ab401db77ff7e",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-validation-schema",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "validation-schema",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-vue-apollo",
-    "headings": [
-      "Examples"
-    ],
+    "headings": ["Examples"],
     "toc": [
       {
         "children": [
@@ -2909,19 +2503,14 @@
     "content": "98f3426b6eaf24984f747c50a95e6a30",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-vue-apollo",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "vue-apollo",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-vue-apollo-smart-ops",
-    "headings": [
-      "Examples"
-    ],
+    "headings": ["Examples"],
     "toc": [
       {
         "children": [
@@ -2938,19 +2527,14 @@
     "content": "9343f5e2a2bd30741bb3d8dacc228c14",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-vue-apollo-smart-ops",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "vue-apollo-smart-ops",
     "type": "Documentation"
   },
   {
     "objectID": "code-generator-plugins-typescript-typescript-vue-urql",
-    "headings": [
-      "Usage Example"
-    ],
+    "headings": ["Usage Example"],
     "toc": [
       {
         "children": [],
@@ -2961,10 +2545,7 @@
     "content": "bde6ad4a67f5dc0a655a1958b1494127",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-vue-urql",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Plugins",
-      "TypeScript"
-    ],
+    "hierarchy": ["Plugins", "TypeScript"],
     "source": "Code Generator",
     "title": "vue-urql",
     "type": "Documentation"
