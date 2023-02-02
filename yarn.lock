@@ -572,7 +572,7 @@
     "@babel/traverse" "^7.20.5"
     "@babel/types" "^7.20.5"
 
-"@babel/helpers@^7.19.0", "@babel/helpers@^7.20.7":
+"@babel/helpers@^7.19.0":
   version "7.20.13"
   resolved "https://registry.yarnpkg.com/@babel/helpers/-/helpers-7.20.13.tgz#e3cb731fb70dc5337134cadc24cbbad31cc87ad2"
   integrity sha512-nzJ0DWCL3gB5RCXbUO3KIMMsBY2Eqbx8mBpKGE/02PgyRQFcPQLbkQ1vyy596mZLaP+dAfD+R4ckASzNVmW3jg==
@@ -1283,7 +1283,7 @@
     "@babel/parser" "^7.20.7"
     "@babel/types" "^7.20.7"
 
-"@babel/traverse@^7.14.0", "@babel/traverse@^7.16.8", "@babel/traverse@^7.19.0", "@babel/traverse@^7.20.10", "@babel/traverse@^7.20.12", "@babel/traverse@^7.20.13", "@babel/traverse@^7.20.5", "@babel/traverse@^7.20.7", "@babel/traverse@^7.7.2":
+"@babel/traverse@^7.14.0", "@babel/traverse@^7.16.8", "@babel/traverse@^7.19.0", "@babel/traverse@^7.20.10", "@babel/traverse@^7.20.13", "@babel/traverse@^7.20.5", "@babel/traverse@^7.20.7", "@babel/traverse@^7.7.2":
   version "7.20.13"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.20.13.tgz#817c1ba13d11accca89478bd5481b2d168d07473"
   integrity sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==
@@ -4243,21 +4243,6 @@
     urlpattern-polyfill "^6.0.2"
     web-streams-polyfill "^3.2.0"
 
-"@whatwg-node/fetch@0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.6.2.tgz#fe4837505f6fc91bcfd6e12cdcec66f4aecfeecc"
-  integrity sha512-fCUycF1W+bI6XzwJFnbdDuxIldfKM3w8+AzVCLGlucm0D+AQ8ZMm2j84hdcIhfV6ZdE4Y1HFVrHosAxdDZ+nPw==
-  dependencies:
-    "@peculiar/webcrypto" "^1.4.0"
-    abort-controller "^3.0.0"
-    busboy "^1.6.0"
-    form-data-encoder "^1.7.1"
-    formdata-node "^4.3.1"
-    node-fetch "^2.6.7"
-    undici "^5.12.0"
-    urlpattern-polyfill "^6.0.2"
-    web-streams-polyfill "^3.2.0"
-
 "@whatwg-node/fetch@0.6.5", "@whatwg-node/fetch@^0.6.0":
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.6.5.tgz#ff96288e9a6295faafac79f13e3b3fd831cad11f"
@@ -4278,20 +4263,20 @@
     busboy "1.6.0"
     tslib "^2.3.1"
 
+"@whatwg-node/server@0.5.11":
+  version "0.5.11"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/server/-/server-0.5.11.tgz#ac5360bc872811eb19c526341e36b36e12b275c0"
+  integrity sha512-MXG2MWE2Cf4nNwZ5Kpq2VueNSxD2Y0DWNBH0FmsGdFOI4DudK8TZfbPXFEFG2b+wXrpkyi7s8Q86Htr62m0pSQ==
+  dependencies:
+    "@whatwg-node/fetch" "0.6.5"
+    tslib "^2.3.1"
+
 "@whatwg-node/server@0.5.4":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@whatwg-node/server/-/server-0.5.4.tgz#2d9101a7923870336731727f56e44fcdfe1ffeb2"
   integrity sha512-JDMmRyyQXdXOzPY2hhJNR+n4K3F2+LuReHbnF81oi+pnNAgHiffr6s9ZGVI3bO9p/Hv/3v0ur3VaMmTPGtxdUA==
   dependencies:
     "@whatwg-node/fetch" "0.6.1"
-    tslib "^2.3.1"
-
-"@whatwg-node/server@0.5.8":
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/server/-/server-0.5.8.tgz#e47aa4535431b6703652809dc4f7e5ebac6bffdb"
-  integrity sha512-29f2Ijk663Hr6hF5GU5a8ELGQVbNMMDBWF1lTdpIKGyLrLJTKixarp6COEyEN5H9tGzIRUQar9Z76A+Jb9DyzQ==
-  dependencies:
-    "@whatwg-node/fetch" "0.6.2"
     tslib "^2.3.1"
 
 "@wry/context@^0.6.0":
@@ -8012,10 +7997,10 @@ graphql-yoga@3.3.0:
     dset "^3.1.1"
     tslib "^2.3.1"
 
-graphql-yoga@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/graphql-yoga/-/graphql-yoga-3.4.0.tgz#9ab03552edb1f9ec0d877566ee7f0ecb23726dd7"
-  integrity sha512-Cjx60mmpoK1qL/sLdM285VdAOQyJBKLuC6oMZrfO8QleneNtu0nDOM6Efv5m0IrRYSONEMtIYA7eNr0u/cCBfg==
+graphql-yoga@3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/graphql-yoga/-/graphql-yoga-3.5.1.tgz#46eed5ca162f153cf37a5074d22214505c241be4"
+  integrity sha512-DVn/r4L9XJs5XeVJY9BqOHXk6P2Z1iNB9vXfChcEGNpfxJCbY6pKBstGdlDY+93U0lq5aLVspeOTvBWXAN90/w==
   dependencies:
     "@envelop/core" "3.0.4"
     "@envelop/parser-cache" "^5.0.4"
@@ -8024,8 +8009,8 @@ graphql-yoga@3.4.0:
     "@graphql-tools/schema" "^9.0.0"
     "@graphql-tools/utils" "^9.0.1"
     "@graphql-yoga/subscription" "^3.1.0"
-    "@whatwg-node/fetch" "0.6.2"
-    "@whatwg-node/server" "0.5.8"
+    "@whatwg-node/fetch" "0.6.5"
+    "@whatwg-node/server" "0.5.11"
     dset "^3.1.1"
     tslib "^2.3.1"
 
@@ -9333,7 +9318,7 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-json5@^2.2.1, json5@^2.2.2:
+json5@^2.2.1:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
