@@ -572,7 +572,7 @@
     "@babel/traverse" "^7.20.5"
     "@babel/types" "^7.20.5"
 
-"@babel/helpers@^7.19.0", "@babel/helpers@^7.20.7":
+"@babel/helpers@^7.19.0":
   version "7.20.13"
   resolved "https://registry.yarnpkg.com/@babel/helpers/-/helpers-7.20.13.tgz#e3cb731fb70dc5337134cadc24cbbad31cc87ad2"
   integrity sha512-nzJ0DWCL3gB5RCXbUO3KIMMsBY2Eqbx8mBpKGE/02PgyRQFcPQLbkQ1vyy596mZLaP+dAfD+R4ckASzNVmW3jg==
@@ -1283,7 +1283,7 @@
     "@babel/parser" "^7.20.7"
     "@babel/types" "^7.20.7"
 
-"@babel/traverse@^7.14.0", "@babel/traverse@^7.16.8", "@babel/traverse@^7.19.0", "@babel/traverse@^7.20.10", "@babel/traverse@^7.20.12", "@babel/traverse@^7.20.13", "@babel/traverse@^7.20.5", "@babel/traverse@^7.20.7", "@babel/traverse@^7.7.2":
+"@babel/traverse@^7.14.0", "@babel/traverse@^7.16.8", "@babel/traverse@^7.19.0", "@babel/traverse@^7.20.10", "@babel/traverse@^7.20.13", "@babel/traverse@^7.20.5", "@babel/traverse@^7.20.7", "@babel/traverse@^7.7.2":
   version "7.20.13"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.20.13.tgz#817c1ba13d11accca89478bd5481b2d168d07473"
   integrity sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==
@@ -2359,15 +2359,6 @@
     resolve-from "5.0.0"
     tslib "^2.4.0"
 
-"@graphql-tools/import@6.7.16":
-  version "6.7.16"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/import/-/import-6.7.16.tgz#5383db75b8fd173788d1c307084cdc6fcf0d8880"
-  integrity sha512-m07u+8YsBtKg5w5BG04KFTd59PCAPMAy5Dv/NlR4zCiH/Zbpy5PoetokCZKDrFHYUzjPlm8r//vfCG+JTvHw7g==
-  dependencies:
-    "@graphql-tools/utils" "9.2.0"
-    resolve-from "5.0.0"
-    tslib "^2.4.0"
-
 "@graphql-tools/json-file-loader@^7.3.7", "@graphql-tools/json-file-loader@^7.4.1":
   version "7.4.16"
   resolved "https://registry.yarnpkg.com/@graphql-tools/json-file-loader/-/json-file-loader-7.4.16.tgz#f2ca1e162ddee1424b39078c74c14b6bd9d177bf"
@@ -2605,10 +2596,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@graphql-yoga/plugin-persisted-operations@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-persisted-operations/-/plugin-persisted-operations-1.4.1.tgz#3187887dc37e19b8261a66a6736373b13374bde5"
-  integrity sha512-RzslweOye8El2qHNo4oDHybE/8/ogf5zaqOoo3FbpU5sXKYnacRQVKWJ25ztrKzzDRTW1FrOSoqzsxa5NySANA==
+"@graphql-yoga/plugin-persisted-operations@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-persisted-operations/-/plugin-persisted-operations-1.5.1.tgz#66c8e4044c8af74a41c1b54ecf428744b2ebf946"
+  integrity sha512-XIGHhCtoXXEV2DVcbEamPdT2/2M8R+hn4sTzajDJqgF7aH5VoVpiu7+sqLV6A1rUx2yLBugihB4aY8sN19BSsw==
 
 "@graphql-yoga/subscription@^3.1.0":
   version "3.1.0"
@@ -9329,7 +9320,7 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-json5@^2.2.1, json5@^2.2.2:
+json5@^2.2.1:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
