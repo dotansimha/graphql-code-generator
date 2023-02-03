@@ -137,13 +137,14 @@ We can use generated files in GraphQL API implementation:
 
 <Tab>
 ```ts filename="src/server.ts"
-import { createServer } from '@graphql-yoga/node'
+import { createYoga, createSchema } from 'graphql-yoga';
+import { createServer } from 'http';
 import { typeDefs } from './schema/typeDefs.generated'
 import { resolvers } from './schema/resolvers.generated'
 
-const server = createServer({ typeDefs, resolvers })
-
-server.start()
+const yoga = createYoga({ schema: createSchema({ typeDefs, resolvers }) })
+const server = createServer(yoga)
+server.listen(3000)
 
 ````
 
