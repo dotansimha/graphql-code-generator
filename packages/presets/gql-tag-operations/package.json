@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/gql-tag-operations-preset",
-  "version": "1.7.4",
+  "version": "2.0.0",
   "description": "GraphQL Code Generator preset for gql magic.",
   "repository": {
     "type": "git",
@@ -19,13 +19,13 @@
   "dependencies": {
     "@babel/helper-plugin-utils": "^7.14.5",
     "@babel/template": "^7.15.4",
-    "@graphql-codegen/add": "^3.2.3",
-    "@graphql-codegen/typed-document-node": "^2.3.11",
-    "@graphql-codegen/typescript": "^2.8.6",
-    "@graphql-codegen/typescript-operations": "^2.5.11",
-    "@graphql-codegen/gql-tag-operations": "^1.6.1",
-    "@graphql-codegen/plugin-helpers": "^3.1.2",
-    "@graphql-codegen/visitor-plugin-common": "^2.13.6",
+    "@graphql-codegen/add": "^4.0.0",
+    "@graphql-codegen/typed-document-node": "^3.0.0",
+    "@graphql-codegen/typescript": "^3.0.0",
+    "@graphql-codegen/typescript-operations": "^3.0.0",
+    "@graphql-codegen/gql-tag-operations": "^2.0.0",
+    "@graphql-codegen/plugin-helpers": "^4.0.0",
+    "@graphql-codegen/visitor-plugin-common": "^3.0.0",
     "@graphql-tools/utils": "^9.0.0",
     "tslib": "~2.4.0"
   },

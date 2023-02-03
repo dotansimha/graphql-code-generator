@@ -1,5 +1,16 @@
 # @graphql-cli/codegen
 
+## 3.0.0
+
+### Major Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
+
+### Patch Changes
+
+- Updated dependencies [[`321d5112e`](https://github.com/dotansimha/graphql-code-generator/commit/321d5112e802fd1d96daf556095b102a81763804), [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)]:
+  - @graphql-codegen/cli@3.0.0
+
 ## 2.4.25
 
 ### Patch Changes

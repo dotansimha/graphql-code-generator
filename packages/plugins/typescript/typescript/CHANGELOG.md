@@ -1,5 +1,18 @@
 # @graphql-codegen/typescript
 
+## 3.0.0
+
+### Major Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
+
+### Patch Changes
+
+- Updated dependencies [[`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5), [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)]:
+  - @graphql-codegen/visitor-plugin-common@3.0.0
+  - @graphql-codegen/plugin-helpers@4.0.0
+  - @graphql-codegen/schema-ast@3.0.0
+
 ## 2.8.8
 
 ### Patch Changes

@@ -7,12 +7,12 @@
     "start:mjs": "tsup --onSuccess \"node dist/index.mjs\""
   },
   "dependencies": {
-    "@graphql-codegen/core": "2.6.8",
-    "@graphql-codegen/plugin-helpers": "3.1.2",
-    "@graphql-codegen/typed-document-node": "2.3.13",
-    "@graphql-codegen/typescript": "2.8.8",
-    "@graphql-codegen/typescript-operations": "2.5.13",
-    "@graphql-codegen/typescript-resolvers": "2.7.13",
+    "@graphql-codegen/core": "3.0.0",
+    "@graphql-codegen/plugin-helpers": "4.0.0",
+    "@graphql-codegen/typed-document-node": "3.0.0",
+    "@graphql-codegen/typescript": "3.0.0",
+    "@graphql-codegen/typescript-operations": "3.0.0",
+    "@graphql-codegen/typescript-resolvers": "3.0.0",
     "@graphql-tools/graphql-file-loader": "7.5.14",
     "@graphql-tools/load": "7.8.10",
     "@graphql-tools/schema": "9.0.14",
