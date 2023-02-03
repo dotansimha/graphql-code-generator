@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/schema-ast",
-  "version": "2.6.1",
+  "version": "3.0.0",
   "description": "GraphQL Code Generator plugin for generating a .graphql file from a given schema",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^3.1.2",
+    "@graphql-codegen/plugin-helpers": "^4.0.0",
     "@graphql-tools/utils": "^9.0.0",
     "tslib": "~2.4.0"
   },

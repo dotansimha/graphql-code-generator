@@ -1,5 +1,29 @@
 # @graphql-codegen/client-preset
 
+## 2.0.0
+
+### Major Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
+
+### Patch Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@babel/helper-plugin-utils@^7.20.2` ↗︎](https://www.npmjs.com/package/@babel/helper-plugin-utils/v/7.20.2) (from `^7.14.5`, in `dependencies`)
+  - Updated dependency [`@babel/template@^7.20.7` ↗︎](https://www.npmjs.com/package/@babel/template/v/7.20.7) (from `^7.15.4`, in `dependencies`)
+
+- [#8871](https://github.com/dotansimha/graphql-code-generator/pull/8871) [`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5) Thanks [@B2o5T](https://github.com/B2o5T)! - eslint fixes
+
+- Updated dependencies [[`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5), [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)]:
+  - @graphql-codegen/visitor-plugin-common@3.0.0
+  - @graphql-codegen/plugin-helpers@4.0.0
+  - @graphql-codegen/add@4.0.0
+  - @graphql-codegen/gql-tag-operations@2.0.0
+  - @graphql-codegen/typescript-operations@3.0.0
+  - @graphql-codegen/typed-document-node@3.0.0
+  - @graphql-codegen/typescript@3.0.0
+
 ## 1.3.0
 
 ### Minor Changes
