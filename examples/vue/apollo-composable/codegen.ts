@@ -9,7 +9,6 @@ const config: CodegenConfig = {
       config: {
         useTypeImports: true,
       },
-      plugins: [],
     },
   },
   hooks: { afterAllFileWrite: ['prettier --write'] },
