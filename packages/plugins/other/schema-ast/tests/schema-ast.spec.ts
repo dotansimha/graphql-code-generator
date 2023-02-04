@@ -1,9 +1,8 @@
-import { validate, plugin } from '../src/index.js';
-import { buildSchema, parse, versionInfo } from 'graphql';
 import '@graphql-codegen/testing';
-import { Types } from '@graphql-codegen/plugin-helpers';
-
 import { codegen } from '@graphql-codegen/core';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import { buildSchema, parse, versionInfo } from 'graphql';
+import { plugin, validate } from '../src/index.js';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 

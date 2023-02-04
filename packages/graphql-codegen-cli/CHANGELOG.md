@@ -1,5 +1,74 @@
 # @graphql-codegen/cli
 
+## 3.0.0
+
+### Major Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
+
+### Patch Changes
+
+- [#8883](https://github.com/dotansimha/graphql-code-generator/pull/8883) [`321d5112e`](https://github.com/dotansimha/graphql-code-generator/commit/321d5112e802fd1d96daf556095b102a81763804) Thanks [@Solo-steven](https://github.com/Solo-steven)! - Fix PluckConfig overwrite problem.
+
+- Updated dependencies [[`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5), [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)]:
+  - @graphql-codegen/core@3.0.0
+  - @graphql-codegen/plugin-helpers@4.0.0
+
+## 2.16.5
+
+### Patch Changes
+
+- [#8865](https://github.com/dotansimha/graphql-code-generator/pull/8865) [`e4d073b16`](https://github.com/dotansimha/graphql-code-generator/commit/e4d073b16f904e0879a3d15774ddc9826b0ab5e5) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@graphql-codegen/core@^2.6.8` ↗︎](https://www.npmjs.com/package/@graphql-codegen/core/v/2.6.8) (from `2.6.8`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/load@^7.8.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/load/v/7.8.0) (from `7.8.0`, in `dependencies`)
+  - Updated dependency [`cosmiconfig-typescript-loader@^4.3.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.3.0) (from `4.3.0`, in `dependencies`)
+  - Updated dependency [`graphql-config@^4.4.0` ↗︎](https://www.npmjs.com/package/graphql-config/v/4.4.0) (from `4.4.0`, in `dependencies`)
+  - Added dependency [`ts-node@^10.9.1` ↗︎](https://www.npmjs.com/package/ts-node/v/10.9.1) (to `dependencies`)
+  - Removed dependency [`ts-node@>=10` ↗︎](https://www.npmjs.com/package/ts-node/v/10.0.0) (from `peerDependencies`)
+
+- [#8808](https://github.com/dotansimha/graphql-code-generator/pull/8808) [`884d25c4e`](https://github.com/dotansimha/graphql-code-generator/commit/884d25c4edb099a46bffb23ffd935abec7d14f80) Thanks [@rwu823](https://github.com/rwu823)! - fix: `gqlMagicComment` type
+
+- [#8865](https://github.com/dotansimha/graphql-code-generator/pull/8865) [`e4d073b16`](https://github.com/dotansimha/graphql-code-generator/commit/e4d073b16f904e0879a3d15774ddc9826b0ab5e5) Thanks [@n1ru4l](https://github.com/n1ru4l)! - move ts-node from peer dependencies to dependencies
+
+## 2.16.4
+
+### Patch Changes
+
+- [#8770](https://github.com/dotansimha/graphql-code-generator/pull/8770) [`4774247e9`](https://github.com/dotansimha/graphql-code-generator/commit/4774247e9d29838075660d0e08c6b3c6ea57689f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@4.4.0` ↗︎](https://www.npmjs.com/package/graphql-config/v/4.4.0) (from `4.3.6`, in `dependencies`)
+
+- [#8790](https://github.com/dotansimha/graphql-code-generator/pull/8790) [`fe12b4826`](https://github.com/dotansimha/graphql-code-generator/commit/fe12b4826d666ef69c38cd72bdd44f1bb262caf6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/fetch@^0.6.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.0) (from `^0.5.0`, in `dependencies`)
+
+## 2.16.3
+
+### Patch Changes
+
+- [#8779](https://github.com/dotansimha/graphql-code-generator/pull/8779) [`ad5d83313`](https://github.com/dotansimha/graphql-code-generator/commit/ad5d83313fe146f0593df7ae2efa3c35459e577a) Thanks [@louisscruz](https://github.com/louisscruz)! - add ts-node as a peerDependency
+
+## 2.16.2
+
+### Patch Changes
+
+- [#8715](https://github.com/dotansimha/graphql-code-generator/pull/8715) [`b1512a59a`](https://github.com/dotansimha/graphql-code-generator/commit/b1512a59a0195c1f67a7e87d6a450e98d115df39) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`cosmiconfig-typescript-loader@4.2.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.2.0) (from `4.1.1`, in `dependencies`)
+
+- [#8729](https://github.com/dotansimha/graphql-code-generator/pull/8729) [`e6ff224fb`](https://github.com/dotansimha/graphql-code-generator/commit/e6ff224fb70cab38e30a963eb9135b2f6257e46c) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`cosmiconfig-typescript-loader@4.3.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.3.0) (from `4.2.0`, in `dependencies`)
+
+- [#8771](https://github.com/dotansimha/graphql-code-generator/pull/8771) [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.9.0`, in `dependencies`)
+
+- [#8765](https://github.com/dotansimha/graphql-code-generator/pull/8765) [`a9c5414d2`](https://github.com/dotansimha/graphql-code-generator/commit/a9c5414d2ca4d0138eed3d14b0c22046128607dc) Thanks [@aniketdd](https://github.com/aniketdd)! - update @graphql-tools/prisma-loader
+
+- Updated dependencies [[`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`6c6b6f2df`](https://github.com/dotansimha/graphql-code-generator/commit/6c6b6f2df88a3a37b437a25320dab5590f033316)]:
+  - @graphql-codegen/plugin-helpers@3.1.2
+
 ## 2.16.1
 
 ### Patch Changes

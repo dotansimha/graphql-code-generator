@@ -1,9 +1,8 @@
 import { ReactElement } from 'react';
-import { useTheme } from '@theguild/components';
 import MonacoEditor from '@monaco-editor/react';
-import { canUseDOM } from '@/utils';
+import { useTheme } from '@theguild/components';
 
-const Editor = ({
+export function Editor({
   value,
   lang,
   readOnly,
@@ -12,18 +11,14 @@ const Editor = ({
   lang: string;
   value: string;
   readOnly?: boolean;
-  onEdit: (value?: string) => void;
-}): ReactElement | null => {
-  const { theme } = useTheme();
-  if (!canUseDOM) {
-    return null;
-  }
-
+  onEdit?: (value?: string) => void;
+}): ReactElement {
+  const { resolvedTheme } = useTheme();
   return (
     <MonacoEditor
       height="40vh"
       language={lang}
-      theme={theme === 'dark' ? 'vs-dark' : 'vs'}
+      theme={resolvedTheme === 'dark' ? 'vs-dark' : 'vs'}
       value={value}
       options={{
         readOnly,
@@ -34,6 +29,4 @@ const Editor = ({
       onChange={onEdit}
     />
   );
-};
-
-export default Editor;
+}

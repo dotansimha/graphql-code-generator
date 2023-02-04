@@ -1,18 +1,18 @@
+import autoBind from 'auto-bind';
+import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { FragmentImport, ImportDeclaration } from './imports.js';
+import { convertFactory } from './naming.js';
 import {
-  ScalarsMap,
-  ParsedScalarsMap,
-  NamingConvention,
   ConvertFn,
   ConvertOptions,
-  LoadedFragment,
-  NormalizedScalarsMap,
   DeclarationKind,
+  LoadedFragment,
+  NamingConvention,
+  NormalizedScalarsMap,
+  ParsedScalarsMap,
+  ScalarsMap,
 } from './types.js';
 import { DeclarationBlockConfig } from './utils.js';
-import autoBind from 'auto-bind';
-import { convertFactory } from './naming.js';
-import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { ImportDeclaration, FragmentImport } from './imports.js';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -412,8 +412,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   }
 
   public convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
-    const useTypesPrefix = typeof (options && options.useTypesPrefix) === 'boolean' ? options.useTypesPrefix : true;
-    const useTypesSuffix = typeof (options && options.useTypesSuffix) === 'boolean' ? options.useTypesSuffix : true;
+    const useTypesPrefix = typeof options?.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+    const useTypesSuffix = typeof options?.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
 
     let convertedName = '';
 

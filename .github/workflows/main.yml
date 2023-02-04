@@ -81,10 +81,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
-        node_version: [12, 14, 16, 18]
+        node_version: [14, 16, 18]
         graphql_version: [15, 16]
         include:
-          - node-version: 12
+          - node-version: 14
             os: windows-latest
             graphql_version: 16
     steps:

@@ -75,7 +75,7 @@ const postsQueryDocument = /* GraphQL */ `
 `
 
 const Posts = () => {
-  const [result] = useQuery<PostQuery>({ query: postsQueryDocument })
+  const [result] = useQuery<PostsQuery>({ query: postsQueryDocument })
 
   // …
 }
@@ -472,7 +472,8 @@ server.listen().then(({ url }) => {
 <Tab>
 ```ts
 import { readFileSync } from 'node:fs'
-import { createServer } from '@graphql-yoga/node'
+import { createServer } from 'node:http'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { Resolvers } from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
@@ -483,9 +484,13 @@ const resolvers: Resolvers = {
   }
 }
 
-const server = createServer({ typeDefs, resolvers })
+const schema = createSchema({ typeDefs, resolvers })
+const yoga = createYoga({ schema })
+const server = createServer(yoga)
 
-server.start()
+server.listen(4000, () => {
+  console.log('GraphQL Server is listening on http://localhost:4000/graphql');
+})
 ```
 </Tab>
 

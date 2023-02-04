@@ -1,9 +1,9 @@
-import { PACKAGES } from '@/lib/plugins';
-import { compileMdx } from 'nextra/compile';
-import { transformDocs } from '@/lib/transform';
-import { fetchPackageInfo } from '@theguild/components';
 import { parse } from 'node:path';
+import { fetchPackageInfo } from '@theguild/components';
 import { format } from 'date-fns';
+import { compileMdx } from 'nextra/compile';
+import { PACKAGES } from '@/lib/plugins';
+import { transformDocs } from '@/lib/transform';
 
 // Can't be used in plugin.tsx due incorrect tree shaking:
 // Module not found: Can't resolve 'fs'
@@ -34,7 +34,7 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
         'MMM do, yyyy'
       )}|
 
-### Installation
+## Installation
 `
     ),
   ]);

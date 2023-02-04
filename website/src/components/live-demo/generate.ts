@@ -1,11 +1,10 @@
-import { load } from 'js-yaml';
 import { codegen } from '@graphql-codegen/core';
-import { parse } from 'graphql';
+import { GraphQLError, parse } from 'graphql';
+import { load } from 'js-yaml';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';
 import { normalizeConfig } from './utils';
-import { canUseDOM } from '@/utils';
 
-if (canUseDOM) {
+if (typeof window !== 'undefined') {
   process.hrtime = () => [0, 0]; // Fix error - TypeError: process.hrtime is not a function
   window.global = window; // type-graphql error - global is not defined
 }
@@ -18,7 +17,7 @@ export async function generate(config: string, schema: string, documents?: strin
     const runConfigurations = [];
 
     for (const [filename, outputOptions] of Object.entries(generates)) {
-      const hasPreset = Boolean(outputOptions.preset);
+      const hasPreset = !!outputOptions.preset;
       const plugins = normalizeConfig(outputOptions.plugins || outputOptions);
       const outputConfig = outputOptions.config;
       const pluginMap = {};

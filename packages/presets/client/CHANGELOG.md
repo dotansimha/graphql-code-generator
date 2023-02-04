@@ -1,5 +1,181 @@
 # @graphql-codegen/client-preset
 
+## 2.0.0
+
+### Major Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
+
+### Patch Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@babel/helper-plugin-utils@^7.20.2` ↗︎](https://www.npmjs.com/package/@babel/helper-plugin-utils/v/7.20.2) (from `^7.14.5`, in `dependencies`)
+  - Updated dependency [`@babel/template@^7.20.7` ↗︎](https://www.npmjs.com/package/@babel/template/v/7.20.7) (from `^7.15.4`, in `dependencies`)
+
+- [#8871](https://github.com/dotansimha/graphql-code-generator/pull/8871) [`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5) Thanks [@B2o5T](https://github.com/B2o5T)! - eslint fixes
+
+- Updated dependencies [[`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5), [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)]:
+  - @graphql-codegen/visitor-plugin-common@3.0.0
+  - @graphql-codegen/plugin-helpers@4.0.0
+  - @graphql-codegen/add@4.0.0
+  - @graphql-codegen/gql-tag-operations@2.0.0
+  - @graphql-codegen/typescript-operations@3.0.0
+  - @graphql-codegen/typed-document-node@3.0.0
+  - @graphql-codegen/typescript@3.0.0
+
+## 1.3.0
+
+### Minor Changes
+
+- [#8757](https://github.com/dotansimha/graphql-code-generator/pull/8757) [`4f290aa72`](https://github.com/dotansimha/graphql-code-generator/commit/4f290aa7279a05ffa40920c1c9e5e5b37c164335) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add support for persisted documents.
+
+  You can now generate and embed a persisted documents hash for the executable documents.
+
+  ```ts
+  /** codegen.ts */
+  import { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+    documents: ['src/**/*.tsx'],
+    ignoreNoDocuments: true, // for better experience with the watcher
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        plugins: [],
+        presetConfig: {
+          persistedDocuments: true,
+        },
+      },
+    },
+  };
+
+  export default config;
+  ```
+
+  This will generate `./src/gql/persisted-documents.json` (dictionary of hashes with their operation string).
+
+  In addition to that each generated document node will have a `__meta__.hash` property.
+
+  ```ts
+  import { gql } from './gql.js';
+
+  const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+    query allFilmsWithVariablesQuery($first: Int!) {
+      allFilms(first: $first) {
+        edges {
+          node {
+            ...FilmItem
+          }
+        }
+      }
+    }
+  `);
+
+  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__']['hash']);
+  ```
+
+- [#8757](https://github.com/dotansimha/graphql-code-generator/pull/8757) [`4f290aa72`](https://github.com/dotansimha/graphql-code-generator/commit/4f290aa7279a05ffa40920c1c9e5e5b37c164335) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add support for embedding metadata in the document AST.
+
+  It is now possible to embed metadata (e.g. for your GraphQL client within the emitted code).
+
+  ```ts
+  /** codegen.ts */
+  import { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+    documents: ['src/**/*.tsx'],
+    ignoreNoDocuments: true, // for better experience with the watcher
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        plugins: [],
+        presetConfig: {
+          onExecutableDocumentNode(documentNode) {
+            return {
+              operation: documentNode.definitions[0].operation,
+              name: documentNode.definitions[0].name.value,
+            };
+          },
+        },
+      },
+    },
+  };
+
+  export default config;
+  ```
+
+  You can then access the metadata via the `__meta__` property on the document node.
+
+  ```ts
+  import { gql } from './gql.js';
+
+  const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
+    query allFilmsWithVariablesQuery($first: Int!) {
+      allFilms(first: $first) {
+        edges {
+          node {
+            ...FilmItem
+          }
+        }
+      }
+    }
+  `);
+
+  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__']);
+  ```
+
+### Patch Changes
+
+- [#8757](https://github.com/dotansimha/graphql-code-generator/pull/8757) [`4f290aa72`](https://github.com/dotansimha/graphql-code-generator/commit/4f290aa7279a05ffa40920c1c9e5e5b37c164335) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+  - Added dependency [`@graphql-tools/documents@^0.1.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/documents/v/0.1.0) (to `dependencies`)
+- Updated dependencies [[`a98198524`](https://github.com/dotansimha/graphql-code-generator/commit/a9819852443884b43de7c15040ccffc205f9177a)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.8
+  - @graphql-codegen/gql-tag-operations@1.6.2
+  - @graphql-codegen/typescript-operations@2.5.13
+  - @graphql-codegen/typed-document-node@2.3.13
+  - @graphql-codegen/typescript@2.8.8
+
+## 1.2.6
+
+### Patch Changes
+
+- [#8796](https://github.com/dotansimha/graphql-code-generator/pull/8796) [`902451601`](https://github.com/dotansimha/graphql-code-generator/commit/902451601b5edf9cb7768e57f332fe6ade79c20a) Thanks [@shmax](https://github.com/shmax)! - remove extra asterisk and add missing semicolon in generated output
+
+- Updated dependencies [[`902451601`](https://github.com/dotansimha/graphql-code-generator/commit/902451601b5edf9cb7768e57f332fe6ade79c20a)]:
+  - @graphql-codegen/gql-tag-operations@1.6.1
+
+## 1.2.5
+
+### Patch Changes
+
+- Updated dependencies [[`eb454d06c`](https://github.com/dotansimha/graphql-code-generator/commit/eb454d06c977f11f7d4a7b0b07eb80f8fd590560), [`2a33fc774`](https://github.com/dotansimha/graphql-code-generator/commit/2a33fc7741f7a9532bef68606666d4e3db7785a3)]:
+  - @graphql-codegen/visitor-plugin-common@2.13.7
+  - @graphql-codegen/gql-tag-operations@1.6.0
+  - @graphql-codegen/typescript-operations@2.5.12
+  - @graphql-codegen/typed-document-node@2.3.12
+  - @graphql-codegen/typescript@2.8.7
+
+## 1.2.4
+
+### Patch Changes
+
+- [#8771](https://github.com/dotansimha/graphql-code-generator/pull/8771) [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.0.0) (from `^8.8.0`, in `dependencies`)
+
+- [#8752](https://github.com/dotansimha/graphql-code-generator/pull/8752) [`cbca5a7ea`](https://github.com/dotansimha/graphql-code-generator/commit/cbca5a7ea3591f7ccf42399842cddb3581b40cf7) Thanks [@pbrink231](https://github.com/pbrink231)! - add typescript `avoidOptionals` to forwarded config
+
+- Updated dependencies [[`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`6c6b6f2df`](https://github.com/dotansimha/graphql-code-generator/commit/6c6b6f2df88a3a37b437a25320dab5590f033316)]:
+  - @graphql-codegen/gql-tag-operations@1.5.12
+  - @graphql-codegen/plugin-helpers@3.1.2
+  - @graphql-codegen/visitor-plugin-common@2.13.6
+  - @graphql-codegen/typescript-operations@2.5.11
+  - @graphql-codegen/typed-document-node@2.3.11
+  - @graphql-codegen/typescript@2.8.6
+
 ## 1.2.3
 
 ### Patch Changes

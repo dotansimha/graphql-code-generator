@@ -59,9 +59,10 @@ const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskF
 ];
 
 const createUnmaskFunction = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-${createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join(';\n')}
-${createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'with-list' })} {
-  return fragmentType as any
+${createUnmaskFunctionTypeDefinitions(unmaskFunctionName)
+  .concat(createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'with-list' }))
+  .join(';\n')} {
+  return fragmentType as any;
 }
 `;
 
@@ -75,7 +76,7 @@ export const plugin: PluginFunction<{
 }> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
-  } { TypedDocumentNode as DocumentNode, ResultOf } from '@graphql-typed-document-node/core';\n`;
+  } { ResultOf, TypedDocumentNode as DocumentNode,  } from '@graphql-typed-document-node/core';\n`;
 
   if (augmentedModuleName == null) {
     return [

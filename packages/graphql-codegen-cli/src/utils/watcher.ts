@@ -1,16 +1,15 @@
-import { executeCodegen } from '../codegen.js';
-import { Types, normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
-
-import isGlob from 'is-glob';
+import { join } from 'path';
+import { normalizeInstanceOrArray, normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
+import { isValidPath } from '@graphql-tools/utils';
+import { FSWatcher } from 'chokidar';
 import debounce from 'debounce';
+import isGlob from 'is-glob';
 import logSymbols from 'log-symbols';
+import { executeCodegen } from '../codegen.js';
+import { CodegenContext, loadContext } from '../config.js';
+import { lifecycleHooks } from '../hooks.js';
 import { debugLog } from './debugging.js';
 import { getLogger } from './logger.js';
-import { join } from 'path';
-import { FSWatcher } from 'chokidar';
-import { lifecycleHooks } from '../hooks.js';
-import { loadContext, CodegenContext } from '../config.js';
-import { isValidPath } from '@graphql-tools/utils';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -79,7 +78,7 @@ export const createWatcher = (
       .map(filename => ({ filename, config: normalizeOutputParam(config.generates[filename]) }))
       .forEach(entry => {
         if (entry.config.preset) {
-          const extension = entry.config.presetConfig && entry.config.presetConfig.extension;
+          const extension = entry.config.presetConfig?.extension;
           if (extension) {
             ignored.push(join(entry.filename, '**', '*' + extension));
           }

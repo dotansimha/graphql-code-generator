@@ -1,9 +1,8 @@
-import { executeCodegen } from '@graphql-codegen/cli';
-import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import '@graphql-codegen/testing';
-import { validateTs } from '@graphql-codegen/testing';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { executeCodegen } from '@graphql-codegen/cli';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { preset } from '../src/index.js';
 
 describe('gql-tag-operations-preset', () => {
@@ -57,6 +56,20 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
       /**
@@ -67,20 +80,6 @@ describe('gql-tag-operations-preset', () => {
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       *
-       *
-       * @example
-       * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
-       * \`\`\`
-       *
-       * The query argument is unknown!
-       * Please regenerate the types.
-      **/
-      export function gql(source: string): unknown;
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -144,6 +143,20 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
       /**
@@ -154,20 +167,6 @@ describe('gql-tag-operations-preset', () => {
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       *
-       *
-       * @example
-       * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
-       * \`\`\`
-       *
-       * The query argument is unknown!
-       * Please regenerate the types.
-      **/
-      export function gql(source: string): unknown;
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -224,6 +223,20 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
       /**
@@ -234,20 +247,6 @@ describe('gql-tag-operations-preset', () => {
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       *
-       *
-       * @example
-       * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
-       * \`\`\`
-       *
-       * The query argument is unknown!
-       * Please regenerate the types.
-      **/
-      export function gql(source: string): unknown;
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -305,6 +304,20 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
       /**
@@ -315,20 +328,6 @@ describe('gql-tag-operations-preset', () => {
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       *
-       *
-       * @example
-       * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
-       * \`\`\`
-       *
-       * The query argument is unknown!
-       * Please regenerate the types.
-      **/
-      export function gql(source: string): unknown;
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -430,11 +429,6 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        *
        *
        * @example
@@ -444,8 +438,13 @@ describe('gql-tag-operations-preset', () => {
        *
        * The query argument is unknown!
        * Please regenerate the types.
-      **/
+       */
       export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function gql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};
@@ -559,12 +558,12 @@ describe('gql-tag-operations-preset', () => {
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-        ): ReadonlyArray<TType> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined;
         export function useFragment<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
         ): TType | ReadonlyArray<TType> | null | undefined {
-          return fragmentType as any
+          return fragmentType as any;
         }
         "
       `);
@@ -657,12 +656,12 @@ describe('gql-tag-operations-preset', () => {
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-        ): ReadonlyArray<TType> | null | undefined
+        ): ReadonlyArray<TType> | null | undefined;
         export function iLikeTurtles<TType>(
           _documentNode: DocumentNode<TType, any>,
           fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
         ): TType | ReadonlyArray<TType> | null | undefined {
-          return fragmentType as any
+          return fragmentType as any;
         }
         "
       `);
@@ -689,14 +688,14 @@ describe('gql-tag-operations-preset', () => {
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
-      ): ReadonlyArray<TType> | null | undefined
+      ): ReadonlyArray<TType> | null | undefined;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentNode<TType, any>,
         fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
       ): TType | ReadonlyArray<TType> | null | undefined {
-        return fragmentType as any
+        return fragmentType as any;
       }
       `);
     });
@@ -902,6 +901,20 @@ describe('gql-tag-operations-preset', () => {
 
       /**
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function gql(source: string): unknown;
+
+      /**
+       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
       /**
@@ -912,20 +925,6 @@ describe('gql-tag-operations-preset', () => {
        * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
        */
       export function gql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      /**
-       * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       *
-       *
-       * @example
-       * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
-       * \`\`\`
-       *
-       * The query argument is unknown!
-       * Please regenerate the types.
-      **/
-      export function gql(source: string): unknown;
 
       export function gql(source: string) {
         return (documents as any)[source] ?? {};

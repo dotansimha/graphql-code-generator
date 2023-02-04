@@ -10,7 +10,7 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
-    "@graphql-codegen/client-preset": "1.0.2",
+    "@graphql-codegen/client-preset": "2.0.0",
     "graphql-request": "next",
     "next": "12.2.4",
     "react": "18.2.0",
@@ -18,11 +18,11 @@
     "swr": "1.3.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.13.3",
-    "@graphql-codegen/schema-ast": "2.5.1",
-    "@types/node": "18.6.5",
+    "@graphql-codegen/cli": "2.16.5",
+    "@graphql-codegen/schema-ast": "2.6.1",
+    "@types/node": "18.11.18",
     "@types/react": "18.0.17",
-    "@types/react-dom": "18.0.9",
+    "@types/react-dom": "18.0.10",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.4",
     "typescript": "4.8.4"

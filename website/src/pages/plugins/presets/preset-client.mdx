@@ -5,6 +5,7 @@ title: client-preset
 import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+import { Tree, File, Folder } from '../../../components/file-tree'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
@@ -284,7 +285,7 @@ describe('<ProfileName />', () => {
 `client-preset`'s Fragment Masking can be disabled as follow:
 
 ```ts filename="codegen.ts" {10-12}
-import { CodegenConfig } from '@graphql-codegen/cli'
+import { type CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'schema.graphql',
@@ -301,6 +302,107 @@ const config: CodegenConfig = {
 }
 
 export default config
+```
+
+## Persisted documents
+
+Persisted documents (often also referred to as persisted queries or persisted documents) is a technique for reducing client to server upstream traffic by sending a unique identifier instead of the full GraphQL document.
+It is also commonly used to reduce the size of the client bundle as well as to improve security by preventing the client from sending and executing arbitrary GraphQL operations.
+
+<Callout type="info">
+  You can find [a functional example using GraphQL Yoga within our Codegen Examples on
+  GitHub](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/persisted-documents).
+</Callout>
+
+Persisted documents can be enabled by setting the `persistedDocuments` option to `true`:
+
+```ts filename="codegen.ts" {10-12}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      plugins: [],
+      presetConfig: {
+        persistedDocuments: true
+      }
+    }
+  }
+}
+```
+
+By enabling this option GraphQL Code Generator will generate an additional file `opersisted-documents.json` within your artifacts location.
+
+<Tree>
+  <Folder name="gql" defaultOpen>
+    <File name="fragment-masking.ts" />
+    <File name="gql.ts" />
+    <File name="graphql.ts" />
+    <File name="index.ts" />
+    <File name="persisted-documents.json" active />
+  </Folder>
+</Tree>
+
+This file contains a mapping of the document's hash to the document's content.
+
+```json filename="persisted-documents.json"
+{
+  "b2c3d4e5f6g7h8i9j0a1": "query Hello { hello }",
+  "kae4fe7f6g7h8i9ej0ag": "mutation echo($msg: String!) { echo(message: $msg) }"
+}
+```
+
+In addition the document hash will be added to the generated document node as a `hash` property.
+
+```ts filename="app.ts"
+import { graphql } from './gql'
+
+const HelloQuery = graphql(/* GraphQL */ `
+  query Hello {
+    hello
+  }
+`)
+
+// logs "b2c3d4e5f6g7h8i9j0a1"
+console.log(HelloQuery['__meta__']['hash'])
+```
+
+This hash can be used in the network layer of your GraphQL client to send the document hash instead of the document string.
+
+<Callout type="info">
+  Note that the server you sent the document hash to must be able to resolve the document hash to the document string.
+</Callout>
+
+```ts filename="Fetch example"
+import { graphql } from './gql'
+
+const HelloQuery = graphql(/* GraphQL */ `
+  query Hello {
+    hello
+  }
+`)
+
+const response = await fetch('http://yoga/graphql', {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    accept: 'application/json'
+  },
+  body: JSON.stringify({
+    extensions: {
+      persistedQuery: {
+        version: 1,
+        sha256Hash: HelloQuery['__meta__']['hash']
+      }
+    }
+  })
+})
+
+console.log(response.status)
+console.log(await response.json())
 ```
 
 ## Reducing bundle size: Babel plugin

@@ -1,5 +1,5 @@
-import { transformFileSync } from '@babel/core';
 import * as path from 'path';
+import { transformFileSync } from '@babel/core';
 import babelPlugin from '../src/babel.js';
 
 describe('gql-tag-operations-preset > babelPlugin', () => {
@@ -13,15 +13,17 @@ describe('gql-tag-operations-preset > babelPlugin', () => {
       "import { CFragmentDoc } from "./graphql";
       import { BDocument } from "./graphql";
       import { ADocument } from "./graphql";
-
       /* eslint-disable @typescript-eslint/ban-ts-comment */
       //@ts-ignore
-      import gql from 'gql-tag'; //@ts-ignore
+      import gql from 'gql-tag';
 
-      const A = ADocument; //@ts-ignore
+      //@ts-ignore
+      const A = ADocument;
 
-      const B = BDocument; //@ts-ignore
+      //@ts-ignore
+      const B = BDocument;
 
+      //@ts-ignore
       const C = CFragmentDoc;"
     `);
   });
@@ -35,15 +37,17 @@ describe('gql-tag-operations-preset > babelPlugin', () => {
       "import { CFragmentDoc } from "../graphql";
       import { BDocument } from "../graphql";
       import { ADocument } from "../graphql";
-
       /* eslint-disable @typescript-eslint/ban-ts-comment */
       //@ts-ignore
-      import gql from 'gql-tag'; //@ts-ignore
+      import gql from 'gql-tag';
 
-      const A = ADocument; //@ts-ignore
+      //@ts-ignore
+      const A = ADocument;
 
-      const B = BDocument; //@ts-ignore
+      //@ts-ignore
+      const B = BDocument;
 
+      //@ts-ignore
       const C = CFragmentDoc;"
     `);
   });

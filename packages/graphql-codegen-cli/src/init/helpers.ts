@@ -1,13 +1,13 @@
-import chalk from 'chalk';
-import { resolve, relative } from 'path';
-import { writeFileSync, readFileSync } from 'fs';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import detectIndent from 'detect-indent';
-import { Answers, Tags } from './types.js';
-import { getLatestVersion } from '../utils/get-latest-version.js';
-import template from '@babel/template';
+import { readFileSync, writeFileSync } from 'fs';
+import { relative, resolve } from 'path';
 import generate from '@babel/generator';
+import template from '@babel/template';
 import * as t from '@babel/types';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import chalk from 'chalk';
+import detectIndent from 'detect-indent';
+import { getLatestVersion } from '../utils/get-latest-version.js';
+import { Answers, Tags } from './types.js';
 
 function jsObjectToBabelObjectExpression<T extends object>(obj: T): ReturnType<typeof t.objectExpression> {
   const objExp = t.objectExpression([]);
@@ -60,9 +60,7 @@ export default config;
   } else {
     content = ext === 'json' ? JSON.stringify(config) : YAML.stringify(config);
   }
-  writeFileSync(fullPath, content, {
-    encoding: 'utf-8',
-  });
+  writeFileSync(fullPath, content, 'utf8');
 
   return {
     relativePath,
@@ -74,22 +72,16 @@ export default config;
 export async function writePackage(answers: Answers, configLocation: string) {
   // script
   const pkgPath = resolve(process.cwd(), 'package.json');
-  const pkgContent = readFileSync(pkgPath, {
-    encoding: 'utf-8',
-  });
+  const pkgContent = readFileSync(pkgPath, 'utf8');
   const pkg = JSON.parse(pkgContent);
   const { indent } = detectIndent(pkgContent);
 
-  if (!pkg.scripts) {
-    pkg.scripts = {};
-  }
+  pkg.scripts ||= {};
 
   pkg.scripts[answers.script] = `graphql-codegen --config ${configLocation}`;
 
   // plugin
-  if (!pkg.devDependencies) {
-    pkg.devDependencies = {};
-  }
+  pkg.devDependencies ||= {};
 
   await Promise.all(
     (answers.plugins || []).map(async plugin => {

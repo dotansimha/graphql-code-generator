@@ -1,12 +1,12 @@
-import autoBind from 'auto-bind';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import {
-  LoadedFragment,
-  ClientSideBaseVisitor,
   ClientSideBasePluginConfig,
+  ClientSideBaseVisitor,
   DocumentMode,
+  LoadedFragment,
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
+import autoBind from 'auto-bind';
 import { GraphQLSchema } from 'graphql';
 
 interface TypeScriptDocumentNodesVisitorPluginConfig extends RawClientSideBasePluginConfig {

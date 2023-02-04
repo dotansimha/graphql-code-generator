@@ -53,10 +53,9 @@ export function generateFragmentImportStatement(
 export function generateImportStatement(statement: ImportDeclaration): string {
   const { baseDir, importSource, outputPath, typesImport } = statement;
   const importPath = resolveImportPath(baseDir, outputPath, importSource.path);
-  const importNames =
-    importSource.identifiers && importSource.identifiers.length
-      ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
-      : '*';
+  const importNames = importSource.identifiers?.length
+    ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
+    : '*';
   const importExtension =
     importPath.startsWith('/') || importPath.startsWith('.') ? (statement.emitLegacyCommonJSImports ? '' : '.js') : '';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
@@ -97,5 +96,5 @@ export function clearExtension(path: string): string {
 }
 
 export function fixLocalFilePath(path: string): string {
-  return !path.startsWith('..') ? `./${path}` : path;
+  return path.startsWith('..') ? path : `./${path}`;
 }

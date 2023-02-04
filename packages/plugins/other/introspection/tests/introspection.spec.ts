@@ -1,5 +1,5 @@
-import { buildSchema, introspectionFromSchema, parse, IntrospectionQuery, IntrospectionObjectType } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
+import { buildSchema, introspectionFromSchema, IntrospectionObjectType, IntrospectionQuery, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('Introspection template', () => {

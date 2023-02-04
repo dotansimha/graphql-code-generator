@@ -1,7 +1,7 @@
-import { join } from 'node:path';
 import { writeFile } from 'node:fs/promises';
-import prettier from 'prettier';
+import { join } from 'node:path';
 import jsonPath from 'jsonpath';
+import prettier from 'prettier';
 import { transformDocs } from './src/lib/transform';
 
 const MARKDOWN_JSDOC_KEY = 'exampleMarkdown';

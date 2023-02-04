@@ -1,5 +1,5 @@
-import { Types, CodegenPlugin, Profiler, createNoopProfiler } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
+import { CodegenPlugin, createNoopProfiler, Profiler, Types } from '@graphql-codegen/plugin-helpers';
+import { buildASTSchema, DocumentNode, GraphQLSchema } from 'graphql';
 
 export interface ExecutePluginOptions {
   name: string;
@@ -16,7 +16,7 @@ export interface ExecutePluginOptions {
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
-  if (!plugin || !plugin.plugin || typeof plugin.plugin !== 'function') {
+  if (!plugin?.plugin || typeof plugin.plugin !== 'function') {
     throw new Error(
       `Invalid Custom Plugin "${options.name}" \n
         Plugin ${options.name} does not export a valid JS object with "plugin" function.

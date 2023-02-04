@@ -4,6 +4,12 @@ import { PackageCmd, Tabs, Tab, Callout } from '@theguild/components'
 
 GraphQL Code Generator's `@graphql-codegen/typescript-resolvers` plugin generates TypeScript types for your GraphQL API's resolvers.
 
+<Callout type="info">
+  The GraphQL Codegen server preset configures `@graphql-codegen/typescript-resolvers` and comes with features to streamline the developer experience such as better server integration, type-safety, generated resolvers, and more!
+
+  Read how to [set up GraphQL Server with server preset](/docs/guides/graphql-server-apollo-yoga-with-server-preset)
+</Callout>
+
 ## Video tutorial
 
 [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator) is a great introduction to `@graphql-codegen/typescript-resolvers`:
@@ -140,7 +146,8 @@ server.listen().then(({ url }) => {
 <Tab>
 ```ts
 import { readFileSync } from 'node:fs'
-import { createServer } from '@graphql-yoga/node'
+import { createYoga, createSchema } from 'graphql-yoga';
+import { createServer } from 'http';
 import { Resolvers } from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
@@ -151,9 +158,11 @@ const resolvers: Resolvers = {
   }
 }
 
-const server = createServer({ typeDefs, resolvers })
+const schema - createSchema({ typeDefs, resolvers }})
+const yoga = createYoga({ schema })
+const server = createServer(yoga)
 
-server.start()
+server.listen(3000)
 ```
 </Tab>
 </Tabs>

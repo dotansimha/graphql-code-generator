@@ -1,8 +1,8 @@
-import { validateTs, resolversTestingSchema, resolversTestingValidate } from '@graphql-codegen/testing';
+import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
+import { resolversTestingSchema, resolversTestingValidate, validateTs } from '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
-import { plugin } from '../src/index.js';
 import { plugin as tsPlugin } from '../../typescript/src/index.js';
-import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { plugin } from '../src/index.js';
 import { ENUM_RESOLVERS_SIGNATURE } from '../src/visitor.js';
 
 describe('TypeScript Resolvers Plugin', () => {

@@ -662,7 +662,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "56a87bc49e9abb85cfb614303829a193",
+    "content": "41786066f495360a40a759b9189260e5",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/installation",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -689,6 +689,47 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-guides-api-testing",
+    "headings": [
+      "Installation",
+      "Setup",
+      "Writing tests",
+      "Conclusion"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Installation",
+        "anchor": "installation"
+      },
+      {
+        "children": [],
+        "title": "Setup",
+        "anchor": "setup"
+      },
+      {
+        "children": [],
+        "title": "Writing tests",
+        "anchor": "writing-tests"
+      },
+      {
+        "children": [],
+        "title": "Conclusion",
+        "anchor": "conclusion"
+      }
+    ],
+    "content": "69db450d89a647f83f7e768065562d6a",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/api-testing",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Guides"
+    ],
+    "source": "Code Generator",
+    "title": "API Testing",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-guides-flutter-freezed",
     "headings": [
       "TL;DR",
@@ -697,6 +738,10 @@
       "TODO:",
       "Demo",
       "Getting started",
+      "Configuring the plugin",
+      "Patterns",
+      "Usage for Graphql Types",
+      "Usage for fields of Graphql Types",
       "PRs are welcomed"
     ],
     "toc": [
@@ -731,12 +776,102 @@
         "anchor": "getting-started"
       },
       {
+        "children": [
+          {
+            "children": [],
+            "title": "Identifying the building blocks",
+            "anchor": "identifying-the-building-blocks"
+          }
+        ],
+        "title": "Configuring the plugin",
+        "anchor": "configuring-the-plugin"
+      },
+      {
+        "children": [],
+        "title": "Patterns",
+        "anchor": "patterns"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Configuring all Graphql Types",
+                "anchor": "configuring-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring all Graphql Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              }
+            ],
+            "title": "Configuring specific Graphql Types",
+            "anchor": "configuring-specific-graphql-types"
+          }
+        ],
+        "title": "Usage for Graphql Types",
+        "anchor": "usage-for-graphql-types"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Configuring all fields of a specific Graphql Type",
+                "anchor": "configuring-all-fields-of-a-specific-graphql-type"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields except those specified in the exclusion list of FieldNames for a specific GraphQL Type",
+                "anchor": "configuring-all-fields-except-those-specified-in-the-exclusion-list-of-fieldnames-for-a-specific-graphql-type"
+              },
+              {
+                "children": [],
+                "title": "Configuring specific fields of all Graphql Types",
+                "anchor": "configuring-specific-fields-of-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields of all Graphql Types",
+                "anchor": "configuring-all-fields-of-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields except those specified in the exclusion list of FieldNames for all GraphQL Types",
+                "anchor": "configuring-all-fields-except-those-specified-in-the-exclusion-list-of-fieldnames-for-all-graphql-types"
+              },
+              {
+                "children": [],
+                "title": "Configuring specific fields of all GraphQL Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-specific-fields-of-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields of all GraphQL Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-all-fields-of-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              },
+              {
+                "children": [],
+                "title": "Configuring all fields except those specified in the exclusion list of FieldNames of all GraphQL Types except those specified in the exclusion list of TypeNames",
+                "anchor": "configuring-all-fields-except-those-specified-in-the-exclusion-list-of-fieldnames-of-all-graphql-types-except-those-specified-in-the-exclusion-list-of-typenames"
+              }
+            ],
+            "title": "Configuring specific fields of a specific Graphql Type",
+            "anchor": "configuring-specific-fields-of-a-specific-graphql-type"
+          }
+        ],
+        "title": "Usage for fields of Graphql Types",
+        "anchor": "usage-for-fields-of-graphql-types"
+      },
+      {
         "children": [],
         "title": "PRs are welcomed",
         "anchor": "prs-are-welcomed"
       }
     ],
-    "content": "1d89192805c6db0fd057532f7a70d379",
+    "content": "4f05871c4076fcee9ebaf95898b61b70",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/flutter-freezed",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -827,7 +962,7 @@
         "anchor": "guide"
       }
     ],
-    "content": "6a2bcfe8ccfff7843c9ef430a8c79e6e",
+    "content": "a0ff097c981da163f3f0c21966dc42d6",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-server-apollo-yoga",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -836,6 +971,46 @@
     ],
     "source": "Code Generator",
     "title": "Apollo Server / GraphQL Yoga",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-docs-guides-graphql-server-apollo-yoga-with-server-preset",
+    "headings": [
+      "Guide"
+    ],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Generate Files",
+                "anchor": "generate-files"
+              },
+              {
+                "children": [],
+                "title": "Conventions to Support Schema Modules",
+                "anchor": "conventions-to-support-schema-modules"
+              }
+            ],
+            "title": "Setup",
+            "anchor": "setup"
+          }
+        ],
+        "title": "Guide",
+        "anchor": "guide"
+      }
+    ],
+    "content": "2d0f27b778aaf6af9064e16f9e527a80",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-server-apollo-yoga-with-server-preset",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Guides"
+    ],
+    "source": "Code Generator",
+    "title": "Apollo Server / GraphQL Yoga with Server Preset",
     "type": "Documentation"
   },
   {
@@ -880,7 +1055,7 @@
         "anchor": "appendix-ii-compatibility"
       }
     ],
-    "content": "3b3df3483e43c7dade311fde5b623acc",
+    "content": "93a7f1749a22be8fad86f9bdceee42d6",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1809,6 +1984,7 @@
       "Getting started",
       "Config API",
       "Fragment Masking",
+      "Persisted documents",
       "Reducing bundle size: Babel plugin"
     ],
     "toc": [
@@ -1853,6 +2029,11 @@
         ],
         "title": "Fragment Masking",
         "anchor": "fragment-masking"
+      },
+      {
+        "children": [],
+        "title": "Persisted documents",
+        "anchor": "persisted-documents"
       },
       {
         "children": [],

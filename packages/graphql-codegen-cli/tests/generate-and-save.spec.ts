@@ -1,9 +1,9 @@
+import { dirname, join } from 'path';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { useMonorepo } from '@graphql-codegen/testing';
+import makeDir from 'make-dir';
 import { generate } from '../src/generate-and-save.js';
 import * as fs from '../src/utils/file-system.js';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { dirname, join } from 'path';
-import makeDir from 'make-dir';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
@@ -173,7 +173,7 @@ describe('generate-and-save', () => {
     import gql from 'graphql-tag';
     const MyQuery = gql\`query MyQuery { f }\`;
   `,
-      {}
+      'utf8'
     );
     const generateOnce: () => Promise<Types.FileOutput[]> = () =>
       generate(

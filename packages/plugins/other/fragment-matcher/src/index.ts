@@ -1,7 +1,6 @@
 import { extname } from 'path';
-
-import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, execute, parse } from 'graphql';
+import { PluginFunction, PluginValidateFn, removeFederation, Types } from '@graphql-codegen/plugin-helpers';
+import { execute, GraphQLSchema, parse } from 'graphql';
 
 interface IntrospectionResultData {
   __schema: {
@@ -160,7 +159,7 @@ export const plugin: PluginFunction = async (
 
   const filterUnionAndInterfaceTypes = type => type.kind === 'UNION' || type.kind === 'INTERFACE';
   const createPossibleTypesCollection = (acc, type) => {
-    return { ...acc, ...{ [type.name]: type.possibleTypes.map(possibleType => possibleType.name) } };
+    return { ...acc, [type.name]: type.possibleTypes.map(possibleType => possibleType.name) };
   };
 
   const filteredData: IntrospectionResultData | PossibleTypesResultData =

@@ -1,50 +1,50 @@
 import {
   DirectiveDefinitionNode,
+  DirectiveNode,
   EnumTypeDefinitionNode,
   EnumValueDefinitionNode,
   FieldDefinitionNode,
+  GraphQLEnumType,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
   InterfaceTypeDefinitionNode,
+  isEnumType,
+  Kind,
   ListTypeNode,
   NamedTypeNode,
   NameNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
-  UnionTypeDefinitionNode,
   StringValueNode,
-  isEnumType,
-  DirectiveNode,
-  Kind,
-  GraphQLEnumType,
+  UnionTypeDefinitionNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
-import { DEFAULT_SCALARS } from './scalars.js';
 import { normalizeDeclarationKind } from './declaration-kinds.js';
-import {
-  EnumValuesMap,
-  NormalizedScalarsMap,
-  DeclarationKindConfig,
-  DeclarationKind,
-  ParsedEnumValuesMap,
-  DirectiveArgumentAndInputFieldMappings,
-  ParsedDirectiveArgumentAndInputFieldMappings,
-} from './types.js';
-import {
-  transformComment,
-  DeclarationBlock,
-  DeclarationBlockConfig,
-  indent,
-  wrapWithSingleQuotes,
-  getConfigValue,
-  buildScalarsFromConfig,
-  isOneOfInputObjectType,
-} from './utils.js';
-import { OperationVariablesToObject } from './variables-to-object.js';
 import { parseEnumValues } from './enum-values.js';
 import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
+import { DEFAULT_SCALARS } from './scalars.js';
+import {
+  DeclarationKind,
+  DeclarationKindConfig,
+  DirectiveArgumentAndInputFieldMappings,
+  EnumValuesMap,
+  NormalizedScalarsMap,
+  ParsedDirectiveArgumentAndInputFieldMappings,
+  ParsedEnumValuesMap,
+} from './types.js';
+import {
+  buildScalarsFromConfig,
+  DeclarationBlock,
+  DeclarationBlockConfig,
+  getConfigValue,
+  indent,
+  isOneOfInputObjectType,
+  transformComment,
+  wrapWithSingleQuotes,
+} from './utils.js';
+import { OperationVariablesToObject } from './variables-to-object.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -561,8 +561,7 @@ export class BaseTypesVisitor<
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
-      const comment =
-        scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+      const comment = scalarType?.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
       const { scalar } = this._parsedConfig.declarationKind;
 
       return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
@@ -796,13 +795,18 @@ export class BaseTypesVisitor<
     sourceIdentifier: string | null,
     sourceFile: string | null
   ): string[] {
-    const importStatement = this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile);
-
-    if (importIdentifier !== sourceIdentifier || sourceIdentifier !== typeIdentifier) {
-      return [importStatement, `import ${typeIdentifier} = ${sourceIdentifier};`];
+    if (importIdentifier !== sourceIdentifier) {
+      // use namespace import to dereference nested enum
+      // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
+      return [
+        this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile),
+        `import ${typeIdentifier} = ${sourceIdentifier};`,
+      ];
     }
-
-    return [importStatement];
+    if (sourceIdentifier !== typeIdentifier) {
+      return [this._buildTypeImport(`${sourceIdentifier} as ${typeIdentifier}`, sourceFile)];
+    }
+    return [this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile)];
   }
 
   public getEnumsImports(): string[] {
@@ -832,7 +836,7 @@ export class BaseTypesVisitor<
     const enumName = node.name as any as string;
 
     // In case of mapped external enum string
-    if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
+    if (this.config.enumValues[enumName]?.sourceFile) {
       return null;
     }
 
@@ -875,11 +879,10 @@ export class BaseTypesVisitor<
             ? schemaEnumType.getValue(enumOption.name as any).value
             : undefined;
         let enumValue: string | number =
-          typeof schemaEnumValue !== 'undefined' ? schemaEnumValue : (enumOption.name as any);
+          typeof schemaEnumValue === 'undefined' ? (enumOption.name as any) : schemaEnumValue;
 
         if (
-          this.config.enumValues[typeName] &&
-          this.config.enumValues[typeName].mappedValues &&
+          this.config.enumValues[typeName]?.mappedValues &&
           typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined'
         ) {
           enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
@@ -996,7 +999,7 @@ export class BaseTypesVisitor<
     return typeToUse;
   }
 
-  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+  ListType(node: ListTypeNode, _key, _parent, _path, _ancestors): string {
     const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);
