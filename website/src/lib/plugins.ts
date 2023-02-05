@@ -9,6 +9,7 @@ import graphqlIcon from '../../public/assets/img/icons/graphql.svg';
 import hasuraIcon from '../../public/assets/img/icons/hasura.svg';
 import javaIcon from '../../public/assets/img/icons/java.svg';
 import mongodbIcon from '../../public/assets/img/icons/mongodb.png';
+import nhostIcon from '../../public/assets/img/icons/nhost.svg';
 import nodeJsIcon from '../../public/assets/img/icons/nodejs.svg';
 import reactIcon from '../../public/assets/img/icons/react.svg';
 import reactQueryIcon from '../../public/assets/img/icons/react-query.svg';
@@ -35,6 +36,7 @@ const ALL_ICONS = [
   'vue',
   'dart',
   'mongodb',
+  'nhost',
   'graphql_modules',
   'reason_client',
   'msw',
@@ -58,6 +60,7 @@ export const icons: Record<Icon, StaticImageData> = {
   hasura: hasuraIcon,
   java: javaIcon,
   mongodb: mongodbIcon,
+  nhost: nhostIcon,
   msw: mswIcon,
   nodejs: nodeJsIcon,
   react: reactIcon,
@@ -79,6 +82,7 @@ export const ALL_TAGS = [
   'java',
   'utilities',
   'mongodb',
+  'nhost',
   'angular',
   'react',
   'svelte',
@@ -308,6 +312,12 @@ export const PACKAGES: Record<
     npmPackage: '@graphql-codegen/typescript-mongodb',
     icon: 'mongodb',
     tags: ['plugin', 'typescript', 'mongodb'],
+  },
+  'typescript-nhost': {
+    title: 'TypeScript Nhost',
+    npmPackage: '@graphql-codegen/typescript-nhost',
+    icon: 'nhost',
+    tags: ['plugin', 'typescript', 'nhost'],
   },
   'typescript-msw': {
     title: 'TypeScript Msw',

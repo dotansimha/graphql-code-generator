@@ -4181,6 +4181,11 @@
   resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.3.tgz#5bcedfebd515161eecf9b193169c2765bf5674f1"
   integrity sha512-tekSLLqWnusfV6V7xaEnLJQSdXOD/lWy7f8JYQwrX+88Md+voGSCSx5WJXI7KLBN3Tat2OV08tAr8UROykls4Q==
 
+"@urql/introspection@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-1.0.0.tgz#e63b22eb66261320c2427c8de604ec24453e85b7"
+  integrity sha512-LV4MNqslkGqdlmAjpmVuyewQ6sQZ1CAaHXsiP7IaNKWKKlnpluxjiQnhLy3V1uhqIcJe/Ni/+sHIq78EvpkJNw==
+
 "@vercel/ncc@^0.34.0":
   version "0.34.0"
   resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.34.0.tgz#d0139528320e46670d949c82967044a8f66db054"
