@@ -20,7 +20,7 @@
     "@graphql-codegen/plugin-helpers": "^4.0.0",
     "@graphql-codegen/visitor-plugin-common": "3.0.0",
     "auto-bind": "~4.0.0",
-    "tslib": "~2.4.0"
+    "tslib": "~2.5.0"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
