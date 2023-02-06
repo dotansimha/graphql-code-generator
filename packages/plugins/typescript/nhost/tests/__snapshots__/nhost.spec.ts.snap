@@ -1,0 +1,734 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TypeScript Operations Plugin Nhost plugin should generate the nhost-compatibel schema 1`] = `
+Object {
+  "content": "/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  DateTime: any;
+};
+
+export type InputType = {
+  t?: InputMaybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  profile?: Maybe<Profile>;
+  role?: Maybe<Role>;
+};
+
+export type Profile = {
+  __typename?: 'Profile';
+  age?: Maybe<Scalars['Int']>;
+  firstName: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  test?: Maybe<Scalars['String']>;
+  login?: Maybe<User>;
+};
+
+
+export type Mutation_LoginArgs = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  userCreated?: Maybe<User>;
+};
+
+export type Notifiction = {
+  id: Scalars['ID'];
+  createdAt: Scalars['String'];
+};
+
+export type TextNotification = Notifiction & {
+  __typename?: 'TextNotification';
+  id: Scalars['ID'];
+  text: Scalars['String'];
+  createdAt: Scalars['String'];
+};
+
+export type ImageNotification = Notifiction & {
+  __typename?: 'ImageNotification';
+  id: Scalars['ID'];
+  imageUrl: Scalars['String'];
+  metadata: ImageMetadata;
+  createdAt: Scalars['String'];
+};
+
+export type ImageMetadata = {
+  __typename?: 'ImageMetadata';
+  createdBy: Scalars['String'];
+};
+
+export type Role =
+  | 'USER'
+  | 'ADMIN';
+
+export type MyUnion = User | Profile;
+
+export type AnyNotification = TextNotification | ImageNotification;
+
+export type SearchResult = TextNotification | ImageNotification | User;
+
+export type Query = {
+  __typename?: 'Query';
+  me?: Maybe<User>;
+  unionTest?: Maybe<MyUnion>;
+  notifications: Array<Notifiction>;
+  mixedNotifications: Array<AnyNotification>;
+  search: Array<SearchResult>;
+  dummy?: Maybe<Scalars['String']>;
+  dummyNonNull: Scalars['String'];
+  dummyArray?: Maybe<Array<Maybe<Scalars['String']>>>;
+  dummyNonNullArray: Array<Maybe<Scalars['String']>>;
+  dummyNonNullArrayWithValues: Array<Scalars['String']>;
+  dummyWithType?: Maybe<Profile>;
+};
+
+
+export type Query_SearchArgs = {
+  term: Scalars['String'];
+};
+
+
+export default {
+  introspection: {
+    "__schema": {
+      "queryType": {
+        "name": "Query"
+      },
+      "mutationType": {
+        "name": "Mutation"
+      },
+      "subscriptionType": {
+        "name": "Subscription"
+      },
+      "types": [
+        {
+          "kind": "SCALAR",
+          "name": "DateTime"
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "InputType",
+          "inputFields": [
+            {
+              "name": "t",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            }
+          ]
+        },
+        {
+          "kind": "SCALAR",
+          "name": "String"
+        },
+        {
+          "kind": "OBJECT",
+          "name": "User",
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "username",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "email",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "profile",
+              "type": {
+                "kind": "OBJECT",
+                "name": "Profile",
+                "ofType": null
+              },
+              "args": []
+            },
+            {
+              "name": "role",
+              "type": {
+                "kind": "ENUM",
+                "name": "Role",
+                "ofType": null
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "SCALAR",
+          "name": "ID"
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Profile",
+          "fields": [
+            {
+              "name": "age",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "args": []
+            },
+            {
+              "name": "firstName",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Int"
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Mutation",
+          "fields": [
+            {
+              "name": "test",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "args": []
+            },
+            {
+              "name": "login",
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              },
+              "args": [
+                {
+                  "name": "username",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                },
+                {
+                  "name": "password",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Subscription",
+          "fields": [
+            {
+              "name": "userCreated",
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "INTERFACE",
+          "name": "Notifiction",
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": [],
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "TextNotification"
+            },
+            {
+              "kind": "OBJECT",
+              "name": "ImageNotification"
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "TextNotification",
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Notifiction"
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ImageNotification",
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "imageUrl",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "metadata",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ImageMetadata",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "createdAt",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Notifiction"
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ImageMetadata",
+          "fields": [
+            {
+              "name": "createdBy",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "ENUM",
+          "name": "Role",
+          "enumValues": [
+            {
+              "name": "USER"
+            },
+            {
+              "name": "ADMIN"
+            }
+          ]
+        },
+        {
+          "kind": "UNION",
+          "name": "MyUnion",
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "User"
+            },
+            {
+              "kind": "OBJECT",
+              "name": "Profile"
+            }
+          ]
+        },
+        {
+          "kind": "UNION",
+          "name": "AnyNotification",
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "TextNotification"
+            },
+            {
+              "kind": "OBJECT",
+              "name": "ImageNotification"
+            }
+          ]
+        },
+        {
+          "kind": "UNION",
+          "name": "SearchResult",
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "TextNotification"
+            },
+            {
+              "kind": "OBJECT",
+              "name": "ImageNotification"
+            },
+            {
+              "kind": "OBJECT",
+              "name": "User"
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Query",
+          "fields": [
+            {
+              "name": "me",
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              },
+              "args": []
+            },
+            {
+              "name": "unionTest",
+              "type": {
+                "kind": "UNION",
+                "name": "MyUnion",
+                "ofType": null
+              },
+              "args": []
+            },
+            {
+              "name": "notifications",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "INTERFACE",
+                      "name": "Notifiction",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "mixedNotifications",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "UNION",
+                      "name": "AnyNotification",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "search",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "UNION",
+                      "name": "SearchResult",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "args": [
+                {
+                  "name": "term",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "dummy",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "args": []
+            },
+            {
+              "name": "dummyNonNull",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "dummyArray",
+              "type": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "dummyNonNullArray",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "dummyNonNullArrayWithValues",
+              "type": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "args": []
+            },
+            {
+              "name": "dummyWithType",
+              "type": {
+                "kind": "OBJECT",
+                "name": "Profile",
+                "ofType": null
+              },
+              "args": []
+            }
+          ],
+          "interfaces": []
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Boolean"
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Any"
+        }
+      ],
+      "directives": []
+    }
+  } as const,
+  types: {} as {
+    Scalars: Scalars,
+    InputType: InputType,
+    User: User,
+    Profile: Profile,
+    Mutation: Mutation,
+    Mutation_LoginArgs: Mutation_LoginArgs,
+    Subscription: Subscription,
+    Notifiction: Notifiction,
+    TextNotification: TextNotification,
+    ImageNotification: ImageNotification,
+    ImageMetadata: ImageMetadata,
+    MyUnion: MyUnion,
+    AnyNotification: AnyNotification,
+    SearchResult: SearchResult,
+    Query: Query,
+    Query_SearchArgs: Query_SearchArgs
+  }
+}",
+  "prepend": Array [
+    "export type Maybe<T> = T | null;",
+    "export type InputMaybe<T> = Maybe<T>;",
+    "export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };",
+    "export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };",
+    "export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };",
+  ],
+}
+`;

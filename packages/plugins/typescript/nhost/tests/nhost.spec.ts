@@ -1,11 +1,7 @@
-import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
-import { validateTs } from '@graphql-codegen/testing';
-import { buildClientSchema, buildSchema } from 'graphql';
-import { plugin as tsPlugin } from '../../typescript/src/index.js';
+import { buildSchema } from 'graphql';
+import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin', () => {
-  const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
-
   const schema = buildSchema(/* GraphQL */ `
     scalar DateTime
 
@@ -88,18 +84,10 @@ describe('TypeScript Operations Plugin', () => {
     }
   `);
 
-  const validate = async (
-    content: Types.PluginOutput,
-    config: any = {},
-    pluginSchema = schema,
-    usage = '',
-    suspenseErrors = []
-  ) => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
-    validateTs(m, undefined, undefined, undefined, suspenseErrors);
-
-    return m;
-  };
-
-  describe('Config', () => {});
+  describe('Nhost plugin', () => {
+    it('should generate the nhost-compatibel schema', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toMatchSnapshot();
+    });
+  });
 });
