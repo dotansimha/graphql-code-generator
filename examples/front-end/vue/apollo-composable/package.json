@@ -16,7 +16,7 @@
     "vue": "3.2.37"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.16.5",
+    "@graphql-codegen/cli": "3.0.0",
     "@types/node": "18.11.18",
     "@vitejs/plugin-vue": "3.0.1",
     "@vitejs/plugin-vue-jsx": "2.0.0",

@@ -18,7 +18,7 @@
     "web-vitals": "2.1.4"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.16.5",
+    "@graphql-codegen/cli": "3.0.0",
     "typescript": "4.8.4"
   },
   "scripts": {
