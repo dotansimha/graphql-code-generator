@@ -78,7 +78,7 @@
     "react-dom": "17.0.2",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
-    "svelte": "3.50.0",
+    "svelte": "3.55.1",
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
     "tslib": "2.5.0",
