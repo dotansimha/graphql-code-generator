@@ -2064,15 +2064,15 @@
     change-case-all "1.0.15"
     tslib "~2.4.0"
 
-"@graphql-codegen/typescript-rtk-query@2.3.7":
-  version "2.3.7"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-rtk-query/-/typescript-rtk-query-2.3.7.tgz#e46efe2679eb349afb5d90916f39e5ce55628ab3"
-  integrity sha512-Ctc9CHnj2TBUTfFf5xsp5/xGUiLbsVLsCsu4McAkzPG238IXBcCQqdP6kww0aRsRE6lAX+QVjMChWTyDv4aIfA==
+"@graphql-codegen/typescript-rtk-query@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-rtk-query/-/typescript-rtk-query-2.4.0.tgz#a570ef15ff730effbd6cc0691f50ec63f20e0fe1"
+  integrity sha512-yozQK4awUv3miaUVz/5UCcFO86SXSPl2Bj9g5oIkPt1iHDCtFwKHw99nrrFY9v27tGU1OXQoVVQ8ZpFbF53aUg==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    "@graphql-codegen/plugin-helpers" "^3.0.0"
     "@graphql-codegen/visitor-plugin-common" "2.13.1"
     auto-bind "~4.0.0"
-    change-case-all "1.0.14"
+    change-case-all "1.0.15"
     tslib "~2.4.0"
 
 "@graphql-codegen/typescript-stencil-apollo@2.3.6":
