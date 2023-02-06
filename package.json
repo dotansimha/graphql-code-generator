@@ -71,7 +71,7 @@
     "jest-junit": "14.0.1",
     "lint-staged": "13.0.3",
     "lodash": "4.17.21",
-    "patch-package": "6.4.7",
+    "patch-package": "6.5.1",
     "prettier": "2.7.1",
     "prettier-plugin-svelte": "2.7.0",
     "react": "17.0.2",
