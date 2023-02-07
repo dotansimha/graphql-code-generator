@@ -202,7 +202,9 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @description This will cause the generator to emit types for enums only.
    * @default false
    *
-   * @exampleMarkdown Override all definition types
+   * @exampleMarkdown
+   * ## Override all definition types
+   *
    * ```ts filename="codegen.ts"
    * import type { CodegenConfig } from '@graphql-codegen/cli'
    *
@@ -226,7 +228,9 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * Interacts well with `preResolveTypes: true`
    * @default false
    *
-   * @exampleMarkdown Override all definition types
+   * @exampleMarkdown
+   * ## Override all definition types
+   *
    * ```ts filename="codegen.ts"
    * import type { CodegenConfig } from '@graphql-codegen/cli'
    *
