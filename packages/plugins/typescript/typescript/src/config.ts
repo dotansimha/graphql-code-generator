@@ -203,7 +203,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ## Override all definition types
+   * Override all definition types
    *
    * ```ts filename="codegen.ts"
    * import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -229,7 +229,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @default false
    *
    * @exampleMarkdown
-   * ## Override all definition types
+   * Override all definition types
    *
    * ```ts filename="codegen.ts"
    * import type { CodegenConfig } from '@graphql-codegen/cli'
