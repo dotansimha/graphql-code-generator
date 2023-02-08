@@ -26,7 +26,7 @@ import {
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives } from './types.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives, LoadedFragment } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -615,3 +615,55 @@ export function flatten<T>(array: Array<Array<T>>): Array<T> {
 export function unique<T>(array: Array<T>, key: (item: T) => string | number = item => item.toString()): Array<T> {
   return Object.values(array.reduce((acc, item) => ({ [key(item)]: item, ...acc }), {}));
 }
+
+function getFullPathFieldName(selection: FieldNode, parentName: string) {
+  const fullName =
+    'alias' in selection && selection.alias ? `${selection.alias.value}@${selection.name.value}` : selection.name.value;
+  return parentName ? `${parentName}.${fullName}` : fullName;
+}
+
+export const getFieldNames = ({
+  selections,
+  fieldNames = new Set(),
+  parentName = '',
+  loadedFragments,
+}: {
+  selections: readonly SelectionNode[];
+  fieldNames?: Set<string>;
+  parentName?: string;
+  loadedFragments: LoadedFragment[];
+}) => {
+  for (const selection of selections) {
+    switch (selection.kind) {
+      case Kind.FIELD: {
+        const fieldName = getFullPathFieldName(selection, parentName);
+        fieldNames.add(fieldName);
+        if (selection.selectionSet) {
+          getFieldNames({
+            selections: selection.selectionSet.selections,
+            fieldNames,
+            parentName: fieldName,
+            loadedFragments,
+          });
+        }
+        break;
+      }
+      case Kind.FRAGMENT_SPREAD: {
+        getFieldNames({
+          selections: loadedFragments
+            .filter(def => def.name === selection.name.value)
+            .flatMap(s => s.node.selectionSet.selections),
+          fieldNames,
+          parentName,
+          loadedFragments,
+        });
+        break;
+      }
+      case Kind.INLINE_FRAGMENT: {
+        getFieldNames({ selections: selection.selectionSet.selections, fieldNames, parentName, loadedFragments });
+        break;
+      }
+    }
+  }
+  return fieldNames;
+};
