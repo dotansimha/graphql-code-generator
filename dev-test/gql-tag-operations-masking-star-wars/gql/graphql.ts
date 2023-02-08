@@ -334,30 +334,25 @@ export const HeroDetailsWithFragmentDocument = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'HeroDetails' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Character' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: '__typename' }, arguments: [], directives: [] },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           {
             kind: 'InlineFragment',
             typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Human' } },
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'height' }, arguments: [], directives: [] }],
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'height' } }],
             },
           },
           {
             kind: 'InlineFragment',
             typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Droid' } },
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'primaryFunction' }, arguments: [], directives: [] },
-              ],
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'primaryFunction' } }],
             },
           },
         ],

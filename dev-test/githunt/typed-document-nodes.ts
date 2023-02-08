@@ -463,21 +463,16 @@ export const FeedEntryFragmentDoc = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'VoteButtons' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'score' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'score' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'vote' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'vote_value' }, arguments: [], directives: [] },
-              ],
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'vote_value' } }],
             },
           },
         ],
@@ -487,35 +482,30 @@ export const FeedEntryFragmentDoc = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'RepoInfo' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'repository' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'description' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' }, arguments: [], directives: [] },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
               ],
             },
           },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'postedBy' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
               ],
             },
           },
@@ -694,26 +684,23 @@ export const CommentDocument = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CommentsPageComment' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'postedBy' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-          { kind: 'Field', name: { kind: 'Name', value: 'content' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'content' } },
         ],
       },
     },
@@ -812,21 +799,16 @@ export const FeedDocument = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'VoteButtons' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'score' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'score' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'vote' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'vote_value' }, arguments: [], directives: [] },
-              ],
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'vote_value' } }],
             },
           },
         ],
@@ -836,35 +818,30 @@ export const FeedDocument = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'RepoInfo' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'repository' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'description' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' }, arguments: [], directives: [] },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
               ],
             },
           },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'postedBy' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
               ],
             },
           },
@@ -875,39 +852,32 @@ export const FeedDocument = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'FeedEntry' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
-          { kind: 'Field', name: { kind: 'Name', value: 'commentCount' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentCount' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'repository' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'full_name' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
+                { kind: 'Field', name: { kind: 'Name', value: 'full_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'owner' },
-                  arguments: [],
-                  directives: [],
                   selectionSet: {
                     kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'avatar_url' }, arguments: [], directives: [] },
-                    ],
+                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'avatar_url' } }],
                   },
                 },
               ],
             },
           },
-          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'VoteButtons' }, directives: [] },
-          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RepoInfo' }, directives: [] },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'VoteButtons' } },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RepoInfo' } },
         ],
       },
     },
@@ -999,26 +969,23 @@ export const SubmitCommentDocument = {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CommentsPageComment' },
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
-      directives: [],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'postedBy' },
-            arguments: [],
-            directives: [],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'login' }, arguments: [], directives: [] },
-                { kind: 'Field', name: { kind: 'Name', value: 'html_url' }, arguments: [], directives: [] },
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' }, arguments: [], directives: [] },
-          { kind: 'Field', name: { kind: 'Name', value: 'content' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'content' } },
         ],
       },
     },
