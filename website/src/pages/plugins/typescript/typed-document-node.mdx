@@ -7,6 +7,11 @@ import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
+<Callout>
+For new projects, we recommend using the [`client-preset`](/plugins/presets/preset-client), which uses `typed-document-node` under the hood.
+
+</Callout>
+
 <PluginHeader hasOperationsNote />
 
 These plugins generate a ready-to-use `TypedDocumentNode` (a combination of pre-compiled `DocumentNode` and the TypeScript signature it represents).
