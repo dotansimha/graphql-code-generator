@@ -1851,18 +1851,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -1936,18 +1936,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2021,18 +2021,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2162,18 +2162,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
