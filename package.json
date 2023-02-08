@@ -72,7 +72,7 @@
     "lint-staged": "13.0.3",
     "lodash": "4.17.21",
     "patch-package": "6.5.1",
-    "prettier": "2.7.1",
+    "prettier": "2.8.4",
     "prettier-plugin-svelte": "2.7.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -99,7 +99,7 @@
     ]
   },
   "resolutions": {
-    "prettier": "2.7.1",
+    "prettier": "2.8.4",
     "babel-jest": "28.1.3",
     "jest-runner": "28.1.3",
     "graphql": "16.6.0",
