@@ -373,12 +373,7 @@ export class ClientSideBaseVisitor<
       return JSON.stringify(gqlObj);
     }
     if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-      let gqlObj = gqlTag([doc]);
-
-      // TODO: this should be done later on, after all things got added here.
-      if (this.config.optimizeDocumentNode) {
-        gqlObj = optimizeDocumentNode(gqlObj);
-      }
+      const gqlObj = gqlTag([doc]);
 
       // We need to inline all fragments that are used in this document
       // Otherwise we might encounter the following issues:
@@ -396,9 +391,19 @@ export class ClientSideBaseVisitor<
       const jsonStringify = (json: unknown) =>
         JSON.stringify(json, (key, value) => (key === 'loc' ? undefined : value));
 
-      const definitions = [...gqlObj.definitions];
+      let definitions = [...gqlObj.definitions];
+
       for (const fragmentName of fragmentDependencyNames) {
         definitions.push(this.fragmentsGraph.getNodeData(fragmentName).node);
+      }
+
+      if (this.config.optimizeDocumentNode) {
+        definitions = [
+          ...optimizeDocumentNode({
+            kind: Kind.DOCUMENT,
+            definitions,
+          }).definitions,
+        ];
       }
 
       let metaString = '';
