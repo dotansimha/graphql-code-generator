@@ -181,6 +181,18 @@ export const BarDocument = {
         ],
       },
     },
-    ...LelFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'Lel' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      directives: [],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' }, arguments: [], directives: [] },
+          { kind: 'Field', name: { kind: 'Name', value: 'body' }, arguments: [], directives: [] },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<BarQuery, BarQueryVariables>;
