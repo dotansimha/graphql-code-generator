@@ -1900,7 +1900,7 @@
         "anchor": "fragment-masking"
       }
     ],
-    "content": "08b583069e04fbb0dc34b64b683047d3",
+    "content": "1b4b14677ee6eb8b177424e154c47be4",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/gql-tag-operations-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2120,7 +2120,7 @@
     "objectID": "code-generator-plugins-typescript-typed-document-node",
     "headings": [],
     "toc": [],
-    "content": "9d073d78f8596d086d613b4dcf80e940",
+    "content": "52ecea9818bc96ad7eed6c3d2f365cfb",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typed-document-node",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
