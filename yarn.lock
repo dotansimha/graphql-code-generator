@@ -11635,10 +11635,10 @@ prettier-plugin-tailwindcss@0.2.0:
   resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.2.0.tgz#5d6823ef8356103fd0aa19d1e08cb49534100464"
   integrity sha512-Ruqig/mdWCSpqdq9WK44nrmqM4BFWTzBPhPGwC5NK3coV9eZntEQPB84MGZbjAg0XQU02jVRHXNRPREBzxvM+A==
 
-prettier@2.7.1, prettier@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
-  integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
+prettier@2.8.4, prettier@^2.7.1:
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
+  integrity sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==
 
 pretty-format@^28.0.0, pretty-format@^28.1.3:
   version "28.1.3"
