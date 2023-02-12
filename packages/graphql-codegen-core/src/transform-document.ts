@@ -17,47 +17,29 @@ export async function transformDocuments(options: Types.GenerateOptions): Promis
     const pluginConfig = documentTransform[name].config;
 
     const config =
-      typeof pluginConfig !== 'object'
-        ? pluginConfig
-        : {
+      typeof pluginConfig === 'object'
+        ? {
             ...options.config,
             ...pluginConfig,
-          };
+          }
+        : pluginConfig;
 
-    if (
-      transformPlugin.validateBeforeTransformDocuments &&
-      typeof transformPlugin.validateBeforeTransformDocuments === 'function'
-    ) {
+    if (transformPlugin.transformDocuments && typeof transformPlugin.transformDocuments === 'function') {
       try {
-        await profiler.run(
-          async () =>
-            transformPlugin.validateBeforeTransformDocuments(
-              outputSchema,
-              options.documents,
-              config,
-              options.filename,
-              options.plugins,
-              options.pluginContext
-            ),
-          `Document transform ${name} validate`
-        );
+        await profiler.run(async () => {
+          documents = await transformPlugin.transformDocuments(outputSchema, documents, config, {
+            outputFile: options.filename,
+            allPlugins: options.plugins,
+            pluginContext: options.pluginContext,
+          });
+        }, `Document transform ${name} execution`);
       } catch (e) {
         throw new Error(
-          `Document transform "${name}" validation failed: \n
+          `Document transform "${name}" failed: \n
             ${e.message}
           `
         );
       }
-    }
-
-    if (transformPlugin.transformDocuments && typeof transformPlugin.transformDocuments === 'function') {
-      await profiler.run(async () => {
-        documents = await transformPlugin.transformDocuments(outputSchema, documents, config, {
-          outputFile: options.filename,
-          allPlugins: options.plugins,
-          pluginContext: options.pluginContext,
-        });
-      }, `Document transform ${name} execution`);
     }
   }
 

@@ -654,7 +654,6 @@ export interface CodegenPlugin<T = any> {
   addToSchema?: AddToSchemaResult | ((config: T) => AddToSchemaResult);
   validate?: PluginValidateFn;
   transformDocuments?: TransformDocumentsFunction<T>;
-  validateBeforeTransformDocuments?: PluginValidateFn;
 }
 
 export type TransformDocumentsFunction<T = any> = (

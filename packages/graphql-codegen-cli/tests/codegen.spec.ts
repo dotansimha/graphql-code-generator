@@ -1142,7 +1142,7 @@ describe('Codegen Executor', () => {
       expect(output[0].content).toContain('Hello world!');
     });
 
-    it('Should execute validation before transform documents and throw when it fails', async () => {
+    it('should throw an understandable error if it fails.', async () => {
       try {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
@@ -1157,9 +1157,9 @@ describe('Codegen Executor', () => {
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).toContain(
-          'Document transform "./tests/custom-plugins/document-transform-validation.js" validation failed'
+          'Document transform "./tests/custom-plugins/document-transform-validation.js" failed'
         );
-        expect(e.message).toContain('Invalid!');
+        expect(e.message).toContain('Something Wrong!');
       }
     });
   });

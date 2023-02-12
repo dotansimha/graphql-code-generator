@@ -19,9 +19,6 @@ module.exports = {
     // Make some changes to the documents
     return documents;
   },
-  validateBeforeTransformDocuments: () => {
-    // Raises an error if necessary
-  },
 };
 ```
 

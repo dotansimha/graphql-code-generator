@@ -98,20 +98,18 @@ export default config
 
 ## Validation
 
-Plugin can also validate before executing the `transformDocuments`:
+The `validate` function is not executed before the `transformDocuments` function in the plugin. If validation is necessary, you can simply throw an error in the `transformDocuments`.
 
-```js {20-24}
+```js {6-8}
 const { visit } = require('graphql')
 
 module.exports = {
   plugin() {},
   transformDocuments(schema, documents, config) {
-    return documents
-  },
-  validateBeforeTransformDocuments(schema, documents, config) {
     if (config.somethingWrong) {
       throw new Error(`Something wrong!`)
     }
+    return documents
   }
 }
 ```
