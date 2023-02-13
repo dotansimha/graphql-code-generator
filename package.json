@@ -27,7 +27,7 @@
     "packages/plugins/other/*",
     "packages/presets/*",
     "website",
-    "examples/*"
+    "examples/**/*"
   ],
   "devDependencies": {
     "@apollo/client": "3.6.9",

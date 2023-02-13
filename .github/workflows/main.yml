@@ -28,10 +28,10 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 17
+          nodeVersion: 16
       - name: Prettier Check
         run: yarn prettier:check
-  dev-tests:
+  dev-tests-old:
     name: Validating dev-tests
     runs-on: ubuntu-latest
     strategy:
@@ -45,7 +45,7 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 17
+          nodeVersion: 16
       - name: Build
         run: yarn build
         env:
@@ -54,6 +54,35 @@ jobs:
         run: |
           yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
+  dev-tests:
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
+        with:
+          nodeVersion: 16
+      - name: Build
+        run: yarn build
+        env:
+          CI: true
+      - name: Test dev-tests
+        run: |
+          # yarn workspace example-programmatic-typescript codegen
+          yarn workspace example-react-apollo-client codegen
+          yarn workspace example-react-graphql-request codegen
+          yarn workspace example-react-swr codegen
+          yarn workspace example-react-tanstack-react-query codegen
+          yarn workspace example-react-urql codegen
+          yarn workspace example-typescript-esm codegen
+          yarn workspace typescript-graphql-request codegen
+          yarn workspace typescript-resolvers codegen
+          yarn workspace example-vue-apollo-composable codegen
+          yarn workspace example-vue-urql codegen
+          yarn workspace example-vue-villus codegen
+          yarn workspace example-yoga-tests codegen
+
+          git diff --exit-code -- examples/
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest
@@ -63,7 +92,7 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 17
+          nodeVersion: 16
       - name: Build
         run: yarn build
         env:
