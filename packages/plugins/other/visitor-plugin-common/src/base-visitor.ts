@@ -345,6 +345,7 @@ export interface RawConfig {
    * Instead - all of them are imported to the Operation node.
    * @type boolean
    * @default false
+   * @deprecated This option is no longer needed. It will be removed in the next major version.
    */
   dedupeFragments?: boolean;
   /**
