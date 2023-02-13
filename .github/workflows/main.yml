@@ -55,6 +55,8 @@ jobs:
           yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
   dev-tests:
+    name: Examples
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
