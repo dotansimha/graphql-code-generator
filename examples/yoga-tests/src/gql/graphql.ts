@@ -19,7 +19,6 @@ export type Mutation = {
   echo: Scalars['String'];
 };
 
-
 export type MutationEchoArgs = {
   message: Scalars['String'];
 };
@@ -29,18 +28,57 @@ export type Query = {
   hello: Scalars['String'];
 };
 
-export type HelloQueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
-
-export type HelloQueryQuery = { __typename?: 'Query', hello: string };
+export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
 
 export type EchoMutationMutationVariables = Exact<{
   message: Scalars['String'];
 }>;
 
+export type EchoMutationMutation = { __typename?: 'Mutation'; echo: string };
 
-export type EchoMutationMutation = { __typename?: 'Mutation', echo: string };
-
-
-export const HelloQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HelloQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hello"}}]}}]} as unknown as DocumentNode<HelloQueryQuery, HelloQueryQueryVariables>;
-export const EchoMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EchoMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"message"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"echo"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"message"},"value":{"kind":"Variable","name":{"kind":"Name","value":"message"}}}]}]}}]} as unknown as DocumentNode<EchoMutationMutation, EchoMutationMutationVariables>;
+export const HelloQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'HelloQuery' },
+      selectionSet: { kind: 'SelectionSet', selections: [{ kind: 'Field', name: { kind: 'Name', value: 'hello' } }] },
+    },
+  ],
+} as unknown as DocumentNode<HelloQueryQuery, HelloQueryQueryVariables>;
+export const EchoMutationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EchoMutation' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'message' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'echo' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'message' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'message' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EchoMutationMutation, EchoMutationMutationVariables>;
