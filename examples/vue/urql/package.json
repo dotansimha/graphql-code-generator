@@ -2,6 +2,7 @@
   "name": "example-vue-urql",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
