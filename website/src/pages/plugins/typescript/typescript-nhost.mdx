@@ -43,7 +43,7 @@ schema:
 generates:
   ./src/schema.ts:
     plugins:
-      - ./plugin/index.js
+      - typescript-nhost
 ```
 
 ### Step 2: Install and configure the Nhost Typescript SDK
@@ -80,7 +80,7 @@ schema:
 generates:
   ./src/schema.ts:
     plugins:
-      - ./plugin/index.js
+      - typescript-nhost
       - add:
           content: 'export type JSONValue = string | number | boolean | { [x: string]: JSONValue } | Array<JSONValue>;'
     config:
