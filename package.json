@@ -2,7 +2,8 @@
   "name": "graphql-code-generator",
   "private": true,
   "scripts": {
-    "postinstall": "patch-package && husky install",
+    "postinstall": "patch-package && husky install && yarn fix-bins",
+    "fix-bins": "node scripts/fix-bin.js",
     "clean": "rimraf node_modules/",
     "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
     "build": "bob build",
@@ -58,6 +59,7 @@
     "chalk": "4.1.2",
     "dotenv": "16.0.3",
     "eslint": "8.31.0",
+    "fast-glob": "3.2.12",
     "flow-bin": "0.186.0",
     "flow-parser": "0.186.0",
     "fs-extra": "10.1.0",
