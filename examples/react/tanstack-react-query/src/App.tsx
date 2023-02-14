@@ -1,7 +1,6 @@
-import request from 'graphql-request';
 import './App.css';
 import Film from './Film';
-import { graphql } from './gql/gql';
+import { graphql } from './gql';
 import { useGraphQL } from './use-graphql';
 
 const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
