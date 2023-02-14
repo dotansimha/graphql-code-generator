@@ -1283,7 +1283,7 @@ export type AllFilmsWithVariablesQueryQuery = {
     __typename?: 'FilmsConnection';
     edges?: Array<{
       __typename?: 'FilmsEdge';
-      node?: ({ __typename?: 'Film' } & { ' $fragmentRefs': { FilmItemFragment: FilmItemFragment } }) | null;
+      node?: ({ __typename?: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } }) | null;
     } | null> | null;
   } | null;
 };
@@ -1294,7 +1294,7 @@ export type FilmItemFragment = {
   title?: string | null;
   releaseDate?: string | null;
   producers?: Array<string | null> | null;
-} & { ' $fragmentName': 'FilmItemFragment' };
+} & { ' $fragmentName'?: 'FilmItemFragment' };
 
 export const FilmItemFragmentDoc = {
   kind: 'Document',

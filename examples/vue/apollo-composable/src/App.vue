@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useQuery } from '@vue/apollo-composable';
-import { graphql } from './gql/gql';
+import { graphql } from './gql';
 import FilmItem from './components/FilmItem.vue';
 import { computed } from 'vue';
 
