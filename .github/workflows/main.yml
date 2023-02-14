@@ -77,8 +77,8 @@ jobs:
           yarn workspace example-react-tanstack-react-query codegen
           yarn workspace example-react-urql codegen
           yarn workspace example-typescript-esm codegen
-          yarn workspace typescript-graphql-request codegen
-          yarn workspace typescript-resolvers codegen
+          yarn workspace example-typescript-graphql-request codegen
+          yarn workspace example-typescript-resolvers codegen
           yarn workspace example-vue-apollo-composable codegen
           yarn workspace example-vue-urql codegen
           yarn workspace example-vue-villus codegen
