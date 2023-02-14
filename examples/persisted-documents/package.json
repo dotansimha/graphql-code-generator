@@ -18,7 +18,8 @@
   },
   "scripts": {
     "test": "jest",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "build": "yarn test"
   },
   "bob": false
 }

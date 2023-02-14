@@ -68,12 +68,15 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Test dev-tests
+      - name: Generate and Diff Codegen Artifacts
         run: |
           set -o xtrace
-          eval $(node scripts/print-example-ci-command.js)
-
+          eval $(node scripts/print-example-ci-command.js codegen)
           git diff --exit-code -- examples/
+      - name: Build Examples
+        run: |
+          set -o xtrace
+          eval $(node scripts/print-example-ci-command.js build)
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest

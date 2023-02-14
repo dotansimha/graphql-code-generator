@@ -18,7 +18,7 @@
   "scripts": {
     "test": "jest",
     "codegen": "graphql-codegen --config codegen.ts",
-    "ci:codegen:examples": "codegen"
+    "build": "yarn test"
   },
   "bob": false
 }
