@@ -11,5 +11,6 @@ console.log(
       const { name } = fs.readJSONSync(packageJSONPath);
       return `yarn workspace ${name} run codegen`;
     })
+    .filter(name => name.includes('vue') === false)
     .join(' && ')
 );
