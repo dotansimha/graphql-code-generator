@@ -19,7 +19,6 @@ export type Mutation = {
   echo: Scalars['String'];
 };
 
-
 export type MutationEchoArgs = {
   message: Scalars['String'];
 };
@@ -29,10 +28,19 @@ export type Query = {
   hello: Scalars['String'];
 };
 
-export type HelloQueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
+export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
 
-export type HelloQueryQuery = { __typename?: 'Query', hello: string };
-
-
-export const HelloQueryDocument = {"__meta__":{"hash":"86f01e23de1c770cabbc35b2d87f2e5fd7557b6f"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HelloQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hello"}}]}}]} as unknown as DocumentNode<HelloQueryQuery, HelloQueryQueryVariables>;
+export const HelloQueryDocument = {
+  __meta__: { hash: '86f01e23de1c770cabbc35b2d87f2e5fd7557b6f' },
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'HelloQuery' },
+      selectionSet: { kind: 'SelectionSet', selections: [{ kind: 'Field', name: { kind: 'Name', value: 'hello' } }] },
+    },
+  ],
+} as unknown as DocumentNode<HelloQueryQuery, HelloQueryQueryVariables>;
