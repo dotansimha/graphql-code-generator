@@ -9,7 +9,7 @@ console.log(
   packageJSON
     .map(packageJSONPath => {
       const { name } = fs.readJSONSync(packageJSONPath);
-      return `yarn workspace ${name} run codegen`;
+      return `yarn workspace ${name} run ${process.argv[2]}`;
     })
     .join(' && ')
 );
