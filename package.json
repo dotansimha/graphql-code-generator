@@ -61,7 +61,7 @@
     "bob-the-bundler": "4.0.0",
     "chalk": "4.1.2",
     "dotenv": "16.0.3",
-    "eslint": "8.31.0",
+    "eslint": "8.34.0",
     "fast-glob": "3.2.12",
     "flow-bin": "0.186.0",
     "flow-parser": "0.186.0",
