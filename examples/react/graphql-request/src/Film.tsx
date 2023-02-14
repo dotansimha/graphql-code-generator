@@ -1,5 +1,4 @@
-import { FragmentType, useFragment } from './gql';
-import { graphql } from './gql';
+import { FragmentType, useFragment, graphql } from './gql';
 
 export const FilmFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {

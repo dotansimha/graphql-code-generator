@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use strict';
 
 // Do this as the first thing so that any code reading it knows the right env.
@@ -43,6 +44,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 const argv = process.argv.slice(2);
+// eslint-disable-next-line unicorn/prefer-includes
 const writeStatsJson = argv.indexOf('--stats') !== -1;
 
 // Generate configuration
@@ -112,7 +114,7 @@ checkBrowsers(paths.appPath, isInteractive)
     }
   )
   .catch(err => {
-    if (err && err.message) {
+    if (err?.message) {
       console.log(err.message);
     }
     process.exit(1);

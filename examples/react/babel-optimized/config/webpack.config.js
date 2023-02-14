@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-negated-condition */
 'use strict';
 
 const fs = require('fs');
@@ -296,6 +297,7 @@ module.exports = function (webpackEnv) {
           'react-dom$': 'react-dom/profiling',
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
+        // eslint-disable-next-line unicorn/no-useless-fallback-in-spread
         ...(modules.webpackAliases || {}),
       },
       plugins: [
