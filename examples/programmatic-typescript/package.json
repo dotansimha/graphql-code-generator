@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start:cjs": "tsup --onSuccess \"node dist/index.js\"",
-    "start:mjs": "tsup --onSuccess \"node dist/index.mjs\""
+    "start:mjs": "tsup --onSuccess \"node dist/index.mjs\"",
+    "codegen": "exit 0"
   },
   "dependencies": {
     "@graphql-codegen/core": "3.0.0",

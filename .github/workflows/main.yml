@@ -70,7 +70,8 @@ jobs:
           CI: true
       - name: Test dev-tests
         run: |
-          $(node scripts/print-example-ci-command.js)
+          set -o xtrace
+          eval $(node scripts/print-example-ci-command.js)
 
           git diff --exit-code -- examples/
   esm:
