@@ -71,12 +71,6 @@
     "test": "node scripts/test.js",
     "codegen": "graphql-codegen --config codegen.ts"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",

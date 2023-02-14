@@ -25,12 +25,6 @@
     "eject": "react-scripts eject",
     "codegen": "graphql-codegen --config codegen.ts"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
