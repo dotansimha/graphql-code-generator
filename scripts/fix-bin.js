@@ -13,7 +13,7 @@ packageDirectories.push('website');
 for (const dirname of packageDirectories) {
   const absolutePath = path.join(__dirname, '..', dirname);
   if (fs.lstatSync(absolutePath).isDirectory()) {
-    const execNames = ['graphql-codegen'];
+    const execNames = ['graphql-codegen', 'graphql-codegen-esm'];
     for (const execName of execNames) {
       const targetPath = path.join(absolutePath, 'node_modules', '.bin', execName);
       fs.ensureSymlinkSync(absoluteBinPath, targetPath);
