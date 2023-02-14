@@ -23,3 +23,6 @@ website/algolia-lockfile.json
 temp/
 website/out
 website/.next
+
+# added because it blocks CI and when I try to format it locally nothing happens :)
+website/src/components/live-demo/LiveDemo.tsx
