@@ -70,19 +70,7 @@ jobs:
           CI: true
       - name: Test dev-tests
         run: |
-          # yarn workspace example-programmatic-typescript codegen
-          yarn workspace example-react-apollo-client codegen
-          yarn workspace example-react-graphql-request codegen
-          yarn workspace example-react-swr codegen
-          yarn workspace example-react-tanstack-react-query codegen
-          yarn workspace example-react-urql codegen
-          yarn workspace example-typescript-esm codegen
-          yarn workspace example-typescript-graphql-request codegen
-          yarn workspace example-typescript-resolvers codegen
-          yarn workspace example-vue-apollo-composable codegen
-          yarn workspace example-vue-urql codegen
-          yarn workspace example-vue-villus codegen
-          yarn workspace example-yoga-tests codegen
+          $(node scripts/print-example-ci-command.js)
 
           git diff --exit-code -- examples/
   esm:
