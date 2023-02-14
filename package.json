@@ -3,9 +3,11 @@
   "private": true,
   "scripts": {
     "postinstall": "patch-package && husky install",
+    "fix-bins": "node scripts/fix-bin.js",
     "clean": "rimraf node_modules/",
     "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
     "build": "bob build",
+    "postbuild": "yarn fix-bins",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "test": "jest --forceExit --no-watchman",
     "lint": "eslint --cache --ignore-path .gitignore .",
@@ -18,7 +20,9 @@
     "release": "changeset publish",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
-    "generate:examples": "yarn generate:examples:cjs"
+    "generate:examples": "yarn generate:examples:cjs",
+    "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
+    "examples:build": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)"
   },
   "workspaces": [
     "packages/*",
@@ -27,7 +31,7 @@
     "packages/plugins/other/*",
     "packages/presets/*",
     "website",
-    "examples/*"
+    "examples/**/*"
   ],
   "devDependencies": {
     "@apollo/client": "3.6.9",
@@ -58,6 +62,7 @@
     "chalk": "4.1.2",
     "dotenv": "16.0.3",
     "eslint": "8.31.0",
+    "fast-glob": "3.2.12",
     "flow-bin": "0.186.0",
     "flow-parser": "0.186.0",
     "fs-extra": "10.1.0",
@@ -74,8 +79,8 @@
     "patch-package": "6.5.1",
     "prettier": "2.8.4",
     "prettier-plugin-svelte": "2.7.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "rimraf": "3.0.2",
     "stencil-apollo": "0.1.6",
     "svelte": "3.50.0",
@@ -106,6 +111,7 @@
     "graphql-language-service-interface": "2.10.2",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0",
-    "ts-node": "10.9.1"
+    "ts-node": "10.9.1",
+    "typescript": "4.7.4"
   }
 }
