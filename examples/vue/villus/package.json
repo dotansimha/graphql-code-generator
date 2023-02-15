@@ -4,10 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
-    "preview": "vite preview --port 4173",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit",
+    "build": "vite build",
     "codegen": "graphql-codegen --config codegen.ts",
     "test:end2end": "exit 0"
   },

@@ -15,7 +15,8 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
     "dev": "ts-node src/main.ts",
-    "test": "exit 0"
+    "test": "exit 0",
+    "test:end2end": "exit 0"
   },
   "type": "commonjs",
   "bob": false

@@ -9,7 +9,7 @@
     "lint": "next lint",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "cypress run",
-    "test:end2end": "start-server-and-test start http://localhost:3000 test"
+    "test:end2end": "start-server-and-test start http://127.0.0.1:3000 test"
   },
   "dependencies": {
     "@graphql-tools/executor-http": "^0.1.8",
