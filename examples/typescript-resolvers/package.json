@@ -14,7 +14,8 @@
   "scripts": {
     "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
-    "dev": "ts-node src/main.ts"
+    "dev": "ts-node src/main.ts",
+    "test": "exit 0"
   },
   "type": "commonjs",
   "bob": false
