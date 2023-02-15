@@ -21,7 +21,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
     });
@@ -108,7 +107,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
     });
@@ -195,7 +193,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
     });
@@ -271,7 +268,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -398,7 +394,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -503,7 +498,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -584,7 +578,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {},
             },
@@ -610,7 +603,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {
                 unmaskFunctionName: 'iLikeTurtles',
@@ -719,7 +711,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -759,7 +750,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -796,7 +786,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
           presetConfig: {
             fragmentMasking: {
               augmentedModuleName: '@urql/fragment',
@@ -865,7 +854,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
       emitLegacyCommonJSImports: false,

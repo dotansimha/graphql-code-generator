@@ -53,8 +53,7 @@ const config: CodegenConfig = {
   documents: ['src/**/*.ts', '!src/gql/**/*'],
   generates: {
     './src/gql/': {
-      preset: 'gql-tag-operations-preset',
-      plugins: []
+      preset: 'gql-tag-operations-preset'
     }
   }
 }
@@ -245,7 +244,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         augmentedModuleName: '@urql/core'
       }
@@ -320,7 +318,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         fragmentMasking: true
       }
@@ -399,7 +396,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         fragmentMasking: {
           unmaskFunctionName: 'getFragment'
@@ -424,7 +420,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         fragmentMasking: {
           augmentedModuleName: '@something/fragment'
