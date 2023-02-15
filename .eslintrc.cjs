@@ -51,5 +51,5 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ['dev-test', 'examples/front-end', 'website'],
+  ignorePatterns: ['dev-test', 'examples/front-end', 'website', 'examples/**/gql/**', '**/react-app-env.d.ts'],
 };

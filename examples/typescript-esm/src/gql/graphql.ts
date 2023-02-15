@@ -1,4 +1,4 @@
- 
+/* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -42,7 +42,6 @@ export type Film = Node & {
   vehicleConnection?: Maybe<FilmVehiclesConnection>;
 };
 
-
 /** A single film. */
 export type FilmCharacterConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -50,7 +49,6 @@ export type FilmCharacterConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 /** A single film. */
 export type FilmPlanetConnectionArgs = {
@@ -60,7 +58,6 @@ export type FilmPlanetConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
-
 /** A single film. */
 export type FilmSpeciesConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -69,7 +66,6 @@ export type FilmSpeciesConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
-
 /** A single film. */
 export type FilmStarshipConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -77,7 +73,6 @@ export type FilmStarshipConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 /** A single film. */
 export type FilmVehicleConnectionArgs = {
@@ -391,7 +386,6 @@ export type Person = Node & {
   vehicleConnection?: Maybe<PersonVehiclesConnection>;
 };
 
-
 /** An individual person or character within the Star Wars universe. */
 export type PersonFilmConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -400,7 +394,6 @@ export type PersonFilmConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
-
 /** An individual person or character within the Star Wars universe. */
 export type PersonStarshipConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -408,7 +401,6 @@ export type PersonStarshipConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 /** An individual person or character within the Star Wars universe. */
 export type PersonVehicleConnectionArgs = {
@@ -566,7 +558,6 @@ export type Planet = Node & {
   terrains?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
-
 /**
  * A large mass, planet or planetoid in the Star Wars Universe, at the time of
  * 0 ABY.
@@ -577,7 +568,6 @@ export type PlanetFilmConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 /**
  * A large mass, planet or planetoid in the Star Wars Universe, at the time of
@@ -710,14 +700,12 @@ export type Root = {
   vehicle?: Maybe<Vehicle>;
 };
 
-
 export type RootAllFilmsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 export type RootAllPeopleArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -726,14 +714,12 @@ export type RootAllPeopleArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
-
 export type RootAllPlanetsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 export type RootAllSpeciesArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -742,14 +728,12 @@ export type RootAllSpeciesArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
-
 export type RootAllStarshipsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 export type RootAllVehiclesArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -758,41 +742,34 @@ export type RootAllVehiclesArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
-
 export type RootFilmArgs = {
   filmID?: InputMaybe<Scalars['ID']>;
   id?: InputMaybe<Scalars['ID']>;
 };
 
-
 export type RootNodeArgs = {
   id: Scalars['ID'];
 };
-
 
 export type RootPersonArgs = {
   id?: InputMaybe<Scalars['ID']>;
   personID?: InputMaybe<Scalars['ID']>;
 };
 
-
 export type RootPlanetArgs = {
   id?: InputMaybe<Scalars['ID']>;
   planetID?: InputMaybe<Scalars['ID']>;
 };
-
 
 export type RootSpeciesArgs = {
   id?: InputMaybe<Scalars['ID']>;
   speciesID?: InputMaybe<Scalars['ID']>;
 };
 
-
 export type RootStarshipArgs = {
   id?: InputMaybe<Scalars['ID']>;
   starshipID?: InputMaybe<Scalars['ID']>;
 };
-
 
 export type RootVehicleArgs = {
   id?: InputMaybe<Scalars['ID']>;
@@ -841,7 +818,6 @@ export type Species = Node & {
   skinColors?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
-
 /** A type of person or character within the Star Wars Universe. */
 export type SpeciesFilmConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -849,7 +825,6 @@ export type SpeciesFilmConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 /** A type of person or character within the Star Wars Universe. */
 export type SpeciesPersonConnectionArgs = {
@@ -1018,7 +993,6 @@ export type Starship = Node & {
   starshipClass?: Maybe<Scalars['String']>;
 };
 
-
 /** A single transport craft that has hyperdrive capability. */
 export type StarshipFilmConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -1026,7 +1000,6 @@ export type StarshipFilmConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 /** A single transport craft that has hyperdrive capability. */
 export type StarshipPilotConnectionArgs = {
@@ -1182,7 +1155,6 @@ export type Vehicle = Node & {
   vehicleClass?: Maybe<Scalars['String']>;
 };
 
-
 /** A single transport craft that does not have hyperdrive capability */
 export type VehicleFilmConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -1190,7 +1162,6 @@ export type VehicleFilmConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
-
 
 /** A single transport craft that does not have hyperdrive capability */
 export type VehiclePilotConnectionArgs = {
@@ -1302,18 +1273,158 @@ export type VehiclesEdge = {
   node?: Maybe<Vehicle>;
 };
 
-export type AllPeopleQueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type AllPeopleQueryQueryVariables = Exact<{ [key: string]: never }>;
 
-
-export type AllPeopleQueryQuery = { __typename?: 'Root', allPeople?: { __typename?: 'PeopleConnection', edges?: Array<{ __typename?: 'PeopleEdge', node?: { __typename?: 'Person', name?: string | null, homeworld?: { __typename?: 'Planet', name?: string | null } | null } | null } | null> | null } | null };
+export type AllPeopleQueryQuery = {
+  __typename?: 'Root';
+  allPeople?: {
+    __typename?: 'PeopleConnection';
+    edges?: Array<{
+      __typename?: 'PeopleEdge';
+      node?: {
+        __typename?: 'Person';
+        name?: string | null;
+        homeworld?: { __typename?: 'Planet'; name?: string | null } | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
 
 export type AllPeopleWithVariablesQueryQueryVariables = Exact<{
   first: Scalars['Int'];
 }>;
 
+export type AllPeopleWithVariablesQueryQuery = {
+  __typename?: 'Root';
+  allPeople?: {
+    __typename?: 'PeopleConnection';
+    edges?: Array<{
+      __typename?: 'PeopleEdge';
+      node?: {
+        __typename?: 'Person';
+        name?: string | null;
+        homeworld?: { __typename?: 'Planet'; name?: string | null } | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
 
-export type AllPeopleWithVariablesQueryQuery = { __typename?: 'Root', allPeople?: { __typename?: 'PeopleConnection', edges?: Array<{ __typename?: 'PeopleEdge', node?: { __typename?: 'Person', name?: string | null, homeworld?: { __typename?: 'Planet', name?: string | null } | null } | null } | null> | null } | null };
-
-
-export const AllPeopleQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AllPeopleQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allPeople"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"5"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"homeworld"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AllPeopleQueryQuery, AllPeopleQueryQueryVariables>;
-export const AllPeopleWithVariablesQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AllPeopleWithVariablesQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allPeople"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"homeworld"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AllPeopleWithVariablesQueryQuery, AllPeopleWithVariablesQueryQueryVariables>;
+export const AllPeopleQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AllPeopleQuery' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'allPeople' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '5' } },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'edges' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'node' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'homeworld' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'name' } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllPeopleQueryQuery, AllPeopleQueryQueryVariables>;
+export const AllPeopleWithVariablesQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AllPeopleWithVariablesQuery' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'allPeople' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'first' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'edges' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'node' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'homeworld' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'name' } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllPeopleWithVariablesQueryQuery, AllPeopleWithVariablesQueryQueryVariables>;

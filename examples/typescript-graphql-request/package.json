@@ -12,7 +12,7 @@
     "graphql-request": "5.1.0"
   },
   "scripts": {
-    "codegen": "graphql-codegen --config codegen.yml",
+    "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
     "dev": "ts-node src/main.ts"
   },
