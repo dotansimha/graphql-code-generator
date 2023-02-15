@@ -21,7 +21,6 @@ describe('client-preset', () => {
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
     });
@@ -109,7 +108,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
     });
@@ -197,7 +195,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
     });
@@ -273,7 +270,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -402,7 +398,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -524,7 +519,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -629,7 +623,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: false,
             },
@@ -717,7 +710,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {},
             },
@@ -743,7 +735,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {
                 unmaskFunctionName: 'iLikeTurtles',
@@ -859,7 +850,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -899,7 +889,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -937,7 +926,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       emitLegacyCommonJSImports: false,
@@ -1026,7 +1014,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
           },
         },
         emitLegacyCommonJSImports: false,
@@ -1098,7 +1085,6 @@ export * from "./gql.js";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
           presetConfig: {
             onExecutableDocumentNode(node) {
               return {
@@ -1167,7 +1153,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: true,
             },
@@ -1245,7 +1230,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: {
                 mode: 'replaceDocumentWithHash',
@@ -1325,7 +1309,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: {
                 hashPropertyName: 'custom_property_name',
@@ -1416,7 +1399,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: true,
               onExecutableDocumentNode(node) {
