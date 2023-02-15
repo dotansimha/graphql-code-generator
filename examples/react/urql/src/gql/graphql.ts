@@ -1368,6 +1368,19 @@ export const AllFilmsWithVariablesQueryDocument = {
         ],
       },
     },
-    ...FilmItemFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FilmItem' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Film' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'releaseDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'producers' } },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<AllFilmsWithVariablesQueryQuery, AllFilmsWithVariablesQueryQueryVariables>;
