@@ -9760,10 +9760,10 @@ flexsearch@^0.7.21:
   resolved "https://registry.yarnpkg.com/flexsearch/-/flexsearch-0.7.31.tgz#065d4110b95083110b9b6c762a71a77cc52e4702"
   integrity sha512-XGozTsMPYkm+6b5QL3Z9wQcJjNYxp0CYn3U1gO7dwD6PAqU1SVWZxI9CCg3z+ml3YfqdPnrBehaBrnH2AGKbNA==
 
-flow-bin@0.186.0:
-  version "0.186.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.186.0.tgz#b60b720dea977516db8e77fdd3911f66e86c6378"
-  integrity sha512-p5g03TsAipO6Wu22rpphRZQ9EYuhVWANN698MRLWRyP7ZtkEyCpFHDfmzRHM4Ym/tbCQCMdLJ9JX/GmuiDsB2w==
+flow-bin@0.200.0:
+  version "0.200.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.200.0.tgz#bae10e7454aca131f72f084f64371f5098c5be07"
+  integrity sha512-4KquALYPkCCTCZ43GIqTDZDOf4znU3/kXsigpiwwORV8l/ctqwvKkqCOhjqvGy5DtbiL6WTPBqLwGAlxeGeNIA==
 
 flow-parser@0.186.0:
   version "0.186.0"
