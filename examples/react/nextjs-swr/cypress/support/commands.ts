@@ -1,1 +1,2 @@
 /// <reference types="cypress" />
+export {};

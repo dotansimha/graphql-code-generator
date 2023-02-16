@@ -4,3 +4,6 @@ describe('template spec', () => {
     cy.get('h3').should('contain', 'A New Hope');
   });
 });
+
+// lol, this is a hack to make the file a module and nextjs build happy
+export {};
