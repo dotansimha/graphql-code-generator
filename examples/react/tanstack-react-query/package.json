@@ -16,12 +16,17 @@
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.10",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "serve": "14.2.0",
+    "cypress": "12.5.1",
+    "start-server-and-test": "1.15.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "serve -s build",
+    "test": "cypress run",
+    "test:end2end": "start-server-and-test start http://localhost:3000 test",
     "eject": "react-scripts eject",
     "codegen": "graphql-codegen --config codegen.ts"
   },
