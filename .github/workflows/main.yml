@@ -10,6 +10,7 @@ on:
 
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
+  CARGO_TERM_COLOR: always
 
 jobs:
   lint:
@@ -132,3 +133,20 @@ jobs:
         run: yarn test
         env:
           CI: true
+  test-rust-swc-plugin:
+    name: Build and Unit Test SWC Plugin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-wasi
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --target wasm32-wasi
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
