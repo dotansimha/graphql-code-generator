@@ -36,7 +36,7 @@
     "mini-css-extract-plugin": "2.7.2",
     "postcss": "8.4.21",
     "postcss-flexbugs-fixes": "5.0.2",
-    "postcss-loader": "6.2.1",
+    "postcss-loader": "7.0.2",
     "postcss-normalize": "10.0.1",
     "postcss-preset-env": "7.8.3",
     "prompts": "2.4.2",
