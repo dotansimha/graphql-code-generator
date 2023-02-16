@@ -20,3 +20,6 @@ out/
 website/public/sitemap.xml
 website/public/_redirects
 .eslintcache
+
+**/cypress/screenshots
+**/cypress/videos

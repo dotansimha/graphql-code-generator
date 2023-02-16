@@ -19,7 +19,8 @@
   "scripts": {
     "test": "jest",
     "codegen": "graphql-codegen --config codegen.ts",
-    "build": "yarn test"
+    "build": "tsc",
+    "test:end2end": "yarn test"
   },
   "bob": false
 }
