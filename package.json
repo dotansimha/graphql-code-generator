@@ -50,7 +50,7 @@
     "@types/jest": "28.1.8",
     "@types/mkdirp": "1.0.2",
     "@types/node": "18.11.18",
-    "@types/react": "18.0.18",
+    "@types/react": "18.0.28",
     "@types/webpack-env": "1.18.0",
     "@urql/exchange-graphcache": "5.0.5",
     "@vue/apollo-composable": "4.0.0-alpha.19",
