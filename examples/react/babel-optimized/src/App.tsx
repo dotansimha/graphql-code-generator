@@ -1,9 +1,8 @@
-import React from 'react';
 import { useQuery } from '@apollo/client';
 
 import './App.css';
 import Film from './Film';
-import { graphql } from './gql/gql';
+import { graphql } from './gql';
 
 const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {

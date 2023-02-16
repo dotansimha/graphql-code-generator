@@ -13,7 +13,8 @@
   "scripts": {
     "codegen": "graphql-codegen-esm --config codegen.cjs",
     "build": "tsc",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "test:end2end": "yarn start"
   },
   "type": "module",
   "bob": false

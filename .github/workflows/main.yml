@@ -75,6 +75,9 @@ jobs:
       - name: Build Examples
         run: |
           yarn examples:build
+      - name: End2End Test Examples
+        run: |
+          yarn examples:test:end2end
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest

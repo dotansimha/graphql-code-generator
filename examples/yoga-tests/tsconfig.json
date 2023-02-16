@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "Node16",
-    "outDir": "dist"
+    "outDir": "dist",
+    "skipLibCheck": true
   },
   "include": ["src/**/*"]
 }
