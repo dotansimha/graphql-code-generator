@@ -171,7 +171,28 @@ export const TweetFragmentFragmentDoc = {
         ],
       },
     },
-    ...TweetAuthorFragmentFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetAuthorFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<TweetFragmentFragment, unknown>;
 export const TweetsFragmentFragmentDoc = {
@@ -198,7 +219,41 @@ export const TweetsFragmentFragmentDoc = {
         ],
       },
     },
-    ...TweetFragmentFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetAuthorFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'body' } },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetAuthorFragment' } },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<TweetsFragmentFragment, unknown>;
 export const TweetAppQueryDocument = {
@@ -213,6 +268,61 @@ export const TweetAppQueryDocument = {
         selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetsFragment' } }],
       },
     },
-    ...TweetsFragmentFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetAuthorFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'body' } },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetAuthorFragment' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetsFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'Tweets' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetFragment' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<TweetAppQueryQuery, TweetAppQueryQueryVariables>;

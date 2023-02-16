@@ -459,8 +459,59 @@ export const FeedEntryFragmentDoc = {
         ],
       },
     },
-    ...VoteButtonsFragmentDoc.definitions,
-    ...RepoInfoFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'VoteButtons' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'score' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'vote' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'vote_value' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'RepoInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repository' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'postedBy' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<FeedEntryFragment, unknown>;
 export const OnCommentAddedDocument = {
@@ -629,7 +680,30 @@ export const CommentDocument = {
         ],
       },
     },
-    ...CommentsPageCommentFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CommentsPageComment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'postedBy' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<CommentQuery, CommentQueryVariables>;
 export const CurrentUserForProfileDocument = {
@@ -721,7 +795,92 @@ export const FeedDocument = {
         ],
       },
     },
-    ...FeedEntryFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'VoteButtons' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'score' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'vote' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'vote_value' } }],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'RepoInfo' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repository' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'postedBy' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FeedEntry' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'commentCount' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repository' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'full_name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'owner' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'avatar_url' } }],
+                  },
+                },
+              ],
+            },
+          },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'VoteButtons' } },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RepoInfo' } },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = {
@@ -806,7 +965,30 @@ export const SubmitCommentDocument = {
         ],
       },
     },
-    ...CommentsPageCommentFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CommentsPageComment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'postedBy' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'login' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<SubmitCommentMutation, SubmitCommentMutationVariables>;
 export const VoteDocument = {
