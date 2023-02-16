@@ -43,7 +43,7 @@ const ALL_ICONS = [
   'urql',
 ] as const;
 
-export type Icon = typeof ALL_ICONS[number];
+export type Icon = (typeof ALL_ICONS)[number];
 
 /* eslint sort-keys: error */
 export const icons: Record<Icon, StaticImageData> = {
@@ -100,7 +100,7 @@ export const ALL_TAGS = [
   'zod',
 ] as const;
 
-export type Tag = typeof ALL_TAGS[number];
+export type Tag = (typeof ALL_TAGS)[number];
 
 export const PACKAGES: Record<
   string,

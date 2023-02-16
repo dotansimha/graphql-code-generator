@@ -35,7 +35,7 @@ export function graphql(source: string): unknown;
  */
 export function graphql(
   source: '\n  query HelloQuery {\n    hello\n  }\n'
-): typeof documents['\n  query HelloQuery {\n    hello\n  }\n'];
+): (typeof documents)['\n  query HelloQuery {\n    hello\n  }\n'];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
