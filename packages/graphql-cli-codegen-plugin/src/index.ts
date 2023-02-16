@@ -1,10 +1,10 @@
 import { defineCommand } from '@graphql-cli/common';
 import {
-  CodegenExtension,
+  buildOptions,
   CodegenContext,
+  CodegenExtension,
   generate,
   updateContextWithCliFlags,
-  buildOptions,
   YamlCliFlags,
 } from '@graphql-codegen/cli';
 

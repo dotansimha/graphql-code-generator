@@ -1,14 +1,16 @@
 import * as addPlugin from '@graphql-codegen/add';
-import type { Types } from '@graphql-codegen/plugin-helpers';
-import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
-import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
-import * as typescriptPlugin from '@graphql-codegen/typescript';
-
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import { processSources } from './process-sources.js';
+import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
+import * as typescriptPlugin from '@graphql-codegen/typescript';
+import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import babelOptimizerPlugin from './babel.js';
+import { DocumentNode } from 'graphql';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
+import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
+import { processSources } from './process-sources.js';
+
+export { default as babelOptimizerPlugin } from './babel.js';
 
 export type FragmentMaskingConfig = {
   /** @description Name of the function that should be used for unmasking a masked fragment property.
@@ -62,6 +64,26 @@ export type ClientPresetConfig = {
    * ```
    */
   gqlTagName?: string;
+  /**
+   * Generate metadata for a executable document node and embed it in the emitted code.
+   */
+  onExecutableDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
+  /** Persisted operations configuration. */
+  persistedDocuments?:
+    | boolean
+    | {
+        /**
+         * @description Behavior for the output file.
+         * @default 'embedHashInDocument'
+         * "embedHashInDocument" will add a property within the `DocumentNode` with the hash of the operation.
+         * "replaceDocumentWithHash" will fully drop the document definition.
+         */
+        mode?: 'embedHashInDocument' | 'replaceDocumentWithHash';
+        /**
+         * @description Name of the property that will be added to the `DocumentNode` with the hash of the operation.
+         */
+        hashPropertyName?: string;
+      };
 };
 
 const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/');
@@ -79,6 +101,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       );
     }
 
+    const isPersistedOperations = !!options.presetConfig?.persistedDocuments ?? false;
+
     const reexports: Array<string> = [];
 
     // the `client` preset is restricting the config options inherited from `typescript`, `typescript-operations` and others.
@@ -93,6 +117,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       enumsAsTypes: options.config.enumsAsTypes,
       dedupeFragments: options.config.dedupeFragments,
       nonOptionalTypename: options.config.nonOptionalTypename,
+      avoidOptionals: options.config.avoidOptionals,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
@@ -105,7 +130,20 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       fragmentMaskingConfig = {};
     }
 
+    const onExecutableDocumentNodeHook = options.presetConfig.onExecutableDocumentNode ?? null;
     const isMaskingFragments = fragmentMaskingConfig != null;
+
+    const persistedDocuments = options.presetConfig.persistedDocuments
+      ? {
+          hashPropertyName:
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.hashPropertyName) ||
+            'hash',
+          omitDefinitions:
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.mode) === 'replaceDocumentWithHash' || false,
+        }
+      : null;
 
     const sourcesWithOperations = processSources(options.documents, node => {
       if (node.kind === 'FragmentDefinition') {
@@ -115,20 +153,54 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     });
     const sources = sourcesWithOperations.map(({ source }) => source);
 
+    const tdnFinished = createDeferred();
+    const persistedDocumentsMap = new Map<string, string>();
+
     const pluginMap = {
       ...options.pluginMap,
       [`add`]: addPlugin,
       [`typescript`]: typescriptPlugin,
       [`typescript-operations`]: typescriptOperationPlugin,
-      [`typed-document-node`]: typedDocumentNodePlugin,
+      [`typed-document-node`]: {
+        ...typedDocumentNodePlugin,
+        plugin: async (...args: Parameters<PluginFunction>) => {
+          try {
+            return await typedDocumentNodePlugin.plugin(...args);
+          } finally {
+            tdnFinished.resolve();
+          }
+        },
+      },
       [`gen-dts`]: gqlTagPlugin,
     };
+
+    function onExecutableDocumentNode(documentNode: DocumentNode) {
+      const meta = onExecutableDocumentNodeHook?.(documentNode);
+
+      if (persistedDocuments) {
+        const documentString = normalizeAndPrintDocumentNode(documentNode);
+        const hash = generateDocumentHash(documentString);
+        persistedDocumentsMap.set(hash, documentString);
+        return { ...meta, [persistedDocuments.hashPropertyName]: hash };
+      }
+
+      if (meta) {
+        return meta;
+      }
+
+      return undefined;
+    }
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
       { [`typescript`]: {} },
       { [`typescript-operations`]: {} },
-      { [`typed-document-node`]: {} },
+      {
+        [`typed-document-node`]: {
+          unstable_onExecutableDocumentNode: onExecutableDocumentNode,
+          unstable_omitDefinitions: persistedDocuments?.omitDefinitions ?? false,
+        },
+      },
       ...options.plugins,
     ];
 
@@ -184,7 +256,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         plugins: [
           {
             [`add`]: {
-              content: reexports.map(moduleName => `export * from "./${moduleName}${reexportsExtension}"`).join('\n'),
+              content: reexports
+                .sort()
+                .map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`)
+                .join('\n'),
             },
           },
         ],
@@ -217,10 +292,48 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         },
         documents: sources,
       },
+      ...(isPersistedOperations
+        ? [
+            {
+              filename: `${options.baseOutputDir}persisted-documents.json`,
+              plugins: [
+                {
+                  [`persisted-operations`]: {},
+                },
+              ],
+              pluginMap: {
+                [`persisted-operations`]: {
+                  plugin: async () => {
+                    await tdnFinished.promise;
+                    return {
+                      content: JSON.stringify(Object.fromEntries(persistedDocumentsMap.entries()), null, 2),
+                    };
+                  },
+                },
+              },
+              schema: options.schema,
+              config: {},
+              documents: sources,
+            },
+          ]
+        : []),
       ...(fragmentMaskingFileGenerateConfig ? [fragmentMaskingFileGenerateConfig] : []),
       ...(indexFileGenerateConfig ? [indexFileGenerateConfig] : []),
     ];
   },
 };
 
-export { babelOptimizerPlugin };
+type Deferred<T = void> = {
+  resolve: (value: T) => void;
+  reject: (value: unknown) => void;
+  promise: Promise<T>;
+};
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>;
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve;
+    d.reject = reject;
+  });
+  return d;
+}

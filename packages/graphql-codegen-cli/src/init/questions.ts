@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import { grey } from './helpers.js';
-import { Tags, Answers } from './types.js';
 import { plugins } from './plugins.js';
+import { Answers, Tags } from './types.js';
 
 export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.QuestionCollection {
   return [
@@ -102,8 +102,7 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
     } else if (possibleTargets.Flow) {
       tags.push(Tags.flow);
     } else if (possibleTargets.Node) {
-      tags.push(Tags.typescript);
-      tags.push(Tags.flow);
+      tags.push(Tags.typescript, Tags.flow);
     }
     return tags;
   }
@@ -187,11 +186,12 @@ export function getOutputDefaultValue(answers: Answers) {
 export function getDocumentsDefaultValue(answers: Answers) {
   if (answers.targets.includes(Tags.vue)) {
     return 'src/**/*.vue';
-  } else if (answers.targets.includes(Tags.angular)) {
-    return 'src/**/*.ts';
-  } else if (answers.targets.includes(Tags.client)) {
-    return 'src/**/*.tsx';
-  } else {
-    return 'src/**/*.graphql';
   }
+  if (answers.targets.includes(Tags.angular)) {
+    return 'src/**/*.ts';
+  }
+  if (answers.targets.includes(Tags.client)) {
+    return 'src/**/*.tsx';
+  }
+  return 'src/**/*.graphql';
 }

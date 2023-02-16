@@ -1,16 +1,15 @@
 import {
-  Types,
-  isComplexPluginOutput,
-  federationSpec,
-  getCachedDocumentNodeFromSchema,
   AddToSchemaResult,
   createNoopProfiler,
+  federationSpec,
+  getCachedDocumentNodeFromSchema,
+  isComplexPluginOutput,
+  Types,
 } from '@graphql-codegen/plugin-helpers';
-import { visit, DefinitionNode, Kind, print, NameNode, specifiedRules, DocumentNode } from 'graphql';
-import { executePlugin } from './execute-plugin.js';
-import { validateGraphQlDocuments, Source, asArray } from '@graphql-tools/utils';
-
 import { mergeSchemas } from '@graphql-tools/schema';
+import { asArray, Source, validateGraphQlDocuments } from '@graphql-tools/utils';
+import { DefinitionNode, DocumentNode, Kind, NameNode, print, specifiedRules, visit } from 'graphql';
+import { executePlugin } from './execute-plugin.js';
 import {
   extractHashFromSchema,
   getSkipDocumentsValidationOption,
@@ -131,13 +130,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       const pluginPackage = options.pluginMap[name];
       const pluginConfig = plugin[name] || {};
 
-      const execConfig =
-        typeof pluginConfig !== 'object'
-          ? pluginConfig
-          : {
-              ...options.config,
-              ...pluginConfig,
-            };
+      const execConfig = typeof pluginConfig === 'object' ? { ...options.config, ...pluginConfig } : pluginConfig;
 
       const result = await profiler.run(
         () =>
@@ -237,15 +230,11 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
     deduplicatedDefinitions: Set<DefinitionNode>
   ) {
     if (typeof node.name !== 'undefined') {
-      if (!definitionMap[node.kind]) {
-        definitionMap[node.kind] = {};
-      }
-      if (!definitionMap[node.kind][node.name.value]) {
-        definitionMap[node.kind][node.name.value] = {
-          paths: new Set(),
-          contents: new Set(),
-        };
-      }
+      definitionMap[node.kind] ||= {};
+      definitionMap[node.kind][node.name.value] ||= {
+        paths: new Set(),
+        contents: new Set(),
+      };
 
       const definitionKindMap = definitionMap[node.kind];
 

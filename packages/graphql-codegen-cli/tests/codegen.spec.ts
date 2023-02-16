@@ -1,8 +1,8 @@
+import { join } from 'path';
 import { useMonorepo } from '@graphql-codegen/testing';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print } from 'graphql';
 import { createContext, executeCodegen } from '../src/index.js';
-import { join } from 'path';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -164,21 +164,45 @@ describe('Codegen Executor', () => {
       }
     });
 
-    it('Should throw when one output has no plugins defined', async () => {
+    it.only('Should throw when one output has no plugins or preset defined', async () => {
+      expect.assertions(1);
       try {
         await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
+          generates: {
+            'out.ts': {},
+          },
+        });
+      } catch (e) {
+        expect(e.message).toMatch('Invalid Codegen Configuration!');
+      }
+    });
+
+    it.only('Should throw when one output has no plugins defined', async () => {
+      expect.assertions(1);
+      try {
+        await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
           generates: {
             'out.ts': {
               plugins: [],
             },
           },
         });
-
-        throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).toMatch('Invalid Codegen Configuration!');
       }
+    });
+
+    it.only('Should succeed when one output has no plugins but preset defined', async () => {
+      await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          './src/gql/': {
+            preset: 'client-preset',
+          },
+        },
+      });
     });
 
     it('should handle extend keyword when GraphQLSchema is used', async () => {

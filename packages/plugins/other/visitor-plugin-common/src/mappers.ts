@@ -1,5 +1,5 @@
 /* eslint-disable no-inner-declarations */
-import { RawResolversConfig, ParsedResolversConfig } from './base-resolvers-visitor.js';
+import { ParsedResolversConfig, RawResolversConfig } from './base-resolvers-visitor.js';
 import { DirectiveArgumentAndInputFieldMappings, ParsedDirectiveArgumentAndInputFieldMappings } from './types.js';
 
 export type ParsedMapper = InternalParsedMapper | ExternalParsedMapper;
@@ -114,7 +114,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
             return handleAlias(true);
           }
 
-          const type = maybeSuffix(`${gqlTypeName}`);
+          const type = maybeSuffix(String(gqlTypeName));
 
           // ./my/module#default
           return {

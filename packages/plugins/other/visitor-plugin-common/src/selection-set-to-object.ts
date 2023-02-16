@@ -1,48 +1,48 @@
+import { createHash } from 'crypto';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { getRootTypes } from '@graphql-tools/utils';
+import autoBind from 'auto-bind';
 import {
-  SelectionSetNode,
-  Kind,
+  DirectiveNode,
   FieldNode,
   FragmentSpreadNode,
-  InlineFragmentNode,
-  GraphQLNamedType,
-  isObjectType,
-  isUnionType,
-  isInterfaceType,
-  GraphQLSchema,
   GraphQLField,
-  SchemaMetaFieldDef,
-  TypeMetaFieldDef,
-  SelectionNode,
-  isListType,
-  isNonNullType,
+  GraphQLNamedType,
   GraphQLObjectType,
   GraphQLOutputType,
+  GraphQLSchema,
+  InlineFragmentNode,
+  isInterfaceType,
+  isListType,
+  isNonNullType,
+  isObjectType,
   isTypeSubTypeOf,
-  DirectiveNode,
+  isUnionType,
+  Kind,
+  SchemaMetaFieldDef,
+  SelectionNode,
+  SelectionSetNode,
+  TypeMetaFieldDef,
 } from 'graphql';
-import {
-  getPossibleTypes,
-  separateSelectionSet,
-  getFieldNodeNameValue,
-  DeclarationBlock,
-  mergeSelectionSets,
-  hasConditionalDirectives,
-} from './utils.js';
-import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types.js';
-import { BaseVisitorConvertOptions } from './base-visitor.js';
-import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor.js';
+import { BaseVisitorConvertOptions } from './base-visitor.js';
 import {
+  BaseSelectionSetProcessor,
   LinkField,
+  NameAndType,
   PrimitiveAliasedFields,
   PrimitiveField,
-  BaseSelectionSetProcessor,
   ProcessResult,
-  NameAndType,
 } from './selection-set-processor/base.js';
-import autoBind from 'auto-bind';
-import { getRootTypes } from '@graphql-tools/utils';
-import { createHash } from 'crypto';
+import { ConvertNameFn, GetFragmentSuffixFn, LoadedFragment, NormalizedScalarsMap } from './types.js';
+import {
+  DeclarationBlock,
+  getFieldNodeNameValue,
+  getPossibleTypes,
+  hasConditionalDirectives,
+  mergeSelectionSets,
+  separateSelectionSet,
+} from './utils.js';
 
 type FragmentSpreadUsage = {
   fragmentName: string;
@@ -230,9 +230,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             possibleTypesForFragment.length === 1 ? null : possibleType.name
           );
 
-          if (!selectionNodesByTypeName[possibleType.name]) {
-            selectionNodesByTypeName[possibleType.name] = [];
-          }
+          selectionNodesByTypeName[possibleType.name] ||= [];
 
           selectionNodesByTypeName[possibleType.name].push({
             fragmentName: spread.name.value,
@@ -304,7 +302,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
   protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
-    if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
+    if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
 
@@ -326,9 +324,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
 
-        if (!prev[typeName]) {
-          prev[typeName] = [];
-        }
+        prev[typeName] ||= [];
 
         const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
         const transformedSet = this.selectionSetStringFromFields(fields);
@@ -450,15 +446,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     for (const selectionNode of selectionNodes) {
       if ('kind' in selectionNode) {
         if (selectionNode.kind === 'Field') {
-          if (!selectionNode.selectionSet) {
-            if (selectionNode.alias) {
-              primitiveAliasFields.set(selectionNode.alias.value, selectionNode);
-            } else if (selectionNode.name.value === '__typename') {
-              requireTypename = true;
-            } else {
-              primitiveFields.set(selectionNode.name.value, selectionNode);
-            }
-          } else {
+          if (selectionNode.selectionSet) {
             let selectedField: GraphQLField<any, any, any> = null;
 
             const fields = parentSchemaType.getFields();
@@ -474,12 +462,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
             const fieldName = getFieldNodeNameValue(selectionNode);
             let linkFieldNode = linkFieldSelectionSets.get(fieldName);
-            if (!linkFieldNode) {
-              linkFieldNode = {
-                selectedFieldType: selectedField.type,
-                field: selectionNode,
-              };
-            } else {
+            if (linkFieldNode) {
               linkFieldNode = {
                 ...linkFieldNode,
                 field: {
@@ -487,8 +470,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
                   selectionSet: mergeSelectionSets(linkFieldNode.field.selectionSet, selectionNode.selectionSet),
                 },
               };
+            } else {
+              linkFieldNode = {
+                selectedFieldType: selectedField.type,
+                field: selectionNode,
+              };
             }
             linkFieldSelectionSets.set(fieldName, linkFieldNode);
+          } else if (selectionNode.alias) {
+            primitiveAliasFields.set(selectionNode.alias.value, selectionNode);
+          } else if (selectionNode.name.value === '__typename') {
+            requireTypename = true;
+          } else {
+            primitiveFields.set(selectionNode.name.value, selectionNode);
           }
         } else if (selectionNode.kind === 'Directive') {
           if (['skip', 'include'].includes(selectionNode?.name?.value)) {

@@ -1,9 +1,9 @@
-import { loadConfig, GraphQLExtensionDeclaration, GraphQLConfig } from 'graphql-config';
 import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { CodeFileLoader } from '@graphql-tools/code-file-loader';
 import { GitLoader } from '@graphql-tools/git-loader';
 import { GithubLoader } from '@graphql-tools/github-loader';
 import { PrismaLoader } from '@graphql-tools/prisma-loader';
+import { GraphQLConfig, GraphQLExtensionDeclaration, loadConfig } from 'graphql-config';
 
 export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
   // Schema
@@ -61,7 +61,7 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
 
   try {
     for (const projectName in config.projects) {
-      if (config.projects.hasOwnProperty(projectName)) {
+      if (Object.prototype.hasOwnProperty.call(config.projects, projectName)) {
         const project = config.projects[projectName];
 
         if (project.hasExtension('codegen')) {

@@ -147,6 +147,14 @@ export type AnimalFragmentFragment = AnimalFragment_Bat_Fragment | AnimalFragmen
 "
 `;
 
+exports[`TypeScript Operations Plugin Issues #8793 selecting __typename should not be optional 1`] = `
+"export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SnakeQueryQuery = { __typename: 'Query', snake: { __typename: 'Snake' } | { __typename: 'Error' } };
+"
+`;
+
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using both inline fragment and spread over type 1`] = `
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

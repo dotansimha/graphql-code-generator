@@ -28,10 +28,10 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 17
+          nodeVersion: 16
       - name: Prettier Check
         run: yarn prettier:check
-  dev-tests:
+  dev-tests-old:
     name: Validating dev-tests
     runs-on: ubuntu-latest
     strategy:
@@ -45,7 +45,7 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 17
+          nodeVersion: 16
       - name: Build
         run: yarn build
         env:
@@ -54,6 +54,27 @@ jobs:
         run: |
           yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
+  dev-tests:
+    name: Examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
+        with:
+          nodeVersion: 16
+      - name: Build
+        run: yarn build
+        env:
+          CI: true
+      - name: Generate and Diff Codegen Artifacts
+        run: |
+          yarn examples:codegen
+          git diff --exit-code -- examples/
+      - name: Build Examples
+        run: |
+          yarn examples:build
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest
@@ -63,7 +84,7 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 17
+          nodeVersion: 16
       - name: Build
         run: yarn build
         env:
@@ -81,10 +102,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
-        node_version: [12, 14, 16, 18]
+        node_version: [14, 16, 18]
         graphql_version: [15, 16]
         include:
-          - node-version: 12
+          - node-version: 14
             os: windows-latest
             graphql_version: 16
     steps:

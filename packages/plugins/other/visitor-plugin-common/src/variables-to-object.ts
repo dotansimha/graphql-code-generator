@@ -1,13 +1,13 @@
-import { Kind, TypeNode, VariableNode, NameNode, ValueNode, DirectiveNode } from 'graphql';
-import { indent, getBaseTypeNode } from './utils.js';
-import {
-  NormalizedScalarsMap,
-  ConvertNameFn,
-  ParsedEnumValuesMap,
-  ParsedDirectiveArgumentAndInputFieldMappings,
-} from './types.js';
-import { BaseVisitorConvertOptions } from './base-visitor.js';
 import autoBind from 'auto-bind';
+import { DirectiveNode, Kind, NameNode, TypeNode, ValueNode, VariableNode } from 'graphql';
+import { BaseVisitorConvertOptions } from './base-visitor.js';
+import {
+  ConvertNameFn,
+  NormalizedScalarsMap,
+  ParsedDirectiveArgumentAndInputFieldMappings,
+  ParsedEnumValuesMap,
+} from './types.js';
+import { getBaseTypeNode, indent } from './utils.js';
 
 export interface InterfaceOrVariable {
   name?: NameNode;
@@ -99,7 +99,7 @@ export class OperationVariablesToObject {
         typeValue = overrideType;
       } else if (this._scalars[typeName]) {
         typeValue = this.getScalar(typeName);
-      } else if (this._enumValues[typeName] && this._enumValues[typeName].sourceFile) {
+      } else if (this._enumValues[typeName]?.sourceFile) {
         typeValue = this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
       } else {
         typeValue = `${prefix}${this._convertName(baseType, {
@@ -124,7 +124,7 @@ export class OperationVariablesToObject {
     throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 
-  protected formatFieldString(fieldName: string, isNonNullType: boolean, _hasDefaultValue: boolean): string {
+  protected formatFieldString(fieldName: string, _isNonNullType: boolean, _hasDefaultValue: boolean): string {
     return fieldName;
   }
 

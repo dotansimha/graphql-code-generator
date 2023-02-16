@@ -1,12 +1,12 @@
-import { lifecycleHooks } from './hooks.js';
+import { createHash } from 'crypto';
+import { dirname, isAbsolute, join } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen.js';
-import { createWatcher } from './utils/watcher.js';
-import { readFile, writeFile, unlinkFile, mkdirp } from './utils/file-system.js';
-import { dirname, join, isAbsolute } from 'path';
-import { debugLog } from './utils/debugging.js';
 import { CodegenContext, ensureContext } from './config.js';
-import { createHash } from 'crypto';
+import { lifecycleHooks } from './hooks.js';
+import { debugLog } from './utils/debugging.js';
+import { mkdirp, readFile, unlinkFile, writeFile } from './utils/file-system.js';
+import { createWatcher } from './utils/watcher.js';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 

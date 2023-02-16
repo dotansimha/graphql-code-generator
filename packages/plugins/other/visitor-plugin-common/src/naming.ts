@@ -1,7 +1,7 @@
-import { ASTNode } from 'graphql';
 import { resolveExternalModuleAndFn } from '@graphql-codegen/plugin-helpers';
-import { NamingConventionMap, NamingConvention, ConvertFn, ConvertOptions } from './types.js';
 import { pascalCase } from 'change-case-all';
+import { ASTNode } from 'graphql';
+import { ConvertFn, ConvertOptions, NamingConvention, NamingConventionMap } from './types.js';
 import { convertNameParts, getConfigValue } from './utils.js';
 
 function getKind(node: ASTNode | string): keyof NamingConventionMap {
@@ -64,7 +64,7 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
   function resolveConventionName(type: keyof NamingConventionMap): (str: string, opts?: ConvertOptions) => string {
     if (!config.namingConvention) {
       return (str: string, opts: ConvertOptions = {}) => {
-        return convertNameParts(str, pascalCase, getConfigValue((opts || {}).transformUnderscore, false));
+        return convertNameParts(str, pascalCase, getConfigValue(opts?.transformUnderscore, false));
       };
     }
 
@@ -77,7 +77,7 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
         return convertNameParts(
           str,
           resolveExternalModuleAndFn(config.namingConvention),
-          getConfigValue((opts || {}).transformUnderscore, false)
+          getConfigValue(opts?.transformUnderscore, false)
         );
       };
     }
@@ -87,7 +87,7 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
         return convertNameParts(
           str,
           config.namingConvention as (str: string) => string,
-          getConfigValue((opts || {}).transformUnderscore, false)
+          getConfigValue(opts?.transformUnderscore, false)
         );
       };
     }
@@ -100,7 +100,7 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       if (!config.namingConvention[type]) {
         return (str: string, opts: ConvertOptions = {}) => {
           const transformUnderscore =
-            (config.namingConvention as NamingConventionMap).transformUnderscore || (opts || {}).transformUnderscore;
+            (config.namingConvention as NamingConventionMap).transformUnderscore || opts?.transformUnderscore;
           return convertNameParts(str, pascalCase, getConfigValue(transformUnderscore, false));
         };
       }
@@ -109,7 +109,7 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
         return convertNameParts(
           str,
           resolveExternalModuleAndFn(config.namingConvention[type]),
-          getConfigValue((opts || {}).transformUnderscore, true)
+          getConfigValue(opts?.transformUnderscore, true)
         );
       };
     }
@@ -118,8 +118,8 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
   }
 
   return (node, opts) => {
-    const prefix = opts && opts.prefix;
-    const suffix = opts && opts.suffix;
+    const prefix = opts?.prefix;
+    const suffix = opts?.suffix;
 
     const kind = getKind(node);
     const str = [prefix || '', getName(node), suffix || ''].join('');

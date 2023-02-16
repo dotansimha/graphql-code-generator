@@ -6,9 +6,9 @@ GraphQL Code Generator provides an unified way to get TypeScript types from Grap
 
 <br />
 
-This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index), you can [find the complete `schema.graphql` in our repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index).
 
-We will build a simple GraphQL front-end app using the following Query to fetches the list of Star Wars films:
+We will build a simple GraphQL front-end app using the following Query to fetch the list of Star Wars films:
 
 ```graphql
 query allFilmsWithVariablesQuery($first: Int!) {
@@ -35,7 +35,7 @@ fragment FilmItem on Film {
 
 <Callout type="info">
 
-All the below code examples are available in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+All the below code examples are available in our [repository `examples` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples).
 
 </Callout>
 
@@ -47,21 +47,21 @@ For most GraphQL clients and frameworks (React, Vue), install the following pack
 
 ```bash
 yarn add graphql
-yarn add -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+yarn add -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
 ```
 
 **For npm:**
 
 ```bash
 npm i -S graphql
-npm i -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+npm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
 ```
 
 **For pnpm:**
 
 ```bash
 pnpm i graphql @graphql-typed-document-node/core
-pnpm i -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+pnpm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
 ```
 
 <br />
@@ -81,8 +81,7 @@ const config: CodegenConfig = {
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     './src/gql/': {
-      preset: 'client',
-      plugins: []
+      preset: 'client'
     }
   }
 }
@@ -106,8 +105,7 @@ const config: CodegenConfig = {
       preset: 'client',
       config: {
         useTypeImports: true
-      },
-      plugins: []
+      }
     }
   }
 }
@@ -362,7 +360,7 @@ Let's now take a look at how to define our `<Film>` component using the `FilmIte
 
 ## Writing GraphQL Fragments
 
-As showcased, in more details, [in one of our recent blog post](https://www.the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen), using GraphQL Fragments helps building better isolated and reusable UI components.
+As showcased [in one of our recent blog posts](https://www.the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen), GraphQL Fragments help build better isolated and reusable UI components.
 
 Let's look at the implementation of our `Film` UI component in React or Vue:
 
@@ -437,24 +435,24 @@ const filmObj = useFragment(FilmFragment, props.film)
 
 <Callout type="info">
 
-Examples for SWR (React), `graphql-request` and Villus (Vue) are available in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/schema.graphql).
+Examples for SWR (React), `graphql-request` and Villus (Vue) are available in our [repository `examples` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples).
 
 </Callout>
 
 You will notice that our `<FilmItem>` component leverages 2 imports from our generated code (from `../src/gql`): the `FragmentType<T>` type helper and the `useFragment()` function.
 
 - we use `FragmentType<typeof FilmFragment>` to get the corresponding Fragment TypeScript type
-- later on, we use `useFragment()` to retrieve the properly `film` property
+- later on, we use `useFragment()` to retrieve the `film` property
 
-Leveraging `FragmentType<typeof FilmFragment>` and `useFragment()` helps keeping your UI component isolated and not inherit of the typings of the parent GraphQL Query.
-
-<br />
-
-> By using GraphQL Fragments, you are explicitly declaring the data dependencies of your UI component and safely accessing only the data it needs.
+Leveraging `FragmentType<typeof FilmFragment>` and `useFragment()` helps keep your UI component isolated and avoids inheriting the parent GraphQL Query's typings.
 
 <br />
 
-Finally, unlike most GraphQL Client setup, you don't need to append the Fragment definition document to the related Query, you simply need to reference it in your GraphQL Query, as shown below:
+> By using GraphQL Fragments, you are explicitly declaring your UI component's data dependencies and safely accessing only the data it needs.
+
+<br />
+
+Finally, unlike most GraphQL Client setups, you don't need to append the Fragment definition document to the related Query. You simply need to reference it in your GraphQL Query, as shown below:
 
 ```ts {6}
 const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
@@ -474,11 +472,11 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 
 Congratulations, you now have the best GraphQL front-end experience with fully-typed Queries and Mutations!
 
-From simple Queries to more advanced Fragments-based ones, GraphQL Code Generator got you covered with a simple TypeScript configuration file and, without impact on your application bundle size! 🚀
+From simple Queries to more advanced Fragments-based ones, GraphQL Code Generator has you covered with a simple TypeScript configuration file, and without impact on your application bundle size! 🚀
 
 **What's next?**
 
-To get the best GraphQL development experience, we recommend to install the [GraphQL VSCode extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) to get:
+To get the best GraphQL development experience, we recommend installing the [GraphQL VSCode extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) to get:
 
 - syntax highlighting
 - autocomplete suggestions
@@ -486,9 +484,9 @@ To get the best GraphQL development experience, we recommend to install the [Gra
 - snippets
 - go to definition for fragments and input types
 
-Also, make sure to follow the GraphQL best practices by using [`graphql-eslint`](https://github.com/B2o5T/graphql-eslint) and the [ESLint VSCode extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) to visualize errors and warnings inlined in your code correctly.
+Also, make sure to follow GraphQL best practices by using [`graphql-eslint`](https://github.com/B2o5T/graphql-eslint) and the [ESLint VSCode extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) to visualize errors and warnings inlined in your code correctly.
 
-Feel free to continue playing with this demo project, available in all flavors, in our [repository `examples/front-end` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples/front-end/).
+Feel free to continue playing with this demo project, available in all flavors, in our [repository `examples` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples).
 
 <br />
 
@@ -516,21 +514,60 @@ The `client` preset allows the following `config` options:
 
 ## Appendix I: React Query with a custom fetcher setup
 
-The use of `@tanstack/react-query` along with `graphql-request@^5` is highly recommended due to GraphQL Code Generator integration with `graphql-request@^5`:
+The use of `@tanstack/react-query` along with `graphql-request@^5` is highly recommended due to GraphQL Code Generator integration with `graphql-request@^5`.
 
-```ts
-// `data` is properly typed, inferred from `allFilmsWithVariablesQueryDocument` type
-const { data } = useQuery(['films'], async () =>
-  request(
-    'https://swapi-graphql.netlify.app/.netlify/functions/index',
+Create a file with the following helper function within your project:
+
+```ts filename="useGraphQL helper function"
+import request from 'graphql-request'
+import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { useQuery, type UseQueryResult } from '@tanstack/react-query'
+
+export function useGraphQL<TResult, TVariables>(
+  document: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): UseQueryResult<TResult> {
+  return useQuery([(document.definitions[0] as any).name.value, variables], async ({ queryKey }) =>
+    request(
+      'https://swapi-graphql.netlify.app/.netlify/functions/index',
+      document,
+      queryKey[1] ? queryKey[1] : undefined
+    )
+  )
+}
+```
+
+Then write type-safe code like the following:
+
+```ts filename="Application Code"
+import { useGraphQL } from './use-graphql.js'
+import { gql } from './generated/grahql.js'
+
+const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          title
+        }
+      }
+    }
+  }
+`)
+
+function App() {
+  // `data` is properly typed, inferred from `allFilmsWithVariablesQueryDocument` type
+  const { data } = useGraphQL(
     allFilmsWithVariablesQueryDocument,
     // variables are also properly type-checked.
     { first: 10 }
   )
-)
+
+  // ... further component code
+}
 ```
 
-In order to infer the result type from a given GraphQL document, we added to `graphql-request@^5` the support for `TypedDocumentNode` documents, an enhanced version of `graphql`'s `DocumentNode` type.
+In case you do not want to use `graphql-request` with `@tanstack/react-query`, you can write and type your own custom fetcher function.
 
 GraphQL Code Generator, via the `client` preset, generates GraphQL documents similar to the following:
 
@@ -546,23 +583,73 @@ A `TypedDocumentNode<R, V>` type carry 2 Generic arguments: the type of the Grap
 
 To implement your own React Query fetcher while preserving the GraphQL document type inference, it should implement a function signature that extract the result type and use it as a return type, as showcased below:
 
-```ts
-const query: TypedDocumentNode<{ greetings: string }, never | Record<any, never>> = parse(/* GraphQL */ `
-  query greetings {
-    greetings
+```ts filename="Custom fetcher function and useGraphQL hook implementation"
+import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { useQuery, type UseQueryResult } from '@tanstack/react-query'
+import { print, type ExecutionResult } from 'graphql'
+
+/** Your custom fetcher function */
+async function customFetcher<TResult, TVariables>(
+  url: string,
+  document: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): Promise<TResult> {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: print(document),
+      variables
+    })
+  })
+  if (response.status !== 200) {
+    throw new Error(`Failed to fetch: ${response.statusText}. Body: ${await response.text()}`)
+  }
+
+  return await response.json()
+}
+
+export function useGraphQL<TResult, TVariables>(
+  document: TypedDocumentNode<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+): UseQueryResult<ExecutionResult<TResult>> {
+  return useQuery([(document.definitions[0] as any).name.value, variables], () =>
+    customFetcher('https://swapi-graphql.netlify.app/.netlify/functions/index', document, variables)
+  )
+}
+```
+
+Then write type-safe code like the following:
+
+```ts filename="Application Code"
+import { useGraphQL } from './use-graphql.js'
+import { gql } from './generated/grahql.js'
+
+const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+  query allFilmsWithVariablesQuery($first: Int!) {
+    allFilms(first: $first) {
+      edges {
+        node {
+          title
+        }
+      }
+    }
   }
 `)
 
-const myFetcher = <D, V>(document: TypedDocumentNode<D, V>): D => {
-  // ... parses the document and fetches the data ...
+function App() {
+  // `data` is properly typed, inferred from `allFilmsWithVariablesQueryDocument` type
+  const { data } = useGraphQL(
+    allFilmsWithVariablesQueryDocument,
+    // variables are also properly type-checked.
+    { first: 10 }
+  )
+
+  // ... further component code
 }
-
-const { data } = useQuery(['greetings'], () => myFetcher(query))
 ```
-
-The type-checking on variables arguments can be added to your custom React Query fetcher by following the same inference principles.
-
-Feel free [to reach out on GitHub discussions](https://github.com/dotansimha/graphql-code-generator/discussions) if you need any help in typing a custom React Query fetcher.
 
 <br />
 

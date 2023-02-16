@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { executeOperation } from './executeOperation.js';
-import { gql } from './gql/index.js';
+import { graphql } from './gql/index.js';
 
-const AllPeopleQueryDocument = gql(/* GraphQL */ `
+const AllPeopleQueryDocument = graphql(/* GraphQL */ `
   query AllPeopleQuery {
     allPeople(first: 5) {
       edges {
@@ -17,7 +17,7 @@ const AllPeopleQueryDocument = gql(/* GraphQL */ `
   }
 `);
 
-const AllPeopleWithVariablesQueryDocument = gql(/* GraphQL */ `
+const AllPeopleWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query AllPeopleWithVariablesQuery($first: Int!) {
     allPeople(first: $first) {
       edges {

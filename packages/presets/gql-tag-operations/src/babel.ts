@@ -1,3 +1,4 @@
+import * as path from 'path';
 import type { PluginObj, PluginPass } from '@babel/core';
 import { declare } from '@babel/helper-plugin-utils';
 import template from '@babel/template';
@@ -5,7 +6,6 @@ import type { NodePath } from '@babel/traverse';
 import type { Program } from '@babel/types';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { buildSchema, parse } from 'graphql';
-import * as path from 'path';
 
 const noopSchema = buildSchema(`type Query { _: Int }`);
 

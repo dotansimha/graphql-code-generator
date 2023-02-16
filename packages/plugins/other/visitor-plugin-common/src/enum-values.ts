@@ -1,6 +1,6 @@
-import { EnumValuesMap, ParsedEnumValuesMap } from './types.js';
-import { GraphQLSchema, isEnumType, GraphQLEnumType } from 'graphql';
+import { GraphQLEnumType, GraphQLSchema, isEnumType } from 'graphql';
 import { parseMapper } from './mappers.js';
+import { EnumValuesMap, ParsedEnumValuesMap } from './types.js';
 
 function escapeString(str: string) {
   return str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'");
@@ -24,7 +24,7 @@ export function parseEnumValues({
         const enumType = schema.getType(enumTypeName) as GraphQLEnumType;
         for (const { name, value } of enumType.getValues()) {
           if (value !== name) {
-            mapOrStr[enumTypeName] = mapOrStr[enumTypeName] || {};
+            mapOrStr[enumTypeName] ||= {};
             if (typeof mapOrStr[enumTypeName] !== 'string' && !mapOrStr[enumTypeName][name]) {
               mapOrStr[enumTypeName][name] = typeof value === 'string' ? escapeString(value) : value;
             }

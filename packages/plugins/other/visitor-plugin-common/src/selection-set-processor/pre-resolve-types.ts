@@ -1,13 +1,13 @@
+import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
+import { GraphQLInterfaceType, GraphQLObjectType, isEnumType, isNonNullType } from 'graphql';
 import {
   BaseSelectionSetProcessor,
-  ProcessResult,
   LinkField,
   PrimitiveAliasedFields,
-  SelectionSetProcessorConfig,
   PrimitiveField,
+  ProcessResult,
+  SelectionSetProcessorConfig,
 } from './base.js';
-import { GraphQLObjectType, GraphQLInterfaceType, isEnumType, isNonNullType } from 'graphql';
-import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 
 export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformTypenameField(type: string, name: string): ProcessResult {

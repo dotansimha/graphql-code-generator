@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@graphql-codegen/cli": "2.16.1",
-    "@graphql-codegen/gql-tag-operations-preset": "1.7.2"
+    "@graphql-codegen/cli": "3.0.0",
+    "@graphql-codegen/client-preset": "2.0.0"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.1.1",
     "graphql": "16.6.0"
   },
   "scripts": {
-    "codegen": "graphql-codegen-esm --config codegen.yml",
+    "codegen": "graphql-codegen-esm --config codegen.cjs",
     "build": "tsc",
     "start": "node dist/main.js"
   },

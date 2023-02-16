@@ -1,7 +1,7 @@
-import { GraphQLSchema, DocumentNode } from 'graphql';
-import { Source } from '@graphql-tools/utils';
-import type { Profiler } from './profiler.js';
 import type { ApolloEngineOptions } from '@graphql-tools/apollo-engine-loader';
+import { Source } from '@graphql-tools/utils';
+import { DocumentNode, GraphQLSchema } from 'graphql';
+import type { Profiler } from './profiler.js';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -243,14 +243,14 @@ export namespace Types {
      *
      * You can either specify plugins from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for custom plugins.
      *
-     * You can find a list of available plugins here: https://graphql-code-generator.com/docs/plugins/index
-     * Need a custom plugin? read this: https://graphql-code-generator.com/docs/custom-codegen/index
+     * You can find a list of available plugins here: https://the-guild.dev/graphql/codegen/docs/plugins/index
+     * Need a custom plugin? read this: https://the-guild.dev/graphql/codegen/docs/custom-codegen/index
      */
-    plugins: OutputConfig[];
+    plugins?: OutputConfig[];
     /**
      * @description If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.
      *
-     * Presets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file
+     * Presets are a way to have more than one file output, for example: https://the-guild.dev/graphql/codegen/docs/presets/near-operation-file
      *
      * You can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.
      *
@@ -505,11 +505,15 @@ export namespace Types {
       /**
        * @description Configures the magic GraphQL comments to look for. The default is `GraphQL`.
        */
-      magicComment?: string;
+      gqlMagicComment?: string;
       /**
        * @description Overrides the name of the default GraphQL name identifier.
        */
       globalIdentifier?: string;
+      /**
+       * @description Allows to use a global identifier instead of a module import.
+       */
+      globalGqlIdentifierName?: string | string[];
     };
     /**
      * @description Specifies scripts to run when events are happening in the codegen core.
@@ -609,7 +613,7 @@ export namespace Types {
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {
-  return typeof obj === 'object' && obj.hasOwnProperty('content');
+  return typeof obj === 'object' && Object.prototype.hasOwnProperty.call(obj, 'content');
 }
 
 export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.PluginOutput> = (

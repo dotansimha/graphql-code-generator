@@ -1,8 +1,7 @@
-import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import '@graphql-codegen/testing';
+import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { resolversTestingSchema, resolversTestingValidate } from '@graphql-codegen/testing';
-import { plugin } from '../src/index.js';
 import { buildSchema } from 'graphql';
+import { plugin } from '../src/index.js';
 
 describe('ResolversTypes', () => {
   it('Should build ResolversTypes object when there are no mappers', async () => {

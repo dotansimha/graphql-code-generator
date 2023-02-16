@@ -1,46 +1,43 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as TJS from 'typescript-json-schema';
 import { PluginConfig, PresetConfig } from './plugins-docs';
 
 export function generateDocs(schema: TJS.Definition, types: (PluginConfig | PresetConfig)[]): Record<string, string> {
-  const result: Record<string, string> = {};
+  return Object.fromEntries(
+    types.map(p => {
+      const subSchema = schema.definitions![p.identifier] as TJS.Definition;
+      const apiDocs = generateContentForSchema(subSchema);
+      let content = '';
 
-  for (const p of types) {
-    const subSchema = schema.definitions![p.identifier] as TJS.Definition;
-    const apiDocs = generateContentForSchema(subSchema);
-    let content = '';
+      if (subSchema.description) {
+        content += `${subSchema.description}\n\n`;
+      }
 
-    if (subSchema.description) {
-      content += `${subSchema.description}\n\n`;
-    }
+      if (apiDocs) {
+        content += `## Config API Reference\n\n${apiDocs}`;
+      }
 
-    if (apiDocs) {
-      content += `### Config API Reference\n\n${apiDocs}`;
-    }
-
-    result[p.name] = content;
-  }
-
-  return result;
+      return [p.name, content];
+    })
+  );
 }
 
 function generateContentForSchema(schema: TJS.Definition): string {
-  return Object.keys(schema.properties || {})
-    .map(propName => {
-      const prop = schema.properties![propName] as TJS.Definition;
+  return Object.entries(schema.properties || {})
+    .map(([propName, prop]) => {
+      if (typeof prop === 'boolean') {
+        throw new Error(`Prop "${propName}" should not be a "boolean"`);
+      }
 
-      return `<details>
-  <summary>${propName}</summary>
+      return `### \`${propName}\`
 
   type: \`${printType(prop)}\`
   ${prop.default !== undefined ? `default: \`${prop.default === '' ? '(empty)' : prop.default}\`\n` : ''}
   ${prop.description ? `${prop.description}\n` : ''}
   ${
     (prop as any).exampleMarkdown
-      ? ` \n### Usage Examples\n\n${(prop as any).exampleMarkdown.replace(/## /g, '##### ')}\n`
+      ? ` \n#### Usage Examples\n\n${(prop as any).exampleMarkdown.replace(/## /g, '##### ')}\n`
       : ''
-  }
-</details>`;
+  }`;
     })
     .join('\n');
 }
