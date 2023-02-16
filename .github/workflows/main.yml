@@ -143,12 +143,12 @@ jobs:
           toolchain: stable
           target: wasm32-wasi
           override: true
-      - uses: actions-rs/cargo@v1
+      - uses: marcopolo/cargo@master
         with:
-          cwd: ./packages/presets/swc-plugin
+          working-directory: ./packages/presets/swc-plugin
           command: build
           args: --target wasm32-wasi
-      - uses: actions-rs/cargo@v1
+      - uses: marcopolo/cargo@master
         with:
-          cwd: ./packages/presets/swc-plugin
+          working-directory: ./packages/presets/swc-plugin
           command: test
