@@ -82,7 +82,7 @@
     "prettier-plugin-svelte": "2.7.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "rimraf": "3.0.2",
+    "rimraf": "4.1.2",
     "stencil-apollo": "0.1.6",
     "svelte": "3.50.0",
     "ts-jest": "28.0.8",
