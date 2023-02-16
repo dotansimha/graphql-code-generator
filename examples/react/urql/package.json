@@ -9,7 +9,7 @@
     "urql": "^2.2.3"
   },
   "devDependencies": {
-    "@types/jest": "^27.5.2",
+    "@types/jest": "^29.0.0",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.10",
