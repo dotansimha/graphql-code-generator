@@ -38,13 +38,13 @@ export function gql(source: string): unknown;
  */
 export function gql(
   source: '\n  query HeroDetailsWithFragment($episode: Episode) {\n    hero(episode: $episode) {\n      ...HeroDetails\n    }\n  }\n'
-): (typeof documents)['\n  query HeroDetailsWithFragment($episode: Episode) {\n    hero(episode: $episode) {\n      ...HeroDetails\n    }\n  }\n'];
+): typeof documents['\n  query HeroDetailsWithFragment($episode: Episode) {\n    hero(episode: $episode) {\n      ...HeroDetails\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
   source: '\n  fragment HeroDetails on Character {\n    __typename\n    name\n    ... on Human {\n      height\n    }\n    ... on Droid {\n      primaryFunction\n    }\n  }\n'
-): (typeof documents)['\n  fragment HeroDetails on Character {\n    __typename\n    name\n    ... on Human {\n      height\n    }\n    ... on Droid {\n      primaryFunction\n    }\n  }\n'];
+): typeof documents['\n  fragment HeroDetails on Character {\n    __typename\n    name\n    ... on Human {\n      height\n    }\n    ... on Droid {\n      primaryFunction\n    }\n  }\n'];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
