@@ -5198,20 +5198,12 @@
     "@typescript-eslint/types" "5.52.0"
     eslint-visitor-keys "^3.3.0"
 
-"@urql/core@>=3.0.5", "@urql/core@^3.0.3":
+"@urql/core@>=3.0.5", "@urql/core@^3.0.3", "@urql/core@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-3.1.1.tgz#a49cd572360d01f2469a786b294fba2269a65e53"
   integrity sha512-Mnxtq4I4QeFJsgs7Iytw+HyhiGxISR6qtyk66c9tipozLZ6QVxrCiUPF2HY4BxNIabaxcp+rivadvm8NAnXj4Q==
   dependencies:
     wonka "^6.1.2"
-
-"@urql/core@^2.3.6":
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.6.1.tgz#c10ee972c5e81df6d7bf1e778ef1b5d30e2906e5"
-  integrity sha512-gYrEHy3tViJhwIhauK6MIf2Qp09QTsgNHZRd0n71rS+hF6gdwjspf1oKljl4m25+272cJF7fPjBUGmjaiEr7Kg==
-  dependencies:
-    "@graphql-typed-document-node/core" "^3.1.1"
-    wonka "^4.0.14"
 
 "@urql/exchange-graphcache@5.0.5":
   version "5.0.5"
@@ -5226,13 +5218,13 @@
   resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-0.3.3.tgz#5bcedfebd515161eecf9b193169c2765bf5674f1"
   integrity sha512-tekSLLqWnusfV6V7xaEnLJQSdXOD/lWy7f8JYQwrX+88Md+voGSCSx5WJXI7KLBN3Tat2OV08tAr8UROykls4Q==
 
-"@urql/vue@^0.6.4":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@urql/vue/-/vue-0.6.4.tgz#96af561551cbccd37842c3d5349598c0d20592f0"
-  integrity sha512-xxySZhUvmB/hJbMvjm06T46LIU9gw2x/uHeG9lc8GbOhg6FTcJ+cxW6nzlsBrxM7ISIMDKmgnnXo1v7rzjmi8w==
+"@urql/vue@^1.0.0":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@urql/vue/-/vue-1.0.4.tgz#52b5341f16e5c731717e29724a725c2a299969cc"
+  integrity sha512-soycMzRekSUCa+QQYSc9gF9qMOeIkfKnirFySVlW8mVhCRBwyjKvb37Z9eksRCqzGerKsn54zmdsgR66LKrGng==
   dependencies:
-    "@urql/core" "^2.3.6"
-    wonka "^4.0.14"
+    "@urql/core" "^3.1.1"
+    wonka "^6.0.0"
 
 "@vercel/ncc@^0.34.0":
   version "0.34.0"
@@ -18669,11 +18661,6 @@ widest-line@^4.0.1:
   integrity sha512-o0cyEG0e8GPzT4iGHphIOh0cJOV8fivsXxddQasHPHfoZf1ZexrfeA21w2NaEN1RHE+fXlfISmOE8R9N3u3Qig==
   dependencies:
     string-width "^5.0.1"
-
-wonka@^4.0.14:
-  version "4.0.15"
-  resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.15.tgz#9aa42046efa424565ab8f8f451fcca955bf80b89"
-  integrity sha512-U0IUQHKXXn6PFo9nqsHphVCE5m3IntqZNB9Jjn7EB1lrR7YTDY3YWgFvEvwniTzXSvOH/XMzAZaIfJF/LvHYXg==
 
 wonka@^6.0.0, wonka@^6.1.2:
   version "6.2.3"
