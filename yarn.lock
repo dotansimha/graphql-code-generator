@@ -9742,10 +9742,10 @@ flow-bin@0.186.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.186.0.tgz#b60b720dea977516db8e77fdd3911f66e86c6378"
   integrity sha512-p5g03TsAipO6Wu22rpphRZQ9EYuhVWANN698MRLWRyP7ZtkEyCpFHDfmzRHM4Ym/tbCQCMdLJ9JX/GmuiDsB2w==
 
-flow-parser@0.186.0:
-  version "0.186.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.186.0.tgz#ef6f4c7a3d8eb29fdd96e1d1f651b7ccb210f8e9"
-  integrity sha512-QaPJczRxNc/yvp3pawws439VZ/vHGq+i1/mZ3bEdSaRy8scPgZgiWklSB6jN7y5NR9sfgL4GGIiBcMXTj3Opqg==
+flow-parser@0.200.0:
+  version "0.200.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.200.0.tgz#7cbdd4cace2843e2fd6098df68247b3876f55917"
+  integrity sha512-01eYYVlCEO2p6JexhTbMbDNPeDKQZV++SJbaHE/HzypTkV83oJmsJQVjVCGD8FYWiQ3ha9ALD/AHwsFhPwnZJA==
 
 focus-trap-react@10.0.2:
   version "10.0.2"
