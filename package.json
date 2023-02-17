@@ -52,7 +52,7 @@
     "@types/node": "18.13.0",
     "@types/react": "18.0.28",
     "@types/webpack-env": "1.18.0",
-    "@urql/exchange-graphcache": "5.0.5",
+    "@urql/exchange-graphcache": "5.0.9",
     "@vue/apollo-composable": "4.0.0-alpha.19",
     "@vue/composition-api": "1.7.0",
     "apollo-client": "2.6.10",
