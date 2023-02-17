@@ -42,7 +42,7 @@
     "@changesets/changelog-github": "0.4.6",
     "@changesets/cli": "2.24.4",
     "@graphql-typed-document-node/core": "3.1.1",
-    "@reduxjs/toolkit": "1.8.5",
+    "@reduxjs/toolkit": "1.9.2",
     "@tanstack/react-query": "4.24.6",
     "@theguild/eslint-config": "0.8.0",
     "@theguild/prettier-config": "0.1.1",
