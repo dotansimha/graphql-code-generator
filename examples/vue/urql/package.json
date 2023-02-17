@@ -11,7 +11,7 @@
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
-    "@urql/vue": "^0.6.4",
+    "@urql/vue": "^1.0.0",
     "graphql": "^16.6.0",
     "vue": "^3.2.45"
   },
