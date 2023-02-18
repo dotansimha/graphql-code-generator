@@ -91,7 +91,7 @@ export const createWatcher = (
 
     watcherSubscription = await parcelWatcher.subscribe(
       process.cwd(),
-      async (err, events) => {
+      async (_, events) => {
         // it doesn't matter what has changed, need to run whole process anyway
         await Promise.all(
           events.map(async ({ type: eventName, path }) => {
