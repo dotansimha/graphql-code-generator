@@ -1055,7 +1055,7 @@
         "anchor": "appendix-ii-compatibility"
       }
     ],
-    "content": "93a7f1749a22be8fad86f9bdceee42d6",
+    "content": "e2500dedd11b279065ebcd3b1446a342",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/react-vue",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1349,7 +1349,7 @@
         "anchor": "10-feature-your-plugin-on-the-plugins-hub"
       }
     ],
-    "content": "d658bb02376551d76a8a3228ef53e7b2",
+    "content": "dfcd2b22ce8f06631eed98b08e8ade64",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/contributing",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -1900,7 +1900,7 @@
         "anchor": "fragment-masking"
       }
     ],
-    "content": "08b583069e04fbb0dc34b64b683047d3",
+    "content": "1b4b14677ee6eb8b177424e154c47be4",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/gql-tag-operations-preset",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2120,7 +2120,7 @@
     "objectID": "code-generator-plugins-typescript-typed-document-node",
     "headings": [],
     "toc": [],
-    "content": "9d073d78f8596d086d613b4dcf80e940",
+    "content": "52ecea9818bc96ad7eed6c3d2f365cfb",
     "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typed-document-node",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [

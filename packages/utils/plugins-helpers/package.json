@@ -21,7 +21,7 @@
     "common-tags": "1.8.2",
     "import-from": "4.0.0",
     "lodash": "~4.17.0",
-    "tslib": "~2.4.0"
+    "tslib": "~2.5.0"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -52,6 +52,6 @@
   },
   "type": "module",
   "devDependencies": {
-    "@graphql-tools/apollo-engine-loader": "7.3.22"
+    "@graphql-tools/apollo-engine-loader": "7.3.23"
   }
 }

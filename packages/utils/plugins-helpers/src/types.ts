@@ -250,7 +250,7 @@ export namespace Types {
      * You can find a list of available plugins here: https://the-guild.dev/graphql/codegen/docs/plugins/index
      * Need a custom plugin? read this: https://the-guild.dev/graphql/codegen/docs/custom-codegen/index
      */
-    plugins: OutputConfig[];
+    plugins?: OutputConfig[];
     /**
      * @description If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.
      *

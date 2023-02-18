@@ -19,7 +19,10 @@ website/src/pages/docs/guides/react.mdx
 website/src/pages/plugins/index.mdx
 website/src/pages/plugins/presets/near-operation-file-preset.mdx
 
-examples/**/gql/**
-
 website/algolia-lockfile.json
 temp/
+website/out
+website/.next
+
+# added because it blocks CI and when I try to format it locally nothing happens :)
+website/src/components/live-demo/LiveDemo.tsx

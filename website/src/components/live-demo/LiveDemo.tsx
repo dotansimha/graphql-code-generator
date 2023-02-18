@@ -60,8 +60,8 @@ export default function LiveDemo(): ReactElement {
           isSearchable={false}
           className="
             rounded-md
-            [&>div]:dark:bg-black
             [&>div>div>div]:dark:text-gray-200
+            [&>div]:dark:bg-black
           "
           styles={{
             option: (styles, { isFocused }) => ({

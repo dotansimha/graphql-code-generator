@@ -6,10 +6,10 @@ const config: CodegenConfig = {
   documents: ['src/**/*.ts'],
   generates: {
     './src/gql/': {
-      plugins: [],
       preset: 'client-preset',
     },
   },
+  hooks: { afterAllFileWrite: ['prettier --write'] },
 };
 
 export default config;

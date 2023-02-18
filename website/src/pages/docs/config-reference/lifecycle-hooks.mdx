@@ -20,8 +20,7 @@ const config: CodegenConfig = {
   documents: ['src/**/*.tsx'],
   generates: {
     './src/gql/': {
-      preset: 'client',
-      plugins: []
+      preset: 'client'
     }
   },
   hooks: {
@@ -43,7 +42,6 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
-      plugins: [],
       hooks: {
         afterOneFileWrite: ['prettier --write']
       }

@@ -54,7 +54,7 @@ export const plugin: PluginFunction<{
         `/**\n * The ${gqlTagName} function is used to parse GraphQL queries into a document that can be used by GraphQL clients.\n *\n`,
         ` *\n * @example\n`,
         ' * ```ts\n',
-        ' * const query = gql(`query GetUser($id: ID!) { user(id: $id) { name } }`);\n',
+        ` * const query = ${gqlTagName}` + '(`query GetUser($id: ID!) { user(id: $id) { name } }`);\n',
         ' * ```\n *\n',
         ` * The query argument is unknown!\n`,
         ` * Please regenerate the types.\n`,

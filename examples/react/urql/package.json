@@ -1,0 +1,44 @@
+{
+  "name": "example-react-urql",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "urql": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.10",
+    "@graphql-codegen/cli": "^3.0.0",
+    "@graphql-codegen/client-preset": "^2.0.0",
+    "typescript": "4.7.4",
+    "serve": "14.2.0",
+    "cypress": "12.5.1",
+    "start-server-and-test": "1.15.4"
+  },
+  "scripts": {
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "start": "serve -s build",
+    "test": "cypress run",
+    "test:end2end": "start-server-and-test start http://localhost:3000 test",
+    "eject": "react-scripts eject",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

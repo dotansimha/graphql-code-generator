@@ -141,7 +141,7 @@ In this scenario, you will need to import it from the generated files, as descri
 
 The `useFragment()` function helps narrowing down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
 
-```tsx filename="src/Film.tsx" {16-17}
+```tsx filename="src/Film.tsx" {14-15}
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
@@ -183,7 +183,6 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
-      plugins: [],
       presetConfig: {
         fragmentMasking: { unmaskFunctionName: 'getFragmentData' }
       }
@@ -293,7 +292,6 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
-      plugins: [],
       presetConfig: {
         fragmentMasking: false
       }
@@ -325,7 +323,6 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
-      plugins: [],
       presetConfig: {
         persistedDocuments: true
       }

@@ -36,7 +36,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          augmentedModuleName: '@urql/core'
    *        },
@@ -58,7 +57,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          fragmentMasking: true
    *        },
@@ -78,7 +76,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          augmentedModuleName: '@urql/core',
    *          fragmentMasking: {
@@ -107,7 +104,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          gqlTagName: 'graphql'
    *        },

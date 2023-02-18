@@ -7,6 +7,13 @@ import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
+<Callout>
+For new projects, we recommend using the [`client-preset`](/plugins/presets/preset-client), which is a revisited and easier to use version of this preset, instead.
+
+If you are already using the `gql-tag-operations-preset`, you might want to consider migrating to the [`client-preset`](/plugins/presets/preset-client) instead.
+
+</Callout>
+
 <PluginHeader />
 
 This preset generates typings for your inline `gql` function usages, without having to manually specify import statements for the documents. All you need to do is import your `gql` function and run codegen in watch mode.
@@ -46,8 +53,7 @@ const config: CodegenConfig = {
   documents: ['src/**/*.ts', '!src/gql/**/*'],
   generates: {
     './src/gql/': {
-      preset: 'gql-tag-operations-preset',
-      plugins: []
+      preset: 'gql-tag-operations-preset'
     }
   }
 }
@@ -167,13 +173,13 @@ const documents = {
 
 export function gql(
   source: '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n'
-): typeof documents['\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n']
+): (typeof documents)['\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n']
 export function gql(
   source: '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n'
-): typeof documents['\n  fragment Lel on Tweet {\n    id\n    body\n  }\n']
+): (typeof documents)['\n  fragment Lel on Tweet {\n    id\n    body\n  }\n']
 export function gql(
   source: '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n'
-): typeof documents['\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n']
+): (typeof documents)['\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n']
 
 export function gql(source: string): unknown
 export function gql(source: string) {
@@ -238,7 +244,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         augmentedModuleName: '@urql/core'
       }
@@ -313,7 +318,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         fragmentMasking: true
       }
@@ -392,7 +396,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         fragmentMasking: {
           unmaskFunctionName: 'getFragment'
@@ -417,7 +420,6 @@ const config: CodegenConfig = {
   generates: {
     'src/gql/': {
       preset: 'gql-tag-operations-preset',
-      plugins: [],
       presetConfig: {
         fragmentMasking: {
           augmentedModuleName: '@something/fragment'
