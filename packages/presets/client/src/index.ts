@@ -318,6 +318,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
               schema: options.schema,
               config: {},
               documents: sources,
+              documentTransforms: options.documentTransforms,
             },
           ]
         : []),

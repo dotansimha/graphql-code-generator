@@ -233,9 +233,6 @@ export namespace Types {
     | 'import-types';
   export type PresetNames = `${PresetNamesBase}-preset` | PresetNamesBase;
 
-  export interface ConfiguredDocumentTransform {
-    [name: string]: { config: PluginConfig; plugin: CodegenPlugin };
-  }
   /**
    * @additionalProperties false
    */
@@ -321,10 +318,9 @@ export namespace Types {
      */
     hooks?: Partial<LifecycleHooksDefinition>;
     /**
-     * @description Specifies plugins that have the transformDocuments function.
-     * Document transform plugin changes documents before executing plugins.
+     * @description DocumentTransform changes documents before executing plugins.
      */
-    documentTransforms?: OutputConfig[];
+    documentTransforms?: OutputDocumentTransform[];
   }
 
   /* Output Builder Preset */
@@ -349,7 +345,7 @@ export namespace Types {
     };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
-    documentTransforms: ConfiguredDocumentTransform[];
+    documentTransforms?: ConfiguredDocumentTransform[];
   };
 
   export type OutputPreset<TPresetConfig = any> = {
@@ -620,6 +616,37 @@ export namespace Types {
         skipValidationAgainstSchema?: boolean;
       }
     | boolean;
+
+  export type DocumentTransformFunction<Config = object> = (options: {
+    documents: Types.DocumentFile[];
+    schema: DocumentNode;
+    config: Config;
+    pluginContext?: { [key: string]: any };
+  }) => Types.Promisable<Types.DocumentFile[]>;
+
+  export type DocumentTransformAddToSchemaFunction<Config = object> = (options: {
+    documents: Types.DocumentFile[];
+    schema: DocumentNode;
+    schemaAst?: GraphQLSchema;
+    config: Config;
+    pluginContext?: { [key: string]: any };
+  }) => AddToSchemaResult;
+
+  export type DocumentTransformObject<T = object> = {
+    transform: DocumentTransformFunction<T>;
+    addToSchema?: AddToSchemaResult | DocumentTransformAddToSchemaFunction;
+  };
+
+  export type DocumentTransformFileName = string;
+  export type DocumentTransformFileConfig<T = object> = { [name: DocumentTransformFileName]: T };
+  export type DocumentTransformFile<T> = DocumentTransformFileName | DocumentTransformFileConfig<T>;
+
+  export type OutputDocumentTransform<T = object> = DocumentTransformObject<T> | DocumentTransformFile<T>;
+  export type ConfiguredDocumentTransform<T = object> = {
+    name: string;
+    transformObject: DocumentTransformObject<T>;
+    config?: T;
+  };
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {
@@ -653,9 +680,4 @@ export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
   addToSchema?: AddToSchemaResult | ((config: T) => AddToSchemaResult);
   validate?: PluginValidateFn;
-  transformDocuments?: TransformDocumentsFunction<T>;
 }
-
-export type TransformDocumentsFunction<T = any> = (
-  ...params: Parameters<PluginFunction<T>>
-) => Types.Promisable<Types.DocumentFile[]>;

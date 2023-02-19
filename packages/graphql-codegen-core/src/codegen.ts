@@ -44,6 +44,27 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
   }
 
+  const documentTransforms = Array.isArray(options.documentTransforms) ? options.documentTransforms : [];
+  for (const documentTransform of documentTransforms) {
+    const addToSchema = documentTransform.transformObject.addToSchema;
+    const partialSchema =
+      typeof addToSchema === 'function'
+        ? addToSchema({
+            schema: options.schema,
+            schemaAst: options.schemaAst,
+            documents: options.documents,
+            config: {
+              ...options.config,
+              ...documentTransform.config,
+            },
+            pluginContext: options.pluginContext,
+          })
+        : addToSchema;
+    if (partialSchema) {
+      additionalTypeDefs.push(partialSchema);
+    }
+  }
+
   const federationInConfig: boolean = pickFlag('federation', options.config);
   const isFederation = prioritize(federationInConfig, false);
 
@@ -74,6 +95,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   const transformedDocuments = await transformDocuments({
     ...options,
+    documentTransforms,
     schema: schemaDocumentNode,
     schemaAst: schemaInstance,
     profiler,

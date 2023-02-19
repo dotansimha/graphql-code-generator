@@ -1,6 +1,5 @@
 module.exports = {
-  plugin: () => {}, // Nothing to do
-  transformDocuments: (_schema, documents, config) => {
+  transform: ({ documents }) => {
     const newDocuments = [
       {
         document: {
@@ -8,7 +7,7 @@ module.exports = {
           definitions: [
             {
               ...documents[0].document.definitions[0],
-              name: { kind: 'Name', value: config.queryName },
+              name: { kind: 'Name', value: 'bar' },
             },
           ],
         },

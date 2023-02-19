@@ -7,61 +7,97 @@
 "@graphql-codegen/graphql-modules-preset": minor
 ---
 
-Add a feature to transform documents.
+Introduce a new feature called DocumentTransform.
 
-Plugin will have the following functions:
+DocumentTransform is a functionality that allows you to modify `documents` before they are processed by plugins. You can use functions passed to the `documentTransforms` option to make changes to GraphQL documents or extend the schema, as needed.
+
+To use this feature, you can write `documentTransforms` as follows:
+
+```ts
+import type { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: 'https://localhost:4000/graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      documentTransforms: [
+        {
+          transform: ({ documents }) => {
+            // Make some changes to the documents
+            return documents;
+          },
+          addToSchema: 'extend type Query { test: String! }',
+        },
+      ],
+    },
+  },
+};
+export default config;
+```
+
+For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the following code:
+
+```js
+import type { CodegenConfig } from '@graphql-codegen/cli';
+import { visit } from 'graphql';
+
+const config: CodegenConfig = {
+  schema: 'https://localhost:4000/graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      documentTransforms: [
+        {
+          transform: ({ documents }) => {
+            return documents.map(documentFile => {
+              documentFile.document = visit(documentFile.document, {
+                Directive: {
+                  leave(node) {
+                    if (node.name.value === 'localOnlyDirective') return null;
+                  },
+                },
+              });
+              return documentFile;
+            });
+          },
+        },
+      ],
+    },
+  },
+};
+export default config;
+```
+
+DocumentTransform can also be specified by file name. You can create a custom file for a specific transformation and pass it to `documentTransforms`.
+
+Let's create the document transform as a file:
+
 ```js
 module.exports = {
-  plugin: () => {
-    return 'hello'
-  },
-  transformDocuments: (_schema, documents) => {
+  transform: ({ documents }) => {
     // Make some changes to the documents
     return documents;
   },
 };
 ```
 
-Use it as follows:
+Then, you can specify the file name as follows:
 
 ```ts
-import type { CodegenConfig } from '@graphql-codegen/cli'
+import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-   schema: 'https://localhost:4000/graphql',
-   documents: ['src/**/*.tsx'],
-   generates: {
-      './src/gql/': {
-        preset: 'client',
-        documentTransformPlugins: ['./my-plugin.js'],
-        plugins: ['./my-plugin.js']
-      }
-   }
-}
-export default config
-```
-
-For example, to remove a `@localOnlyDirective` directive from documents:
-
-```js
-const { visit, print } = require('graphql')
-
-module.exports = {
-  plugin(schema, documents, config) {
-    // Output `documents` as an example.
-    return documents.map(documentFile => `${print(documentFile.document)}`).join('\n')
+  schema: 'https://localhost:4000/graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      documentTransforms: ['./my-document-transform.js'],
+    },
   },
-  transformDocuments(schema, documents, config) {
-    return documents.map(documentFile => {
-      documentFile.document = visit(documentFile.document, {
-        Directive: {
-          leave(node) {
-            if (node.name.value === 'localOnlyDirective') return null
-          }
-        }
-      })
-      return documentFile
-    })
-  }
-}
+};
+export default config;
 ```
