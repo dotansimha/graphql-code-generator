@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "graphql-yoga": "3.5.1",
-    "@graphql-yoga/plugin-persisted-operations": "1.5.1"
+    "graphql-yoga": "3.7.0",
+    "@graphql-yoga/plugin-persisted-operations": "1.7.0"
   },
   "devDependencies": {
     "@graphql-typed-document-node/core": "3.1.1",
