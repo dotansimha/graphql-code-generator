@@ -14,6 +14,21 @@ jobs:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NPM_TOKEN }}
 
+  publish-rust-swc-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Publish SWC plugin
+        working-directory: ./packages/presets/swc-plugin
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   algolia:
     uses: the-guild-org/shared-config/.github/workflows/algolia-publish.yml@main
     secrets:

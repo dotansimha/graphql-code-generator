@@ -1,0 +1,26 @@
+{
+  "name": "@graphql-codegen/client-preset-swc-plugin-optimizer",
+  "version": "0.1.0",
+  "description": "A SWC plugin for https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
+  "license": "MIT",
+  "bob": false,
+  "keywords": [
+    "swc-plugin",
+    "graphql-codegen",
+    "preset-client"
+  ],
+  "main": "swc_plugin.wasm",
+  "scripts": {
+    "prepack": "cargo build --target wasm32-wasi --release && cp target/wasm32-wasi/release/swc_plugin.wasm ../"
+  },
+  "homepage": "https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/presets/client/swc-plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-code-generator/issues"
+  },
+  "files": []
+}
