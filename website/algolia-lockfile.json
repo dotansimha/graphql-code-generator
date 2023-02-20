@@ -2036,7 +2036,19 @@
         "anchor": "persisted-documents"
       },
       {
-        "children": [],
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "SWC plugin",
+                "anchor": "swc-plugin"
+              }
+            ],
+            "title": "Babel plugin",
+            "anchor": "babel-plugin"
+          }
+        ],
         "title": "Reducing bundle size: Babel plugin",
         "anchor": "reducing-bundle-size-babel-plugin"
       }
