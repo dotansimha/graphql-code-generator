@@ -46,9 +46,10 @@
           "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": ["string", "boolean"] }]
         },
         "watchConfig": {
-          "description": "Allows overriding the behavior of watch to use stat polling over native file watching support.\n\nConfig fields have the same defaults and sematics as the identically named ones for chokidar.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
+          "description": "This field is deprecated and will be removed in next major release. Allows overriding the behavior of watch to use stat polling over native file watching support.\n\nConfig fields have the same defaults and sematics as the identically named ones for chokidar.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
           "type": "object",
-          "properties": { "usePolling": { "type": "boolean" }, "interval": { "type": "number" } }
+          "properties": { "usePolling": { "type": "boolean" }, "interval": { "type": "number" } },
+          "deprecated": "true"
         },
         "ignoreNoDocuments": {
           "description": "A flag to suppress non-zero exit code when there are no documents to generate.",
