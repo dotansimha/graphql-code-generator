@@ -1,5 +1,5 @@
 [package]
-name = "swc-plugin-graphql-codegen-client-preset-optimizer"
+name = "swc-plugin"
 version = "0.1.0"
 edition = "2021"
 description = "SWC plugin for https://the-guild.dev/graphql/codegen/plugins/presets/preset-client"

@@ -1292,7 +1292,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "swc-plugin-graphql-codegen-client-preset-optimizer"
+name = "swc-plugin"
 version = "0.1.0"
 dependencies = [
  "graphql-parser",

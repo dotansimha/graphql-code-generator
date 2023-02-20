@@ -9,9 +9,9 @@
     "graphql-codegen",
     "preset-client"
   ],
-  "main": "swc_plugin_graphql_codegen_client_preset_optimizer.wasm",
+  "main": "swc_plugin.wasm",
   "scripts": {
-    "prepack": "cargo build --target wasm32-wasi --release && cp target/wasm32-wasi/release/swc_plugin_graphql_codegen_client_preset_optimizer.wasm ."
+    "prepack": "cargo build --target wasm32-wasi --release && cp target/wasm32-wasi/release/swc_plugin.wasm ../"
   },
   "homepage": "https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
   "repository": {
