@@ -16,12 +16,13 @@ for (const dirname of packageDirectories) {
     const execNames = ['graphql-codegen', 'graphql-codegen-esm'];
     for (const execName of execNames) {
       const targetPath = path.join(absolutePath, 'node_modules', '.bin', execName);
-      fs.ensureSymlinkSync(absoluteBinPath, targetPath);
-      fs.chmodSync(targetPath, '755');
-      const targetCmdPath = targetPath + '.cmd';
-      fs.writeFileSync(
-        targetCmdPath,
-        `
+      try {
+        fs.ensureSymlinkSync(absoluteBinPath, targetPath);
+        fs.chmodSync(targetPath, '755');
+        const targetCmdPath = targetPath + '.cmd';
+        fs.writeFileSync(
+          targetCmdPath,
+          `
 @IF EXIST "%~dp0\\node.exe" (
   "%~dp0\\node.exe"  "${absoluteBinPath}" %*
 ) ELSE (
@@ -30,8 +31,11 @@ for (const dirname of packageDirectories) {
   node  "${absoluteBinPath}" %*
 )
             `
-      );
-      fs.chmodSync(targetCmdPath, '755');
+        );
+        fs.chmodSync(targetCmdPath, '755');
+      } catch {
+        /* ignore symlink that already exist */
+      }
     }
   }
 }
