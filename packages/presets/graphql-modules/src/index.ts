@@ -69,6 +69,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         enumsAsTypes: true,
       },
       schemaAst: options.schemaAst!,
+      documentTransforms: options.documentTransforms,
     };
 
     const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, '');
@@ -120,6 +121,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         },
         config: options.config,
         schemaAst: options.schemaAst,
+        documentTransforms: options.documentTransforms,
       };
     });
 

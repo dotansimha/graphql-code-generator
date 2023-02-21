@@ -1321,6 +1321,23 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     await resolversTestingValidate(result, {}, testSchema);
   });
 
+  it('#8852 - should generate the correct imports when customResolveInfo defined in config with type import', async () => {
+    const testSchema = buildSchema(`scalar MyScalar`);
+    const result = (await plugin(
+      testSchema,
+      [],
+      {
+        customResolveInfo: './my-type#MyGraphQLResolveInfo',
+        useTypeImports: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import type { GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result.prepend).toContain(`import type { MyGraphQLResolveInfo as GraphQLResolveInfo } from './my-type';`);
+    await resolversTestingValidate(result, {}, testSchema);
+  });
+
   describe('Should generate the correct imports when customResolverFn defined in config', () => {
     it('./my-type#MyResolverFn', async () => {
       const testSchema = buildSchema(`scalar MyScalar`);

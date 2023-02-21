@@ -4,24 +4,29 @@
   "private": true,
   "dependencies": {
     "@graphql-tools/executor-http": "^0.1.8",
-    "@tanstack/react-query": "4.0.10",
+    "@tanstack/react-query": "4.24.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^3.0.0",
-    "@graphql-codegen/client-preset": "^2.0.0",
+    "@graphql-codegen/cli": "^3.1.0",
+    "@graphql-codegen/client-preset": "^2.1.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.10",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "serve": "14.2.0",
+    "cypress": "12.6.0",
+    "start-server-and-test": "1.15.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "serve -s build",
+    "test": "cypress run",
+    "test:end2end": "start-server-and-test start http://localhost:3000 test",
     "eject": "react-scripts eject",
     "codegen": "graphql-codegen --config codegen.ts"
   },

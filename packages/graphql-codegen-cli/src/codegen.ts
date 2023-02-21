@@ -18,6 +18,7 @@ import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from '
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
+import { getDocumentTransform } from './documentTransforms.js';
 
 /**
  * Poor mans ESM detection.
@@ -316,6 +317,18 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
                           };
 
+                          const documentTransforms = Array.isArray(outputConfig.documentTransforms)
+                            ? await Promise.all(
+                                outputConfig.documentTransforms.map(async (config, index) => {
+                                  return await getDocumentTransform(
+                                    config,
+                                    makeDefaultLoader(context.cwd),
+                                    `the element at index ${index} of the documentTransforms`
+                                  );
+                                })
+                              )
+                            : [];
+
                           const outputs: Types.GenerateOptions[] = preset
                             ? await context.profiler.run(
                                 async () =>
@@ -330,6 +343,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                     pluginMap,
                                     pluginContext,
                                     profiler: context.profiler,
+                                    documentTransforms,
                                   }),
                                 `Build Generates Section: ${filename}`
                               )
@@ -344,6 +358,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                   pluginMap,
                                   pluginContext,
                                   profiler: context.profiler,
+                                  documentTransforms,
                                 },
                               ];
 

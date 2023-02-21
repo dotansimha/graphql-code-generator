@@ -1,5 +1,40 @@
 [
   {
+    "objectID": "code-generator-docs-advanced-usage-document-transform",
+    "headings": [
+      "Basic Usage",
+      "How to specify by name",
+      "Configuration"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Basic Usage",
+        "anchor": "basic-usage"
+      },
+      {
+        "children": [],
+        "title": "How to specify by name",
+        "anchor": "how-to-specify-by-name"
+      },
+      {
+        "children": [],
+        "title": "Configuration",
+        "anchor": "configuration"
+      }
+    ],
+    "content": "6bdab9c986b1b3269c5bc234bf21c95f",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/advanced/document-transform",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Advanced Usage"
+    ],
+    "source": "Code Generator",
+    "title": "Document Transform",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-advanced-usage-generated-files-colocation",
     "headings": [],
     "toc": [],
@@ -2036,7 +2071,19 @@
         "anchor": "persisted-documents"
       },
       {
-        "children": [],
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "SWC plugin",
+                "anchor": "swc-plugin"
+              }
+            ],
+            "title": "Babel plugin",
+            "anchor": "babel-plugin"
+          }
+        ],
         "title": "Reducing bundle size: Babel plugin",
         "anchor": "reducing-bundle-size-babel-plugin"
       }

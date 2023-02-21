@@ -3,18 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@graphql-codegen/cli": "3.0.0",
-    "@graphql-codegen/gql-tag-operations-preset": "2.0.0"
+    "@graphql-codegen/cli": "3.1.0",
+    "@graphql-codegen/gql-tag-operations-preset": "2.1.0"
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "graphql-yoga": "3.5.1",
+    "graphql-yoga": "3.7.0",
     "graphql-request": "5.1.0"
   },
   "scripts": {
     "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
-    "dev": "ts-node src/main.ts"
+    "dev": "ts-node src/main.ts",
+    "test:end2end": "node dist/main.js"
   },
   "type": "commonjs",
   "bob": false
