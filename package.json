@@ -44,7 +44,7 @@
     "@theguild/prettier-config": "0.1.1",
     "@types/jest": "28.1.8",
     "babel-jest": "28.1.3",
-    "bob-the-bundler": "4.0.0",
+    "bob-the-bundler": "4.1.1",
     "eslint": "8.34.0",
     "graphql": "16.6.0",
     "husky": "8.0.3",
