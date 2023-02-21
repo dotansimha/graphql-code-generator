@@ -16,7 +16,7 @@ You will need to provide the `artifactDirectory` path that should be the same as
 
 #### `.swrc`
 
-```json
+```json5
 {
   // ...
   "jsc": {
