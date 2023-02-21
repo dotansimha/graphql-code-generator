@@ -19,11 +19,11 @@ You will need to provide the `artifactDirectory` path that should be the same as
 ```json5
 {
   // ...
-  "jsc": {
+  jsc: {
     // ...
-    "experimental": {
-      "plugins": [
-        ["@graphql-codegen/client-preset-swc-plugin", { "artifactDirectory": "./src/gql", "gqlTagName": "graphql" }]
+    experimental: {
+      plugins: [
+        ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
       ]
     }
   }
