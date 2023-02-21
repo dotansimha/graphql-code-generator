@@ -1,20 +1,5 @@
 # @graphql-codegen/typescript-resolvers
 
-## 3.1.0
-
-### Minor Changes
-
-- [#8853](https://github.com/dotansimha/graphql-code-generator/pull/8853) [`b13aa7449`](https://github.com/dotansimha/graphql-code-generator/commit/b13aa7449637eaf28976ea7e31730b0290609919) Thanks [@KGAdamCook](https://github.com/KGAdamCook)! - Updated customResolveInfo to use the correct importType for external imports
-
-### Patch Changes
-
-- [#8879](https://github.com/dotansimha/graphql-code-generator/pull/8879) [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
-  - Updated dependency [`tslib@~2.5.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.5.0) (from `~2.4.0`, in `dependencies`)
-- Updated dependencies [[`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`a118c307a`](https://github.com/dotansimha/graphql-code-generator/commit/a118c307a35bbb97b7cbca0f178a88276032a26c), [`6b6fe3cbc`](https://github.com/dotansimha/graphql-code-generator/commit/6b6fe3cbcc7de748754703adce0f62f3e070a098), [`a3309e63e`](https://github.com/dotansimha/graphql-code-generator/commit/a3309e63efed880e6f74ce6fcbf82dd3d7857a15)]:
-  - @graphql-codegen/plugin-helpers@4.1.0
-  - @graphql-codegen/typescript@3.0.1
-  - @graphql-codegen/visitor-plugin-common@3.0.1
-
 ## 3.0.0
 
 ### Major Changes
