@@ -1,5 +1,19 @@
 # @graphql-codegen/gql-tag-operations
 
+## 2.0.1
+
+### Patch Changes
+
+- [#8879](https://github.com/dotansimha/graphql-code-generator/pull/8879) [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`tslib@~2.5.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.5.0) (from `~2.4.0`, in `dependencies`)
+
+- [#8995](https://github.com/dotansimha/graphql-code-generator/pull/8995) [`fe2e9c7a5`](https://github.com/dotansimha/graphql-code-generator/commit/fe2e9c7a5f2731e06dd285e391936608dfa3fb51) Thanks [@charpeni](https://github.com/charpeni)! - Use `gqlTagName` for generated examples
+
+- Updated dependencies [[`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`a118c307a`](https://github.com/dotansimha/graphql-code-generator/commit/a118c307a35bbb97b7cbca0f178a88276032a26c), [`6b6fe3cbc`](https://github.com/dotansimha/graphql-code-generator/commit/6b6fe3cbcc7de748754703adce0f62f3e070a098), [`a3309e63e`](https://github.com/dotansimha/graphql-code-generator/commit/a3309e63efed880e6f74ce6fcbf82dd3d7857a15)]:
+  - @graphql-codegen/plugin-helpers@4.1.0
+  - @graphql-codegen/visitor-plugin-common@3.0.1
+
 ## 2.0.0
 
 ### Major Changes
