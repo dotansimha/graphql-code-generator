@@ -45,7 +45,7 @@ module.exports = {
       },
     },
     {
-      files: '**/tests/fixtures/*.ts',
+      files: '**/tests/fixtures/*.{ts,js}',
       rules: {
         '@typescript-eslint/no-unused-vars': 'off',
       },
