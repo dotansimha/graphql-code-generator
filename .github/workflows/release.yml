@@ -6,20 +6,35 @@ on:
 
 jobs:
   stable:
+    uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
+    with:
+      releaseScript: release
+      nodeVersion: 18
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
+      npmToken: ${{ secrets.NPM_TOKEN }}
+
+  publish-rust-swc-plugin:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
       - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
         with:
           working-directory: ./packages/presets/swc-plugin
           command: build
           args: --target wasm32-wasi --release
-      - uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
-        with:
-          releaseScript: release
-          nodeVersion: 18
-        secrets:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          npmToken: ${{ secrets.NPM_TOKEN }}
+      - name: Publish SWC plugin
+        working-directory: ./packages/presets/swc-plugin
+        run: |
+          npm run build-wasm
+          npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   algolia:
     uses: the-guild-org/shared-config/.github/workflows/algolia-publish.yml@main
