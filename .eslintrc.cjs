@@ -51,5 +51,13 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ['dev-test', 'examples/front-end', 'website', 'examples/**/gql/**', '**/react-app-env.d.ts'],
+  ignorePatterns: [
+    'dev-test',
+    'examples/front-end',
+    'website',
+    'examples/**/gql/**',
+    '**/react-app-env.d.ts',
+    'packages/presets/swc-plugin/tests/fixtures/simple-uppercase-operation-name.js',
+    'packages/presets/swc-plugin/tests/fixtures/simple-uppercase-operation-name.other-dir.js'
+  ],
 };
