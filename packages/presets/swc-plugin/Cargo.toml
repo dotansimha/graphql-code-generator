@@ -27,7 +27,7 @@ graphql-parser = "0.4.0"
 pathdiff = "0.2.1"
 serde = "1"
 serde_json = "1.0.91"
-swc_core = { version = "0.44.*", features = ["plugin_transform", "ecma_utils", "common", "testing" ] }
+swc_core = { version = "0.59.*", features = ["ecma_plugin_transform", "ecma_visit", "ecma_utils", "common", "testing" ] }
 swc_ecma_parser = "0.123.11"
 
 
