@@ -1,5 +1,113 @@
 # @graphql-codegen/cli
 
+## 3.1.0
+
+### Minor Changes
+
+- [#8893](https://github.com/dotansimha/graphql-code-generator/pull/8893) [`a118c307a`](https://github.com/dotansimha/graphql-code-generator/commit/a118c307a35bbb97b7cbca0f178a88276032a26c) Thanks [@n1ru4l](https://github.com/n1ru4l)! - It is no longer mandatory to declare an empty plugins array when using a preset
+
+- [#8723](https://github.com/dotansimha/graphql-code-generator/pull/8723) [`a3309e63e`](https://github.com/dotansimha/graphql-code-generator/commit/a3309e63efed880e6f74ce6fcbf82dd3d7857a15) Thanks [@kazekyo](https://github.com/kazekyo)! - Introduce a new feature called DocumentTransform.
+
+  DocumentTransform is a functionality that allows you to modify `documents` before they are processed by plugins. You can use functions passed to the `documentTransforms` option to make changes to GraphQL documents.
+
+  To use this feature, you can write `documentTransforms` as follows:
+
+  ```ts
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://localhost:4000/graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        documentTransforms: [
+          {
+            transform: ({ documents }) => {
+              // Make some changes to the documents
+              return documents;
+            },
+          },
+        ],
+      },
+    },
+  };
+  export default config;
+  ```
+
+  For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the following code:
+
+  ```js
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import { visit } from 'graphql';
+
+  const config: CodegenConfig = {
+    schema: 'https://localhost:4000/graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        documentTransforms: [
+          {
+            transform: ({ documents }) => {
+              return documents.map(documentFile => {
+                documentFile.document = visit(documentFile.document, {
+                  Directive: {
+                    leave(node) {
+                      if (node.name.value === 'localOnlyDirective') return null;
+                    },
+                  },
+                });
+                return documentFile;
+              });
+            },
+          },
+        ],
+      },
+    },
+  };
+  export default config;
+  ```
+
+  DocumentTransform can also be specified by file name. You can create a custom file for a specific transformation and pass it to `documentTransforms`.
+
+  Let's create the document transform as a file:
+
+  ```js
+  module.exports = {
+    transform: ({ documents }) => {
+      // Make some changes to the documents
+      return documents;
+    },
+  };
+  ```
+
+  Then, you can specify the file name as follows:
+
+  ```ts
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://localhost:4000/graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        documentTransforms: ['./my-document-transform.js'],
+      },
+    },
+  };
+  export default config;
+  ```
+
+### Patch Changes
+
+- [#9000](https://github.com/dotansimha/graphql-code-generator/pull/9000) [`4c422ccf6`](https://github.com/dotansimha/graphql-code-generator/commit/4c422ccf6384cfb0d0949ebe5567923973b1a044) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/fetch@^0.8.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.8.0) (from `^0.6.0`, in `dependencies`)
+- Updated dependencies [[`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`a118c307a`](https://github.com/dotansimha/graphql-code-generator/commit/a118c307a35bbb97b7cbca0f178a88276032a26c), [`a3309e63e`](https://github.com/dotansimha/graphql-code-generator/commit/a3309e63efed880e6f74ce6fcbf82dd3d7857a15)]:
+  - @graphql-codegen/core@3.1.0
+  - @graphql-codegen/plugin-helpers@4.1.0
+
 ## 3.0.0
 
 ### Major Changes
