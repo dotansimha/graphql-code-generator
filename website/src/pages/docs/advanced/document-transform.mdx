@@ -3,11 +3,11 @@ import { Callout } from '@theguild/components'
 # Document Transform
 
 Document transform is a feature that allows you to modify `documents` before they are used by plugins.
-You can use functions passed to the `documentTransforms` option to make changes to GraphQL `documents` or extend the schema, as needed.
+You can use functions passed to the `documentTransforms` option to make changes to GraphQL `documents`.
 
 ## Basic Usage
 
-Document transform has `transform` function and optional `addToSchema` function.
+Document transform has `transform` function.
 
 Let's specify an object containing those functions as the `documentTransforms` option as follows:
 
@@ -25,8 +25,7 @@ const config: CodegenConfig = {
           transform: ({ documents }) => {
             // Make some changes to the documents
             return documents
-          },
-          addToSchema: 'extend type Query { test: String! }'
+          }
         }
       ]
     }

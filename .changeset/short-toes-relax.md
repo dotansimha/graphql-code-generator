@@ -9,7 +9,7 @@
 
 Introduce a new feature called DocumentTransform.
 
-DocumentTransform is a functionality that allows you to modify `documents` before they are processed by plugins. You can use functions passed to the `documentTransforms` option to make changes to GraphQL documents or extend the schema, as needed.
+DocumentTransform is a functionality that allows you to modify `documents` before they are processed by plugins. You can use functions passed to the `documentTransforms` option to make changes to GraphQL documents.
 
 To use this feature, you can write `documentTransforms` as follows:
 
@@ -28,7 +28,6 @@ const config: CodegenConfig = {
             // Make some changes to the documents
             return documents;
           },
-          addToSchema: 'extend type Query { test: String! }',
         },
       ],
     },

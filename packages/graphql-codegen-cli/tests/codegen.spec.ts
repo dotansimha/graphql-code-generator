@@ -1272,33 +1272,8 @@ describe('Codegen Executor', () => {
       }
     });
 
-    it('should be able to extend the schema.', async () => {
-      const documentTransform: Types.DocumentTransformObject = {
-        transform: ({ documents }) => {
-          return documents;
-        },
-        addToSchema: `extend type Query { test: String! }`,
-      };
-
-      const output = await executeCodegen({
-        schema: SIMPLE_TEST_SCHEMA,
-        documents: `query foo { f }`,
-        generates: {
-          'out1.ts': {
-            plugins: ['typescript', 'typescript-operations'],
-            documentTransforms: [documentTransform],
-          },
-        },
-      });
-
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain(`test: Scalars['String']`);
-    });
-  });
-
-  it('should be able to dynamically extend the schema.', async () => {
-    const documentTransform: Types.DocumentTransformObject = {
-      transform: ({ documents }) => {
+    it('Should transform documents with client-preset', async () => {
+      const transform: Types.DocumentTransformFunction = ({ documents }) => {
         const newDocuments = [
           {
             document: {
@@ -1306,84 +1281,28 @@ describe('Codegen Executor', () => {
               definitions: [
                 {
                   ...documents[0].document.definitions[0],
-                  selectionSet: {
-                    kind: Kind.SELECTION_SET,
-                    selections: [
-                      {
-                        kind: Kind.FIELD,
-                        name: { kind: Kind.NAME, value: 'test' },
-                      },
-                    ],
-                  },
+                  name: { kind: Kind.NAME, value: 'bar' },
                 } as OperationDefinitionNode,
               ],
             },
           },
         ];
         return newDocuments;
-      },
-      addToSchema: ({ schema, schemaAst, documents }) => {
-        // Check that the arguments schema, schemaAST, and documents exist correctly.
-        // These following are only needed as a test and is of no importance for the extension of the schema in this case.
-        const fieldObjectTypeFromSchema = schema.definitions.find(
-          node => node.kind === Kind.OBJECT_TYPE_DEFINITION && node.fields.find(field => field.name.value === 'f')
-        );
-        const fieldFromSchemaAST = schemaAst.getQueryType().getFields()['f'];
-        const operationDefinitionNode = documents[0].document!.definitions[0] as OperationDefinitionNode;
+      };
 
-        if (operationDefinitionNode.name.value === 'foo' && fieldObjectTypeFromSchema && fieldFromSchemaAST) {
-          return `extend type Query { test: String! }`;
-        }
-        return '';
-      },
-    };
-
-    const output = await executeCodegen({
-      schema: SIMPLE_TEST_SCHEMA,
-      documents: `query foo { f }`,
-      generates: {
-        'out1.ts': {
-          plugins: ['typescript', 'typescript-operations'],
-          documentTransforms: [documentTransform],
-        },
-      },
-    });
-
-    expect(output.length).toBe(1);
-    expect(output[0].content).toContain(`test: Scalars['String']`);
-    expect(output[0].content).toContain(`export type FooQuery = { __typename?: 'Query', test: string }`);
-  });
-
-  it('Should transform documents with client-preset', async () => {
-    const transform: Types.DocumentTransformFunction = ({ documents }) => {
-      const newDocuments = [
-        {
-          document: {
-            ...documents[0].document,
-            definitions: [
-              {
-                ...documents[0].document.definitions[0],
-                name: { kind: Kind.NAME, value: 'bar' },
-              } as OperationDefinitionNode,
-            ],
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          './src/gql/': {
+            preset: 'client',
+            documentTransforms: [{ transform }],
           },
         },
-      ];
-      return newDocuments;
-    };
+      });
 
-    const output = await executeCodegen({
-      schema: SIMPLE_TEST_SCHEMA,
-      documents: `query foo { f }`,
-      generates: {
-        './src/gql/': {
-          preset: 'client',
-          documentTransforms: [{ transform }],
-        },
-      },
+      const fileOutput = output.find(file => file.filename === './src/gql/graphql.ts');
+      expect(fileOutput.content).toContain('export type BarQuery');
     });
-
-    const fileOutput = output.find(file => file.filename === './src/gql/graphql.ts');
-    expect(fileOutput.content).toContain('export type BarQuery');
   });
 });

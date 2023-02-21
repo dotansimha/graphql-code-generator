@@ -624,17 +624,8 @@ export namespace Types {
     pluginContext?: { [key: string]: any };
   }) => Types.Promisable<Types.DocumentFile[]>;
 
-  export type DocumentTransformAddToSchemaFunction<Config = object> = (options: {
-    documents: Types.DocumentFile[];
-    schema: DocumentNode;
-    schemaAst?: GraphQLSchema;
-    config: Config;
-    pluginContext?: { [key: string]: any };
-  }) => AddToSchemaResult;
-
   export type DocumentTransformObject<T = object> = {
     transform: DocumentTransformFunction<T>;
-    addToSchema?: AddToSchemaResult | DocumentTransformAddToSchemaFunction;
   };
 
   export type DocumentTransformFileName = string;
