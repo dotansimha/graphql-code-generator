@@ -240,6 +240,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
         },
         documents: [],
+        documentTransforms: options.documentTransforms,
       };
     }
 
@@ -266,6 +267,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         schema: options.schema,
         config: {},
         documents: [],
+        documentTransforms: options.documentTransforms,
       };
     }
 
@@ -280,6 +282,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           ...forwardedConfig,
         },
         documents: sources,
+        documentTransforms: options.documentTransforms,
       },
       {
         filename: `${options.baseOutputDir}gql${gqlArtifactFileExtension}`,
@@ -291,6 +294,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           gqlTagName: options.presetConfig.gqlTagName || 'graphql',
         },
         documents: sources,
+        documentTransforms: options.documentTransforms,
       },
       ...(isPersistedOperations
         ? [
@@ -314,6 +318,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
               schema: options.schema,
               config: {},
               documents: sources,
+              documentTransforms: options.documentTransforms,
             },
           ]
         : []),
