@@ -23,11 +23,6 @@ jobs:
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
-      - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-        with:
-          working-directory: ./packages/presets/swc-plugin
-          command: build
-          args: --target wasm32-wasi --release
       - name: Publish SWC plugin
         working-directory: ./packages/presets/swc-plugin
         run: npm publish --access=public
