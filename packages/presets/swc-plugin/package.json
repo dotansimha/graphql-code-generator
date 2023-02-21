@@ -1,5 +1,5 @@
 {
-  "name": "@graphql-codegen/client-preset-swc-plugin-optimizer",
+  "name": "@graphql-codegen/client-preset-swc-plugin",
   "version": "0.1.0",
   "description": "A SWC plugin for https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
   "license": "MIT",
