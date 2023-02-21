@@ -1,13 +1,12 @@
 use std::path::PathBuf;
 use swc_core::{
     ecma::{
+        parser::{Syntax, TsConfig},
         transforms::testing::{test, test_fixture},
         visit::as_folder,
     },
     testing,
 };
-
-use swc_ecma_parser::{Syntax, TsConfig};
 
 use super::*;
 
