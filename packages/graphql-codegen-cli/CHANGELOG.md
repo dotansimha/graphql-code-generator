@@ -1,5 +1,17 @@
 # @graphql-codegen/cli
 
+## 3.2.0
+
+### Minor Changes
+
+- [#9009](https://github.com/dotansimha/graphql-code-generator/pull/9009) [`288ed0977`](https://github.com/dotansimha/graphql-code-generator/commit/288ed097745f9c06dd74a9398a050866caa3942a) Thanks [@saihaj](https://github.com/saihaj)! - use @parcel/watcher for improved watch functionality
+
+### Patch Changes
+
+- [#9009](https://github.com/dotansimha/graphql-code-generator/pull/9009) [`288ed0977`](https://github.com/dotansimha/graphql-code-generator/commit/288ed097745f9c06dd74a9398a050866caa3942a) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+  - Added dependency [`@parcel/watcher@^2.1.0` ↗︎](https://www.npmjs.com/package/@parcel/watcher/v/2.1.0) (to `dependencies`)
+  - Removed dependency [`chokidar@^3.5.2` ↗︎](https://www.npmjs.com/package/chokidar/v/3.5.2) (from `dependencies`)
+
 ## 3.1.0
 
 ### Minor Changes
