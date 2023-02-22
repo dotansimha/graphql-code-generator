@@ -7,7 +7,7 @@
     "start": "next start",
     "build": "yarn generate-json-config && next build && next-sitemap --config next-sitemap.config.cjs && next export",
     "dev": "next",
-    "generate-json-config": "node --loader ts-node/esm --experimental-specifier-resolution=node generate-config-json-schema.ts"
+    "generate-json-config": "tsx generate-config-json-schema.ts"
   },
   "devDependencies": {
     "@theguild/algolia": "1.1.2",
