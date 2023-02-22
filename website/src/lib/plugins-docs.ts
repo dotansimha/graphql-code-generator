@@ -121,7 +121,7 @@ export const pluginsConfigurations: PluginConfig[] = [
     name: 'typescript-apollo-angular',
   },
   {
-    file: '../packages/plugins/typescript/nhost/src/config.ts',
+    file: '../node_modules/@graphql-codegen/typescript-nhost/typings/config.d.ts',
     identifier: 'NhostPluginConfig',
     name: 'typescript-nhost',
   },
