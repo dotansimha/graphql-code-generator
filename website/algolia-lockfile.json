@@ -2583,6 +2583,47 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-plugins-typescript-typescript-nhost",
+    "headings": [
+      "Usage",
+      "Custom scalars"
+    ],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Step 2: Install and configure the Nhost Typescript SDK",
+                "anchor": "step-2-install-and-configure-the-nhost-typescript-sdk"
+              }
+            ],
+            "title": "Step 1: Generate the schema",
+            "anchor": "step-1-generate-the-schema"
+          }
+        ],
+        "title": "Usage",
+        "anchor": "usage"
+      },
+      {
+        "children": [],
+        "title": "Custom scalars",
+        "anchor": "custom-scalars"
+      }
+    ],
+    "content": "1d75b4495cd5315f6b45e1d1e5da409c",
+    "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-nhost",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Plugins",
+      "TypeScript"
+    ],
+    "source": "Code Generator",
+    "title": "typescript-nhost",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-plugins-typescript-typescript-oclif",
     "headings": [
       "Usage",
