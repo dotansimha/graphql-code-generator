@@ -1,6 +1,6 @@
 name: Rust plugin
 on:
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
   publish-rust-swc-plugin:
