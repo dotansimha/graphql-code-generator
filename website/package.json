@@ -59,6 +59,7 @@
     "@graphql-codegen/typescript-rtk-query": "2.4.1",
     "@graphql-codegen/typescript-stencil-apollo": "2.3.6",
     "@graphql-codegen/typescript-type-graphql": "2.3.6",
+    "@graphql-codegen/typescript-nhost": "0.0.1",
     "@graphql-codegen/typescript-urql": "3.7.3",
     "@graphql-codegen/typescript-vue-apollo": "3.3.7",
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.3.6",

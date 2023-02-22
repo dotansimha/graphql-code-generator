@@ -562,7 +562,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "241d25c61530cb506ca80af52932b631",
+    "content": "4e75b012b94c2a9880279bf0f63401ab",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/development-workflow",
     "domain": "https://www.the-guild.dev/graphql/codegen/",
     "hierarchy": [
@@ -2580,6 +2580,47 @@
     ],
     "source": "Code Generator",
     "title": "msw",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-plugins-typescript-typescript-nhost",
+    "headings": [
+      "Usage",
+      "Custom scalars"
+    ],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Step 2: Install and configure the Nhost Typescript SDK",
+                "anchor": "step-2-install-and-configure-the-nhost-typescript-sdk"
+              }
+            ],
+            "title": "Step 1: Generate the schema",
+            "anchor": "step-1-generate-the-schema"
+          }
+        ],
+        "title": "Usage",
+        "anchor": "usage"
+      },
+      {
+        "children": [],
+        "title": "Custom scalars",
+        "anchor": "custom-scalars"
+      }
+    ],
+    "content": "1d75b4495cd5315f6b45e1d1e5da409c",
+    "url": "https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-nhost",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Plugins",
+      "TypeScript"
+    ],
+    "source": "Code Generator",
+    "title": "typescript-nhost",
     "type": "Documentation"
   },
   {

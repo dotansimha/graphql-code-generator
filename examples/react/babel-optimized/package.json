@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@babel/core": "7.20.12",
+    "@babel/core": "7.21.0",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",
     "@svgr/webpack": "5.5.0",
     "@types/jest": "27.5.2",
