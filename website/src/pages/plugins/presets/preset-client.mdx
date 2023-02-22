@@ -53,14 +53,14 @@ For more information or feature request, please [refer to the repository discuss
 
 As explained in [our guide](/docs/guides/react-vue), the `client-preset` comes with Fragment Masking enabled by default.
 
-This section covers this concept and associated options in details.
+This section covers this concept and associated options in detail.
 
 ### Embrace Fragment Masking principles
 
-Fragment Masking helps expressing components data-dependencies with GraphQL Fragments.
+Fragment Masking helps express components' data dependencies with GraphQL Fragments.
 
 By doing so, we ensure that the tree of data is properly passed down to the components without "leaking" data.
-It also allow to colocate the Fragment definitions with their components counterparts:
+It also allows to colocate the Fragment definitions with their components counterparts:
 
 ```tsx filename="src/Film.tsx" {4-11}
 import { FragmentType, useFragment } from './gql/fragment-masking'
@@ -91,7 +91,7 @@ export default Film
 For a deeper and more visual explanation of Fragment Masking, please refer to [Laurin](https://twitter.com/n1rual)'s article: [Unleash the power of Fragments with GraphQL Codegen
 ](https://the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen)
 
-For a introduction on how to design your GraphQL Query to leverage Fragment Masking, please refer to [our guide](/docs/guides/react-vue).
+For an introduction on how to design your GraphQL Query to leverage Fragment Masking, please refer to [our guide](/docs/guides/react-vue).
 
 #### The `FragmentType<T>` type
 
@@ -131,15 +131,17 @@ export default Film
 <Callout type="warning">
 **`FragmentType<T>` is not the Fragment's type**
 
-A common misconception is too mix `FragmentType<T>` and the Fragment's type.
-You might need to get the Fragment's type directly, for example, for helper functions or testing.
-In this scenario, you will need to import it from the generated files, as described in the next section.
+A common misconception is to mix `FragmentType<T>` and the Fragment's type.
+For example, for helper functions, testing, or if you don't use Fragment Masking,
+you should get the Fragment's type directly. In this scenario, you must import
+it from the generated files or extract it from the Fragment's definition,
+as described in [the next section](#getting-a-fragments-type).
 
 </Callout>
 
 #### The `useFragment()` helper
 
-The `useFragment()` function helps narrowing down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
+The `useFragment()` function helps narrow down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
 
 ```tsx filename="src/Film.tsx" {14-15}
 import { FragmentType, useFragment } from './gql/fragment-masking'
@@ -197,7 +199,7 @@ export default config
 
 ### Getting a Fragment's type
 
-To get a Fragment's type is achieved by importing the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
+Getting a Fragment's type is achieved by importing the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
 
 ```tsx filename="src/Film.tsx" {1, 8, 15}
 import { FilmItemFragment } from './gql'
@@ -215,6 +217,25 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 `)
 
 function myFilmHelper(film: FilmItemFragment) {
+  // ...
+}
+```
+
+Or, if you have access to the Fragment's definition, you can extract the type from it without having to "guess" the name:
+
+```tsx filename="src/Film.tsx" {1, 3, 12}
+import { ResultOf } from '@graphql-typed-document-node/core'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+function myFilmHelper(film: ResultOf<typeof FilmFragment>) {
   // ...
 }
 ```
@@ -263,7 +284,7 @@ describe('<ProfileName />', () => {
 })
 ```
 
-Since the component expect to receive "Masked data", you will need to import the `makeFragmentData()` helper to "build" some masked data, as follow:
+Since the component expects to receive "Masked data", you will need to import the `makeFragmentData()` helper to "build" some masked data, as follow:
 
 ```tsx filename="ProfileName.spec.ts" {7}
 // ...
@@ -331,7 +352,7 @@ const config: CodegenConfig = {
 }
 ```
 
-By enabling this option GraphQL Code Generator will generate an additional file `opersisted-documents.json` within your artifacts location.
+By enabling this option GraphQL Code Generator will generate an additional file `persisted-documents.json` within your artifacts location.
 
 <Tree>
   <Folder name="gql" defaultOpen>
