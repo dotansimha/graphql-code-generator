@@ -4,6 +4,7 @@ import { isValidPath } from '@graphql-tools/utils';
 import type { subscribe } from '@parcel/watcher';
 import debounce from 'debounce';
 import isGlob from 'is-glob';
+import mm from 'micromatch';
 import logSymbols from 'log-symbols';
 import { executeCodegen } from '../codegen.js';
 import { CodegenContext, loadContext } from '../config.js';
@@ -95,6 +96,12 @@ export const createWatcher = (
         // it doesn't matter what has changed, need to run whole process anyway
         await Promise.all(
           events.map(async ({ type: eventName, path }) => {
+            /**
+             * @parcel/watcher has no way to run watcher on specific files (https://github.com/parcel-bundler/watcher/issues/42)
+             * But we can use micromatch to filter out events that we don't care about
+             */
+            if (!mm.contains(path, files)) return;
+
             lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
             debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
             const fullPath = join(process.cwd(), path);
