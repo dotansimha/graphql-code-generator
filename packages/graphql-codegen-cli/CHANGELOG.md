@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 3.2.1
+
+### Patch Changes
+
+- [#9051](https://github.com/dotansimha/graphql-code-generator/pull/9051) [`f7313f7ca`](https://github.com/dotansimha/graphql-code-generator/commit/f7313f7cabd81ee708e3345b2934aeeb978f65a3) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+
+  - Added dependency [`micromatch@^4.0.5` ↗︎](https://www.npmjs.com/package/micromatch/v/4.0.5) (to `dependencies`)
+
+- [#9051](https://github.com/dotansimha/graphql-code-generator/pull/9051) [`f7313f7ca`](https://github.com/dotansimha/graphql-code-generator/commit/f7313f7cabd81ee708e3345b2934aeeb978f65a3) Thanks [@saihaj](https://github.com/saihaj)! - only run generate for files that users have listed in config to avoid running this over every change that codegen is not supposed to execute
+
 ## 3.2.0
 
 ### Minor Changes
