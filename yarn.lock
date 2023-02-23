@@ -2897,10 +2897,15 @@
     tslib "^2.4.0"
     value-or-promise "1.0.12"
 
-"@graphql-typed-document-node/core@3.1.1", "@graphql-typed-document-node/core@^3.1.1":
+"@graphql-typed-document-node/core@3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
+
+"@graphql-typed-document-node/core@3.1.2", "@graphql-typed-document-node/core@^3.1.1":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.2.tgz#6fc464307cbe3c8ca5064549b806360d84457b04"
+  integrity sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==
 
 "@graphql-yoga/plugin-persisted-operations@1.7.0":
   version "1.7.0"
