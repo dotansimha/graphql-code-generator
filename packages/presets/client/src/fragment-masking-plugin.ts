@@ -1,14 +1,21 @@
 import type { PluginFunction } from '@graphql-codegen/plugin-helpers';
 
 const fragmentTypeHelper = `
-export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+export type FragmentName<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
   infer TType,
   any
 >
   ? TType extends { ' $fragmentName'?: infer TKey }
-    ? TKey extends string
-      ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
-      : never
+    ? TKey
+    : never
+  : never;
+
+export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+  infer TType,
+  any
+>
+  ? FragmentName<TDocumentType> extends string
+    ? { ' $fragmentRefs'?: { [key in FragmentName<TDocumentType>]: TType } }
     : never
   : never;`;
 
@@ -18,6 +25,19 @@ export function makeFragmentData<
   FT extends ResultOf<F>
 >(data: FT, _fragment: F): FragmentType<F> {
   return data as FragmentType<F>;
+}`;
+
+const getFragmentNameHelper = `
+export function getFragmentName<TType>(doc: DocumentNode<TType>): FragmentName<DocumentNode<TType, any>> {
+  const fragmentName = doc.definitions
+    .filter((definition): definition is FragmentDefinitionNode => definition.kind === 'FragmentDefinition')
+    .map(definition => definition.name.value as FragmentName<DocumentNode<TType, any>>)[0];
+
+  if (!fragmentName) {
+    throw new Error(\`Could not find a fragment name for the provided document: $\{doc}\`);
+  }
+
+  return fragmentName;
 }`;
 
 const defaultUnmaskFunctionName = 'useFragment';
@@ -77,21 +97,29 @@ export const plugin: PluginFunction<{
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, TypedDocumentNode as DocumentNode,  } from '@graphql-typed-document-node/core';\n`;
+  const graphqlTypeImports = `${
+    useTypeImports ? 'import type' : 'import'
+  } { FragmentDefinitionNode } from 'graphql';\n`;
 
   if (augmentedModuleName == null) {
     return [
       documentNodeImport,
+      graphqlTypeImports,
       `\n`,
       fragmentTypeHelper,
       `\n`,
       createUnmaskFunction(unmaskFunctionName),
       `\n`,
       makeFragmentDataHelper,
+      `\n`,
+      getFragmentNameHelper,
     ].join(``);
   }
 
   return [
     documentNodeImport,
+    graphqlTypeImports,
+    `\n`,
     `declare module "${augmentedModuleName}" {`,
     [
       ...fragmentTypeHelper.split(`\n`),
@@ -99,6 +127,8 @@ export const plugin: PluginFunction<{
       ...createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join('\n').split('\n'),
       `\n`,
       makeFragmentDataHelper,
+      `\n`,
+      getFragmentNameHelper,
     ]
       .map(line => (line === `\n` || line === '' ? line : `  ${line}`))
       .join(`\n`),
