@@ -65,10 +65,6 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 16
-      - name: Build
-        run: yarn build
-        env:
-          CI: true
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -78,6 +74,10 @@ jobs:
         working-directory: ./packages/presets/swc-plugin
         run: |
           npm run build-wasm
+      - name: Build
+        run: yarn build
+        env:
+          CI: true
       - name: Generate and Diff Codegen Artifacts
         run: |
           yarn examples:codegen
