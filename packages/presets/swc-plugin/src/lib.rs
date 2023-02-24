@@ -40,7 +40,7 @@ impl GraphQLVisitor {
 
     fn handle_error(&self, details: &str, span: Span) {
         let message = format!(
-            "@graphql-codegen/client-preset-swc-plugin-optimizer details: {}",
+            "@graphql-codegen/client-preset-swc-plugin details: {}",
             details
         );
         HANDLER.with(|handler| handler.struct_span_err(span, &message).emit());
