@@ -560,6 +560,7 @@ export class BaseResolversVisitor<
   protected _usedMappers: { [key: string]: boolean } = {};
   protected _resolversTypes: ResolverTypes = {};
   protected _resolversParentTypes: ResolverParentTypes = {};
+  protected _resolversUnionTypes: Record<string, string> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
   protected _federation: ApolloFederation;
@@ -624,6 +625,7 @@ export class BaseResolversVisitor<
       name => this.getParentTypeToUse(name),
       namedType => !isEnumType(namedType)
     );
+    this._resolversUnionTypes = this.createResolversUnionTypes();
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
     this._directiveContextTypesMap = this.createDirectivedContextType();
     this._directiveResolverMappings = rawConfig.directiveResolverMappings ?? {};
@@ -880,6 +882,20 @@ export class BaseResolversVisitor<
     return `Array<${t}>`;
   }
 
+  protected createResolversUnionTypes(): Record<string, string> {
+    const allSchemaTypes = this._schema.getTypeMap();
+
+    const unionTypes = Object.entries(allSchemaTypes).reduce((res, [typeName, schemaType]) => {
+      if (isUnionType(schemaType)) {
+        const referencedTypes = schemaType.getTypes();
+        res[typeName] = referencedTypes.join(' | ');
+      }
+      return res;
+    }, {});
+
+    return unionTypes;
+  }
+
   protected createFieldContextTypeMap(): FieldContextTypeMap {
     return this.config.fieldContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
       const items = fieldContextType.split('#');
@@ -931,6 +947,20 @@ export class BaseResolversVisitor<
           .map(typeName =>
             indent(`${typeName}: ${this._resolversParentTypes[typeName]}${this.getPunctuation(declarationKind)}`)
           )
+          .join('\n')
+      ).string;
+  }
+
+  public buildResolversUnionTypes(): string {
+    const declarationKind = 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName('ResolversUnionTypes'))
+      .withComment('Mapping of union types')
+      .withBlock(
+        Object.entries(this._resolversUnionTypes)
+          .map(([typeName, value]) => indent(`${typeName}: ${value}${this.getPunctuation(declarationKind)}`))
           .join('\n')
       ).string;
   }

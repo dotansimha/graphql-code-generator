@@ -1720,6 +1720,50 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     `);
   });
 
+  it('should generate ResolversUnionTypes', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): UserPayload!
+        posts: PostsPayload!
+      }
+
+      type StandardError {
+        error: String!
+      }
+
+      type User {
+        id: ID!
+        fullName: String!
+      }
+
+      type UserResult {
+        result: User
+      }
+
+      union UserPayload = UserResult | StandardError
+
+      type Post {
+        author: String
+        comment: String
+      }
+
+      type PostsResult {
+        results: [Post!]!
+      }
+
+      union PostsPayload = PostsResult | StandardError
+    `);
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+
+    expect(content.content).toBeSimilarStringTo(`
+    /** Mapping of union types */
+    export type ResolversUnionTypes = {
+      UserPayload: UserResult | StandardError;
+      PostsPayload: PostsResult | StandardError;
+    };
+    `);
+  });
+
   it('should use correct value when rootValueType mapped as default', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Subscription {
