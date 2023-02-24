@@ -1,4 +1,4 @@
 /target
 ^target/
 target
-swc_plugin_graphql_codegen_client_preset_optimizer.wasm
+swc_plugin.wasm

@@ -3,14 +3,14 @@ use pathdiff::diff_paths;
 use serde::Deserialize;
 use std::path::{Path, PathBuf};
 use swc_core::{
-    common::{errors::HANDLER, Span},
+    common::Span,
     ecma::{
         ast::*,
         utils::quote_ident,
         visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
     },
     plugin::{
-        metadata::TransformPluginMetadataContextKind, plugin_transform,
+        errors::HANDLER, metadata::TransformPluginMetadataContextKind, plugin_transform,
         proxies::TransformPluginProgramMetadata,
     },
 };
@@ -40,7 +40,7 @@ impl GraphQLVisitor {
 
     fn handle_error(&self, details: &str, span: Span) {
         let message = format!(
-            "@graphql-codegen/client-preset-swc-plugin-optimizer details: {}",
+            "@graphql-codegen/client-preset-swc-plugin error details: {}",
             details
         );
         HANDLER.with(|handler| handler.struct_span_err(span, &message).emit());
@@ -118,7 +118,8 @@ impl VisitMut for GraphQLVisitor {
                     let graphql_ast = match parse_query::<&str>(raw) {
                         Ok(ast) => ast,
                         Err(e) => {
-                            let error = format!("Error parsing graphql query: {:?}", e);
+                            // Currently the parser outputs a string like: "query parse error", so we add "GraphQL" to the beginning
+                            let error = format!("GraphQL {}", e);
                             self.handle_error(error.as_str(), quasis[0].span);
                             return;
                         }
@@ -219,15 +220,16 @@ pub fn process_transform(program: Program, metadata: TransformPluginProgramMetad
         .get_context(&TransformPluginMetadataContextKind::Cwd)
         .unwrap_or_default();
 
-    let plugin_config: PluginOptions =
-        serde_json::from_str(&metadata.get_transform_plugin_config().expect(
-            "Failed to get plugin config for @graphql-codegen/client-preset-swc-plugin-optimizer",
-        ))
-        .expect("Invalid configuration for @graphql-codegen/client-preset-swc-plugin-optimizer");
+    let plugin_config: PluginOptions = serde_json::from_str(
+        &metadata
+            .get_transform_plugin_config()
+            .expect("Failed to get plugin config for @graphql-codegen/client-preset-swc-plugin"),
+    )
+    .expect("Invalid configuration for @graphql-codegen/client-preset-swc-plugin");
 
     let artifact_directory = plugin_config.artifactDirectory;
     if artifact_directory.is_empty() {
-        panic!("artifactDirectory is not present in the config for @graphql-codegen/client-preset-swc-plugin-optimizer");
+        panic!("artifactDirectory is not present in the config for @graphql-codegen/client-preset-swc-plugin");
     }
 
     let visitor = create_graphql_codegen_visitor(GraphQLCodegenOptions {
