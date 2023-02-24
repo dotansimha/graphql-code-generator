@@ -69,6 +69,15 @@ jobs:
         run: yarn build
         env:
           CI: true
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-wasi
+          override: true
+      - name: Build SWC plugin
+        working-directory: ./packages/presets/swc-plugin
+        run: |
+          npm run build-wasm
       - name: Generate and Diff Codegen Artifacts
         run: |
           yarn examples:codegen

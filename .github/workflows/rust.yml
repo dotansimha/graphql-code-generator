@@ -17,10 +17,13 @@ jobs:
           toolchain: stable
           target: wasm32-wasi
           override: true
-      - name: Publish SWC plugin
+      - name: Build SWC plugin
         working-directory: ./packages/presets/swc-plugin
         run: |
           npm run build-wasm
+      - name: Publish SWC plugin
+        working-directory: ./packages/presets/swc-plugin
+        run: |
           npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
