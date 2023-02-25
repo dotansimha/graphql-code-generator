@@ -953,6 +953,10 @@ export class BaseResolversVisitor<
   }
 
   public buildResolversUnionTypes(): string {
+    if (Object.keys(this._resolversUnionTypes).length === 0) {
+      return '';
+    }
+
     const declarationKind = 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
