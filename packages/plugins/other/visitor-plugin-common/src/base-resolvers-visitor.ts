@@ -822,13 +822,7 @@ export class BaseResolversVisitor<
         // Make sure the inner type has no ResolverTypeWrapper
         const name = clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
         const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
-
-        // Don't wrap Union with ResolverTypeWrapper, each inner type already has it
-        if (isUnionType(schemaType)) {
-          prev[typeName] = replaced;
-        } else {
-          prev[typeName] = applyWrapper(replacePlaceholder(this.config.defaultMapper.type, name));
-        }
+        prev[typeName] = applyWrapper(replaced);
       }
 
       return prev;
@@ -885,9 +879,27 @@ export class BaseResolversVisitor<
 
     const unionTypes = Object.entries(allSchemaTypes).reduce((res, [typeName, schemaType]) => {
       if (isUnionType(schemaType)) {
-        const referencedTypes = schemaType.getTypes().map(unionMember => {
-          const isMapped = this.config.mappers[unionMember.name];
-          return this.convertName(isMapped?.type || unionMember.name);
+        const referencedTypes = schemaType.getTypes().map(unionMemberType => {
+          const isUnionMemberMapped = this.config.mappers[unionMemberType.name];
+          const hasDefaultMapper = !!this.config.defaultMapper?.type;
+          const isScalar = this.config.scalars[typeName];
+
+          if (isUnionMemberMapped && hasPlaceholder(isUnionMemberMapped.type)) {
+            const convertedName = this.convertName(unionMemberType.name);
+            return replacePlaceholder(isUnionMemberMapped.type, convertedName);
+          }
+
+          if (isUnionMemberMapped) {
+            return isUnionMemberMapped.type;
+          }
+
+          if (!isUnionMemberMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+            const baseTypeName = isScalar ? this._getScalar(typeName) : unionMemberType.name;
+            const convertedName = this.convertName(baseTypeName);
+            return replacePlaceholder(this.config.defaultMapper.type, convertedName);
+          }
+
+          return this.convertName(unionMemberType.name);
         });
         res[typeName] = referencedTypes.join(' | ');
       }
