@@ -1426,10 +1426,39 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       union CCCUnion = CCCFoo | CCCBar
     `);
 
-    const tsContent = (await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
     const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
-    expect(content.content).toBeSimilarStringTo(`CCCUnion: ResolversTypes['CCCFoo'] | ResolversTypes['CCCBar']`); // In ResolversTypes
+    expect(tsContent.content).toBeSimilarStringTo(`
+    export type CccFoo = {
+      __typename?: 'CCCFoo';
+      foo: Scalars['String'];
+    };
+    `);
+    expect(tsContent.content).toBeSimilarStringTo(`
+    export type CccBar = {
+      __typename?: 'CCCBar';
+      bar: Scalars['String'];
+    };
+    `);
+
+    expect(content.content).toBeSimilarStringTo(`
+    /** Mapping of union types */
+    export type ResolversUnionTypes = {
+      CCCUnion: CccFoo | CccBar;
+    }
+    `);
+    expect(content.content).toBeSimilarStringTo(`
+    /** Mapping between all available schema types and the resolvers types */
+    export type ResolversTypes = {
+      CCCFoo: ResolverTypeWrapper<CccFoo>;
+      String: ResolverTypeWrapper<Scalars['String']>;
+      CCCBar: ResolverTypeWrapper<CccBar>;
+      Query: ResolverTypeWrapper<{}>;
+      CCCUnion: ResolverTypeWrapper<ResolversUnionTypes['CCCUnion']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+    };
+    `);
     expect(content.content).toBeSimilarStringTo(`
     export type CccUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CCCUnion'] = ResolversParentTypes['CCCUnion']> = {
       __resolveType: TypeResolveFn<'CCCFoo' | 'CCCBar', ParentType, ContextType>;

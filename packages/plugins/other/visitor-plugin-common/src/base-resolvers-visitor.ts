@@ -885,7 +885,10 @@ export class BaseResolversVisitor<
 
     const unionTypes = Object.entries(allSchemaTypes).reduce((res, [typeName, schemaType]) => {
       if (isUnionType(schemaType)) {
-        const referencedTypes = schemaType.getTypes();
+        const referencedTypes = schemaType.getTypes().map(unionMember => {
+          const isMapped = this.config.mappers[unionMember.name];
+          return this.convertName(isMapped?.type || unionMember.name);
+        });
         res[typeName] = referencedTypes.join(' | ');
       }
       return res;
