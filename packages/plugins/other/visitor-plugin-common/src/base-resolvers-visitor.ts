@@ -756,10 +756,8 @@ export class BaseResolversVisitor<
       } else if (isScalar) {
         prev[typeName] = applyWrapper(this._getScalar(typeName));
       } else if (isUnionType(schemaType)) {
-        prev[typeName] = schemaType
-          .getTypes()
-          .map(type => getTypeToUse(type.name))
-          .join(' | ');
+        const resolversType = this.convertName('ResolversUnionTypes');
+        prev[typeName] = applyWrapper(`${resolversType}['${typeName}']`);
       } else if (isEnumType(schemaType)) {
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
       } else {

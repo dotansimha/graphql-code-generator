@@ -1762,6 +1762,56 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       PostsPayload: PostsResult | StandardError;
     };
     `);
+
+    expect(content.content).toBeSimilarStringTo(`
+    /** Mapping between all available schema types and the resolvers types */
+    export type ResolversTypes = {
+      Query: ResolverTypeWrapper<{}>;
+      ID: ResolverTypeWrapper<Scalars['ID']>;
+      StandardError: ResolverTypeWrapper<StandardError>;
+      String: ResolverTypeWrapper<Scalars['String']>;
+      User: ResolverTypeWrapper<User>;
+      UserResult: ResolverTypeWrapper<UserResult>;
+      UserPayload: ResolverTypeWrapper<ResolversUnionTypes['UserPayload']>;
+      Post: ResolverTypeWrapper<Post>;
+      PostsResult: ResolverTypeWrapper<PostsResult>;
+      PostsPayload: ResolverTypeWrapper<ResolversUnionTypes['PostsPayload']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+    };
+    `);
+
+    expect(content.content).toBeSimilarStringTo(`
+    /** Mapping between all available schema types and the resolvers parents */
+    export type ResolversParentTypes = {
+      Query: {};
+      ID: Scalars['ID'];
+      StandardError: StandardError;
+      String: Scalars['String'];
+      User: User;
+      UserResult: UserResult;
+      UserPayload: ResolversUnionTypes['UserPayload'];
+      Post: Post;
+      PostsResult: PostsResult;
+      PostsPayload: ResolversUnionTypes['PostsPayload'];
+      Boolean: Scalars['Boolean'];
+    };
+    `);
+  });
+
+  it('should NOT generate ResolversUnionTypes if there is no Union', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        fullName: String!
+      }
+    `);
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+
+    expect(content.content).not.toBeSimilarStringTo(`export type ResolversUnionTypes`);
   });
 
   it('should use correct value when rootValueType mapped as default', async () => {
