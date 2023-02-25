@@ -1443,7 +1443,6 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     `);
 
     expect(content.content).toBeSimilarStringTo(`
-    /** Mapping of union types */
     export type ResolversUnionTypes = {
       CCCUnion: CccFoo | CccBar;
     }
@@ -1785,7 +1784,6 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
     expect(content.content).toBeSimilarStringTo(`
-    /** Mapping of union types */
     export type ResolversUnionTypes = {
       UserPayload: UserResult | StandardError;
       PostsPayload: PostsResult | StandardError;
