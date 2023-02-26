@@ -1444,7 +1444,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
     export type ResolversUnionTypes = {
-      CCCUnion: CccFoo | CccBar;
+      CCCUnion: ( CccFoo ) | ( CccBar );
     }
     `);
     expect(content.content).toBeSimilarStringTo(`
@@ -1785,8 +1785,8 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
     export type ResolversUnionTypes = {
-      UserPayload: UserResult | StandardError;
-      PostsPayload: PostsResult | StandardError;
+      UserPayload: ( UserResult ) | ( StandardError );
+      PostsPayload: ( PostsResult ) | ( StandardError );
     };
     `);
 

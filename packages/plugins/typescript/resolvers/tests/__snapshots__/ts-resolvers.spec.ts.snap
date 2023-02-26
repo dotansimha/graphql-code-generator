@@ -136,8 +136,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes = ResolversObject<{
-  ChildUnion: Child | MyOtherType;
-  MyUnion: MyType | MyOtherType;
+  ChildUnion: ( Child ) | ( MyOtherType );
+  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -339,8 +339,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes = ResolversObject<{
-  ChildUnion: Child | MyOtherType;
-  MyUnion: MyType | MyOtherType;
+  ChildUnion: ( Child ) | ( MyOtherType );
+  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -596,8 +596,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes = ResolversObject<{
-  ChildUnion: Child | MyOtherType;
-  MyUnion: MyType | MyOtherType;
+  ChildUnion: ( Child ) | ( MyOtherType );
+  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
 /** Mapping between all available schema types and the resolvers types */

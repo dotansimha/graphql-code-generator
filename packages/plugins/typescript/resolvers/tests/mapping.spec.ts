@@ -9,8 +9,8 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: MyType | MyOtherType;
+        ChildUnion: ( Child ) | ( MyOtherType );
+        MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -66,8 +66,8 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: MyTypeDb | MyOtherType;
+        ChildUnion: ( Omit<Child, 'bar' | 'parent'> & { bar: ResolversTypes['String'], parent?: Maybe<ResolversTypes['MyType']> } ) | ( Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] } );
+        MyUnion: ( MyTypeDb ) | ( Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] } );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -142,7 +142,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        MovieLike: MovieEntity | Book;
+        MovieLike: ( MovieEntity ) | ( Book );
       };
     `);
     expect(content).toBeSimilarStringTo(`
@@ -212,7 +212,7 @@ describe('ResolversTypes', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        MovieLike: MovieEntity | Book;
+        MovieLike: ( MovieEntity ) | ( Book );
       };
     `);
     expect(content).toBeSimilarStringTo(`export type ResolversTypes = {
@@ -355,8 +355,8 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Partial<Child> | Partial<MyOtherType>;
-        MyUnion: Partial<MyType> | Partial<MyOtherType>;
+        ChildUnion: ( Partial<Child> ) | ( Partial<MyOtherType> );
+        MyUnion: ( Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }> ) | ( Partial<MyOtherType> );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -410,8 +410,8 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: CustomPartial<Child> | CustomPartial<MyOtherType>;
-        MyUnion: CustomPartial<MyType> | CustomPartial<MyOtherType>;
+        ChildUnion: ( CustomPartial<Child> ) | ( CustomPartial<MyOtherType> );
+        MyUnion: ( CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }> ) | ( CustomPartial<MyOtherType> );
       }
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -465,10 +465,14 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
+    // TODO: eddeee888 check if ResolversUnionTypes.MyUnion is supposed to be which?
+    //   - CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>
+    //   OR
+    //   - CustomPartial<MyType>
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: CustomPartial<MyType> | MyOtherType;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyOtherType );
+        MyUnion: ( CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }> ) | ( MyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -597,8 +601,8 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyType as DatabaseMyType } from './my-type';`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: DatabaseMyType | MyOtherType;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyOtherType );
+        MyUnion: ( DatabaseMyType ) | ( MyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -655,8 +659,8 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import DatabaseMyOtherType, { MyType as DatabaseMyType } from './my-type';`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | DatabaseMyOtherType;
-        MyUnion: DatabaseMyType | DatabaseMyOtherType;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( DatabaseMyOtherType );
+        MyUnion: ( DatabaseMyType ) | ( DatabaseMyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -716,8 +720,8 @@ describe('ResolversTypes', () => {
     );
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | DatabaseMyOtherType;
-        MyUnion: DatabaseMyType | DatabaseMyOtherType;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( DatabaseMyOtherType );
+        MyUnion: ( DatabaseMyType ) | ( DatabaseMyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -772,13 +776,7 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    // TODO: eddeee888 is this necessary? Maybe we should remove it if defaultMapper is set?
-    expect(result.content).toBeSimilarStringTo(`
-      export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: MyTypeDb | MyOtherType;
-      };
-    `);
+    expect(result.content).not.toBeSimilarStringTo(`export type ResolversUnionTypes`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<MyTypeDb>;
@@ -831,8 +829,8 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | CustomMyOtherType;
-        MyUnion: MyTypeDb | CustomMyOtherType;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( CustomMyOtherType );
+        MyUnion: ( MyTypeDb ) | ( CustomMyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -885,10 +883,14 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
+    // TODO: eddeee888 check if ResolversUnionTypes.MyUnion is supposed to be which?
+    //   - Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>
+    //   OR
+    //   - Partial<MyType>
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: Partial<MyType> | MyOtherType;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyOtherType );
+        MyUnion: ( Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }> ) | ( MyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -1389,8 +1391,8 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherTypeCustom;
-        MyUnion: MyType | MyOtherTypeCustom;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyOtherTypeCustom );
+        MyUnion: ( Omit<MyType, 'otherType' | 'unionChild'> & { otherType?: Maybe<ResolversTypes['MyOtherType']>, unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherTypeCustom );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -1447,8 +1449,8 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherTypeCustom;
-        MyUnion: MyTypeCustom | MyOtherTypeCustom;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyOtherTypeCustom );
+        MyUnion: ( MyTypeCustom ) | ( MyOtherTypeCustom );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -1505,8 +1507,8 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyNamespace.MyCustomOtherType;
-        MyUnion: MyType | MyNamespace.MyCustomOtherType;
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyNamespace.MyCustomOtherType );
+        MyUnion: ( Omit<MyType, 'otherType' | 'unionChild'> & { otherType?: Maybe<ResolversTypes['MyOtherType']>, unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyNamespace.MyCustomOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -1577,13 +1579,7 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
-    // TODO: eddeee888 do we need this if not used?
-    expect(result.content).toBeSimilarStringTo(`
-      export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: MyType | MyOtherType;
-      };
-    `);
+    expect(result.content).not.toBeSimilarStringTo(`export type ResolversUnionTypes`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
@@ -1637,8 +1633,8 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: Child | MyOtherType;
-        MyUnion: MyType | MyOtherType;
+        ChildUnion: ( Child ) | ( MyOtherType );
+        MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
@@ -1693,11 +1689,15 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
+    // TODO: eddeee888 check if ResolversUnionTypes.MyUnion is supposed to be which?
+    //   - MyNamespace.MyType<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>
+    //   OR
+    //   - MyNamespace.MyType<MyType>
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
-        ChildUnion: MyNamespace.MyDefaultMapper<Child> | MyNamespace.MyDefaultMapper<MyOtherType>;
-        MyUnion: MyNamespace.MyType<MyType> | MyNamespace.MyDefaultMapper<MyOtherType>;
+        ChildUnion: ( MyNamespace.MyDefaultMapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }> ) | ( MyNamespace.MyDefaultMapper<MyOtherType> );
+        MyUnion: ( MyNamespace.MyType<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }> ) | ( MyNamespace.MyDefaultMapper<MyOtherType> );
       };
     `);
     expect(result.content).toBeSimilarStringTo(`

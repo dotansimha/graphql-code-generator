@@ -560,6 +560,7 @@ export class BaseResolversVisitor<
   protected _usedMappers: { [key: string]: boolean } = {};
   protected _resolversTypes: ResolverTypes = {};
   protected _resolversParentTypes: ResolverParentTypes = {};
+  protected _hasReferencedResolversUnionTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
@@ -756,6 +757,7 @@ export class BaseResolversVisitor<
       } else if (isScalar) {
         prev[typeName] = applyWrapper(this._getScalar(typeName));
       } else if (isUnionType(schemaType)) {
+        this._hasReferencedResolversUnionTypes = true;
         const resolversType = this.convertName('ResolversUnionTypes');
         prev[typeName] = applyWrapper(`${resolversType}['${typeName}']`);
       } else if (isEnumType(schemaType)) {
@@ -875,33 +877,74 @@ export class BaseResolversVisitor<
   }
 
   protected createResolversUnionTypes(): Record<string, string> {
+    if (!this._hasReferencedResolversUnionTypes) {
+      return {};
+    }
+
     const allSchemaTypes = this._schema.getTypeMap();
 
     const unionTypes = Object.entries(allSchemaTypes).reduce((res, [typeName, schemaType]) => {
       if (isUnionType(schemaType)) {
         const referencedTypes = schemaType.getTypes().map(unionMemberType => {
           const isUnionMemberMapped = this.config.mappers[unionMemberType.name];
-          const hasDefaultMapper = !!this.config.defaultMapper?.type;
-          const isScalar = this.config.scalars[typeName];
 
-          if (isUnionMemberMapped && hasPlaceholder(isUnionMemberMapped.type)) {
-            const convertedName = this.convertName(unionMemberType.name);
-            return replacePlaceholder(isUnionMemberMapped.type, convertedName);
-          }
-
-          if (isUnionMemberMapped) {
+          // 1. If mapped without plachoder, just use it without doing extra checks
+          if (isUnionMemberMapped && !hasPlaceholder(isUnionMemberMapped.type)) {
             return isUnionMemberMapped.type;
           }
 
-          if (!isUnionMemberMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-            const baseTypeName = isScalar ? this._getScalar(typeName) : unionMemberType.name;
-            const convertedName = this.convertName(baseTypeName);
-            return replacePlaceholder(this.config.defaultMapper.type, convertedName);
+          // 2. Work out value for union member type
+          // 2a. By default, use the typescript type
+          let unionMemberValue = this.convertName(unionMemberType.name);
+
+          // 2b. Find fields to Omit if needed.
+          //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
+          //  - If there are fields to Omit, "type with maybe Omit"
+          const fields = unionMemberType.getFields();
+          const fieldsToOmit = this._federation
+            .filterFieldNames(Object.keys(fields))
+            .map(fieldName => {
+              const field = fields[fieldName];
+              const baseType = getBaseType(field.type);
+              const isMapped = this.config.mappers[baseType.name];
+              const isUnion = isUnionType(baseType);
+              const shouldMapType = this._shouldMapType[baseType.name];
+
+              if (!isMapped && !isUnion && !shouldMapType) {
+                return null;
+              }
+
+              return {
+                addOptionalSign: !this.config.avoidOptionals && !isNonNullType(field.type),
+                fieldName: field.name,
+                replaceWithType: wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type, {
+                  wrapOptional: this.applyMaybe,
+                  wrapArray: this.wrapWithArray,
+                }),
+              };
+            })
+            .filter(a => a);
+          if (fieldsToOmit.length > 0) {
+            unionMemberValue = this.replaceFieldsInType(unionMemberValue, fieldsToOmit);
           }
 
-          return this.convertName(unionMemberType.name);
+          // 2c. If union member is mapped with placeholder, use the "type with maybe Omit" as {T}
+          if (isUnionMemberMapped && hasPlaceholder(isUnionMemberMapped.type)) {
+            return replacePlaceholder(isUnionMemberMapped.type, unionMemberValue);
+          }
+
+          // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
+          const hasDefaultMapper = !!this.config.defaultMapper?.type;
+          const isScalar = this.config.scalars[typeName];
+
+          if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+            const finalTypename = isScalar ? this._getScalar(typeName) : unionMemberValue;
+            return replacePlaceholder(this.config.defaultMapper.type, finalTypename);
+          }
+
+          return unionMemberValue;
         });
-        res[typeName] = referencedTypes.join(' | ');
+        res[typeName] = referencedTypes.map(type => `( ${type} )`).join(' | '); // Must wrap every union member in explicit "( )" to separate the members
       }
       return res;
     }, {});
