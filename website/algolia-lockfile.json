@@ -1,5 +1,17 @@
 [
   {
+    "objectID": "code-generator-",
+    "headings": [],
+    "toc": [],
+    "content": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "https://www.the-guild.dev/graphql/codegen//",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [],
+    "source": "Code Generator",
+    "title": "Home",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-advanced-usage-document-transform",
     "headings": [
       "Basic Usage",
@@ -533,6 +545,47 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-getting-started-",
+    "headings": [
+      "The perfect GraphQL Developer Experience",
+      "What's next?"
+    ],
+    "toc": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "To the back-end",
+                "anchor": "to-the-back-end"
+              }
+            ],
+            "title": "From the front-end",
+            "anchor": "from-the-front-end"
+          }
+        ],
+        "title": "The perfect GraphQL Developer Experience",
+        "anchor": "the-perfect-graphql-developer-experience"
+      },
+      {
+        "children": [],
+        "title": "What's next?",
+        "anchor": "whats-next"
+      }
+    ],
+    "content": "66b3c192f2a033c11156a1a9e7b024a2",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Getting Started"
+    ],
+    "source": "Code Generator",
+    "title": "Introduction",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-getting-started-development-workflow",
     "headings": [
       "Scripts Integration",
@@ -612,47 +665,6 @@
     ],
     "source": "Code Generator",
     "title": "ESM TypeScript usage",
-    "type": "Documentation"
-  },
-  {
-    "objectID": "code-generator-docs-getting-started-index",
-    "headings": [
-      "The perfect GraphQL Developer Experience",
-      "What's next?"
-    ],
-    "toc": [
-      {
-        "children": [
-          {
-            "children": [
-              {
-                "children": [],
-                "title": "To the back-end",
-                "anchor": "to-the-back-end"
-              }
-            ],
-            "title": "From the front-end",
-            "anchor": "from-the-front-end"
-          }
-        ],
-        "title": "The perfect GraphQL Developer Experience",
-        "anchor": "the-perfect-graphql-developer-experience"
-      },
-      {
-        "children": [],
-        "title": "What's next?",
-        "anchor": "whats-next"
-      }
-    ],
-    "content": "66b3c192f2a033c11156a1a9e7b024a2",
-    "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/index",
-    "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Getting Started"
-    ],
-    "source": "Code Generator",
-    "title": "Introduction",
     "type": "Documentation"
   },
   {
@@ -1319,6 +1331,21 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-writing-plugins-",
+    "headings": [],
+    "toc": [],
+    "content": "2e91a8d03380fe061291a059d61dae4b",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/",
+    "domain": "https://www.the-guild.dev/graphql/codegen/",
+    "hierarchy": [
+      "Docs",
+      "Writing Plugins"
+    ],
+    "source": "Code Generator",
+    "title": "What are Plugins?",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-writing-plugins-contributing",
     "headings": [
       "1. Requirements",
@@ -1411,21 +1438,6 @@
     "type": "Documentation"
   },
   {
-    "objectID": "code-generator-docs-writing-plugins-index",
-    "headings": [],
-    "toc": [],
-    "content": "2e91a8d03380fe061291a059d61dae4b",
-    "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/index",
-    "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [
-      "Docs",
-      "Writing Plugins"
-    ],
-    "source": "Code Generator",
-    "title": "What are Plugins?",
-    "type": "Documentation"
-  },
-  {
     "objectID": "code-generator-docs-writing-plugins-plugin-structure",
     "headings": [
       "Basic Plugin",
@@ -1514,18 +1526,6 @@
     ],
     "source": "Code Generator",
     "title": "Validate Configuration",
-    "type": "Documentation"
-  },
-  {
-    "objectID": "code-generator-index",
-    "headings": [],
-    "toc": [],
-    "content": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "https://www.the-guild.dev/graphql/codegen//index",
-    "domain": "https://www.the-guild.dev/graphql/codegen/",
-    "hierarchy": [],
-    "source": "Code Generator",
-    "title": "Home",
     "type": "Documentation"
   },
   {
