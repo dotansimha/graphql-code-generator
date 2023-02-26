@@ -904,6 +904,7 @@ export class BaseResolversVisitor<
           const fieldsToOmit = this._federation
             .filterFieldNames(Object.keys(fields))
             .map(fieldName => {
+              // TODO: eddeee888 this is duplicated from createResolversFields. Abstract to reuse
               const field = fields[fieldName];
               const baseType = getBaseType(field.type);
               const isMapped = this.config.mappers[baseType.name];

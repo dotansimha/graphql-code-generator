@@ -1430,22 +1430,22 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
     expect(tsContent.content).toBeSimilarStringTo(`
-    export type CccFoo = {
-      __typename?: 'CCCFoo';
-      foo: Scalars['String'];
-    };
+      export type CccFoo = {
+        __typename?: 'CCCFoo';
+        foo: Scalars['String'];
+      };
     `);
     expect(tsContent.content).toBeSimilarStringTo(`
-    export type CccBar = {
-      __typename?: 'CCCBar';
-      bar: Scalars['String'];
-    };
+      export type CccBar = {
+        __typename?: 'CCCBar';
+        bar: Scalars['String'];
+      };
     `);
 
     expect(content.content).toBeSimilarStringTo(`
-    export type ResolversUnionTypes = {
-      CCCUnion: ( CccFoo ) | ( CccBar );
-    }
+      export type ResolversUnionTypes = {
+        CCCUnion: ( CccFoo ) | ( CccBar );
+      };
     `);
     expect(content.content).toBeSimilarStringTo(`
     /** Mapping between all available schema types and the resolvers types */
@@ -1784,44 +1784,42 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
     expect(content.content).toBeSimilarStringTo(`
-    export type ResolversUnionTypes = {
-      UserPayload: ( UserResult ) | ( StandardError );
-      PostsPayload: ( PostsResult ) | ( StandardError );
-    };
+      export type ResolversUnionTypes = {
+        UserPayload: ( UserResult ) | ( StandardError );
+        PostsPayload: ( PostsResult ) | ( StandardError );
+      };
     `);
 
     expect(content.content).toBeSimilarStringTo(`
-    /** Mapping between all available schema types and the resolvers types */
-    export type ResolversTypes = {
-      Query: ResolverTypeWrapper<{}>;
-      ID: ResolverTypeWrapper<Scalars['ID']>;
-      StandardError: ResolverTypeWrapper<StandardError>;
-      String: ResolverTypeWrapper<Scalars['String']>;
-      User: ResolverTypeWrapper<User>;
-      UserResult: ResolverTypeWrapper<UserResult>;
-      UserPayload: ResolverTypeWrapper<ResolversUnionTypes['UserPayload']>;
-      Post: ResolverTypeWrapper<Post>;
-      PostsResult: ResolverTypeWrapper<PostsResult>;
-      PostsPayload: ResolverTypeWrapper<ResolversUnionTypes['PostsPayload']>;
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-    };
+      export type ResolversTypes = {
+        Query: ResolverTypeWrapper<{}>;
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        StandardError: ResolverTypeWrapper<StandardError>;
+        String: ResolverTypeWrapper<Scalars['String']>;
+        User: ResolverTypeWrapper<User>;
+        UserResult: ResolverTypeWrapper<UserResult>;
+        UserPayload: ResolverTypeWrapper<ResolversUnionTypes['UserPayload']>;
+        Post: ResolverTypeWrapper<Post>;
+        PostsResult: ResolverTypeWrapper<PostsResult>;
+        PostsPayload: ResolverTypeWrapper<ResolversUnionTypes['PostsPayload']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      };
     `);
 
     expect(content.content).toBeSimilarStringTo(`
-    /** Mapping between all available schema types and the resolvers parents */
-    export type ResolversParentTypes = {
-      Query: {};
-      ID: Scalars['ID'];
-      StandardError: StandardError;
-      String: Scalars['String'];
-      User: User;
-      UserResult: UserResult;
-      UserPayload: ResolversUnionTypes['UserPayload'];
-      Post: Post;
-      PostsResult: PostsResult;
-      PostsPayload: ResolversUnionTypes['PostsPayload'];
-      Boolean: Scalars['Boolean'];
-    };
+      export type ResolversParentTypes = {
+        Query: {};
+        ID: Scalars['ID'];
+        StandardError: StandardError;
+        String: Scalars['String'];
+        User: User;
+        UserResult: UserResult;
+        UserPayload: ResolversUnionTypes['UserPayload'];
+        Post: Post;
+        PostsResult: PostsResult;
+        PostsPayload: ResolversUnionTypes['PostsPayload'];
+        Boolean: Scalars['Boolean'];
+      };
     `);
   });
 
