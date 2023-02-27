@@ -788,10 +788,16 @@ export class BaseResolversVisitor<
       }
 
       if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-        // Make sure the inner type has no ResolverTypeWrapper
-        const name = clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
-        const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
-        prev[typeName] = applyWrapper(replaced);
+        const originalTypeName = isScalar ? this._getScalar(typeName) : prev[typeName];
+
+        if (isUnionType(schemaType)) {
+          // Don't clear ResolverTypeWrapper from Unions
+          prev[typeName] = replacePlaceholder(this.config.defaultMapper.type, originalTypeName);
+        } else {
+          const name = clearWrapper(originalTypeName);
+          const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
+          prev[typeName] = applyWrapper(replaced);
+        }
       }
 
       return prev;
