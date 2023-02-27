@@ -10,7 +10,7 @@
     "generate-json-config": "tsx generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/algolia": "1.1.2",
+    "@theguild/algolia": "1.1.4",
     "@theguild/tailwind-config": "0.2.1",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
@@ -66,7 +66,7 @@
     "@graphql-codegen/typescript-vue-urql": "2.3.6",
     "@graphql-codegen/urql-introspection": "2.2.1",
     "@monaco-editor/react": "4.4.6",
-    "@theguild/components": "4.5.4",
+    "@theguild/components": "4.5.5",
     "classnames": "2.3.2",
     "date-fns": "2.29.3",
     "dedent": "0.7.0",
