@@ -768,44 +768,11 @@ export class BaseResolversVisitor<
       }
 
       if (shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) {
-        const fields = schemaType.getFields();
-        const relevantFields: {
-          addOptionalSign: boolean;
-          fieldName: string;
-          replaceWithType: string;
-        }[] = this._federation
-          .filterFieldNames(Object.keys(fields))
-          .filter(fieldName => {
-            const field = fields[fieldName];
-            const baseType = getBaseType(field.type);
-
-            // Filter out fields of types that are not included
-            if (shouldInclude && !shouldInclude(baseType)) {
-              return false;
-            }
-            return true;
-          })
-          .map(fieldName => {
-            const field = fields[fieldName];
-            const baseType = getBaseType(field.type);
-            const isUnion = isUnionType(baseType);
-
-            if (!this.config.mappers[baseType.name] && !isUnion && !this._shouldMapType[baseType.name]) {
-              return null;
-            }
-
-            const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
-
-            return {
-              addOptionalSign,
-              fieldName,
-              replaceWithType: wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type, {
-                wrapOptional: this.applyMaybe,
-                wrapArray: this.wrapWithArray,
-              }),
-            };
-          })
-          .filter(a => a);
+        const relevantFields = this.getRelevantFieldsToOmit({
+          schemaType,
+          getTypeToUse,
+          shouldInclude,
+        });
 
         if (relevantFields.length > 0) {
           // Puts ResolverTypeWrapper on top of an entire type
@@ -833,7 +800,7 @@ export class BaseResolversVisitor<
 
   protected replaceFieldsInType(
     typeName: string,
-    relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[]
+    relevantFields: ReturnType<typeof this.getRelevantFieldsToOmit>
   ): string {
     this._globalDeclarations.add(OMIT_TYPE);
     return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields
@@ -900,31 +867,10 @@ export class BaseResolversVisitor<
           // 2b. Find fields to Omit if needed.
           //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
           //  - If there are fields to Omit, "type with maybe Omit"
-          const fields = unionMemberType.getFields();
-          const fieldsToOmit = this._federation
-            .filterFieldNames(Object.keys(fields))
-            .map(fieldName => {
-              // TODO: eddeee888 this is duplicated from createResolversFields. Abstract to reuse
-              const field = fields[fieldName];
-              const baseType = getBaseType(field.type);
-              const isMapped = this.config.mappers[baseType.name];
-              const isUnion = isUnionType(baseType);
-              const shouldMapType = this._shouldMapType[baseType.name];
-
-              if (!isMapped && !isUnion && !shouldMapType) {
-                return null;
-              }
-
-              return {
-                addOptionalSign: !this.config.avoidOptionals && !isNonNullType(field.type),
-                fieldName: field.name,
-                replaceWithType: wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type, {
-                  wrapOptional: this.applyMaybe,
-                  wrapArray: this.wrapWithArray,
-                }),
-              };
-            })
-            .filter(a => a);
+          const fieldsToOmit = this.getRelevantFieldsToOmit({
+            schemaType: unionMemberType,
+            getTypeToUse: this.getTypeToUse,
+          });
           if (fieldsToOmit.length > 0) {
             unionMemberValue = this.replaceFieldsInType(unionMemberValue, fieldsToOmit);
           }
@@ -1568,6 +1514,55 @@ export class BaseResolversVisitor<
 
   SchemaDefinition() {
     return null;
+  }
+
+  private getRelevantFieldsToOmit({
+    schemaType,
+    shouldInclude,
+    getTypeToUse,
+  }: {
+    schemaType: GraphQLObjectType;
+    getTypeToUse: (name: string) => string;
+    shouldInclude?: (type: GraphQLNamedType) => boolean;
+  }): {
+    addOptionalSign: boolean;
+    fieldName: string;
+    replaceWithType: string;
+  }[] {
+    const fields = schemaType.getFields();
+    return this._federation
+      .filterFieldNames(Object.keys(fields))
+      .filter(fieldName => {
+        const field = fields[fieldName];
+        const baseType = getBaseType(field.type);
+
+        // Filter out fields of types that are not included
+        if (shouldInclude && !shouldInclude(baseType)) {
+          return false;
+        }
+        return true;
+      })
+      .map(fieldName => {
+        const field = fields[fieldName];
+        const baseType = getBaseType(field.type);
+        const isUnion = isUnionType(baseType);
+
+        if (!this.config.mappers[baseType.name] && !isUnion && !this._shouldMapType[baseType.name]) {
+          return null;
+        }
+
+        const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
+
+        return {
+          addOptionalSign,
+          fieldName,
+          replaceWithType: wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type, {
+            wrapOptional: this.applyMaybe,
+            wrapArray: this.wrapWithArray,
+          }),
+        };
+      })
+      .filter(a => a);
   }
 }
 
