@@ -201,6 +201,29 @@ export default config
 
 </Callout>
 
+#### The `getFragmentName()` helper
+
+The `getFragmentName()` function helps get the Fragment's name from a given Fragment.
+
+This could be useful if you would like to rely on a hard reference to the fragment name or for any utility functions:
+
+```tsx filename="src/Film.tsx" {13-14}
+import { getFragmentName } from './gql/fragment-masking'
+import { graphql } from '../src/gql'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+const fragmentName = getFragmentName(FilmFragment) // 'FilmItemFragment'
+//    ^? const fragmentName = "FilmItemFragment"
+```
+
 ### Getting a Fragment's type
 
 Getting a Fragment's type is achieved by importing the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:

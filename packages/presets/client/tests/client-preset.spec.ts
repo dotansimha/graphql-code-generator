@@ -748,16 +748,24 @@ export * from "./gql";`);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
         "import { ResultOf, TypedDocumentNode as DocumentNode,  } from '@graphql-typed-document-node/core';
+        import { FragmentDefinitionNode } from 'graphql';
 
+
+        export type FragmentName<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+          infer TType,
+          any
+        >
+          ? TType extends { ' $fragmentName'?: infer TKey }
+            ? TKey
+            : never
+          : never;
 
         export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
           infer TType,
           any
         >
-          ? TType extends { ' $fragmentName'?: infer TKey }
-            ? TKey extends string
-              ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
-              : never
+          ? FragmentName<TDocumentType> extends string
+            ? { ' $fragmentRefs'?: { [key in FragmentName<TDocumentType>]: TType } }
             : never
           : never;
 
@@ -794,6 +802,18 @@ export * from "./gql";`);
           FT extends ResultOf<F>
         >(data: FT, _fragment: F): FragmentType<F> {
           return data as FragmentType<F>;
+        }
+
+        export function getFragmentName<TType>(doc: DocumentNode<TType>): FragmentName<DocumentNode<TType, any>> {
+          const fragmentName = doc.definitions
+            .filter((definition): definition is FragmentDefinitionNode => definition.kind === 'FragmentDefinition')
+            .map(definition => definition.name.value as FragmentName<DocumentNode<TType, any>>)[0];
+
+          if (!fragmentName) {
+            throw new Error(\`Could not find a fragment name for the provided document: \${doc}\`);
+          }
+
+          return fragmentName;
         }"
       `);
 
