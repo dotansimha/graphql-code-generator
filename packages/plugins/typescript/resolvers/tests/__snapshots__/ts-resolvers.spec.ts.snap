@@ -339,8 +339,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes = ResolversObject<{
-  ChildUnion: ( Child ) | ( MyOtherType );
-  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
+  ChildUnion: ( Types.Child ) | ( Types.MyOtherType );
+  MyUnion: ( Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']> } ) | ( Types.MyOtherType );
 }>;
 
 /** Mapping between all available schema types and the resolvers types */

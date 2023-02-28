@@ -855,20 +855,23 @@ export class BaseResolversVisitor<
     }
 
     const allSchemaTypes = this._schema.getTypeMap();
+    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
-    const unionTypes = Object.entries(allSchemaTypes).reduce((res, [typeName, schemaType]) => {
+    const unionTypes = typeNames.reduce((res, typeName) => {
+      const schemaType = allSchemaTypes[typeName];
+
       if (isUnionType(schemaType)) {
         const referencedTypes = schemaType.getTypes().map(unionMemberType => {
           const isUnionMemberMapped = this.config.mappers[unionMemberType.name];
 
-          // 1. If mapped without plachoder, just use it without doing extra checks
+          // 1. If mapped without placehoder, just use it without doing extra checks
           if (isUnionMemberMapped && !hasPlaceholder(isUnionMemberMapped.type)) {
             return isUnionMemberMapped.type;
           }
 
           // 2. Work out value for union member type
           // 2a. By default, use the typescript type
-          let unionMemberValue = this.convertName(unionMemberType.name);
+          let unionMemberValue = this.convertName(unionMemberType.name, {}, true);
 
           // 2b. Find fields to Omit if needed.
           //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
@@ -889,7 +892,6 @@ export class BaseResolversVisitor<
           // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
           const hasDefaultMapper = !!this.config.defaultMapper?.type;
           const isScalar = this.config.scalars[typeName];
-
           if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
             const finalTypename = isScalar ? this._getScalar(typeName) : unionMemberValue;
             return replacePlaceholder(this.config.defaultMapper.type, finalTypename);
