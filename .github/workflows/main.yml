@@ -67,7 +67,7 @@ jobs:
           nodeVersion: 16
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.65.0
           target: wasm32-wasi
           override: true
       - name: Build SWC plugin
@@ -152,7 +152,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.65.0
           target: wasm32-wasi
           override: true
       - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
