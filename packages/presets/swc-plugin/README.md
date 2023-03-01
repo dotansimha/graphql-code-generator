@@ -14,20 +14,22 @@ yarn add -D @graphql-codegen/client-preset-swc-plugin
 
 You will need to provide the `artifactDirectory` path that should be the same as the one configured in your `codegen.ts`
 
-#### `.swrc`
+#### Vite
 
-```json5
-{
-  // ...
-  jsc: {
-    // ...
-    experimental: {
+```ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react({
       plugins: [
         ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
       ]
-    }
-  }
-}
+    })
+  ]
+})
 ```
 
 #### Next.js
@@ -39,6 +41,22 @@ const nextConfig = {
     swcPlugins: [
       ['@graphql-codegen/client-preset-swc-plugin-optimizer', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
     ]
+  }
+}
+```
+
+#### `.swcrc`
+
+```json5
+{
+  // ...
+  jsc: {
+    // ...
+    experimental: {
+      plugins: [
+        ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+      ]
+    }
   }
 }
 ```
