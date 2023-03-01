@@ -1,9 +1,10 @@
 import { join } from 'path';
 import { normalizeInstanceOrArray, normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import { isValidPath } from '@graphql-tools/utils';
-import { FSWatcher } from 'chokidar';
+import type { subscribe } from '@parcel/watcher';
 import debounce from 'debounce';
 import isGlob from 'is-glob';
+import mm from 'micromatch';
 import logSymbols from 'log-symbols';
 import { executeCodegen } from '../codegen.js';
 import { CodegenContext, loadContext } from '../config.js';
@@ -58,10 +59,12 @@ export const createWatcher = (
     files.push(...normalizeInstanceOrArray<string>(config.watch));
   }
 
-  let watcher: FSWatcher;
+  let watcherSubscription: Awaited<ReturnType<typeof subscribe>>;
 
   const runWatcher = async () => {
-    const chokidar = await import('chokidar');
+    const parcelWatcher = await import('@parcel/watcher');
+    debugLog(`[Watcher] Parcel watcher loaded...`);
+
     let isShutdown = false;
 
     const debouncedExec = debounce(() => {
@@ -87,20 +90,45 @@ export const createWatcher = (
         }
       });
 
-    watcher = chokidar.watch(files, {
-      persistent: true,
-      ignoreInitial: true,
-      followSymlinks: true,
-      cwd: process.cwd(),
-      disableGlobbing: false,
-      usePolling: config.watchConfig?.usePolling,
-      interval: config.watchConfig?.interval,
-      depth: 99,
-      awaitWriteFinish: true,
-      ignorePermissionErrors: false,
-      atomic: true,
-      ignored,
-    });
+    watcherSubscription = await parcelWatcher.subscribe(
+      process.cwd(),
+      async (_, events) => {
+        // it doesn't matter what has changed, need to run whole process anyway
+        await Promise.all(
+          events.map(async ({ type: eventName, path }) => {
+            /**
+             * @parcel/watcher has no way to run watcher on specific files (https://github.com/parcel-bundler/watcher/issues/42)
+             * But we can use micromatch to filter out events that we don't care about
+             */
+            if (!mm.contains(path, files)) return;
+
+            lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
+            debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
+            const fullPath = join(process.cwd(), path);
+            // In ESM require is not defined
+            try {
+              delete require.cache[fullPath];
+            } catch (err) {}
+
+            if (eventName === 'update' && config.configFilePath && fullPath === config.configFilePath) {
+              log(`${logSymbols.info} Config file has changed, reloading...`);
+              const context = await loadContext(config.configFilePath);
+
+              const newParsedConfig: Types.Config & { configFilePath?: string } = context.getConfig();
+              newParsedConfig.watch = config.watch;
+              newParsedConfig.silent = config.silent;
+              newParsedConfig.overwrite = config.overwrite;
+              newParsedConfig.configFilePath = config.configFilePath;
+              config = newParsedConfig;
+              initalContext.updateConfig(config);
+            }
+
+            debouncedExec();
+          })
+        );
+      },
+      { ignore: ignored }
+    );
 
     debugLog(`[Watcher] Started`);
 
@@ -108,35 +136,9 @@ export const createWatcher = (
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
-      watcher.close();
+      watcherSubscription.unsubscribe();
       lifecycleHooks(config.hooks).beforeDone();
     };
-
-    // it doesn't matter what has changed, need to run whole process anyway
-    watcher.on('all', async (eventName, path) => {
-      lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
-      debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
-      const fullPath = join(process.cwd(), path);
-      // In ESM require is not defined
-      try {
-        delete require.cache[fullPath];
-      } catch (err) {}
-
-      if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
-        log(`${logSymbols.info} Config file has changed, reloading...`);
-        const context = await loadContext(config.configFilePath);
-
-        const newParsedConfig: Types.Config & { configFilePath?: string } = context.getConfig();
-        newParsedConfig.watch = config.watch;
-        newParsedConfig.silent = config.silent;
-        newParsedConfig.overwrite = config.overwrite;
-        newParsedConfig.configFilePath = config.configFilePath;
-        config = newParsedConfig;
-        initalContext.updateConfig(config);
-      }
-
-      debouncedExec();
-    });
 
     process.once('SIGINT', shutdown);
     process.once('SIGTERM', shutdown);
@@ -148,7 +150,7 @@ export const createWatcher = (
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)
       .catch(err => {
-        watcher.close();
+        watcherSubscription.unsubscribe();
         reject(err);
       });
   });

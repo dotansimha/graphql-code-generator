@@ -59,7 +59,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
     [typeName: string]: ParsedMapper;
   };
   defaultMapper: ParsedMapper | null;
-  avoidOptionals: AvoidOptionalsConfig;
+  avoidOptionals: AvoidOptionalsConfig | boolean;
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
@@ -1198,7 +1198,10 @@ export class BaseResolversVisitor<
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 
-      const avoidOptionals = this.config.avoidOptionals?.resolvers ?? this.config.avoidOptionals === true;
+      const avoidOptionals =
+        typeof this.config.avoidOptionals === 'object'
+          ? this.config.avoidOptionals?.resolvers
+          : this.config.avoidOptionals === true;
       const signature: {
         name: string;
         modifier: string;

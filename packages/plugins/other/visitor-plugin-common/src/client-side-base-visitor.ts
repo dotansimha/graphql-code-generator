@@ -542,6 +542,10 @@ export class ClientSideBaseVisitor<
   private clearExtension(path: string): string {
     const extension = extname(path);
 
+    if (!this.config.emitLegacyCommonJSImports && extension === '.js') {
+      return path;
+    }
+
     if (EXTENSIONS_TO_REMOVE.includes(extension)) {
       return path.replace(/\.[^/.]+$/, '');
     }

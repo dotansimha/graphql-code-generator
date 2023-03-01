@@ -47,7 +47,7 @@ yarn graphql-codegen --watch "src/**/*.js"
 
 Use this when you are loading your schema or documents from a single code file that depends on other files internally because codegen can't tell that you're using those files automatically.
 
-By default, watch mode uses the system's native support to listen for file change events. This can be configured in the settings file to use a stat polling method instead of in unusual cases where system support is unavailable.
+We use [`@parcel/watcher`](https://github.com/parcel-bundler/watcher) which supports subscribing to realtime notifications of changes in a directory. It works recursively, so changes in sub-directories will also be emitted.
 
 ```ts {6-10}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -55,12 +55,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   schema: 'http://localhost:4000/graphql',
   // ...
-  watch: true,
-  watchConfig: {
-    // Passed directly through to chokidar's file watch configuration
-    usePolling: true,
-    interval: 1000
-  }
+  watch: true
 }
 
 export default config

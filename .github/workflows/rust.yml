@@ -1,0 +1,26 @@
+name: Rust plugin
+on:
+  workflow_dispatch:
+
+jobs:
+  publish-rust-swc-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-wasi
+          override: true
+      - name: Publish SWC plugin
+        working-directory: ./packages/presets/swc-plugin
+        run: |
+          npm run build-wasm
+          npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

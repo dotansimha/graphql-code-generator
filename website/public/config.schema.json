@@ -79,7 +79,7 @@
               "$ref": "#/definitions/Array",
               "description": "An array of package name and identifier that will be used to track down your gql usages and imports. Use this if your code files imports gql from another library or you have a custom gql tag. identifier is the named export, so don't provide it if the tag function is imported as default."
             },
-            "magicComment": {
+            "gqlMagicComment": {
               "description": "Configures the magic GraphQL comments to look for. The default is `GraphQL`.",
               "type": "string"
             },
@@ -104,30 +104,83 @@
       "type": "object",
       "properties": {
         "camelCasedEnums": {
-          "description": "Dart's recommended lint uses camelCase for enum fields. Set this option to `false` to use the same case as used in the GraphQL Schema but note this can cause lint issues.\nDefault value: \"true\"",
-          "type": "boolean"
+          "type": "{(boolean | DartIdentifierCasing)}",
+          "description": "Setting this option to `true` will camelCase enum values as required by Dart's recommended linter.\n\nIf set to false, the original casing as specified in the Graphql Schema is used\n\nYou can also transform the casing by specifying your preferred casing for Enum values.\n\nAvailable options are: `'snake_case'`, `'camelCase'` and `'PascalCase'`\n\nFor consistency, this option applies the same configuration to all Enum Types in the GraphQL Schema\nDefault value: \"true\""
+        },
+        "copyWith": {
+          "type": "{(boolean | TypeNamePattern)}",
+          "description": "The [`freezed`](https://pub.dev/packages/freezed) library has this option enabled by default.\nUse this option to enable/disable this option completely.\n\nThe plugin by default generates immutable Freezed models using the `@freezed` decorator.\n\nIf this option is configured, the plugin will generate immutable Freezed models using the `@Freezed(copyWith: value)` instead.\n\nSetting a boolean value will enable/disable this option globally for every GraphQL Type\nbut you can also set this option to `true` for one or more GraphQL Types using a `TypeNamePattern`.\nDefault value: \"undefined\""
         },
         "customScalars": {
-          "description": "map custom Scalars to Dart built-in types\nDefault value: \"[object Object]\"",
-          "type": "object",
-          "additionalProperties": { "type": "string" }
+          "type": "{(Record<string, string>)}",
+          "description": "The `key` is the GraphQL Scalar Type and the `value` is the equivalent Dart Type\n\nThe plugin automatically handles built-in GraphQL Scalar Types so only specify the custom Scalars in your Graphql Schema.\nDefault value: \"[object Object]\""
         },
-        "fileName": {
-          "description": "this fileName will be used for the generated output file\nDefault value: \"app_models\"",
-          "type": "string"
+        "defaultValues": {
+          "type": "{([pattern: FieldNamePattern, value: string, appliesOn: AppliesOnParameters[]][])}",
+          "description": "This will annotate the generated parameter with a `@Default(value: defaultValue)` decorator.\n\nThe default value will be interpolated into the `@Default(value: ${value})` decorator so\nUse backticks for the value element so that you can use quotation marks for string values.\nE.g: `\"I'm a string default value\"` but `Episode.jedi` is not a string value.\n\nUse the `appliesOn` to specify where this option should be applied on\nDefault value: \"undefined\""
         },
-        "globalFreezedConfig": {
-          "$ref": "#/definitions/FreezedConfig",
-          "description": "use the same Freezed configuration for every generated output\nDefault value: \"DefaultFreezedConfig\""
+        "deprecated": {
+          "type": "{([pattern: Pattern, appliesOn: (AppliesOnFactory | AppliesOnParameters)[]][])}",
+          "description": "Using a TypeNamePattern, you can mark an entire factory constructor for one or more GraphQL types as deprecated.\n\nLikewise, using a FieldNamePattern, you can mark one or more fields as deprecated\n\nSince the first element in the tuple has a type signature of `Pattern`,\nyou can use either TypeNamePattern or FieldNamePattern or use both\nby composing them with `Pattern.compose(...)`\n\nUse the `appliesOn` to specify which block this option should be applied on\nDefault value: \"undefined\""
         },
-        "typeSpecificFreezedConfig": {
-          "$ref": "#/definitions/Record_1",
-          "description": "override the `globalFreezedConfig` for specific types. The GraphQL Type name is the key\nDefault value: \"undefined\""
+        "equal": {
+          "type": "{(boolean | TypeNamePattern)}",
+          "description": "The [`freezed`](https://pub.dev/packages/freezed) library has this option enabled by default.\nUse this option to enable/disable this option completely.\n\nThe plugin by default generates immutable Freezed models using the `@freezed` decorator.\n\nIf this option is configured, the plugin will generate immutable Freezed models using the `@Freezed(equal: value)` instead.\n\nSetting a boolean value will enable/disable this option globally for every GraphQL Type\nbut you can also set this option to `true` for one or more GraphQL Types using a `TypeNamePattern`.\nDefault value: \"undefined\""
+        },
+        "escapeDartKeywords": {
+          "type": "{(boolean | [pattern: Pattern, prefix?: string, suffix?: string, appliesOn?: AppliesOn[]][])}",
+          "description": "Wraps the fields names that are valid Dart keywords with the prefix and suffix given\nDefault value: \"true\""
+        },
+        "final": {
+          "type": "{([pattern: FieldNamePattern, appliesOn: AppliesOnParameters[]][])}",
+          "description": "This will mark the specified parameters as final\nDefault value: \"undefined\""
         },
         "ignoreTypes": {
-          "description": "names of GraphQL types to ignore when generating Freezed classes\nDefault value: \"\"",
+          "type": "{(TypeNamePattern)}",
+          "description": "names of GraphQL types to ignore when generating Freezed classes\nDefault value: \"undefined\""
+        },
+        "immutable": {
+          "type": "{(boolean | TypeNamePattern)}",
+          "description": "The [`freezed`](https://pub.dev/packages/freezed) library  by default generates immutable models decorated with the `@freezed` decorator.\nThis option if set to `false` the plugin will generate mutable Freezed models using the `@unfreezed` decorator instead.\n\nSetting a boolean value will enable/disable this option globally for every GraphQL Type\nbut you can also set this option to `true` for one or more GraphQL Types using a `TypeNamePattern`.\nDefault value: \"undefined\""
+        },
+        "makeCollectionsUnmodifiable": {
+          "type": "{(boolean | TypeNamePattern)}",
+          "description": "allows collections(lists/maps) to be modified even if class is immutable\nDefault value: \"undefined\""
+        },
+        "mergeTypes": {
+          "type": "{(Record<string, TypeName[]>)}",
+          "description": "maps over the value(array of typeNames) and transform each as a named factory constructor inside a class generated for the key(target GraphQL Object Type).\nDefault value: \"undefined\""
+        },
+        "mutableInputs": {
+          "description": "since inputs will be used to collect data, it makes sense to make them mutable with Freezed's `@unfreezed` decorator.\n\nThis overrides(in order words: has a higher precedence than) the `immutable` config value `ONLY` for GraphQL `input types`.\nDefault value: \"true\"",
+          "anyOf": [{ "$ref": "#/definitions/TypeNamePattern" }, { "type": "boolean" }]
+        },
+        "privateEmptyConstructor": {
+          "description": "if true, defines a private empty constructor to allow getter and methods to work on the class\nDefault value: \"true\"",
+          "anyOf": [{ "$ref": "#/definitions/TypeNamePattern" }, { "type": "boolean" }]
+        },
+        "unionClass": {
+          "description": "customize the key to be used for fromJson with multiple constructors\nDefault value: \"undefined\"",
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "array",
+            "items": [
+              { "$ref": "#/definitions/TypeNamePattern" },
+              { "type": "string" },
+              { "$ref": "#/definitions/UnionValueCase" },
+              {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": [{ "$ref": "#/definitions/TypeName" }, { "type": "string" }],
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            ],
+            "minItems": 1,
+            "maxItems": 4
+          }
         }
       }
     },
@@ -256,6 +309,10 @@
       "properties": {
         "importBaseApiFrom": {
           "description": "Define where to import the base api to inject endpoints into",
+          "type": "string"
+        },
+        "importBaseApiAlternateName": {
+          "description": "Change the import name of the baseApi from default 'api'\nDefault value: \"'api'\"",
           "type": "string"
         },
         "exportHooks": {
@@ -765,7 +822,7 @@
       "type": "object",
       "properties": {
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap",
+          "$ref": "#/definitions/EnumValuesMap_1",
           "description": "Overrides the default value of enum values declared in your GraphQL schema."
         },
         "namespaceName": {
@@ -801,11 +858,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap_1",
+          "$ref": "#/definitions/ScalarsMap_2",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention_1",
+          "$ref": "#/definitions/NamingConvention_2",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -938,11 +995,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap_1",
+          "$ref": "#/definitions/ScalarsMap_2",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention_1",
+          "$ref": "#/definitions/NamingConvention_2",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -1007,7 +1064,7 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using TypeScript optionals (`?`) on types,\nso the following definition: `type A { myField: String }` will output `myField: Maybe<string>`\ninstead of `myField?: Maybe<string>`.\nDefault value: \"false\"",
-          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig" }, { "type": "boolean" }]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig_1" }, { "type": "boolean" }]
         },
         "constEnums": {
           "description": "Will prefix every generated `enum` with `const`, you can read more about const enums here: https://www.typescriptlang.org/docs/handbook/enums.html.\nDefault value: \"false\"",
@@ -1050,7 +1107,7 @@
           "type": "string"
         },
         "inputMaybeValue": {
-          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override it's definition.\nDefault value: \"Maybe<T>\"",
+          "description": "Allow to override the type value of `Maybe` for input types and arguments.\nThis is useful in case you want to differentiate between the wrapper of input and output types.\nBy default, this type just refers to `Maybe` type, but you can override its definition.\nDefault value: \"Maybe<T>\"",
           "type": "string"
         },
         "noExport": {
@@ -1079,13 +1136,13 @@
           "type": "boolean"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap",
+          "$ref": "#/definitions/EnumValuesMap_1",
           "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
         },
         "declarationKind": {
           "description": "Overrides the default output for various GraphQL elements.",
           "anyOf": [
-            { "$ref": "#/definitions/DeclarationKindConfig" },
+            { "$ref": "#/definitions/DeclarationKindConfig_1" },
             { "enum": ["abstract class", "class", "interface", "type"], "type": "string" }
           ]
         },
@@ -1106,7 +1163,7 @@
           "type": "boolean"
         },
         "directiveArgumentAndInputFieldMappings": {
-          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings",
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings_1",
           "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
         },
         "directiveArgumentAndInputFieldMappingTypeSuffix": {
@@ -1122,11 +1179,11 @@
           "type": "string"
         },
         "scalars": {
-          "$ref": "#/definitions/ScalarsMap_1",
+          "$ref": "#/definitions/ScalarsMap_2",
           "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         },
         "namingConvention": {
-          "$ref": "#/definitions/NamingConvention_1",
+          "$ref": "#/definitions/NamingConvention_2",
           "description": "Allow you to override the naming convention of the output.\nYou can either override all namings, or specify an object with specific custom naming convention per output.\nThe format of the converter must be a valid `module#method`.\nAllowed values for specific output are: `typeNames`, `enumValues`.\nYou can also use \"keep\" to keep all GraphQL names as-is.\nAdditionally, you can set `transformUnderscore` to `true` if you want to override the default behavior,\nwhich is to preserve underscores.\n\nAvailable case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`\n[See more](https://github.com/btxtiger/change-case-all)\nDefault value: \"change-case-all#pascalCase\""
         },
         "typesPrefix": { "description": "Prefixes all the generated types.\nDefault value: \"\"", "type": "string" },
@@ -1711,6 +1768,16 @@
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
+        }
+      }
+    },
+    "NhostPluginConfig": {
+      "description": "This plugin generates the Typescript schema that enables queries and mutations to be typed in the Nhost SDK.",
+      "type": "object",
+      "properties": {
+        "scalars": {
+          "$ref": "#/definitions/ScalarsMap_3",
+          "description": "Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type."
         }
       }
     },
@@ -2602,7 +2669,7 @@
           "type": "string"
         },
         "documentMode": {
-          "$ref": "#/definitions/DocumentMode_1",
+          "$ref": "#/definitions/DocumentMode_2",
           "description": "Declares how DocumentNode are created:\n\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
@@ -2813,7 +2880,7 @@
           "type": "string"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap_1",
+          "$ref": "#/definitions/EnumValuesMap_2",
           "description": "Overrides the default value of enum values declared in your GraphQL schema."
         },
         "listType": {
@@ -2889,13 +2956,13 @@
           "type": "boolean"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap_1",
+          "$ref": "#/definitions/EnumValuesMap_2",
           "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
         },
         "declarationKind": {
           "description": "Overrides the default output for various GraphQL elements.",
           "anyOf": [
-            { "$ref": "#/definitions/DeclarationKindConfig_1" },
+            { "$ref": "#/definitions/DeclarationKindConfig_2" },
             { "enum": ["abstract class", "class", "interface", "type"], "type": "string" }
           ]
         },
@@ -2932,7 +2999,7 @@
           "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
         },
         "directiveArgumentAndInputFieldMappings": {
-          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings_1",
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings_2",
           "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
         },
         "directiveArgumentAndInputFieldMappingTypeSuffix": {
@@ -3022,14 +3089,14 @@
         },
         "avoidOptionals": {
           "description": "This will cause the generator to avoid using optionals (`?`),\nso all field resolvers must be implemented in order to avoid compilation errors.\nDefault value: \"false\"",
-          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig_1" }, { "type": "boolean" }]
+          "anyOf": [{ "$ref": "#/definitions/AvoidOptionalsConfig_2" }, { "type": "boolean" }]
         },
         "showUnusedMappers": {
           "description": "Warns about unused mappers.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap_1",
+          "$ref": "#/definitions/EnumValuesMap_2",
           "description": "Overrides the default value of enum values declared in your GraphQL schema, supported\nin this plugin because of the need for integration with `typescript` package.\nSee documentation under `typescript` plugin for more information and examples."
         },
         "resolverTypeWrapperSignature": {
@@ -3170,13 +3237,13 @@
           "type": "boolean"
         },
         "enumValues": {
-          "$ref": "#/definitions/EnumValuesMap_1",
+          "$ref": "#/definitions/EnumValuesMap_2",
           "description": "Overrides the default value of enum values declared in your GraphQL schema.\nYou can also map the entire enum to an external type by providing a string that of `module#type`."
         },
         "declarationKind": {
           "description": "Overrides the default output for various GraphQL elements.",
           "anyOf": [
-            { "$ref": "#/definitions/DeclarationKindConfig_1" },
+            { "$ref": "#/definitions/DeclarationKindConfig_2" },
             { "enum": ["abstract class", "class", "interface", "type"], "type": "string" }
           ]
         },
@@ -3213,7 +3280,7 @@
           "description": "Allow to override the type value of `EntireFieldWrapper`. This wrapper applies outside of Array and Maybe\nunlike `fieldWrapperValue`, that will wrap the inner type.\nDefault value: \"T | Promise<T> | (() => T | Promise<T>)\""
         },
         "directiveArgumentAndInputFieldMappings": {
-          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings_1",
+          "$ref": "#/definitions/DirectiveArgumentAndInputFieldMappings_2",
           "description": "Replaces a GraphQL scalar with a custom type based on the applied directive on an argument or input field.\n\nYou can use both `module#type` and `module#namespace#type` syntax.\nWill NOT work with introspected schemas since directives are not exported.\nOnly works with directives on ARGUMENT_DEFINITION or INPUT_FIELD_DEFINITION.\n\n**WARNING:** Using this option does only change the type definitions.\n\nFor actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://graphql-tools.com/docs/schema-directives)) that apply those rules!\nOtherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.\n\nPlease use this configuration option with care!"
         },
         "directiveArgumentAndInputFieldMappingTypeSuffix": {
@@ -3405,6 +3472,10 @@
         "importAllFragmentsFrom": {
           "description": "Overrides all external fragments import types by using a specific file path or a package name.\n\nIf you wish to use an NPM package or a local workspace package, make sure to prefix the package name with `~`.",
           "anyOf": [{ "$ref": "#/definitions/FragmentImportFromFn" }, { "type": "string" }]
+        },
+        "fileName": {
+          "description": "Optional, sets a specific file name for the generated files. Use this to override the generated file name when generating files for example based on multiple .graphql files in separate directories.",
+          "type": "string"
         },
         "extension": {
           "description": "Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)\nDefault value: \".generated.ts\"",
@@ -3660,6 +3731,7 @@
         "typescript-mongodb": { "$ref": "#/definitions/TypeScriptMongoPluginConfig" },
         "typescript-resolvers": { "$ref": "#/definitions/TypeScriptResolversPluginConfig" },
         "typescript-apollo-angular": { "$ref": "#/definitions/ApolloAngularRawPluginConfig" },
+        "typescript-nhost": { "$ref": "#/definitions/NhostPluginConfig" },
         "typescript-urql": { "$ref": "#/definitions/UrqlRawPluginConfig" },
         "typescript-react-apollo": { "$ref": "#/definitions/ReactApolloRawPluginConfig" },
         "typescript-vue-apollo": { "$ref": "#/definitions/VueApolloRawPluginConfig" },
@@ -3689,10 +3761,10 @@
         "plugins": {
           "type": "array",
           "items": { "$ref": "#/definitions/GeneratedPluginsMap" },
-          "description": "List of plugins to apply to this current output file.\n\nYou can either specify plugins from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for custom plugins.\n\nYou can find a list of available plugins here: https://graphql-code-generator.com/docs/plugins/index\nNeed a custom plugin? read this: https://graphql-code-generator.com/docs/custom-codegen/index"
+          "description": "List of plugins to apply to this current output file.\n\nYou can either specify plugins from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for custom plugins.\n\nYou can find a list of available plugins here: https://the-guild.dev/graphql/codegen/docs/plugins/index\nNeed a custom plugin? read this: https://the-guild.dev/graphql/codegen/docs/custom-codegen/index"
         },
         "preset": {
-          "description": "If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.\n\nPresets are a way to have more than one file output, for example: https://graphql-code-generator.com/docs/presets/near-operation-file\n\nYou can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
+          "description": "If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.\n\nPresets are a way to have more than one file output, for example: https://the-guild.dev/graphql/codegen/docs/presets/near-operation-file\n\nYou can either specify a preset from the community using the NPM package name (after you installed it in your project), or you can use a path to a local file for a custom preset.\n\nList of available presets: https://graphql-code-generator.com/docs/presets/presets-index",
           "anyOf": [
             { "$ref": "#/definitions/Types.OutputPreset" },
             {
@@ -3733,6 +3805,11 @@
         "hooks": {
           "$ref": "#/definitions/Partial",
           "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect only the current output files.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks"
+        },
+        "documentTransforms": {
+          "description": "DocumentTransform changes documents before executing plugins.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/Types.OutputDocumentTransform<object>" }
         }
       },
       "allOf": [
@@ -3831,6 +3908,10 @@
             "properties": { "plugins": { "contains": { "type": "string", "const": "typescript-apollo-angular" } } }
           },
           "then": { "properties": { "config": { "$ref": "#/definitions/ApolloAngularRawPluginConfig" } } }
+        },
+        {
+          "if": { "properties": { "plugins": { "contains": { "type": "string", "const": "typescript-nhost" } } } },
+          "then": { "properties": { "config": { "$ref": "#/definitions/NhostPluginConfig" } } }
         },
         {
           "if": { "properties": { "plugins": { "contains": { "type": "string", "const": "typescript-urql" } } } },
@@ -3996,8 +4077,25 @@
     "__type_5": { "type": "object" },
     "Types.HookAlterFunction": { "$ref": "#/definitions/__type_5" },
     "Partial": { "$ref": "#/definitions/__type_3" },
-    "__type_6": { "type": "object" },
-    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_6" },
+    "Types.OutputDocumentTransform<object>": {
+      "anyOf": [
+        { "$ref": "#/definitions/Types.DocumentTransformObject" },
+        { "$ref": "#/definitions/Types.DocumentTransformFileConfig" },
+        { "type": "string" }
+      ]
+    },
+    "__type_6": {
+      "type": "object",
+      "properties": { "transform": { "$ref": "#/definitions/Types.DocumentTransformFunction" } }
+    },
+    "__type_7": { "type": "object" },
+    "Types.DocumentTransformFunction": { "$ref": "#/definitions/__type_7" },
+    "Types.DocumentTransformObject": { "$ref": "#/definitions/__type_6" },
+    "__type_8": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T_1" } },
+    "T_1": { "type": "object" },
+    "Types.DocumentTransformFileConfig": { "$ref": "#/definitions/__type_8" },
+    "__type_9": { "type": "object" },
+    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_9" },
     "Array": {
       "type": "array",
       "items": {
@@ -4008,80 +4106,27 @@
         }
       }
     },
-    "FreezedConfig": {
-      "description": "configure what Freeze should generate\nDefault value: \"DefaultFreezedConfig\"",
+    "TypeNamePattern": {
+      "description": "A compact string of patterns used in the config for granular configuration of Graphql Types.\n\nThe string can contain one or more patterns, each pattern ends with a semi-colon (`;`).\n\nTo apply an option to all Graphql Types or all fields, use the allTypeNames (`@*TypeNames`) tokens.\n\nWherever you use the allTypeNames token, know very well that you can make some exceptions. After all, to every rule, there is an exception.\n\nA **square bracket** (`[]`) is used to specify what should be included and a **negated square bracket** (`-[]`) is used to specify what should be excluded.\n\nManually typing out a pattern may be prone to typos resulting in invalid patterns therefore the [`TypeNamePattern`]() class exposes some builder methods to be used in the plugin config file.\n\n## Available Builder Methods and the patterns they make\n```ts\nconst Droid = TypeName.fromString('Droid');\nconst Starship = TypeName.fromString('Starship');\nconst Human = TypeName.fromString('Human');\nconst Movie = TypeName.fromString('Movie');\n\n\n// Configuring specific Graphql Types\nconst pattern = TypeNamePattern.forTypeNames([Droid, Starship]);\nconsole.log(pattern); // \"Droid;Starship;\"\n\n// Configuring all Graphql Types\nconst pattern = TypeNamePattern.forAllTypeNames();\nconsole.log(pattern); // \"@*TypeNames;\"\n\n// Configuring all Graphql Types except those specified in the exclusion list of TypeNames\nconst pattern = TypeNamePattern.forAllTypeNamesExcludeTypeNames([Droid, Starship]);\nconsole.log(pattern); // \"@*TypeNames-[Droid,Starship];\"",
       "type": "object",
-      "properties": {
-        "alwaysUseJsonKeyName": { "description": "Use\nDefault value: \"false\"", "type": "boolean" },
-        "copyWith": {
-          "description": "set to false to disable Freezed copyWith method helper\nDefault value: \"undefined\"",
-          "type": "boolean"
-        },
-        "customDecorators": {
-          "$ref": "#/definitions/CustomDecorator",
-          "description": "annotate/decorate the generated output. Also use this option to map GraphQL directives to freezed decorators.\nDefault value: \"[object Object]\""
-        },
-        "defaultUnionConstructor": {
-          "description": "generate empty constructors for Union Types and mergedInputs\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "equal": {
-          "description": "set to false to disable Freezed equal method helper\nDefault value: \"undefined\"",
-          "type": "boolean"
-        },
-        "fromJsonToJson": {
-          "description": "generate fromJson toJson methods on the classes with json_serialization. Requires the [json_serializable](https://pub.dev/packages/json_serializable) to be installed in your Flutter app\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "immutable": {
-          "description": "set to true to use the `@freezed` decorator or false to use the `@unfreezed` decorator\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "makeCollectionsUnmodifiable": {
-          "description": "allows collections(lists/maps) to be modified even if class is immutable\nDefault value: \"undefined\"",
-          "type": "boolean"
-        },
-        "mergeInputs": {
-          "description": "merge InputTypes as a union of an ObjectType where ObjectType is denoted by a $ in the pattern.\nDefault value: \"\"",
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "mutableInputs": {
-          "description": "since inputs will be used to collect data, it makes sense to make them mutable with Freezed's `@unfreezed` decorator. This overrides(in order words: has a higher precedence than) the `immutable` config value `ONLY` for GraphQL `input types`.\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "privateEmptyConstructor": {
-          "description": "if true, defines a private empty constructor to allow getter and methods to work on the class\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "unionKey": {
-          "description": "specify the key to be used for Freezed union/sealed classes\nDefault value: \"undefined\"",
-          "type": "string"
-        },
-        "unionValueCase": {
-          "description": "specify the casing style to be used for Freezed union/sealed classes\nDefault value: \"undefined\"",
-          "enum": ["FreezedUnionCase.camel", "FreezedUnionCase.pascal"],
-          "type": "string"
-        }
-      }
+      "properties": { "_value": {}, "value": { "type": "string" } }
     },
-    "__type_7": {
-      "description": "use this option to add annotations/decorators for the the generated output. Also use this to add",
-      "type": "object"
+    "UnionValueCase": { "enum": ["FreezedUnionCase.camel", "FreezedUnionCase.pascal"], "type": "string" },
+    "TypeName": {
+      "description": "represents a single valid GraphQL Type Name used in the GraphQL Schema provided",
+      "type": "object",
+      "properties": { "_value": {}, "value": { "type": "string" } }
     },
-    "CustomDecorator": { "$ref": "#/definitions/__type_7" },
-    "__type_8": { "type": "object" },
-    "Record_1": { "$ref": "#/definitions/__type_8" },
-    "__type_9": {
+    "__type_10": {
       "type": "object",
       "properties": {
         "endpoint": { "type": "string" },
-        "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record_2" }, { "type": "string" }] }
+        "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record_1" }, { "type": "string" }] }
       }
     },
-    "__type_10": { "type": "object" },
-    "Record_2": { "$ref": "#/definitions/__type_10" },
-    "HardcodedFetch": { "$ref": "#/definitions/__type_9" },
+    "__type_11": { "type": "object" },
+    "Record_1": { "$ref": "#/definitions/__type_11" },
+    "HardcodedFetch": { "$ref": "#/definitions/__type_10" },
     "NamingConvention": {
       "anyOf": [
         { "$ref": "#/definitions/NamingConventionFn" },
@@ -4089,8 +4134,8 @@
         { "type": "string" }
       ]
     },
-    "__type_11": { "type": "object" },
-    "NamingConventionFn": { "$ref": "#/definitions/__type_11" },
+    "__type_12": { "type": "object" },
+    "NamingConventionFn": { "$ref": "#/definitions/__type_12" },
     "NamingConventionMap": {
       "additionalProperties": false,
       "type": "object",
@@ -4151,12 +4196,12 @@
       }
     },
     "DeclarationKind": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_12": {
+    "__type_13": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_12" },
+    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_13" },
     "ScalarsMap_1": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
@@ -4168,8 +4213,8 @@
         { "type": "string" }
       ]
     },
-    "__type_13": { "type": "object" },
-    "NamingConventionFn_1": { "$ref": "#/definitions/__type_13" },
+    "__type_14": { "type": "object" },
+    "NamingConventionFn_1": { "$ref": "#/definitions/__type_14" },
     "NamingConventionMap_1": {
       "additionalProperties": false,
       "type": "object",
@@ -4179,25 +4224,6 @@
         "transformUnderscore": { "type": "boolean" }
       }
     },
-    "JsonAttributesSource": { "enum": ["Newtonsoft.Json", "System.Text.Json"], "type": "string" },
-    "DocumentMode_1": {
-      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
-      "type": "string"
-    },
-    "__type_14": {
-      "type": "object",
-      "properties": {
-        "type": { "type": "string" },
-        "interface": { "type": "string" },
-        "field": { "type": "string" },
-        "input": { "type": "string" },
-        "arguments": { "type": "string" }
-      }
-    },
-    "Partial_1": { "$ref": "#/definitions/__type_14" },
-    "Array_1": { "type": "array", "items": { "type": "string" } },
-    "StencilComponentType": { "enum": ["class", "functional"], "type": "string" },
-    "FileType": { "enum": [0, 1, 2, 3], "type": "number" },
     "EnumValuesMap_1": {
       "description": "A raw configuration for enumValues map - can be represented with a single string value for a file path,\na map between enum name and a file path, or a map between enum name and an object with explicit enum values.",
       "anyOf": [
@@ -4219,6 +4245,54 @@
       ]
     },
     "AdditionalProps_1": { "type": "object" },
+    "JsonAttributesSource": { "enum": ["Newtonsoft.Json", "System.Text.Json"], "type": "string" },
+    "ScalarsMap_2": {
+      "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
+      "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
+    },
+    "NamingConvention_2": {
+      "anyOf": [
+        { "$ref": "#/definitions/NamingConventionFn_2" },
+        { "$ref": "#/definitions/NamingConventionMap_2" },
+        { "type": "string" }
+      ]
+    },
+    "__type_15": { "type": "object" },
+    "NamingConventionFn_2": { "$ref": "#/definitions/__type_15" },
+    "NamingConventionMap_2": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "enumValues": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn_2" }, { "type": "string" }] },
+        "typeNames": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn_2" }, { "type": "string" }] },
+        "transformUnderscore": { "type": "boolean" }
+      }
+    },
+    "DocumentMode_1": {
+      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
+      "type": "string"
+    },
+    "__type_16": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "interface": { "type": "string" },
+        "field": { "type": "string" },
+        "input": { "type": "string" },
+        "arguments": { "type": "string" }
+      }
+    },
+    "Partial_1": { "$ref": "#/definitions/__type_16" },
+    "AvoidOptionalsConfig_1": {
+      "type": "object",
+      "properties": {
+        "field": { "type": "boolean" },
+        "object": { "type": "boolean" },
+        "inputValue": { "type": "boolean" },
+        "defaultValue": { "type": "boolean" },
+        "resolvers": { "type": "boolean" }
+      }
+    },
     "DeclarationKindConfig_1": {
       "type": "object",
       "properties": {
@@ -4231,13 +4305,63 @@
       }
     },
     "DeclarationKind_1": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_15": {
+    "__type_17": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings_1": { "$ref": "#/definitions/__type_15" },
-    "AvoidOptionalsConfig_1": {
+    "DirectiveArgumentAndInputFieldMappings_1": { "$ref": "#/definitions/__type_17" },
+    "Array_1": { "type": "array", "items": { "type": "string" } },
+    "ScalarsMap_3": {
+      "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
+      "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
+    },
+    "StencilComponentType": { "enum": ["class", "functional"], "type": "string" },
+    "DocumentMode_2": {
+      "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
+      "type": "string"
+    },
+    "FileType": { "enum": [0, 1, 2, 3], "type": "number" },
+    "EnumValuesMap_2": {
+      "description": "A raw configuration for enumValues map - can be represented with a single string value for a file path,\na map between enum name and a file path, or a map between enum name and an object with explicit enum values.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "allOf": [
+                  { "type": "object", "additionalProperties": { "type": ["string", "number"] } },
+                  { "$ref": "#/definitions/AdditionalProps_2" }
+                ]
+              },
+              { "type": "string" }
+            ]
+          }
+        },
+        { "type": "string" }
+      ]
+    },
+    "AdditionalProps_2": { "type": "object" },
+    "DeclarationKindConfig_2": {
+      "type": "object",
+      "properties": {
+        "directive": { "$ref": "#/definitions/DeclarationKind_2" },
+        "scalar": { "$ref": "#/definitions/DeclarationKind_2" },
+        "input": { "$ref": "#/definitions/DeclarationKind_2" },
+        "type": { "$ref": "#/definitions/DeclarationKind_2" },
+        "interface": { "$ref": "#/definitions/DeclarationKind_2" },
+        "arguments": { "$ref": "#/definitions/DeclarationKind_2" }
+      }
+    },
+    "DeclarationKind_2": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
+    "__type_18": {
+      "description": "A map between the GraphQL directive name and the identifier that should be used",
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "DirectiveArgumentAndInputFieldMappings_2": { "$ref": "#/definitions/__type_18" },
+    "AvoidOptionalsConfig_2": {
       "type": "object",
       "properties": {
         "field": { "type": "boolean" },
@@ -4247,9 +4371,9 @@
         "resolvers": { "type": "boolean" }
       }
     },
-    "__type_16": { "type": "object" },
-    "FragmentImportFromFn": { "$ref": "#/definitions/__type_16" },
-    "__type_17": {
+    "__type_19": { "type": "object" },
+    "FragmentImportFromFn": { "$ref": "#/definitions/__type_19" },
+    "__type_20": {
       "type": "object",
       "properties": {
         "augmentedModuleName": {
@@ -4262,7 +4386,7 @@
         }
       }
     },
-    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_17" },
+    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_20" },
     "GeneratedPluginsMap": {
       "anyOf": [
         {
@@ -4391,6 +4515,11 @@
               "additionalProperties": false,
               "$ref": "#/definitions/ApolloAngularRawPluginConfig"
             },
+            "typescript-nhost": { "additionalProperties": false, "$ref": "#/definitions/NhostPluginConfig" },
+            "@graphql-codegen/typescript-nhost": {
+              "additionalProperties": false,
+              "$ref": "#/definitions/NhostPluginConfig"
+            },
             "typescript-urql": { "additionalProperties": false, "$ref": "#/definitions/UrqlRawPluginConfig" },
             "@graphql-codegen/typescript-urql": {
               "additionalProperties": false,
@@ -4505,307 +4634,315 @@
           "oneOf": [
             {
               "const": "flutter-freezed",
-              "description": "configure the `flutter-freezed` plugin\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flutter-freezed\n\n=> Make sure to include \"@graphql-codegen/flutter-freezed\" in your package.json file and install your dependencies.\n\n"
+              "description": "configure the `flutter-freezed` plugin\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flutter-freezed\n\n=> Make sure to include \"@graphql-codegen/flutter-freezed\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flutter-freezed",
-              "description": "configure the `flutter-freezed` plugin\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flutter-freezed\n\n=> Make sure to include \"@graphql-codegen/flutter-freezed\" in your package.json file and install your dependencies.\n\n"
+              "description": "configure the `flutter-freezed` plugin\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flutter-freezed\n\n=> Make sure to include \"@graphql-codegen/flutter-freezed\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-react-query",
-              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-react-query",
-              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `React-Query` Hooks with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\n> **If you are using the `react-query` package instead of the `@tanstack/react-query` package in your project, please set the `legacyMode` option to `true`.**\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-react-query\n\n=> Make sure to include \"@graphql-codegen/typescript-react-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-rtk-query",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-rtk-query",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-rtk-query\n\n=> Make sure to include \"@graphql-codegen/typescript-rtk-query\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-generic-sdk",
-              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-generic-sdk",
-              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-apollo-client-helpers",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-apollo-client-helpers",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-apollo-client-helpers\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-client-helpers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "add",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/add\n\n=> Make sure to include \"@graphql-codegen/add\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/add\n\n=> Make sure to include \"@graphql-codegen/add\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/add",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/add\n\n=> Make sure to include \"@graphql-codegen/add\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/add\n\n=> Make sure to include \"@graphql-codegen/add\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "time",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/time\n\n=> Make sure to include \"@graphql-codegen/time\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/time\n\n=> Make sure to include \"@graphql-codegen/time\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/time",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/time\n\n=> Make sure to include \"@graphql-codegen/time\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/time\n\n=> Make sure to include \"@graphql-codegen/time\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript",
-              "description": "This plugin generates the base TypeScript types, based on your GraphQL schema.\n\nThe types generated by this plugin are simple, and refers to the exact structure of your schema, and it's used as the base types for other plugins (such as `typescript-operations` / `typescript-resolvers`)\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript\n\n=> Make sure to include \"@graphql-codegen/typescript\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates the base TypeScript types, based on your GraphQL schema.\n\nThe types generated by this plugin are simple, and refers to the exact structure of your schema, and it's used as the base types for other plugins (such as `typescript-operations` / `typescript-resolvers`)\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript\n\n=> Make sure to include \"@graphql-codegen/typescript\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript",
-              "description": "This plugin generates the base TypeScript types, based on your GraphQL schema.\n\nThe types generated by this plugin are simple, and refers to the exact structure of your schema, and it's used as the base types for other plugins (such as `typescript-operations` / `typescript-resolvers`)\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript\n\n=> Make sure to include \"@graphql-codegen/typescript\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates the base TypeScript types, based on your GraphQL schema.\n\nThe types generated by this plugin are simple, and refers to the exact structure of your schema, and it's used as the base types for other plugins (such as `typescript-operations` / `typescript-resolvers`)\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript\n\n=> Make sure to include \"@graphql-codegen/typescript\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-operations",
-              "description": "This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-operations\n\n=> Make sure to include \"@graphql-codegen/typescript-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-operations\n\n=> Make sure to include \"@graphql-codegen/typescript-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-operations",
-              "description": "This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-operations\n\n=> Make sure to include \"@graphql-codegen/typescript-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nNote: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-operations\n\n=> Make sure to include \"@graphql-codegen/typescript-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "c-sharp",
-              "description": "This plugin generates C# `class` identifier for your schema types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp\n\n=> Make sure to include \"@graphql-codegen/c-sharp\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates C# `class` identifier for your schema types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/c-sharp\n\n=> Make sure to include \"@graphql-codegen/c-sharp\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/c-sharp",
-              "description": "This plugin generates C# `class` identifier for your schema types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp\n\n=> Make sure to include \"@graphql-codegen/c-sharp\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates C# `class` identifier for your schema types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/c-sharp\n\n=> Make sure to include \"@graphql-codegen/c-sharp\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "c-sharp-operations",
-              "description": "This plugin generates C# `class` based on your GraphQL operations.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp-operations\n\n=> Make sure to include \"@graphql-codegen/c-sharp-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates C# `class` based on your GraphQL operations.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/c-sharp-operations\n\n=> Make sure to include \"@graphql-codegen/c-sharp-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/c-sharp-operations",
-              "description": "This plugin generates C# `class` based on your GraphQL operations.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/c-sharp-operations\n\n=> Make sure to include \"@graphql-codegen/c-sharp-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates C# `class` based on your GraphQL operations.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/c-sharp-operations\n\n=> Make sure to include \"@graphql-codegen/c-sharp-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "schema-ast",
-              "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/schema-ast\n\n=> Make sure to include \"@graphql-codegen/schema-ast\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/schema-ast\n\n=> Make sure to include \"@graphql-codegen/schema-ast\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/schema-ast",
-              "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/schema-ast\n\n=> Make sure to include \"@graphql-codegen/schema-ast\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/schema-ast\n\n=> Make sure to include \"@graphql-codegen/schema-ast\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-type-graphql",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-type-graphql\n\n=> Make sure to include \"@graphql-codegen/typescript-type-graphql\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-type-graphql\n\n=> Make sure to include \"@graphql-codegen/typescript-type-graphql\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-type-graphql",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-type-graphql\n\n=> Make sure to include \"@graphql-codegen/typescript-type-graphql\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-type-graphql\n\n=> Make sure to include \"@graphql-codegen/typescript-type-graphql\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-graphql-files-modules",
-              "description": "This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) or use `string` types if you will use the operations as raw strings, and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.\n\nThis plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.\n\n> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-files-modules\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-files-modules\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) or use `string` types if you will use the operations as raw strings, and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.\n\nThis plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.\n\n> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-graphql-files-modules\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-files-modules\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-graphql-files-modules",
-              "description": "This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) or use `string` types if you will use the operations as raw strings, and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.\n\nThis plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.\n\n> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-files-modules\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-files-modules\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) or use `string` types if you will use the operations as raw strings, and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.\n\nThis plugin also handles `.graphql` files containing multiple GraphQL documents, and name the imports according to the operation name.\n\n> ⚠ Fragments are not generated with named imports, only as default imports, due to `graphql-tag/loader` behavior.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-graphql-files-modules\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-files-modules\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "named-operations-object",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/named-operations-object\n\n=> Make sure to include \"@graphql-codegen/named-operations-object\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/named-operations-object\n\n=> Make sure to include \"@graphql-codegen/named-operations-object\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/named-operations-object",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/named-operations-object\n\n=> Make sure to include \"@graphql-codegen/named-operations-object\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/named-operations-object\n\n=> Make sure to include \"@graphql-codegen/named-operations-object\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-graphql-request",
-              "description": "This plugin generates [`graphql-request`](https://npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-request\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-request\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates [`graphql-request`](https://npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-graphql-request\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-request\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-graphql-request",
-              "description": "This plugin generates [`graphql-request`](https://npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-graphql-request\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-request\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates [`graphql-request`](https://npmjs.com/package/graphql-request) ready-to-use SDK, which is fully-typed.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-graphql-request\n\n=> Make sure to include \"@graphql-codegen/typescript-graphql-request\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-mongodb",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-mongodb\n\n=> Make sure to include \"@graphql-codegen/typescript-mongodb\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-mongodb\n\n=> Make sure to include \"@graphql-codegen/typescript-mongodb\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-mongodb",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-mongodb\n\n=> Make sure to include \"@graphql-codegen/typescript-mongodb\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-mongodb\n\n=> Make sure to include \"@graphql-codegen/typescript-mongodb\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-resolvers",
-              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin to generate simple resolvers signature based on your GraphQL types, or you can change its behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin to generate simple resolvers signature based on your GraphQL types, or you can change its behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-resolvers",
-              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin to generate simple resolvers signature based on your GraphQL types, or you can change its behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript signature for `resolve` functions of your GraphQL API.\nYou can use this plugin to generate simple resolvers signature based on your GraphQL types, or you can change its behavior be providing custom model types (mappers).\n\nYou can find a blog post explaining the usage of this plugin here: https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-resolvers\n\n=> Make sure to include \"@graphql-codegen/typescript-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-apollo-angular",
-              "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through this article: https://apollo-angular.com/docs/get-started, and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-angular\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-angular\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through this article: https://apollo-angular.com/docs/get-started, and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-apollo-angular\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-angular\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-apollo-angular",
-              "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through this article: https://apollo-angular.com/docs/get-started, and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-apollo-angular\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-angular\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.\n\nIt will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nTo shed some more light regards this template, it's recommended to go through this article: https://apollo-angular.com/docs/get-started, and to read the Code Generation with Apollo Angular: https://the-guild.dev/blog/apollo-angular-12\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-apollo-angular\n\n=> Make sure to include \"@graphql-codegen/typescript-apollo-angular\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "typescript-nhost",
+              "description": "This plugin generates the Typescript schema that enables queries and mutations to be typed in the Nhost SDK.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-nhost\n\n=> Make sure to include \"@graphql-codegen/typescript-nhost\" in your package.json file and install your dependencies.\n\n"
+            },
+            {
+              "const": "@graphql-codegen/typescript-nhost",
+              "description": "This plugin generates the Typescript schema that enables queries and mutations to be typed in the Nhost SDK.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-nhost\n\n=> Make sure to include \"@graphql-codegen/typescript-nhost\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-urql",
-              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-urql\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-urql\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-urql",
-              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-urql\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-urql\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-react-apollo",
-              "description": "This plugin generates React Apollo components and HOC with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-react-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates React Apollo components and HOC with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-react-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-react-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-react-apollo",
-              "description": "This plugin generates React Apollo components and HOC with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-react-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-react-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates React Apollo components and HOC with TypeScript typings.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-react-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-react-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-vue-apollo",
-              "description": "This plugin generates\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-vue-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-vue-apollo",
-              "description": "This plugin generates\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-vue-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-vue-apollo-smart-ops",
-              "description": "This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with\nTypeScript typings.\n\nThis plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds\nsome optional functionality for improved error handling in Vue Apollo operations which can be configured in the\ngenerated code from this plugin.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -\nand thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with\nTypeScript typings.\n\nThis plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds\nsome optional functionality for improved error handling in Vue Apollo operations which can be configured in the\ngenerated code from this plugin.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -\nand thus shares a similar configuration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-vue-apollo-smart-ops",
-              "description": "This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with\nTypeScript typings.\n\nThis plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds\nsome optional functionality for improved error handling in Vue Apollo operations which can be configured in the\ngenerated code from this plugin.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -\nand thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Vue Apollo Smart Query, Smart Subscription and mutation operation functions with\nTypeScript typings.\n\nThis plugin relies on some helper functions and types from the `vue-apollo-smart-ops` package. That package also adds\nsome optional functionality for improved error handling in Vue Apollo operations which can be configured in the\ngenerated code from this plugin.\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` -\nand thus shares a similar configuration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-vue-apollo-smart-ops\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-apollo-smart-ops\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-vue-urql",
-              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) composition functions with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-urql\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) composition functions with TypeScript typings.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-vue-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-urql\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-vue-urql",
-              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) composition functions with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-vue-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-urql\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `urql` (https://github.com/FormidableLabs/urql) composition functions with TypeScript typings.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-vue-urql\n\n=> Make sure to include \"@graphql-codegen/typescript-vue-urql\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-stencil-apollo",
-              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Stencil Apollo functional components typings\n\nIt extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-stencil-apollo\n\n=> Make sure to include \"@graphql-codegen/typescript-stencil-apollo\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-document-nodes",
-              "description": "This plugin generates TypeScript source `.ts` file from GraphQL files `.graphql`.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript source `.ts` file from GraphQL files `.graphql`.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-document-nodes",
-              "description": "This plugin generates TypeScript source `.ts` file from GraphQL files `.graphql`.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates TypeScript source `.ts` file from GraphQL files `.graphql`.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-document-nodes\n\n=> Make sure to include \"@graphql-codegen/typescript-document-nodes\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-msw",
-              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-msw",
-              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates `msw` (https://github.com/mswjs/msw) mock handlers with TypeScript typings.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-msw\n\n=> Make sure to include \"@graphql-codegen/typescript-msw\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "java-apollo-android",
-              "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-apollo-android\n\n=> Make sure to include \"@graphql-codegen/java-apollo-android\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/java-apollo-android\n\n=> Make sure to include \"@graphql-codegen/java-apollo-android\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/java-apollo-android",
-              "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-apollo-android\n\n=> Make sure to include \"@graphql-codegen/java-apollo-android\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin and presets creates generated mappers and parsers for a complete type-safe GraphQL requests, for developers that uses Apollo Android runtime.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/java-apollo-android\n\n=> Make sure to include \"@graphql-codegen/java-apollo-android\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "java-resolvers",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-resolvers\n\n=> Make sure to include \"@graphql-codegen/java-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/java-resolvers\n\n=> Make sure to include \"@graphql-codegen/java-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/java-resolvers",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java-resolvers\n\n=> Make sure to include \"@graphql-codegen/java-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/java-resolvers\n\n=> Make sure to include \"@graphql-codegen/java-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "java",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java\n\n=> Make sure to include \"@graphql-codegen/java\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/java\n\n=> Make sure to include \"@graphql-codegen/java\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/java",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/java\n\n=> Make sure to include \"@graphql-codegen/java\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/java\n\n=> Make sure to include \"@graphql-codegen/java\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "kotlin",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/kotlin\n\n=> Make sure to include \"@graphql-codegen/kotlin\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/kotlin\n\n=> Make sure to include \"@graphql-codegen/kotlin\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/kotlin",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/kotlin\n\n=> Make sure to include \"@graphql-codegen/kotlin\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/kotlin\n\n=> Make sure to include \"@graphql-codegen/kotlin\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flow\n\n=> Make sure to include \"@graphql-codegen/flow\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-resolvers",
-              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-resolvers",
-              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates resolvers signature based on your `GraphQLSchema`.\n\nIt generates types for your entire schema: types, input types, enum, interface, scalar and union.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flow-resolvers\n\n=> Make sure to include \"@graphql-codegen/flow-resolvers\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/flow-operations",
-              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.\n\nIt generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.\n\nThis plugin requires you to use `@graphql-codegen/flow` as well, because it depends on its types.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/flow-operations\n\n=> Make sure to include \"@graphql-codegen/flow-operations\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "introspection",
-              "description": "This plugin generates a GraphQL introspection file based on your GraphQL schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/introspection\n\n=> Make sure to include \"@graphql-codegen/introspection\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates a GraphQL introspection file based on your GraphQL schema.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/introspection\n\n=> Make sure to include \"@graphql-codegen/introspection\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/introspection",
-              "description": "This plugin generates a GraphQL introspection file based on your GraphQL schema.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/introspection\n\n=> Make sure to include \"@graphql-codegen/introspection\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates a GraphQL introspection file based on your GraphQL schema.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/introspection\n\n=> Make sure to include \"@graphql-codegen/introspection\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "fragment-matcher",
-              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in [`apollo-client` documentation](https://apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces).\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in [`apollo-client` documentation](https://apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces).\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/fragment-matcher",
-              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in [`apollo-client` documentation](https://apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces).\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates an introspection file but only with Interfaces and Unions, based on your GraphQLSchema.\n\nIf you are using `apollo-client` and your schema contains `interface` or `union` declaration, it's recommended to use Apollo's Fragment Matcher and the result generated by the plugin.\n\nYou can read more about it in [`apollo-client` documentation](https://apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces).\n\nFragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/fragment-matcher\n\n=> Make sure to include \"@graphql-codegen/fragment-matcher\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "urql-introspection",
-              "description": "This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange\n\nYou can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness.\n\nUrql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/urql-introspection\n\n=> Make sure to include \"@graphql-codegen/urql-introspection\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange\n\nYou can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness.\n\nUrql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/urql-introspection\n\n=> Make sure to include \"@graphql-codegen/urql-introspection\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/urql-introspection",
-              "description": "This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange\n\nYou can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness.\n\nUrql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/urql-introspection\n\n=> Make sure to include \"@graphql-codegen/urql-introspection\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generates an introspection file for Schema Awareness feature of Urql Cache Exchange\n\nYou can read more about it in `urql` documentation: https://formidable.com/open-source/urql/docs/graphcache/schema-awareness.\n\nUrql Introspection plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.\n\nBoth in TypeScript and JavaScript a default export is being used.\n\n> The output is based on the output you choose for the output file name.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/urql-introspection\n\n=> Make sure to include \"@graphql-codegen/urql-introspection\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "hasura-allow-list",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/hasura-allow-list\n\n=> Make sure to include \"@graphql-codegen/hasura-allow-list\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/hasura-allow-list\n\n=> Make sure to include \"@graphql-codegen/hasura-allow-list\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/hasura-allow-list",
-              "description": "\n\nFor more details and documentation: https://graphql-code-generator.com/docs/plugins/hasura-allow-list\n\n=> Make sure to include \"@graphql-codegen/hasura-allow-list\" in your package.json file and install your dependencies.\n\n"
+              "description": "\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/hasura-allow-list\n\n=> Make sure to include \"@graphql-codegen/hasura-allow-list\" in your package.json file and install your dependencies.\n\n"
             }
           ]
         },
