@@ -77,8 +77,8 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
     }
 
     if (ext === 'ts') {
-      // #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
       try {
+        // #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
         const tsLoader = TypeScriptLoader({ transpileOnly: true });
         return tsLoader(filepath, content);
       } catch (err) {
