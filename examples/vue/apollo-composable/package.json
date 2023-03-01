@@ -25,6 +25,6 @@
     "vue-tsc": "^1.0.24",
     "serve": "14.2.0",
     "cypress": "12.6.0",
-    "start-server-and-test": "1.15.4"
+    "start-server-and-test": "2.0.0"
   }
 }
