@@ -21,5 +21,5 @@ export function mkdirp(filePath: string) {
 }
 
 export function getTempDir() {
-  return join(tmpdir(), `graphql-codegen-cli-${Date.now()}`);
+  return join(tmpdir(), `graphql-codegen-cli`);
 }

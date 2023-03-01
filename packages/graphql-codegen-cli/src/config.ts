@@ -1,4 +1,4 @@
-import { createHash } from 'crypto';
+import { createHash, BinaryToTextEncoding } from 'crypto';
 import { promises } from 'fs';
 import { createRequire } from 'module';
 import { basename, resolve, join } from 'path';
@@ -83,18 +83,43 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
         return tsLoader(filepath, content);
       } catch (err) {
         if (typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:')) {
-          const tempDir = getTempDir();
-          // We're compiling the file, because ts-node doesn't work perfectly with ESM.
-          // TODO: A neater, faster way to compile the file.
-          execSync(`tsc ${filepath} --module commonjs --outDir ${tempDir}`, { stdio: 'pipe' });
-          const newPath = join(tempDir, basename(filepath).replace(/\.ts$/, '.js'));
+          const hash = hashContent(content, 'base64url');
 
+          const tempDir = getTempDir();
+
+          // TODO
+          let inTempDir: string[] = [];
+          try {
+            inTempDir = await promises.readdir(tempDir);
+          } catch (err) {}
+
+          let outDir = join(tempDir, new Date().getTime() + '-' + hash);
+          const previousOutDir = inTempDir.find(s => s.endsWith(hash));
+
+          if (previousOutDir) {
+            outDir = join(tempDir, previousOutDir);
+          } else {
+            // We're compiling the file, because ts-node doesn't work perfectly with ESM.
+            execSync(`tsc ${filepath} --module commonjs --outDir ${outDir}`, { stdio: 'pipe' });
+          }
+
+          const newPath = join(outDir, basename(filepath).replace(/\.ts$/, '.js'));
           const config = import(newPath).then(m => {
             const config = m.default;
             return 'default' in config ? config.default : config;
           });
 
-          await rm(tempDir, { recursive: true, force: true });
+          // If the cache has more than 10 files, we delete the oldest one.
+          if (inTempDir.length > 10) {
+            const oldest = inTempDir.sort((a, b) => {
+              const aTime = Number(a.split('-')[0]);
+              const bTime = Number(b.split('-')[0]);
+
+              return aTime - bTime;
+            })[0];
+
+            await rm(join(tempDir, oldest), { recursive: true, force: true });
+          }
 
           return config;
         }
@@ -478,8 +503,8 @@ export function ensureContext(input: CodegenContext | Types.Config): CodegenCont
   return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
 }
 
-function hashContent(content: string): string {
-  return createHash('sha256').update(content).digest('hex');
+function hashContent(content: string, encoding: BinaryToTextEncoding = 'hex'): string {
+  return createHash('sha256').update(content).digest(encoding);
 }
 
 function hashSchema(schema: GraphQLSchema): string {
