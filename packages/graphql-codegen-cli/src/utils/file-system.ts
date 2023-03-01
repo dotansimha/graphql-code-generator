@@ -1,4 +1,6 @@
 import { promises, unlink as fsUnlink } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 
 const { writeFile: fsWriteFile, readFile: fsReadFile, mkdir } = promises;
 
@@ -16,4 +18,8 @@ export function unlinkFile(filePath: string, cb?: (err?: Error) => any): void {
 
 export function mkdirp(filePath: string) {
   return mkdir(filePath, { recursive: true });
+}
+
+export function getTempDir() {
+  return join(tmpdir(), `graphql-codegen-cli-${Date.now()}`);
 }

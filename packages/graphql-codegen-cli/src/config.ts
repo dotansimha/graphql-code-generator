@@ -1,7 +1,8 @@
 import { createHash } from 'crypto';
 import { promises } from 'fs';
 import { createRequire } from 'module';
-import { resolve } from 'path';
+import { basename, resolve, join } from 'path';
+
 import {
   createNoopProfiler,
   createProfiler,
@@ -12,14 +13,16 @@ import {
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
+import { execSync } from 'child_process';
 import { GraphQLConfig } from 'graphql-config';
 import { env } from 'string-env-interpolation';
 import yaml from 'yaml';
 import yargs from 'yargs';
 import { findAndLoadGraphQLConfig } from './graphql-config.js';
 import { defaultDocumentsLoadOptions, defaultSchemaLoadOptions, loadDocuments, loadSchema } from './load.js';
+import { getTempDir } from './utils/file-system.js';
 
-const { lstat } = promises;
+const { lstat, rm } = promises;
 
 export type CodegenConfig = Types.Config;
 
@@ -49,8 +52,8 @@ export function generateSearchPlaces(moduleName: string) {
   return [...regular.concat(dot), 'package.json'];
 }
 
-function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
-  function loader(filepath: string, content: string) {
+function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
+  return async function loader(filepath, content) {
     if (typeof process !== 'undefined' && 'env' in process) {
       content = env(content);
     }
@@ -75,13 +78,33 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
 
     if (ext === 'ts') {
       // #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
-      const tsLoader = TypeScriptLoader({ transpileOnly: true });
-      return tsLoader(filepath, content);
-    }
-  }
+      try {
+        const tsLoader = TypeScriptLoader({ transpileOnly: true });
+        return tsLoader(filepath, content);
+      } catch (err) {
+        if (typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:')) {
+          const tempDir = getTempDir();
+          // We're compiling the file, because ts-node doesn't work perfectly with ESM.
+          // TODO: A neater, faster way to compile the file.
+          execSync(`tsc ${filepath} --module commonjs --outDir ${tempDir}`, { stdio: 'pipe' });
+          const newPath = join(tempDir, basename(filepath).replace(/\.ts$/, '.js'));
 
-  return loader;
+          const config = import(newPath).then(m => {
+            const config = m.default;
+            return 'default' in config ? config.default : config;
+          });
+
+          await rm(tempDir, { recursive: true, force: true });
+
+          return config;
+        }
+        throw err;
+      }
+    }
+  };
 }
+
+export type CodegenConfigLoader = (filepath: string, content: string) => Promise<Types.Config> | Types.Config;
 
 export interface LoadCodegenConfigOptions {
   /**
@@ -105,7 +128,7 @@ export interface LoadCodegenConfigOptions {
   /**
    * Overrides or extends the loaders for specific file extensions
    */
-  loaders?: Record<string, (filepath: string, content: string) => Promise<Types.Config> | Types.Config>;
+  loaders?: Record<string, CodegenConfigLoader>;
 }
 
 export interface LoadCodegenConfigResult {
@@ -142,7 +165,16 @@ export async function loadCodegenConfig({
 }
 
 export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
-  const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
+  let graphqlConfig: GraphQLConfig | undefined | void;
+  try {
+    graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
+  } catch (err) {
+    if (typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:')) {
+      // TODO: This needs a fix in graphql-config
+    } else {
+      throw err;
+    }
+  }
 
   if (graphqlConfig) {
     return new CodegenContext({ graphqlConfig });
