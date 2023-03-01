@@ -24,7 +24,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "serve -s build",
+    "start": "serve -s dist",
     "test": "cypress run",
     "test:end2end": "start-server-and-test start http://localhost:3000 test",
     "codegen": "graphql-codegen --config codegen.ts"
