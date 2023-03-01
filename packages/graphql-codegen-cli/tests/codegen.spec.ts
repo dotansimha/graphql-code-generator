@@ -1,7 +1,22 @@
 import { join } from 'path';
 import { useMonorepo } from '@graphql-codegen/testing';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print, OperationDefinitionNode, Kind } from 'graphql';
+import {
+  buildASTSchema,
+  buildSchema,
+  GraphQLObjectType,
+  parse,
+  print,
+  OperationDefinitionNode,
+  Kind,
+  visit,
+  TypeInfo,
+  visitWithTypeInfo,
+  concatAST,
+  isNonNullType,
+  isObjectType,
+  FieldNode,
+} from 'graphql';
 import { createContext, executeCodegen } from '../src/index.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -1303,6 +1318,113 @@ describe('Codegen Executor', () => {
 
       const fileOutput = output.find(file => file.filename === './src/gql/graphql.ts');
       expect(fileOutput.content).toContain('export type BarQuery');
+    });
+
+    it('should be able to extend the schema.', async () => {
+      const documentTransform: Types.DocumentTransformObject = {
+        transform: ({ documents }) => {
+          return documents;
+        },
+        addToSchema: `extend type Query { test: String! }`,
+      };
+
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransforms: [documentTransform],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain(`test: Scalars['String']`);
+    });
+
+    it('should be able to dynamically extend the schema.', async () => {
+      const testSchema = `type UserType { field: String! } type Query { user: UserType! }`;
+      const testDocuments = `query MyQuery { user @useMyTool { field } }`;
+      const directiveName = 'useMyTool';
+      const localOnlyFieldName = 'localOnlyFieldForMyTool';
+
+      const documentTransform: Types.DocumentTransformObject = {
+        transform: ({ documents }) => {
+          return documents.map(documentFile => {
+            documentFile.document = visit(documentFile.document, {
+              Field: {
+                leave(fieldNode) {
+                  if (!fieldNode.directives) return undefined;
+                  const addFieldDirective = fieldNode.directives.find(
+                    directive => directive.name.value === directiveName
+                  );
+                  if (!addFieldDirective) return undefined;
+
+                  const localOnlyField: FieldNode = {
+                    kind: Kind.FIELD,
+                    name: { kind: Kind.NAME, value: localOnlyFieldName },
+                    directives: [{ kind: Kind.DIRECTIVE, name: { kind: Kind.NAME, value: 'client' } }],
+                  };
+
+                  return {
+                    ...fieldNode,
+                    selectionSet: {
+                      ...fieldNode.selectionSet!,
+                      selections: [...fieldNode.selectionSet!.selections, localOnlyField],
+                    },
+                  };
+                },
+              },
+            });
+            return documentFile;
+          });
+        },
+        addToSchema: ({ schemaAst, documents }) => {
+          const typeInfo = new TypeInfo(schemaAst);
+          const typeNames = [];
+          visit(
+            concatAST(documents.map(file => file.document)),
+            visitWithTypeInfo(typeInfo, {
+              Field: {
+                leave(fieldNode) {
+                  if (!fieldNode.directives) return;
+                  const addFieldDirective = fieldNode.directives.find(
+                    directive => directive.name.value === directiveName
+                  );
+                  if (!addFieldDirective) return;
+
+                  const type = typeInfo.getType();
+                  if (isNonNullType(type) && isObjectType(type.ofType)) {
+                    typeNames.push(type.ofType.name);
+                  }
+                },
+              },
+            })
+          );
+          if (typeNames.length > 0) {
+            return typeNames.map(name => `extend type ${name} { ${localOnlyFieldName}: String! }`).join('\n');
+          }
+          return '';
+        },
+      };
+
+      const output = await executeCodegen({
+        schema: testSchema,
+        documents: testDocuments,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransforms: [documentTransform],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain(`localOnlyFieldForMyTool: Scalars['String'];`);
+      expect(output[0].content).toContain(
+        `export type MyQueryQuery = { __typename?: 'Query', user: { __typename?: 'UserType', field: string, localOnlyFieldForMyTool: string } };`
+      );
     });
   });
 });

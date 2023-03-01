@@ -164,3 +164,73 @@ module.exports = {
   }
 }
 ```
+
+## Extending the schema
+
+You can also extend types using `addToSchema`. For example, if you want to add a local-only field that doesn't exist in the schema using a document transform, you can generate the type information for that field.
+
+The following is an example of a document transform that adds a field named `localOnlyFieldForMyTool` when a `@useMyTool` directive is used:
+
+```ts
+import { Kind, visit, TypeInfo, visitWithTypeInfo, concatAST, isNonNullType, isObjectType, FieldNode } from 'graphql'
+import { Types } from '@graphql-codegen/plugin-helpers'
+
+const directiveName = 'useMyTool'
+const localOnlyFieldName = 'localOnlyFieldForMyTool'
+
+const documentTransform: Types.DocumentTransformObject = {
+  transform: ({ documents }) => {
+    return documents.map(documentFile => {
+      documentFile.document = visit(documentFile.document, {
+        Field: {
+          leave(fieldNode) {
+            if (!fieldNode.directives) return undefined
+            const addFieldDirective = fieldNode.directives.find(directive => directive.name.value === directiveName)
+            if (!addFieldDirective) return undefined
+
+            const localOnlyField: FieldNode = {
+              kind: Kind.FIELD,
+              name: { kind: Kind.NAME, value: localOnlyFieldName },
+              directives: [{ kind: Kind.DIRECTIVE, name: { kind: Kind.NAME, value: 'client' } }]
+            }
+
+            return {
+              ...fieldNode,
+              selectionSet: {
+                ...fieldNode.selectionSet!,
+                selections: [...fieldNode.selectionSet!.selections, localOnlyField]
+              }
+            }
+          }
+        }
+      })
+      return documentFile
+    })
+  },
+  addToSchema: ({ schemaAst, documents }) => {
+    const typeInfo = new TypeInfo(schemaAst)
+    const typeNames = []
+    visit(
+      concatAST(documents.map(file => file.document)),
+      visitWithTypeInfo(typeInfo, {
+        Field: {
+          leave(fieldNode) {
+            if (!fieldNode.directives) return
+            const addFieldDirective = fieldNode.directives.find(directive => directive.name.value === directiveName)
+            if (!addFieldDirective) return
+
+            const type = typeInfo.getType()
+            if (isNonNullType(type) && isObjectType(type.ofType)) {
+              typeNames.push(type.ofType.name)
+            }
+          }
+        }
+      })
+    )
+    if (typeNames.length > 0) {
+      return typeNames.map(name => `extend type ${name} { ${localOnlyFieldName}: String! }`).join('\n')
+    }
+    return ''
+  }
+}
+```
