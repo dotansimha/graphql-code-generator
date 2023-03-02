@@ -82,16 +82,21 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
         const tsLoader = TypeScriptLoader({ transpileOnly: true });
         return tsLoader(filepath, content);
       } catch (err) {
-        if (typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:')) {
+        if (isRequireESMError(err)) {
           const hash = hashContent(content, 'base64url');
 
           const tempDir = getTempDir();
 
-          // TODO
           let inTempDir: string[] = [];
           try {
             inTempDir = await promises.readdir(tempDir);
-          } catch (err) {}
+          } catch (err) {
+            if (err.code === 'ENOENT') {
+              // tsc will create the directory if it doesn't exist.
+            } else {
+              throw err;
+            }
+          }
 
           let outDir = join(tempDir, new Date().getTime() + '-' + hash);
           const previousOutDir = inTempDir.find(s => s.endsWith(hash));
@@ -100,7 +105,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
             outDir = join(tempDir, previousOutDir);
           } else {
             // We're compiling the file, because ts-node doesn't work perfectly with ESM.
-            execSync(`tsc ${filepath} --module commonjs --outDir ${outDir}`, { stdio: 'pipe' });
+            execSync(`tsc ${filepath} --module commonjs --outDir ${outDir} --skipLibCheck`);
           }
 
           const newPath = join(outDir, basename(filepath).replace(/\.ts$/, '.js'));
@@ -110,16 +115,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
           });
 
           // If the cache has more than 10 files, we delete the oldest one.
-          if (inTempDir.length > 10) {
-            const oldest = inTempDir.sort((a, b) => {
-              const aTime = Number(a.split('-')[0]);
-              const bTime = Number(b.split('-')[0]);
-
-              return aTime - bTime;
-            })[0];
-
-            await rm(join(tempDir, oldest), { recursive: true, force: true });
-          }
+          await removeOldestDirInCache(inTempDir, tempDir, 10);
 
           return config;
         }
@@ -194,7 +190,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
   try {
     graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
   } catch (err) {
-    if (typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:')) {
+    if (isRequireESMError(err)) {
       // TODO: This needs a fix in graphql-config
     } else {
       throw err;
@@ -558,4 +554,21 @@ export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
   // }
 
   return globalValue;
+}
+
+async function removeOldestDirInCache(inTempDir: string[], tempDir: string, cacheLimit: number) {
+  if (inTempDir.length > cacheLimit) {
+    const oldest = inTempDir.sort((a, b) => {
+      const aTime = Number(a.split('-')[0]);
+      const bTime = Number(b.split('-')[0]);
+
+      return aTime - bTime;
+    })[0];
+
+    await rm(join(tempDir, oldest), { recursive: true, force: true });
+  }
+}
+
+function isRequireESMError(err: any) {
+  return typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:');
 }
