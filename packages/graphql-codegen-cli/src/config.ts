@@ -1,7 +1,7 @@
 import { createHash, BinaryToTextEncoding } from 'crypto';
 import { promises } from 'fs';
 import { createRequire } from 'module';
-import { basename, resolve, join } from 'path';
+import { resolve } from 'path';
 
 import {
   createNoopProfiler,
@@ -13,16 +13,14 @@ import {
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
-import { execSync } from 'child_process';
 import { GraphQLConfig } from 'graphql-config';
 import { env } from 'string-env-interpolation';
 import yaml from 'yaml';
 import yargs from 'yargs';
 import { findAndLoadGraphQLConfig } from './graphql-config.js';
 import { defaultDocumentsLoadOptions, defaultSchemaLoadOptions, loadDocuments, loadSchema } from './load.js';
-import { getTempDir } from './utils/file-system.js';
 
-const { lstat, rm } = promises;
+const { lstat } = promises;
 
 export type CodegenConfig = Types.Config;
 
@@ -83,41 +81,11 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
         return tsLoader(filepath, content);
       } catch (err) {
         if (isRequireESMError(err)) {
-          const hash = hashContent(content, 'base64url');
-
-          const tempDir = getTempDir();
-
-          let inTempDir: string[] = [];
-          try {
-            inTempDir = await promises.readdir(tempDir);
-          } catch (err) {
-            if (err.code === 'ENOENT') {
-              // tsc will create the directory if it doesn't exist.
-            } else {
-              throw err;
-            }
-          }
-
-          let outDir = join(tempDir, new Date().getTime() + '-' + hash);
-          const previousOutDir = inTempDir.find(s => s.endsWith(hash));
-
-          if (previousOutDir) {
-            outDir = join(tempDir, previousOutDir);
-          } else {
-            // We're compiling the file, because ts-node doesn't work perfectly with ESM.
-            execSync(`tsc ${filepath} --module commonjs --outDir ${outDir} --skipLibCheck`);
-          }
-
-          const newPath = join(outDir, basename(filepath).replace(/\.ts$/, '.js'));
-          const config = import(newPath).then(m => {
-            const config = m.default;
-            return 'default' in config ? config.default : config;
+          const jiti = require('jiti')(__filename, {
+            interopDefault: true,
           });
 
-          // If the cache has more than 10 files, we delete the oldest one.
-          await removeOldestDirInCache(inTempDir, tempDir, 10);
-
-          return config;
+          return jiti(filepath);
         }
         throw err;
       }
@@ -556,18 +524,18 @@ export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
   return globalValue;
 }
 
-async function removeOldestDirInCache(inTempDir: string[], tempDir: string, cacheLimit: number) {
-  if (inTempDir.length > cacheLimit) {
-    const oldest = inTempDir.sort((a, b) => {
-      const aTime = Number(a.split('-')[0]);
-      const bTime = Number(b.split('-')[0]);
+// async function removeOldestDirInCache(inTempDir: string[], tempDir: string, cacheLimit: number) {
+//   if (inTempDir.length > cacheLimit) {
+//     const oldest = inTempDir.sort((a, b) => {
+//       const aTime = Number(a.split('-')[0]);
+//       const bTime = Number(b.split('-')[0]);
 
-      return aTime - bTime;
-    })[0];
+//       return aTime - bTime;
+//     })[0];
 
-    await rm(join(tempDir, oldest), { recursive: true, force: true });
-  }
-}
+//     await rm(join(tempDir, oldest), { recursive: true, force: true });
+//   }
+// }
 
 function isRequireESMError(err: any) {
   return typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:');
