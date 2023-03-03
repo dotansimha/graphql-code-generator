@@ -145,6 +145,8 @@ export async function loadCodegenConfig({
       '.yml': customLoader('yaml'),
       '.js': customLoader('js'),
       '.ts': customLoader('ts'),
+      '.mts': customLoader('ts'),
+      '.cts': customLoader('ts'),
       noExt: customLoader('yaml'),
       ...customLoaders,
     },
@@ -160,6 +162,8 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
   } catch (err) {
     if (isRequireESMError(err)) {
       // TODO: This needs a fix in graphql-config
+    } else if (isMissingLoaderError(err)) {
+      // TODO: This also needs a fix in graphql-config
     } else {
       throw err;
     }
@@ -539,4 +543,8 @@ export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
 
 function isRequireESMError(err: any) {
   return typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:');
+}
+
+function isMissingLoaderError(err: any) {
+  return typeof err.stack === 'string' && err.stack.startsWith('Error: No loader specified for extension');
 }
