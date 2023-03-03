@@ -50,7 +50,7 @@ export function generateSearchPlaces(moduleName: string) {
   return [...regular.concat(dot), 'package.json'];
 }
 
-function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
+function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): CodegenConfigLoader {
   return async function loader(filepath, content) {
     if (typeof process !== 'undefined' && 'env' in process) {
       content = env(content);
@@ -72,6 +72,13 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts'): CodegenConfigLoader {
 
     if (ext === 'js') {
       return defaultLoaders['.js'](filepath, content);
+    }
+
+    if (ext === 'mts' || ext === 'cts') {
+      const jiti = require('jiti')(__filename, {
+        interopDefault: true,
+      });
+      return jiti(filepath);
     }
 
     if (ext === 'ts') {
@@ -527,19 +534,6 @@ export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
 
   return globalValue;
 }
-
-// async function removeOldestDirInCache(inTempDir: string[], tempDir: string, cacheLimit: number) {
-//   if (inTempDir.length > cacheLimit) {
-//     const oldest = inTempDir.sort((a, b) => {
-//       const aTime = Number(a.split('-')[0]);
-//       const bTime = Number(b.split('-')[0]);
-
-//       return aTime - bTime;
-//     })[0];
-
-//     await rm(join(tempDir, oldest), { recursive: true, force: true });
-//   }
-// }
 
 function isRequireESMError(err: any) {
   return typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:');
