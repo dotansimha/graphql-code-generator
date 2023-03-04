@@ -15,6 +15,10 @@ use swc_core::{
     },
 };
 
+fn capetalize(s: &str) -> String {
+    format!("{}{}", (&s[..1].to_string()).to_uppercase(), &s[1..])
+}
+
 #[cfg(test)]
 mod tests;
 
@@ -40,7 +44,7 @@ impl GraphQLVisitor {
 
     fn handle_error(&self, details: &str, span: Span) {
         let message = format!(
-            "@graphql-codegen/client-preset-swc-plugin error details: {}",
+            "@graphql-codegen/client-preset-swc-plugin details: {}",
             details
         );
         HANDLER.with(|handler| handler.struct_span_err(span, &message).emit());
@@ -64,11 +68,7 @@ impl GraphQLVisitor {
 
         let mut relative = diff_paths(resolved_artifact_directory, file_s_dirname).unwrap();
 
-        let start_of_path = if relative.components().count() == 0 {
-            "./"
-        } else {
-            ""
-        };
+        let start_of_path = "./";
 
         // e.g. add 'graphql' to relative path
         relative.push(path_end);
@@ -158,10 +158,10 @@ impl VisitMut for GraphQLVisitor {
                     };
 
                     self.graphql_operations_or_fragments_to_import
-                        .push(operation_name.to_string());
+                        .push(capetalize(&operation_name));
 
                     // now change the call expression to a Identifier
-                    let new_expr = Expr::Ident(quote_ident!(operation_name));
+                    let new_expr = Expr::Ident(quote_ident!(capetalize(&operation_name)));
 
                     *init = Box::new(new_expr);
                 }

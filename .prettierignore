@@ -2,6 +2,7 @@ dev-test/githunt-invalid/invalid.graphql
 packages/graphql-codegen-cli/tests/test-documents/invalid-schema.graphql
 packages/presets/gql-tag-operations/tests/fixtures/crlf-operation.ts
 dist/
+build/
 .next/
 .bob
 CHANGELOG.md
