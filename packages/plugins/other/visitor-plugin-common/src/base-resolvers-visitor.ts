@@ -716,7 +716,6 @@ export class BaseResolversVisitor<
         return prev;
       }
 
-      let shouldApplyOmit = false;
       const isRootType = this._rootTypeNames.has(typeName);
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
@@ -727,7 +726,7 @@ export class BaseResolversVisitor<
 
         return prev;
       }
-      if (isMapped && this.config.mappers[typeName].type && hasPlaceholder(this.config.mappers[typeName].type)) {
+      if (isMapped && this.config.mappers[typeName].type && !hasPlaceholder(this.config.mappers[typeName].type)) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isInterfaceType(schemaType)) {
@@ -763,28 +762,31 @@ export class BaseResolversVisitor<
       } else if (isEnumType(schemaType)) {
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
       } else {
-        shouldApplyOmit = true;
         prev[typeName] = this.convertName(typeName, {}, true);
-      }
 
-      if (shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) {
-        const relevantFields = this.getRelevantFieldsToOmit({
-          schemaType,
-          getTypeToUse,
-          shouldInclude,
-        });
+        if (prev[typeName] !== 'any' && isObjectType(schemaType)) {
+          const relevantFields = this.getRelevantFieldsToOmit({
+            schemaType,
+            getTypeToUse,
+            shouldInclude,
+          });
 
-        if (relevantFields.length > 0) {
-          // Puts ResolverTypeWrapper on top of an entire type
-          prev[typeName] = applyWrapper(this.replaceFieldsInType(prev[typeName], relevantFields));
-        } else {
-          // We still want to use ResolverTypeWrapper, even if we don't touch any fields
-          prev[typeName] = applyWrapper(prev[typeName]);
+          // If relevantFields, puts ResolverTypeWrapper on top of an entire type
+          let internalType =
+            relevantFields.length > 0 ? this.replaceFieldsInType(prev[typeName], relevantFields) : prev[typeName];
+
+          if (isMapped) {
+            // replace the placeholder with the actual type
+            if (hasPlaceholder(internalType)) {
+              internalType = replacePlaceholder(internalType, typeName);
+            }
+            if (this.config.mappers[typeName].type && hasPlaceholder(this.config.mappers[typeName].type)) {
+              internalType = replacePlaceholder(this.config.mappers[typeName].type, internalType);
+            }
+          }
+
+          prev[typeName] = applyWrapper(internalType);
         }
-      }
-
-      if (isMapped && hasPlaceholder(prev[typeName])) {
-        prev[typeName] = replacePlaceholder(prev[typeName], typeName);
       }
 
       if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {

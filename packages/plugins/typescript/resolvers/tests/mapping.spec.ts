@@ -473,7 +473,7 @@ describe('ResolversTypes', () => {
     `);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      MyType: ResolverTypeWrapper<CustomPartial<MyType>>;
+      MyType: ResolverTypeWrapper<CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
       String: ResolverTypeWrapper<Scalars['String']>;
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<MyOtherType>;
@@ -887,7 +887,7 @@ describe('ResolversTypes', () => {
     `);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        MyType: ResolverTypeWrapper<Partial<MyType>>;
+        MyType: ResolverTypeWrapper<Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
         String: ResolverTypeWrapper<Scalars['String']>;
         Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<MyOtherType>;
@@ -1690,7 +1690,7 @@ describe('ResolversTypes', () => {
     `);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        MyType: ResolverTypeWrapper<MyNamespace.MyType<MyType>>;
+        MyType: ResolverTypeWrapper<MyNamespace.MyType<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
         String: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['String']>>;
         Child: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>>;
         MyOtherType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<MyOtherType>>;
