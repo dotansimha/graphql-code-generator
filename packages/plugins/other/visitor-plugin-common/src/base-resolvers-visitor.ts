@@ -727,7 +727,7 @@ export class BaseResolversVisitor<
 
         return prev;
       }
-      if (isMapped && this.config.mappers[typeName].type) {
+      if (isMapped && this.config.mappers[typeName].type && hasPlaceholder(this.config.mappers[typeName].type)) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isInterfaceType(schemaType)) {
