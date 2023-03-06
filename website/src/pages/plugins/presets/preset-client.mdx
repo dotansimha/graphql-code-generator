@@ -454,6 +454,8 @@ The SWC plugin is not bundled in the `client-preset` package, so you will need t
 
 <PackageCmd packages={['-D @graphql-codegen/client-preset-swc-plugin']} />
 
+#### General
+
 To use the SWC plugin without Next.js, update your `.swcrc` to add the following:
 
 ```json5 filename=".swcrc"
@@ -469,6 +471,28 @@ To use the SWC plugin without Next.js, update your `.swcrc` to add the following
   }
 }
 ```
+
+#### Vite React
+
+To use the SWC plugin with Vite React, update your `vite.config.ts` to add the following:
+
+```ts filename="vite.config.ts" {2,8-10}
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react({
+      plugins: [
+        ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+      ]
+    })
+  ]
+})
+```
+
+#### Next.js
 
 To use the SWC plugin with Next.js, update your `next.config.js` to add the following:
 
