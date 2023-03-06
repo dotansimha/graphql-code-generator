@@ -162,6 +162,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes = {
+  PaymentOption: CreditCard | Paypal;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Article: ResolverTypeWrapper<Article>;
@@ -173,7 +178,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
-  PaymentOption: ResolversTypes['CreditCard'] | ResolversTypes['Paypal'];
+  PaymentOption: ResolverTypeWrapper<ResolversUnionTypes['PaymentOption']>;
   Paypal: ResolverTypeWrapper<Paypal>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -193,7 +198,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Mutation: {};
-  PaymentOption: ResolversParentTypes['CreditCard'] | ResolversParentTypes['Paypal'];
+  PaymentOption: ResolversUnionTypes['PaymentOption'];
   Paypal: Paypal;
   Query: {};
   String: Scalars['String'];
