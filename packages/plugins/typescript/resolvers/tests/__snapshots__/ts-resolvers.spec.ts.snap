@@ -134,19 +134,25 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes = ResolversObject<{
+  ChildUnion: ( Child ) | ( MyOtherType );
+  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
+}>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Child: ResolverTypeWrapper<Child>;
   MyOtherType: ResolverTypeWrapper<MyOtherType>;
-  ChildUnion: ResolversTypes['Child'] | ResolversTypes['MyOtherType'];
+  ChildUnion: ResolverTypeWrapper<ResolversUnionTypes['ChildUnion']>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
   Node: ResolversTypes['SomeNode'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   SomeNode: ResolverTypeWrapper<SomeNode>;
-  MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+  MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
   MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -158,13 +164,13 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   Child: Child;
   MyOtherType: MyOtherType;
-  ChildUnion: ResolversParentTypes['Child'] | ResolversParentTypes['MyOtherType'];
+  ChildUnion: ResolversUnionTypes['ChildUnion'];
   Query: {};
   Subscription: {};
   Node: ResolversParentTypes['SomeNode'];
   ID: Scalars['ID'];
   SomeNode: SomeNode;
-  MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'];
+  MyUnion: ResolversUnionTypes['MyUnion'];
   MyScalar: Scalars['MyScalar'];
   Int: Scalars['Int'];
   Boolean: Scalars['Boolean'];
@@ -331,19 +337,25 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes = ResolversObject<{
+  ChildUnion: ( Types.Child ) | ( Types.MyOtherType );
+  MyUnion: ( Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']> } ) | ( Types.MyOtherType );
+}>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   MyType: ResolverTypeWrapper<Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']> }>;
   String: ResolverTypeWrapper<Types.Scalars['String']>;
   Child: ResolverTypeWrapper<Types.Child>;
   MyOtherType: ResolverTypeWrapper<Types.MyOtherType>;
-  ChildUnion: ResolversTypes['Child'] | ResolversTypes['MyOtherType'];
+  ChildUnion: ResolverTypeWrapper<ResolversUnionTypes['ChildUnion']>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
   Node: ResolversTypes['SomeNode'];
   ID: ResolverTypeWrapper<Types.Scalars['ID']>;
   SomeNode: ResolverTypeWrapper<Types.SomeNode>;
-  MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+  MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
   MyScalar: ResolverTypeWrapper<Types.Scalars['MyScalar']>;
   Int: ResolverTypeWrapper<Types.Scalars['Int']>;
   Boolean: ResolverTypeWrapper<Types.Scalars['Boolean']>;
@@ -355,13 +367,13 @@ export type ResolversParentTypes = ResolversObject<{
   String: Types.Scalars['String'];
   Child: Types.Child;
   MyOtherType: Types.MyOtherType;
-  ChildUnion: ResolversParentTypes['Child'] | ResolversParentTypes['MyOtherType'];
+  ChildUnion: ResolversUnionTypes['ChildUnion'];
   Query: {};
   Subscription: {};
   Node: ResolversParentTypes['SomeNode'];
   ID: Types.Scalars['ID'];
   SomeNode: Types.SomeNode;
-  MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'];
+  MyUnion: ResolversUnionTypes['MyUnion'];
   MyScalar: Types.Scalars['MyScalar'];
   Int: Types.Scalars['Int'];
   Boolean: Types.Scalars['Boolean'];
@@ -582,19 +594,25 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info?: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes = ResolversObject<{
+  ChildUnion: ( Child ) | ( MyOtherType );
+  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } ) | ( MyOtherType );
+}>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Child: ResolverTypeWrapper<Child>;
   MyOtherType: ResolverTypeWrapper<MyOtherType>;
-  ChildUnion: ResolversTypes['Child'] | ResolversTypes['MyOtherType'];
+  ChildUnion: ResolverTypeWrapper<ResolversUnionTypes['ChildUnion']>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
   Node: ResolversTypes['SomeNode'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   SomeNode: ResolverTypeWrapper<SomeNode>;
-  MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'];
+  MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
   MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -606,13 +624,13 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   Child: Child;
   MyOtherType: MyOtherType;
-  ChildUnion: ResolversParentTypes['Child'] | ResolversParentTypes['MyOtherType'];
+  ChildUnion: ResolversUnionTypes['ChildUnion'];
   Query: {};
   Subscription: {};
   Node: ResolversParentTypes['SomeNode'];
   ID: Scalars['ID'];
   SomeNode: SomeNode;
-  MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'];
+  MyUnion: ResolversUnionTypes['MyUnion'];
   MyScalar: Scalars['MyScalar'];
   Int: Scalars['Int'];
   Boolean: Scalars['Boolean'];
