@@ -465,10 +465,6 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
-    // TODO: eddeee888 check if ResolversUnionTypes.MyUnion is supposed to be which?
-    //   - CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>
-    //   OR
-    //   - CustomPartial<MyType>
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
         ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyOtherType );
@@ -883,10 +879,6 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    // TODO: eddeee888 check if ResolversUnionTypes.MyUnion is supposed to be which?
-    //   - Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>
-    //   OR
-    //   - Partial<MyType>
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
         ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> } ) | ( MyOtherType );
@@ -1689,10 +1681,6 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
 
-    // TODO: eddeee888 check if ResolversUnionTypes.MyUnion is supposed to be which?
-    //   - MyNamespace.MyType<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>
-    //   OR
-    //   - MyNamespace.MyType<MyType>
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes = {
