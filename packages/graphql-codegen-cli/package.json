@@ -59,7 +59,6 @@
     "@whatwg-node/fetch": "^0.8.0",
     "chalk": "^4.1.0",
     "cosmiconfig": "^7.0.0",
-    "cosmiconfig-typescript-loader": "^4.3.0",
     "debounce": "^1.2.0",
     "detect-indent": "^6.0.0",
     "graphql-config": "^4.5.0",

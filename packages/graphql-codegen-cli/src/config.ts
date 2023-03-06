@@ -11,7 +11,6 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
 import { GraphQLConfig } from 'graphql-config';
 import { env } from 'string-env-interpolation';
@@ -74,28 +73,11 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): Codeg
       return defaultLoaders['.js'](filepath, content);
     }
 
-    if (ext === 'mts' || ext === 'cts') {
+    if (ext === 'ts') {
       const jiti = require('jiti')(__filename, {
         interopDefault: true,
       });
       return jiti(filepath);
-    }
-
-    if (ext === 'ts') {
-      try {
-        // #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
-        const tsLoader = TypeScriptLoader({ transpileOnly: true });
-        return tsLoader(filepath, content);
-      } catch (err) {
-        if (isRequireESMError(err)) {
-          const jiti = require('jiti')(__filename, {
-            interopDefault: true,
-          });
-
-          return jiti(filepath);
-        }
-        throw err;
-      }
     }
   };
 }
@@ -522,8 +504,4 @@ export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
   // }
 
   return globalValue;
-}
-
-function isRequireESMError(err: any) {
-  return typeof err.stack === 'string' && err.stack.startsWith('Error [ERR_REQUIRE_ESM]:');
 }
