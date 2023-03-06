@@ -72,7 +72,6 @@
     "shell-quote": "^1.7.3",
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^2.2.3",
-    "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
     "yaml": "^1.10.0",
     "yargs": "^17.0.0"
