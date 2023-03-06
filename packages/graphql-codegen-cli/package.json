@@ -62,7 +62,7 @@
     "cosmiconfig-typescript-loader": "^4.3.0",
     "debounce": "^1.2.0",
     "detect-indent": "^6.0.0",
-    "graphql-config": "^4.4.0",
+    "graphql-config": "^4.5.0",
     "inquirer": "^8.0.0",
     "is-glob": "^4.0.1",
     "jiti": "^1.17.1",
