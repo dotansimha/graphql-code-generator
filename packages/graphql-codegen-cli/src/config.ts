@@ -75,9 +75,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): Codeg
     }
 
     if (ext === 'ts') {
-      const jitiLoader = jiti(__filename, {
-        interopDefault: true,
-      });
+      const jitiLoader = jiti('', { interopDefault: true });
       return jitiLoader(filepath);
     }
   };
