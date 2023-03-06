@@ -490,7 +490,7 @@ describe('ResolversTypes', () => {
     };`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        MyType: CustomPartial<MyType>;
+        MyType: CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }>;
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
