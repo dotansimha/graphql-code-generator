@@ -4,6 +4,7 @@ import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { preset } from '../src/index.js';
+import { print } from 'graphql';
 
 describe('client-preset', () => {
   it('can generate simple examples uppercase names', async () => {
@@ -997,6 +998,66 @@ export * from "./gql.js";`);
     // graphql.ts
     const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(graphqlFile).toBeDefined();
+  });
+
+  it('should dedupe fragments - #8670', async () => {
+    const dir = path.join(__dirname, 'tmp/duplicate-fragments');
+    const cleanUp = async () => {
+      await fs.promises.rm(dir, { recursive: true, force: true });
+    };
+
+    const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            user(id: ID!): User!
+            event(id: ID!): Event!
+          }
+
+          type User {
+            id: ID!
+            username: String!
+            email: String!
+          }
+
+          type Event {
+            id: ID!
+            owner: User!
+            attendees: [User!]!
+          }
+        `,
+      ],
+      documents: [docPath],
+      generates: {
+        'out1/': {
+          preset,
+          plugins: [],
+        },
+      },
+    });
+
+    // TODO: Consider using in-memory file system for tests like this.
+    try {
+      await cleanUp();
+    } catch {}
+    await fs.promises.mkdir(path.join(dir, 'out1'), { recursive: true });
+    for (const file of result) {
+      if (file.filename === 'out1/graphql.ts') {
+        await fs.promises.writeFile(path.join(dir, file.filename), file.content, 'utf-8');
+      }
+    }
+
+    const { default: jiti } = await import('jiti');
+    const loader = jiti('', {});
+
+    const { EventQueryDocument } = loader(path.join(dir, 'out1/graphql.ts'));
+
+    const printed = print(EventQueryDocument);
+
+    expect(printed.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
+
+    await cleanUp();
   });
 
   describe('when no operations are found', () => {
