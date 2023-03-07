@@ -92,6 +92,56 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
   });
 
+  it('should include nested fields from @provides directive', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        users: [User]
+      }
+
+      type Book {
+        author: User @provides(fields: "name { first last}")
+      }
+
+      type Name @key(fields: "id") {
+        id: ID! @external
+        first: String!
+        middle: String @external
+        last: String!
+      }
+
+      type User @key(fields: "id") {
+        id: ID!
+        name: Name @external
+        username: String @external
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+      },
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        name?: Resolver<Maybe<ResolversTypes['Name']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type NameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Name']>, { __typename: 'Name' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        first?: Resolver<ResolversTypes['String'], { __typename: 'Name' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        last?: Resolver<ResolversTypes['String'], { __typename: 'Name' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      }
+    `);
+  });
+
   it('should include fields from @requires directive', async () => {
     const federatedSchema = /* GraphQL */ `
       type Query {
