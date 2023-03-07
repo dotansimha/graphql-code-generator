@@ -1,5 +1,18 @@
 # @graphql-codegen/client-preset
 
+## 2.1.1
+
+### Patch Changes
+
+- [#9049](https://github.com/dotansimha/graphql-code-generator/pull/9049) [`9430c3811`](https://github.com/dotansimha/graphql-code-generator/commit/9430c38111579c8c0023cbabfae047156ae2df42) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@graphql-typed-document-node/core@3.1.2` ↗︎](https://www.npmjs.com/package/@graphql-typed-document-node/core/v/3.1.2) (from `3.1.1`, in `dependencies`)
+- Updated dependencies [[`ba0610bbd`](https://github.com/dotansimha/graphql-code-generator/commit/ba0610bbd4578d8a82078014766f56d8ae5fcf7a), [`4b49f6fbe`](https://github.com/dotansimha/graphql-code-generator/commit/4b49f6fbed802907b460bfb7b6e9a85f88c555bc), [`b343626c9`](https://github.com/dotansimha/graphql-code-generator/commit/b343626c978b9ee0f14e314cea6c01ae3dad057c)]:
+  - @graphql-codegen/visitor-plugin-common@3.0.2
+  - @graphql-codegen/gql-tag-operations@2.0.2
+  - @graphql-codegen/typescript-operations@3.0.2
+  - @graphql-codegen/typed-document-node@3.0.2
+  - @graphql-codegen/typescript@3.0.2
+
 ## 2.1.0
 
 ### Minor Changes

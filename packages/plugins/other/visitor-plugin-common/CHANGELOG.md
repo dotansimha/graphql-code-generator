@@ -1,5 +1,15 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 3.0.2
+
+### Patch Changes
+
+- [#9110](https://github.com/dotansimha/graphql-code-generator/pull/9110) [`ba0610bbd`](https://github.com/dotansimha/graphql-code-generator/commit/ba0610bbd4578d8a82078014766f56d8ae5fcf7a) Thanks [@gilgardosh](https://github.com/gilgardosh)! - Custom mappers with placeholder will apply omit
+
+- [#9069](https://github.com/dotansimha/graphql-code-generator/pull/9069) [`4b49f6fbe`](https://github.com/dotansimha/graphql-code-generator/commit/4b49f6fbed802907b460bfb7b6e9a85f88c555bc) Thanks [@eddeee888](https://github.com/eddeee888)! - Extract union types to ResolversUnionTypes
+
+- [#8895](https://github.com/dotansimha/graphql-code-generator/pull/8895) [`b343626c9`](https://github.com/dotansimha/graphql-code-generator/commit/b343626c978b9ee0f14e314cea6c01ae3dad057c) Thanks [@benkroeger](https://github.com/benkroeger)! - Preserve .js extension when importDocumentNodeExternallyFrom and emitLegacyCommonJSImports is false
+
 ## 3.0.1
 
 ### Patch Changes

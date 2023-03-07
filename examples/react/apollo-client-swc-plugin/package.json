@@ -9,8 +9,8 @@
   },
   "devDependencies": {
     "@graphql-codegen/client-preset-swc-plugin": "0.1.1",
-    "@graphql-codegen/client-preset": "^2.0.0",
-    "@graphql-codegen/cli": "^3.0.0",
+    "@graphql-codegen/client-preset": "^2.1.1",
+    "@graphql-codegen/cli": "^3.2.2",
     "@vitejs/plugin-react-swc": "^3.2.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
