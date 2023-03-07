@@ -1,5 +1,18 @@
 # @graphql-codegen/cli
 
+## 3.2.2
+
+### Patch Changes
+
+- [#9086](https://github.com/dotansimha/graphql-code-generator/pull/9086) [`a34cef35b`](https://github.com/dotansimha/graphql-code-generator/commit/a34cef35b4cbbe83c54bd92f88882b325df173fd) Thanks [@beerose](https://github.com/beerose)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@^4.5.0` ↗︎](https://www.npmjs.com/package/graphql-config/v/4.5.0) (from `^4.4.0`, in `dependencies`)
+  - Added dependency [`jiti@^1.17.1` ↗︎](https://www.npmjs.com/package/jiti/v/1.17.1) (to `dependencies`)
+  - Removed dependency [`cosmiconfig-typescript-loader@^4.3.0` ↗︎](https://www.npmjs.com/package/cosmiconfig-typescript-loader/v/4.3.0) (from `dependencies`)
+  - Removed dependency [`ts-node@^10.9.1` ↗︎](https://www.npmjs.com/package/ts-node/v/10.9.1) (from `dependencies`)
+
+- [#9086](https://github.com/dotansimha/graphql-code-generator/pull/9086) [`a34cef35b`](https://github.com/dotansimha/graphql-code-generator/commit/a34cef35b4cbbe83c54bd92f88882b325df173fd) Thanks [@beerose](https://github.com/beerose)! - Support `codegen.ts` in ESM projects
+
 ## 3.2.1
 
 ### Patch Changes

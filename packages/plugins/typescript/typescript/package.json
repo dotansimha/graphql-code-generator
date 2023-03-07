@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "GraphQL Code Generator plugin for generating TypeScript types",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^4.1.0",
     "@graphql-codegen/schema-ast": "^3.0.1",
-    "@graphql-codegen/visitor-plugin-common": "3.0.1",
+    "@graphql-codegen/visitor-plugin-common": "3.0.2",
     "auto-bind": "~4.0.0",
     "tslib": "~2.5.0"
   },
