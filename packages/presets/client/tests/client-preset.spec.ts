@@ -1043,7 +1043,9 @@ export * from "./gql.js";`);
     } catch {}
     await fs.promises.mkdir(path.join(dir, 'out1'), { recursive: true });
     for (const file of result) {
-      await fs.promises.writeFile(path.join(dir, file.filename), file.content, 'utf-8');
+      if (file.filename === 'out1/graphql.ts') {
+        await fs.promises.writeFile(path.join(dir, file.filename), file.content, 'utf-8');
+      }
     }
 
     const { default: jiti } = await import('jiti');
