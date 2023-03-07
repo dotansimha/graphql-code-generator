@@ -9,6 +9,7 @@
     "build": "bob build",
     "postbuild": "yarn fix-bins",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
+    "rebuild": "bob build --incremental",
     "test": "jest --forceExit --no-watchman",
     "lint": "eslint --cache --ignore-path .gitignore .",
     "prettier": "prettier --cache --write --list-different .",
