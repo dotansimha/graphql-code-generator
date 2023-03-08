@@ -29,9 +29,9 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       schema,
       fragments,
       {
-        documentMode: DocumentMode.documentNodeImportFragments,
         documentNodeImport: '@graphql-typed-document-node/core#TypedDocumentNode',
         ...config,
+        documentMode: config.documentMode || DocumentMode.documentNodeImportFragments,
       },
       {},
       documents
@@ -45,6 +45,13 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     if (this.config.documentMode === DocumentMode.graphQLTag) {
       const documentNodeImport = this._parseImport(this.config.documentNodeImport || 'graphql#DocumentNode');
       const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
+      this._imports.add(tagImport);
+    } else if (this.config.documentMode === DocumentMode.string) {
+      const tagImport = this._generateImport(
+        { moduleName: '@graphql-typed-document-node/core', propName: 'TypedDocumentString' },
+        'TypedDocumentString',
+        true
+      );
       this._imports.add(tagImport);
     }
   }
@@ -97,6 +104,10 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       this.config.documentMode === DocumentMode.graphQLTag
     ) {
       return ` as unknown as DocumentNode<${resultType}, ${variablesTypes}>`;
+    }
+
+    if (this.config.documentMode === DocumentMode.string) {
+      return ` as unknown as TypedDocumentString<${resultType}, ${variablesTypes}>`;
     }
 
     return super.getDocumentNodeSignature(resultType, variablesTypes, node);

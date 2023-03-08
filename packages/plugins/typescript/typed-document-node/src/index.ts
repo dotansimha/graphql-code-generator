@@ -1,7 +1,6 @@
 import { extname } from 'path';
 import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import {
-  DocumentMode,
   LoadedFragment,
   optimizeOperations,
   RawClientSideBasePluginConfig,
@@ -40,15 +39,11 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
 };
 
 export const validate: PluginValidateFn<RawClientSideBasePluginConfig> = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config,
+  _schema: GraphQLSchema,
+  _documents: Types.DocumentFile[],
+  _config,
   outputFile: string
 ) => {
-  if (config && config.documentMode === DocumentMode.string) {
-    throw new Error(`Plugin "typed-document-node" does not allow using 'documentMode: string' configuration!`);
-  }
-
   if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
     throw new Error(`Plugin "typed-document-node" requires extension to be ".ts" or ".tsx"!`);
   }
