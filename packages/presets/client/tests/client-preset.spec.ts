@@ -1612,4 +1612,175 @@ export * from "./gql.js";`);
       export const OiDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OI"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AB"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}}]} as unknown as DocumentNode<OiQuery, OiQueryVariables>;"
     `);
   });
+
+  describe('documentMode: "string"', () => {
+    it('generates correct types', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentString } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Foo = {
+          __typename?: 'Foo';
+          value?: Maybe<Scalars['String']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
+        export type FooQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FooQuery = { __typename?: 'Query', foo?: (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': FooFragment } }
+          ) | null };
+
+        export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<(
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': FooFragment } }
+          ) | null> | null };
+
+        export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
+
+        export const FooFragmentDoc = \`
+            fragment Foo on Foo {
+          value
+        }
+            \` as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooDocument = \`
+            query Foo {
+          foo {
+            ...Foo
+          }
+        }
+            \${FooFragmentDoc}\` as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        export const FoosDocument = \`
+            query Foos {
+          foos {
+            ...Foo
+          }
+        }
+            \${FooFragmentDoc}\` as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+      `);
+    });
+
+    it('does not include documents dictionary', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).not.toContain('const documents = {');
+    });
+
+    it('graphql overloads have a nice result type', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n"): typeof import('./graphql').FooDocument;
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n"): typeof import('./graphql').FoosDocument;
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  fragment Foo on Foo {\\n    value\\n  }\\n"): typeof import('./graphql').FooFragmentDoc;
+
+
+        export function graphql(source: string): string { return source; }"
+      `);
+    });
+  });
 });
