@@ -748,10 +748,10 @@ export * from "./gql";`);
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "import { ResultOf, TypedDocumentNode as DocumentNode,  } from '@graphql-typed-document-node/core';
+        "import { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';
 
 
-        export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+        export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
           infer TType,
           any
         >
@@ -764,34 +764,34 @@ export * from "./gql";`);
 
         // return non-nullable if \`fragmentType\` is non-nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: FragmentType<DocumentNode<TType, any>>
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
         ): TType;
         // return nullable if \`fragmentType\` is nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
         ): TType | null | undefined;
         // return array of non-nullable if \`fragmentType\` is array of non-nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
         ): ReadonlyArray<TType>;
         // return array of nullable if \`fragmentType\` is array of nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): ReadonlyArray<TType> | null | undefined;
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): TType | ReadonlyArray<TType> | null | undefined {
           return fragmentType as any;
         }
 
 
         export function makeFragmentData<
-          F extends DocumentNode,
+          F extends DocumentTypeDecoration<any, any>,
           FT extends ResultOf<F>
         >(data: FT, _fragment: F): FragmentType<F> {
           return data as FragmentType<F>;
@@ -800,32 +800,32 @@ export * from "./gql";`);
 
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: FragmentType<DocumentNode<TType, any>>
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
       ): TType;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
       ): TType | null | undefined;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
       ): ReadonlyArray<TType>;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
       ): ReadonlyArray<TType> | null | undefined;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
       ): TType | ReadonlyArray<TType> | null | undefined {
         return fragmentType as any;
       }
@@ -1708,35 +1708,6 @@ export * from "./gql.js";`);
       `);
     });
 
-    it('does not include documents dictionary', async () => {
-      const result = await executeCodegen({
-        schema: [
-          /* GraphQL */ `
-            type Query {
-              foo: Foo
-              foos: [Foo]
-            }
-
-            type Foo {
-              value: String
-            }
-          `,
-        ],
-        documents: path.join(__dirname, 'fixtures/with-fragment.ts'),
-        generates: {
-          'out1/': {
-            preset,
-            config: {
-              documentMode: 'string',
-            },
-          },
-        },
-      });
-
-      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).not.toContain('const documents = {');
-    });
-
     it('graphql overloads have a nice result type', async () => {
       const result = await executeCodegen({
         schema: [
@@ -1765,6 +1736,26 @@ export * from "./gql.js";`);
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
+        import * as types from './graphql';
+
+
+
+        /**
+         * Map of all GraphQL operations in the project.
+         *
+         * This map has several performance disadvantages:
+         * 1. It is not tree-shakeable, so it will include all operations in the project.
+         * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+         * 3. It does not support dead code elimination, so it will add unused operations.
+         *
+         * Therefore it is highly recommended to use the babel or swc plugin for production.
+         */
+        const documents = {
+            "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
+            "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": types.FoosDocument,
+            "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": types.FooFragmentDoc,
+        };
+
         /**
          * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
          */
@@ -1779,7 +1770,10 @@ export * from "./gql.js";`);
         export function graphql(source: "\\n  fragment Foo on Foo {\\n    value\\n  }\\n"): typeof import('./graphql').FooFragmentDoc;
 
 
-        export function graphql(source: string): string { return source; }"
+        export function graphql(source: string) {
+          return (documents as any)[source] ?? {};
+        }
+        "
       `);
     });
   });
