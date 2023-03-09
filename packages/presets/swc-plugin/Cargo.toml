@@ -1,6 +1,6 @@
 [package]
 name = "swc-plugin"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "SWC plugin for https://the-guild.dev/graphql/codegen/plugins/presets/preset-client"
 license = "MIT"

@@ -1952,6 +1952,11 @@
     tslib "~2.4.0"
     unixify "^1.0.0"
 
+"@graphql-codegen/client-preset-swc-plugin@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/client-preset-swc-plugin/-/client-preset-swc-plugin-0.1.1.tgz#2724432d9a83b68c8d1d177386a286b11caa6d2d"
+  integrity sha512-FYdw7x562VqhavXWm5V/Oho8wtBsNbUfxlPsfjQaRpC1sBOrKJJxOvw/Bb5qW+Mqf3Uepbe5dN+cZaKn15ybWg==
+
 "@graphql-codegen/flow-operations@2.3.6":
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/flow-operations/-/flow-operations-2.3.6.tgz#324f15d96f38c18272678a86e30b678bc4480cb6"
@@ -10947,10 +10952,10 @@ negotiator@0.6.3:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz#58e323a72fedc0d6f9cd4d31fe49f51479590ccd"
   integrity sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==
 
-next-mdx-remote@4.3.0, next-mdx-remote@^4.2.1:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/next-mdx-remote/-/next-mdx-remote-4.3.0.tgz#34c5223c8a6465ab4484e8b22efff840c510316a"
-  integrity sha512-fbxkY03pM2Wx5bDNTVKpYD5Hx3QVZGH+6xDtVIxlxXz4HTifP1yI2DrkDvxXbTz0SYGIbluRMIW81IOOa8pigA==
+next-mdx-remote@4.4.1, next-mdx-remote@^4.2.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/next-mdx-remote/-/next-mdx-remote-4.4.1.tgz#96b16e2adc54dbcd0a7f204a9a3c3fd269d41abf"
+  integrity sha512-1BvyXaIou6xy3XoNF4yaMZUCb6vD2GTAa5ciOa6WoO+gAUTYsb1K4rI/HSC2ogAWLrb/7VSV52skz07vOzmqIQ==
   dependencies:
     "@mdx-js/mdx" "^2.2.1"
     "@mdx-js/react" "^2.2.1"
@@ -10962,10 +10967,10 @@ next-seo@^5.5.0:
   resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-5.15.0.tgz#b1a90508599774982909ea44803323c6fb7b50f4"
   integrity sha512-LGbcY91yDKGMb7YI+28n3g+RuChUkt6pXNpa8FkfKkEmNiJkeRDEXTnnjVtwT9FmMhG6NH8qwHTelGrlYm9rgg==
 
-next-sitemap@4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-4.0.4.tgz#c20a638159ee40b3abe864281325cacc30581d9d"
-  integrity sha512-4/bUDeWNx03fc8ac+5wA55H1Zn3X3c1qj5iq3Mk5eidzxnBzIuUt4NJ+1TpB0n1m7HUgEtE+kaUGShFK0McZVg==
+next-sitemap@4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-4.0.5.tgz#389980d79ada1580b793bad913ec8e993d3a6881"
+  integrity sha512-kIABX4n8wJqY2sttRjivBF2r1MgQ1pg12y87qGT+5meippq0ivxaNSRldMDOj8pIGhXW6uFAsCxyH/JftqkwWQ==
   dependencies:
     "@corex/deepmerge" "^4.0.37"
     minimist "^1.2.8"
@@ -12639,10 +12644,10 @@ rfdc@^1.3.0:
   resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.3.0.tgz#d0b7c441ab2720d05dc4cf26e01c89631d9da08b"
   integrity sha512-V2hovdzFbOi77/WajaSMXk2OLm+xNIeQdMMuB7icj7bk6zi2F8GGAxigcnDFpJHbNyNcgyJDiP+8nOrY5cZGrA==
 
-rimraf@4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-4.3.1.tgz#ccb3525e39100478acb334fae6d23029b87912ea"
-  integrity sha512-GfHJHBzFQra23IxDzIdBqhOWfbtdgS1/dCHrDy+yvhpoJY5TdwdT28oWaHWfRpKFDLd3GZnGTx6Mlt4+anbsxQ==
+rimraf@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-4.4.0.tgz#c7a9f45bb2ec058d2e60ef9aca5167974313d605"
+  integrity sha512-X36S+qpCUR0HjXlkDe4NAOhS//aHH0Z+h8Ckf2auGJk3PTnx5rLmrHkwNdbVQuCSUhOyFrlRvFEllZOYE+yZGQ==
   dependencies:
     glob "^9.2.0"
 

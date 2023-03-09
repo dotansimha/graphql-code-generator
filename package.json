@@ -56,7 +56,7 @@
     "patch-package": "6.5.1",
     "prettier": "2.8.4",
     "prettier-plugin-svelte": "2.9.0",
-    "rimraf": "4.3.1",
+    "rimraf": "4.4.0",
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
     "tslib": "2.5.0",
