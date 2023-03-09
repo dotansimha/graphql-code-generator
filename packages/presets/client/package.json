@@ -26,7 +26,7 @@
     "@graphql-codegen/gql-tag-operations": "2.0.2",
     "@graphql-codegen/plugin-helpers": "^4.1.0",
     "@graphql-codegen/visitor-plugin-common": "^3.0.2",
-    "@graphql-typed-document-node/core": "3.1.2",
+    "@graphql-typed-document-node/core": "3.2.0-alpha-20230309104331-975d9d2",
     "@graphql-tools/documents": "^0.1.0",
     "@graphql-tools/utils": "^9.0.0",
     "tslib": "~2.5.0"

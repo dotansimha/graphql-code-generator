@@ -2762,6 +2762,11 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.2.tgz#6fc464307cbe3c8ca5064549b806360d84457b04"
   integrity sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==
 
+"@graphql-typed-document-node/core@3.2.0-alpha-20230309104331-975d9d2":
+  version "3.2.0-alpha-20230309104331-975d9d2"
+  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0-alpha-20230309104331-975d9d2.tgz#b2af94b5dd0e1aee4a35657015d503a12c536752"
+  integrity sha512-qXJvJJf8FdjxM+4Zk71pCRfw1WOU9Nky4riMKQ4FVKRTrK0EHcvbQCCQ5v+SAsJxBZceJuO/g+Czi5jh1h12YQ==
+
 "@graphql-yoga/logger@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-yoga/logger/-/logger-0.0.1.tgz#48504fa6ecaee487d9df00fd44c28e356635a324"
