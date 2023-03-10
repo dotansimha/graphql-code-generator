@@ -540,7 +540,7 @@ export interface RawResolversConfig extends RawConfig {
    */
   onlyResolveTypeForInterfaces?: boolean;
   /**
-   * @description Make __typename of resolver mappings non-optional
+   * @description Make `__typename` of resolver type in mappings non-optional
    * @default false
    */
   resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
@@ -915,7 +915,6 @@ export class BaseResolversVisitor<
 
           return `${unionMemberValue}${nonOptionalTypenameModifier}`;
         });
-
         res[typeName] = referencedTypes.map(type => `( ${type} )`).join(' | '); // Must wrap every union member in explicit "( )" to separate the members
       }
       return res;
