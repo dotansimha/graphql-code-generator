@@ -909,7 +909,7 @@ export class BaseResolversVisitor<
             return replacePlaceholder(this.config.defaultMapper.type, finalTypename);
           }
 
-          const nonOptionalTypenameModifier = this.config.resolversNonOptionalTypename.union
+          const nonOptionalTypenameModifier = this.config.resolversNonOptionalTypename.unionMember
             ? ` & { __typename: "${unionMemberType}" }`
             : '';
 
@@ -1603,12 +1603,12 @@ function normalizeResolversNonOptionalTypename(
   input?: boolean | ResolversNonOptionalTypenameConfig
 ): ResolversNonOptionalTypenameConfig {
   const defaultConfig: ResolversNonOptionalTypenameConfig = {
-    union: false,
+    unionMember: false,
   };
 
   if (typeof input === 'boolean') {
     return {
-      union: input,
+      unionMember: input,
     };
   }
 

@@ -245,7 +245,7 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       const result = await plugin(
         resolversTestingSchema,
         [],
-        { resolversNonOptionalTypename: { union: true } },
+        { resolversNonOptionalTypename: { unionMember: true } },
         { outputFile: '' }
       );
 
