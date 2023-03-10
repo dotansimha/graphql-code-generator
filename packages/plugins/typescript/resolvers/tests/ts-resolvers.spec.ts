@@ -225,6 +225,22 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       await resolversTestingValidate(result);
     });
 
+    it('resolversNonOptionalTypename - adds non-optional typenames to implemented types', async () => {
+      const result = await plugin(
+        resolversTestingSchema,
+        [],
+        { resolversNonOptionalTypename: true },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionTypes = {
+          ChildUnion: ( Child & { __typename: "Child" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
+          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } & { __typename: "MyType" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
+        };
+      `);
+    });
+
     it('resolversNonOptionalTypename - adds non-optional typenames to ResolversUnionTypes', async () => {
       const result = await plugin(
         resolversTestingSchema,
