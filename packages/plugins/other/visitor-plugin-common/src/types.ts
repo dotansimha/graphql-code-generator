@@ -102,3 +102,7 @@ export interface ParsedImport {
   moduleName: string | null;
   propName: string;
 }
+
+export interface ResolversNonOptionalTypenameConfig {
+  union?: boolean;
+}
