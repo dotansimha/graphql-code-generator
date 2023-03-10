@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { TypedDocumentString } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1273,11 +1273,11 @@ export type VehiclesEdge = {
   node?: Maybe<Vehicle>;
 };
 
-export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
+export type AllFilmsWithVariablesQuery199QueryVariables = Exact<{
   first: Scalars['Int'];
 }>;
 
-export type AllFilmsWithVariablesQueryQuery = {
+export type AllFilmsWithVariablesQuery199Query = {
   __typename?: 'Root';
   allFilms?: {
     __typename?: 'FilmsConnection';
@@ -1296,91 +1296,25 @@ export type FilmItemFragment = {
   producers?: Array<string | null> | null;
 } & { ' $fragmentName'?: 'FilmItemFragment' };
 
-export const FilmItemFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FilmItem' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Film' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'releaseDate' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'producers' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<FilmItemFragment, unknown>;
-export const AllFilmsWithVariablesQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'allFilmsWithVariablesQuery' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'allFilms' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'first' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'edges' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'node' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FilmItem' } }],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FilmItem' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Film' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'releaseDate' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'producers' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AllFilmsWithVariablesQueryQuery, AllFilmsWithVariablesQueryQueryVariables>;
+export const FilmItemFragmentDoc = `
+    fragment FilmItem on Film {
+  id
+  title
+  releaseDate
+  producers
+}
+    ` as unknown as TypedDocumentString<FilmItemFragment, unknown>;
+export const AllFilmsWithVariablesQuery199Document = `
+    query allFilmsWithVariablesQuery199($first: Int!) {
+  allFilms(first: $first) {
+    edges {
+      node {
+        ...FilmItem
+      }
+    }
+  }
+}
+    ${FilmItemFragmentDoc}` as unknown as TypedDocumentString<
+  AllFilmsWithVariablesQuery199Query,
+  AllFilmsWithVariablesQuery199QueryVariables
+>;
