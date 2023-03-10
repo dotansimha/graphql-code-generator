@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { buildHTTPExecutor } from '@graphql-tools/executor-http';
+import { GraphQLClient } from 'graphql-request';
 import './App.css';
 import Film from './Film';
 import { graphql, DocumentType } from './gql';
 
-const executor = buildHTTPExecutor({
-  endpoint: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
-});
+const client = new GraphQLClient('https://swapi-graphql.netlify.app/.netlify/functions/index');
 
 const AllFilmsWithVariablesQuery = graphql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {
@@ -20,24 +18,12 @@ const AllFilmsWithVariablesQuery = graphql(/* GraphQL */ `
   }
 `);
 
-// we could also define a client:
-// `const client = new GraphQLClient('https://swapi-graphql.netlify.app/.netlify/functions/index')`
-// and use:
-// `client.request(allFilmsWithVariablesQueryDocument, { first: 10 })`
-
 function App() {
   const [data, setData] = useState<DocumentType<typeof AllFilmsWithVariablesQuery>>();
 
   useEffect(() => {
-    executor({
-      document: AllFilmsWithVariablesQuery,
-      variables: {
-        first: 10,
-      },
-    }).then(result => {
-      if ('data' in result) {
-        setData(result.data!);
-      }
+    client.request(AllFilmsWithVariablesQuery, { first: 10 }).then(result => {
+      setData(result);
     });
   }, []);
 
