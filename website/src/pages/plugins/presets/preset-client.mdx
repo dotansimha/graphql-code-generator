@@ -450,6 +450,22 @@ module.exports = {
 
 ### SWC plugin
 
+<Callout type="warning">
+  As of 2023/03/11, SWC's custom plugins is still an experimental feature, that means unexpected breaking changes that
+  makes specific nextjs versions or our plugin incompatible are possible, so please file an issue
+  [here](https://github.com/dotansimha/graphql-code-generator/issues/new?assignees=&labels=&template=bug_report.yml&title=@graphql-codegen/client-preset-swc-plugin%20...)
+  if you faced any unexpected behavior/errors while using the plugin.
+
+Pro tip: if you faced the following obscure error, or the nextjs `dev` script just instantly terminates the process without any errors,
+it most likely means that SWC is not happy with your nextjs version, so try upgrading it to `latest` if possible,
+then let us know of your current broken version to try fixing it or documenting its no longer supported.
+
+```sh
+thread '<unnamed>' panicked at 'failed to invoke plugin: failed to invoke plugin on 'Some("/app/node_modules/next/dist/client/router.js")'
+```
+
+</Callout>
+
 The SWC plugin is not bundled in the `client-preset` package, so you will need to install it separately:
 
 <PackageCmd packages={['-D @graphql-codegen/client-preset-swc-plugin']} />
