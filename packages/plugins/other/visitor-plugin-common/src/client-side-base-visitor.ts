@@ -330,7 +330,7 @@ export class ClientSideBaseVisitor<
 
   protected _includeFragments(fragments: string[], nodeKind: 'FragmentDefinition' | 'OperationDefinition'): string {
     if (fragments && fragments.length > 0) {
-      if (this.config.documentMode === DocumentMode.documentNode) {
+      if (this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.string) {
         return Array.from(this._fragments.values())
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))

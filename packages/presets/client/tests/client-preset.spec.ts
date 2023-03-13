@@ -1758,14 +1758,18 @@ export * from "./gql.js";`);
             ...Foo
           }
         }
-            \${FooFragmentDoc}\` as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+            fragment Foo on Foo {
+          value
+        }\` as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
         export const FoosDocument = \`
             query Foos {
           foos {
             ...Foo
           }
         }
-            \${FooFragmentDoc}\` as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+            fragment Foo on Foo {
+          value
+        }\` as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
 
