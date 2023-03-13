@@ -1314,7 +1314,9 @@ export const AllFilmsWithVariablesQuery199Document = `
     }
   }
 }
-    ${FilmItemFragmentDoc}` as unknown as TypedDocumentString<
-  AllFilmsWithVariablesQuery199Query,
-  AllFilmsWithVariablesQuery199QueryVariables
->;
+    fragment FilmItem on Film {
+  id
+  title
+  releaseDate
+  producers
+}` as unknown as TypedDocumentString<AllFilmsWithVariablesQuery199Query, AllFilmsWithVariablesQuery199QueryVariables>;
