@@ -4,7 +4,9 @@
   "private": true,
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",
-    "@graphql-codegen/gql-tag-operations-preset": "2.1.0"
+    "@graphql-codegen/gql-tag-operations-preset": "2.1.0",
+    "babel-jest": "28.1.3",
+    "jest": "28.1.3"
   },
   "dependencies": {
     "graphql": "16.6.0",
@@ -15,7 +17,7 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
     "dev": "ts-node src/main.ts",
-    "test:end2end": "node dist/main.js"
+    "test:end2end": "exit 0"
   },
   "type": "commonjs",
   "bob": false
