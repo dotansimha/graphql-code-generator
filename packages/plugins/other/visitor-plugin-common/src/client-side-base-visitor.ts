@@ -427,7 +427,19 @@ export class ClientSideBaseVisitor<
     }
 
     if (this.config.documentMode === DocumentMode.string) {
-      return '`' + doc + '`';
+      let meta: any; //todo
+
+      if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
+        meta = this._onExecutableDocumentNode({
+          kind: Kind.DOCUMENT,
+          definitions: gqlTag([doc]).definitions,
+        });
+
+        if (meta && this._omitDefinitions === true) {
+          return `{${`"__meta__":${JSON.stringify(meta)},`.slice(0, -1)}}`;
+        }
+      }
+      return JSON.stringify({ document: doc, __meta__: meta });
     }
 
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');

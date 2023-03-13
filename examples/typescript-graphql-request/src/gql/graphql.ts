@@ -1309,31 +1309,11 @@ export type AllPeopleWithVariablesQueryQuery = {
   } | null;
 };
 
-export const AllPeopleQueryDocument = `
-    query AllPeopleQuery {
-  allPeople(first: 5) {
-    edges {
-      node {
-        name
-        homeworld {
-          name
-        }
-      }
-    }
-  }
-}
-    ` as unknown as TypedDocumentString<AllPeopleQueryQuery, AllPeopleQueryQueryVariables>;
-export const AllPeopleWithVariablesQueryDocument = `
-    query AllPeopleWithVariablesQuery($first: Int!) {
-  allPeople(first: $first) {
-    edges {
-      node {
-        name
-        homeworld {
-          name
-        }
-      }
-    }
-  }
-}
-    ` as unknown as TypedDocumentString<AllPeopleWithVariablesQueryQuery, AllPeopleWithVariablesQueryQueryVariables>;
+export const AllPeopleQueryDocument = {
+  document:
+    '\n    query AllPeopleQuery {\n  allPeople(first: 5) {\n    edges {\n      node {\n        name\n        homeworld {\n          name\n        }\n      }\n    }\n  }\n}\n    ',
+} as unknown as TypedDocumentString<AllPeopleQueryQuery, AllPeopleQueryQueryVariables>;
+export const AllPeopleWithVariablesQueryDocument = {
+  document:
+    '\n    query AllPeopleWithVariablesQuery($first: Int!) {\n  allPeople(first: $first) {\n    edges {\n      node {\n        name\n        homeworld {\n          name\n        }\n      }\n    }\n  }\n}\n    ',
+} as unknown as TypedDocumentString<AllPeopleWithVariablesQueryQuery, AllPeopleWithVariablesQueryQueryVariables>;

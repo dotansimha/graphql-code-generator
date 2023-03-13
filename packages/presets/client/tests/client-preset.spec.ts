@@ -1116,7 +1116,7 @@ export * from "./gql.js";`);
 
     const { EventQueryDocument } = loader(path.join(dir, 'out1/graphql.ts'));
 
-    expect(EventQueryDocument.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
+    expect(EventQueryDocument.document.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
 
     await cleanUp();
   });
@@ -1747,29 +1747,9 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
-        export const FooFragmentDoc = \`
-            fragment Foo on Foo {
-          value
-        }
-            \` as unknown as TypedDocumentString<FooFragment, unknown>;
-        export const FooDocument = \`
-            query Foo {
-          foo {
-            ...Foo
-          }
-        }
-            fragment Foo on Foo {
-          value
-        }\` as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
-        export const FoosDocument = \`
-            query Foos {
-          foos {
-            ...Foo
-          }
-        }
-            fragment Foo on Foo {
-          value
-        }\` as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+        export const FooFragmentDoc = {"document":"\\n    fragment Foo on Foo {\\n  value\\n}\\n    "} as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooDocument = {"document":"\\n    query Foo {\\n  foo {\\n    ...Foo\\n  }\\n}\\n    fragment Foo on Foo {\\n  value\\n}"} as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        export const FoosDocument = {"document":"\\n    query Foos {\\n  foos {\\n    ...Foo\\n  }\\n}\\n    fragment Foo on Foo {\\n  value\\n}"} as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
 

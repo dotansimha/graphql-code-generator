@@ -1296,27 +1296,10 @@ export type FilmItemFragment = {
   producers?: Array<string | null> | null;
 } & { ' $fragmentName'?: 'FilmItemFragment' };
 
-export const FilmItemFragmentDoc = `
-    fragment FilmItem on Film {
-  id
-  title
-  releaseDate
-  producers
-}
-    ` as unknown as TypedDocumentString<FilmItemFragment, unknown>;
-export const AllFilmsWithVariablesQuery199Document = `
-    query allFilmsWithVariablesQuery199($first: Int!) {
-  allFilms(first: $first) {
-    edges {
-      node {
-        ...FilmItem
-      }
-    }
-  }
-}
-    fragment FilmItem on Film {
-  id
-  title
-  releaseDate
-  producers
-}` as unknown as TypedDocumentString<AllFilmsWithVariablesQuery199Query, AllFilmsWithVariablesQuery199QueryVariables>;
+export const FilmItemFragmentDoc = {
+  document: '\n    fragment FilmItem on Film {\n  id\n  title\n  releaseDate\n  producers\n}\n    ',
+} as unknown as TypedDocumentString<FilmItemFragment, unknown>;
+export const AllFilmsWithVariablesQuery199Document = {
+  document:
+    '\n    query allFilmsWithVariablesQuery199($first: Int!) {\n  allFilms(first: $first) {\n    edges {\n      node {\n        ...FilmItem\n      }\n    }\n  }\n}\n    fragment FilmItem on Film {\n  id\n  title\n  releaseDate\n  producers\n}',
+} as unknown as TypedDocumentString<AllFilmsWithVariablesQuery199Query, AllFilmsWithVariablesQuery199QueryVariables>;
