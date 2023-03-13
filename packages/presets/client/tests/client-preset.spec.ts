@@ -1060,6 +1060,67 @@ export * from "./gql.js";`);
     await cleanUp();
   });
 
+  it('should dedupe fragments in a "string" document mode', async () => {
+    const dir = path.join(__dirname, 'tmp/duplicate-fragments');
+    const cleanUp = async () => {
+      await fs.promises.rm(dir, { recursive: true, force: true });
+    };
+
+    const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            user(id: ID!): User!
+            event(id: ID!): Event!
+          }
+
+          type User {
+            id: ID!
+            username: String!
+            email: String!
+          }
+
+          type Event {
+            id: ID!
+            owner: User!
+            attendees: [User!]!
+          }
+        `,
+      ],
+      documents: [docPath],
+      generates: {
+        'out1/': {
+          preset,
+          plugins: [],
+          config: {
+            documentMode: 'string',
+          },
+        },
+      },
+    });
+
+    // TODO: Consider using in-memory file system for tests like this.
+    try {
+      await cleanUp();
+    } catch {}
+    await fs.promises.mkdir(path.join(dir, 'out1'), { recursive: true });
+    for (const file of result) {
+      if (file.filename === 'out1/graphql.ts') {
+        await fs.promises.writeFile(path.join(dir, file.filename), file.content, 'utf-8');
+      }
+    }
+
+    const { default: jiti } = await import('jiti');
+    const loader = jiti('', {});
+
+    const { EventQueryDocument } = loader(path.join(dir, 'out1/graphql.ts'));
+
+    expect(EventQueryDocument.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
+
+    await cleanUp();
+  });
+
   describe('when no operations are found', () => {
     it('still generates the helper `graphql()` (or under another `presetConfig.gqlTagName` name) function', async () => {
       const result = await executeCodegen({
