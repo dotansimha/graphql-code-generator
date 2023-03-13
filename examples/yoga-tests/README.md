@@ -6,6 +6,6 @@ Example for executing typed GraphQL operations against your Yoga instance within
 
 ## Usage
 
-Run `yarn codegen --watch` for starting GraphQL Code Generator in watch mode.
+Run `pnpm codegen --watch` for starting GraphQL Code Generator in watch mode.
 
-Run `yarn test` for running a tests located within `yoga.spec.ts`.
+Run `pnpm test` for running a tests located within `yoga.spec.ts`.

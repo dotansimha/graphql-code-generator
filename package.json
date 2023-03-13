@@ -7,7 +7,7 @@
     "clean": "rimraf node_modules/",
     "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
     "build": "bob build",
-    "postbuild": "yarn fix-bins",
+    "postbuild": "pnpm fix-bins",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "rebuild": "bob build --incremental",
     "test": "jest --forceExit --no-watchman",
@@ -15,13 +15,13 @@
     "prettier": "prettier --cache --write --list-different .",
     "prettier:check": "prettier --cache --check .",
     "types:check": "tsc --noEmit",
-    "test-and-build": "yarn build && yarn test",
+    "test-and-build": "pnpm build && pnpm test",
     "ci:lint": "eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
-    "prerelease": "yarn build",
+    "prerelease": "pnpm build",
     "release": "changeset publish",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
-    "generate:examples": "yarn generate:examples:cjs",
+    "generate:examples": "pnpm generate:examples:cjs",
     "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
     "examples:build": "set -o xtrace && eval $(node scripts/print-example-ci-command.js build)",
     "examples:test:end2end": "set -o xtrace && eval $(node scripts/print-example-ci-command.js test:end2end)"
@@ -70,8 +70,8 @@
     "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
     ],
-    "yarn.lock": [
-      "npx yarn-deduplicate"
+    "pnpm.lock": [
+      "pnpm dedupe"
     ]
   },
   "resolutions": {
@@ -80,8 +80,6 @@
     "jest-runner": "28.1.3",
     "graphql": "16.6.0",
     "graphql-language-service-interface": "2.10.2",
-    "**/apollo-language-server/graphql": "^16.0.0",
-    "**/@types/graphql-upload/graphql": "^16.0.0",
     "ts-node": "10.9.1",
     "typescript": "4.9.5"
   }
