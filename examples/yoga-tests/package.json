@@ -19,7 +19,7 @@
     "test": "jest",
     "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
-    "test:end2end": "yarn test"
+    "test:end2end": "pnpm test"
   },
   "bob": false
 }

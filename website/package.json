@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "next start",
-    "build": "yarn generate-json-config && next build && next-sitemap --config next-sitemap.config.cjs && next export",
+    "build": "pnpm generate-json-config && next build && next-sitemap --config next-sitemap.config.cjs && next export",
     "dev": "next",
     "generate-json-config": "tsx generate-config-json-schema.ts"
   },
