@@ -1703,7 +1703,7 @@ export * from "./gql.js";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        import { TypedDocumentString as DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+        import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
         export type InputMaybe<T> = Maybe<T>;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
