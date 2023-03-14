@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { TypedDocumentString } from '@graphql-typed-document-node/core';
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1309,11 +1309,46 @@ export type AllPeopleWithVariablesQueryQuery = {
   } | null;
 };
 
-export const AllPeopleQueryDocument = {
-  document:
-    '\n    query AllPeopleQuery {\n  allPeople(first: 5) {\n    edges {\n      node {\n        name\n        homeworld {\n          name\n        }\n      }\n    }\n  }\n}\n    ',
-} as unknown as TypedDocumentString<AllPeopleQueryQuery, AllPeopleQueryQueryVariables>;
-export const AllPeopleWithVariablesQueryDocument = {
-  document:
-    '\n    query AllPeopleWithVariablesQuery($first: Int!) {\n  allPeople(first: $first) {\n    edges {\n      node {\n        name\n        homeworld {\n          name\n        }\n      }\n    }\n  }\n}\n    ',
-} as unknown as TypedDocumentString<AllPeopleWithVariablesQueryQuery, AllPeopleWithVariablesQueryQueryVariables>;
+export class TypedDocumentString<TResult, TVariables>
+  extends String
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+  constructor(private value: string, public __meta__?: { hash: string }) {
+    super(value);
+  }
+
+  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+    return this.value;
+  }
+}
+
+export const AllPeopleQueryDocument = new TypedDocumentString(`
+    query AllPeopleQuery {
+  allPeople(first: 5) {
+    edges {
+      node {
+        name
+        homeworld {
+          name
+        }
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AllPeopleQueryQuery, AllPeopleQueryQueryVariables>;
+export const AllPeopleWithVariablesQueryDocument = new TypedDocumentString(`
+    query AllPeopleWithVariablesQuery($first: Int!) {
+  allPeople(first: $first) {
+    edges {
+      node {
+        name
+        homeworld {
+          name
+        }
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AllPeopleWithVariablesQueryQuery, AllPeopleWithVariablesQueryQueryVariables>;

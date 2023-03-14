@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { TypedDocumentString } from '@graphql-typed-document-node/core';
+import { TypedDocumentString as DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -32,7 +32,26 @@ export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
 
-export const HelloQueryDocument = {
-  document: '\n    query HelloQuery {\n  hello\n}\n    ',
-  __meta__: { hash: '86f01e23de1c770cabbc35b2d87f2e5fd7557b6f' },
-} as unknown as TypedDocumentString<HelloQueryQuery, HelloQueryQueryVariables>;
+export class TypedDocumentString<TResult, TVariables>
+  extends String
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+  constructor(private value: string, public __meta__?: { hash: string }) {
+    super(value);
+  }
+
+  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+    return this.value;
+  }
+}
+
+export const HelloQueryDocument = new TypedDocumentString(
+  `
+    query HelloQuery {
+  hello
+}
+    `,
+  { hash: '86f01e23de1c770cabbc35b2d87f2e5fd7557b6f' }
+) as unknown as TypedDocumentString<HelloQueryQuery, HelloQueryQueryVariables>;

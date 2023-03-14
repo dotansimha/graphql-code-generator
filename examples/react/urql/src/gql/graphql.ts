@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { TypedDocumentString } from '@graphql-typed-document-node/core';
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1296,10 +1296,41 @@ export type FilmItemFragment = {
   producers?: Array<string | null> | null;
 } & { ' $fragmentName'?: 'FilmItemFragment' };
 
-export const FilmItemFragmentDoc = {
-  document: '\n    fragment FilmItem on Film {\n  id\n  title\n  releaseDate\n  producers\n}\n    ',
-} as unknown as TypedDocumentString<FilmItemFragment, unknown>;
-export const AllFilmsWithVariablesQuery199Document = {
-  document:
-    '\n    query allFilmsWithVariablesQuery199($first: Int!) {\n  allFilms(first: $first) {\n    edges {\n      node {\n        ...FilmItem\n      }\n    }\n  }\n}\n    fragment FilmItem on Film {\n  id\n  title\n  releaseDate\n  producers\n}',
-} as unknown as TypedDocumentString<AllFilmsWithVariablesQuery199Query, AllFilmsWithVariablesQuery199QueryVariables>;
+export class TypedDocumentString<TResult, TVariables>
+  extends String
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+  constructor(private value: string, public __meta__?: { hash: string }) {
+    super(value);
+  }
+
+  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+    return this.value;
+  }
+}
+export const FilmItemFragmentDoc = new TypedDocumentString(`
+    fragment FilmItem on Film {
+  id
+  title
+  releaseDate
+  producers
+}
+    `) as unknown as TypedDocumentString<FilmItemFragment, unknown>;
+export const AllFilmsWithVariablesQuery199Document = new TypedDocumentString(`
+    query allFilmsWithVariablesQuery199($first: Int!) {
+  allFilms(first: $first) {
+    edges {
+      node {
+        ...FilmItem
+      }
+    }
+  }
+}
+    fragment FilmItem on Film {
+  id
+  title
+  releaseDate
+  producers
+}`) as unknown as TypedDocumentString<AllFilmsWithVariablesQuery199Query, AllFilmsWithVariablesQuery199QueryVariables>;

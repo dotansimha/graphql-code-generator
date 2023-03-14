@@ -20,7 +20,7 @@ describe('Persisted Documents', () => {
         accept: 'application/json',
       },
       body: JSON.stringify({
-        query: HelloQuery.document,
+        query: HelloQuery,
       }),
     });
     expect(await result.json()).toMatchInlineSnapshot(`
@@ -34,6 +34,7 @@ describe('Persisted Documents', () => {
 
   it('can not execute arbitrary operation with persisted operations enabled', async () => {
     const yoga = makeYoga({ persistedDocuments });
+
     const result = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -41,7 +42,7 @@ describe('Persisted Documents', () => {
         accept: 'application/json',
       },
       body: JSON.stringify({
-        query: HelloQuery.document,
+        query: HelloQuery,
       }),
     });
     expect(await result.json()).toMatchInlineSnapshot(`

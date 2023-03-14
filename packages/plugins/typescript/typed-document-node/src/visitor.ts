@@ -48,8 +48,8 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       this._imports.add(tagImport);
     } else if (this.config.documentMode === DocumentMode.string) {
       const tagImport = this._generateImport(
-        { moduleName: '@graphql-typed-document-node/core', propName: 'TypedDocumentString' },
-        'TypedDocumentString',
+        { moduleName: '@graphql-typed-document-node/core', propName: 'DocumentTypeDecoration' },
+        'DocumentTypeDecoration',
         true
       );
       this._imports.add(tagImport);

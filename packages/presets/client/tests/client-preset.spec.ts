@@ -1116,7 +1116,7 @@ export * from "./gql.js";`);
 
     const { EventQueryDocument } = loader(path.join(dir, 'out1/graphql.ts'));
 
-    expect(EventQueryDocument.document.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
+    expect(EventQueryDocument.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
 
     await cleanUp();
   });
@@ -1703,7 +1703,7 @@ export * from "./gql.js";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        import { TypedDocumentString } from '@graphql-typed-document-node/core';
+        import { TypedDocumentString as DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
         export type InputMaybe<T> = Maybe<T>;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1747,9 +1747,43 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
-        export const FooFragmentDoc = {"document":"\\n    fragment Foo on Foo {\\n  value\\n}\\n    "} as unknown as TypedDocumentString<FooFragment, unknown>;
-        export const FooDocument = {"document":"\\n    query Foo {\\n  foo {\\n    ...Foo\\n  }\\n}\\n    fragment Foo on Foo {\\n  value\\n}"} as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
-        export const FoosDocument = {"document":"\\n    query Foos {\\n  foos {\\n    ...Foo\\n  }\\n}\\n    fragment Foo on Foo {\\n  value\\n}"} as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+        export class TypedDocumentString<TResult, TVariables>
+          extends String
+          implements DocumentTypeDecoration<TResult, TVariables>
+        {
+          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+          constructor(private value: string, public __meta__?: { hash: string }) {
+            super(value);
+          }
+
+          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+            return this.value;
+          }
+        }
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment Foo on Foo {
+          value
+        }
+            \`) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooDocument = new TypedDocumentString(\`
+            query Foo {
+          foo {
+            ...Foo
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        export const FoosDocument = new TypedDocumentString(\`
+            query Foos {
+          foos {
+            ...Foo
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
 

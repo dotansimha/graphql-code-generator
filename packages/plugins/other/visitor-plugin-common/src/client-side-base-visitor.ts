@@ -427,7 +427,7 @@ export class ClientSideBaseVisitor<
     }
 
     if (this.config.documentMode === DocumentMode.string) {
-      let meta: any; //todo
+      let meta: ExecutableDocumentNodeMeta | void;
 
       if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
         meta = this._onExecutableDocumentNode({
@@ -439,7 +439,11 @@ export class ClientSideBaseVisitor<
           return `{${`"__meta__":${JSON.stringify(meta)},`.slice(0, -1)}}`;
         }
       }
-      return JSON.stringify({ document: doc, __meta__: meta });
+      if (meta) {
+        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify(meta)})`;
+      }
+
+      return `new TypedDocumentString(\`${doc}\`)`;
     }
 
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');

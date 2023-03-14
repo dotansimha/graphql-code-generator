@@ -1,6 +1,7 @@
 import { extname } from 'path';
 import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import {
+  DocumentMode,
   LoadedFragment,
   optimizeOperations,
   RawClientSideBasePluginConfig,
@@ -32,9 +33,32 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
   const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config, documents);
   const visitorResult = oldVisit(allAst, { leave: visitor });
 
+  let content: string[] = [];
+  if (config.documentMode === DocumentMode.string) {
+    content = [
+      `\
+export class TypedDocumentString<TResult, TVariables>
+  extends String
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+  constructor(private value: string, public __meta__?: { hash: string }) {
+    super(value);
+  }
+
+  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+    return this.value;
+  }
+}`,
+    ];
+  }
+
   return {
     prepend: allAst.definitions.length === 0 ? [] : visitor.getImports(),
-    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+    content: [...content, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join(
+      '\n'
+    ),
   };
 };
 

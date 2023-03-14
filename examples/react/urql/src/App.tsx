@@ -1,4 +1,4 @@
-import { TypedDocumentString } from '@graphql-typed-document-node/core';
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 import { AnyVariables, OperationContext, RequestPolicy, TypedDocumentNode, useQuery, UseQueryResponse } from 'urql';
 import type { DocumentNode } from 'graphql';
 import './App.css';
@@ -20,7 +20,7 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 declare module 'urql' {
   // @ts-expect-error this is just temporary until we update types in urql
   export type UseQueryArgs<Variables extends AnyVariables = AnyVariables, Data = any> = {
-    query: string | DocumentNode | TypedDocumentNode<Data, Variables> | TypedDocumentString<Data, Variables>;
+    query: string | DocumentNode | DocumentTypeDecoration<Data, Variables>;
     requestPolicy?: RequestPolicy;
     context?: Partial<OperationContext>;
     pause?: boolean;
@@ -45,7 +45,7 @@ declare module 'urql' {
 
 function App() {
   const [{ data }] = useQuery({
-    query: allFilmsWithVariablesQueryDocument,
+    query: allFilmsWithVariablesQueryDocument.toString(),
     variables: {
       first: 10,
     },

@@ -36,10 +36,10 @@ const apiUrl = 'https://swapi-graphql.netlify.app/.netlify/functions/index';
 
 const client = new GraphQLClient(apiUrl);
 
-client.request(AllPeopleQueryDocument).then(res => {
+client.request(AllPeopleQueryDocument.toString()).then(res => {
   console.log(res?.allPeople?.edges);
 });
 
-client.request(AllPeopleWithVariablesQueryDocument, { first: 10 }).then(res => {
+client.request(AllPeopleWithVariablesQueryDocument.toString(), { first: 10 }).then(res => {
   console.log(res?.allPeople?.edges);
 });
