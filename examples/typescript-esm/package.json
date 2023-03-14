@@ -7,7 +7,7 @@
     "@graphql-codegen/client-preset": "2.1.1"
   },
   "dependencies": {
-    "@graphql-typed-document-node/core": "3.2.0-alpha-20230309104331-975d9d2",
+    "@graphql-typed-document-node/core": "3.2.0-alpha-20230314161625-aafb8c1",
     "graphql": "16.6.0"
   },
   "scripts": {

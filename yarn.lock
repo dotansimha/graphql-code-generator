@@ -2772,10 +2772,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.2.tgz#6fc464307cbe3c8ca5064549b806360d84457b04"
   integrity sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==
 
-"@graphql-typed-document-node/core@3.2.0-alpha-20230309104331-975d9d2":
-  version "3.2.0-alpha-20230309104331-975d9d2"
-  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0-alpha-20230309104331-975d9d2.tgz#b2af94b5dd0e1aee4a35657015d503a12c536752"
-  integrity sha512-qXJvJJf8FdjxM+4Zk71pCRfw1WOU9Nky4riMKQ4FVKRTrK0EHcvbQCCQ5v+SAsJxBZceJuO/g+Czi5jh1h12YQ==
+"@graphql-typed-document-node/core@3.2.0-alpha-20230314161625-aafb8c1":
+  version "3.2.0-alpha-20230314161625-aafb8c1"
+  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0-alpha-20230314161625-aafb8c1.tgz#f6a18327277c8908e876a340060709c54b44f255"
+  integrity sha512-eNp0NbL3tLzRsu//InRbp74a7vZRAdqnjTjWwJfPtIvYsoksnrO5gHJQnIIjZ5+mdCRPjO5TvNEsMi4Res1uvw==
 
 "@graphql-yoga/logger@^0.0.1":
   version "0.0.1"
