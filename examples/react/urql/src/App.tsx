@@ -1,5 +1,5 @@
 import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-import { AnyVariables, OperationContext, RequestPolicy, TypedDocumentNode, useQuery, UseQueryResponse } from 'urql';
+import { AnyVariables, OperationContext, RequestPolicy, useQuery, UseQueryResponse } from 'urql';
 import type { DocumentNode } from 'graphql';
 import './App.css';
 import Film from './Film';
