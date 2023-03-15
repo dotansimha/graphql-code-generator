@@ -51,6 +51,7 @@ The `client` preset allows the following `config` options:
 - [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
 - [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
 - [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
+- [`documentMode`](#documentmode): Allows you to control how the documents are generated.
 
 For more information or feature request, please [refer to the repository discussions](https://github.com/dotansimha/graphql-code-generator/discussions).
 
@@ -525,3 +526,82 @@ const nextConfig = {
 ```
 
 Note that you will need to provide the `artifactDirectory` path that should be the same as the one configured in your `codegen.ts`
+
+### DocumentMode
+
+The `DocumentMode` option can be used to control how the plugin will generate the document nodes.
+
+By default, the generated documents are of type `TypedDocumentNode` which is a fully typed GraphQL operation AST. Example:
+
+```ts filename="out/gql.ts"
+export type HelloQueryVariables = Exact<{ [key: string]: never }>
+
+export type HelloQuery = { __typename?: 'Query'; hello: string }
+
+export const HelloDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'hello' },
+      selectionSet: { kind: 'SelectionSet', selections: [{ kind: 'Field', name: { kind: 'Name', value: 'hello' } }] }
+    }
+  ]
+} as unknown as DocumentNode<HelloQuery, HelloQueryVariables>
+```
+
+The `documentMode` option can be used to change the generated documents to `string`:
+
+```ts filename="codegen.ts" {9-11}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      config: {
+        documentMode: 'string'
+      }
+    }
+  }
+}
+```
+
+This will generate the following:
+
+```ts filename="out/gql.ts"
+export type HelloQueryVariables = Exact<{ [key: string]: never }>
+
+export type HelloQuery = { __typename?: 'Query'; hello: string }
+
+export const HelloDocument = new TypedDocumentString(`
+  query hello {
+    hello
+  }
+`) as unknown as TypedDocumentString<HelloQuery, HelloQueryVariables>
+```
+
+It can then be used as follow:
+
+```ts filename="Fetch example"
+import { graphql } from './gql'
+
+const helloQuery = graphql(`
+  query hello {
+    hello
+  }
+`)
+
+fetch('https:<your-graphql-api>', {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify({
+    query: helloQuery.toString()
+  })
+})
+```
