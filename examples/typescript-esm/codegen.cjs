@@ -7,7 +7,6 @@ const config = {
   emitLegacyCommonJSImports: false,
   generates: {
     './src/gql/': {
-      plugins: [],
       preset: 'client-preset',
     },
   },

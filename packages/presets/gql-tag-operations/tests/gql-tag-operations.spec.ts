@@ -21,7 +21,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
     });
@@ -46,7 +45,7 @@ describe('gql-tag-operations-preset', () => {
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -108,7 +107,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
     });
@@ -133,7 +131,7 @@ describe('gql-tag-operations-preset', () => {
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -195,7 +193,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
     });
@@ -213,7 +210,7 @@ describe('gql-tag-operations-preset', () => {
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -271,7 +268,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -294,7 +290,7 @@ describe('gql-tag-operations-preset', () => {
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -398,7 +394,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -421,7 +416,7 @@ describe('gql-tag-operations-preset', () => {
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -503,7 +498,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -584,7 +578,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {},
             },
@@ -610,7 +603,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {
                 unmaskFunctionName: 'iLikeTurtles',
@@ -719,7 +711,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -759,7 +750,6 @@ describe('gql-tag-operations-preset', () => {
         generates: {
           out1: {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -796,7 +786,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
           presetConfig: {
             fragmentMasking: {
               augmentedModuleName: '@urql/fragment',
@@ -865,7 +854,6 @@ describe('gql-tag-operations-preset', () => {
       generates: {
         out1: {
           preset,
-          plugins: [],
         },
       },
       emitLegacyCommonJSImports: false,
@@ -891,7 +879,7 @@ describe('gql-tag-operations-preset', () => {
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,

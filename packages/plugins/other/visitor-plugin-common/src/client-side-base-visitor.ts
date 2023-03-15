@@ -5,7 +5,6 @@ import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
 import { DepGraph } from 'dependency-graph';
 import {
-  DefinitionNode,
   DocumentNode,
   FragmentDefinitionNode,
   FragmentSpreadNode,
@@ -353,29 +352,6 @@ export class ClientSideBaseVisitor<
     return documentStr;
   }
 
-  private _generateDocumentNodeMeta(
-    definitions: ReadonlyArray<DefinitionNode>,
-    fragmentNames: Array<string>
-  ): ExecutableDocumentNodeMeta | void {
-    // If the document does not contain any executable operation, we don't need to hash it
-    if (definitions.every(def => def.kind !== Kind.OPERATION_DEFINITION)) {
-      return undefined;
-    }
-
-    const allDefinitions = [...definitions];
-
-    for (const fragment of fragmentNames) {
-      const fragmentRecord = this._fragments.get(fragment);
-      if (fragmentRecord) {
-        allDefinitions.push(fragmentRecord.node);
-      }
-    }
-
-    const documentNode: DocumentNode = { kind: Kind.DOCUMENT, definitions: allDefinitions };
-
-    return this._onExecutableDocumentNode(documentNode);
-  }
-
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const includeNestedFragments =
       this.config.documentMode === DocumentMode.documentNode ||
@@ -397,49 +373,57 @@ export class ClientSideBaseVisitor<
       return JSON.stringify(gqlObj);
     }
     if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-      let gqlObj = gqlTag([doc]);
+      const gqlObj = gqlTag([doc]);
+
+      // We need to inline all fragments that are used in this document
+      // Otherwise we might encounter the following issues:
+      // 1. missing fragments
+      // 2. duplicated fragments
+
+      const fragmentDependencyNames = new Set(
+        fragmentNames.map(name => this.fragmentsGraph.dependenciesOf(name)).flatMap(item => item)
+      );
+
+      for (const fragmentName of fragmentNames) {
+        fragmentDependencyNames.add(fragmentName);
+      }
+
+      const jsonStringify = (json: unknown) =>
+        JSON.stringify(json, (key, value) => (key === 'loc' ? undefined : value));
+
+      let definitions = [...gqlObj.definitions];
+
+      for (const fragmentName of fragmentDependencyNames) {
+        definitions.push(this.fragmentsGraph.getNodeData(fragmentName).node);
+      }
 
       if (this.config.optimizeDocumentNode) {
-        gqlObj = optimizeDocumentNode(gqlObj);
+        definitions = [
+          ...optimizeDocumentNode({
+            kind: Kind.DOCUMENT,
+            definitions,
+          }).definitions,
+        ];
       }
 
-      if (fragments.length > 0 && (!this.config.dedupeFragments || node.kind === 'OperationDefinition')) {
-        const definitions = [
-          ...gqlObj.definitions.map(t => JSON.stringify(t)),
-          ...fragments.map(name => `...${name}.definitions`),
-        ].join();
+      let metaString = '';
 
-        let hashPropertyStr = '';
-
-        if (this._onExecutableDocumentNode) {
-          const meta = this._generateDocumentNodeMeta(gqlObj.definitions, fragmentNames);
-          if (meta) {
-            hashPropertyStr = `"__meta__": ${JSON.stringify(meta)}, `;
-            if (this._omitDefinitions === true) {
-              return `{${hashPropertyStr}}`;
-            }
-          }
-        }
-
-        return `{${hashPropertyStr}"kind":"${Kind.DOCUMENT}", "definitions":[${definitions}]}`;
-      }
-
-      let meta: ExecutableDocumentNodeMeta | void;
-
-      if (this._onExecutableDocumentNode) {
-        meta = this._generateDocumentNodeMeta(gqlObj.definitions, fragmentNames);
-        const metaNodePartial = { ['__meta__']: meta };
-
-        if (this._omitDefinitions === true) {
-          return JSON.stringify(metaNodePartial);
-        }
+      if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
+        const meta = this._onExecutableDocumentNode({
+          kind: Kind.DOCUMENT,
+          definitions,
+        });
 
         if (meta) {
-          return JSON.stringify({ ...metaNodePartial, ...gqlObj });
+          metaString = `"__meta__":${JSON.stringify(meta)},`;
+
+          if (this._omitDefinitions === true) {
+            return `{${metaString.slice(0, -1)}}`;
+          }
         }
       }
 
-      return JSON.stringify(gqlObj);
+      return `{${metaString}"kind":"${Kind.DOCUMENT}","definitions":${jsonStringify(definitions)}}`;
     }
 
     if (this.config.documentMode === DocumentMode.string) {
@@ -557,6 +541,10 @@ export class ClientSideBaseVisitor<
 
   private clearExtension(path: string): string {
     const extension = extname(path);
+
+    if (!this.config.emitLegacyCommonJSImports && extension === '.js') {
+      return path;
+    }
 
     if (EXTENSIONS_TO_REMOVE.includes(extension)) {
       return path.replace(/\.[^/.]+$/, '');

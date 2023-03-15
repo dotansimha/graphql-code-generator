@@ -245,6 +245,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
+  const resolversUnionTypesMapping = visitor.buildResolversUnionTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
 
   if (hasScalars()) {
@@ -264,10 +265,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     const parsedMapper = parseMapper(config.customResolveInfo);
     if (parsedMapper.isExternal) {
       if (parsedMapper.default) {
-        prepend.push(`import GraphQLResolveInfo from '${parsedMapper.source}'`);
+        prepend.push(`${importType} GraphQLResolveInfo from '${parsedMapper.source}'`);
       }
       prepend.push(
-        `import { ${parsedMapper.import} ${
+        `${importType} { ${parsedMapper.import} ${
           parsedMapper.import === 'GraphQLResolveInfo' ? '' : 'as GraphQLResolveInfo'
         } } from '${parsedMapper.source}';`
       );
@@ -282,6 +283,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     prepend,
     content: [
       header,
+      resolversUnionTypesMapping,
       resolversTypeMapping,
       resolversParentTypeMapping,
       ...visitorResult.definitions.filter(d => typeof d === 'string'),

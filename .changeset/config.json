@@ -5,7 +5,13 @@
   "access": "restricted",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["website", "example-*"],
+  "ignore": [
+    "website",
+    "example-*",
+    "@graphql-codegen/client-preset-swc-plugin",
+    "example-apollo-client-swc-plugin",
+    "example-react-nextjs-swr"
+  ],
   "changelog": [
     "@changesets/changelog-github",
     {

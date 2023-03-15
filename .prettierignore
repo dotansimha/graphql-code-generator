@@ -2,6 +2,7 @@ dev-test/githunt-invalid/invalid.graphql
 packages/graphql-codegen-cli/tests/test-documents/invalid-schema.graphql
 packages/presets/gql-tag-operations/tests/fixtures/crlf-operation.ts
 dist/
+build/
 .next/
 .bob
 CHANGELOG.md
@@ -20,9 +21,14 @@ website/src/pages/plugins/index.mdx
 website/src/pages/plugins/presets/near-operation-file-preset.mdx
 
 website/algolia-lockfile.json
+
 temp/
 website/out
 website/.next
 
 # added because it blocks CI and when I try to format it locally nothing happens :)
 website/src/components/live-demo/LiveDemo.tsx
+
+# This should be added bc our rust test setup for the SWC plugin does a string diff, and it fails
+# bc it compares imports with double quotes against the formatted perttier single quotes
+packages/presets/swc-plugin/tests/fixtures

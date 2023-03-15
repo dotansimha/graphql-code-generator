@@ -330,6 +330,33 @@ export const HeroDetailsWithFragmentDocument = {
         ],
       },
     },
-    ...HeroDetailsFragmentDoc.definitions,
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'HeroDetails' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Character' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'InlineFragment',
+            typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Human' } },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'height' } }],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Droid' } },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'primaryFunction' } }],
+            },
+          },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;

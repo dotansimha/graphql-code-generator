@@ -1321,6 +1321,23 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     await resolversTestingValidate(result, {}, testSchema);
   });
 
+  it('#8852 - should generate the correct imports when customResolveInfo defined in config with type import', async () => {
+    const testSchema = buildSchema(`scalar MyScalar`);
+    const result = (await plugin(
+      testSchema,
+      [],
+      {
+        customResolveInfo: './my-type#MyGraphQLResolveInfo',
+        useTypeImports: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import type { GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result.prepend).toContain(`import type { MyGraphQLResolveInfo as GraphQLResolveInfo } from './my-type';`);
+    await resolversTestingValidate(result, {}, testSchema);
+  });
+
   describe('Should generate the correct imports when customResolverFn defined in config', () => {
     it('./my-type#MyResolverFn', async () => {
       const testSchema = buildSchema(`scalar MyScalar`);
@@ -1409,10 +1426,38 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       union CCCUnion = CCCFoo | CCCBar
     `);
 
-    const tsContent = (await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
     const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
-    expect(content.content).toBeSimilarStringTo(`CCCUnion: ResolversTypes['CCCFoo'] | ResolversTypes['CCCBar']`); // In ResolversTypes
+    expect(tsContent.content).toBeSimilarStringTo(`
+      export type CccFoo = {
+        __typename?: 'CCCFoo';
+        foo: Scalars['String'];
+      };
+    `);
+    expect(tsContent.content).toBeSimilarStringTo(`
+      export type CccBar = {
+        __typename?: 'CCCBar';
+        bar: Scalars['String'];
+      };
+    `);
+
+    expect(content.content).toBeSimilarStringTo(`
+      export type ResolversUnionTypes = {
+        CCCUnion: ( CccFoo ) | ( CccBar );
+      };
+    `);
+    expect(content.content).toBeSimilarStringTo(`
+    /** Mapping between all available schema types and the resolvers types */
+    export type ResolversTypes = {
+      CCCFoo: ResolverTypeWrapper<CccFoo>;
+      String: ResolverTypeWrapper<Scalars['String']>;
+      CCCBar: ResolverTypeWrapper<CccBar>;
+      Query: ResolverTypeWrapper<{}>;
+      CCCUnion: ResolverTypeWrapper<ResolversUnionTypes['CCCUnion']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+    };
+    `);
     expect(content.content).toBeSimilarStringTo(`
     export type CccUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CCCUnion'] = ResolversParentTypes['CCCUnion']> = {
       __resolveType: TypeResolveFn<'CCCFoo' | 'CCCBar', ParentType, ContextType>;
@@ -1701,6 +1746,97 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         Boolean: Scalars['Boolean'];
       };
     `);
+  });
+
+  it('should generate ResolversUnionTypes', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): UserPayload!
+        posts: PostsPayload!
+      }
+
+      type StandardError {
+        error: String!
+      }
+
+      type User {
+        id: ID!
+        fullName: String!
+      }
+
+      type UserResult {
+        result: User
+      }
+
+      union UserPayload = UserResult | StandardError
+
+      type Post {
+        author: String
+        comment: String
+      }
+
+      type PostsResult {
+        results: [Post!]!
+      }
+
+      union PostsPayload = PostsResult | StandardError
+    `);
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+
+    expect(content.content).toBeSimilarStringTo(`
+      export type ResolversUnionTypes = {
+        UserPayload: ( UserResult ) | ( StandardError );
+        PostsPayload: ( PostsResult ) | ( StandardError );
+      };
+    `);
+
+    expect(content.content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        Query: ResolverTypeWrapper<{}>;
+        ID: ResolverTypeWrapper<Scalars['ID']>;
+        StandardError: ResolverTypeWrapper<StandardError>;
+        String: ResolverTypeWrapper<Scalars['String']>;
+        User: ResolverTypeWrapper<User>;
+        UserResult: ResolverTypeWrapper<UserResult>;
+        UserPayload: ResolverTypeWrapper<ResolversUnionTypes['UserPayload']>;
+        Post: ResolverTypeWrapper<Post>;
+        PostsResult: ResolverTypeWrapper<PostsResult>;
+        PostsPayload: ResolverTypeWrapper<ResolversUnionTypes['PostsPayload']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      };
+    `);
+
+    expect(content.content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        Query: {};
+        ID: Scalars['ID'];
+        StandardError: StandardError;
+        String: Scalars['String'];
+        User: User;
+        UserResult: UserResult;
+        UserPayload: ResolversUnionTypes['UserPayload'];
+        Post: Post;
+        PostsResult: PostsResult;
+        PostsPayload: ResolversUnionTypes['PostsPayload'];
+        Boolean: Scalars['Boolean'];
+      };
+    `);
+  });
+
+  it('should NOT generate ResolversUnionTypes if there is no Union', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        fullName: String!
+      }
+    `);
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+
+    expect(content.content).not.toBeSimilarStringTo(`export type ResolversUnionTypes`);
   });
 
   it('should use correct value when rootValueType mapped as default', async () => {

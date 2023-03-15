@@ -36,7 +36,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          augmentedModuleName: '@urql/core'
    *        },
@@ -58,7 +57,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          fragmentMasking: true
    *        },
@@ -78,7 +76,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          augmentedModuleName: '@urql/core',
    *          fragmentMasking: {
@@ -107,7 +104,6 @@ export type GqlTagConfig = {
    *    generates: {
    *      'path/to/file.ts': {
    *        preset: 'gql-tag-operations',
-   *        plugins: [],
    *        presetConfig: {
    *          gqlTagName: 'graphql'
    *        },
@@ -207,6 +203,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
         },
         documents: [],
+        documentTransforms: options.documentTransforms,
       };
     }
 
@@ -230,6 +227,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         schema: options.schema,
         config: {},
         documents: [],
+        documentTransforms: options.documentTransforms,
       };
     }
 
@@ -241,6 +239,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
         schema: options.schema,
         config,
         documents: sources,
+        documentTransforms: options.documentTransforms,
       },
       {
         filename: `${options.baseOutputDir}/gql${gqlArtifactFileExtension}`,
@@ -253,6 +252,7 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
           gqlTagName: options.presetConfig.gqlTagName || 'gql',
         },
         documents: sources,
+        documentTransforms: options.documentTransforms,
       },
       ...(fragmentMaskingFileGenerateConfig ? [fragmentMaskingFileGenerateConfig] : []),
       ...(indexFileGenerateConfig ? [indexFileGenerateConfig] : []),

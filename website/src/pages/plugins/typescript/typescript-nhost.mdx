@@ -1,0 +1,96 @@
+---
+title: typescript-nhost
+description: GraphQL Code Generator plugin for Nhost Typescript SDK. It generates the schema for the Typescript Nhost SDK.
+---
+
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+export const getStaticProps = pluginGetStaticProps(__filename)
+
+<PluginHeader hasOperationsNote />
+<PluginApiDocs />
+
+This plugin generates the schema for the [`Typescript Nhost SDK`](https://docs.nhost.io/reference/javascript).
+
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000',
+  generates: {
+    'src/schema.ts': { plugins: ['typescript-nhost'] }
+  }
+}
+export default config
+```
+
+## Usage
+
+### Step 1: Generate the schema
+
+First, install GraphQL codegen and the Nhost Typescript plugin:
+
+```sh
+yarn add -D @graphql-codegen/cli @graphql-codegen/typescript-nhost
+```
+
+Then configure the code generator by adding a `codegen.yaml` file:
+
+```yaml filename="codegen.yaml"
+schema:
+  - http://localhost:1337/v1/graphql:
+      headers:
+        x-hasura-admin-secret: nhost-admin-secret
+generates:
+  ./src/schema.ts:
+    plugins:
+      - typescript-nhost
+```
+
+### Step 2: Install and configure the Nhost Typescript SDK
+
+```sh
+yarn add @nhost/nhost-js
+```
+
+```ts filename="src/main.ts"
+import { NhostClient } from '@nhost/nhost-js'
+import schema from './schema'
+
+const nhost = new NhostClient({ subdomain: 'localhost', schema })
+```
+
+A GraphQL query named `todos` will then be accessible through:
+
+```ts
+const todos = await nhost.graphql.query.todos({ select: { contents: true } })
+```
+
+The `todos` object will be strongly typed based on the GraphQL schema, and the fields that would have been selected in the query.
+
+## Custom scalars
+
+It is possible to customize the scalar types in adapting the configuration file.
+The following example illustrates how to specify some Hasura scalars. The `@graphql-codegen/add` plugin is necessary to be able to add the definition of the `JSONValue` type.
+
+```yaml filename="codegen.yaml"
+schema:
+  - http://localhost:1337/v1/graphql:
+      headers:
+        x-hasura-admin-secret: nhost-admin-secret
+generates:
+  ./src/schema.ts:
+    plugins:
+      - typescript-nhost
+      - add:
+          content: 'export type JSONValue = string | number | boolean | { [x: string]: JSONValue } | Array<JSONValue>;'
+    config:
+      scalars:
+        uuid: 'string'
+        bigint: 'number'
+        citext: 'string'
+        timestamptz: 'string'
+        json: 'JSONValue'
+        jsonb: 'JSONValue'
+        bytea: 'string'
+```

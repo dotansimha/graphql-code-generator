@@ -1,3 +1,7 @@
+---
+description: GraphQL Code Generator is a tool that generates code from your GraphQL schema and operations. It can generate TypeScript, Flow, Swift, Kotlin, and more.
+---
+
 import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
 
 # Guide: React and Vue
@@ -81,8 +85,7 @@ const config: CodegenConfig = {
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     './src/gql/': {
-      preset: 'client',
-      plugins: []
+      preset: 'client'
     }
   }
 }
@@ -106,8 +109,7 @@ const config: CodegenConfig = {
       preset: 'client',
       config: {
         useTypeImports: true
-      },
-      plugins: []
+      }
     }
   }
 }
@@ -500,13 +502,17 @@ Feel free to continue playing with this demo project, available in all flavors, 
 
 The `client` preset allows the following `config` options:
 
-- [`scalars`](/plugins/typescript/typescript#config-api-reference): Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
-- [`strictScalars`](/plugins/typescript/typescript#config-api-reference): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
-- [`namingConvention`](/plugins/typescript/typescript#config-api-reference): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
-- [`useTypeImports`](/plugins/typescript/typescript#config-api-reference): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's `"importsNotUsedAsValues": "error"` option.
-- [`skipTypename`](/plugins/typescript/typescript#config-api-reference): Does not add `__typename` to the generated types, unless it was specified in the selection set.
-- [`enumsAsTypes`](/plugins/typescript/typescript#config-api-reference): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns
-- [`arrayInputCoercion`](/plugins/typescript/typescript-operations#config-api-reference): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
+- [`scalars`](/plugins/typescript/typescript#scalars): Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
+- [`defaultScalarType`](/plugins/typescript/typescript#defaultscalartype): Allows you to override the type that unknown `scalars` will have. Defaults to `any`.
+- [`strictScalars`](/plugins/typescript/typescript#strictscalars): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
+- [`namingConvention`](/plugins/typescript/typescript#namingconvention): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`.
+- [`useTypeImports`](/plugins/typescript/typescript#usetypeimports): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's [`"importsNotUsedAsValues": "error"`](https://www.typescriptlang.org/tsconfig#importsNotUsedAsValues) option.
+- [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
+- [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
+- [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
+- [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
+- [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
+- [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
 
 <br />
 

@@ -1,8 +1,9 @@
 import { join } from 'path';
 import { useMonorepo } from '@graphql-codegen/testing';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print } from 'graphql';
+import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print, OperationDefinitionNode, Kind } from 'graphql';
 import { createContext, executeCodegen } from '../src/index.js';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -164,21 +165,45 @@ describe('Codegen Executor', () => {
       }
     });
 
-    it('Should throw when one output has no plugins defined', async () => {
+    it('Should throw when one output has no plugins or preset defined', async () => {
+      expect.assertions(1);
       try {
         await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
+          generates: {
+            'out.ts': {},
+          },
+        });
+      } catch (e) {
+        expect(e.message).toMatch('Invalid Codegen Configuration!');
+      }
+    });
+
+    it('Should throw when one output has no plugins defined', async () => {
+      expect.assertions(1);
+      try {
+        await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
           generates: {
             'out.ts': {
               plugins: [],
             },
           },
         });
-
-        throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).toMatch('Invalid Codegen Configuration!');
       }
+    });
+
+    it('Should succeed when one output has no plugins but preset defined', async () => {
+      await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          './src/gql/': {
+            preset: 'client-preset',
+          },
+        },
+      });
     });
 
     it('should handle extend keyword when GraphQLSchema is used', async () => {
@@ -1085,5 +1110,199 @@ describe('Codegen Executor', () => {
     const config = prj1.getConfig();
     const output = await executeCodegen(config);
     expect(output[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
+  });
+
+  describe('Document Transform', () => {
+    it('Should transform documents', async () => {
+      const transform: Types.DocumentTransformFunction = ({ documents }) => {
+        const newDocuments = [
+          {
+            document: {
+              ...documents[0].document,
+              definitions: [
+                {
+                  ...documents[0].document.definitions[0],
+                  name: { kind: Kind.NAME, value: 'bar' },
+                } as OperationDefinitionNode,
+              ],
+            },
+          },
+        ];
+        return newDocuments;
+      };
+
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransforms: [{ transform }],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('export type BarQuery');
+    });
+
+    it('Should allow users to set config', async () => {
+      const generateDocumentTransform: (config: { queryName: string }) => Types.DocumentTransformObject = ({
+        queryName,
+      }) => {
+        return {
+          transform: ({ documents }) => {
+            const newDocuments = [
+              {
+                document: {
+                  ...documents[0].document,
+                  definitions: [
+                    {
+                      ...documents[0].document.definitions[0],
+                      name: { kind: Kind.NAME, value: queryName },
+                    } as OperationDefinitionNode,
+                  ],
+                },
+              },
+            ];
+            return newDocuments;
+          },
+        };
+      };
+
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransforms: [generateDocumentTransform({ queryName: 'test' })],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('export type TestQuery');
+    });
+
+    it('Should transform documents when specifying files', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransforms: ['./tests/custom-document-transforms/document-transform.js'],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('export type BarQuery');
+    });
+
+    it('Should allow users to set config when specifying files', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript', 'typescript-operations'],
+            documentTransforms: [
+              {
+                './tests/custom-document-transforms/test-config.js': {
+                  queryName: 'test',
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('export type TestQuery');
+    });
+
+    it('Should allow plugin context to be accessed and modified', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': {
+            documentTransforms: [
+              {
+                transform: ({ pluginContext, documents }) => {
+                  pluginContext.myPluginInfo = 'world';
+                  return documents;
+                },
+              },
+            ],
+            plugins: ['./tests/custom-plugins/document-transform-context.js'],
+          },
+        },
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('Hello world!');
+    });
+
+    it('should throw an understandable error if it fails.', async () => {
+      try {
+        await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
+          documents: `query foo { f }`,
+          generates: {
+            'out1.ts': {
+              plugins: ['typescript'],
+              documentTransforms: [
+                {
+                  transform: () => {
+                    throw new Error('Something Wrong!');
+                  },
+                },
+              ],
+            },
+          },
+        });
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
+        expect(e.message).toContain('DocumentTransform "the element at index 0 of the documentTransforms" failed');
+        expect(e.message).toContain('Something Wrong!');
+      }
+    });
+
+    it('Should transform documents with client-preset', async () => {
+      const transform: Types.DocumentTransformFunction = ({ documents }) => {
+        const newDocuments = [
+          {
+            document: {
+              ...documents[0].document,
+              definitions: [
+                {
+                  ...documents[0].document.definitions[0],
+                  name: { kind: Kind.NAME, value: 'bar' },
+                } as OperationDefinitionNode,
+              ],
+            },
+          },
+        ];
+        return newDocuments;
+      };
+
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          './src/gql/': {
+            preset: 'client',
+            documentTransforms: [{ transform }],
+          },
+        },
+      });
+
+      const fileOutput = output.find(file => file.filename === './src/gql/graphql.ts');
+      expect(fileOutput.content).toContain('export type BarQuery');
+    });
   });
 });

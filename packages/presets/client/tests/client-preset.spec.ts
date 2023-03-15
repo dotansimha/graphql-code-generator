@@ -4,6 +4,7 @@ import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { preset } from '../src/index.js';
+import { print } from 'graphql';
 
 describe('client-preset', () => {
   it('can generate simple examples uppercase names', async () => {
@@ -21,7 +22,6 @@ describe('client-preset', () => {
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
     });
@@ -47,7 +47,7 @@ export * from "./gql";`);
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -61,7 +61,7 @@ export * from "./gql";`);
        *
        * @example
        * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
        * \`\`\`
        *
        * The query argument is unknown!
@@ -109,7 +109,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
     });
@@ -135,7 +134,7 @@ export * from "./gql";`);
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -149,7 +148,7 @@ export * from "./gql";`);
        *
        * @example
        * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
        * \`\`\`
        *
        * The query argument is unknown!
@@ -197,7 +196,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
     });
@@ -215,7 +213,7 @@ export * from "./gql";`);
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -229,7 +227,7 @@ export * from "./gql";`);
        *
        * @example
        * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
        * \`\`\`
        *
        * The query argument is unknown!
@@ -273,7 +271,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -296,7 +293,7 @@ export * from "./gql";`);
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -310,7 +307,7 @@ export * from "./gql";`);
        *
        * @example
        * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
        * \`\`\`
        *
        * The query argument is unknown!
@@ -402,7 +399,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -425,7 +421,7 @@ export * from "./gql";`);
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -439,7 +435,7 @@ export * from "./gql";`);
        *
        * @example
        * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
        * \`\`\`
        *
        * The query argument is unknown!
@@ -524,7 +520,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       config: {
@@ -535,49 +530,49 @@ export * from "./gql";`);
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
-          "/* eslint-disable */
-          import * as types from './graphql';
-          import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      "/* eslint-disable */
+      import * as types from './graphql';
+      import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-          /**
-           * Map of all GraphQL operations in the project.
-           *
-           * This map has several performance disadvantages:
-           * 1. It is not tree-shakeable, so it will include all operations in the project.
-           * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-           * 3. It does not support dead code elimination, so it will add unused operations.
-           *
-           * Therefore it is highly recommended to use the babel-plugin for production.
-           */
-          const documents = {
-              "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
-          };
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
+       */
+      const documents = {
+          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
+      };
 
-          /**
-           * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-           *
-           *
-           * @example
-           * \`\`\`ts
-           * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
-           * \`\`\`
-           *
-           * The query argument is unknown!
-           * Please regenerate the types.
-           */
-          export function graphql(source: string): unknown;
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function graphql(source: string): unknown;
 
-          /**
-           * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-           */
-          export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
 
-          export function graphql(source: string) {
-            return (documents as any)[source] ?? {};
-          }
+      export function graphql(source: string) {
+        return (documents as any)[source] ?? {};
+      }
 
-          export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
-        `);
+      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
@@ -629,7 +624,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: false,
             },
@@ -647,59 +641,59 @@ export * from "./gql";`);
       expect(indexFile.content).toMatchInlineSnapshot(`"export * from "./gql";"`);
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-              "/* eslint-disable */
-              import * as types from './graphql';
-              import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        "/* eslint-disable */
+        import * as types from './graphql';
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-              /**
-               * Map of all GraphQL operations in the project.
-               *
-               * This map has several performance disadvantages:
-               * 1. It is not tree-shakeable, so it will include all operations in the project.
-               * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-               * 3. It does not support dead code elimination, so it will add unused operations.
-               *
-               * Therefore it is highly recommended to use the babel-plugin for production.
-               */
-              const documents = {
-                  "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
-                  "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
-                  "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
-              };
+        /**
+         * Map of all GraphQL operations in the project.
+         *
+         * This map has several performance disadvantages:
+         * 1. It is not tree-shakeable, so it will include all operations in the project.
+         * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+         * 3. It does not support dead code elimination, so it will add unused operations.
+         *
+         * Therefore it is highly recommended to use the babel or swc plugin for production.
+         */
+        const documents = {
+            "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
+            "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
+            "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+        };
 
-              /**
-               * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-               *
-               *
-               * @example
-               * \`\`\`ts
-               * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
-               * \`\`\`
-               *
-               * The query argument is unknown!
-               * Please regenerate the types.
-               */
-              export function graphql(source: string): unknown;
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         *
+         *
+         * @example
+         * \`\`\`ts
+         * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+         * \`\`\`
+         *
+         * The query argument is unknown!
+         * Please regenerate the types.
+         */
+        export function graphql(source: string): unknown;
 
-              /**
-               * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-               */
-              export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-              /**
-               * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-               */
-              export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-              /**
-               * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-               */
-              export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
 
-              export function graphql(source: string) {
-                return (documents as any)[source] ?? {};
-              }
+        export function graphql(source: string) {
+          return (documents as any)[source] ?? {};
+        }
 
-              export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
-          `);
+        export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+      `);
     });
 
     it('fragmentMasking: {}', async () => {
@@ -717,7 +711,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {},
             },
@@ -743,7 +736,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: {
                 unmaskFunctionName: 'iLikeTurtles',
@@ -859,7 +851,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -899,7 +890,6 @@ export * from "./gql";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               fragmentMasking: true,
             },
@@ -937,7 +927,6 @@ export * from "./gql";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
         },
       },
       emitLegacyCommonJSImports: false,
@@ -964,7 +953,7 @@ export * from "./gql.js";`);
        * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
-       * Therefore it is highly recommended to use the babel-plugin for production.
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -978,7 +967,7 @@ export * from "./gql.js";`);
        *
        * @example
        * \`\`\`ts
-       * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
        * \`\`\`
        *
        * The query argument is unknown!
@@ -1011,6 +1000,66 @@ export * from "./gql.js";`);
     expect(graphqlFile).toBeDefined();
   });
 
+  it('should dedupe fragments - #8670', async () => {
+    const dir = path.join(__dirname, 'tmp/duplicate-fragments');
+    const cleanUp = async () => {
+      await fs.promises.rm(dir, { recursive: true, force: true });
+    };
+
+    const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            user(id: ID!): User!
+            event(id: ID!): Event!
+          }
+
+          type User {
+            id: ID!
+            username: String!
+            email: String!
+          }
+
+          type Event {
+            id: ID!
+            owner: User!
+            attendees: [User!]!
+          }
+        `,
+      ],
+      documents: [docPath],
+      generates: {
+        'out1/': {
+          preset,
+          plugins: [],
+        },
+      },
+    });
+
+    // TODO: Consider using in-memory file system for tests like this.
+    try {
+      await cleanUp();
+    } catch {}
+    await fs.promises.mkdir(path.join(dir, 'out1'), { recursive: true });
+    for (const file of result) {
+      if (file.filename === 'out1/graphql.ts') {
+        await fs.promises.writeFile(path.join(dir, file.filename), file.content, 'utf-8');
+      }
+    }
+
+    const { default: jiti } = await import('jiti');
+    const loader = jiti('', {});
+
+    const { EventQueryDocument } = loader(path.join(dir, 'out1/graphql.ts'));
+
+    const printed = print(EventQueryDocument);
+
+    expect(printed.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
+
+    await cleanUp();
+  });
+
   describe('when no operations are found', () => {
     it('still generates the helper `graphql()` (or under another `presetConfig.gqlTagName` name) function', async () => {
       const result = await executeCodegen({
@@ -1026,7 +1075,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
           },
         },
         emitLegacyCommonJSImports: false,
@@ -1052,7 +1100,7 @@ export * from "./gql.js";`);
          *
          * @example
          * \`\`\`ts
-         * const query = gql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+         * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
          * \`\`\`
          *
          * The query argument is unknown!
@@ -1098,7 +1146,6 @@ export * from "./gql.js";`);
       generates: {
         'out1/': {
           preset,
-          plugins: [],
           presetConfig: {
             onExecutableDocumentNode(node) {
               return {
@@ -1167,7 +1214,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: true,
             },
@@ -1245,7 +1291,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: {
                 mode: 'replaceDocumentWithHash',
@@ -1304,7 +1349,7 @@ export * from "./gql.js";`);
 
         export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
 
-        export const CFragmentDoc = {} as unknown as DocumentNode<CFragment, unknown>;
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"}} as unknown as DocumentNode<AQuery, AQueryVariables>;
         export const BDocument = {"__meta__":{"hash":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"}} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
@@ -1325,7 +1370,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: {
                 hashPropertyName: 'custom_property_name',
@@ -1416,7 +1460,6 @@ export * from "./gql.js";`);
         generates: {
           'out1/': {
             preset,
-            plugins: [],
             presetConfig: {
               persistedDocuments: true,
               onExecutableDocumentNode(node) {
@@ -1469,5 +1512,104 @@ export * from "./gql.js";`);
         export const BbbDocument = {"__meta__":{"cacheKeys":["bbb"],"hash":"2a8e0849914b13ebc13b112ba5a502678d757511"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"bbb"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BbbQuery, BbbQueryVariables>;"
       `);
     });
+  });
+
+  it('correctly handle fragment references', async () => {
+    const result = await executeCodegen({
+      schema: /* GraphQL */ `
+        type Query {
+          a: A!
+        }
+
+        type A {
+          b: String!
+          a: A!
+        }
+      `,
+      documents: [
+        /* GraphQL */ `
+          fragment AC on A {
+            b
+          }
+        `,
+        /* GraphQL */ `
+          fragment AA on A {
+            b
+          }
+        `,
+        /* GraphQL */ `
+          fragment AB on A {
+            b
+            ...AC
+            ...AA
+          }
+        `,
+        /* GraphQL */ `
+          query OI {
+            a {
+              ...AB
+              ...AC
+            }
+          }
+        `,
+      ],
+      generates: {
+        'out1/': {
+          preset,
+          plugins: [],
+        },
+      },
+    });
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = Maybe<T>;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: string;
+        String: string;
+        Boolean: boolean;
+        Int: number;
+        Float: number;
+      };
+
+      export type A = {
+        __typename?: 'A';
+        a: A;
+        b: Scalars['String'];
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        a: A;
+      };
+
+      export type AbFragment = (
+        { __typename?: 'A', b: string }
+        & { ' $fragmentRefs'?: { 'AcFragment': AcFragment;'AaFragment': AaFragment } }
+      ) & { ' $fragmentName'?: 'AbFragment' };
+
+      export type AaFragment = { __typename?: 'A', b: string } & { ' $fragmentName'?: 'AaFragment' };
+
+      export type OiQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type OiQuery = { __typename?: 'Query', a: (
+          { __typename?: 'A' }
+          & { ' $fragmentRefs'?: { 'AbFragment': AbFragment;'AcFragment': AcFragment } }
+        ) };
+
+      export type AcFragment = { __typename?: 'A', b: string } & { ' $fragmentName'?: 'AcFragment' };
+
+      export const AcFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AcFragment, unknown>;
+      export const AaFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AaFragment, unknown>;
+      export const AbFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AbFragment, unknown>;
+      export const OiDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OI"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AB"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}}]} as unknown as DocumentNode<OiQuery, OiQueryVariables>;"
+    `);
   });
 });

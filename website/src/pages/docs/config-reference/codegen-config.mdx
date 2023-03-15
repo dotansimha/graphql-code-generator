@@ -1,3 +1,7 @@
+---
+description: Learn how to configure GraphQL Code Generator to generate code from your GraphQL schema and documents.
+---
+
 import { PackageCmd, Callout } from '@theguild/components'
 
 # `codegen.ts` file
@@ -24,8 +28,7 @@ const config: CodegenConfig = {
   documents: ['src/**/*.tsx'],
   generates: {
     './src/gql/': {
-      preset: 'client',
-      plugins: []
+      preset: 'client'
     }
   }
 }
@@ -107,8 +110,7 @@ const config: CodegenConfig = {
   documents: ['src/**/*.tsx'],
   generates: {
     './src/gql/': {
-      preset: 'client',
-      plugins: []
+      preset: 'client'
     }
   }
 }
