@@ -46,7 +46,6 @@ import {
   getFieldNodeNameValue,
   getPossibleTypes,
   hasConditionalDirectives,
-  hasIncrementalDeliveryDirectives,
   mergeSelectionSets,
   separateSelectionSet,
 } from './utils.js';
@@ -56,9 +55,11 @@ type FragmentSpreadUsage = {
   typeName: string;
   onType: string;
   selectionNodes: Array<SelectionNode>;
+  fragmentDirectives: DirectiveNode[];
 };
 
 type CollectedFragmentNode = (SelectionNode | FragmentSpreadUsage | DirectiveNode) & FragmentDirectives;
+type GroupedStringifedTypes = Record<string, Array<string | { union: string[] }>>;
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -232,7 +233,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected buildFragmentSpreadsUsage(spreads: FragmentSpreadNode[]): Record<string, FragmentSpreadUsage[]> {
-    const selectionNodesByTypeName: Record<string, FragmentSpreadUsage[]> = {};
+    const selectionNodesByTypeName: Record<string, Array<FragmentSpreadUsage>> = {};
 
     for (const spread of spreads) {
       const fragmentSpreadObject = this._loadedFragments.find(lf => lf.name === spread.name.value);
@@ -254,7 +255,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           const selectionNodes = fragmentSpreadObject.node.selectionSet.selections.map(selectionNode => {
             return {
               ...selectionNode,
-              fragmentDirectives: [...(spread.directives || [])],
             };
           });
 
@@ -263,6 +263,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             typeName: usage,
             onType: fragmentSpreadObject.onType,
             selectionNodes,
+            fragmentDirectives: [...(spread.directives || [])],
           });
         }
       }
@@ -330,7 +331,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   /**
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
-  protected _buildGroupedSelections(): { grouped: Record<string, string[]>; mustAddEmptyObject: boolean } {
+  protected _buildGroupedSelections(): { grouped: GroupedStringifedTypes; mustAddEmptyObject: boolean } {
     if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
@@ -343,7 +344,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const possibleTypes = getPossibleTypes(this._schema, this._parentSchemaType);
 
     if (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask') {
-      const grouped = possibleTypes.reduce((prev, type) => {
+      const grouped = possibleTypes.reduce<GroupedStringifedTypes>((prev, type) => {
         const typeName = type.name;
         const schemaType = this._schema.getType(typeName);
 
@@ -355,17 +356,35 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         prev[typeName] ||= [];
 
-        const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
-        const transformedSet = this.selectionSetStringFromFields(fields);
+        const deferredNodes = selectionNodes.filter((node): node is FragmentSpreadUsage =>
+          'fragmentDirectives' in node ? node.fragmentDirectives.some(d => d.name.value === 'defer') : false
+        );
 
+        const filteredSelectionNodes = selectionNodes.filter(
+          (node: any) => !node.fragmentDirectives?.some(d => d.name.value === 'defer')
+        );
+
+        const { fields } = this.buildSelectionSet(schemaType, filteredSelectionNodes);
+
+        const transformedSet = this.selectionSetStringFromFields(fields);
         if (transformedSet) {
           prev[typeName].push(transformedSet);
         } else {
           mustAddEmptyObject = true;
         }
 
+        for (const deferredNode of deferredNodes) {
+          const { fields: initialFields } = this.buildSelectionSet(schemaType, [deferredNode]);
+          const { fields: subsequentFields } = this.buildSelectionSet(schemaType, [deferredNode], { unsetTypes: true });
+
+          const initialSet = this.selectionSetStringFromFields(initialFields);
+          const subsequentSet = this.selectionSetStringFromFields(subsequentFields);
+
+          prev[typeName].push({ union: [initialSet, subsequentSet] });
+        }
+
         return prev;
-      }, {} as Record<string, string[]>);
+      }, {});
 
       return { grouped, mustAddEmptyObject };
     }
@@ -452,7 +471,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
   protected buildSelectionSet(
     parentSchemaType: GraphQLObjectType,
-    selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>
+    selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>,
+    options?: { unsetTypes: boolean }
   ) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
@@ -557,15 +577,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
-      const isIncremental = hasIncrementalDeliveryDirectives(field);
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
-        name: this._processor.config.formatNamedField(
-          field.name.value,
-          selectedFieldType,
-          isConditional,
-          isIncremental
-        ),
+        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
@@ -592,7 +606,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
           isConditional: hasConditionalDirectives(field),
-          isIncremental: hasIncrementalDeliveryDirectives(field),
           fieldName: field.name.value,
         }))
       ),
@@ -606,10 +619,13 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ...this._processor.transformLinkFields(linkFields),
     ].filter(Boolean);
 
+    // TODO: This needs TESTS!
     const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
-    const allObjectsMerged: string[] = transformed
-      .filter(t => typeof t !== 'string')
-      .map((t: NameAndType) => `${t.name}: ${t.type}`);
+
+    const allObjectsMerged: string[] = options.unsetTypes
+      ? transformed.filter(t => typeof t !== 'string').map((t: NameAndType) => `${t.name}: ${t.type}`)
+      : transformed.filter(t => typeof t !== 'string').map((t: NameAndType) => `${t.name}?: ${this.getUnknownType()}`);
+
     let mergedObjectsAsString: string = null;
 
     if (allObjectsMerged.length > 0) {
@@ -643,7 +659,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     if (nonOptionalTypename || addTypename || queriedForTypename) {
       const optionalTypename = !queriedForTypename && !nonOptionalTypename;
-
       return {
         name: `${this._processor.config.formatNamedField('__typename')}${optionalTypename ? '?' : ''}`,
         type: `'${type.name}'`,
@@ -683,10 +698,16 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           if (relevant.length === 0) {
             return null;
           }
-          if (relevant.length === 1) {
-            return relevant[0];
-          }
-          return `( ${relevant.join(' & ')} )`;
+
+          const res = relevant
+            .map(selectionObject => {
+              if (typeof selectionObject === 'string') return selectionObject;
+
+              return '(' + selectionObject.union.join(' | ') + ')';
+            })
+            .join(' & ');
+
+          return relevant.length > 1 ? `( ${res} )` : res;
         })
         .filter(Boolean)
         .join(' | ') + this.getEmptyObjectTypeString(mustAddEmptyObject)

@@ -16,7 +16,6 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     if (fields.length === 0) {
       return [];
     }
-
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {
@@ -27,7 +26,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     const optionalList: string[] = [];
     let resString = `Pick<${parentName}, ${fields
       .map(field => {
-        if (field.isConditional || field.isIncremental) {
+        if (field.isConditional) {
           hasOptional = true;
           optionalList.push(field.fieldName);
         }

@@ -23,7 +23,7 @@ export type Query = {
    * A field that resolves slowly.
    * Maybe you want to @defer this field ;)
    */
-  slowField?: Maybe<Scalars['String']>;
+  slowField: Scalars['String'];
 };
 
 export type QuerySlowFieldArgs = {
@@ -32,7 +32,10 @@ export type QuerySlowFieldArgs = {
 
 export type SlowAndFastFieldWithDeferQueryVariables = Exact<{ [key: string]: never }>;
 
-export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; slowField?: string | null; fastField: string };
+export type SlowAndFastFieldWithDeferQuery = (
+  | { __typename?: 'Query'; slowField: string }
+  | { __typename?: never; slowField: never }
+) & { __typename?: 'Query'; fastField: string };
 
 export const SlowAndFastFieldWithDeferDocument = {
   kind: 'Document',
@@ -44,6 +47,7 @@ export const SlowAndFastFieldWithDeferDocument = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'fastField' } },
           {
             kind: 'InlineFragment',
             typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
@@ -53,7 +57,6 @@ export const SlowAndFastFieldWithDeferDocument = {
               selections: [{ kind: 'Field', name: { kind: 'Name', value: 'slowField' } }],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'fastField' } },
         ],
       },
     },

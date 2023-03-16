@@ -14,7 +14,7 @@ const typeDefs = /* GraphQL */ `
     A field that resolves slowly.
     Maybe you want to @defer this field ;)
     """
-    slowField(waitFor: Int! = 5000): String
+    slowField(waitFor: Int! = 5000): String!
   }
 `;
 

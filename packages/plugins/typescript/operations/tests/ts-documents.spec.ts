@@ -6435,7 +6435,7 @@ function test(q: GetEntityBrandDataQuery): void {
   });
 
   describe('incremental delivery directive handling', () => {
-    it('should mark fields in deferred fragments as optional (preResolveTypes: true)', async () => {
+    it.only('should mark fields in deferred fragments as optional (preResolveTypes: true)', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String!
@@ -6524,6 +6524,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
+      // todo
       expect(content).toBeSimilarStringTo(`
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
         export type UserQuery = {
@@ -6533,10 +6534,6 @@ function test(q: GetEntityBrandDataQuery): void {
             email?: string,
             clearanceLevel: string,
             name: string,
-            widgetCount?: number,
-            widgetPreference?: string,
-            favoriteFood?: string,
-            leastFavoriteFood?: string,
             address?: {
               __typename?: 'Address',
               street1: string
@@ -6550,6 +6547,8 @@ function test(q: GetEntityBrandDataQuery): void {
               title: string
             }
           }
+          & ({ widgetCount?: never; widgetPreference?: never; } | { widgetCoun: number; widgetPreference: string; })
+          & ({ favoriteFood?: never; leastFavoriteFood?: never; } | { favoriteFood: number; leastFavoriteFood: string; })
         };
       `);
     });

@@ -5,10 +5,10 @@ import { graphql } from './gql/gql';
 
 const alphabetQuery = graphql(/* GraphQL */ `
   query SlowAndFastFieldWithDefer {
+    fastField
     ... on Query @defer {
       slowField
     }
-    fastField
   }
 `);
 
@@ -18,6 +18,9 @@ const Field = ({ field }: { field: string }) => {
 
 function App() {
   const { data } = useQuery(alphabetQuery);
+  if (data) {
+    type _x = typeof data;
+  }
   return (
     <div className="App">
       {data && (

@@ -1,7 +1,7 @@
 import { GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLOutputType } from 'graphql';
 import { AvoidOptionalsConfig, ConvertNameFn, ScalarsMap } from '../types.js';
 
-export type PrimitiveField = { isConditional: boolean; isIncremental: boolean; fieldName: string };
+export type PrimitiveField = { isConditional: boolean; fieldName: string };
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
