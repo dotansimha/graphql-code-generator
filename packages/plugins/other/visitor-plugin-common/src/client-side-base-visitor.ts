@@ -15,7 +15,6 @@ import {
 } from 'graphql';
 import gqlTag from 'graphql-tag';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
-import { generateFragmentImportStatement } from './imports.js';
 import { LoadedFragment, ParsedImport } from './types.js';
 import { buildScalarsFromConfig, getConfigValue } from './utils.js';
 
@@ -553,7 +552,7 @@ export class ClientSideBaseVisitor<
     return path;
   }
 
-  public getImports(options: { excludeFragments?: boolean } = {}): string[] {
+  public getImports(): string[] {
     (this._additionalImports || []).forEach(i => this._imports.add(i));
 
     switch (this.config.documentMode) {
