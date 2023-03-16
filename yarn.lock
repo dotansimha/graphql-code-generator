@@ -3700,10 +3700,10 @@
     unist-util-visit "4.1.2"
     use-debounce "9.0.3"
 
-"@theguild/eslint-config@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@theguild/eslint-config/-/eslint-config-0.8.0.tgz#4b918f7bbb5f79394269632d63469d62566381e9"
-  integrity sha512-OAXxluL5yA0z85t+zIJf4tibzOfEhY/RyD4AaI7NJc8iZ88mDIBasdiErBFhlRMa4GLfg6hvKdqeI6x/2ZGf7Q==
+"@theguild/eslint-config@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@theguild/eslint-config/-/eslint-config-0.8.1.tgz#0b5fb460694310935447eccdd29cbd92fd60eee2"
+  integrity sha512-ZQVfnaT3HtYsuCQ+IlbvhUUArq/ZoOWgAoYm28aTy0f+Guc2Gf7aqDEUtcnfusSeZttPO9DshNePmlkd1B8vMg==
   dependencies:
     "@rushstack/eslint-patch" "^1.2.0"
     "@typescript-eslint/eslint-plugin" "^5.48.1"
@@ -3719,7 +3719,7 @@
     eslint-plugin-react "^7.32.0"
     eslint-plugin-react-hooks "^4.6.0"
     eslint-plugin-sonarjs "^0.18.0"
-    eslint-plugin-unicorn "^45.0.2"
+    eslint-plugin-unicorn "^46.0.0"
     eslint-plugin-yml "^1.4.0"
 
 "@theguild/prettier-config@0.1.1":
@@ -7058,10 +7058,10 @@ eslint-plugin-sonarjs@^0.18.0:
   resolved "https://registry.yarnpkg.com/eslint-plugin-sonarjs/-/eslint-plugin-sonarjs-0.18.0.tgz#7c009452f633cf6a4c28387dd50502a3e828b05e"
   integrity sha512-DJ3osLnt6KFdT5e9ZuIDOjT5A6wUGSLeiJJT03lPgpdD+7CVWlYAw9Goe3bt7SmbFO3Xh89NOCZAuB9XA7bAUQ==
 
-eslint-plugin-unicorn@^45.0.2:
-  version "45.0.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-45.0.2.tgz#d6ba704793a6909fe5dfe013900d2b05b715284c"
-  integrity sha512-Y0WUDXRyGDMcKLiwgL3zSMpHrXI00xmdyixEGIg90gHnj0PcHY4moNv3Ppje/kDivdAy5vUeUr7z211ImPv2gw==
+eslint-plugin-unicorn@^46.0.0:
+  version "46.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-46.0.0.tgz#b5cdcc9465fd6e46ab7968b87dd4a43adc8d6031"
+  integrity sha512-j07WkC+PFZwk8J33LYp6JMoHa1lXc1u6R45pbSAipjpfpb7KIGr17VE2D685zCxR5VL4cjrl65kTJflziQWMDA==
   dependencies:
     "@babel/helper-validator-identifier" "^7.19.1"
     "@eslint-community/eslint-utils" "^4.1.2"
