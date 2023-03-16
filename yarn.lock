@@ -14147,9 +14147,9 @@ vfile@^5.0.0, vfile@^5.3.0, vfile@^5.3.4:
     vfile-message "^3.0.0"
 
 villus@^2.1.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/villus/-/villus-2.1.1.tgz#7d04b47be5d41f191a5cc3617517b50c7cf9066c"
-  integrity sha512-WX0DqUDJ00RU/cmYeX0u0xlCVWIuM/8EHR0XZQlc9HKgnaqaOqZmJ31sZ7m4gbIvhnojSSDzqeY/ZO7J2EY6dw==
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/villus/-/villus-2.2.1.tgz#fd74a724862281e4673e00ee4302e3ea1eabaab1"
+  integrity sha512-vnrY62rf5Yzfew0fZbHQ7b51NpcWKbNDxxmq98NNhBRXjt8gVtbbXsOpRatnKINxsZPPzH+zLJGnTj95F0InHQ==
 
 vite@^4.1.0:
   version "4.1.1"
