@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "graphql-yoga": "3.7.2",
+    "graphql-yoga": "3.7.3",
     "graphql-request": "5.1.0"
   },
   "scripts": {
