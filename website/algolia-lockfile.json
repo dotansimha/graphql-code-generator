@@ -1333,28 +1333,16 @@
   {
     "objectID": "code-generator-docs-migration-guides-graphql-cli",
     "headings": [
-      "Example Configuration",
-      "Usage",
-      "Migrating from GraphQL-CLI to Inspector CLI"
+      "Migrating from GraphQL-CLI to Codegen CLI"
     ],
     "toc": [
       {
         "children": [],
-        "title": "Example Configuration",
-        "anchor": "example-configuration"
-      },
-      {
-        "children": [],
-        "title": "Usage",
-        "anchor": "usage"
-      },
-      {
-        "children": [],
-        "title": "Migrating from GraphQL-CLI to Inspector CLI",
-        "anchor": "migrating-from-graphql-cli-to-inspector-cli"
+        "title": "Migrating from GraphQL-CLI to Codegen CLI",
+        "anchor": "migrating-from-graphql-cli-to-codegen-cli"
       }
     ],
-    "content": "a279972843b282293ba2a684fba1f887",
+    "content": "a8ea4ebbcac336dd5c80d709710b17cd",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/migration/graphql-cli",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
