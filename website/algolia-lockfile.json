@@ -977,41 +977,6 @@
     "type": "Documentation"
   },
   {
-    "objectID": "code-generator-docs-guides-graphql-cli",
-    "headings": [
-      "Example Configuration",
-      "Usage",
-      "Migrating from GraphQL-CLI to Inspector CLI"
-    ],
-    "toc": [
-      {
-        "children": [],
-        "title": "Example Configuration",
-        "anchor": "example-configuration"
-      },
-      {
-        "children": [],
-        "title": "Usage",
-        "anchor": "usage"
-      },
-      {
-        "children": [],
-        "title": "Migrating from GraphQL-CLI to Inspector CLI",
-        "anchor": "migrating-from-graphql-cli-to-inspector-cli"
-      }
-    ],
-    "content": "a279972843b282293ba2a684fba1f887",
-    "url": "https://www.the-guild.dev/graphql/codegen/docs/guides/graphql-cli",
-    "domain": "https://www.the-guild.dev/graphql/codegen",
-    "hierarchy": [
-      "Docs",
-      "Guides"
-    ],
-    "source": "Code Generator",
-    "title": "GraphQL-CLI",
-    "type": "Documentation"
-  },
-  {
     "objectID": "code-generator-docs-guides-graphql-modules",
     "headings": [],
     "toc": [],
@@ -1363,6 +1328,41 @@
     ],
     "source": "Code Generator",
     "title": "v0.18 -> v1.0",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-docs-migration-guides-graphql-cli",
+    "headings": [
+      "Example Configuration",
+      "Usage",
+      "Migrating from GraphQL-CLI to Inspector CLI"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Example Configuration",
+        "anchor": "example-configuration"
+      },
+      {
+        "children": [],
+        "title": "Usage",
+        "anchor": "usage"
+      },
+      {
+        "children": [],
+        "title": "Migrating from GraphQL-CLI to Inspector CLI",
+        "anchor": "migrating-from-graphql-cli-to-inspector-cli"
+      }
+    ],
+    "content": "a279972843b282293ba2a684fba1f887",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/migration/graphql-cli",
+    "domain": "https://www.the-guild.dev/graphql/codegen",
+    "hierarchy": [
+      "Docs",
+      "Migration Guides"
+    ],
+    "source": "Code Generator",
+    "title": "GraphQL-CLI Deprecation",
     "type": "Documentation"
   },
   {
