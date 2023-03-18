@@ -90,6 +90,35 @@ export type GqlTagConfig = {
    */
   fragmentMasking?: FragmentMaskingConfig | boolean;
   /**
+   * @description If base schema types are in another file,
+   * you can specify this as the relative path to it.
+   *
+   * @exampleMarkdown
+   * ```yaml {5}
+   * generates:
+   *   path/to/file.ts:
+   *     preset: gql-tag-operations-preset
+   *     presetConfig:
+   *       importTypesPath: types.ts
+   * ```
+   */
+  importTypesPath: string;
+  /**
+   * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
+   * @default Types
+   *
+   * @exampleMarkdown
+   * ```yaml {6}
+   * generates:
+   *   src/:
+   *     preset: gql-tag-operations-preset
+   *     presetConfig:
+   *       importTypesPath: types.ts
+   *       importTypesNamespace: SchemaTypes
+   * ```
+   */
+  importTypesNamespace?: string;
+  /**
    * @description Specify the name of the "graphql tag" function to use
    * @default "gql"
    *
@@ -152,13 +181,11 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
       [`gen-dts`]: gqlTagPlugin,
     };
 
-    const plugins: Array<Types.ConfiguredPlugin> = [
-      { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
-      { [`typescript-operations`]: {} },
-      { [`typed-document-node`]: {} },
-      ...options.plugins,
-    ];
+    const plugins: Array<Types.ConfiguredPlugin> = [{ [`add`]: { content: `/* eslint-disable */` } }];
+    if (!options.presetConfig.importTypesPath) {
+      plugins.push({ [`typescript`]: {} });
+    }
+    plugins.push({ [`typescript-operations`]: {} }, { [`typed-document-node`]: {} }, ...options.plugins);
 
     const genDtsPlugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
@@ -171,10 +198,17 @@ export const preset: Types.OutputPreset<GqlTagConfig> = {
       reexports.push('gql');
     }
 
-    const config = {
+    const config: Record<string, any> = {
       ...options.config,
       inlineFragmentTypes: isMaskingFragments ? 'mask' : options.config['inlineFragmentTypes'],
     };
+
+    if (options.presetConfig.importTypesPath) {
+      const importType = options.config.useTypeImports ? 'import type' : 'import';
+      const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
+      plugins[0].add.content += `\n${importType} * as ${importTypesNamespace} from '${options.presetConfig.importTypesPath}';`;
+      config.namespacedImportName = importTypesNamespace;
+    }
 
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
