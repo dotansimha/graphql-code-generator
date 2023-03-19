@@ -37,6 +37,7 @@ export const createWatcher = (
     .forEach(conf => {
       schemas.push(...normalizeInstanceOrArray<Types.Schema>(conf.schema));
       documents.push(...normalizeInstanceOrArray<Types.OperationDocument>(conf.documents));
+      files.push(...normalizeInstanceOrArray(conf.watchPattern));
     });
 
   if (documents) {
