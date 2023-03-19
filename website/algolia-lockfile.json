@@ -1331,6 +1331,29 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-migration-guides-graphql-cli",
+    "headings": [
+      "Migrating from GraphQL-CLI to Codegen CLI"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Migrating from GraphQL-CLI to Codegen CLI",
+        "anchor": "migrating-from-graphql-cli-to-codegen-cli"
+      }
+    ],
+    "content": "a8ea4ebbcac336dd5c80d709710b17cd",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/migration/graphql-cli",
+    "domain": "https://www.the-guild.dev/graphql/codegen",
+    "hierarchy": [
+      "Docs",
+      "Migration Guides"
+    ],
+    "source": "Code Generator",
+    "title": "GraphQL-CLI Deprecation",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-writing-plugins-",
     "headings": [],
     "toc": [],
