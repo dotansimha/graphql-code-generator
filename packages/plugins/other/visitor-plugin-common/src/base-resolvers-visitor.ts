@@ -887,10 +887,10 @@ export class BaseResolversVisitor<
 
           // 2b. Find fields to Omit if needed.
           //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
-          //  - If there are fields to Omit, "type with maybe Omit"
+          //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
           const fieldsToOmit = this.getRelevantFieldsToOmit({
             schemaType: unionMemberType,
-            getTypeToUse: this.getTypeToUse,
+            getTypeToUse: this.getParentTypeToUse,
           });
           if (fieldsToOmit.length > 0) {
             unionMemberValue = this.replaceFieldsInType(unionMemberValue, fieldsToOmit);
