@@ -540,7 +540,7 @@ export interface RawResolversConfig extends RawConfig {
    */
   onlyResolveTypeForInterfaces?: boolean;
   /**
-   * @description Make `__typename` of resolver type in mappings non-optional
+   * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
    * @default false
    */
   resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
