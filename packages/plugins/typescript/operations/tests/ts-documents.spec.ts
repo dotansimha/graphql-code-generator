@@ -6648,18 +6648,39 @@ function test(q: GetEntityBrandDataQuery): void {
           { __typename?: 'Query' }
           & { user: (
             { __typename?: 'User' }
-            & MakeOptional<Pick<User, 'email' | 'clearanceLevel' | 'name' | 'widgetCount'>, 'email' | 'widgetCount'>
-            & { address?: (
-              { __typename?: 'Address' }
-              & Pick<Address, 'street1'>
-            ), phone: (
+            & Pick<User, 'clearanceLevel' | 'name'>
+            & { phone: (
               { __typename?: 'Phone' }
               & Pick<Phone, 'home'>
             ), employment: (
               { __typename?: 'Employment' }
               & Pick<Employment, 'title'>
             ) }
-          ) }
+          ) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'email'>
+          ) | (
+            { __typename?: 'User' }
+            & Empty<User, 'email'>
+          )) & ((
+            { __typename?: 'User' }
+            & { address: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          ) | (
+            { __typename?: 'User' }
+            & { address?: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          )) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'widgetCount'>
+          ) | (
+            { __typename?: 'User' }
+            & Empty<User, 'widgetCount'>
+          )) }
         );
       `);
     });
@@ -6684,6 +6705,7 @@ function test(q: GetEntityBrandDataQuery): void {
           address: Address!
           phone: Phone!
           employment: Employment!
+          widgetName: String!
           widgetCount: Int!
           clearanceLevel: String!
         }
@@ -6695,6 +6717,7 @@ function test(q: GetEntityBrandDataQuery): void {
 
       const fragment = parse(`
         fragment WidgetFragment on User {
+          widgetName
           widgetCount
         }
 
@@ -6747,7 +6770,7 @@ function test(q: GetEntityBrandDataQuery): void {
       expect(content).toBeSimilarStringTo(`
         export type WidgetFragmentFragment = (
           { __typename?: 'User' }
-          & Pick<User, 'widgetCount'>
+          & Pick<User, 'widgetName' | 'widgetCount'>
         );
 
         export type EmploymentFragmentFragment = (
@@ -6764,18 +6787,39 @@ function test(q: GetEntityBrandDataQuery): void {
           { __typename?: 'Query' }
           & { user: (
             { __typename?: 'User' }
-            & MakeMaybe<Pick<User, 'email' | 'clearanceLevel' | 'name' | 'widgetCount'>, 'email' | 'widgetCount'>
-            & { address?: (
-              { __typename?: 'Address' }
-              & Pick<Address, 'street1'>
-            ), phone: (
+            & Pick<User, 'clearanceLevel' | 'name'>
+            & { phone: (
               { __typename?: 'Phone' }
               & Pick<Phone, 'home'>
             ), employment: (
               { __typename?: 'Employment' }
               & Pick<Employment, 'title'>
             ) }
-          ) }
+          ) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'email'>
+          ) | (
+            { __typename?: 'User' }
+            & Empty<User, 'email'>
+          )) & ((
+            { __typename?: 'User' }
+            & { address: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          ) | (
+            { __typename?: 'User' }
+            & { address?: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          )) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'widgetName' | 'widgetCount'>
+          ) | (
+            { __typename?: 'User' }
+            & Empty<User, 'widgetName' | 'widgetCount'>
+          )) }
         );
       `);
     });

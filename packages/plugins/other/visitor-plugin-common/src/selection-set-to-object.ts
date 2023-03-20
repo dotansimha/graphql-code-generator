@@ -581,9 +581,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
+      const isOptional = options?.unsetTypes;
       linkFields.push({
         alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
-        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional),
+        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional, isOptional),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
@@ -611,30 +612,25 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         Array.from(primitiveFields.values()).map(field => ({
           isConditional: hasConditionalDirectives(field),
           fieldName: field.name.value,
-        }))
+        })),
+        options?.unsetTypes
       ),
       ...this._processor.transformAliasesPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveAliasFields.values()).map(field => ({
           alias: field.alias.value,
           fieldName: field.name.value,
-        }))
+        })),
+        options?.unsetTypes
       ),
-      ...this._processor.transformLinkFields(linkFields),
+      ...this._processor.transformLinkFields(linkFields, options?.unsetTypes),
     ].filter(Boolean);
 
-    // TODO: This needs TESTS!
     const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
 
     const allObjectsMerged: string[] = transformed
       .filter(t => typeof t !== 'string')
-      .map(t => {
-        const { name, type } = t as NameAndType;
-        if (options?.unsetTypes && !name.startsWith('__typename')) {
-          return `${name}?: ${this.getUnknownType()}`;
-        }
-        return `${name}: ${type}`;
-      });
+      .map((t: NameAndType) => `${t.name}: ${t.type}`);
 
     let mergedObjectsAsString: string = null;
 
