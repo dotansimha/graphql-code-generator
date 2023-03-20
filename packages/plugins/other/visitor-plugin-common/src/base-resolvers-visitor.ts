@@ -35,6 +35,7 @@ import {
   EnumValuesMap,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
+  ResolversNonOptionalTypenameConfig,
 } from './types.js';
 import {
   buildScalarsFromConfig,
@@ -73,6 +74,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   internalResolversPrefix: string;
   onlyResolveTypeForInterfaces: boolean;
   directiveResolverMappings: Record<string, string>;
+  resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -538,6 +540,11 @@ export interface RawResolversConfig extends RawConfig {
    */
   onlyResolveTypeForInterfaces?: boolean;
   /**
+   * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
+   * @default false
+   */
+  resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
+  /**
    * @ignore
    */
   directiveResolverMappings?: Record<string, string>;
@@ -604,6 +611,9 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
+      resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
+        getConfigValue(rawConfig.resolversNonOptionalTypename, false)
+      ),
       ...additionalConfig,
     } as TPluginConfig);
 
@@ -899,7 +909,11 @@ export class BaseResolversVisitor<
             return replacePlaceholder(this.config.defaultMapper.type, finalTypename);
           }
 
-          return unionMemberValue;
+          const nonOptionalTypenameModifier = this.config.resolversNonOptionalTypename.unionMember
+            ? ` & { __typename: "${unionMemberType}" }`
+            : '';
+
+          return `${unionMemberValue}${nonOptionalTypenameModifier}`;
         });
         res[typeName] = referencedTypes.map(type => `( ${type} )`).join(' | '); // Must wrap every union member in explicit "( )" to separate the members
       }
@@ -1582,4 +1596,23 @@ function replacePlaceholder(pattern: string, typename: string): string {
 
 function hasPlaceholder(pattern: string): boolean {
   return pattern.includes('{T}');
+}
+
+function normalizeResolversNonOptionalTypename(
+  input?: boolean | ResolversNonOptionalTypenameConfig
+): ResolversNonOptionalTypenameConfig {
+  const defaultConfig: ResolversNonOptionalTypenameConfig = {
+    unionMember: false,
+  };
+
+  if (typeof input === 'boolean') {
+    return {
+      unionMember: input,
+    };
+  }
+
+  return {
+    ...defaultConfig,
+    ...input,
+  };
 }
