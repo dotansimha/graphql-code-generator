@@ -69,7 +69,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       isConditional = false
     ): string => {
       const optional = isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
-
       return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
 

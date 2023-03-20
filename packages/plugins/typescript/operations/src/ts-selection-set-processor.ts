@@ -16,25 +16,26 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     if (fields.length === 0) {
       return [];
     }
+
     const parentName =
       (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
       this.config.convertName(schemaType.name, {
         useTypesPrefix: true,
       });
 
-    let hasOptional = false;
-    const optionalList: string[] = [];
+    let hasConditionals = false;
+    const conditilnalsList: string[] = [];
     let resString = `Pick<${parentName}, ${fields
       .map(field => {
         if (field.isConditional) {
-          hasOptional = true;
-          optionalList.push(field.fieldName);
+          hasConditionals = true;
+          conditilnalsList.push(field.fieldName);
         }
         return `'${field.fieldName}'`;
       })
       .join(' | ')}>`;
 
-    if (hasOptional) {
+    if (hasConditionals) {
       const avoidOptional =
         // TODO: check type and exec only if relevant
         this.config.avoidOptionals === true ||
@@ -46,7 +47,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       const transform = avoidOptional ? 'MakeMaybe' : 'MakeOptional';
       resString = `${
         this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''
-      }${transform}<${resString}, ${optionalList.map(field => `'${field}'`).join(' | ')}>`;
+      }${transform}<${resString}, ${conditilnalsList.map(field => `'${field}'`).join(' | ')}>`;
     }
     return [resString];
   }

@@ -46,6 +46,7 @@ import {
   getFieldNodeNameValue,
   getPossibleTypes,
   hasConditionalDirectives,
+  hasIncrementalDeliveryDirectives,
   mergeSelectionSets,
   separateSelectionSet,
 } from './utils.js';
@@ -55,7 +56,7 @@ type FragmentSpreadUsage = {
   typeName: string;
   onType: string;
   selectionNodes: Array<SelectionNode>;
-  fragmentDirectives: DirectiveNode[];
+  fragmentDirectives?: DirectiveNode[];
 };
 
 type CollectedFragmentNode = (SelectionNode | FragmentSpreadUsage | DirectiveNode) & FragmentDirectives;
@@ -233,7 +234,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected buildFragmentSpreadsUsage(spreads: FragmentSpreadNode[]): Record<string, FragmentSpreadUsage[]> {
-    const selectionNodesByTypeName: Record<string, Array<FragmentSpreadUsage>> = {};
+    const selectionNodesByTypeName: Record<string, FragmentSpreadUsage[]> = {};
 
     for (const spread of spreads) {
       const fragmentSpreadObject = this._loadedFragments.find(lf => lf.name === spread.name.value);
@@ -252,18 +253,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
           selectionNodesByTypeName[possibleType.name] ||= [];
 
-          const selectionNodes = fragmentSpreadObject.node.selectionSet.selections.map(selectionNode => {
-            return {
-              ...selectionNode,
-            };
-          });
-
           selectionNodesByTypeName[possibleType.name].push({
             fragmentName: spread.name.value,
             typeName: usage,
             onType: fragmentSpreadObject.onType,
-            selectionNodes,
-            fragmentDirectives: [...(spread.directives || [])],
+            selectionNodes: [...fragmentSpreadObject.node.selectionSet.selections],
           });
         }
       }
@@ -352,19 +346,26 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
         }
 
-        const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
+        const allNodes = selectionNodesByTypeName.get(typeName) || [];
 
         prev[typeName] ||= [];
 
-        const deferredNodes = selectionNodes.filter((node): node is FragmentSpreadUsage =>
-          'fragmentDirectives' in node ? node.fragmentDirectives.some(d => d.name.value === 'defer') : false
+        const { incrementalNodes, selectionNodes } = allNodes.reduce<{
+          selectionNodes: (SelectionNode | FragmentSpreadUsage)[];
+          incrementalNodes: FragmentSpreadUsage[];
+        }>(
+          (acc, node) => {
+            if ('fragmentDirectives' in node && hasIncrementalDeliveryDirectives(node.fragmentDirectives)) {
+              acc.incrementalNodes.push(node);
+            } else {
+              acc.selectionNodes.push(node);
+            }
+            return acc;
+          },
+          { selectionNodes: [], incrementalNodes: [] }
         );
 
-        const filteredSelectionNodes = selectionNodes.filter(
-          (node: any) => !node.fragmentDirectives?.some(d => d.name.value === 'defer')
-        );
-
-        const { fields } = this.buildSelectionSet(schemaType, filteredSelectionNodes);
+        const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
 
         const transformedSet = this.selectionSetStringFromFields(fields);
         if (transformedSet) {
@@ -373,9 +374,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           mustAddEmptyObject = true;
         }
 
-        for (const deferredNode of deferredNodes) {
-          const { fields: initialFields } = this.buildSelectionSet(schemaType, [deferredNode]);
-          const { fields: subsequentFields } = this.buildSelectionSet(schemaType, [deferredNode], { unsetTypes: true });
+        for (const incrementalNode of incrementalNodes) {
+          const { fields: initialFields } = this.buildSelectionSet(schemaType, [incrementalNode]);
+          const { fields: subsequentFields } = this.buildSelectionSet(schemaType, [incrementalNode], {
+            unsetTypes: true,
+          });
 
           const initialSet = this.selectionSetStringFromFields(initialFields);
           const subsequentSet = this.selectionSetStringFromFields(subsequentFields);

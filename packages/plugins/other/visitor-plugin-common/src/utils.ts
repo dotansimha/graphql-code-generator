@@ -439,9 +439,9 @@ export function hasConditionalDirectives(field: FieldNode): boolean {
   return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }
 
-export function hasIncrementalDeliveryDirectives(field: { fragmentDirectives?: DirectiveNode[] }): boolean {
+export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {
   const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
-  return field.fragmentDirectives?.some(directive => INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value));
+  return directives?.some(directive => INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {
