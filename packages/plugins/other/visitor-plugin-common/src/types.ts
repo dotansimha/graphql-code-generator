@@ -106,3 +106,7 @@ export interface ParsedImport {
 export type FragmentDirectives = {
   fragmentDirectives?: Array<DirectiveNode>;
 };
+
+export interface ResolversNonOptionalTypenameConfig {
+  unionMember?: boolean;
+}
