@@ -34,7 +34,7 @@ export type SlowAndFastFieldWithDeferQueryVariables = Exact<{ [key: string]: nev
 
 export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; fastField: string } & (
   | { __typename?: 'Query'; slowField: string }
-  | { __typename?: never; slowField?: never }
+  | { __typename?: 'Query'; slowField?: never }
 );
 
 export const SlowAndFastFieldWithDeferDocument = {
