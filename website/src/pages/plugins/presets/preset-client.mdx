@@ -527,7 +527,7 @@ const nextConfig = {
 
 Note that you will need to provide the `artifactDirectory` path that should be the same as the one configured in your `codegen.ts`
 
-### DocumentMode
+## DocumentMode
 
 The `DocumentMode` option can be used to control how the plugin will generate the document nodes.
 
@@ -605,3 +605,7 @@ fetch('https:<your-graphql-api>', {
   })
 })
 ```
+
+### When to use a string DocumentMode?
+
+The `string` DocumentMode is useful when you want to reduce the bundle size of your application as you will get string literals instead of typed ASTs. This is useful when your GraphQL client allows you to send a string literal as the query and you don't need to use the AST on the client.
