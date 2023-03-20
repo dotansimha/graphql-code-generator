@@ -18,9 +18,6 @@ const Field = ({ field }: { field: string }) => {
 
 function App() {
   const { data } = useQuery(alphabetQuery);
-  if (data) {
-    type _x = typeof data;
-  }
   return (
     <div className="App">
       {data && (

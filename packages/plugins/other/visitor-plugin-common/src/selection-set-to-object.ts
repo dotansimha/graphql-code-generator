@@ -474,6 +474,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>,
     options?: { unsetTypes: boolean }
   ) {
+    // const x = options
+    // why is it narrowed to { unsetTypes: boolean }
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
     const linkFieldSelectionSets = new Map<
@@ -622,9 +624,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     // TODO: This needs TESTS!
     const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
 
-    const allObjectsMerged: string[] = options.unsetTypes
-      ? transformed.filter(t => typeof t !== 'string').map((t: NameAndType) => `${t.name}: ${t.type}`)
-      : transformed.filter(t => typeof t !== 'string').map((t: NameAndType) => `${t.name}?: ${this.getUnknownType()}`);
+    const allObjectsMerged: string[] = options?.unsetTypes
+      ? transformed
+          .filter(t => typeof t !== 'string')
+          .map((t: NameAndType) => `${t.name}${t.name.endsWith('?') ? '' : '?'}: ${this.getUnknownType()}`)
+      : transformed.filter(t => typeof t !== 'string').map((t: NameAndType) => `${t.name}: ${t.type}`);
 
     let mergedObjectsAsString: string = null;
 

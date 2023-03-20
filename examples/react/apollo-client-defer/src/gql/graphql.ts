@@ -32,10 +32,10 @@ export type QuerySlowFieldArgs = {
 
 export type SlowAndFastFieldWithDeferQueryVariables = Exact<{ [key: string]: never }>;
 
-export type SlowAndFastFieldWithDeferQuery = (
+export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; fastField: string } & (
   | { __typename?: 'Query'; slowField: string }
-  | { __typename?: never; slowField: never }
-) & { __typename?: 'Query'; fastField: string };
+  | { __typename?: never; slowField?: never }
+);
 
 export const SlowAndFastFieldWithDeferDocument = {
   kind: 'Document',
