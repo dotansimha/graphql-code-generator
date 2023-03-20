@@ -6435,7 +6435,7 @@ function test(q: GetEntityBrandDataQuery): void {
   });
 
   describe('incremental delivery directive handling', () => {
-    it.only('should mark fields in deferred fragments as optional (preResolveTypes: true)', async () => {
+    it('should mark fields in deferred fragments as optional (preResolveTypes: true)', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String!
@@ -6524,20 +6524,14 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
-      // todo
       expect(content).toBeSimilarStringTo(`
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
         export type UserQuery = {
           __typename?: 'Query',
           user: {
             __typename?: 'User',
-            email?: string,
             clearanceLevel: string,
             name: string,
-            address?: {
-              __typename?: 'Address',
-              street1: string
-            },
             phone: {
               __typename?: 'Phone',
               home: string
@@ -6546,10 +6540,14 @@ function test(q: GetEntityBrandDataQuery): void {
               __typename?: 'Employment',
               title: string
             }
-          }
-          & ({ widgetCount?: never; widgetPreference?: never; } | { widgetCoun: number; widgetPreference: string; })
-          & ({ favoriteFood?: never; leastFavoriteFood?: never; } | { favoriteFood: number; leastFavoriteFood: string; })
-        };
+          } & ({ __typename?: 'User', email: string }
+              | { __typename?: never, email?: never })
+            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
+              | { __typename?: never, address?: never })
+            & ({ __typename?: 'User', widgetCount: number, widgetPreference: string }
+              | { __typename?: never, widgetCount?: never, widgetPreference?: never })
+            & ({ __typename?: 'User', favoriteFood: string, leastFavoriteFood: string }
+              | { __typename?: never, favoriteFood?: never, leastFavoriteFood?: never }) };
       `);
     });
 
@@ -6868,24 +6866,17 @@ function test(q: GetEntityBrandDataQuery): void {
           __typename?: 'Query',
           user: {
             __typename?: 'User',
-            email?: string,
             clearanceLevel: string,
             name: string,
-            widgetCount?: number,
-            address?: {
-              __typename?: 'Address',
-              street1: string
-            },
-            phone: {
-              __typename?: 'Phone',
-              home: string
-            },
-            employment: {
-              __typename?: 'Employment',
-              title: string
-            }
-          }
-        };
+            phone: { __typename?: 'Phone', home: string },
+            employment: { __typename?: 'Employment', title: string }
+          } & ({ __typename?: 'User', email: string }
+              | { __typename?: never, email?: never })
+            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
+              | { __typename?: never, address?: never })
+            & ({ __typename?: 'User', widgetCount: number }
+              | { __typename?: never, widgetCount?: never })
+          };
       `);
     });
 
@@ -6909,6 +6900,7 @@ function test(q: GetEntityBrandDataQuery): void {
           address: Address!
           phone: Phone!
           employment: Employment!
+          widgetName: String!
           widgetCount: Int!
           clearanceLevel: String!
         }
@@ -6920,6 +6912,7 @@ function test(q: GetEntityBrandDataQuery): void {
 
       const fragment = parse(`
         fragment WidgetFragment on User {
+          widgetName
           widgetCount
         }
 
@@ -6976,24 +6969,17 @@ function test(q: GetEntityBrandDataQuery): void {
           __typename?: 'Query',
           user: {
             __typename?: 'User',
-            email?: string,
             clearanceLevel: string,
             name: string,
-            widgetCount?: number,
-            address?: {
-              __typename?: 'Address',
-              street1: string | 'specialType'
-            },
-            phone: {
-              __typename?: 'Phone',
-              home: string
-            },
-            employment: {
-              __typename?: 'Employment',
-              title: string
-            }
-          }
-        };
+            phone: { __typename?: 'Phone', home: string },
+            employment: { __typename?: 'Employment', title: string }
+          } & ({ __typename?: 'User', email: string }
+              | { __typename?: never, email?: never })
+            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string | 'specialType' } }
+              | { __typename?: never, address?: never })
+            & ({ __typename?: 'User', widgetName: string, widgetCount: number }
+              | { __typename?: never, widgetName?: never, widgetCount?: never })
+          };
       `);
     });
   });

@@ -258,6 +258,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             typeName: usage,
             onType: fragmentSpreadObject.onType,
             selectionNodes: [...fragmentSpreadObject.node.selectionSet.selections],
+            fragmentDirectives: [...spread.directives],
           });
         }
       }
@@ -700,6 +701,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return (
       Object.keys(grouped)
         .map(typeName => {
+          const hasUnions = grouped[typeName].filter(s => typeof s !== 'string' && s.union).length > 0;
           const relevant = grouped[typeName].filter(Boolean);
 
           if (relevant.length === 0) {
@@ -714,7 +716,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             })
             .join(' & ');
 
-          return relevant.length > 1 ? `( ${res} )` : res;
+          return relevant.length > 1 && !hasUnions ? `( ${res} )` : res;
         })
         .filter(Boolean)
         .join(' | ') + this.getEmptyObjectTypeString(mustAddEmptyObject)
