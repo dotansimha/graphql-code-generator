@@ -6541,13 +6541,13 @@ function test(q: GetEntityBrandDataQuery): void {
               title: string
             }
           } & ({ __typename?: 'User', email: string }
-              | { __typename?: never, email?: never })
+              | { __typename?: 'User', email?: never })
             & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
-              | { __typename?: never, address?: never })
+              | { __typename?: 'User', address?: never })
             & ({ __typename?: 'User', widgetCount: number, widgetPreference: string }
-              | { __typename?: never, widgetCount?: never, widgetPreference?: never })
+              | { __typename?: 'User', widgetCount?: never, widgetPreference?: never })
             & ({ __typename?: 'User', favoriteFood: string, leastFavoriteFood: string }
-              | { __typename?: never, favoriteFood?: never, leastFavoriteFood?: never }) };
+              | { __typename?: 'User', favoriteFood?: never, leastFavoriteFood?: never }) };
       `);
     });
 
@@ -6871,11 +6871,11 @@ function test(q: GetEntityBrandDataQuery): void {
             phone: { __typename?: 'Phone', home: string },
             employment: { __typename?: 'Employment', title: string }
           } & ({ __typename?: 'User', email: string }
-              | { __typename?: never, email?: never })
+              | { __typename?: 'User', email?: never })
             & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
-              | { __typename?: never, address?: never })
+              | { __typename?: 'User', address?: never })
             & ({ __typename?: 'User', widgetCount: number }
-              | { __typename?: never, widgetCount?: never })
+              | { __typename?: 'User', widgetCount?: never })
           };
       `);
     });
@@ -6974,11 +6974,11 @@ function test(q: GetEntityBrandDataQuery): void {
             phone: { __typename?: 'Phone', home: string },
             employment: { __typename?: 'Employment', title: string }
           } & ({ __typename?: 'User', email: string }
-              | { __typename?: never, email?: never })
+              | { __typename?: 'User', email?: never })
             & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string | 'specialType' } }
-              | { __typename?: never, address?: never })
+              | { __typename?: 'User', address?: never })
             & ({ __typename?: 'User', widgetName: string, widgetCount: number }
-              | { __typename?: never, widgetName?: never, widgetCount?: never })
+              | { __typename?: 'User', widgetName?: never, widgetCount?: never })
           };
       `);
     });
