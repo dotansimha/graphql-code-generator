@@ -246,6 +246,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const resolversUnionTypesMapping = visitor.buildResolversUnionTypes();
+  const resolversUnionParentTypesMapping = visitor.buildResolversUnionParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
 
   if (hasScalars()) {
@@ -284,6 +285,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     content: [
       header,
       resolversUnionTypesMapping,
+      resolversUnionParentTypesMapping,
       resolversTypeMapping,
       resolversParentTypeMapping,
       ...visitorResult.definitions.filter(d => typeof d === 'string'),
