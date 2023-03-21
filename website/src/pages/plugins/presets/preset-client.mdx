@@ -608,4 +608,4 @@ fetch('https:<your-graphql-api>', {
 
 ### When to use a string DocumentMode?
 
-The `string` DocumentMode is useful when you want to reduce the bundle size of your application as you will get string literals instead of typed ASTs. This is useful when your GraphQL client allows you to send a string literal as the query and you don't need to use the AST on the client.
+The `string` DocumentMode is useful when you want to reduce the bundle size of your application as you will get string literals instead of typed ASTs. This is useful when your GraphQL client allows you to send a string literal as the query and you don't need to use the AST on the client, e.g. when using `graphql-request`, SWR, React Query, etc.
