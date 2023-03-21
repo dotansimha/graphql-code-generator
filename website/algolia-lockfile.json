@@ -2043,7 +2043,8 @@
       "Config API",
       "Fragment Masking",
       "Persisted documents",
-      "Reducing bundle size: Babel plugin"
+      "Reducing bundle size: Babel plugin",
+      "DocumentMode"
     ],
     "toc": [
       {
@@ -2109,6 +2110,17 @@
         ],
         "title": "Reducing bundle size: Babel plugin",
         "anchor": "reducing-bundle-size-babel-plugin"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "When to use a string DocumentMode?",
+            "anchor": "when-to-use-a-string-documentmode"
+          }
+        ],
+        "title": "DocumentMode",
+        "anchor": "documentmode"
       }
     ],
     "content": "d41d8cd98f00b204e9800998ecf8427e",

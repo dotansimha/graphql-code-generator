@@ -40,9 +40,9 @@ const client = new GraphQLClient(apiUrl);
 export const getPeople = async (first?: number) => {
   let res: AllPeopleQueryQuery;
   if (first) {
-    res = await client.request(AllPeopleWithVariablesQueryDocument, { first });
+    res = await client.request(AllPeopleWithVariablesQueryDocument.toString(), { first });
   } else {
-    res = await client.request(AllPeopleQueryDocument);
+    res = await client.request(AllPeopleQueryDocument.toString());
   }
   return res?.allPeople?.edges;
 };

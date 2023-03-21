@@ -1,29 +1,29 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { buildHTTPExecutor } from '@graphql-tools/executor-http';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { ASTNode, ExecutionResult, Kind, OperationDefinitionNode } from 'graphql';
+import { ExecutionResult } from 'graphql';
 import { useQuery } from '@tanstack/react-query';
-
-const executor = buildHTTPExecutor({
-  endpoint: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
-});
-
-const isOperationDefinition = (def: ASTNode): def is OperationDefinitionNode => def.kind === Kind.OPERATION_DEFINITION;
+import { TypedDocumentString } from './gql/graphql';
 
 export function useGraphQL<TResult, TVariables>(
-  document: TypedDocumentNode<TResult, TVariables>,
+  document: TypedDocumentString<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ) {
   return useQuery(
     [
       // This logic can be customized as desired
-      document.definitions.find(isOperationDefinition)?.name,
+      document,
       variables,
     ] as const,
-    async ({ queryKey }) =>
-      executor({
-        document: document as any,
-        variables: queryKey[1] as any,
-      }) as Promise<ExecutionResult<TResult>>
+    async ({ queryKey }) => {
+      return fetch('https://swapi-graphql.netlify.app/.netlify/functions/index', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: queryKey[0].toString(),
+          variables: queryKey[1],
+        }),
+      }).then(response => response.json()) as Promise<ExecutionResult<TResult>>;
+    }
   );
 }

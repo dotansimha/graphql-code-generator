@@ -748,10 +748,10 @@ export * from "./gql";`);
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "import { ResultOf, TypedDocumentNode as DocumentNode,  } from '@graphql-typed-document-node/core';
+        "import { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';
 
 
-        export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+        export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
           infer TType,
           any
         >
@@ -764,34 +764,34 @@ export * from "./gql";`);
 
         // return non-nullable if \`fragmentType\` is non-nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: FragmentType<DocumentNode<TType, any>>
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
         ): TType;
         // return nullable if \`fragmentType\` is nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
         ): TType | null | undefined;
         // return array of non-nullable if \`fragmentType\` is array of non-nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
         ): ReadonlyArray<TType>;
         // return array of nullable if \`fragmentType\` is array of nullable
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): ReadonlyArray<TType> | null | undefined;
         export function iLikeTurtles<TType>(
-          _documentNode: DocumentNode<TType, any>,
-          fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): TType | ReadonlyArray<TType> | null | undefined {
           return fragmentType as any;
         }
 
 
         export function makeFragmentData<
-          F extends DocumentNode,
+          F extends DocumentTypeDecoration<any, any>,
           FT extends ResultOf<F>
         >(data: FT, _fragment: F): FragmentType<F> {
           return data as FragmentType<F>;
@@ -800,32 +800,32 @@ export * from "./gql";`);
 
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: FragmentType<DocumentNode<TType, any>>
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
       ): TType;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: FragmentType<DocumentNode<TType, any>> | null | undefined
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
       ): TType | null | undefined;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>>
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
       ): ReadonlyArray<TType>;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
       ): ReadonlyArray<TType> | null | undefined;
       `);
       expect(gqlFile.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
-        _documentNode: DocumentNode<TType, any>,
-        fragmentType: FragmentType<DocumentNode<TType, any>> | ReadonlyArray<FragmentType<DocumentNode<TType, any>>> | null | undefined
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
       ): TType | ReadonlyArray<TType> | null | undefined {
         return fragmentType as any;
       }
@@ -1056,6 +1056,67 @@ export * from "./gql.js";`);
     const printed = print(EventQueryDocument);
 
     expect(printed.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
+
+    await cleanUp();
+  });
+
+  it('should dedupe fragments in a "string" document mode', async () => {
+    const dir = path.join(__dirname, 'tmp/duplicate-fragments');
+    const cleanUp = async () => {
+      await fs.promises.rm(dir, { recursive: true, force: true });
+    };
+
+    const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            user(id: ID!): User!
+            event(id: ID!): Event!
+          }
+
+          type User {
+            id: ID!
+            username: String!
+            email: String!
+          }
+
+          type Event {
+            id: ID!
+            owner: User!
+            attendees: [User!]!
+          }
+        `,
+      ],
+      documents: [docPath],
+      generates: {
+        'out1/': {
+          preset,
+          plugins: [],
+          config: {
+            documentMode: 'string',
+          },
+        },
+      },
+    });
+
+    // TODO: Consider using in-memory file system for tests like this.
+    try {
+      await cleanUp();
+    } catch {}
+    await fs.promises.mkdir(path.join(dir, 'out1'), { recursive: true });
+    for (const file of result) {
+      if (file.filename === 'out1/graphql.ts') {
+        await fs.promises.writeFile(path.join(dir, file.filename), file.content, 'utf-8');
+      }
+    }
+
+    const { default: jiti } = await import('jiti');
+    const loader = jiti('', {});
+
+    const { EventQueryDocument } = loader(path.join(dir, 'out1/graphql.ts'));
+
+    expect(EventQueryDocument.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
 
     await cleanUp();
   });
@@ -1611,5 +1672,188 @@ export * from "./gql.js";`);
       export const AbFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AbFragment, unknown>;
       export const OiDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OI"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AB"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}}]} as unknown as DocumentNode<OiQuery, OiQueryVariables>;"
     `);
+  });
+
+  describe('documentMode: "string"', () => {
+    it('generates correct types', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Foo = {
+          __typename?: 'Foo';
+          value?: Maybe<Scalars['String']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
+        export type FooQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FooQuery = { __typename?: 'Query', foo?: (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': FooFragment } }
+          ) | null };
+
+        export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<(
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': FooFragment } }
+          ) | null> | null };
+
+        export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
+
+        export class TypedDocumentString<TResult, TVariables>
+          extends String
+          implements DocumentTypeDecoration<TResult, TVariables>
+        {
+          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+          constructor(private value: string, public __meta__?: { hash: string }) {
+            super(value);
+          }
+
+          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+            return this.value;
+          }
+        }
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment Foo on Foo {
+          value
+        }
+            \`) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooDocument = new TypedDocumentString(\`
+            query Foo {
+          foo {
+            ...Foo
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        export const FoosDocument = new TypedDocumentString(\`
+            query Foos {
+          foos {
+            ...Foo
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+      `);
+    });
+
+    it('graphql overloads have a nice result type', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import * as types from './graphql';
+
+
+
+        /**
+         * Map of all GraphQL operations in the project.
+         *
+         * This map has several performance disadvantages:
+         * 1. It is not tree-shakeable, so it will include all operations in the project.
+         * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+         * 3. It does not support dead code elimination, so it will add unused operations.
+         *
+         * Therefore it is highly recommended to use the babel or swc plugin for production.
+         */
+        const documents = {
+            "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
+            "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": types.FoosDocument,
+            "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": types.FooFragmentDoc,
+        };
+
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n"): typeof import('./graphql').FooDocument;
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n"): typeof import('./graphql').FoosDocument;
+        /**
+         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+         */
+        export function graphql(source: "\\n  fragment Foo on Foo {\\n    value\\n  }\\n"): typeof import('./graphql').FooFragmentDoc;
+
+
+        export function graphql(source: string) {
+          return (documents as any)[source] ?? {};
+        }
+        "
+      `);
+    });
   });
 });
