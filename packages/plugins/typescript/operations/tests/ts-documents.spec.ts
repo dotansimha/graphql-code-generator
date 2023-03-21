@@ -6438,7 +6438,7 @@ function test(q: GetEntityBrandDataQuery): void {
   });
 
   describe('incremental delivery directive handling', () => {
-    it('should mark fields in deferred fragments as optional (preResolveTypes: true)', async () => {
+    it('should generate an union of initial and deferred fields for fragments (preResolveTypes: true)', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String!
@@ -6554,7 +6554,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('should mark fields in deferred fragments as optional using MakeOptional (preResolveTypes: false)', async () => {
+    it('should generate an union of initial and deferred fields for fragments using MakeEmpty (preResolveTypes: false)', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String!
@@ -6688,7 +6688,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('should mark fields in deferred fragments as optional using MakeMaybe (avoidOptionals: true)', async () => {
+    it('should generate an union of initial and deferred fields for fragments MakeEmpty (avoidOptionals: true)', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String!
