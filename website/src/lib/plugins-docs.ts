@@ -17,11 +17,6 @@ export const presetsConfigurations: PresetConfig[] = [
     identifier: 'ImportTypesConfig',
     name: 'import-types-preset',
   },
-  {
-    file: '../node_modules/@graphql-codegen/gql-tag-operations-preset/src/index.ts',
-    identifier: 'GqlTagConfig',
-    name: 'gql-tag-operations-preset',
-  },
 ];
 
 export const pluginsConfigurations: PluginConfig[] = [
