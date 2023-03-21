@@ -118,6 +118,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       dedupeFragments: options.config.dedupeFragments,
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
+      documentMode: options.config.documentMode,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);

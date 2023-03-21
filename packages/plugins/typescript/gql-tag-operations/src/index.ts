@@ -1,4 +1,5 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { Source } from '@graphql-tools/utils';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 
@@ -27,12 +28,48 @@ export const plugin: PluginFunction<{
   augmentedModuleName?: string;
   gqlTagName?: string;
   emitLegacyCommonJSImports?: boolean;
+  documentMode?: DocumentMode;
 }> = (
   _,
   __,
-  { sourcesWithOperations, useTypeImports, augmentedModuleName, gqlTagName = 'gql', emitLegacyCommonJSImports },
+  {
+    sourcesWithOperations,
+    useTypeImports,
+    augmentedModuleName,
+    gqlTagName = 'gql',
+    emitLegacyCommonJSImports,
+    documentMode,
+  },
   _info
 ) => {
+  if (documentMode === DocumentMode.string) {
+    const code = [`import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`, `\n`];
+
+    // We need the mapping from source as written to full document source to
+    // handle fragments. An identity function would not suffice.
+    if (sourcesWithOperations.length > 0) {
+      code.push([...getDocumentRegistryChunk(sourcesWithOperations)].join(''));
+    } else {
+      code.push('const documents = {}');
+    }
+
+    if (sourcesWithOperations.length > 0) {
+      code.push(
+        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports), `\n`].join(
+          ''
+        )
+      );
+    }
+
+    code.push(
+      [`export function ${gqlTagName}(source: string) {\n`, `  return (documents as any)[source] ?? {};\n`, `}\n`].join(
+        ''
+      )
+    );
+
+    return code.join('\n');
+  }
+
   if (augmentedModuleName == null) {
     const code = [
       `import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
