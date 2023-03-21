@@ -24,9 +24,8 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
         useTypesPrefix: true,
       });
 
-    // todo: add Empty type
     if (unsetTypes) {
-      return [`Empty<${parentName}, ${fields.map(field => `'${field.fieldName}'`).join(' | ')}>`];
+      return [`MakeEmpty<${parentName}, ${fields.map(field => `'${field.fieldName}'`).join(' | ')}>`];
     }
 
     let hasConditionals = false;

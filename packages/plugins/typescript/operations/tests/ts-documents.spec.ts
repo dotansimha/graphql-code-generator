@@ -4049,6 +4049,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -4157,6 +4158,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -4243,6 +4245,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -6661,7 +6664,7 @@ function test(q: GetEntityBrandDataQuery): void {
             & Pick<User, 'email'>
           ) | (
             { __typename?: 'User' }
-            & Empty<User, 'email'>
+            & MakeEmpty<User, 'email'>
           )) & ((
             { __typename?: 'User' }
             & { address: (
@@ -6679,7 +6682,7 @@ function test(q: GetEntityBrandDataQuery): void {
             & Pick<User, 'widgetCount'>
           ) | (
             { __typename?: 'User' }
-            & Empty<User, 'widgetCount'>
+            & MakeEmpty<User, 'widgetCount'>
           )) }
         );
       `);
@@ -6800,7 +6803,7 @@ function test(q: GetEntityBrandDataQuery): void {
             & Pick<User, 'email'>
           ) | (
             { __typename?: 'User' }
-            & Empty<User, 'email'>
+            & MakeEmpty<User, 'email'>
           )) & ((
             { __typename?: 'User' }
             & { address: (
@@ -6818,7 +6821,7 @@ function test(q: GetEntityBrandDataQuery): void {
             & Pick<User, 'widgetName' | 'widgetCount'>
           ) | (
             { __typename?: 'User' }
-            & Empty<User, 'widgetName' | 'widgetCount'>
+            & MakeEmpty<User, 'widgetName' | 'widgetCount'>
           )) }
         );
       `);

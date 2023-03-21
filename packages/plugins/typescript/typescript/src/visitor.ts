@@ -49,6 +49,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
 export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
 export const MAKE_OPTIONAL_SIGNATURE = `type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };`;
 export const MAKE_MAYBE_SIGNATURE = `type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };`;
+export const MAKE_EMPTY_SIGNATURE = `type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };`;
 
 export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
@@ -159,6 +160,7 @@ export class TsVisitor<
       this.getExactDefinition(),
       this.getMakeOptionalDefinition(),
       this.getMakeMaybeDefinition(),
+      this.getMakeEmptyDefinition(),
     ];
 
     if (this.config.wrapFieldDefinitions) {
@@ -185,6 +187,10 @@ export class TsVisitor<
     if (this.config.onlyEnums) return '';
 
     return `${this.getExportPrefix()}${MAKE_MAYBE_SIGNATURE}`;
+  }
+
+  public getMakeEmptyDefinition(): string {
+    return `${this.getExportPrefix()}${MAKE_EMPTY_SIGNATURE}`;
   }
 
   public getMaybeValue(): string {
