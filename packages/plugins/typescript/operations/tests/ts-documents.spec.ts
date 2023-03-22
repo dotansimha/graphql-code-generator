@@ -7029,6 +7029,100 @@ function test(q: GetEntityBrandDataQuery): void {
           };
       `);
     });
+
+    it('should generate correct types with inlineFragmentTypes: "mask""', async () => {
+      const schema = buildSchema(`
+      type Address {
+        street1: String!
+      }
+
+      type Phone {
+        home: String!
+      }
+
+      type Employment {
+        title: String!
+      }
+
+      type User {
+        name: String!
+        email: String!
+        address: Address!
+        phone: Phone!
+        employment: Employment!
+        widgetCount: Int!
+        widgetPreference: String!
+        clearanceLevel: String!
+        favoriteFood: String!
+        leastFavoriteFood: String!
+      }
+
+      type Query {
+        user: User!
+      }
+    `);
+
+      const fragment = parse(`
+      fragment WidgetFragment on User {
+        widgetCount
+        widgetPreference
+      }
+
+      fragment FoodFragment on User {
+        favoriteFood
+        leastFavoriteFood
+      }
+
+      fragment EmploymentFragment on User {
+        employment {
+          title
+        }
+      }
+
+      query user {
+        user {
+          # Test inline fragment defer
+          ... @defer {
+            email
+          }
+
+          # Test inline fragment defer with nested selection set
+          ... @defer {
+            address {
+              street1
+            }
+          }
+
+          # Test named fragment defer
+          ...WidgetFragment @defer
+
+          # Test a secondary named fragment defer
+          ...FoodFragment @defer
+
+          # Not deferred fields, fragments, selection sets, etc are left alone
+          name
+          phone {
+            home
+          }
+          ...EmploymentFragment
+          ... {
+            clearanceLevel
+          }
+        }
+      }
+    `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: true, inlineFragmentTypes: 'mask' },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      TODO
+    `);
+    });
   });
 
   it('handles unnamed queries', async () => {
