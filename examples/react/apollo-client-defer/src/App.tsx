@@ -1,19 +1,25 @@
 import { useQuery } from '@apollo/client';
 
 import './App.css';
-import { graphql } from './gql/gql';
+import { useFragment, graphql, FragmentType } from './gql';
+
+export const slowFieldFragment = graphql(/* GraphQL */ `
+  fragment SlowFieldFragment on Query {
+    slowField
+  }
+`);
 
 const alphabetQuery = graphql(/* GraphQL */ `
   query SlowAndFastFieldWithDefer {
     fastField
-    ... on Query @defer {
-      slowField
-    }
+    ...SlowFieldFragment @defer
   }
 `);
 
-const Field = ({ field }: { field: string }) => {
-  return <p>{field}</p>;
+const SlowDataField = (props: { data: FragmentType<typeof slowFieldFragment> }) => {
+  const fragment = useFragment(slowFieldFragment, props.data);
+  // should be string | undefined
+  return <p>{fragment.slowField}</p>;
 };
 
 function App() {
@@ -22,9 +28,8 @@ function App() {
     <div className="App">
       {data && (
         <>
-          <Field field={data?.fastField} />
-          {/* @ts-expect-error expected because slowField can be undefined */}
-          <Field field={data?.slowField} />
+          <p>{data.fastField}</p>
+          <SlowDataField data={data} />
         </>
       )}
     </div>

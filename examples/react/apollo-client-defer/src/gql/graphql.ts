@@ -31,13 +31,33 @@ export type QuerySlowFieldArgs = {
   waitFor?: Scalars['Int'];
 };
 
-export type SlowAndFastFieldWithDeferQueryVariables = Exact<{ [key: string]: never }>;
-
-export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; fastField: string } & (
+export type SlowFieldFragmentFragment = (
   | { __typename?: 'Query'; slowField: string }
   | { __typename?: 'Query'; slowField?: never }
-);
+) & {
+  ' $fragmentName'?: 'SlowFieldFragmentFragment';
+};
 
+export type SlowAndFastFieldWithDeferQueryVariables = Exact<{ [key: string]: never }>;
+
+export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; fastField: string } & ({ __typename?: 'Query' } & {
+  ' $fragmentRefs'?: { SlowFieldFragmentFragment: SlowFieldFragmentFragment };
+});
+
+export const SlowFieldFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SlowFieldFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'slowField' } }],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SlowFieldFragmentFragment, unknown>;
 export const SlowAndFastFieldWithDeferDocument = {
   kind: 'Document',
   definitions: [
@@ -50,15 +70,20 @@ export const SlowAndFastFieldWithDeferDocument = {
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'fastField' } },
           {
-            kind: 'InlineFragment',
-            typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'SlowFieldFragment' },
             directives: [{ kind: 'Directive', name: { kind: 'Name', value: 'defer' } }],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'slowField' } }],
-            },
           },
         ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'SlowFieldFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'slowField' } }],
       },
     },
   ],
