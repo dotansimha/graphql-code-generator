@@ -1917,59 +1917,6 @@
     "type": "Documentation"
   },
   {
-    "objectID": "code-generator-plugins-presets-gql-tag-operations-preset",
-    "headings": [
-      "Getting Started",
-      "Improving bundle-size with the gql-tag-operations babel plugin",
-      "Using module augmentation for an existing `gql` function from a library",
-      "Fragment Masking"
-    ],
-    "toc": [
-      {
-        "children": [],
-        "title": "Getting Started",
-        "anchor": "getting-started"
-      },
-      {
-        "children": [],
-        "title": "Improving bundle-size with the gql-tag-operations babel plugin",
-        "anchor": "improving-bundle-size-with-the-gql-tag-operations-babel-plugin"
-      },
-      {
-        "children": [],
-        "title": "Using module augmentation for an existing `gql` function from a library",
-        "anchor": "using-module-augmentation-for-an-existing-gql-function-from-a-library"
-      },
-      {
-        "children": [
-          {
-            "children": [
-              {
-                "children": [],
-                "title": "Module augmentation with fragment masking",
-                "anchor": "module-augmentation-with-fragment-masking"
-              }
-            ],
-            "title": "Fragment Masking with custom unmask name",
-            "anchor": "fragment-masking-with-custom-unmask-name"
-          }
-        ],
-        "title": "Fragment Masking",
-        "anchor": "fragment-masking"
-      }
-    ],
-    "content": "777d1faa1c92466103763c69d921b091",
-    "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/gql-tag-operations-preset",
-    "domain": "https://www.the-guild.dev/graphql/codegen",
-    "hierarchy": [
-      "Plugins",
-      "Presets"
-    ],
-    "source": "Code Generator",
-    "title": "gql-tag-operations",
-    "type": "Documentation"
-  },
-  {
     "objectID": "code-generator-plugins-presets-graphql-modules-preset",
     "headings": [
       "Usage Example",
