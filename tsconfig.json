@@ -37,7 +37,6 @@
       "@graphql-codegen/typed-document-node": ["packages/plugins/typescript/typed-document-node/src/index.ts"],
       "@graphql-codegen/gql-tag-operations": ["packages/plugins/typescript/gql-tag-operations/src/index.ts"],
       "@graphql-codegen/typescript": ["packages/plugins/typescript/typescript/src/index.ts"],
-      "@graphql-codegen/gql-tag-operations-preset": ["packages/presets/gql-tag-operations-preset/src/index.ts"],
       "@graphql-codegen/testing": ["packages/utils/graphql-codegen-testing/src/index.ts"],
       "@graphql-codegen/plugin-helpers": ["packages/utils/plugins-helpers/src/index.ts"]
     }
