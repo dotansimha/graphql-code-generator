@@ -298,7 +298,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
             `.trimRight();
             })
             .join('')}
-    `.trimRight()
+    `.trimEnd()
         )
         .join('');
 

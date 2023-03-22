@@ -4050,6 +4050,7 @@ describe('TypeScript Operations Plugin', () => {
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -4159,6 +4160,7 @@ describe('TypeScript Operations Plugin', () => {
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -4246,6 +4248,7 @@ describe('TypeScript Operations Plugin', () => {
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -7030,7 +7033,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it.only('should generate correct types with inlineFragmentTypes: "mask""', async () => {
+    it('should generate correct types with inlineFragmentTypes: "mask""', async () => {
       const schema = buildSchema(`
       type Address {
         street1: String!
@@ -7120,43 +7123,30 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export type WidgetFragmentFragment = (
-        | { __typename?: 'User'; widgetCount: number; widgetPreference: string }
-        | { __typename?: 'User'; widgetCount?: never; widgetPreference?: never }
-      ) & {
-        ' $fragmentName'?: 'WidgetFragmentFragment';
-      };
+      export type WidgetFragmentFragment = { __typename?: 'User', widgetCount: number, widgetPreference: string } & { ' $fragmentName'?: 'WidgetFragmentFragment' };
 
-      export type FoodFragmentFragment = (
-        | { __typename?: 'User'; favoriteFood: string; leastFavoriteFood: string }
-        | { __typename?: 'User'; favoriteFood?: never; leastFavoriteFood?: never }
-      ) & {
-        ' $fragmentName'?: 'FoodFragmentFragment';
-      };
+      export type FoodFragmentFragment = { __typename?: 'User', favoriteFood: string, leastFavoriteFood: string } & { ' $fragmentName'?: 'FoodFragmentFragment' };
 
-      export type EmploymentFragmentFragment = {
-        __typename?: 'User';
-        employment: { __typename?: 'Employment'; title: string };
-      } & { ' $fragmentName'?: 'EmploymentFragmentFragment' };
+      export type EmploymentFragmentFragment = { __typename?: 'User', employment: { __typename?: 'Employment', title: string } } & { ' $fragmentName'?: 'EmploymentFragmentFragment' };
 
-      export type UserQueryVariables = Exact<{ [key: string]: never }>;
+      export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
       export type UserQuery = {
-        __typename?: 'Query';
-        user: ({
-          __typename?: 'User';
-          clearanceLevel: string;
-          name: string;
-          phone: { __typename?: 'Phone'; home: string };
-        } & { ' $fragmentRefs'?: { EmploymentFragmentFragment: EmploymentFragmentFragment } }) &
-          ({ __typename?: 'User'; email: string } | { __typename?: 'User'; email?: never }) &
-          (
-            | { __typename?: 'User'; address: { __typename?: 'Address'; street1: string } }
-            | { __typename?: 'User'; address?: never }
-          ) &
-          { __typename?: 'User' } & { ' $fragmentRefs'?: { WidgetFragmentFragment: WidgetFragmentFragment } } &
-          { __typename?: 'User' } & { ' $fragmentRefs'?: { FoodFragmentFragment: FoodFragmentFragment } };
-      };
+        __typename?: 'Query',
+        user: (
+        {
+          __typename?: 'User',
+          clearanceLevel: string,
+          name: string,
+          phone: { __typename?: 'Phone', home: string }
+        } & { ' $fragmentRefs'?: { 'EmploymentFragmentFragment': EmploymentFragmentFragment } }
+      ) & ({ __typename?: 'User', email: string } | { __typename?: 'User', email?: never }) & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } } | { __typename?: 'User', address?: never }) & (
+        { __typename?: 'User' }
+        & { ' $fragmentRefs'?: { 'WidgetFragmentFragment': Incremental<WidgetFragmentFragment> } }
+      ) & (
+        { __typename?: 'User' }
+        & { ' $fragmentRefs'?: { 'FoodFragmentFragment': Incremental<FoodFragmentFragment> } }
+      ) };
     `);
     });
   });

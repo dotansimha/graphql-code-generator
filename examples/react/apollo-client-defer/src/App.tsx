@@ -18,7 +18,6 @@ const alphabetQuery = graphql(/* GraphQL */ `
 
 const SlowDataField = (props: { data: FragmentType<typeof slowFieldFragment> }) => {
   const fragment = useFragment(slowFieldFragment, props.data);
-  // should be string | undefined
   return <p>{fragment.slowField}</p>;
 };
 
@@ -29,6 +28,8 @@ function App() {
       {data && (
         <>
           <p>{data.fastField}</p>
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-expect-error */}
           <SlowDataField data={data} />
         </>
       )}

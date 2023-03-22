@@ -376,6 +376,14 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         }
 
         for (const incrementalNode of incrementalNodes) {
+          if (this._config.inlineFragmentTypes === 'mask' && 'fragmentName' in incrementalNode) {
+            const { fields: incrementalFields } = this.buildSelectionSet(schemaType, [incrementalNode], {
+              unsetTypes: true,
+            });
+            prev[typeName].push(this.selectionSetStringFromFields(incrementalFields));
+
+            continue;
+          }
           const { fields: initialFields } = this.buildSelectionSet(schemaType, [incrementalNode]);
           const { fields: subsequentFields } = this.buildSelectionSet(schemaType, [incrementalNode], {
             unsetTypes: true,
@@ -644,7 +652,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       if (this._config.inlineFragmentTypes === 'combine') {
         fields.push(...fragmentsSpreadUsages);
       } else if (this._config.inlineFragmentTypes === 'mask') {
-        fields.push(`{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
+        fields.push(
+          `{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages
+            .map(name => `'${name}': ${options?.unsetTypes ? `Incremental<${name}>` : name}`)
+            .join(`;`)} } }`
+        );
       }
     }
 
@@ -748,7 +760,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const fragmentTypeName = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
     const fragmentMaskPartial =
       this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName'?: '${fragmentTypeName}' }` : '';
-
     if (subTypes.length === 1) {
       return new DeclarationBlock(declarationBlockConfig)
         .export()

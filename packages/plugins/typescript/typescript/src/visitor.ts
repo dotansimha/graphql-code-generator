@@ -50,6 +50,7 @@ export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }>
 export const MAKE_OPTIONAL_SIGNATURE = `type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };`;
 export const MAKE_MAYBE_SIGNATURE = `type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };`;
 export const MAKE_EMPTY_SIGNATURE = `type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };`;
+export const MAKE_INCREMENTAL_SIGNATURE = `type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };`;
 
 export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
@@ -161,6 +162,7 @@ export class TsVisitor<
       this.getMakeOptionalDefinition(),
       this.getMakeMaybeDefinition(),
       this.getMakeEmptyDefinition(),
+      this.getIncrementalDefinition(),
     ];
 
     if (this.config.wrapFieldDefinitions) {
@@ -191,6 +193,10 @@ export class TsVisitor<
 
   public getMakeEmptyDefinition(): string {
     return `${this.getExportPrefix()}${MAKE_EMPTY_SIGNATURE}`;
+  }
+
+  public getIncrementalDefinition(): string {
+    return `${this.getExportPrefix()}${MAKE_INCREMENTAL_SIGNATURE}`;
   }
 
   public getMaybeValue(): string {
