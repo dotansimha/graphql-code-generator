@@ -91,12 +91,12 @@ export const plugin: PluginFunction<{
   useTypeImports?: boolean;
   augmentedModuleName?: string;
   unmaskFunctionName?: string;
-}> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
+  emitLegacyCommonJSImports?: boolean;
+}> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName, emitLegacyCommonJSImports }, _info) => {
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';\n`;
 
-  const emitLegacyCommonJSImports = true; // todo
   const typeHelpersImport = `${useTypeImports ? 'import type' : 'import'} { Empty, Incremental } from './graphql${
     emitLegacyCommonJSImports ? '' : '.js'
   }';\n`;
