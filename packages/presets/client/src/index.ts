@@ -239,6 +239,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         config: {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
+          emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
         },
         documents: [],
         documentTransforms: options.documentTransforms,
