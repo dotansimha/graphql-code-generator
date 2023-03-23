@@ -207,12 +207,6 @@ const config: CodegenConfig = {
       preset: 'client',
       presetConfig: { fragmentMasking: true },
     },
-    './dev-test/gql-tag-operations-masking-star-wars/gql/': {
-      schema: './dev-test/gql-tag-operations-masking-star-wars/schema.json',
-      documents: './dev-test/gql-tag-operations-masking-star-wars/src/**/*.tsx',
-      preset: 'client',
-      presetConfig: { fragmentMasking: true },
-    },
   },
 };
 
