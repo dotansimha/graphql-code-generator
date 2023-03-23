@@ -1,4 +1,5 @@
 import type { ResultOf, DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+import type { Empty, Incremental } from './graphql.js';
 
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> =
   TDocumentType extends DocumentTypeDecoration<infer TType, any>
@@ -9,6 +10,11 @@ export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>>
       : never
     : never;
 
+// return union with empty object if `fragmentType` is `Incremental
+export function useFragment<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: FragmentType<DocumentTypeDecoration<Incremental<TType>, any>> | null | undefined
+): TType | Empty<TType> | null | undefined;
 // return non-nullable if `fragmentType` is non-nullable
 export function useFragment<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,

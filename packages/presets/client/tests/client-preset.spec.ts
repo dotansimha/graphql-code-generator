@@ -344,7 +344,8 @@ export * from "./gql";`);
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
       export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+      export type Empty<T> = { [P in keyof T]?: never };
+      export type Incremental<T> = T & { ' $defer': true };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
         ID: string;
@@ -474,7 +475,8 @@ export * from "./gql";`);
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
       export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+      export type Empty<T> = { [P in keyof T]?: never };
+      export type Incremental<T> = T & { ' $defer': true };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
         ID: string;
@@ -587,7 +589,8 @@ export * from "./gql";`);
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
       export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+      export type Empty<T> = { [P in keyof T]?: never };
+      export type Incremental<T> = T & { ' $defer': true };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
         ID: string;
@@ -755,6 +758,7 @@ export * from "./gql";`);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
         "import { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';
+        import { Empty, Incremental } from './graphql.js';
 
 
         export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
@@ -768,6 +772,11 @@ export * from "./gql";`);
             : never
           : never;
 
+        // return union with empty object if \`fragmentType\` is \`Incremental
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<Incremental<TType>, any>> | null | undefined
+        ): TType | Empty<TType> | null | undefined;
         // return non-nullable if \`fragmentType\` is non-nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
@@ -1234,7 +1243,8 @@ export * from "./gql.js";`);
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
       export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+      export type Empty<T> = { [P in keyof T]?: never };
+      export type Incremental<T> = T & { ' $defer': true };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
         ID: string;
@@ -1312,7 +1322,8 @@ export * from "./gql.js";`);
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+        export type Empty<T> = { [P in keyof T]?: never };
+        export type Incremental<T> = T & { ' $defer': true };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -1393,7 +1404,8 @@ export * from "./gql.js";`);
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+        export type Empty<T> = { [P in keyof T]?: never };
+        export type Incremental<T> = T & { ' $defer': true };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -1474,7 +1486,8 @@ export * from "./gql.js";`);
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+        export type Empty<T> = { [P in keyof T]?: never };
+        export type Incremental<T> = T & { ' $defer': true };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -1557,7 +1570,8 @@ export * from "./gql.js";`);
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+        export type Empty<T> = { [P in keyof T]?: never };
+        export type Incremental<T> = T & { ' $defer': true };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;
@@ -1647,7 +1661,8 @@ export * from "./gql.js";`);
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
       export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+      export type Empty<T> = { [P in keyof T]?: never };
+      export type Incremental<T> = T & { ' $defer': true };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
         ID: string;
@@ -1728,7 +1743,8 @@ export * from "./gql.js";`);
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
         export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = { [P in keyof T]: T[P] } | { [P in keyof T]?: never };
+        export type Empty<T> = { [P in keyof T]?: never };
+        export type Incremental<T> = T & { ' $defer': true };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
           ID: string;

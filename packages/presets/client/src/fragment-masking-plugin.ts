@@ -22,24 +22,42 @@ export function makeFragmentData<
 
 const defaultUnmaskFunctionName = 'useFragment';
 
-const modifyType = (rawType: string, opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }) =>
-  `${
+const modifyType = (
+  initialRawType: string,
+  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false; empty?: boolean }
+) => {
+  let rawType = initialRawType;
+  if (opts.empty) {
+    rawType = `${initialRawType} | Empty<${initialRawType}>`;
+  }
+  return `${
     opts.list === 'only-list'
       ? `ReadonlyArray<${rawType}>`
       : opts.list === 'with-list'
       ? `${rawType} | ReadonlyArray<${rawType}>`
       : rawType
   }${opts.nullable ? ' | null | undefined' : ''}`;
+};
 
 const createUnmaskFunctionTypeDefinition = (
   unmaskFunctionName = defaultUnmaskFunctionName,
-  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
-) => `export function ${unmaskFunctionName}<TType>(
+  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false },
+  empty?: boolean
+) => {
+  const tType = empty ? 'Incremental<TType>' : 'TType';
+
+  return `export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: ${modifyType('FragmentType<DocumentTypeDecoration<TType, any>>', opts)}
-): ${modifyType('TType', opts)}`;
+  fragmentType: ${modifyType(`FragmentType<DocumentTypeDecoration<${tType}, any>>`, opts)}
+): ${modifyType('TType', { ...opts, empty })}`;
+};
 
 const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
+  `// return union with empty object if \`fragmentType\` is \`Incremental\n${createUnmaskFunctionTypeDefinition(
+    unmaskFunctionName,
+    { nullable: true, list: false },
+    true
+  )}`,
   `// return non-nullable if \`fragmentType\` is non-nullable\n${createUnmaskFunctionTypeDefinition(
     unmaskFunctionName,
     { nullable: false, list: false }
@@ -78,9 +96,15 @@ export const plugin: PluginFunction<{
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';\n`;
 
+  const emitLegacyCommonJSImports = true; // todo
+  const typeHelpersImport = `${useTypeImports ? 'import type' : 'import'} { Empty, Incremental } from './graphql${
+    emitLegacyCommonJSImports ? '' : '.js'
+  }';\n`;
+
   if (augmentedModuleName == null) {
     return [
       documentNodeImport,
+      typeHelpersImport,
       `\n`,
       fragmentTypeHelper,
       `\n`,

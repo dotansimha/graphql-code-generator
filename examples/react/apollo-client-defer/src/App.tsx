@@ -1,7 +1,8 @@
 import { useQuery } from '@apollo/client';
 
 import './App.css';
-import { useFragment, graphql, FragmentType } from './gql';
+import { useFragment, graphql } from './gql';
+import { SlowFieldFragmentFragment } from './gql/graphql';
 
 export const slowFieldFragment = graphql(/* GraphQL */ `
   fragment SlowFieldFragment on Query {
@@ -16,21 +17,19 @@ const alphabetQuery = graphql(/* GraphQL */ `
   }
 `);
 
-const SlowDataField = (props: { data: FragmentType<typeof slowFieldFragment> }) => {
-  const fragment = useFragment(slowFieldFragment, props.data);
-  return <p>{fragment.slowField}</p>;
+const SlowDataField = (props: { data: SlowFieldFragmentFragment }) => {
+  return <p>{props.data.slowField}</p>;
 };
 
 function App() {
   const { data } = useQuery(alphabetQuery);
+  const slowData = useFragment(slowFieldFragment, data);
   return (
     <div className="App">
       {data && (
         <>
           <p>{data.fastField}</p>
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-          {/* @ts-expect-error */}
-          <SlowDataField data={data} />
+          {slowData?.slowField && <SlowDataField data={slowData} />}
         </>
       )}
     </div>
