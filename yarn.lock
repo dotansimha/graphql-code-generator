@@ -4473,20 +4473,20 @@
   integrity sha512-WKj/lI4QjnLuPrim0cfO7i+HsDSXHxNv1y0CrJhdntuO3hxWZmnXCwNDnwOvry11OjRin6cgWNF+j/9Pn8TN4w==
 
 "@whatwg-node/fetch@^0.8.0", "@whatwg-node/fetch@^0.8.1", "@whatwg-node/fetch@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.8.2.tgz#763fa02e957e6308454f496e060d27f2d9c5f119"
-  integrity sha512-6u1xGzFZvskJpQXhWreR9s1/4nsuY4iFRsTb4BC3NiDHmzgj/Hu1Ovt4iHs5KAjLzbnsjaQOI5f5bQPucqvPsQ==
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.8.4.tgz#ae1c306d1e4f5ba5cf9badf070de259f04c2cda8"
+  integrity sha512-xK0NGWt49P+JmsdfN+8zmHzZoscENrV0KL1SyyncvWkc6vbFmSqGSpvItEBuhj1PAfTGFEUpyiRMCsut2hLy/Q==
   dependencies:
     "@peculiar/webcrypto" "^1.4.0"
-    "@whatwg-node/node-fetch" "^0.3.1"
+    "@whatwg-node/node-fetch" "^0.3.3"
     busboy "^1.6.0"
     urlpattern-polyfill "^6.0.2"
     web-streams-polyfill "^3.2.1"
 
-"@whatwg-node/node-fetch@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/node-fetch/-/node-fetch-0.3.1.tgz#491ac6c5a367ab6dbff78756c0487afc32f70dee"
-  integrity sha512-/U4onp5eBkRHfFe/VL+ppyupqj7z6iBtjcuPSosQNH2/y+LxRn5lyFb7Vqhb5DokjrDMjssLcqiVYnx+UABFsw==
+"@whatwg-node/node-fetch@^0.3.3":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/node-fetch/-/node-fetch-0.3.4.tgz#4beb88579c53ebd870e28d0f2f0376191b9fd6c3"
+  integrity sha512-gP1MN6DiHVbhkLWH1eCELhE2ZtLRxb+HRKu4eYze1Tijxz0uT1T2kk3lseZp94txzxCfbxGFU0jsWkxNdH3EXA==
   dependencies:
     "@whatwg-node/events" "^0.0.2"
     busboy "^1.6.0"
