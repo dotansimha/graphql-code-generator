@@ -28,7 +28,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       return [];
     }
 
-    const x = fields.map(field => {
+    return fields.map(field => {
       const fieldObj = schemaType.getFields()[field.fieldName];
 
       const baseType = getBaseType(fieldObj.type);
@@ -66,7 +66,6 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         type: wrappedType,
       };
     });
-    return x;
   }
 
   transformAliasesPrimitiveFields(

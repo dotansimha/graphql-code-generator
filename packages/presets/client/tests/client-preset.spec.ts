@@ -758,7 +758,7 @@ export * from "./gql";`);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
         "import { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';
-        import { Empty, Incremental } from './graphql.js';
+        import type { Empty, Incremental } from './graphql';
 
 
         export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
