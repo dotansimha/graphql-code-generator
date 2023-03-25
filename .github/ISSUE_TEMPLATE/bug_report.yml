@@ -67,7 +67,6 @@ body:
         - '@graphql-codegen/typed-document-node'
         - '@graphql-codegen/typescript'
         - '@graphql-codegen/client-preset'
-        - '@graphql-codegen/gql-tag-operations-preset'
         - '@graphql-codegen/graphql-modules-preset'
         - '@graphql-codegen/testing'
         - '@graphql-codegen/plugin-helpers'

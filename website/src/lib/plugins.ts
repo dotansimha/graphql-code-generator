@@ -145,12 +145,6 @@ export const PACKAGES: Record<
     icon: 'graphql',
     tags: ['plugin', 'apollo'],
   },
-  'gql-tag-operations-preset': {
-    title: 'Gql Tag Operations Preset',
-    npmPackage: '@graphql-codegen/gql-tag-operations-preset',
-    icon: 'codegen',
-    tags: ['preset', 'utilities', 'typescript'],
-  },
   'graphql-modules-preset': {
     title: 'GraphQL Modules Preset',
     npmPackage: '@graphql-codegen/graphql-modules-preset',
