@@ -38,6 +38,34 @@ export const resolversTestingSchema = buildSchema(/* GraphQL */ `
     id: ID!
   }
 
+  interface AnotherNode {
+    id: ID!
+  }
+
+  interface WithChild {
+    unionChild: ChildUnion
+    node: AnotherNode
+  }
+
+  interface WithChildren {
+    unionChildren: [ChildUnion!]!
+    nodes: [AnotherNode!]!
+  }
+
+  type AnotherNodeWithChild implements AnotherNode & WithChild {
+    id: ID!
+    unionChild: ChildUnion
+    interfaceChild: Node
+  }
+
+  type AnotherNodeWithAll implements AnotherNode & WithChild & WithChildren {
+    id: ID!
+    unionChild: ChildUnion
+    unionChildren: [ChildUnion!]!
+    interfaceChild: Node
+    interfaceChildren: [Node!]!
+  }
+
   union MyUnion = MyType | MyOtherType
 
   scalar MyScalar
