@@ -176,6 +176,14 @@ export type ResolversUnionParentTypes = ResolversObject<{
   MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+  Node: ( SomeNode );
+  AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+  WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+  WithChildren: ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+}>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
@@ -185,12 +193,12 @@ export type ResolversTypes = ResolversObject<{
   ChildUnion: ResolverTypeWrapper<ResolversUnionTypes['ChildUnion']>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['SomeNode'];
+  Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   SomeNode: ResolverTypeWrapper<SomeNode>;
-  AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
-  WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
-  WithChildren: ResolversTypes['AnotherNodeWithAll'];
+  AnotherNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['AnotherNode']>;
+  WithChild: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['WithChild']>;
+  WithChildren: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['WithChildren']>;
   AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
   AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
   MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
@@ -208,12 +216,12 @@ export type ResolversParentTypes = ResolversObject<{
   ChildUnion: ResolversUnionParentTypes['ChildUnion'];
   Query: {};
   Subscription: {};
-  Node: ResolversParentTypes['SomeNode'];
+  Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   ID: Scalars['ID'];
   SomeNode: SomeNode;
-  AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
-  WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
-  WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+  AnotherNode: ResolversInterfaceTypes<ResolversParentTypes>['AnotherNode'];
+  WithChild: ResolversInterfaceTypes<ResolversParentTypes>['WithChild'];
+  WithChildren: ResolversInterfaceTypes<ResolversParentTypes>['WithChildren'];
   AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
   AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
   MyUnion: ResolversUnionParentTypes['MyUnion'];
@@ -433,6 +441,14 @@ export type ResolversUnionParentTypes = ResolversObject<{
   MyUnion: ( Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<ResolversParentTypes['ChildUnion']> } ) | ( Types.MyOtherType );
 }>;
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+  Node: ( Types.SomeNode );
+  AnotherNode: ( Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+  WithChild: ( Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+  WithChildren: ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+}>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   MyType: ResolverTypeWrapper<Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']> }>;
@@ -442,12 +458,12 @@ export type ResolversTypes = ResolversObject<{
   ChildUnion: ResolverTypeWrapper<ResolversUnionTypes['ChildUnion']>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['SomeNode'];
+  Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   ID: ResolverTypeWrapper<Types.Scalars['ID']>;
   SomeNode: ResolverTypeWrapper<Types.SomeNode>;
-  AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
-  WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
-  WithChildren: ResolversTypes['AnotherNodeWithAll'];
+  AnotherNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['AnotherNode']>;
+  WithChild: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['WithChild']>;
+  WithChildren: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['WithChildren']>;
   AnotherNodeWithChild: ResolverTypeWrapper<Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']> }>;
   AnotherNodeWithAll: ResolverTypeWrapper<Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
   MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
@@ -465,12 +481,12 @@ export type ResolversParentTypes = ResolversObject<{
   ChildUnion: ResolversUnionParentTypes['ChildUnion'];
   Query: {};
   Subscription: {};
-  Node: ResolversParentTypes['SomeNode'];
+  Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   ID: Types.Scalars['ID'];
   SomeNode: Types.SomeNode;
-  AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
-  WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
-  WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+  AnotherNode: ResolversInterfaceTypes<ResolversParentTypes>['AnotherNode'];
+  WithChild: ResolversInterfaceTypes<ResolversParentTypes>['WithChild'];
+  WithChildren: ResolversInterfaceTypes<ResolversParentTypes>['WithChildren'];
   AnotherNodeWithChild: Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<ResolversParentTypes['ChildUnion']> };
   AnotherNodeWithAll: Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
   MyUnion: ResolversUnionParentTypes['MyUnion'];
@@ -774,6 +790,14 @@ export type ResolversUnionParentTypes = ResolversObject<{
   MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+  Node: ( SomeNode );
+  AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+  WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+  WithChildren: ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+}>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
@@ -783,12 +807,12 @@ export type ResolversTypes = ResolversObject<{
   ChildUnion: ResolverTypeWrapper<ResolversUnionTypes['ChildUnion']>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['SomeNode'];
+  Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   SomeNode: ResolverTypeWrapper<SomeNode>;
-  AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
-  WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
-  WithChildren: ResolversTypes['AnotherNodeWithAll'];
+  AnotherNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['AnotherNode']>;
+  WithChild: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['WithChild']>;
+  WithChildren: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['WithChildren']>;
   AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
   AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
   MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
@@ -806,12 +830,12 @@ export type ResolversParentTypes = ResolversObject<{
   ChildUnion: ResolversUnionParentTypes['ChildUnion'];
   Query: {};
   Subscription: {};
-  Node: ResolversParentTypes['SomeNode'];
+  Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   ID: Scalars['ID'];
   SomeNode: SomeNode;
-  AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
-  WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
-  WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+  AnotherNode: ResolversInterfaceTypes<ResolversParentTypes>['AnotherNode'];
+  WithChild: ResolversInterfaceTypes<ResolversParentTypes>['WithChild'];
+  WithChildren: ResolversInterfaceTypes<ResolversParentTypes>['WithChildren'];
   AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
   AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
   MyUnion: ResolversUnionParentTypes['MyUnion'];

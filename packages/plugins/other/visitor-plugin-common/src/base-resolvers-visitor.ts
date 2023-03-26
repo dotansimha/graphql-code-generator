@@ -569,8 +569,10 @@ export class BaseResolversVisitor<
   protected _resolversParentTypes: ResolverParentTypes = {};
   protected _hasReferencedResolversUnionTypes = false;
   protected _hasReferencedResolversUnionParentTypes = false;
+  protected _hasReferencedResolversInterfaceTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
   protected _resolversUnionParentTypes: Record<string, string> = {};
+  protected _resolversInterfaceTypes: Record<string, string> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
   protected _federation: ApolloFederation;
@@ -632,6 +634,7 @@ export class BaseResolversVisitor<
       applyWrapper: type => this.applyResolverTypeWrapper(type),
       clearWrapper: type => this.clearResolverTypeWrapper(type),
       getTypeToUse: name => this.getTypeToUse(name),
+      currentType: 'ResolversTypes',
       referencedUnionType: 'ResolversUnionTypes',
     });
     this._resolversParentTypes = this.createResolversFields({
@@ -639,6 +642,7 @@ export class BaseResolversVisitor<
       clearWrapper: type => type,
       getTypeToUse: name => this.getParentTypeToUse(name),
       referencedUnionType: 'ResolversUnionParentTypes',
+      currentType: 'ResolversParentTypes',
       shouldInclude: namedType => !isEnumType(namedType),
     });
     this._resolversUnionTypes = this.createResolversUnionTypes({
@@ -647,6 +651,7 @@ export class BaseResolversVisitor<
     this._resolversUnionParentTypes = this.createResolversUnionTypes({
       getTypeToUse: this.getParentTypeToUse,
     });
+    this._resolversInterfaceTypes = this.createResolversInterfaceTypes();
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
     this._directiveContextTypesMap = this.createDirectivedContextType();
     this._directiveResolverMappings = rawConfig.directiveResolverMappings ?? {};
@@ -715,12 +720,14 @@ export class BaseResolversVisitor<
     clearWrapper,
     getTypeToUse,
     referencedUnionType,
+    currentType,
     shouldInclude,
   }: {
     applyWrapper: (str: string) => string;
     clearWrapper: (str: string) => string;
     getTypeToUse: (str: string) => string;
     referencedUnionType: 'ResolversUnionTypes' | 'ResolversUnionParentTypes';
+    currentType: 'ResolversTypes' | 'ResolversParentTypes';
     shouldInclude?: (type: GraphQLNamedType) => boolean;
   }): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
@@ -756,24 +763,6 @@ export class BaseResolversVisitor<
       if (isMapped && this.config.mappers[typeName].type && !hasPlaceholder(this.config.mappers[typeName].type)) {
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
-      } else if (isInterfaceType(schemaType)) {
-        const allTypesMap = this._schema.getTypeMap();
-        const implementingTypes: string[] = [];
-
-        for (const graphqlType of Object.values(allTypesMap)) {
-          if (graphqlType instanceof GraphQLObjectType) {
-            const allInterfaces = graphqlType.getInterfaces();
-
-            if (allInterfaces.some(int => int.name === schemaType.name)) {
-              implementingTypes.push(graphqlType.name);
-            }
-          }
-        }
-
-        const possibleTypes = implementingTypes.map(name => getTypeToUse(name)).join(' | ') || 'never';
-
-        prev[typeName] = possibleTypes;
-        return prev;
       } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
         prev[typeName] =
           this.config.enumValues[typeName].sourceIdentifier ||
@@ -782,6 +771,12 @@ export class BaseResolversVisitor<
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
       } else if (isScalar) {
         prev[typeName] = applyWrapper(this._getScalar(typeName));
+      } else if (isInterfaceType(schemaType)) {
+        this._hasReferencedResolversInterfaceTypes = true;
+        const type = this.convertName('ResolversInterfaceTypes');
+        const generic = this.convertName(currentType);
+        prev[typeName] = applyWrapper(`${type}<${generic}>['${typeName}']`);
+        return prev;
       } else if (isUnionType(schemaType)) {
         if (referencedUnionType === 'ResolversUnionTypes') {
           this._hasReferencedResolversUnionTypes = true;
@@ -956,6 +951,107 @@ export class BaseResolversVisitor<
     return unionTypes;
   }
 
+  protected createResolversInterfaceTypes(): Record<string, string> {
+    if (!this._hasReferencedResolversInterfaceTypes) {
+      return {};
+    }
+
+    const allSchemaTypes = this._schema.getTypeMap();
+    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
+
+    const interfaceTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
+      const schemaType = allSchemaTypes[typeName];
+
+      if (isInterfaceType(schemaType)) {
+        const allTypesMap = this._schema.getTypeMap();
+        const implementingTypes: GraphQLObjectType[] = [];
+
+        for (const graphqlType of Object.values(allTypesMap)) {
+          if (graphqlType instanceof GraphQLObjectType) {
+            const allInterfaces = graphqlType.getInterfaces();
+
+            if (allInterfaces.some(int => int.name === schemaType.name)) {
+              implementingTypes.push(graphqlType);
+            }
+          }
+        }
+
+        res[typeName] = this.getAbstractMembersType({
+          typeName,
+          memberTypes: implementingTypes,
+          isTypenameNonOptional: this.config.resolversNonOptionalTypename.interfaceImplementingType,
+        });
+      }
+
+      return res;
+    }, {});
+
+    return interfaceTypes;
+  }
+
+  /**
+   * Function to generate the types of Abstract Type Members i.e. Union Members or Interface Implementing Types
+   */
+  getAbstractMembersType({
+    typeName,
+    memberTypes,
+    isTypenameNonOptional,
+  }: {
+    typeName: string;
+    memberTypes: readonly GraphQLObjectType[] | GraphQLObjectType[];
+    isTypenameNonOptional: boolean;
+  }): string {
+    const result =
+      memberTypes
+        .map(type => {
+          const isTypeMapped = this.config.mappers[type.name];
+          // 1. If mapped without placehoder, just use it without doing extra checks
+          if (isTypeMapped && !hasPlaceholder(isTypeMapped.type)) {
+            return { typename: type.name, typeValue: isTypeMapped.type };
+          }
+
+          // 2. Work out value for type
+          // 2a. By default, use the typescript type
+          let typeValue = this.convertName(type.name, {}, true);
+
+          // 2b. Find fields to Omit if needed.
+          //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
+          //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
+          const fieldsToOmit = this.getRelevantFieldsToOmit({
+            schemaType: type,
+            getTypeToUse: baseType => `RefType['${baseType}']`,
+          });
+          if (fieldsToOmit.length > 0) {
+            typeValue = this.replaceFieldsInType(typeValue, fieldsToOmit);
+          }
+
+          // 2c. If type is mapped with placeholder, use the "type with maybe Omit" as {T}
+          if (isTypeMapped && hasPlaceholder(isTypeMapped.type)) {
+            return { typename: type.name, typeValue: replacePlaceholder(isTypeMapped.type, typeValue) };
+          }
+
+          // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
+          const hasDefaultMapper = !!this.config.defaultMapper?.type;
+          const isScalar = this.config.scalars[typeName];
+          if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+            const finalTypename = isScalar ? this._getScalar(typeName) : typeValue;
+            return {
+              typename: type.name,
+              typeValue: replacePlaceholder(this.config.defaultMapper.type, finalTypename),
+            };
+          }
+
+          return { typename: type.name, typeValue };
+        })
+        .map(({ typename, typeValue }) => {
+          const nonOptionalTypenameModifier = isTypenameNonOptional ? ` & { __typename: '${typename}' }` : '';
+
+          return `( ${typeValue}${nonOptionalTypenameModifier} )`; // Must wrap every type in explicit "( )" to separate them
+        })
+        .join(' | ') || 'never';
+    return result;
+  }
+
   protected createFieldContextTypeMap(): FieldContextTypeMap {
     return this.config.fieldContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
       const items = fieldContextType.split('#');
@@ -1042,6 +1138,24 @@ export class BaseResolversVisitor<
       .withComment('Mapping of union parent types')
       .withBlock(
         Object.entries(this._resolversUnionParentTypes)
+          .map(([typeName, value]) => indent(`${typeName}: ${value}${this.getPunctuation(declarationKind)}`))
+          .join('\n')
+      ).string;
+  }
+
+  public buildResolversInterfaceTypes(): string {
+    if (Object.keys(this._resolversInterfaceTypes).length === 0) {
+      return '';
+    }
+
+    const declarationKind = 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName('ResolversInterfaceTypes'), `<RefType extends Record<string, unknown>>`)
+      .withComment('Mapping of interface types')
+      .withBlock(
+        Object.entries(this._resolversInterfaceTypes)
           .map(([typeName, value]) => indent(`${typeName}: ${value}${this.getPunctuation(declarationKind)}`))
           .join('\n')
       ).string;
@@ -1658,6 +1772,7 @@ function normalizeResolversNonOptionalTypename(
   if (typeof input === 'boolean') {
     return {
       unionMember: input,
+      interfaceImplementingType: input,
     };
   }
 
