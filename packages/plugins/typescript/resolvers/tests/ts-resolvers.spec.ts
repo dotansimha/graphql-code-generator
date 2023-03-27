@@ -235,14 +235,14 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 
       expect(result.content).toBeSimilarStringTo(`
         export type ResolversUnionTypes = {
-          ChildUnion: ( Child & { __typename: "Child" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
-          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } & { __typename: "MyType" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
+          ChildUnion: ( Child & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
         export type ResolversUnionParentTypes = {
-          ChildUnion: ( Child & { __typename: "Child" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
-          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } & { __typename: "MyType" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
+          ChildUnion: ( Child & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
         };
       `);
     });
@@ -257,14 +257,14 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 
       expect(result.content).toBeSimilarStringTo(`
         export type ResolversUnionTypes = {
-          ChildUnion: ( Child & { __typename: "Child" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
-          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } & { __typename: "MyType" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
+          ChildUnion: ( Child & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
         export type ResolversUnionParentTypes = {
-          ChildUnion: ( Child & { __typename: "Child" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
-          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } & { __typename: "MyType" } ) | ( MyOtherType & { __typename: "MyOtherType" } );
+          ChildUnion: ( Child & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
         };
       `);
     });
