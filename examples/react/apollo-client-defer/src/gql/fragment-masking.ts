@@ -1,5 +1,5 @@
-import { ResultOf, DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-import { Empty, Incremental } from './graphql';
+import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { FragmentDefinitionNode } from 'graphql';
 
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> =
   TDocumentType extends DocumentTypeDecoration<infer TType, any>
@@ -10,12 +10,6 @@ export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>>
       : never
     : never;
 
-// return union with empty object if `fragmentType` is `Incremental
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: FragmentType<DocumentTypeDecoration<Incremental<TType>, any>> | null | undefined
-): TType | Empty<TType> | null | undefined;
-// return non-nullable if `fragmentType` is non-nullable
 export function useFragment<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,
   fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
@@ -51,4 +45,21 @@ export function makeFragmentData<F extends DocumentTypeDecoration<any, any>, FT 
   _fragment: F
 ): FragmentType<F> {
   return data as FragmentType<F>;
+}
+
+export function isFragmentReady<TQuery, TFrag>(
+  queryNode: DocumentTypeDecoration<TQuery, any>, // works for string
+  fragmentNode: TypedDocumentNode<TFrag>, // doesn't work with string yet
+  data: TQuery
+): data is FragmentType<typeof fragmentNode> {
+  const deferredFields = (queryNode as { __meta__?: Record<string, any> }).__meta__?.deferredFields;
+  if (deferredFields) {
+    const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
+    const fragName = fragDef?.name?.value;
+    const field = fragName && deferredFields[fragName];
+
+    return field && (data as any)[field];
+  }
+
+  return true;
 }

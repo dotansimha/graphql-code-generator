@@ -6,8 +6,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Empty<T> = { [P in keyof T]?: never };
-export type Incremental<T> = T & { ' $defer': true };
+export type Incremental<T> = T | { [P in keyof T]?: never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -39,9 +38,13 @@ export type SlowFieldFragmentFragment = { __typename?: 'Query'; slowField: strin
 
 export type SlowAndFastFieldWithDeferQueryVariables = Exact<{ [key: string]: never }>;
 
-export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; fastField: string } & ({ __typename?: 'Query' } & {
-  ' $fragmentRefs'?: { SlowFieldFragmentFragment: Incremental<SlowFieldFragmentFragment> };
-});
+export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; fastField: string } & (
+  | { __typename?: 'Query'; inlinedSlowField: string }
+  | { __typename?: 'Query'; inlinedSlowField?: never }
+) &
+  ({ __typename?: 'Query' } & {
+    ' $fragmentRefs'?: { SlowFieldFragmentFragment: Incremental<SlowFieldFragmentFragment> };
+  });
 
 export const SlowFieldFragmentFragmentDoc = {
   kind: 'Document',
@@ -52,7 +55,19 @@ export const SlowFieldFragmentFragmentDoc = {
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
       selectionSet: {
         kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'slowField' } }],
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'slowField' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'waitFor' },
+                value: { kind: 'IntValue', value: '5000' },
+              },
+            ],
+          },
+        ],
       },
     },
   ],
@@ -73,6 +88,27 @@ export const SlowAndFastFieldWithDeferDocument = {
             name: { kind: 'Name', value: 'SlowFieldFragment' },
             directives: [{ kind: 'Directive', name: { kind: 'Name', value: 'defer' } }],
           },
+          {
+            kind: 'InlineFragment',
+            directives: [{ kind: 'Directive', name: { kind: 'Name', value: 'defer' } }],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'inlinedSlowField' },
+                  name: { kind: 'Name', value: 'slowField' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'waitFor' },
+                      value: { kind: 'IntValue', value: '5000' },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -82,7 +118,19 @@ export const SlowAndFastFieldWithDeferDocument = {
       typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
       selectionSet: {
         kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'slowField' } }],
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'slowField' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'waitFor' },
+                value: { kind: 'IntValue', value: '5000' },
+              },
+            ],
+          },
+        ],
       },
     },
   ],

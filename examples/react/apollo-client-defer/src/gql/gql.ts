@@ -13,8 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-  '\n  fragment SlowFieldFragment on Query {\n    slowField\n  }\n': types.SlowFieldFragmentFragmentDoc,
-  '\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n  }\n':
+  '\n  fragment SlowFieldFragment on Query {\n    slowField(waitFor: 5000)\n  }\n': types.SlowFieldFragmentFragmentDoc,
+  '\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n\n    ... @defer {\n      inlinedSlowField: slowField(waitFor: 5000)\n    }\n  }\n':
     types.SlowAndFastFieldWithDeferDocument,
 };
 
@@ -36,14 +36,14 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment SlowFieldFragment on Query {\n    slowField\n  }\n'
-): (typeof documents)['\n  fragment SlowFieldFragment on Query {\n    slowField\n  }\n'];
+  source: '\n  fragment SlowFieldFragment on Query {\n    slowField(waitFor: 5000)\n  }\n'
+): (typeof documents)['\n  fragment SlowFieldFragment on Query {\n    slowField(waitFor: 5000)\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n  }\n'
-): (typeof documents)['\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n  }\n'];
+  source: '\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n\n    ... @defer {\n      inlinedSlowField: slowField(waitFor: 5000)\n    }\n  }\n'
+): (typeof documents)['\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n\n    ... @defer {\n      inlinedSlowField: slowField(waitFor: 5000)\n    }\n  }\n'];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -1,12 +1,12 @@
 import { useQuery } from '@apollo/client';
 
 import './App.css';
-import { useFragment, graphql } from './gql';
-import { SlowFieldFragmentFragment } from './gql/graphql';
+import { useFragment, graphql, FragmentType, isFragmentReady } from './gql';
+import { SlowAndFastFieldWithDeferQuery } from './gql/graphql';
 
 export const slowFieldFragment = graphql(/* GraphQL */ `
   fragment SlowFieldFragment on Query {
-    slowField
+    slowField(waitFor: 5000)
   }
 `);
 
@@ -14,22 +14,36 @@ const alphabetQuery = graphql(/* GraphQL */ `
   query SlowAndFastFieldWithDefer {
     fastField
     ...SlowFieldFragment @defer
+
+    ... @defer {
+      inlinedSlowField: slowField(waitFor: 5000)
+    }
   }
 `);
 
-const SlowDataField = (props: { data: SlowFieldFragmentFragment }) => {
-  return <p>{props.data.slowField}</p>;
+const SlowDataField = (props: { data: FragmentType<typeof slowFieldFragment> }) => {
+  const data = useFragment(slowFieldFragment, props.data);
+  return <p>{data.slowField}</p>;
+};
+
+const InlinedSlowDataField = (props: { data: SlowAndFastFieldWithDeferQuery }) => {
+  try {
+    // @ts-expect-error - this field should be either undefined or a string
+    const _ = props.data.inlinedSlowField.toLowerCase();
+  } catch (e) {}
+  return <p>{props.data.inlinedSlowField}</p>;
 };
 
 function App() {
   const { data } = useQuery(alphabetQuery);
-  const slowData = useFragment(slowFieldFragment, data);
+
   return (
     <div className="App">
       {data && (
         <>
           <p>{data.fastField}</p>
-          {slowData?.slowField && <SlowDataField data={slowData} />}
+          {isFragmentReady(alphabetQuery, slowFieldFragment, data) && <SlowDataField data={data} />}
+          <InlinedSlowDataField data={data} />
         </>
       )}
     </div>
