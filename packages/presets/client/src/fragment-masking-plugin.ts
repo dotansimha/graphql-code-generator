@@ -23,13 +23,9 @@ export function makeFragmentData<
 const defaultUnmaskFunctionName = 'useFragment';
 
 const modifyType = (
-  initialRawType: string,
+  rawType: string,
   opts: { nullable: boolean; list: 'with-list' | 'only-list' | false; empty?: boolean }
 ) => {
-  let rawType = initialRawType;
-  if (opts.empty) {
-    rawType = `${initialRawType} | Empty<${initialRawType}>`;
-  }
   return `${
     opts.list === 'only-list'
       ? `ReadonlyArray<${rawType}>`
@@ -41,23 +37,15 @@ const modifyType = (
 
 const createUnmaskFunctionTypeDefinition = (
   unmaskFunctionName = defaultUnmaskFunctionName,
-  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false },
-  empty?: boolean
+  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
 ) => {
-  const tType = empty ? 'Incremental<TType>' : 'TType';
-
   return `export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: ${modifyType(`FragmentType<DocumentTypeDecoration<${tType}, any>>`, opts)}
-): ${modifyType('TType', { ...opts, empty })}`;
+  fragmentType: ${modifyType(`FragmentType<DocumentTypeDecoration<TType, any>>`, opts)}
+): ${modifyType('TType', opts)}`;
 };
 
 const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
-  `// return union with empty object if \`fragmentType\` is \`Incremental\n${createUnmaskFunctionTypeDefinition(
-    unmaskFunctionName,
-    { nullable: true, list: false },
-    true
-  )}`,
   `// return non-nullable if \`fragmentType\` is non-nullable\n${createUnmaskFunctionTypeDefinition(
     unmaskFunctionName,
     { nullable: false, list: false }
@@ -91,20 +79,14 @@ export const plugin: PluginFunction<{
   useTypeImports?: boolean;
   augmentedModuleName?: string;
   unmaskFunctionName?: string;
-  emitLegacyCommonJSImports?: boolean;
-}> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName, emitLegacyCommonJSImports }, _info) => {
+}> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';\n`;
 
-  const typeHelpersImport = `${useTypeImports ? 'import type' : 'import'} { Empty, Incremental } from './graphql${
-    emitLegacyCommonJSImports ? '' : '.js'
-  }';\n`;
-
   if (augmentedModuleName == null) {
     return [
       documentNodeImport,
-      typeHelpersImport,
       `\n`,
       fragmentTypeHelper,
       `\n`,
