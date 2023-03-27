@@ -268,6 +268,96 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
         };
       `);
     });
+
+    it('resolversNonOptionalTypename - adds non-optional typenames to ResolversUnionTypes for mappers with no placeholder', async () => {
+      const result = await plugin(
+        resolversTestingSchema,
+        [],
+        {
+          resolversNonOptionalTypename: { unionMember: true },
+          mappers: { Child: 'ChildMapper', MyType: 'MyTypeMapper' },
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionTypes = {
+          ChildUnion: ( ChildMapper & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( MyTypeMapper & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionParentTypes = {
+          ChildUnion: ( ChildMapper & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( MyTypeMapper & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        };
+      `);
+    });
+
+    it('resolversNonOptionalTypename - adds non-optional typenames to ResolversUnionTypes for mappers with placeholder', async () => {
+      const result = await plugin(
+        resolversTestingSchema,
+        [],
+        {
+          resolversNonOptionalTypename: { unionMember: true },
+          mappers: { Child: 'Wrapper<{T}>', MyType: 'MyWrapper<{T}>' },
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionTypes = {
+          ChildUnion: ( Wrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }> & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( MyWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }> & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionParentTypes = {
+          ChildUnion: ( Wrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> }> & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+          MyUnion: ( MyWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }> & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        };
+      `);
+    });
+
+    it('resolversNonOptionalTypename - adds non-optional typenames to ResolversUnionTypes for default mappers with placeholder', async () => {
+      const result = await plugin(
+        resolversTestingSchema,
+        [],
+        {
+          resolversNonOptionalTypename: { unionMember: true },
+          defaultMapper: 'Partial<{T}>',
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionTypes = {
+          ChildUnion: ( Partial<Child> & { __typename: 'Child' } ) | ( Partial<MyOtherType> & { __typename: 'MyOtherType' } );
+          MyUnion: ( Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }> & { __typename: 'MyType' } ) | ( Partial<MyOtherType> & { __typename: 'MyOtherType' } );
+        };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionParentTypes = {
+          ChildUnion: ( Partial<Child> & { __typename: 'Child' } ) | ( Partial<MyOtherType> & { __typename: 'MyOtherType' } );
+          MyUnion: ( Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }> & { __typename: 'MyType' } ) | ( Partial<MyOtherType> & { __typename: 'MyOtherType' } );
+        };
+      `);
+    });
+
+    it('resolversNonOptionalTypename - does not create ResolversUnionTypes for default mappers with no placeholder', async () => {
+      const result = await plugin(
+        resolversTestingSchema,
+        [],
+        {
+          resolversNonOptionalTypename: { unionMember: true },
+          defaultMapper: '{}',
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.content).not.toBeSimilarStringTo('export type ResolversUnionTypes');
+      expect(result.content).not.toBeSimilarStringTo('export type ResolversUnionParentTypes');
+    });
   });
 
   it('directiveResolverMappings - should generate correct types (import definition)', async () => {
