@@ -72,6 +72,25 @@ ${createUnmaskFunctionTypeDefinitions(unmaskFunctionName)
 }
 `;
 
+const isFragmentReadyFunction = `
+export function isFragmentReady<TQuery, TFrag>(
+  queryNode: DocumentTypeDecoration<TQuery, any>, // works with strings
+  fragmentNode: TypedDocumentNode<TFrag>, // doesn't work with strings yet
+  data: TQuery
+): data is FragmentType<typeof fragmentNode> {
+  const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, string[]> } }).__meta__?.deferredFields;
+  if (deferredFields) {
+    const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
+    const fragName = fragDef?.name?.value;
+    const fields = fragName ? deferredFields[fragName] : [];
+
+    return fields.length > 0 && fields.some(field => field in (data as any));
+  }
+
+  return true;
+}
+`;
+
 /**
  * Plugin for generating fragment masking helper functions.
  */
@@ -82,17 +101,24 @@ export const plugin: PluginFunction<{
 }> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
-  } { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';\n`;
+  } { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';\n`;
+
+  const fragmentDefinitionNodeImport = `${
+    useTypeImports ? 'import type' : 'import'
+  } { FragmentDefinitionNode } from 'graphql';\n`;
 
   if (augmentedModuleName == null) {
     return [
       documentNodeImport,
+      fragmentDefinitionNodeImport,
       `\n`,
       fragmentTypeHelper,
       `\n`,
       createUnmaskFunction(unmaskFunctionName),
       `\n`,
       makeFragmentDataHelper,
+      `\n`,
+      isFragmentReadyFunction,
     ].join(``);
   }
 

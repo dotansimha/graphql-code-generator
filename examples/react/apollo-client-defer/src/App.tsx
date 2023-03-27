@@ -31,7 +31,11 @@ const InlinedSlowDataField = (props: { data: SlowAndFastFieldWithDeferQuery }) =
     // @ts-expect-error - this field should be either undefined or a string
     const _ = props.data.inlinedSlowField.toLowerCase();
   } catch (e) {}
-  return <p>{props.data.inlinedSlowField}</p>;
+
+  if (!props.data.inlinedSlowField) {
+    return null;
+  }
+  return <p>{props.data.inlinedSlowField} inlined fragment</p>;
 };
 
 function App() {

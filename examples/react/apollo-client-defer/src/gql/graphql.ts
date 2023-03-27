@@ -73,6 +73,7 @@ export const SlowFieldFragmentFragmentDoc = {
   ],
 } as unknown as DocumentNode<SlowFieldFragmentFragment, unknown>;
 export const SlowAndFastFieldWithDeferDocument = {
+  __meta__: { deferredFields: { SlowFieldFragment: ['slowField'] } },
   kind: 'Document',
   definitions: [
     {

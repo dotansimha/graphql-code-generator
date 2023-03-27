@@ -409,10 +409,38 @@ export class ClientSideBaseVisitor<
       let metaString = '';
 
       if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
-        const meta = this._onExecutableDocumentNode({
+        // find deferred fragments
+        const deferredFields = node.selectionSet.selections.reduce<Record<string, string[]>>((acc, selection) => {
+          if (selection.kind === Kind.FRAGMENT_SPREAD && selection.directives.some(d => d.name.value === 'defer')) {
+            const fragmentName = selection.name.value;
+            const fragment = this.fragmentsGraph.getNodeData(fragmentName);
+            if (fragment) {
+              const fields = fragment.node.selectionSet.selections.reduce<string[]>((acc, selection) => {
+                if (selection.kind === Kind.FIELD) {
+                  acc.push(selection.name.value);
+                }
+                return acc;
+              }, []);
+
+              acc[fragmentName] = fields;
+            }
+          }
+          return acc;
+        }, {});
+
+        let meta: Record<string, any> | void | undefined;
+
+        meta = this._onExecutableDocumentNode({
           kind: Kind.DOCUMENT,
           definitions,
         });
+
+        if (Object.keys(deferredFields).length) {
+          meta = {
+            ...meta,
+            deferredFields,
+          };
+        }
 
         if (meta) {
           metaString = `"__meta__":${JSON.stringify(meta)},`;
