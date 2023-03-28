@@ -321,6 +321,10 @@ export namespace Types {
      * @description DocumentTransform changes documents before executing plugins.
      */
     documentTransforms?: OutputDocumentTransform[];
+    /**
+     * @description: Additional file pattern to watch when using watch mode
+     */
+    watchPattern?: string | string[];
   }
 
   /* Output Builder Preset */

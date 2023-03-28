@@ -162,6 +162,26 @@ export default config;
 
 ```
 
+##### `handleAsSDL`
+
+Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection. Example use case is when using schema registry like [GraphQL Hive](https://docs.graphql-hive.com/features/high-availability-cdn#graphql-schema-sdl).
+
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: [
+    {
+      'http://localhost:3000/sdl': {
+        handleAsSDL: true,
+      }
+    }
+  ]
+};
+export default config;
+
+```
+
 ### JSON
 
 You can point to a local `.json` file that contains [GraphQL Introspection](https://graphql.org/learn/introspection) JSON.

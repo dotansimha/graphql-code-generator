@@ -185,32 +185,26 @@ const config: CodegenConfig = {
       documents: './dev-test/star-wars/**/*.graphql',
       plugins: ['typescript', 'typescript-operations'],
     },
-    './dev-test/gql-tag-operations/gql': {
+    './dev-test/gql-tag-operations/gql/': {
       schema: './dev-test/gql-tag-operations/schema.graphql',
       documents: './dev-test/gql-tag-operations/src/**/*.ts',
-      preset: 'gql-tag-operations-preset',
+      preset: 'client',
     },
     './dev-test/gql-tag-operations/graphql/': {
       schema: './dev-test/gql-tag-operations/schema.graphql',
       documents: './dev-test/gql-tag-operations/src/**/*.ts',
       preset: 'client',
     },
-    './dev-test/gql-tag-operations-urql/gql': {
+    './dev-test/gql-tag-operations-urql/gql/': {
       schema: './dev-test/gql-tag-operations-urql/schema.graphql',
       documents: './dev-test/gql-tag-operations-urql/src/**/*.ts',
-      preset: 'gql-tag-operations-preset',
+      preset: 'client',
       presetConfig: { augmentedModuleName: '@urql/core' },
     },
-    './dev-test/gql-tag-operations-masking/gql': {
+    './dev-test/gql-tag-operations-masking/gql/': {
       schema: './dev-test/gql-tag-operations-masking/schema.graphql',
       documents: './dev-test/gql-tag-operations-masking/src/**/*.tsx',
-      preset: 'gql-tag-operations-preset',
-      presetConfig: { fragmentMasking: true },
-    },
-    './dev-test/gql-tag-operations-masking-star-wars/gql': {
-      schema: './dev-test/gql-tag-operations-masking-star-wars/schema.json',
-      documents: './dev-test/gql-tag-operations-masking-star-wars/src/**/*.tsx',
-      preset: 'gql-tag-operations-preset',
+      preset: 'client',
       presetConfig: { fragmentMasking: true },
     },
   },

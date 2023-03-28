@@ -14,6 +14,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Child ) | ( MyOtherType );
+        MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } ) | ( MyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -25,6 +31,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -37,13 +48,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Child;
         MyOtherType: MyOtherType;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -71,6 +87,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'bar' | 'parent'> & { bar: ResolversParentTypes['String'], parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( Omit<MyOtherType, 'bar'> & { bar: ResolversParentTypes['String'] } );
+        MyUnion: ( MyTypeDb ) | ( Omit<MyOtherType, 'bar'> & { bar: ResolversParentTypes['String'] } );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<MyTypeDb>;
         String: ResolverTypeWrapper<number>;
@@ -82,6 +104,11 @@ describe('ResolversTypes', () => {
         Node: ResolversTypes['SomeNode'];
         ID: ResolverTypeWrapper<Scalars['ID']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
+        AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+        AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
         MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
         MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
         Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -94,13 +121,18 @@ describe('ResolversTypes', () => {
         String: number;
         Child: Omit<Child, 'bar' | 'parent'> & { bar: ResolversParentTypes['String'], parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: Omit<MyOtherType, 'bar'> & { bar: ResolversParentTypes['String'] };
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -145,6 +177,11 @@ describe('ResolversTypes', () => {
         MovieLike: ( MovieEntity ) | ( Book );
       };
     `);
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        MovieLike: ( MovieEntity ) | ( Book );
+      };
+    `);
     expect(content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         Movie: ResolverTypeWrapper<MovieEntity>;
@@ -162,7 +199,7 @@ describe('ResolversTypes', () => {
         ID: Scalars['ID'];
         String: Scalars['String'];
         Book: Book;
-        MovieLike: ResolversUnionTypes['MovieLike'];
+        MovieLike: ResolversUnionParentTypes['MovieLike'];
         NonInterfaceHasNarrative: Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversParentTypes['MovieLike'], movie: ResolversParentTypes['Movie'] };
         Boolean: Scalars['Boolean'];
       };
@@ -215,6 +252,11 @@ describe('ResolversTypes', () => {
         MovieLike: ( MovieEntity ) | ( Book );
       };
     `);
+    expect(content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        MovieLike: ( MovieEntity ) | ( Book );
+      };
+    `);
     expect(content).toBeSimilarStringTo(`export type ResolversTypes = {
       Movie: ResolverTypeWrapper<MovieEntity>;
       ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -232,7 +274,7 @@ describe('ResolversTypes', () => {
         ID: Scalars['ID'];
         String: Scalars['String'];
         Book: Book;
-        MovieLike: ResolversUnionTypes['MovieLike'];
+        MovieLike: ResolversUnionParentTypes['MovieLike'];
         NonInterfaceHasNarrative: Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversParentTypes['MovieLike'], movie: ResolversParentTypes['Movie'] };
         LayerOfIndirection: Omit<LayerOfIndirection, 'movies'> & { movies: Array<ResolversParentTypes['NonInterfaceHasNarrative']> };
         AnotherLayerOfIndirection: Omit<AnotherLayerOfIndirection, 'inner'> & { inner: ResolversParentTypes['LayerOfIndirection'] };
@@ -360,6 +402,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Partial<Child> ) | ( Partial<MyOtherType> );
+        MyUnion: ( Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }> ) | ( Partial<MyOtherType> );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
       String: ResolverTypeWrapper<Partial<Scalars['String']>>;
@@ -371,6 +419,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Partial<Scalars['ID']>>;
       SomeNode: ResolverTypeWrapper<Partial<SomeNode>>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Partial<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Partial<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>>;
       MyUnion: Partial<ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>>;
       MyScalar: ResolverTypeWrapper<Partial<Scalars['MyScalar']>>;
       Int: ResolverTypeWrapper<Partial<Scalars['Int']>>;
@@ -382,13 +435,18 @@ describe('ResolversTypes', () => {
         String: Partial<Scalars['String']>;
         Child: Partial<Child>;
         MyOtherType: Partial<MyOtherType>;
-        ChildUnion: Partial<ResolversUnionTypes['ChildUnion']>;
+        ChildUnion: Partial<ResolversUnionParentTypes['ChildUnion']>;
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Partial<Scalars['ID']>;
         SomeNode: Partial<SomeNode>;
-        MyUnion: Partial<ResolversUnionTypes['MyUnion']>;
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Partial<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }>;
+        AnotherNodeWithAll: Partial<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> }>;
+        MyUnion: Partial<ResolversUnionParentTypes['MyUnion']>;
         MyScalar: Partial<Scalars['MyScalar']>;
         Int: Partial<Scalars['Int']>;
         Boolean: Partial<Scalars['Boolean']>;
@@ -415,6 +473,12 @@ describe('ResolversTypes', () => {
       }
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( CustomPartial<Child> ) | ( CustomPartial<MyOtherType> );
+        MyUnion: ( CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }> ) | ( CustomPartial<MyOtherType> );
+      }
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
       String: ResolverTypeWrapper<CustomPartial<Scalars['String']>>;
@@ -426,6 +490,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<CustomPartial<Scalars['ID']>>;
       SomeNode: ResolverTypeWrapper<CustomPartial<SomeNode>>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<CustomPartial<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
+      AnotherNodeWithAll: ResolverTypeWrapper<CustomPartial<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>>;
       MyUnion: CustomPartial<ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>>;
       MyScalar: ResolverTypeWrapper<CustomPartial<Scalars['MyScalar']>>;
       Int: ResolverTypeWrapper<CustomPartial<Scalars['Int']>>;
@@ -437,13 +506,18 @@ describe('ResolversTypes', () => {
         String: CustomPartial<Scalars['String']>;
         Child: CustomPartial<Child>;
         MyOtherType: CustomPartial<MyOtherType>;
-        ChildUnion: CustomPartial<ResolversUnionTypes['ChildUnion']>;
+        ChildUnion: CustomPartial<ResolversUnionParentTypes['ChildUnion']>;
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: CustomPartial<Scalars['ID']>;
         SomeNode: CustomPartial<SomeNode>;
-        MyUnion: CustomPartial<ResolversUnionTypes['MyUnion']>;
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: CustomPartial<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }>;
+        AnotherNodeWithAll: CustomPartial<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> }>;
+        MyUnion: CustomPartial<ResolversUnionParentTypes['MyUnion']>;
         MyScalar: CustomPartial<Scalars['MyScalar']>;
         Int: CustomPartial<Scalars['Int']>;
         Boolean: CustomPartial<Scalars['Boolean']>;
@@ -472,6 +546,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( MyOtherType );
+        MyUnion: ( CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }> ) | ( MyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<CustomPartial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -483,6 +563,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -494,13 +579,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -602,6 +692,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( MyOtherType );
+        MyUnion: ( DatabaseMyType ) | ( MyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<DatabaseMyType>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -613,6 +709,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -624,13 +725,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -660,6 +766,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( DatabaseMyOtherType );
+        MyUnion: ( DatabaseMyType ) | ( DatabaseMyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<DatabaseMyType>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -671,6 +783,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -682,13 +799,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: DatabaseMyOtherType;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -721,6 +843,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( DatabaseMyOtherType );
+        MyUnion: ( DatabaseMyType ) | ( DatabaseMyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<DatabaseMyType>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -732,6 +860,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -743,13 +876,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: DatabaseMyOtherType;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -785,6 +923,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<any>;
       SomeNode: ResolverTypeWrapper<any>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<any>;
+      AnotherNodeWithAll: ResolverTypeWrapper<any>;
       MyUnion: ResolverTypeWrapper<any>;
       MyScalar: ResolverTypeWrapper<any>;
       Int: ResolverTypeWrapper<any>;
@@ -802,6 +945,11 @@ describe('ResolversTypes', () => {
       Node: ResolversParentTypes['SomeNode'];
       ID: any;
       SomeNode: any;
+      AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: any;
+      AnotherNodeWithAll: any;
       MyUnion: any;
       MyScalar: any;
       Int: any;
@@ -830,6 +978,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( CustomMyOtherType );
+        MyUnion: ( MyTypeDb ) | ( CustomMyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<MyTypeDb>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -841,6 +995,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -852,13 +1011,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: CustomMyOtherType;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -886,6 +1050,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( MyOtherType );
+        MyUnion: ( Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }> ) | ( MyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
         String: ResolverTypeWrapper<Scalars['String']>;
@@ -897,10 +1067,39 @@ describe('ResolversTypes', () => {
         Node: ResolversTypes['SomeNode'];
         ID: ResolverTypeWrapper<Scalars['ID']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
+        AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+        AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
         MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
         MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
         Int: ResolverTypeWrapper<Scalars['Int']>;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        MyType: Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }>;
+        String: Scalars['String'];
+        Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
+        MyOtherType: MyOtherType;
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
+        Query: {};
+        Subscription: {};
+        Node: ResolversParentTypes['SomeNode'];
+        ID: Scalars['ID'];
+        SomeNode: SomeNode;
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
+        MyScalar: Scalars['MyScalar'];
+        Int: Scalars['Int'];
+        Boolean: Scalars['Boolean'];
       };
     `);
   });
@@ -1388,6 +1587,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( MyOtherTypeCustom );
+        MyUnion: ( Omit<MyType, 'otherType' | 'unionChild'> & { otherType?: Maybe<ResolversParentTypes['MyOtherType']>, unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } ) | ( MyOtherTypeCustom );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<Omit<MyType, 'otherType' | 'unionChild'> & { otherType?: Maybe<ResolversTypes['MyOtherType']>, unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -1399,6 +1604,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -1410,13 +1620,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherTypeCustom;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -1446,6 +1661,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( MyOtherTypeCustom );
+        MyUnion: ( MyTypeCustom ) | ( MyOtherTypeCustom );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
       MyType: ResolverTypeWrapper<MyTypeCustom>;
       String: ResolverTypeWrapper<Scalars['String']>;
@@ -1457,6 +1678,11 @@ describe('ResolversTypes', () => {
       Node: ResolversTypes['SomeNode'];
       ID: ResolverTypeWrapper<Scalars['ID']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
+      AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
       MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
       MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
       Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -1468,13 +1694,18 @@ describe('ResolversTypes', () => {
         String: Scalars['String'];
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherTypeCustom;
-        ChildUnion: ResolversUnionTypes['ChildUnion'];
+        ChildUnion: ResolversUnionParentTypes['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversParentTypes['SomeNode'];
         ID: Scalars['ID'];
         SomeNode: SomeNode;
-        MyUnion: ResolversUnionTypes['MyUnion'];
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+        AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+        MyUnion: ResolversUnionParentTypes['MyUnion'];
         MyScalar: Scalars['MyScalar'];
         Int: Scalars['Int'];
         Boolean: Scalars['Boolean'];
@@ -1504,6 +1735,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> } ) | ( MyNamespace.MyCustomOtherType );
+        MyUnion: ( Omit<MyType, 'otherType' | 'unionChild'> & { otherType?: Maybe<ResolversParentTypes['MyOtherType']>, unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } ) | ( MyNamespace.MyCustomOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<Omit<MyType, 'otherType' | 'unionChild'> & { otherType?: Maybe<ResolversTypes['MyOtherType']>, unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
         String: ResolverTypeWrapper<Scalars['String']>;
@@ -1515,6 +1752,11 @@ describe('ResolversTypes', () => {
         Node: ResolversTypes['SomeNode'];
         ID: ResolverTypeWrapper<Scalars['ID']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
+        AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+        AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
         MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
         MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
         Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -1528,13 +1770,18 @@ describe('ResolversTypes', () => {
       String: Scalars['String'];
       Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
       MyOtherType: MyNamespace.MyCustomOtherType;
-      ChildUnion: ResolversUnionTypes['ChildUnion'];
+      ChildUnion: ResolversUnionParentTypes['ChildUnion'];
       Query: {};
       Subscription: {};
       Node: ResolversParentTypes['SomeNode'];
       ID: Scalars['ID'];
       SomeNode: SomeNode;
-      MyUnion: ResolversUnionTypes['MyUnion'];
+      AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+      AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+      MyUnion: ResolversUnionParentTypes['MyUnion'];
       MyScalar: Scalars['MyScalar'];
       Int: Scalars['Int'];
       Boolean: Scalars['Boolean'];
@@ -1572,6 +1819,7 @@ describe('ResolversTypes', () => {
 
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
     expect(result.content).not.toBeSimilarStringTo(`export type ResolversUnionTypes`);
+    expect(result.content).not.toBeSimilarStringTo(`export type ResolversParentUnionTypes`);
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
@@ -1584,6 +1832,11 @@ describe('ResolversTypes', () => {
         Node: ResolversTypes['SomeNode'];
         ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
+        AnotherNodeWithAll: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         MyUnion: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         MyScalar: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         Int: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
@@ -1603,6 +1856,11 @@ describe('ResolversTypes', () => {
         Node: ResolversParentTypes['SomeNode'];
         ID: MyNamespace.MyDefaultMapper;
         SomeNode: MyNamespace.MyDefaultMapper;
+        AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: MyNamespace.MyDefaultMapper;
+        AnotherNodeWithAll: MyNamespace.MyDefaultMapper;
         MyUnion: MyNamespace.MyDefaultMapper;
         MyScalar: MyNamespace.MyDefaultMapper;
         Int: MyNamespace.MyDefaultMapper;
@@ -1630,6 +1888,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( Child ) | ( MyOtherType );
+        MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> } ) | ( MyOtherType );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
         String: ResolverTypeWrapper<Scalars['String']>;
@@ -1641,6 +1905,11 @@ describe('ResolversTypes', () => {
         Node: ResolversTypes['SomeNode'];
         ID: ResolverTypeWrapper<Scalars['ID']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
+        AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
+        AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
         MyUnion: ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>;
         MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
         Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -1654,13 +1923,18 @@ describe('ResolversTypes', () => {
       String: Scalars['String'];
       Child: Child;
       MyOtherType: MyOtherType;
-      ChildUnion: ResolversUnionTypes['ChildUnion'];
+      ChildUnion: ResolversUnionParentTypes['ChildUnion'];
       Query: MyNamespace.MyRootType;
       Subscription: MyNamespace.MyRootType;
       Node: ResolversParentTypes['SomeNode'];
       ID: Scalars['ID'];
       SomeNode: SomeNode;
-      MyUnion: ResolversUnionTypes['MyUnion'];
+      AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
+      AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
+      MyUnion: ResolversUnionParentTypes['MyUnion'];
       MyScalar: Scalars['MyScalar'];
       Int: Scalars['Int'];
       Boolean: Scalars['Boolean'];
@@ -1689,6 +1963,12 @@ describe('ResolversTypes', () => {
       };
     `);
     expect(result.content).toBeSimilarStringTo(`
+      export type ResolversUnionParentTypes = {
+        ChildUnion: ( MyNamespace.MyDefaultMapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> }> ) | ( MyNamespace.MyDefaultMapper<MyOtherType> );
+        MyUnion: ( MyNamespace.MyType<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }> ) | ( MyNamespace.MyDefaultMapper<MyOtherType> );
+      };
+    `);
+    expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<MyNamespace.MyType<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
         String: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['String']>>;
@@ -1700,26 +1980,35 @@ describe('ResolversTypes', () => {
         Node: ResolversTypes['SomeNode'];
         ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['ID']>>;
         SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<SomeNode>>;
+        AnotherNode: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChild: ResolversTypes['AnotherNodeWithChild'] | ResolversTypes['AnotherNodeWithAll'];
+        WithChildren: ResolversTypes['AnotherNodeWithAll'];
+        AnotherNodeWithChild: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>>;
+        AnotherNodeWithAll: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>>;
         MyUnion: MyNamespace.MyDefaultMapper<ResolverTypeWrapper<ResolversUnionTypes['MyUnion']>>;
         MyScalar: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['MyScalar']>>;
         Int: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['Int']>>;
         Boolean: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['Boolean']>>;
       };
     `);
-
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversParentTypes = {
       MyType: MyNamespace.MyType<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }>;
       String: MyNamespace.MyDefaultMapper<Scalars['String']>;
       Child: MyNamespace.MyDefaultMapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> }>;
       MyOtherType: MyNamespace.MyDefaultMapper<MyOtherType>;
-      ChildUnion: MyNamespace.MyDefaultMapper<ResolversUnionTypes['ChildUnion']>;
+      ChildUnion: MyNamespace.MyDefaultMapper<ResolversUnionParentTypes['ChildUnion']>;
       Query: {};
       Subscription: {};
       Node: ResolversParentTypes['SomeNode'];
       ID: MyNamespace.MyDefaultMapper<Scalars['ID']>;
       SomeNode: MyNamespace.MyDefaultMapper<SomeNode>;
-      MyUnion: MyNamespace.MyDefaultMapper<ResolversUnionTypes['MyUnion']>;
+      AnotherNode: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChild: ResolversParentTypes['AnotherNodeWithChild'] | ResolversParentTypes['AnotherNodeWithAll'];
+      WithChildren: ResolversParentTypes['AnotherNodeWithAll'];
+      AnotherNodeWithChild: MyNamespace.MyDefaultMapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> }>;
+      AnotherNodeWithAll: MyNamespace.MyDefaultMapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> }>;
+      MyUnion: MyNamespace.MyDefaultMapper<ResolversUnionParentTypes['MyUnion']>;
       MyScalar: MyNamespace.MyDefaultMapper<Scalars['MyScalar']>;
       Int: MyNamespace.MyDefaultMapper<Scalars['Int']>;
       Boolean: MyNamespace.MyDefaultMapper<Scalars['Boolean']>;

@@ -1,7 +1,7 @@
 import type { PluginFunction } from '@graphql-codegen/plugin-helpers';
 
 const fragmentTypeHelper = `
-export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocumentType extends DocumentNode<
+export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
   infer TType,
   any
 >
@@ -14,7 +14,7 @@ export type FragmentType<TDocumentType extends DocumentNode<any, any>> = TDocume
 
 const makeFragmentDataHelper = `
 export function makeFragmentData<
-  F extends DocumentNode,
+  F extends DocumentTypeDecoration<any, any>,
   FT extends ResultOf<F>
 >(data: FT, _fragment: F): FragmentType<F> {
   return data as FragmentType<F>;
@@ -35,8 +35,8 @@ const createUnmaskFunctionTypeDefinition = (
   unmaskFunctionName = defaultUnmaskFunctionName,
   opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
 ) => `export function ${unmaskFunctionName}<TType>(
-  _documentNode: DocumentNode<TType, any>,
-  fragmentType: ${modifyType('FragmentType<DocumentNode<TType, any>>', opts)}
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: ${modifyType('FragmentType<DocumentTypeDecoration<TType, any>>', opts)}
 ): ${modifyType('TType', opts)}`;
 
 const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
@@ -76,7 +76,7 @@ export const plugin: PluginFunction<{
 }> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
-  } { ResultOf, TypedDocumentNode as DocumentNode,  } from '@graphql-typed-document-node/core';\n`;
+  } { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';\n`;
 
   if (augmentedModuleName == null) {
     return [

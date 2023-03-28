@@ -3772,7 +3772,6 @@
                 "client",
                 "client-preset",
                 "gql-tag-operations",
-                "gql-tag-operations-preset",
                 "graphql-modules",
                 "graphql-modules-preset",
                 "import-types",

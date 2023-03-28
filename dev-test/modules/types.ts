@@ -167,6 +167,11 @@ export type ResolversUnionTypes = {
   PaymentOption: CreditCard | Paypal;
 };
 
+/** Mapping of union parent types */
+export type ResolversUnionParentTypes = {
+  PaymentOption: CreditCard | Paypal;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Article: ResolverTypeWrapper<Article>;
@@ -198,7 +203,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Mutation: {};
-  PaymentOption: ResolversUnionTypes['PaymentOption'];
+  PaymentOption: ResolversUnionParentTypes['PaymentOption'];
   Paypal: Paypal;
   Query: {};
   String: Scalars['String'];
