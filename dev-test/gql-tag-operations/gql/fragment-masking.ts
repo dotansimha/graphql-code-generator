@@ -47,21 +47,19 @@ export function makeFragmentData<F extends DocumentTypeDecoration<any, any>, FT 
 ): FragmentType<F> {
   return data as FragmentType<F>;
 }
-
 export function isFragmentReady<TQuery, TFrag>(
-  queryNode: DocumentTypeDecoration<TQuery, any>, // works with strings
-  fragmentNode: TypedDocumentNode<TFrag>, // doesn't work with strings yet
+  queryNode: TypedDocumentNode<TQuery>,
+  fragmentNode: TypedDocumentNode<TFrag>,
   data: TQuery
 ): data is FragmentType<typeof fragmentNode> {
   const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, string[]> } }).__meta__
     ?.deferredFields;
-  if (deferredFields) {
-    const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
-    const fragName = fragDef?.name?.value;
-    const fields = fragName ? deferredFields[fragName] : [];
 
-    return fields.length > 0 && fields.some(field => field in (data as any));
-  }
+  if (!deferredFields) return true;
 
-  return true;
+  const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
+  const fragName = fragDef?.name?.value;
+
+  const fields = fragName ? deferredFields[fragName] : [];
+  return fields.length > 0 && fields.some(field => data && field in (data as any));
 }

@@ -803,22 +803,21 @@ export * from "./gql";`);
         >(data: FT, _fragment: F): FragmentType<F> {
           return data as FragmentType<F>;
         }
-
         export function isFragmentReady<TQuery, TFrag>(
-          queryNode: DocumentTypeDecoration<TQuery, any>, // works with strings
-          fragmentNode: TypedDocumentNode<TFrag>, // doesn't work with strings yet
+          queryNode: TypedDocumentNode<TQuery>,
+          fragmentNode: TypedDocumentNode<TFrag>,
           data: TQuery
         ): data is FragmentType<typeof fragmentNode> {
-          const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, string[]> } }).__meta__?.deferredFields;
-          if (deferredFields) {
-            const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
-            const fragName = fragDef?.name?.value;
-            const fields = fragName ? deferredFields[fragName] : [];
+          const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, string[]> } }).__meta__
+            ?.deferredFields;
 
-            return fields.length > 0 && fields.some(field => field in (data as any));
-          }
+          if (!deferredFields) return true;
 
-          return true;
+          const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
+          const fragName = fragDef?.name?.value;
+
+          const fields = fragName ? deferredFields[fragName] : [];
+          return fields.length > 0 && fields.some(field => data && field in (data as any));
         }
         "
       `);
@@ -1869,7 +1868,7 @@ export * from "./gql.js";`);
       `);
     });
 
-    it.only('works with documentMode: string', async () => {
+    it('works with documentMode: string', async () => {
       const result = await executeCodegen({
         schema: [
           /* GraphQL */ `
@@ -1949,7 +1948,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: { hash: string }) {
+          constructor(private value: string, public __meta__?: Record<string, any>) {
             super(value);
           }
 
@@ -2066,7 +2065,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: { hash: string }) {
+          constructor(private value: string, public __meta__?: Record<string, any>) {
             super(value);
           }
 
@@ -2087,7 +2086,7 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
-        }\`, {"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        }\`, {"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
         export const FoosDocument = new TypedDocumentString(\`
             query Foos {
           foos {
@@ -2096,7 +2095,7 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
-        }\`, {"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+        }\`, {"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
   });
@@ -2182,7 +2181,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: { hash: string }) {
+          constructor(private value: string, public __meta__?: Record<string, any>) {
             super(value);
           }
 
