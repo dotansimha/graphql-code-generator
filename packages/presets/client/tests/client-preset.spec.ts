@@ -804,9 +804,9 @@ export * from "./gql";`);
           return data as FragmentType<F>;
         }
         export function isFragmentReady<TQuery, TFrag>(
-          queryNode: TypedDocumentNode<TQuery>,
+          queryNode: DocumentTypeDecoration<TQuery, any>,
           fragmentNode: TypedDocumentNode<TFrag>,
-          data: TQuery
+          data: Record<string, any>
         ): data is FragmentType<typeof fragmentNode> {
           const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, string[]> } }).__meta__
             ?.deferredFields;

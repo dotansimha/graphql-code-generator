@@ -78,7 +78,7 @@ const isFragmentReadyFunction = (isStringDocumentMode: boolean) => {
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: TypedDocumentString<TQuery, any>,
   fragmentNode: TypedDocumentString<TFrag, any>,
-  data: TQuery
+  data: Record<string, any>
 ): data is FragmentType<typeof fragmentNode> {
   const deferredFields = queryNode.__meta__?.deferredFields as { [fragName: string]: string[] };
 
@@ -93,9 +93,9 @@ export function isFragmentReady<TQuery, TFrag>(
   }
   return `\
 export function isFragmentReady<TQuery, TFrag>(
-  queryNode: TypedDocumentNode<TQuery>,
+  queryNode: DocumentTypeDecoration<TQuery, any>,
   fragmentNode: TypedDocumentNode<TFrag>,
-  data: TQuery
+  data: Record<string, any>
 ): data is FragmentType<typeof fragmentNode> {
   const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, string[]> } }).__meta__
     ?.deferredFields;
