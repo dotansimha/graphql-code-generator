@@ -533,7 +533,7 @@
         "anchor": "custom-schema-loader"
       }
     ],
-    "content": "78719d9c51a5563fd0112d0d0c1fe7be",
+    "content": "2741d5131dc2271008489e0448732efe",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/schema-field",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
@@ -1331,6 +1331,29 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-docs-migration-guides-graphql-cli",
+    "headings": [
+      "Migrating from GraphQL-CLI to Codegen CLI"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "Migrating from GraphQL-CLI to Codegen CLI",
+        "anchor": "migrating-from-graphql-cli-to-codegen-cli"
+      }
+    ],
+    "content": "a8ea4ebbcac336dd5c80d709710b17cd",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/migration/graphql-cli",
+    "domain": "https://www.the-guild.dev/graphql/codegen",
+    "hierarchy": [
+      "Docs",
+      "Migration Guides"
+    ],
+    "source": "Code Generator",
+    "title": "GraphQL-CLI Deprecation",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-writing-plugins-",
     "headings": [],
     "toc": [],
@@ -1894,59 +1917,6 @@
     "type": "Documentation"
   },
   {
-    "objectID": "code-generator-plugins-presets-gql-tag-operations-preset",
-    "headings": [
-      "Getting Started",
-      "Improving bundle-size with the gql-tag-operations babel plugin",
-      "Using module augmentation for an existing `gql` function from a library",
-      "Fragment Masking"
-    ],
-    "toc": [
-      {
-        "children": [],
-        "title": "Getting Started",
-        "anchor": "getting-started"
-      },
-      {
-        "children": [],
-        "title": "Improving bundle-size with the gql-tag-operations babel plugin",
-        "anchor": "improving-bundle-size-with-the-gql-tag-operations-babel-plugin"
-      },
-      {
-        "children": [],
-        "title": "Using module augmentation for an existing `gql` function from a library",
-        "anchor": "using-module-augmentation-for-an-existing-gql-function-from-a-library"
-      },
-      {
-        "children": [
-          {
-            "children": [
-              {
-                "children": [],
-                "title": "Module augmentation with fragment masking",
-                "anchor": "module-augmentation-with-fragment-masking"
-              }
-            ],
-            "title": "Fragment Masking with custom unmask name",
-            "anchor": "fragment-masking-with-custom-unmask-name"
-          }
-        ],
-        "title": "Fragment Masking",
-        "anchor": "fragment-masking"
-      }
-    ],
-    "content": "777d1faa1c92466103763c69d921b091",
-    "url": "https://www.the-guild.dev/graphql/codegen/plugins/presets/gql-tag-operations-preset",
-    "domain": "https://www.the-guild.dev/graphql/codegen",
-    "hierarchy": [
-      "Plugins",
-      "Presets"
-    ],
-    "source": "Code Generator",
-    "title": "gql-tag-operations",
-    "type": "Documentation"
-  },
-  {
     "objectID": "code-generator-plugins-presets-graphql-modules-preset",
     "headings": [
       "Usage Example",
@@ -2020,7 +1990,8 @@
       "Config API",
       "Fragment Masking",
       "Persisted documents",
-      "Reducing bundle size: Babel plugin"
+      "Reducing bundle size: Babel plugin",
+      "DocumentMode"
     ],
     "toc": [
       {
@@ -2086,6 +2057,17 @@
         ],
         "title": "Reducing bundle size: Babel plugin",
         "anchor": "reducing-bundle-size-babel-plugin"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "When to use a string DocumentMode?",
+            "anchor": "when-to-use-a-string-documentmode"
+          }
+        ],
+        "title": "DocumentMode",
+        "anchor": "documentmode"
       }
     ],
     "content": "d41d8cd98f00b204e9800998ecf8427e",

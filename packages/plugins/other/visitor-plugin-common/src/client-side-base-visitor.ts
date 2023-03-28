@@ -329,7 +329,7 @@ export class ClientSideBaseVisitor<
 
   protected _includeFragments(fragments: string[], nodeKind: 'FragmentDefinition' | 'OperationDefinition'): string {
     if (fragments && fragments.length > 0) {
-      if (this.config.documentMode === DocumentMode.documentNode) {
+      if (this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.string) {
         return Array.from(this._fragments.values())
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))
@@ -426,7 +426,23 @@ export class ClientSideBaseVisitor<
     }
 
     if (this.config.documentMode === DocumentMode.string) {
-      return '`' + doc + '`';
+      let meta: ExecutableDocumentNodeMeta | void;
+
+      if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
+        meta = this._onExecutableDocumentNode({
+          kind: Kind.DOCUMENT,
+          definitions: gqlTag([doc]).definitions,
+        });
+
+        if (meta && this._omitDefinitions === true) {
+          return `{${`"__meta__":${JSON.stringify(meta)},`.slice(0, -1)}}`;
+        }
+      }
+      if (meta) {
+        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify(meta)})`;
+      }
+
+      return `new TypedDocumentString(\`${doc}\`)`;
     }
 
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');

@@ -2,6 +2,5 @@
   "preset-client": "client-preset",
   "graphql-modules-preset": "graphql-modules",
   "import-types-preset": "import-types",
-  "near-operation-file-preset": "near-operation-file",
-  "gql-tag-operations-preset": "gql-tag-operations"
+  "near-operation-file-preset": "near-operation-file"
 }

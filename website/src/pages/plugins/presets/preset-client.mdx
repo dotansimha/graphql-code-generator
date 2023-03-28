@@ -1,5 +1,6 @@
 ---
 title: client-preset
+description: The client preset provides typed GraphQL operations (Query, Mutation and Subscription) by perfectly integrating with your favorite GraphQL clients.
 ---
 
 import { Callout, PackageCmd } from '@theguild/components'
@@ -50,6 +51,7 @@ The `client` preset allows the following `config` options:
 - [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
 - [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
 - [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
+- [`documentMode`](#documentmode): Allows you to control how the documents are generated.
 
 For more information or feature request, please [refer to the repository discussions](https://github.com/dotansimha/graphql-code-generator/discussions).
 
@@ -450,6 +452,22 @@ module.exports = {
 
 ### SWC plugin
 
+<Callout type="warning">
+  As of 2023/03/11, SWC's custom plugins is still an experimental feature, that means unexpected breaking changes that
+  makes specific nextjs versions or our plugin incompatible are possible, so please file an issue
+  [here](https://github.com/dotansimha/graphql-code-generator/issues/new?assignees=&labels=&template=bug_report.yml&title=@graphql-codegen/client-preset-swc-plugin%20...)
+  if you faced any unexpected behavior/errors while using the plugin.
+
+Pro tip: if you faced the following obscure error, or the nextjs `dev` script just instantly terminates the process without any errors,
+it most likely means that SWC is not happy with your nextjs version, so try upgrading it to `latest` if possible,
+then let us know of your current broken version to try fixing it or documenting its no longer supported.
+
+```sh
+thread '<unnamed>' panicked at 'failed to invoke plugin: failed to invoke plugin on 'Some("/app/node_modules/next/dist/client/router.js")'
+```
+
+</Callout>
+
 The SWC plugin is not bundled in the `client-preset` package, so you will need to install it separately:
 
 <PackageCmd packages={['-D @graphql-codegen/client-preset-swc-plugin']} />
@@ -508,3 +526,86 @@ const nextConfig = {
 ```
 
 Note that you will need to provide the `artifactDirectory` path that should be the same as the one configured in your `codegen.ts`
+
+## DocumentMode
+
+The `DocumentMode` option can be used to control how the plugin will generate the document nodes.
+
+By default, the generated documents are of type `TypedDocumentNode` which is a fully typed GraphQL operation AST. Example:
+
+```ts filename="out/gql.ts"
+export type HelloQueryVariables = Exact<{ [key: string]: never }>
+
+export type HelloQuery = { __typename?: 'Query'; hello: string }
+
+export const HelloDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'hello' },
+      selectionSet: { kind: 'SelectionSet', selections: [{ kind: 'Field', name: { kind: 'Name', value: 'hello' } }] }
+    }
+  ]
+} as unknown as DocumentNode<HelloQuery, HelloQueryVariables>
+```
+
+The `documentMode` option can be used to change the generated documents to `string`:
+
+```ts filename="codegen.ts" {9-11}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      config: {
+        documentMode: 'string'
+      }
+    }
+  }
+}
+```
+
+This will generate the following:
+
+```ts filename="out/gql.ts"
+export type HelloQueryVariables = Exact<{ [key: string]: never }>
+
+export type HelloQuery = { __typename?: 'Query'; hello: string }
+
+export const HelloDocument = new TypedDocumentString(`
+  query hello {
+    hello
+  }
+`) as unknown as TypedDocumentString<HelloQuery, HelloQueryVariables>
+```
+
+It can then be used as follow:
+
+```ts filename="Fetch example"
+import { graphql } from './gql'
+
+const helloQuery = graphql(`
+  query hello {
+    hello
+  }
+`)
+
+fetch('https:<your-graphql-api>', {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify({
+    query: helloQuery.toString()
+  })
+})
+```
+
+### When to use a string DocumentMode?
+
+The `string` DocumentMode is useful when you want to reduce the bundle size of your application as you will get string literals instead of typed ASTs. This is useful when your GraphQL client allows you to send a string literal as the query and you don't need to use the AST on the client, e.g. when using `graphql-request`, SWR, React Query, etc.

@@ -35,6 +35,7 @@ import {
   EnumValuesMap,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
+  ResolversNonOptionalTypenameConfig,
 } from './types.js';
 import {
   buildScalarsFromConfig,
@@ -73,6 +74,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   internalResolversPrefix: string;
   onlyResolveTypeForInterfaces: boolean;
   directiveResolverMappings: Record<string, string>;
+  resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -538,6 +540,11 @@ export interface RawResolversConfig extends RawConfig {
    */
   onlyResolveTypeForInterfaces?: boolean;
   /**
+   * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
+   * @default false
+   */
+  resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
+  /**
    * @ignore
    */
   directiveResolverMappings?: Record<string, string>;
@@ -561,7 +568,9 @@ export class BaseResolversVisitor<
   protected _resolversTypes: ResolverTypes = {};
   protected _resolversParentTypes: ResolverParentTypes = {};
   protected _hasReferencedResolversUnionTypes = false;
+  protected _hasReferencedResolversUnionParentTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
+  protected _resolversUnionParentTypes: Record<string, string> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
   protected _federation: ApolloFederation;
@@ -604,6 +613,9 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
+      resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
+        getConfigValue(rawConfig.resolversNonOptionalTypename, false)
+      ),
       ...additionalConfig,
     } as TPluginConfig);
 
@@ -615,18 +627,26 @@ export class BaseResolversVisitor<
       this.convertName,
       this.config.namespacedImportName
     );
-    this._resolversTypes = this.createResolversFields(
-      type => this.applyResolverTypeWrapper(type),
-      type => this.clearResolverTypeWrapper(type),
-      name => this.getTypeToUse(name)
-    );
-    this._resolversParentTypes = this.createResolversFields(
-      type => type,
-      type => type,
-      name => this.getParentTypeToUse(name),
-      namedType => !isEnumType(namedType)
-    );
-    this._resolversUnionTypes = this.createResolversUnionTypes();
+
+    this._resolversTypes = this.createResolversFields({
+      applyWrapper: type => this.applyResolverTypeWrapper(type),
+      clearWrapper: type => this.clearResolverTypeWrapper(type),
+      getTypeToUse: name => this.getTypeToUse(name),
+      referencedUnionType: 'ResolversUnionTypes',
+    });
+    this._resolversParentTypes = this.createResolversFields({
+      applyWrapper: type => type,
+      clearWrapper: type => type,
+      getTypeToUse: name => this.getParentTypeToUse(name),
+      referencedUnionType: 'ResolversUnionParentTypes',
+      shouldInclude: namedType => !isEnumType(namedType),
+    });
+    this._resolversUnionTypes = this.createResolversUnionTypes({
+      getTypeToUse: this.getTypeToUse,
+    });
+    this._resolversUnionParentTypes = this.createResolversUnionTypes({
+      getTypeToUse: this.getParentTypeToUse,
+    });
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
     this._directiveContextTypesMap = this.createDirectivedContextType();
     this._directiveResolverMappings = rawConfig.directiveResolverMappings ?? {};
@@ -690,12 +710,19 @@ export class BaseResolversVisitor<
   }
 
   // Kamil: this one is heeeeavvyyyy
-  protected createResolversFields(
-    applyWrapper: (str: string) => string,
-    clearWrapper: (str: string) => string,
-    getTypeToUse: (str: string) => string,
-    shouldInclude?: (type: GraphQLNamedType) => boolean
-  ): ResolverTypes {
+  protected createResolversFields({
+    applyWrapper,
+    clearWrapper,
+    getTypeToUse,
+    referencedUnionType,
+    shouldInclude,
+  }: {
+    applyWrapper: (str: string) => string;
+    clearWrapper: (str: string) => string;
+    getTypeToUse: (str: string) => string;
+    referencedUnionType: 'ResolversUnionTypes' | 'ResolversUnionParentTypes';
+    shouldInclude?: (type: GraphQLNamedType) => boolean;
+  }): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
@@ -756,8 +783,12 @@ export class BaseResolversVisitor<
       } else if (isScalar) {
         prev[typeName] = applyWrapper(this._getScalar(typeName));
       } else if (isUnionType(schemaType)) {
-        this._hasReferencedResolversUnionTypes = true;
-        const resolversType = this.convertName('ResolversUnionTypes');
+        if (referencedUnionType === 'ResolversUnionTypes') {
+          this._hasReferencedResolversUnionTypes = true;
+        } else if (referencedUnionType === 'ResolversUnionParentTypes') {
+          this._hasReferencedResolversUnionParentTypes = true;
+        }
+        const resolversType = this.convertName(referencedUnionType);
         prev[typeName] = applyWrapper(`${resolversType}['${typeName}']`);
       } else if (isEnumType(schemaType)) {
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
@@ -851,7 +882,11 @@ export class BaseResolversVisitor<
     return `Array<${t}>`;
   }
 
-  protected createResolversUnionTypes(): Record<string, string> {
+  protected createResolversUnionTypes({
+    getTypeToUse,
+  }: {
+    getTypeToUse: (name: string) => string;
+  }): Record<string, string> {
     if (!this._hasReferencedResolversUnionTypes) {
       return {};
     }
@@ -877,11 +912,8 @@ export class BaseResolversVisitor<
 
           // 2b. Find fields to Omit if needed.
           //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
-          //  - If there are fields to Omit, "type with maybe Omit"
-          const fieldsToOmit = this.getRelevantFieldsToOmit({
-            schemaType: unionMemberType,
-            getTypeToUse: this.getTypeToUse,
-          });
+          //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
+          const fieldsToOmit = this.getRelevantFieldsToOmit({ schemaType: unionMemberType, getTypeToUse });
           if (fieldsToOmit.length > 0) {
             unionMemberValue = this.replaceFieldsInType(unionMemberValue, fieldsToOmit);
           }
@@ -899,7 +931,11 @@ export class BaseResolversVisitor<
             return replacePlaceholder(this.config.defaultMapper.type, finalTypename);
           }
 
-          return unionMemberValue;
+          const nonOptionalTypenameModifier = this.config.resolversNonOptionalTypename.unionMember
+            ? ` & { __typename: "${unionMemberType}" }`
+            : '';
+
+          return `${unionMemberValue}${nonOptionalTypenameModifier}`;
         });
         res[typeName] = referencedTypes.map(type => `( ${type} )`).join(' | '); // Must wrap every union member in explicit "( )" to separate the members
       }
@@ -977,6 +1013,24 @@ export class BaseResolversVisitor<
       .withComment('Mapping of union types')
       .withBlock(
         Object.entries(this._resolversUnionTypes)
+          .map(([typeName, value]) => indent(`${typeName}: ${value}${this.getPunctuation(declarationKind)}`))
+          .join('\n')
+      ).string;
+  }
+
+  public buildResolversUnionParentTypes(): string {
+    if (Object.keys(this._resolversUnionParentTypes).length === 0) {
+      return '';
+    }
+
+    const declarationKind = 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName('ResolversUnionParentTypes'))
+      .withComment('Mapping of union parent types')
+      .withBlock(
+        Object.entries(this._resolversUnionParentTypes)
           .map(([typeName, value]) => indent(`${typeName}: ${value}${this.getPunctuation(declarationKind)}`))
           .join('\n')
       ).string;
@@ -1582,4 +1636,23 @@ function replacePlaceholder(pattern: string, typename: string): string {
 
 function hasPlaceholder(pattern: string): boolean {
   return pattern.includes('{T}');
+}
+
+function normalizeResolversNonOptionalTypename(
+  input?: boolean | ResolversNonOptionalTypenameConfig
+): ResolversNonOptionalTypenameConfig {
+  const defaultConfig: ResolversNonOptionalTypenameConfig = {
+    unionMember: false,
+  };
+
+  if (typeof input === 'boolean') {
+    return {
+      unionMember: input,
+    };
+  }
+
+  return {
+    ...defaultConfig,
+    ...input,
+  };
 }

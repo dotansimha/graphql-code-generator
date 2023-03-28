@@ -1,3 +1,7 @@
+---
+description: How to specify your GraphQL Schema in GraphQL Code Generator. Learn how to load your schema from a remote server, local file, or multiple files.
+---
+
 import { Callout } from '@theguild/components'
 
 # `schema` field
@@ -150,6 +154,26 @@ const config: CodegenConfig = {
     {
       'http://localhost:3000/graphql': {
         method: 'GET',
+      }
+    }
+  ]
+};
+export default config;
+
+```
+
+##### `handleAsSDL`
+
+Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection. Example use case is when using schema registry like [GraphQL Hive](https://docs.graphql-hive.com/features/high-availability-cdn#graphql-schema-sdl).
+
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: [
+    {
+      'http://localhost:3000/sdl': {
+        handleAsSDL: true,
       }
     }
   ]

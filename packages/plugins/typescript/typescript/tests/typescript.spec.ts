@@ -209,6 +209,7 @@ describe('TypeScript', () => {
           X_Y_Z
           _TEST
           My_Value
+          _123
         }
       `);
       const result = (await plugin(
@@ -223,7 +224,8 @@ describe('TypeScript', () => {
         ABC: 'A_B_C',
         XYZ: 'X_Y_Z',
         Test: '_TEST',
-        MyValue: 'My_Value'
+        MyValue: 'My_Value',
+        '123': '_123'
       } as const;
       export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
     });
