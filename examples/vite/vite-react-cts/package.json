@@ -27,7 +27,7 @@
     "@types/react-dom": "^18.0.10",
     "cypress": "12.8.1",
     "start-server-and-test": "2.0.0",
-    "typescript": "^4.9.3"
+    "typescript": "^5.0.0"
   },
   "bob": false,
   "browserslist": {
