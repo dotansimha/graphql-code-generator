@@ -126,9 +126,9 @@ export const plugin: PluginFunction<{
   { useTypeImports, augmentedModuleName, unmaskFunctionName, emitLegacyCommonJSImports, isStringDocumentMode },
   _info
 ) => {
-  const documentNodeImport = `${
-    useTypeImports ? 'import type' : 'import'
-  } { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';\n`;
+  const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { ResultOf, DocumentTypeDecoration${
+    isStringDocumentMode ? '' : ', TypedDocumentNode'
+  } } from '@graphql-typed-document-node/core';\n`;
 
   const deferFragmentHelperImports = isStringDocumentMode
     ? `${useTypeImports ? 'import type' : 'import'} { TypedDocumentString } from './graphql${
