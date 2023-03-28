@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
 
-import './App.css';
 import { useFragment, graphql, FragmentType, isFragmentReady } from './gql';
 import { SlowAndFastFieldWithDeferQuery } from './gql/graphql';
 

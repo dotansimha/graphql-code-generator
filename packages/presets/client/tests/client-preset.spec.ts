@@ -1711,6 +1711,396 @@ export * from "./gql.js";`);
     `);
   });
 
+  describe('handles @defer directive', () => {
+    it('generates correct types and metadata', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-deferred-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Foo = {
+          __typename?: 'Foo';
+          value?: Maybe<Scalars['String']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
+        export type FooQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null };
+
+        export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null> | null };
+
+        export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
+
+        export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
+        export const FooDocument = {"__meta__":{"deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
+        export const FoosDocument = {"__meta__":{"deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
+      `);
+    });
+
+    it('works with persisted documents', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-deferred-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: true,
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Foo = {
+          __typename?: 'Foo';
+          value?: Maybe<Scalars['String']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
+        export type FooQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null };
+
+        export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null> | null };
+
+        export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
+
+        export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
+        export const FooDocument = {"__meta__":{"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
+        export const FoosDocument = {"__meta__":{"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
+      `);
+    });
+
+    it.only('works with documentMode: string', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-deferred-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Foo = {
+          __typename?: 'Foo';
+          value?: Maybe<Scalars['String']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
+        export type FooQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null };
+
+        export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null> | null };
+
+        export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
+
+        export class TypedDocumentString<TResult, TVariables>
+          extends String
+          implements DocumentTypeDecoration<TResult, TVariables>
+        {
+          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+          constructor(private value: string, public __meta__?: { hash: string }) {
+            super(value);
+          }
+
+          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+            return this.value;
+          }
+        }
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment Foo on Foo {
+          value
+        }
+            \`) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooDocument = new TypedDocumentString(\`
+            query Foo {
+          foo {
+            ...Foo @defer
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`, {"deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        export const FoosDocument = new TypedDocumentString(\`
+            query Foos {
+          foos {
+            ...Foo @defer
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`, {"deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+      `);
+    });
+
+    it('works with documentMode: string and persisted documents', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-deferred-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: true,
+            },
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string;
+          String: string;
+          Boolean: boolean;
+          Int: number;
+          Float: number;
+        };
+
+        export type Foo = {
+          __typename?: 'Foo';
+          value?: Maybe<Scalars['String']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
+        export type FooQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null };
+
+        export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+            { __typename?: 'Foo' }
+            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+          ) ) | null> | null };
+
+        export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
+
+        export class TypedDocumentString<TResult, TVariables>
+          extends String
+          implements DocumentTypeDecoration<TResult, TVariables>
+        {
+          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+
+          constructor(private value: string, public __meta__?: { hash: string }) {
+            super(value);
+          }
+
+          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+            return this.value;
+          }
+        }
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment Foo on Foo {
+          value
+        }
+            \`) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooDocument = new TypedDocumentString(\`
+            query Foo {
+          foo {
+            ...Foo @defer
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`, {"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        export const FoosDocument = new TypedDocumentString(\`
+            query Foos {
+          foos {
+            ...Foo @defer
+          }
+        }
+            fragment Foo on Foo {
+          value
+        }\`, {"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+      `);
+    });
+  });
+
   describe('documentMode: "string"', () => {
     it('generates correct types', async () => {
       const result = await executeCodegen({
