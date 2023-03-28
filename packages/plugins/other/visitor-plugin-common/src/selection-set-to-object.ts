@@ -60,7 +60,7 @@ type FragmentSpreadUsage = {
 };
 
 type CollectedFragmentNode = (SelectionNode | FragmentSpreadUsage | DirectiveNode) & FragmentDirectives;
-type GroupedStringifedTypes = Record<string, Array<string | { union: string[] }>>;
+type GroupedStringifiedTypes = Record<string, Array<string | { union: string[] }>>;
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -326,7 +326,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   /**
    * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
    */
-  protected _buildGroupedSelections(): { grouped: GroupedStringifedTypes; mustAddEmptyObject: boolean } {
+  protected _buildGroupedSelections(): { grouped: GroupedStringifiedTypes; mustAddEmptyObject: boolean } {
     if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
       return { grouped: {}, mustAddEmptyObject: true };
     }
@@ -339,7 +339,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const possibleTypes = getPossibleTypes(this._schema, this._parentSchemaType);
 
     if (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask') {
-      const grouped = possibleTypes.reduce<GroupedStringifedTypes>((prev, type) => {
+      const grouped = possibleTypes.reduce<GroupedStringifiedTypes>((prev, type) => {
         const typeName = type.name;
         const schemaType = this._schema.getType(typeName);
 
