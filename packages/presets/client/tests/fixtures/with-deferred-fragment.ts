@@ -10,7 +10,7 @@ const Query = gql(/* GraphQL */ `
 `);
 
 //@ts-ignore
-const LsitQuery = gql(/* GraphQL */ `
+const ListQuery = gql(/* GraphQL */ `
   query Foos {
     foos {
       ...Foo @defer
