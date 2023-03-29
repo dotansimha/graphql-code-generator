@@ -18,7 +18,6 @@ import {
 } from 'graphql';
 import gqlTag from 'graphql-tag';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
-import { generateFragmentImportStatement } from './imports.js';
 import { LoadedFragment, ParsedImport } from './types.js';
 import { buildScalarsFromConfig, getConfigValue } from './utils.js';
 
@@ -617,7 +616,7 @@ export class ClientSideBaseVisitor<
     return path;
   }
 
-  public getImports(options: { excludeFragments?: boolean } = {}): string[] {
+  public getImports(): string[] {
     (this._additionalImports || []).forEach(i => this._imports.add(i));
 
     switch (this.config.documentMode) {
@@ -666,50 +665,6 @@ export class ClientSideBaseVisitor<
       }
       default:
         break;
-    }
-
-    if (!options.excludeFragments && !this.config.globalNamespace) {
-      const { documentMode, fragmentImports } = this.config;
-      if (
-        documentMode === DocumentMode.graphQLTag ||
-        documentMode === DocumentMode.string ||
-        documentMode === DocumentMode.documentNodeImportFragments
-      ) {
-        // keep track of what imports we've already generated so we don't try
-        // to import the same identifier twice
-        const alreadyImported = new Map<string, Set<string>>();
-
-        const deduplicatedImports = fragmentImports
-          .map(fragmentImport => {
-            const { path, identifiers } = fragmentImport.importSource;
-            if (!alreadyImported.has(path)) {
-              alreadyImported.set(path, new Set<string>());
-            }
-
-            const alreadyImportedForPath = alreadyImported.get(path);
-            const newIdentifiers = identifiers.filter(identifier => !alreadyImportedForPath.has(identifier.name));
-            newIdentifiers.forEach(newIdentifier => alreadyImportedForPath.add(newIdentifier.name));
-
-            // filter the set of identifiers in this fragment import to only
-            // the ones we haven't already imported from this path
-            return {
-              ...fragmentImport,
-              importSource: {
-                ...fragmentImport.importSource,
-                identifiers: newIdentifiers,
-              },
-              emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
-            };
-          })
-          // remove any imports that now have no identifiers in them
-          .filter(fragmentImport => fragmentImport.importSource.identifiers.length > 0);
-
-        deduplicatedImports.forEach(fragmentImport => {
-          if (fragmentImport.outputPath !== fragmentImport.importSource.path) {
-            this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
-          }
-        });
-      }
     }
 
     return Array.from(this._imports);
