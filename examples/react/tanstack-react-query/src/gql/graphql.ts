@@ -1312,14 +1312,17 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
-export const FilmItemFragmentDoc = new TypedDocumentString(`
+export const FilmItemFragmentDoc = new TypedDocumentString(
+  `
     fragment FilmItem on Film {
   id
   title
   releaseDate
   producers
 }
-    `) as unknown as TypedDocumentString<FilmItemFragment, unknown>;
+    `,
+  { fragmentName: 'FilmItem' }
+) as unknown as TypedDocumentString<FilmItemFragment, unknown>;
 export const AllFilmsWithVariablesQueryDocument = new TypedDocumentString(`
     query allFilmsWithVariablesQuery($first: Int!) {
   allFilms(first: $first) {

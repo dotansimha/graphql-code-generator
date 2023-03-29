@@ -56,7 +56,7 @@ export function isFragmentReady<TQuery, TFrag>(
 
   if (!deferredFields) return true;
 
-  const fragName = fragmentNode.match(/fragments+(w+)Fragments+ons+w+/)?.[1];
+  const fragName = fragmentNode.__meta__?.fragmentName;
 
   const fields = fragName ? deferredFields[fragName] : [];
   return fields.length > 0 && fields.some(field => data && field in (data as any));

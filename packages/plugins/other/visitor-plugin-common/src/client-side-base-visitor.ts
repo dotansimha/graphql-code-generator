@@ -426,6 +426,10 @@ export class ClientSideBaseVisitor<
     }
 
     if (this.config.documentMode === DocumentMode.string) {
+      if (node.kind === Kind.FRAGMENT_DEFINITION) {
+        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify({ fragmentName: node.name.value })})`;
+      }
+
       if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
         const meta = this._getGraphQLCodegenMetadata(node, gqlTag([doc]).definitions);
 
