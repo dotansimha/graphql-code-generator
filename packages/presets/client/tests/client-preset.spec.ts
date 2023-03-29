@@ -1960,7 +1960,7 @@ export * from "./gql.js";`);
             fragment Foo on Foo {
           value
         }
-            \`) as unknown as TypedDocumentString<FooFragment, unknown>;
+            \`, {"fragmentName":"Foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
         export const FooDocument = new TypedDocumentString(\`
             query Foo {
           foo {
@@ -2077,7 +2077,7 @@ export * from "./gql.js";`);
             fragment Foo on Foo {
           value
         }
-            \`) as unknown as TypedDocumentString<FooFragment, unknown>;
+            \`, {"fragmentName":"Foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
         export const FooDocument = new TypedDocumentString(\`
             query Foo {
           foo {
@@ -2193,7 +2193,7 @@ export * from "./gql.js";`);
             fragment Foo on Foo {
           value
         }
-            \`) as unknown as TypedDocumentString<FooFragment, unknown>;
+            \`, {"fragmentName":"Foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
         export const FooDocument = new TypedDocumentString(\`
             query Foo {
           foo {
