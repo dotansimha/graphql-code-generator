@@ -438,10 +438,12 @@ export class TsVisitor<
         .withBlock(
           node.values
             .map(enumOption => {
-              const optionName = this.convertName(enumOption, {
-                useTypesPrefix: false,
-                transformUnderscore: true,
-              });
+              const optionName = this.makeValidEnumIdentifier(
+                this.convertName(enumOption, {
+                  useTypesPrefix: false,
+                  transformUnderscore: true,
+                })
+              );
               const comment = transformComment(enumOption.description as any as string, 1);
               const name = enumOption.name as unknown as string;
               const enumValue: string | number = getValueFromConfig(name) ?? name;
