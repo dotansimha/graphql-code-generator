@@ -40,7 +40,7 @@
     "@babel/preset-env": "7.20.2",
     "@babel/preset-typescript": "7.21.0",
     "@changesets/changelog-github": "0.4.8",
-    "@changesets/cli": "2.26.0",
+    "@changesets/cli": "2.26.1",
     "@theguild/eslint-config": "0.9.0",
     "@theguild/prettier-config": "0.1.1",
     "@types/jest": "28.1.8",
