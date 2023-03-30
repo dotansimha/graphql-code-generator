@@ -18,7 +18,9 @@ const sep = '/';
 export function collectUsedTypes(doc: DocumentNode): string[] {
   const used: string[] = [];
 
-  doc.definitions.forEach(findRelated);
+  for (const node of doc.definitions) {
+    findRelated(node);
+  }
 
   function markAsUsed(type: string) {
     pushUnique(used, type);
@@ -30,36 +32,48 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
       markAsUsed(node.name.value);
 
       if (node.fields) {
-        node.fields.forEach(findRelated);
+        for (const n of node.fields) {
+          findRelated(n);
+        }
       }
 
       if (node.interfaces) {
-        node.interfaces.forEach(findRelated);
+        for (const n of node.interfaces) {
+          findRelated(n);
+        }
       }
     } else if (node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION || node.kind === Kind.INPUT_OBJECT_TYPE_EXTENSION) {
       // Input
       markAsUsed(node.name.value);
 
       if (node.fields) {
-        node.fields.forEach(findRelated);
+        for (const n of node.fields) {
+          findRelated(n);
+        }
       }
     } else if (node.kind === Kind.INTERFACE_TYPE_DEFINITION || node.kind === Kind.INTERFACE_TYPE_EXTENSION) {
       // Interface
       markAsUsed(node.name.value);
 
       if (node.fields) {
-        node.fields.forEach(findRelated);
+        for (const n of node.fields) {
+          findRelated(n);
+        }
       }
 
       if (node.interfaces) {
-        node.interfaces.forEach(findRelated);
+        for (const n of node.interfaces) {
+          findRelated(n)
+        }
       }
     } else if (node.kind === Kind.UNION_TYPE_DEFINITION || node.kind === Kind.UNION_TYPE_EXTENSION) {
       // Union
       markAsUsed(node.name.value);
 
       if (node.types) {
-        node.types.forEach(findRelated);
+        for (const n of node.types) {
+          findRelated(n)
+        }
       }
     } else if (node.kind === Kind.ENUM_TYPE_DEFINITION || node.kind === Kind.ENUM_TYPE_EXTENSION) {
       // Enum
@@ -77,7 +91,9 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
       findRelated(resolveTypeNode(node.type));
 
       if (node.arguments) {
-        node.arguments.forEach(findRelated);
+        for (const n of node.arguments) {
+          findRelated(n)
+        }
       }
     } else if (
       node.kind === Kind.NAMED_TYPE &&

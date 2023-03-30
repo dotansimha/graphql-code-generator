@@ -48,11 +48,12 @@ export const createWatcher = (
     }
   }
 
-  schemas.forEach((schema: string) => {
+  for (const s of schemas) {
+    const schema = s as string;
     if (isGlob(schema) || isValidPath(schema)) {
       files.push(schema);
     }
-  });
+  }
 
   if (typeof config.watch !== 'boolean') {
     files.push(...normalizeInstanceOrArray<string>(config.watch));
