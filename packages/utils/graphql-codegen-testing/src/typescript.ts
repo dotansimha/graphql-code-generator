@@ -97,7 +97,7 @@ export function validateTs(
     const emitResult = program.emit();
     const allDiagnostics = emitResult.diagnostics;
 
-    allDiagnostics.forEach(diagnostic => {
+    for (const diagnostic of allDiagnostics) {
       if (diagnostic.file) {
         const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
@@ -106,7 +106,7 @@ export function validateTs(
       } else {
         errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
       }
-    });
+    }
   } else {
     const result = createSourceFile(
       testFile,
@@ -119,7 +119,7 @@ export function validateTs(
     const allDiagnostics = result.parseDiagnostics;
 
     if (allDiagnostics && allDiagnostics.length > 0) {
-      allDiagnostics.forEach(diagnostic => {
+      for (const diagnostic of allDiagnostics) {
         if (diagnostic.file) {
           const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
           const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
@@ -128,7 +128,7 @@ export function validateTs(
         } else {
           errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
         }
-      });
+      }
     }
   }
 
@@ -216,7 +216,7 @@ export function compileTs(
     const allDiagnostics = emitResult.diagnostics;
     const errors: string[] = [];
 
-    allDiagnostics.forEach(diagnostic => {
+    for (const diagnostic of allDiagnostics) {
       if (diagnostic.file) {
         const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
@@ -225,7 +225,7 @@ export function compileTs(
       } else {
         errors.push(String(flattenDiagnosticMessageText(diagnostic.messageText, '\n')));
       }
-    });
+    }
 
     const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
 

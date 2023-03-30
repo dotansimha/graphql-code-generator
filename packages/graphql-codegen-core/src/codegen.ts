@@ -262,7 +262,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
     return deduplicatedDefinitions.add(node);
   }
 
-  files.forEach(file => {
+  for (const file of files) {
     const deduplicatedDefinitions = new Set<DefinitionNode>();
     visit(file.document, {
       OperationDefinition(node) {
@@ -273,18 +273,18 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       },
     });
     (file.document as any).definitions = Array.from(deduplicatedDefinitions);
-  });
+  }
 
   const kinds = Object.keys(definitionMap);
 
-  kinds.forEach(kind => {
+  for (const kind of kinds) {
     const definitionKindMap = definitionMap[kind];
     const names = Object.keys(definitionKindMap);
     if (names.length) {
       const duplicated = names.filter(name => definitionKindMap[name].contents.size > 1);
 
       if (!duplicated.length) {
-        return;
+        continue;
       }
 
       const list = duplicated
@@ -295,10 +295,10 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
             .map(filepath => {
               return `
               - ${filepath}
-            `.trimRight();
+            `.trimEnd();
             })
             .join('')}
-    `.trimRight()
+    `.trimEnd()
         )
         .join('');
 
@@ -309,5 +309,5 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
         `
       );
     }
-  });
+  }
 }

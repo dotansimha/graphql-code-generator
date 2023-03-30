@@ -146,7 +146,7 @@ const getRelativePath = function (filepath: string, basePath: string) {
 export function groupSourcesByModule(sources: Source[], basePath: string): Record<string, Source[]> {
   const grouped: Record<string, Source[]> = {};
 
-  sources.forEach(source => {
+  for (const source of sources) {
     const relativePath = getRelativePath(source.location, basePath);
 
     if (relativePath) {
@@ -157,7 +157,7 @@ export function groupSourcesByModule(sources: Source[], basePath: string): Recor
 
       grouped[mod].push(source);
     }
-  });
+  }
 
   return grouped;
 }
@@ -208,9 +208,9 @@ export function uniqueByKey<T extends Record<string, any[]>, K extends keyof T>(
 export function createObject<K extends string, T>(keys: K[], valueFn: (key: K) => T) {
   const obj: Record<K, T> = {} as any;
 
-  keys.forEach(key => {
+  for (const key of keys) {
     obj[key] = valueFn(key);
-  });
+  }
 
   return obj;
 }

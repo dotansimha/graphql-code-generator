@@ -393,9 +393,9 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     };
 
     this.scalars = {};
-    Object.keys(this.config.scalars || {}).forEach(key => {
+    for (const key of Object.keys(this.config.scalars || {})) {
       this.scalars[key] = this.config.scalars[key].type;
-    });
+    }
 
     autoBind(this);
   }

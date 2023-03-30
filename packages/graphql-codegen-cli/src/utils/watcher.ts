@@ -32,22 +32,20 @@ export const createWatcher = (
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
   // Add schemas and documents from "generates"
-  Object.keys(config.generates)
-    .map(filename => normalizeOutputParam(config.generates[filename]))
-    .forEach(conf => {
-      schemas.push(...normalizeInstanceOrArray<Types.Schema>(conf.schema));
-      documents.push(...normalizeInstanceOrArray<Types.OperationDocument>(conf.documents));
-      files.push(...normalizeInstanceOrArray(conf.watchPattern));
-    });
+  for (const conf of Object.keys(config.generates).map(filename => normalizeOutputParam(config.generates[filename]))) {
+    schemas.push(...normalizeInstanceOrArray<Types.Schema>(conf.schema));
+    documents.push(...normalizeInstanceOrArray<Types.OperationDocument>(conf.documents));
+    files.push(...normalizeInstanceOrArray(conf.watchPattern));
+  }
 
   if (documents) {
-    documents.forEach(doc => {
+    for (const doc of documents) {
       if (typeof doc === 'string') {
         files.push(doc);
       } else {
         files.push(...Object.keys(doc));
       }
-    });
+    }
   }
 
   schemas.forEach((schema: string) => {
@@ -78,18 +76,19 @@ export const createWatcher = (
     emitWatching();
 
     const ignored: string[] = [];
-    Object.keys(config.generates)
-      .map(filename => ({ filename, config: normalizeOutputParam(config.generates[filename]) }))
-      .forEach(entry => {
-        if (entry.config.preset) {
-          const extension = entry.config.presetConfig?.extension;
-          if (extension) {
-            ignored.push(join(entry.filename, '**', '*' + extension));
-          }
-        } else {
-          ignored.push(entry.filename);
+    for (const entry of Object.keys(config.generates).map(filename => ({
+      filename,
+      config: normalizeOutputParam(config.generates[filename]),
+    }))) {
+      if (entry.config.preset) {
+        const extension = entry.config.presetConfig?.extension;
+        if (extension) {
+          ignored.push(join(entry.filename, '**', '*' + extension));
         }
-      });
+      } else {
+        ignored.push(entry.filename);
+      }
+    }
 
     watcherSubscription = await parcelWatcher.subscribe(
       process.cwd(),
