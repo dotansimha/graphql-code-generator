@@ -71,13 +71,15 @@ export function includeIntrospectionTypesDefinitions(
     },
   });
 
-  documents.forEach(doc => visit(doc.document, documentsVisitor));
+  for (const doc of documents) {
+    visit(doc.document, documentsVisitor);
+  }
 
   const typesToInclude: GraphQLNamedType[] = [];
 
-  usedTypes.forEach(type => {
+  for (const type of usedTypes) {
     collectTypes(type);
-  });
+  }
 
   const visitor = new TsIntrospectionVisitor(schema, config, typesToInclude);
   const result: DocumentNode = oldVisit(parse(printIntrospectionSchema(schema)), { leave: visitor });
@@ -94,11 +96,11 @@ export function includeIntrospectionTypesDefinitions(
     if (isObjectType(type)) {
       const fields = type.getFields();
 
-      Object.keys(fields).forEach(key => {
+      for (const key of Object.keys(fields)) {
         const field = fields[key];
         const type = getNamedType(field.type);
         collectTypes(type);
-      });
+      }
     }
   }
 

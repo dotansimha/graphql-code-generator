@@ -728,12 +728,12 @@ export class BaseResolversVisitor<
 
     // avoid checking all types recursively if we have no `mappers` defined
     if (Object.keys(this.config.mappers).length > 0) {
-      typeNames.forEach(typeName => {
+      for (const typeName of typeNames) {
         if (this._shouldMapType[typeName] === undefined) {
           const schemaType = allSchemaTypes[typeName];
           this._shouldMapType[typeName] = this.shouldMapType(schemaType);
         }
-      });
+      }
     }
 
     return typeNames.reduce((prev: ResolverTypes, typeName: string) => {
@@ -1072,14 +1072,13 @@ export class BaseResolversVisitor<
       }
     };
 
-    Object.keys(this.config.mappers)
+    for (const { mapper } of Object.keys(this.config.mappers)
       .map(gqlTypeName => ({ gqlType: gqlTypeName, mapper: this.config.mappers[gqlTypeName] }))
-      .filter(({ mapper }) => mapper.isExternal)
-      .forEach(({ mapper }) => {
-        const externalMapper = mapper as ExternalParsedMapper;
-        const identifier = stripMapperTypeInterpolation(externalMapper.import);
-        addMapper(externalMapper.source, identifier, externalMapper.default);
-      });
+      .filter(({ mapper }) => mapper.isExternal)) {
+      const externalMapper = mapper as ExternalParsedMapper;
+      const identifier = stripMapperTypeInterpolation(externalMapper.import);
+      addMapper(externalMapper.source, identifier, externalMapper.default);
+    }
 
     if (this.config.contextType.isExternal) {
       addMapper(this.config.contextType.source, this.config.contextType.import, this.config.contextType.default);
@@ -1094,17 +1093,17 @@ export class BaseResolversVisitor<
       addMapper(this.config.defaultMapper.source, identifier, this.config.defaultMapper.default);
     }
 
-    Object.values(this._fieldContextTypeMap).forEach(parsedMapper => {
+    for (const parsedMapper of Object.values(this._fieldContextTypeMap)) {
       if (parsedMapper.isExternal) {
         addMapper(parsedMapper.source, parsedMapper.import, parsedMapper.default);
       }
-    });
+    }
 
-    Object.values(this._directiveContextTypesMap).forEach(parsedMapper => {
+    for (const parsedMapper of Object.values(this._directiveContextTypesMap)) {
       if (parsedMapper.isExternal) {
         addMapper(parsedMapper.source, parsedMapper.import, parsedMapper.default);
       }
-    });
+    }
 
     return Object.keys(groupedMappers)
       .map(source => buildMapperImport(source, groupedMappers[source], this.config.useTypeImports))

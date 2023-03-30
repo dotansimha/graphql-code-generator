@@ -12,7 +12,7 @@ import { Answers, Tags } from './types.js';
 function jsObjectToBabelObjectExpression<T extends object>(obj: T): ReturnType<typeof t.objectExpression> {
   const objExp = t.objectExpression([]);
 
-  Object.entries(obj).forEach(([key, val]) => {
+  for (const [key, val] of Object.entries(obj)) {
     if (Array.isArray(val)) {
       objExp.properties.push(
         t.objectProperty(
@@ -30,7 +30,7 @@ function jsObjectToBabelObjectExpression<T extends object>(obj: T): ReturnType<t
         )
       );
     }
-  });
+  }
 
   return objExp;
 }
