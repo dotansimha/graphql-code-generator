@@ -34,7 +34,6 @@ export async function generate(
             debugLog(`Removed stale file: ${prettyFilename}`);
           }
         });
-        continue;
       }
     }
     previouslyGeneratedFilenames = filenames;
