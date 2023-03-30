@@ -3595,10 +3595,10 @@
     unist-util-visit "4.1.2"
     use-debounce "9.0.3"
 
-"@theguild/eslint-config@0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@theguild/eslint-config/-/eslint-config-0.8.1.tgz#0b5fb460694310935447eccdd29cbd92fd60eee2"
-  integrity sha512-ZQVfnaT3HtYsuCQ+IlbvhUUArq/ZoOWgAoYm28aTy0f+Guc2Gf7aqDEUtcnfusSeZttPO9DshNePmlkd1B8vMg==
+"@theguild/eslint-config@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@theguild/eslint-config/-/eslint-config-0.9.0.tgz#5e90c8f2546da5c5a783b116a5061d2e0e231248"
+  integrity sha512-rPYiVcAxT2j75wUm7nVrFw6oCpSdgFsS3PtVXfWKBhBb3JHSv2249t5SVPkvJKD3WRiVl4952KI5lh9tHT6JBg==
   dependencies:
     "@rushstack/eslint-patch" "^1.2.0"
     "@typescript-eslint/eslint-plugin" "^5.48.1"
@@ -3613,7 +3613,7 @@
     eslint-plugin-promise "^6.1.1"
     eslint-plugin-react "^7.32.0"
     eslint-plugin-react-hooks "^4.6.0"
-    eslint-plugin-sonarjs "^0.18.0"
+    eslint-plugin-sonarjs "^0.19.0"
     eslint-plugin-unicorn "^46.0.0"
     eslint-plugin-yml "^1.4.0"
 
@@ -6920,10 +6920,10 @@ eslint-plugin-react@^7.31.7, eslint-plugin-react@^7.32.0:
     semver "^6.3.0"
     string.prototype.matchall "^4.0.8"
 
-eslint-plugin-sonarjs@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-sonarjs/-/eslint-plugin-sonarjs-0.18.0.tgz#7c009452f633cf6a4c28387dd50502a3e828b05e"
-  integrity sha512-DJ3osLnt6KFdT5e9ZuIDOjT5A6wUGSLeiJJT03lPgpdD+7CVWlYAw9Goe3bt7SmbFO3Xh89NOCZAuB9XA7bAUQ==
+eslint-plugin-sonarjs@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-sonarjs/-/eslint-plugin-sonarjs-0.19.0.tgz#6654bc1c6d24c2183891b8bfe1175004dbba1e3c"
+  integrity sha512-6+s5oNk5TFtVlbRxqZN7FIGmjdPCYQKaTzFPmqieCmsU1kBYDzndTeQav0xtQNwZJWu5awWfTGe8Srq9xFOGnw==
 
 eslint-plugin-unicorn@^46.0.0:
   version "46.0.0"
