@@ -63,7 +63,7 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
 
       if (node.interfaces) {
         for (const n of node.interfaces) {
-          findRelated(n)
+          findRelated(n);
         }
       }
     } else if (node.kind === Kind.UNION_TYPE_DEFINITION || node.kind === Kind.UNION_TYPE_EXTENSION) {
@@ -72,7 +72,7 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
 
       if (node.types) {
         for (const n of node.types) {
-          findRelated(n)
+          findRelated(n);
         }
       }
     } else if (node.kind === Kind.ENUM_TYPE_DEFINITION || node.kind === Kind.ENUM_TYPE_EXTENSION) {
@@ -92,7 +92,7 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
 
       if (node.arguments) {
         for (const n of node.arguments) {
-          findRelated(n)
+          findRelated(n);
         }
       }
     } else if (

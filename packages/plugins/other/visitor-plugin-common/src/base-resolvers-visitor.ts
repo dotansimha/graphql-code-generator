@@ -1075,10 +1075,10 @@ export class BaseResolversVisitor<
     for (const { mapper } of Object.keys(this.config.mappers)
       .map(gqlTypeName => ({ gqlType: gqlTypeName, mapper: this.config.mappers[gqlTypeName] }))
       .filter(({ mapper }) => mapper.isExternal)) {
-        const externalMapper = mapper as ExternalParsedMapper;
-        const identifier = stripMapperTypeInterpolation(externalMapper.import);
-        addMapper(externalMapper.source, identifier, externalMapper.default);
-      }
+      const externalMapper = mapper as ExternalParsedMapper;
+      const identifier = stripMapperTypeInterpolation(externalMapper.import);
+      addMapper(externalMapper.source, identifier, externalMapper.default);
+    }
 
     if (this.config.contextType.isExternal) {
       addMapper(this.config.contextType.source, this.config.contextType.import, this.config.contextType.default);
