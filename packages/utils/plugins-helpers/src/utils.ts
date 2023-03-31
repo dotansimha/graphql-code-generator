@@ -5,7 +5,7 @@ export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOut
   const result: Types.ComplexPluginOutput = { content: '', prepend: [], append: [] };
 
   if (Array.isArray(content)) {
-    content.forEach(item => {
+    for (const item of content) {
       if (typeof item === 'string') {
         result.content += item;
       } else {
@@ -13,7 +13,7 @@ export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOut
         result.prepend.push(...(item.prepend || []));
         result.append.push(...(item.append || []));
       }
-    });
+    }
   }
 
   return [...result.prepend, result.content, ...result.append].join('\n');

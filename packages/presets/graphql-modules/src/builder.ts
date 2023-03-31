@@ -252,9 +252,9 @@ export function buildModule(
       if (Object.prototype.hasOwnProperty.call(registry, k) && resolverKeys.includes(k as any)) {
         const types = registry[k];
 
-        types.forEach(typeName => {
+        for (const typeName of types) {
           if (k === 'enums') {
-            return;
+            continue;
           }
           if (k === 'scalars') {
             lines.push(`${typeName}?: ${encapsulateTypeName(importNamespace)}.Resolvers['${typeName}'];`);
@@ -264,7 +264,7 @@ export function buildModule(
 
             lines.push(`${typeName}${fieldModifier}: ${encapsulateTypeName(typeName)}Resolvers;`);
           }
-        });
+        }
       }
     }
 
@@ -380,9 +380,9 @@ export function buildModule(
     if (node.fields) {
       picksObj[name] ||= [];
 
-      node.fields.forEach(field => {
+      for (const field of node.fields) {
         picksObj[name].push(field.name.value);
-      });
+      }
     }
   }
 
@@ -392,9 +392,9 @@ export function buildModule(
     if (node.values) {
       picks.enums[name] ||= [];
 
-      node.values.forEach(field => {
+      for (const field of node.values) {
         picks.enums[name].push(field.name.value);
-      });
+      }
     }
   }
 

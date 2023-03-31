@@ -47,7 +47,7 @@ export async function getPresetByName(
     .map(name =>
       `
         - ${name}
-    `.trimRight()
+    `.trimEnd()
     )
     .join('');
 

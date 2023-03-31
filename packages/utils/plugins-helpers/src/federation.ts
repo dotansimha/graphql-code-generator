@@ -250,11 +250,11 @@ export class ApolloFederation {
   private createMapOfProvides() {
     const providesMap: Record<string, string[]> = {};
 
-    Object.keys(this.schema.getTypeMap()).forEach(typename => {
+    for (const typename of Object.keys(this.schema.getTypeMap())) {
       const objectType = this.schema.getType(typename);
 
       if (isObjectType(objectType)) {
-        Object.values(objectType.getFields()).forEach(field => {
+        for (const field of Object.values(objectType.getFields())) {
           const provides = getDirectivesByName('provides', field.astNode)
             .map(this.extractFieldSet)
             .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []);
@@ -263,9 +263,9 @@ export class ApolloFederation {
           providesMap[ofType.name] ||= [];
 
           providesMap[ofType.name].push(...provides);
-        });
+        }
       }
-    });
+    }
 
     return providesMap;
   }
