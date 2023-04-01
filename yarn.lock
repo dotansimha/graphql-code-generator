@@ -3566,10 +3566,10 @@
     lodash.sortby "^4.7.0"
     remove-markdown "^0.5.0"
 
-"@theguild/components@4.5.7":
-  version "4.5.7"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.7.tgz#9d144ea41488d90e1741ba26807a9894e7e490f9"
-  integrity sha512-nh5zOQLaRghXS4psjDt7yGI7QKVt3Ig0VZOlbW3KybZ0IlqrXqDcITdiNwjy+arEbtoEDRqCRal6l4PvWo3Xcg==
+"@theguild/components@4.5.8":
+  version "4.5.8"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.8.tgz#f95d617c61168476f85f87f032c6b0f1881e0358"
+  integrity sha512-FogSV0QjfbAnrTJfnn7Yjr7J75zwtSBYXLMneOmh3VBIdherYCums9MxTm7JGHrAzVJz/Gf8B4dQX11ZI0zZ5Q==
   dependencies:
     "@algolia/autocomplete-js" "1.8.3"
     "@algolia/autocomplete-plugin-algolia-insights" "1.8.3"
@@ -3584,10 +3584,10 @@
     fuzzy "^0.1.3"
     mermaid "10.0.2"
     next-videos "1.5.0"
-    nextra "2.2.20"
-    nextra-theme-docs "2.2.20"
+    nextra "2.3.0"
+    nextra-theme-docs "2.3.0"
     react-instantsearch-dom "6.39.1"
-    react-paginate "8.1.4"
+    react-paginate "8.1.5"
     react-player "2.12.0"
     remark-mdx-disable-explicit-jsx "0.1.0"
     search-insights "2.4.0"
@@ -10779,10 +10779,10 @@ next@13.2.3, next@^13.0.0:
     "@next/swc-win32-ia32-msvc" "13.2.3"
     "@next/swc-win32-x64-msvc" "13.2.3"
 
-nextra-theme-docs@2.2.20:
-  version "2.2.20"
-  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.2.20.tgz#144f8fb4da9ad3ccf80c044447e7da0da13048e4"
-  integrity sha512-YbDbpwvLCUnDvq9afP57Zu/fDFbSrsvx5MEZIhKRcrn/eCfo4yIwoMMhdRF0yntB5uTDc4MZ8jqJgb25g2v7QA==
+nextra-theme-docs@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.3.0.tgz#5bb0ac03c331d3f82cd8b8ad29aaa599f4e838c4"
+  integrity sha512-KMvHhGOvaKIqR71Gnx+w/1c9LLfpQJ3+fnCAgg9qfjXo2agr1zRKyRDROyY8cGINdslpzmEGgs/MH2gDSAI6nw==
   dependencies:
     "@headlessui/react" "^1.7.10"
     "@popperjs/core" "^2.11.6"
@@ -10797,10 +10797,10 @@ nextra-theme-docs@2.2.20:
     scroll-into-view-if-needed "^3.0.0"
     zod "^3.20.2"
 
-nextra@2.2.20:
-  version "2.2.20"
-  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.2.20.tgz#7973c817067779318c989fcc9ad31473a97f50cb"
-  integrity sha512-V5P5UHvA7GvISziJSEMVV9jCDBm1aMlez3XqKPzvr/aIrugfnIPBhGrFh2YjpXp5FspldgTS8lbZVf36Alonhg==
+nextra@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.3.0.tgz#57d1beae6744926f70dc4389db1a7d06df8bb793"
+  integrity sha512-v17vMq2bJa15iKKt9+6AidSeIoKcK1ZlXmwqFqTgc0pQmRrl6pTJaSR36UZKcpMwvvLZ/7/xWuWV/OQB599O3g==
   dependencies:
     "@mdx-js/mdx" "^2.3.0"
     "@mdx-js/react" "^2.3.0"
@@ -11982,10 +11982,10 @@ react-markdown@8.0.6:
     unist-util-visit "^4.0.0"
     vfile "^5.0.0"
 
-react-paginate@8.1.4:
-  version "8.1.4"
-  resolved "https://registry.yarnpkg.com/react-paginate/-/react-paginate-8.1.4.tgz#f62bfef4f07bb420f3a994e0284d1065a865a6b9"
-  integrity sha512-c3rxjcTEqeDQa6LqXifxLeFguY2qy2CHGRphVjHLFFMGfIHyaJ+v3bOvIlLYEeohwQ1q+cQpknjsqBVrkc/SNA==
+react-paginate@8.1.5:
+  version "8.1.5"
+  resolved "https://registry.yarnpkg.com/react-paginate/-/react-paginate-8.1.5.tgz#59eda2ab13c7d962b19ef815cd84e7e001e641c2"
+  integrity sha512-DnwbzimjyCmiregTP8npoHu2HvJ3NDm9+kBM8mx7dOVc66/4lSWzz0uTd1smRSENf1yD7SCZEOMduXbdyxNj1A==
   dependencies:
     prop-types "^15"
 
