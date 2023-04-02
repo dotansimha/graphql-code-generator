@@ -35,11 +35,11 @@ The server preset works best when the schema is split into smaller modules. This
 Here's the content of each schema module:
 
 ```graphql
-# src/schema/base.graphql
+# src/schema/base/schema.graphql
 type Query
 type Mutation
 
-# src/schema/user.graphql
+# src/schema/user/schema.graphql
 extend type Query {
   user(id: ID!): User
 }
@@ -49,7 +49,7 @@ type User {
   isAdmin: Boolean!
 }
 
-# src/schema/book.graphql
+# src/schema/book/schema.graphql
 extend type Query {
   book(id: ID!): Book
 }
