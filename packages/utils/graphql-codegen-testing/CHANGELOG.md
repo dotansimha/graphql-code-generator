@@ -1,5 +1,14 @@
 # @graphql-codegen/testing
 
+## 2.0.2
+
+### Patch Changes
+
+- [#9228](https://github.com/dotansimha/graphql-code-generator/pull/9228) [`a5ec5af36`](https://github.com/dotansimha/graphql-code-generator/commit/a5ec5af36cd77f4ec86773a899aa5ebd16d4ff9f) Thanks [@eddeee888](https://github.com/eddeee888)! - Add complex test cases for resolvers tests
+
+- Updated dependencies [[`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29), [`f104619ac`](https://github.com/dotansimha/graphql-code-generator/commit/f104619acd27c9d62a06bc577737500880731087)]:
+  - @graphql-codegen/plugin-helpers@4.2.0
+
 ## 2.0.1
 
 ### Patch Changes

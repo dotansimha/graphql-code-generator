@@ -1,5 +1,51 @@
 # @graphql-codegen/cli
 
+## 3.3.0
+
+### Minor Changes
+
+- [#9151](https://github.com/dotansimha/graphql-code-generator/pull/9151) [`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29) Thanks [@'./user/schema.mappers#UserMapper',](https://github.com/'./user/schema.mappers#UserMapper',)! - Add `watchPattern` config option for `generates` sections.
+
+  By default, `watch` mode automatically watches all GraphQL schema and document files. This means when a change is detected, Codegen CLI is run.
+
+  A user may want to run Codegen CLI when non-schema and non-document files are changed. Each `generates` section now has a `watchPattern` option to allow more file patterns to be added to the list of patterns to watch.
+
+  In the example below, mappers are exported from `schema.mappers.ts` files. We want to re-run Codegen if the content of `*.mappers.ts` files change because they change the generated types file. To solve this, we can add mapper file patterns to watch using the glob pattern used for schema and document files.
+
+  ```ts
+  // codegen.ts
+  const config: CodegenConfig = {
+    schema: 'src/schema/**/*.graphql',
+    generates: {
+      'src/schema/types.ts': {
+        plugins: ['typescript', 'typescript-resolvers'],
+        config: {
+          mappers: {
+
+            Book: './book/schema.mappers#BookMapper',
+          },
+        }
+        watchPattern: 'src/schema/**/*.mappers.ts', // Watches mapper files in `watch` mode. Use an array for multiple patterns e.g. `['src/*.pattern1.ts','src/*.pattern2.ts']`
+      },
+    },
+  };
+  ```
+
+  Then, run Codegen CLI in `watch` mode:
+
+  ```shell
+  yarn graphql-codegen --watch
+  ```
+
+  Now, updating `*.mappers.ts` files re-runs Codegen! 🎉
+
+  Note: `watchPattern` is only used in `watch` mode i.e. running CLI with `--watch` flag.
+
+### Patch Changes
+
+- Updated dependencies [[`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29), [`f104619ac`](https://github.com/dotansimha/graphql-code-generator/commit/f104619acd27c9d62a06bc577737500880731087)]:
+  - @graphql-codegen/plugin-helpers@4.2.0
+
 ## 3.2.2
 
 ### Patch Changes

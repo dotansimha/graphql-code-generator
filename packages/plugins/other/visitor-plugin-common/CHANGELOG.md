@@ -1,5 +1,179 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 3.1.0
+
+### Minor Changes
+
+- [#9146](https://github.com/dotansimha/graphql-code-generator/pull/9146) [`9f4d9c5a4`](https://github.com/dotansimha/graphql-code-generator/commit/9f4d9c5a479d34da25df8e060a8c2b3b162647dd) Thanks [@eddeee888](https://github.com/eddeee888)! - [typescript-resolvers] Add `resolversNonOptionalTypename` config option.
+
+  This is extending on `ResolversUnionTypes` implemented in https://github.com/dotansimha/graphql-code-generator/pull/9069
+
+  `resolversNonOptionalTypename` adds non-optional `__typename` to union members of `ResolversUnionTypes`, without affecting the union members' base intefaces.
+
+  A common use case for non-optional `__typename` of union members is using it as the common field to work out the final schema type. This makes implementing the union's `__resolveType` very simple as we can use `__typename` to decide which union member the resolved object is. Without this, we have to check the existence of field/s on the incoming object which could be verbose.
+
+  For example, consider this schema:
+
+  ```graphql
+  type Query {
+    book(id: ID!): BookPayload!
+  }
+
+  type Book {
+    id: ID!
+    isbn: String!
+  }
+
+  type BookResult {
+    node: Book
+  }
+
+  type PayloadError {
+    message: String!
+  }
+
+  union BookPayload = BookResult | PayloadError
+  ```
+
+  _With optional `__typename`:_ We need to check existence of certain fields to resolve type in the union resolver:
+
+  ```ts
+  // Query/book.ts
+  export const book = async () => {
+    try {
+      const book = await fetchBook();
+      // 1. No `__typename` in resolver results...
+      return {
+        node: book,
+      };
+    } catch (e) {
+      return {
+        message: 'Failed to fetch book',
+      };
+    }
+  };
+
+  // BookPayload.ts
+  export const BookPayload = {
+    __resolveType: parent => {
+      // 2. ... means more checks in `__resolveType`
+      if ('message' in parent) {
+        return 'PayloadError';
+      }
+      return 'BookResult';
+    },
+  };
+  ```
+
+  _With non-optional `__typename`:_ Resolvers declare the type. This which gives us better TypeScript support in resolvers and simplify `__resolveType` implementation:
+
+  ```ts
+  // Query/book.ts
+  export const book = async () => {
+    try {
+      const book = await fetchBook();
+      // 1. `__typename` is declared in resolver results...
+      return {
+        __typename: 'BookResult', // 1a. this also types `node` for us 🎉
+        node: book,
+      };
+    } catch (e) {
+      return {
+        __typename: 'PayloadError',
+        message: 'Failed to fetch book',
+      };
+    }
+  };
+
+  // BookPayload.ts
+  export const BookPayload = {
+    __resolveType: parent => parent.__typename, // 2. ... means a very simple check in `__resolveType`
+  };
+  ```
+
+  _Using `resolversNonOptionalTypename`:_ add it into `typescript-resolvers` plugin config:
+
+  ```ts
+  // codegen.ts
+  const config: CodegenConfig = {
+    schema: 'src/schema/**/*.graphql',
+    generates: {
+      'src/schema/types.ts': {
+        plugins: ['typescript', 'typescript-resolvers'],
+        config: {
+          resolversNonOptionalTypename: true, // Or `resolversNonOptionalTypename: { unionMember: true }`
+        },
+      },
+    },
+  };
+  ```
+
+### Patch Changes
+
+- [#9206](https://github.com/dotansimha/graphql-code-generator/pull/9206) [`e56790104`](https://github.com/dotansimha/graphql-code-generator/commit/e56790104ae56d6c5b48ef71823345bd09d3b835) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `ResolversUnionTypes` being used in `ResolversParentTypes`
+
+  Previously, objects with mappable fields are converted to Omit format that references its own type group or `ResolversTypes` or `ResolversParentTypes` e.g.
+
+  ```ts
+  export type ResolversTypes = {
+    Book: ResolverTypeWrapper<BookMapper>;
+    BookPayload: ResolversTypes['BookResult'] | ResolversTypes['StandardError'];
+    // Note: `result` on the next line references `ResolversTypes["Book"]`
+    BookResult: ResolverTypeWrapper<Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }>;
+    StandardError: ResolverTypeWrapper<StandardError>;
+  };
+
+  export type ResolversParentTypes = {
+    Book: BookMapper;
+    BookPayload: ResolversParentTypes['BookResult'] | ResolversParentTypes['StandardError'];
+    // Note: `result` on the next line references `ResolversParentTypes["Book"]`
+    BookResult: Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> };
+    StandardError: StandardError;
+  };
+  ```
+
+  In https://github.com/dotansimha/graphql-code-generator/pull/9069, we extracted resolver union types to its own group:
+
+  ```ts
+  export type ResolversUnionTypes = {
+    // Note: `result` on the next line references `ResolversTypes["Book"]` which is only correct for the `ResolversTypes` case
+    BookPayload: (Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }) | StandardError;
+  };
+
+  export type ResolversTypes = {
+    Book: ResolverTypeWrapper<BookMapper>;
+    BookPayload: ResolverTypeWrapper<ResolversUnionTypes['BookPayload']>;
+    BookResult: ResolverTypeWrapper<Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }>;
+    StandardError: ResolverTypeWrapper<StandardError>;
+  };
+
+  export type ResolversParentTypes = {
+    Book: BookMapper;
+    BookPayload: ResolversUnionTypes['BookPayload'];
+    BookResult: Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> };
+    StandardError: StandardError;
+  };
+  ```
+
+  This change creates an extra `ResolversUnionParentTypes` that is referenced by `ResolversParentTypes` to ensure backwards compatibility:
+
+  ```ts
+  export type ResolversUnionTypes = {
+    BookPayload: (Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> }) | StandardError;
+  };
+
+  // ... and the reference is changed in ResolversParentTypes:
+  export type ResolversParentTypes = {
+    // ... other fields
+    BookPayload: ResolversUnionParentTypes['BookPayload'];
+  };
+  ```
+
+- [#9194](https://github.com/dotansimha/graphql-code-generator/pull/9194) [`acb647e4e`](https://github.com/dotansimha/graphql-code-generator/commit/acb647e4efbddecf732b6e55dc47ac40c9bdaf08) Thanks [@dstaley](https://github.com/dstaley)! - Don't emit import statements for unused fragments
+
+- Updated dependencies [[`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29), [`f104619ac`](https://github.com/dotansimha/graphql-code-generator/commit/f104619acd27c9d62a06bc577737500880731087)]:
+  - @graphql-codegen/plugin-helpers@4.2.0
+
 ## 3.0.2
 
 ### Patch Changes

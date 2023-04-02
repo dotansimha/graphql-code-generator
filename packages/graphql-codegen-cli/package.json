@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
@@ -44,7 +44,7 @@
     "@babel/template": "^7.18.10",
     "@babel/types": "^7.18.13",
     "@graphql-codegen/core": "^3.1.0",
-    "@graphql-codegen/plugin-helpers": "^4.1.0",
+    "@graphql-codegen/plugin-helpers": "^4.2.0",
     "@graphql-tools/apollo-engine-loader": "^7.3.6",
     "@graphql-tools/code-file-loader": "^7.3.17",
     "@graphql-tools/git-loader": "^7.2.13",

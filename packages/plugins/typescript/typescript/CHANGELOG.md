@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript
 
+## 3.0.3
+
+### Patch Changes
+
+- [#9150](https://github.com/dotansimha/graphql-code-generator/pull/9150) [`92d86b009`](https://github.com/dotansimha/graphql-code-generator/commit/92d86b009579edf70f60b0b8e28658af93ff9fd1) Thanks [@rliljest](https://github.com/rliljest)! - Properly escape enum identifiers when enumsAsConst is used
+
+- Updated dependencies [[`e56790104`](https://github.com/dotansimha/graphql-code-generator/commit/e56790104ae56d6c5b48ef71823345bd09d3b835), [`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29), [`f104619ac`](https://github.com/dotansimha/graphql-code-generator/commit/f104619acd27c9d62a06bc577737500880731087), [`acb647e4e`](https://github.com/dotansimha/graphql-code-generator/commit/acb647e4efbddecf732b6e55dc47ac40c9bdaf08), [`9f4d9c5a4`](https://github.com/dotansimha/graphql-code-generator/commit/9f4d9c5a479d34da25df8e060a8c2b3b162647dd)]:
+  - @graphql-codegen/visitor-plugin-common@3.1.0
+  - @graphql-codegen/plugin-helpers@4.2.0
+
 ## 3.0.2
 
 ### Patch Changes
