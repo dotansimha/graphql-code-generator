@@ -55,7 +55,7 @@
     "lint-staged": "13.2.0",
     "patch-package": "6.5.1",
     "prettier": "2.8.7",
-    "prettier-plugin-svelte": "2.9.0",
+    "prettier-plugin-svelte": "2.10.0",
     "rimraf": "4.4.1",
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
