@@ -78,16 +78,16 @@ const isFragmentReadyFunction = (isStringDocumentMode: boolean) => {
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: TypedDocumentString<TQuery, any>,
   fragmentNode: TypedDocumentString<TFrag, any>,
-  data: Record<string, any>
-): data is FragmentType<typeof fragmentNode> {
-  const deferredFields = queryNode.__meta__?.deferredFields as { [fragName: string]: string[] };
+  fragment: Partial<TFrag>
+): fragment is FragmentType<typeof fragmentNode> {
+  const deferredFields = queryNode.__meta__?.deferredFields as Record<string, (keyof TFrag)[]>;
 
   if (!deferredFields) return true;
 
   const fragName = fragmentNode.__meta__?.fragmentName;
 
   const fields = fragName ? deferredFields[fragName] : [];
-  return fields.length > 0 && fields.some(field => data && field in (data as any));
+  return fields.length > 0 && fields.some(field => fragment && field in fragment);
 }
 `;
   }
@@ -95,9 +95,9 @@ export function isFragmentReady<TQuery, TFrag>(
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: DocumentTypeDecoration<TQuery, any>,
   fragmentNode: TypedDocumentNode<TFrag>,
-  data: Record<string, any>
-): data is FragmentType<typeof fragmentNode> {
-  const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, string[]> } }).__meta__
+  fragment: Partial<TFrag>
+): fragment is FragmentType<typeof fragmentNode> {
+  const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, (keyof TFrag)[]> } }).__meta__
     ?.deferredFields;
 
   if (!deferredFields) return true;
@@ -106,7 +106,7 @@ export function isFragmentReady<TQuery, TFrag>(
   const fragName = fragDef?.name?.value;
 
   const fields = fragName ? deferredFields[fragName] : [];
-  return fields.length > 0 && fields.some(field => data && field in (data as any));
+  return fields.length > 0 && fields.some(field => fragment && field in fragment);
 }
 `;
 };
