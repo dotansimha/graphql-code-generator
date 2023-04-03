@@ -55,7 +55,7 @@ const config: CodegenConfig = {
     },
     './dev-test/githunt/graphql-declared-modules.d.ts': {
       schema: './dev-test/githunt/schema.json',
-      documents: ['./dev-test/githunt/**/*.graphql'],
+      documents: ['./dev-test/githunt/**/*.graphql', './dev-test-outer-dir/githunt/**/*.graphql'],
       plugins: ['typescript-graphql-files-modules'],
     },
     './dev-test/githunt/typed-document-nodes.ts': {
