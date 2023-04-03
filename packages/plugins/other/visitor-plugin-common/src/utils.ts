@@ -284,9 +284,9 @@ export function buildScalars(
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
-  Object.keys(defaultScalarsMapping).forEach(name => {
+  for (const name of Object.keys(defaultScalarsMapping)) {
     result[name] = parseMapper(defaultScalarsMapping[name]);
-  });
+  }
 
   if (schema) {
     const typeMap = schema.getTypeMap();
@@ -326,7 +326,7 @@ export function buildScalars(
     if (typeof scalarsMapping === 'string') {
       throw new Error('Cannot use string scalars mapping when building without a schema');
     }
-    Object.keys(scalarsMapping).forEach(name => {
+    for (const name of Object.keys(scalarsMapping)) {
       if (typeof scalarsMapping[name] === 'string') {
         const value = parseMapper(scalarsMapping[name], name);
         result[name] = value;
@@ -336,7 +336,7 @@ export function buildScalars(
           type: JSON.stringify(scalarsMapping[name]),
         };
       }
-    });
+    }
   }
 
   return result;

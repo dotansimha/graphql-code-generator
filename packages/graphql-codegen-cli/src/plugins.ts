@@ -38,7 +38,7 @@ export async function getPluginByName(
     .map(name =>
       `
         - ${name}
-    `.trimRight()
+    `.trimEnd()
     )
     .join('');
 

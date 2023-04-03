@@ -41,11 +41,11 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   if (config.addOperationExport) {
     const exportConsts = [];
 
-    allAst.definitions.forEach(d => {
+    for (const d of allAst.definitions) {
       if ('name' in d) {
         exportConsts.push(`export declare const ${d.name.value}: import("graphql").DocumentNode;`);
       }
-    });
+    }
 
     content = visitorResult.definitions.concat(exportConsts).join('\n');
   }

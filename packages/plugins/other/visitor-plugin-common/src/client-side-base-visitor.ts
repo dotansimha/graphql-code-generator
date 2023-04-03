@@ -533,15 +533,15 @@ export class ClientSideBaseVisitor<
       graph.addNode(fragment.name, fragment);
     }
 
-    this._fragments.forEach(fragment => {
+    for (const fragment of this._fragments.values()) {
       const depends = this._extractFragments(fragment.node);
 
       if (depends && depends.length > 0) {
-        depends.forEach(name => {
+        for (const name of depends) {
           graph.addDependency(fragment.name, name);
-        });
+        }
       }
-    });
+    }
 
     return graph;
   }
@@ -617,7 +617,9 @@ export class ClientSideBaseVisitor<
   }
 
   public getImports(): string[] {
-    (this._additionalImports || []).forEach(i => this._imports.add(i));
+    for (const i of this._additionalImports || []) {
+      this._imports.add(i);
+    }
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:

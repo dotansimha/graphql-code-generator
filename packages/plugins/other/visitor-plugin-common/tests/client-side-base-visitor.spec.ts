@@ -197,9 +197,9 @@ describe('getImports', () => {
       visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
 
       const imports = visitor.getImports();
-      imports.forEach(i => {
+      for (const i of imports) {
         expect(i).not.toContain('FragmentDoc');
-      });
+      }
     });
   });
 });
