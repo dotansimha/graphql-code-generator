@@ -1,4 +1,5 @@
-import { join } from 'path';
+import { access } from 'node:fs/promises';
+import { join, isAbsolute, resolve, sep } from 'path';
 import { normalizeInstanceOrArray, normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import { isValidPath } from '@graphql-tools/utils';
 import type { subscribe } from '@parcel/watcher';
@@ -17,8 +18,8 @@ function log(msg: string) {
   getLogger().info(`  ${msg}`);
 }
 
-function emitWatching() {
-  log(`${logSymbols.info} Watching for changes...`);
+function emitWatching(watchDir: string) {
+  log(`${logSymbols.info} Watching for changes in ${watchDir}...`);
 }
 
 export const createWatcher = (
@@ -62,6 +63,8 @@ export const createWatcher = (
   let watcherSubscription: Awaited<ReturnType<typeof subscribe>>;
 
   const runWatcher = async () => {
+    const watchDirectory = await findHighestCommonDirectory(files);
+
     const parcelWatcher = await import('@parcel/watcher');
     debugLog(`[Watcher] Parcel watcher loaded...`);
 
@@ -71,10 +74,10 @@ export const createWatcher = (
       if (!isShutdown) {
         executeCodegen(initalContext)
           .then(onNext, () => Promise.resolve())
-          .then(() => emitWatching());
+          .then(() => emitWatching(watchDirectory));
       }
     }, 100);
-    emitWatching();
+    emitWatching(watchDirectory);
 
     const ignored: string[] = [];
     for (const entry of Object.keys(config.generates).map(filename => ({
@@ -92,7 +95,7 @@ export const createWatcher = (
     }
 
     watcherSubscription = await parcelWatcher.subscribe(
-      process.cwd(),
+      watchDirectory,
       async (_, events) => {
         // it doesn't matter what has changed, need to run whole process anyway
         await Promise.all(
@@ -105,7 +108,7 @@ export const createWatcher = (
 
             lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
             debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
-            const fullPath = join(process.cwd(), path);
+            const fullPath = join(watchDirectory, path);
             // In ESM require is not defined
             try {
               delete require.cache[fullPath];
@@ -155,4 +158,61 @@ export const createWatcher = (
         reject(err);
       });
   });
+};
+
+/**
+ * Given a list of file paths (each of which may be absolute, or relative to
+ * `process.cwd()`), find absolute path of the "highest" common directory,
+ * i.e. the directory that contains all the files in the list.
+ *
+ * @param files List of relative and/or absolute file paths (or micromatch patterns)
+ */
+const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
+  // Map files to a list of basePaths, where "base" is the result of mm.scan(pathOrPattern)
+  // e.g. mm.scan("/**/foo/bar").base -> "/" ; mm.scan("/foo/bar/**/fizz/*.graphql") -> /foo/bar
+  const dirPaths = files
+    .map(filePath => (isAbsolute(filePath) ? filePath : resolve(filePath)))
+    .map(patterned => mm.scan(patterned).base);
+
+  // Return longest common prefix if it's accessible, otherwise process.cwd()
+  return (async (maybeValidPath: string) => {
+    debugLog(`[Watcher] Longest common prefix of all files: ${maybeValidPath}...`);
+    try {
+      await access(maybeValidPath);
+      return maybeValidPath;
+    } catch {
+      log(`[Watcher] Longest common prefix (${maybeValidPath}) is not accessible`);
+      log(`[Watcher] Watching current working directory (${process.cwd()}) instead`);
+      return process.cwd();
+    }
+  })(longestCommonPrefix(dirPaths.map(path => path.split(sep))).join(sep));
+};
+
+/**
+ * Find the longest common prefix of an array of paths, where each item in
+ * the array an array of path segments which comprise an absolute path when
+ * joined together by a path separator
+ *
+ * Adapted from:
+ * https://duncan-mcardle.medium.com/leetcode-problem-14-longest-common-prefix-javascript-3bc6a2f777c4
+ *
+ * @param splitPaths An array of arrays, where each item is a path split by its separator
+ * @returns An array of path segments representing the longest common prefix of splitPaths
+ */
+const longestCommonPrefix = (splitPaths: string[][]): string[] => {
+  // Return early on empty input
+  if (!splitPaths.length) {
+    return [];
+  }
+
+  // Loop through the segments of the first path
+  for (let i = 0; i <= splitPaths[0].length; i++) {
+    // Check if this path segment is present in the same position of every path
+    if (!splitPaths.every(string => string[i] === splitPaths[0][i])) {
+      // If not, return the path segments up to and including the previous segment
+      return splitPaths[0].slice(0, i);
+    }
+  }
+
+  return splitPaths[0];
 };

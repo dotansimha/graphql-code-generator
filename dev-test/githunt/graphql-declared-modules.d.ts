@@ -1,3 +1,12 @@
+declare module '*/current-user.query.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const CurrentUserForProfileFromOutsideDirectory: DocumentNode;
+  export const CurrentUserForProfile: DocumentNode;
+
+  export default defaultDocument;
+}
+
 declare module '*/comment-added.subscription.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -18,14 +27,6 @@ declare module '*/comments-page-comment.fragment.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const CommentsPageComment: DocumentNode;
-
-  export default defaultDocument;
-}
-
-declare module '*/current-user.query.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const CurrentUserForProfile: DocumentNode;
 
   export default defaultDocument;
 }

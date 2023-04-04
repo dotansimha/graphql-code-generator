@@ -1,0 +1,8 @@
+# When running `yarn watch:examples`, updating this file should trigger rebuild,
+# even though it's "outside" of the CWD of `dev-test/codegen.ts`
+query CurrentUserForProfileFromOutsideDirectory {
+  currentUser {
+    login
+    avatar_url
+  }
+}
