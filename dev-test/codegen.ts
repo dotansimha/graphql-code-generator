@@ -121,6 +121,16 @@ const config: CodegenConfig = {
       documents: './dev-test/star-wars/**/*.graphql',
       plugins: ['typescript', 'typescript-operations'],
     },
+    './dev-test/star-wars/types.excludeQueryAlpha.ts': {
+      schema: './dev-test/star-wars/schema.json',
+      documents: ['./dev-test/star-wars/**/*.graphql', '!./dev-test/star-wars/**/ExcludeQueryAlpha.graphql'],
+      plugins: ['typescript', 'typescript-operations'],
+    },
+    './dev-test/star-wars/types.excludeQueryBeta.ts': {
+      schema: './dev-test/star-wars/schema.json',
+      documents: ['./dev-test/star-wars/**/*.graphql', '!./dev-test/star-wars/**/ExcludeQueryBeta.graphql'],
+      plugins: ['typescript', 'typescript-operations'],
+    },
     './dev-test/star-wars/types.preResolveTypes.ts': {
       schema: './dev-test/star-wars/schema.json',
       documents: './dev-test/star-wars/**/*.graphql',
