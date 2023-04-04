@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 
-import { useFragment, graphql, FragmentType, isFragmentReady } from './gql';
-import { SlowAndFastFieldWithDeferQuery } from './gql/graphql';
+import { useFragment, graphql, FragmentType, isFragmentReady, DocumentType } from './gql';
 
 export const slowFieldFragment = graphql(/* GraphQL */ `
   fragment SlowFieldFragment on Query {
@@ -25,7 +24,7 @@ const SlowDataField = (props: { data: FragmentType<typeof slowFieldFragment> }) 
   return <p>{data.slowField}</p>;
 };
 
-const InlinedSlowDataField = (props: { data: SlowAndFastFieldWithDeferQuery }) => {
+const InlinedSlowDataField = (props: { data: DocumentType<typeof alphabetQuery> }) => {
   try {
     // @ts-expect-error - this field should be either undefined or a string
     const _ = props.data.inlinedSlowField.toLowerCase();
