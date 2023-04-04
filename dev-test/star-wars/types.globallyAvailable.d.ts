@@ -246,6 +246,24 @@ type CreateReviewForEpisodeMutation = {
   createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
 };
 
+type ExcludeQueryAlphaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+type ExcludeQueryAlphaQuery = {
+  __typename?: 'Query';
+  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
+};
+
+type ExcludeQueryBetaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+type ExcludeQueryBetaQuery = {
+  __typename?: 'Query';
+  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
+};
+
 type HeroAndFriendsNamesQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;

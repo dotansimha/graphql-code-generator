@@ -57,6 +57,24 @@ export type CreateReviewForEpisodeMutation = {
   createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
 };
 
+export type ExcludeQueryAlphaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryAlphaQuery = {
+  __typename?: 'Query';
+  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
+};
+
+export type ExcludeQueryBetaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryBetaQuery = {
+  __typename?: 'Query';
+  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
+};
+
 export type HeroAndFriendsNamesQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
