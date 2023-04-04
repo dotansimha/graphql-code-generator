@@ -79,7 +79,7 @@
     "react-dom": "18.2.0",
     "react-markdown": "8.0.6",
     "react-select": "5.7.2",
-    "typescript-json-schema": "0.55.0"
+    "typescript-json-schema": "0.56.0"
   },
   "browserslist": {
     "production": [
