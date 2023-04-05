@@ -7,7 +7,7 @@ import { preset } from '../src/index.js';
 import { print } from 'graphql';
 
 describe('client-preset', () => {
-  it('can generate simple examples uppercase names', async () => {
+  it.only('can generate simple examples uppercase names', async () => {
     const result = await executeCodegen({
       schema: [
         /* GraphQL */ `

@@ -12,6 +12,8 @@ import { processSources } from './process-sources.js';
 
 export { default as babelOptimizerPlugin } from './babel.js';
 
+import * as typescriptASTPoweredPlugin from './typescript-ast-visitor';
+
 export type FragmentMaskingConfig = {
   /** @description Name of the function that should be used for unmasking a masked fragment property.
    * @default `'useFragment'`
@@ -160,8 +162,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const pluginMap = {
       ...options.pluginMap,
       [`add`]: addPlugin,
+      // TODO: Remove this
       [`typescript`]: typescriptPlugin,
       [`typescript-operations`]: typescriptOperationPlugin,
+      [`typescript-ast-client-preset-only`]: typescriptASTPoweredPlugin,
+      // END TODO -----------------
       [`typed-document-node`]: {
         ...typedDocumentNodePlugin,
         plugin: async (...args: Parameters<PluginFunction>) => {
@@ -191,19 +196,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
       return undefined;
     }
-
-    const plugins: Array<Types.ConfiguredPlugin> = [
-      { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
-      { [`typescript-operations`]: {} },
-      {
-        [`typed-document-node`]: {
-          unstable_onExecutableDocumentNode: onExecutableDocumentNode,
-          unstable_omitDefinitions: persistedDocuments?.omitDefinitions ?? false,
-        },
-      },
-      ...options.plugins,
-    ];
 
     const genDtsPlugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
@@ -275,7 +267,19 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     return [
       {
         filename: `${options.baseOutputDir}graphql.ts`,
-        plugins,
+        plugins: [
+          { [`add`]: { content: `/* eslint-disable */` } },
+          { [`typescript`]: {} },
+          { [`typescript-operations`]: {} },
+          { [`typescript-ast-client-preset-only`]: {} },
+          {
+            [`typed-document-node`]: {
+              unstable_onExecutableDocumentNode: onExecutableDocumentNode,
+              unstable_omitDefinitions: persistedDocuments?.omitDefinitions ?? false,
+            },
+          },
+          ...options.plugins,
+        ],
         pluginMap,
         schema: options.schema,
         config: {
