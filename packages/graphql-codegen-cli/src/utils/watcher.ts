@@ -99,6 +99,7 @@ export const createWatcher = (
       async (_, events) => {
         // it doesn't matter what has changed, need to run whole process anyway
         await Promise.all(
+          // NOTE: @parcel/watcher always provides path as an absolute path
           events.map(async ({ type: eventName, path }) => {
             /**
              * @parcel/watcher has no way to run watcher on specific files (https://github.com/parcel-bundler/watcher/issues/42)
@@ -108,13 +109,12 @@ export const createWatcher = (
 
             lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
             debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
-            const fullPath = join(watchDirectory, path);
             // In ESM require is not defined
             try {
-              delete require.cache[fullPath];
+              delete require.cache[path];
             } catch (err) {}
 
-            if (eventName === 'update' && config.configFilePath && fullPath === config.configFilePath) {
+            if (eventName === 'update' && config.configFilePath && path === config.configFilePath) {
               log(`${logSymbols.info} Config file has changed, reloading...`);
               const context = await loadContext(config.configFilePath);
 
