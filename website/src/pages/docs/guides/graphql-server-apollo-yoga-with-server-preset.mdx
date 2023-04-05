@@ -64,7 +64,7 @@ type Book {
 
 #### 2. Install Server Preset
 
-<PackageCmd packages={['-D @eddeee888/gcg-typescript-resolver-files']} />
+<PackageCmd packages={['-D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files']} />
 
 #### 3. Configure Codegen Config
 
@@ -72,14 +72,12 @@ Create or update your `codegen.ts` as follows:
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
-import { preset } from '@eddeee888/gcg-typescript-resolver-files'
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files'
 
 const config: CodegenConfig = {
   schema: '**/schema.graphql',
   generates: {
-    'src/schema': {
-      preset
-    }
+    'src/schema': defineConfig()
   }
 }
 export default config
