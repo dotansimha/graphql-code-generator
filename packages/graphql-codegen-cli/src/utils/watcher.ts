@@ -24,7 +24,12 @@ function emitWatching(watchDir: string) {
 export const createWatcher = (
   initialContext: CodegenContext,
   onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
-): Promise<void> => {
+): {
+  /** Call this function to stop the running watch server */
+  stopWatching: () => void;
+  /** Promise that will never resolve. To stop it, call stopWatching() */
+  runningWatcher: Promise<void>;
+} => {
   debugLog(`[Watcher] Starting watcher...`);
   let config: Types.Config & { configFilePath?: string } = initialContext.getConfig();
 
@@ -38,7 +43,7 @@ export const createWatcher = (
 
   let watcherSubscription: Awaited<ReturnType<typeof subscribe>>;
 
-  const runWatcher = async () => {
+  const runWatcher = async (abortSignal: AbortSignal) => {
     const watchDirectory = await findHighestCommonDirectory(allPatterns);
 
     const parcelWatcher = await import('@parcel/watcher');
@@ -118,20 +123,28 @@ export const createWatcher = (
       lifecycleHooks(config.hooks).beforeDone();
     };
 
+    abortSignal.addEventListener('abort', () => {
+      debugLog(`[Watcher] Got abort signal`);
+      shutdown();
+    });
     process.once('SIGINT', shutdown);
     process.once('SIGTERM', shutdown);
   };
 
-  // the promise never resolves to keep process running
-  return new Promise<void>((resolve, reject) => {
-    executeCodegen(initialContext)
-      .then(onNext, () => Promise.resolve())
-      .then(runWatcher)
-      .catch(err => {
-        watcherSubscription.unsubscribe();
-        reject(err);
-      });
-  });
+  const abortController = new AbortController();
+
+  return {
+    stopWatching: () => abortController.abort(),
+    runningWatcher: new Promise<void>((resolve, reject) => {
+      executeCodegen(initialContext)
+        .then(onNext, () => Promise.resolve())
+        .then(() => runWatcher(abortController.signal))
+        .catch(err => {
+          watcherSubscription.unsubscribe();
+          reject(err);
+        });
+    }),
+  };
 };
 
 /**
