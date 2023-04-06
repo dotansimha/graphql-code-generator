@@ -898,46 +898,57 @@ export class BaseResolversVisitor<
       const schemaType = allSchemaTypes[typeName];
 
       if (isUnionType(schemaType)) {
-        const referencedTypes = schemaType.getTypes().map(unionMemberType => {
-          const isUnionMemberMapped = this.config.mappers[unionMemberType.name];
+        const referencedTypes = schemaType
+          .getTypes()
+          .map(unionMemberType => {
+            const isUnionMemberMapped = this.config.mappers[unionMemberType.name];
 
-          // 1. If mapped without placehoder, just use it without doing extra checks
-          if (isUnionMemberMapped && !hasPlaceholder(isUnionMemberMapped.type)) {
-            return isUnionMemberMapped.type;
-          }
+            // 1. If mapped without placehoder, just use it without doing extra checks
+            if (isUnionMemberMapped && !hasPlaceholder(isUnionMemberMapped.type)) {
+              return { typename: unionMemberType.name, unionMemberValue: isUnionMemberMapped.type };
+            }
 
-          // 2. Work out value for union member type
-          // 2a. By default, use the typescript type
-          let unionMemberValue = this.convertName(unionMemberType.name, {}, true);
+            // 2. Work out value for union member type
+            // 2a. By default, use the typescript type
+            let unionMemberValue = this.convertName(unionMemberType.name, {}, true);
 
-          // 2b. Find fields to Omit if needed.
-          //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
-          //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
-          const fieldsToOmit = this.getRelevantFieldsToOmit({ schemaType: unionMemberType, getTypeToUse });
-          if (fieldsToOmit.length > 0) {
-            unionMemberValue = this.replaceFieldsInType(unionMemberValue, fieldsToOmit);
-          }
+            // 2b. Find fields to Omit if needed.
+            //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
+            //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
+            const fieldsToOmit = this.getRelevantFieldsToOmit({ schemaType: unionMemberType, getTypeToUse });
+            if (fieldsToOmit.length > 0) {
+              unionMemberValue = this.replaceFieldsInType(unionMemberValue, fieldsToOmit);
+            }
 
-          // 2c. If union member is mapped with placeholder, use the "type with maybe Omit" as {T}
-          if (isUnionMemberMapped && hasPlaceholder(isUnionMemberMapped.type)) {
-            return replacePlaceholder(isUnionMemberMapped.type, unionMemberValue);
-          }
+            // 2c. If union member is mapped with placeholder, use the "type with maybe Omit" as {T}
+            if (isUnionMemberMapped && hasPlaceholder(isUnionMemberMapped.type)) {
+              return {
+                typename: unionMemberType.name,
+                unionMemberValue: replacePlaceholder(isUnionMemberMapped.type, unionMemberValue),
+              };
+            }
 
-          // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
-          const hasDefaultMapper = !!this.config.defaultMapper?.type;
-          const isScalar = this.config.scalars[typeName];
-          if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-            const finalTypename = isScalar ? this._getScalar(typeName) : unionMemberValue;
-            return replacePlaceholder(this.config.defaultMapper.type, finalTypename);
-          }
+            // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
+            const hasDefaultMapper = !!this.config.defaultMapper?.type;
+            const isScalar = this.config.scalars[typeName];
+            if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+              const finalTypename = isScalar ? this._getScalar(typeName) : unionMemberValue;
+              return {
+                typename: unionMemberType.name,
+                unionMemberValue: replacePlaceholder(this.config.defaultMapper.type, finalTypename),
+              };
+            }
 
-          const nonOptionalTypenameModifier = this.config.resolversNonOptionalTypename.unionMember
-            ? ` & { __typename: "${unionMemberType}" }`
-            : '';
+            return { typename: unionMemberType.name, unionMemberValue };
+          })
+          .map(({ typename, unionMemberValue }) => {
+            const nonOptionalTypenameModifier = this.config.resolversNonOptionalTypename.unionMember
+              ? ` & { __typename: '${typename}' }`
+              : '';
 
-          return `${unionMemberValue}${nonOptionalTypenameModifier}`;
-        });
-        res[typeName] = referencedTypes.map(type => `( ${type} )`).join(' | '); // Must wrap every union member in explicit "( )" to separate the members
+            return `( ${unionMemberValue}${nonOptionalTypenameModifier} )`; // Must wrap every union member in explicit "( )" to separate the members
+          });
+        res[typeName] = referencedTypes.join(' | ');
       }
       return res;
     }, {});
