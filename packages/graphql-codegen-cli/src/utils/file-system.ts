@@ -1,6 +1,10 @@
 import { promises, unlink as fsUnlink } from 'fs';
 
-const { writeFile: fsWriteFile, readFile: fsReadFile, mkdir } = promises;
+const { access: fsAccess, writeFile: fsWriteFile, readFile: fsReadFile, mkdir } = promises;
+
+export function access(...args: Parameters<typeof fsAccess>) {
+  return fsAccess(...args);
+}
 
 export function writeFile(filepath: string, content: string) {
   return fsWriteFile(filepath, content);

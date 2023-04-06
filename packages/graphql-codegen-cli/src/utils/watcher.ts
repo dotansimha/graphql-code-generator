@@ -1,4 +1,4 @@
-import { access } from 'node:fs/promises';
+import { access } from './file-system.js';
 import { join, isAbsolute, resolve, sep } from 'path';
 import { normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import type { subscribe } from '@parcel/watcher';
