@@ -3,7 +3,7 @@ import type { FragmentDefinitionNode } from 'graphql';
 
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> =
   TDocumentType extends DocumentTypeDecoration<infer TType, any>
-    ? TType extends { ' $fragmentName'?: infer TKey }
+    ? [TType] extends [{ ' $fragmentName'?: infer TKey }]
       ? TKey extends string
         ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
         : never
@@ -50,8 +50,8 @@ export function makeFragmentData<F extends DocumentTypeDecoration<any, any>, FT 
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: DocumentTypeDecoration<TQuery, any>,
   fragmentNode: TypedDocumentNode<TFrag>,
-  fragment: Partial<TFrag>
-): fragment is FragmentType<typeof fragmentNode> {
+  data: FragmentType<TypedDocumentNode<Incremental<TFrag>, any>> | null | undefined
+): data is FragmentType<typeof fragmentNode> {
   const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, (keyof TFrag)[]> } }).__meta__
     ?.deferredFields;
 
@@ -61,5 +61,5 @@ export function isFragmentReady<TQuery, TFrag>(
   const fragName = fragDef?.name?.value;
 
   const fields = fragName ? deferredFields[fragName] : [];
-  return fields.length > 0 && fields.some(field => fragment && field in fragment);
+  return fields.length > 0 && fields.some(field => data && field in data);
 }
