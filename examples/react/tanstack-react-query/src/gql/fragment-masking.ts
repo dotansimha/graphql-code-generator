@@ -50,7 +50,7 @@ export function makeFragmentData<F extends DocumentTypeDecoration<any, any>, FT 
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: TypedDocumentString<TQuery, any>,
   fragmentNode: TypedDocumentString<TFrag, any>,
-  data: FragmentType<TypedDocumentNode<Incremental<TFrag>, any>> | null | undefined
+  data: FragmentType<TypedDocumentString<Incremental<TFrag>, any>> | null | undefined
 ): data is FragmentType<typeof fragmentNode> {
   const deferredFields = queryNode.__meta__?.deferredFields as Record<string, (keyof TFrag)[]>;
 
