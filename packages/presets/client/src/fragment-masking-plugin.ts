@@ -130,15 +130,18 @@ export const plugin: PluginFunction<{
     isStringDocumentMode ? '' : ', TypedDocumentNode'
   } } from '@graphql-typed-document-node/core';\n`;
 
-  const deferFragmentHelperImports = isStringDocumentMode
-    ? `${useTypeImports ? 'import type' : 'import'} { TypedDocumentString } from './graphql${
-        emitLegacyCommonJSImports ? '' : '.js'
-      }';\n`
+  const deferFragmentHelperImports = `${useTypeImports ? 'import type' : 'import'} { Incremental${
+    isStringDocumentMode ? ', TypedDocumentString' : ''
+  } } from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`;
+
+  const fragmentDefinitionNodeImport = isStringDocumentMode
+    ? ''
     : `${useTypeImports ? 'import type' : 'import'} { FragmentDefinitionNode } from 'graphql';\n`;
 
   if (augmentedModuleName == null) {
     return [
       documentNodeImport,
+      fragmentDefinitionNodeImport,
       deferFragmentHelperImports,
       `\n`,
       fragmentTypeHelper,
