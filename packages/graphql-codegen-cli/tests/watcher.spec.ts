@@ -1,4 +1,5 @@
-import { assertBuildTriggers, setupMockFilesystem, setupMockWatcher } from './watcher-helpers.js';
+import { setupMockFilesystem, setupMockWatcher } from './watcher-test-helpers/setup-mock-watcher.js';
+import { assertBuildTriggers } from './watcher-test-helpers/assert-watcher-build-triggers.js';
 import { join } from 'path';
 
 describe('Watch targets', () => {
@@ -101,13 +102,41 @@ describe('Watch targets', () => {
           ['./foo/some-output.ts']: {
             documents: ['./foo/bar/*.graphql'],
           },
+          ['./foo/some-other-output.ts']: {
+            documents: ['./foo/some-other-bar/*.graphql'],
+          },
+          ['./foo/some-preset-bar/']: {
+            preset: 'near-operation-file',
+            presetConfig: {
+              extension: '.generated.tsx',
+              baseTypesPath: 'types.ts',
+            },
+            documents: ['./foo/some-preset-bar/*.graphql'],
+          },
         },
       },
     });
 
     await assertBuildTriggers(mockWatcher, {
-      shouldTriggerBuild: ['./foo/bar/fizzbuzz.graphql'],
-      shouldNotTriggerBuild: ['./foo/bar/something.ts'],
+      shouldTriggerBuild: [
+        './foo/some-config.ts', // config file
+        './foo/bar/fizzbuzz.graphql',
+      ],
+      pathsWouldBeIgnoredByParcelWatcher: [
+        // note: expectations should be relative to cwd; assertion helper converts
+        //       the values received by parcelWatcher to match before testing them (see typedoc)
+        './foo/some-output.ts', // output file
+        'foo/some-output.ts', // output file
+      ],
+      globsWouldBeIgnoredByParcelWatcher: [
+        // note: globs are tested for exact match with argument passed to subscribe options
+        'some-preset-bar/**/*.generated.tsx', // output of preset
+      ],
+      shouldNotTriggerBuild: [
+        './foo/bar/something.ts', // unrelated file
+        './foo/some-output.ts', // output file (note: should be ignored by parcel anyway)
+        '.git/index.lock',
+      ],
     });
   });
 });
