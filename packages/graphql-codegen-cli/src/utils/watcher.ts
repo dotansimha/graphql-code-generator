@@ -1,4 +1,3 @@
-import { access } from './file-system.js';
 import { join, isAbsolute, resolve, sep } from 'path';
 import { normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import type { subscribe } from '@parcel/watcher';
@@ -8,9 +7,11 @@ import logSymbols from 'log-symbols';
 import { executeCodegen } from '../codegen.js';
 import { CodegenContext, loadContext } from '../config.js';
 import { lifecycleHooks } from '../hooks.js';
+import { access } from './file-system.js';
 import { debugLog } from './debugging.js';
 import { getLogger } from './logger.js';
 import { flattenPatternSets, makeGlobalPatternSet, makeLocalPatternSet, makeShouldRebuild } from './patterns.js';
+import { AbortController } from './abort-controller-polyfill.js';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -25,9 +26,17 @@ export const createWatcher = (
   initialContext: CodegenContext,
   onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
 ): {
-  /** Call this function to stop the running watch server */
-  stopWatching: () => void;
-  /** Promise that will never resolve. To stop it, call stopWatching() */
+  /**
+   * Call this function to stop the running watch server
+   *
+   * @returns Promise that resolves when watcher has terminated ({@link runningWatcher} promise settled)
+   * */
+  stopWatching: () => Promise<void>;
+  /**
+   * Promise that will never resolve as long as the watcher is running. To stop
+   * the watcher, call {@link stopWatching}, which will send a stop signal and
+   * then return a promise that doesn't resolve until `runningWatcher` has resolved.
+   * */
   runningWatcher: Promise<void>;
 } => {
   debugLog(`[Watcher] Starting watcher...`);
@@ -115,35 +124,77 @@ export const createWatcher = (
 
     debugLog(`[Watcher] Started`);
 
-    const shutdown = () => {
+    const shutdown = (
+      /** Optional callback to execute after shutdown has completed its async tasks */
+      afterShutdown?: () => void
+    ) => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
-      watcherSubscription.unsubscribe();
-      lifecycleHooks(config.hooks).beforeDone();
+
+      const pendingUnsubscribe = watcherSubscription.unsubscribe();
+      const pendingBeforeDoneHook = lifecycleHooks(config.hooks).beforeDone();
+
+      if (afterShutdown && typeof afterShutdown === 'function') {
+        Promise.allSettled([pendingUnsubscribe, pendingBeforeDoneHook]).then(afterShutdown);
+      }
     };
 
-    abortSignal.addEventListener('abort', () => {
-      debugLog(`[Watcher] Got abort signal`);
-      shutdown();
-    });
-    process.once('SIGINT', shutdown);
-    process.once('SIGTERM', shutdown);
+    abortSignal.addEventListener('abort', () => shutdown(abortSignal.reason));
+
+    process.once('SIGINT', () => shutdown());
+    process.once('SIGTERM', () => shutdown());
   };
 
+  // Use an AbortController for shutdown signals
+  // NOTE: This will be polyfilled on Node 14 (or any environment without it defined)
   const abortController = new AbortController();
 
+  /**
+   * Send shutdown signal and return a promise that only resolves after the
+   * runningWatcher has resolved, which only resolved after the shutdown signal has been handled
+   */
+  const stopWatching = async function () {
+    // stopWatching.afterShutdown is lazily set to resolve pendingShutdown promise
+    abortController.abort(stopWatching.afterShutdown);
+
+    // SUBTLE: runningWatcher waits for pendingShutdown before it resolves itself, so
+    // by awaiting it here, we are awaiting both the shutdown handler, and runningWatcher itself
+    await stopWatching.runningWatcher;
+  };
+  stopWatching.afterShutdown = () => {
+    debugLog('Shutdown watcher before it started');
+  };
+  stopWatching.runningWatcher = Promise.resolve();
+
+  /** Promise will resolve after the shutdown() handler completes */
+  const pendingShutdown = new Promise<void>(afterShutdown => {
+    // afterShutdown will be passed to shutdown() handler via abortSignal.reason
+    stopWatching.afterShutdown = afterShutdown;
+  });
+
+  /**
+   * Promise that resolves after the watch server has shutdown, either because
+   * stopWatching() was called or there was an error inside it
+   */
+  stopWatching.runningWatcher = new Promise<void>((resolve, reject) => {
+    executeCodegen(initialContext)
+      .then(onNext, () => Promise.resolve())
+      .then(() => runWatcher(abortController.signal))
+      .catch(err => {
+        watcherSubscription.unsubscribe();
+        reject(err);
+      })
+      .then(() => pendingShutdown)
+      .finally(() => {
+        debugLog('Done watching.');
+        resolve();
+      });
+  });
+
   return {
-    stopWatching: () => abortController.abort(),
-    runningWatcher: new Promise<void>((resolve, reject) => {
-      executeCodegen(initialContext)
-        .then(onNext, () => Promise.resolve())
-        .then(() => runWatcher(abortController.signal))
-        .catch(err => {
-          watcherSubscription.unsubscribe();
-          reject(err);
-        });
-    }),
+    stopWatching,
+    runningWatcher: stopWatching.runningWatcher,
   };
 };
 

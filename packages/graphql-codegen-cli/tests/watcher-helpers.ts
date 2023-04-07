@@ -2,7 +2,7 @@ import type { SubscribeCallback } from '@parcel/watcher';
 import ParcelWatcher from '@parcel/watcher';
 import { CodegenContext } from '../src/config';
 import * as fs from '../src/utils/file-system.js';
-import { createWatcher } from '../src/utils/watcher';
+import { createWatcher } from '../src/utils/watcher.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 /**
@@ -36,7 +36,7 @@ export const setupMockWatcher = async (
   const context = new CodegenContext(contextOpts);
 
   const deferredParcelWatcher = deferMockedParcelWatcher();
-  const { stopper } = createWatcher(context, async _ => Promise.resolve([]));
+  const { stopWatching, runningWatcher } = createWatcher(context, async _ => Promise.resolve([]));
 
   const { dispatchChange, subscribeCallbackSpy, unsubscribeSpy, watchDirectory } = await deferredParcelWatcher;
 
@@ -61,7 +61,14 @@ export const setupMockWatcher = async (
      *
      * This _must be called_ at the end of each test to avoid unhandled promises.
      */
-    stopper,
+    stopWatching,
+    /**
+     * Promise that is pending as long as the watcher is running.
+     *
+     * There should be no need to manually await this, because `await stopWatching()`
+     * will wait for also wait for this same promise to resolve.
+     */
+    runningWatcher,
     /**
      * Asynchronous function for dispatching file change events,
      * _which only resolves after the {@link ParcelWatcher.SubscribeCallback | subscription callback}
@@ -96,28 +103,29 @@ export const setupMockWatcher = async (
  */
 export const setupMockFilesystem = (
   /**
-   * Optionally spy on any {@link fs} functions exported from [file-system.ts](../src/utils/file-system.ts)
+   * Optionally provide the mock implementations for any {@link fs} functions
+   * exported from [file-system.ts](../src/utils/file-system.ts)
    *
    * Default:
    *  * {@link fs.writeFile | `writeFile`}: no-op
    *  * {@link fs.readFile | `readFile`}: return blank string
    *  * {@link fs.access | `access` }: return `void` (indicates file is accessible, since no error is thrown)
    */
-  fsSpies?: Partial<typeof fs>
+  implementations?: Partial<typeof fs>
 ) => {
   const mockedFsSpies = {
     /** Don't write any file */
-    writeFile: fsSpies?.writeFile ?? jest.spyOn(fs, 'writeFile').mockImplementation(),
+    writeFile: jest.spyOn(fs, 'writeFile').mockImplementation(implementations?.writeFile),
     /** Read a blank file */
-    readFile: fsSpies?.readFile ?? jest.spyOn(fs, 'readFile').mockImplementation(async () => ''),
+    readFile: jest.spyOn(fs, 'readFile').mockImplementation(implementations?.readFile ?? (async () => '')),
     /** Always accessible (void means accesible, it throws otherwise) */
-    access: fsSpies?.access ?? jest.spyOn(fs, 'access').mockImplementation(async () => {}),
+    access: jest.spyOn(fs, 'access').mockImplementation(implementations?.access ?? (async () => {})),
   };
 
   return {
     /**
      * The spy functions created for the {@link fs} module, either those provided
-     * by {@link fsSpies} or {@link mockedFsSpies | the defaults}.
+     * by {@link implementations} or {@link mockedFsSpies | the defaults}.
      */
     fsSpies: mockedFsSpies,
   };
