@@ -1,4 +1,4 @@
-import { setupMockFilesystem, setupMockWatcher } from './watcher-helpers.js';
+import { assertBuildTriggers, setupMockFilesystem, setupMockWatcher } from './watcher-helpers.js';
 import { join } from 'path';
 
 describe('Watch targets', () => {
@@ -90,5 +90,24 @@ describe('Watch targets', () => {
 
     await stopWatching();
     expect(unsubscribeSpy).toHaveBeenCalled();
+  });
+
+  test('triggers rebuilds as expected (auto-assertions)', async () => {
+    const mockWatcher = await setupMockWatcher({
+      filepath: './foo/some-config.ts',
+      config: {
+        schema: './foo/something.ts',
+        generates: {
+          ['./foo/some-output.ts']: {
+            documents: ['./foo/bar/*.graphql'],
+          },
+        },
+      },
+    });
+
+    await assertBuildTriggers(mockWatcher, {
+      shouldTriggerBuild: ['./foo/bar/fizzbuzz.graphql'],
+      shouldNotTriggerBuild: ['./foo/bar/something.ts'],
+    });
   });
 });

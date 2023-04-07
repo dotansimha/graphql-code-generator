@@ -1,9 +1,142 @@
+import { join, relative } from 'path';
+import chalk from 'chalk';
 import type { SubscribeCallback } from '@parcel/watcher';
 import ParcelWatcher from '@parcel/watcher';
 import { CodegenContext } from '../src/config';
 import * as fs from '../src/utils/file-system.js';
 import { createWatcher } from '../src/utils/watcher.js';
 import { Types } from '@graphql-codegen/plugin-helpers';
+
+/**
+ * Helper function for asserting that multiple paths did or did not trigger a build
+ */
+export const assertBuildTriggers = async (
+  mockWatcher: Awaited<ReturnType<typeof setupMockWatcher>>,
+  {
+    shouldTriggerBuild,
+    shouldNotTriggerBuild,
+    keepWatching,
+  }: {
+    /**
+     * Array of relative paths that SHOULD trigger build during watch mode
+     *
+     * Each path will be converted to absolute path relative to `process.cwd()`
+     * before dispatching it as a change event.
+     */
+    shouldTriggerBuild: string[];
+    /**
+     * Array of relative paths that SHOULD NOT trigger build during watch mode
+     *
+     * Each path will be converted to absolute path relative to `process.cwd()`
+     * before dispatching it as a change event.
+     */
+    shouldNotTriggerBuild: string[];
+    /**
+     * Set to `true` if the helper function should not call `stopWatching()`
+     * (for example, if you want to continue making assertions within the test).
+     *
+     * By default, the helper will stop the watcher when it's done, even if it
+     * encounters an error.
+     */
+    keepWatching?: true;
+  }
+) => {
+  const { onWatchTriggered, dispatchChange, stopWatching, subscribeCallbackSpy, unsubscribeSpy } = mockWatcher;
+
+  // Wrap in a try/finally block so even if there's an error, we can stop the watcher
+  // This way, we avoid misleading "cannot log after tests are done" error
+  try {
+    for (const relPath of shouldTriggerBuild) {
+      const path = join(process.cwd(), relPath);
+      await assertTriggeredBuild(path, { dispatchChange, subscribeCallbackSpy, onWatchTriggered });
+    }
+
+    expect(subscribeCallbackSpy).toHaveBeenCalledTimes(shouldTriggerBuild.length);
+    expect(onWatchTriggered).toHaveBeenCalledTimes(shouldTriggerBuild.length);
+
+    for (const relPath of shouldNotTriggerBuild) {
+      const path = join(process.cwd(), relPath);
+      await assertDidNotTriggerBuild(path, { dispatchChange, subscribeCallbackSpy, onWatchTriggered });
+    }
+
+    expect(subscribeCallbackSpy).toHaveBeenCalledTimes(shouldTriggerBuild.length + shouldNotTriggerBuild.length);
+    expect(onWatchTriggered).toHaveBeenCalledTimes(shouldTriggerBuild.length);
+  } finally {
+    if (keepWatching !== true) {
+      await stopWatching();
+      expect(unsubscribeSpy).toHaveBeenCalled();
+    }
+  }
+};
+
+type MockWatcherAssertionHelpers = Pick<
+  Awaited<ReturnType<typeof setupMockWatcher>>,
+  'dispatchChange' | 'subscribeCallbackSpy' | 'onWatchTriggered'
+>;
+
+/**
+ * Assertion helper to assert that the given (absolute) path triggered a build
+ */
+const assertTriggeredBuild = async (
+  /** Absolute path */ path: string,
+  { dispatchChange, subscribeCallbackSpy, onWatchTriggered }: MockWatcherAssertionHelpers
+) => {
+  try {
+    await dispatchChange(path);
+    expect(subscribeCallbackSpy).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
+    expect(onWatchTriggered).toHaveBeenLastCalledWith('update', path);
+  } catch (error) {
+    error.message = formatBuildTriggerErrorPrelude(path, true, error.message);
+    Error.captureStackTrace(error, assertTriggeredBuild);
+    throw error;
+  }
+};
+
+/**
+ * Assertion helper to assert that the given (absolute) path did NOT trigger a build
+ */
+const assertDidNotTriggerBuild = async (
+  /** Absolute path */ path: string,
+  { dispatchChange, subscribeCallbackSpy, onWatchTriggered }: MockWatcherAssertionHelpers
+) => {
+  try {
+    await dispatchChange(path);
+    expect(subscribeCallbackSpy).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
+    expect(onWatchTriggered).not.toHaveBeenLastCalledWith('update', path);
+  } catch (error) {
+    error.message = formatBuildTriggerErrorPrelude(path, false, error.message);
+    Error.captureStackTrace(error, assertDidNotTriggerBuild);
+    throw error;
+  }
+};
+
+/**
+ * Format a readable error message to print when the assertion fails, so that
+ * the developer can immediately see which path was expected to trigger the rebuild.
+ *
+ * Since we're using auto-assertions, this makes for much more readable errors
+ * than the raw Jest message (which can be misleading because, e.g. if the assertion
+ * is that `onWatchTriggered` was last called with the right path, but it wasn't,
+ * then the Jest error message will misleadingly print the previous path).
+ */
+const formatBuildTriggerErrorPrelude = (
+  /** Absolute path */ path: string,
+  expectedToBuild: boolean,
+  jestErrorMessage: string
+) => {
+  const relPath = relative(process.cwd(), path);
+  const should = `${expectedToBuild ? 'have' : 'not have'} triggered build`;
+  const but = expectedToBuild ? 'it did not' : 'it did';
+  return `${[
+    chalk.gray('---------------------- Watch Mode Build Trigger Assertion Failure: ----------------------'),
+    chalk.red(`<${relPath}>` + chalk.bold(` should ${should}, but ${but}.`)),
+    `     Expected: ${chalk.green(expectedToBuild ? 'to trigger build' : 'not to trigger build')}`,
+    `     Received: ${chalk.red(expectedToBuild ? 'did not trigger build' : 'triggered build')}`,
+    chalk.gray(`Absolute Path: ${path}`),
+    '',
+    chalk.gray('-------------------------------- Raw Error (from Jest): --------------------------------'),
+  ].join('\n')}\n${jestErrorMessage}`;
+};
 
 /**
  * Setup mocking infrastructure for a fake watcher.
