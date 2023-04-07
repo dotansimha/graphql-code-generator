@@ -1,4 +1,4 @@
-import { join, isAbsolute, resolve, sep } from 'path';
+import { join, isAbsolute, relative, resolve, sep } from 'path';
 import { normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import type { subscribe } from '@parcel/watcher';
 import debounce from 'debounce';
@@ -74,13 +74,17 @@ export const createWatcher = (
       filename,
       config: normalizeOutputParam(config.generates[filename]),
     }))) {
+      // ParcelWatcher expects relative ignore patterns to be relative to watchDirectory,
+      // but we expect filename from config to be relative to cwd, so we need to convert
+      const filenameRelativeToWatchDirectory = relative(watchDirectory, resolve(process.cwd(), entry.filename));
+
       if (entry.config.preset) {
         const extension = entry.config.presetConfig?.extension;
         if (extension) {
-          ignored.push(join(entry.filename, '**', '*' + extension));
+          ignored.push(join(filenameRelativeToWatchDirectory, '**', '*' + extension));
         }
       } else {
-        ignored.push(entry.filename);
+        ignored.push(filenameRelativeToWatchDirectory);
       }
     }
 
