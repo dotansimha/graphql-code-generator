@@ -10,6 +10,7 @@ import { Types } from '@graphql-codegen/plugin-helpers';
  *
  * **IMPORTANT**: Make sure to call the returned {@link stopWatching `stopWatching()`}
  * function at the end of each test that uses this, or Jest will complain about unterminated promises.
+ * If you're using the `assertBuildTriggers` helper, it will call `stopWatching` for you.
  *
  * @returns Various helpers and spies for making assertions about change events and rebuild triggers
  */
@@ -61,13 +62,16 @@ export const setupMockWatcher = async (
      * Call this functon to stop the mock watching promise (which otherwise will not terminate).
      *
      * This _must be called_ at the end of each test to avoid unhandled promises.
+     *
+     * Note that the assertion helper `assertBuildTriggers` will call `await stopWatching()`,
+     * so any test using that helper does not need to call it.
      */
     stopWatching,
     /**
      * Promise that is pending as long as the watcher is running.
      *
      * There should be no need to manually await this, because `await stopWatching()`
-     * will wait for also wait for this same promise to resolve.
+     * will also wait for this same `runningWatcher` promise to resolve.
      */
     runningWatcher,
     /**
@@ -83,6 +87,11 @@ export const setupMockWatcher = async (
      *
      * This function is called for _every_ change event, so it's a useful spy
      * for making assertions about events that did _not_ call {@link onWatchTriggered}
+     *
+     * NOTE: Our mock does not implement {@link ParcelWatcher.Options}`["ignore"]`
+     * logic, so even if a path would be ignored, this spy will still be called.
+     * But it's possible to make assertions on ignored paths/globs by testing
+     * their values in {@link subscribeOpts} (or using the `assertBuildTriggers` helper).
      */
     subscribeCallbackSpy,
     /**
@@ -99,14 +108,15 @@ export const setupMockWatcher = async (
     /**
      * The {@link ParcelWatcher.Options} argument that may have been provided to
      * {@link ParcelWatcher.subscribe | @parcel/watch.subscribe}, which will
-     * include, for example, the `ignore` key that contains ignored paths that
+     * include, for example, the `ignore` key that contains ignored paths and globs that
      * should never cause the subscription callback to be called.
      *
      * NOTE: This mock does _not_ implement the Parcel Watcher `shouldIgnore` check,
      * because that's implemented by Parcel Watcher in C++ and there is no sense
      * duplicating it in JS. So if you want to make assertions about ignored paths,
-     * you should limit it to assertions about which paths end up in subscribeOpts.ignore,
-     * and otherwise assume that Parcel Watcher will work as expected.
+     * you should limit it to assertions about which paths end up in `subscribeOpts.ignore`,
+     * and otherwise assume that Parcel Watcher will work as expected. For making
+     * these assertions, see the `assertBuildTriggers` helper.
      */
     subscribeOpts,
   };

@@ -10,7 +10,8 @@ import {
 } from './format-watcher-assertion-errors';
 
 /**
- * Helper function for asserting that multiple paths did or did not trigger a build
+ * Helper function for asserting that multiple paths did or did not trigger a build,
+ * and for asserting the values of paths and globs passed to {@link ParcelWatcher.Options}`["ignore"]`
  */
 export const assertBuildTriggers = async (
   mockWatcher: Awaited<ReturnType<typeof setupMockWatcher>>,
@@ -24,33 +25,35 @@ export const assertBuildTriggers = async (
     /**
      * Array of relative paths that SHOULD trigger build during watch mode
      *
-     * Each path will be converted to absolute path relative to `process.cwd()`
-     * before dispatching it as a change event.
+     * Each path will be converted to absolute path relative from `process.cwd()`
+     * before dispatching it as a change event, which is consistent with how
+     * ParcelWatcher dispatches events (always containing an absolute path).
      */
     shouldTriggerBuild: string[];
     /**
      * Array of relative paths that SHOULD NOT trigger build during watch mode
      *
-     * Each path will be converted to absolute path relative to `process.cwd()`
-     * before dispatching it as a change event.
+     * Each path will be converted to absolute path relative from `process.cwd()`
+     * before dispatching it as a change event, which is consistent with how
+     * ParcelWatcher dispatches events (always containing an absolute path).
      *
      * NOTE: If a path would match one of the ignore patterns passed to Parcel,
      * because we do not implement the C++ code that evaluates those paths, it
      * will still be evaluated by the subscribe trigger. That's probably fine,
      * if you expect that our JS level matchers should also ignore the path,
      * but keep in mind that in production, the real Parcel watcher would (hopefully)
-     * never pass an ignored path to the subscribe callback.
+     * never dispatch an event with an ignored path to the subscribe callback.
      */
     shouldNotTriggerBuild: string[];
     /**
      * Optional array specifying paths (_not_ globs) that should be included
      * in the `options.ignore` value passed to {@link ParcelWatcher.subscribe}.
      *
-     * Any paths expected to be ignored should be specified _relative to cwd_,
+     * Any paths expected to be ignored should be specified _relative from cwd_,
      * as they would be in the config file. Note that ParcelWatcher expects
-     * these paths to be relative to the `watchDirectory`, and the assertion
+     * these paths to be relative from the `watchDirectory`, and the assertion
      * helper will do the conversion, by converting each item in the `options.ignore`
-     * array to be relative to the cwd, and _then_ searching for a match to the
+     * array to be relative from the cwd, and _then_ searching for a match to the
      * specified path.
      *
      * This is different from {@link globsWouldBeIgnoredByParcelWatcher} which
@@ -59,23 +62,22 @@ export const assertBuildTriggers = async (
      * For each path in this array:
      *
      *  * It will be checked for equality with an item in `options.ignore`, but
-     *    only after all paths in options.ignore have been converted to also be relative to cwd
+     *    only after all paths in options.ignore have been converted to also be relative from cwd
      *
      * See: {@link https://github.com/parcel-bundler/watcher#options}
      *
      * NOTE: Because our mock does not implement Parcel Watcher's C++ code that
-     * checks whether a path should be ignored, that means that every path will
-     * always call the subscribe callback on our mock, even if Parcel would have
-     * otherwise ignored it.
+     * checks whether a path should be ignored, that means that every dispatched
+     * event, regardless of path, will always call the subscribe callback on our mock,
+     * even if Parcel would have otherwise ignored it.
      */
     pathsWouldBeIgnoredByParcelWatcher?: string[];
-
     /**
      * Optional array specifying glob patterns (_not_ paths) that should be included
      * in the `options.ignore` value passed to {@link ParcelWatcher.subscribe}.
      *
      * This assertion helper will look for an **exact match** of each string
-     * in this array. Any relative globs should be specified relative to the
+     * in this array. Any relative globs should be specified relative from the
      * `watchDirectory`, because this asertion helper will not attempt to convert
      * them (unlike with {@link pathsWouldBeIgnoredByParcelWatcher}).
      *
@@ -86,13 +88,13 @@ export const assertBuildTriggers = async (
      * See: {@link https://github.com/parcel-bundler/watcher#options}
      *
      * NOTE: Because our mock does not implement Parcel Watcher's C++ code that
-     * checks whether a path should be ignored, that means that every path will
-     * always call the subscribe callback on our mock, even if Parcel would have
-     * otherwise ignored it.
+     * checks whether a path should be ignored, that means that every dispatched
+     * event, regardless of path, will always call the subscribe callback on our mock,
+     * even if Parcel would have otherwise ignored it.
      */
     globsWouldBeIgnoredByParcelWatcher?: string[];
     /**
-     * Set to `true` if the helper function should not call `stopWatching()`
+     * Set this to `true` if the helper function should not call `stopWatching()`
      * (for example, if you want to continue making assertions within the test).
      *
      * By default, the helper will stop the watcher when it's done, even if it
@@ -154,7 +156,7 @@ export const assertBuildTriggers = async (
         if (!isGlob(expectedIgnoredGlob)) {
           throw new Error(
             [
-              `expected glob, got path: ${expectedIgnoredGlob}`,
+              `expected glob, got path (or something that is not a glob): ${expectedIgnoredGlob}`,
               'pass paths to pathsWouldBeIgnoredByParcelWatcher, not globsWouldBeIgnoredByParcelWatcher',
             ].join('\n')
           );
@@ -196,16 +198,16 @@ const assertParcelWouldIgnoreGlob = (
       jestErrorMessage: error.message,
       watchDirectory,
     });
-    Error.captureStackTrace(error, assertParcelWouldIgnorePath);
+    Error.captureStackTrace(error, assertParcelWouldIgnoreGlob);
     throw error;
   }
 };
 
 /**
  * Given a path, and the `ignore` option passed to the mocked {@link ParcelWatcher.Options},
- * assert that Parcel "would" ignore the path if given it as part of the ignore option.
+ * assert that ParcelWatcher "would" ignore the path if given it as part of the ignore option.
  *
- * Note that ParcelWatcher expects paths relative to the watchDirectory, but
+ * Note that ParcelWatcher expects paths relative from the watchDirectory, but
  * our assertion helper expects paths relative from cwd.
  */
 const assertParcelWouldIgnorePath = (
@@ -225,12 +227,12 @@ const assertParcelWouldIgnorePath = (
   const parcelIgnoredPaths = ignore.filter(pathOrGlob => !isGlob(pathOrGlob));
 
   const parcelIgnoredPathsRelativeFromCwd = parcelIgnoredPaths.map(relOrAbsolutePath => {
-    // NOTE: ParcelWatcher considers relative ignore paths relative to the given watchDirectory
+    // NOTE: ParcelWatcher considers relative ignore paths relative from the given watchDirectory
     const relPathFromWatchDir = isAbsolute(relOrAbsolutePath)
       ? relative(watchDirectory, relOrAbsolutePath)
       : relOrAbsolutePath;
 
-    // ...but we want to assert relative to cwd
+    // ...but we want to assert relative from cwd
     const absPath = resolve(process.cwd(), relative(process.cwd(), watchDirectory), relPathFromWatchDir);
     const relPathFromCwd = relative(process.cwd(), absPath);
 

@@ -59,6 +59,8 @@ describe('Watch targets', () => {
     await stopWatching();
   });
 
+  // This test uses manual assertions to make sure they're tested individually,
+  // but note that `assertBuildTriggers` can do most of this work for you
   test('triggers a rebuild for basic case', async () => {
     const { onWatchTriggered, dispatchChange, stopWatching, subscribeCallbackSpy, unsubscribeSpy, watchDirectory } =
       await setupMockWatcher({
@@ -117,19 +119,22 @@ describe('Watch targets', () => {
       },
     });
 
+    expect(mockWatcher.watchDirectory).toBe(join(process.cwd(), 'foo'));
+
     await assertBuildTriggers(mockWatcher, {
       shouldTriggerBuild: [
         './foo/some-config.ts', // config file
         './foo/bar/fizzbuzz.graphql',
       ],
       pathsWouldBeIgnoredByParcelWatcher: [
-        // note: expectations should be relative to cwd; assertion helper converts
+        // note: expectations should be relative from cwd; assertion helper converts
         //       the values received by parcelWatcher to match before testing them (see typedoc)
         './foo/some-output.ts', // output file
         'foo/some-output.ts', // output file
       ],
       globsWouldBeIgnoredByParcelWatcher: [
-        // note: globs are tested for exact match with argument passed to subscribe options
+        // note: globs are tested for exact match with argument passed to subscribe options,
+        //       so they should be specified relative from watchDirectory, _not_ cwd (see typedoc)
         'some-preset-bar/**/*.generated.tsx', // output of preset
       ],
       shouldNotTriggerBuild: [

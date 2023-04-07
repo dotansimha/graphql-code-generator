@@ -40,11 +40,14 @@ export const formatErrorGlobNotIgnoredByParcelWatcher = ({
       '-----------------------------------------'
     ),
     '',
-    chalk.gray(chalk.bold('Note:'), 'Assertion should specify path relative to watch directory,'),
     chalk.gray(
-      '      i.e. exactly as given to ParcelWatcher (unlike path assertions which should be relative to cwd),'
+      chalk.bold('Note:'),
+      'Assertion should specify relative glob paths relative from watchDirectory (_not_ cwd),'
     ),
-    chalk.gray('      because glob assertion looks for an exact match and does not convert paths.'),
+    chalk.gray(
+      '      i.e. exactly as given to ParcelWatcher (unlike path assertions which should be relative from cwd),'
+    ),
+    chalk.gray('      because glob assertion looks for an exact match and does not try to convert them.'),
     '',
     chalk.gray(chalk.bold('watchDirectory:'), watchDirectory),
     ' ',
@@ -79,9 +82,9 @@ export const formatErrorPathNotIgnoredByParcelWatcher = ({
     '',
     '',
     'ParcelWatcher.Options[ignore]',
-    'Thee raw values were received in the options.ignore argument',
+    'These raw values were received in the options.ignore argument',
     'of ParcelWatcher.subscribe, which ParcelWatcher expects to be',
-    'either an absolute path, or relative to watchDirectory',
+    'either an absolute path, or relative from watchDirectory',
     '--------------------------------------------------------------+',
     ...parcelIgnoredPaths,
   ];
@@ -91,7 +94,7 @@ export const formatErrorPathNotIgnoredByParcelWatcher = ({
     expectedPath,
     'Converted to be relative from CWD',
     'Each value was converted to be relative from CWD, (assuming',
-    'that the inputs were correctly relative to watchDirectory),',
+    'that the inputs were correctly relative from watchDirectory),',
     'and then we scanned this column looking for a match.',
     '+--------------------------------------------------------------',
     ...parcelIgnoredPathsRelativeFromCwd,
@@ -126,8 +129,8 @@ export const formatErrorPathNotIgnoredByParcelWatcher = ({
       '-----------------------------------------'
     ),
     chalk.red(`<${expectedPath}> ` + chalk.bold('would not have been ignored by Parcel Watcher')),
-    chalk.gray(chalk.bold('Note:'), 'Assertion should specify path relative to current working directory,'),
-    chalk.gray('      but code should give path to ParcelWatcher relative to', chalk.bold('watchDirectory')),
+    chalk.gray(chalk.bold('Note:'), 'Assertion should specify path relative from current working directory,'),
+    chalk.gray('      but code should give path to ParcelWatcher relative from', chalk.bold('watchDirectory')),
     '',
     chalk.gray(chalk.bold('watchDirectory:'), watchDirectory),
     '',
@@ -144,7 +147,8 @@ export const formatErrorPathNotIgnoredByParcelWatcher = ({
 
 /**
  * Format a readable error message to print when the assertion fails, so that
- * the developer can immediately see which path was expected to trigger the rebuild.
+ * the developer can immediately see which path was expected to trigger (or not trigger)
+ * the rebuild.
  *
  * Since we're using auto-assertions, this makes for much more readable errors
  * than the raw Jest message (which can be misleading because, e.g. if the assertion

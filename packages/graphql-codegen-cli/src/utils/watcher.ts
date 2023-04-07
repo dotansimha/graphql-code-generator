@@ -74,17 +74,17 @@ export const createWatcher = (
       filename,
       config: normalizeOutputParam(config.generates[filename]),
     }))) {
-      // ParcelWatcher expects relative ignore patterns to be relative to watchDirectory,
-      // but we expect filename from config to be relative to cwd, so we need to convert
-      const filenameRelativeToWatchDirectory = relative(watchDirectory, resolve(process.cwd(), entry.filename));
+      // ParcelWatcher expects relative ignore patterns to be relative from watchDirectory,
+      // but we expect filename from config to be relative from cwd, so we need to convert
+      const filenameRelativeFromWatchDirectory = relative(watchDirectory, resolve(process.cwd(), entry.filename));
 
       if (entry.config.preset) {
         const extension = entry.config.presetConfig?.extension;
         if (extension) {
-          ignored.push(join(filenameRelativeToWatchDirectory, '**', '*' + extension));
+          ignored.push(join(filenameRelativeFromWatchDirectory, '**', '*' + extension));
         }
       } else {
-        ignored.push(filenameRelativeToWatchDirectory);
+        ignored.push(filenameRelativeFromWatchDirectory);
       }
     }
 
@@ -203,7 +203,7 @@ export const createWatcher = (
 };
 
 /**
- * Given a list of file paths (each of which may be absolute, or relative to
+ * Given a list of file paths (each of which may be absolute, or relative from
  * `process.cwd()`), find absolute path of the "highest" common directory,
  * i.e. the directory that contains all the files in the list.
  *
