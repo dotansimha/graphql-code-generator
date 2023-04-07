@@ -65,7 +65,7 @@
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.3.6",
     "@graphql-codegen/typescript-vue-urql": "2.3.6",
     "@graphql-codegen/urql-introspection": "2.2.1",
-    "@monaco-editor/react": "4.4.6",
+    "@monaco-editor/react": "4.5.0",
     "@theguild/components": "4.5.8",
     "classnames": "2.3.2",
     "date-fns": "2.29.3",
