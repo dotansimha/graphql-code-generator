@@ -10,7 +10,12 @@ import { lifecycleHooks } from '../hooks.js';
 import { access } from './file-system.js';
 import { debugLog } from './debugging.js';
 import { getLogger } from './logger.js';
-import { flattenPatternSets, makeGlobalPatternSet, makeLocalPatternSet, makeShouldRebuild } from './patterns.js';
+import {
+  allAffirmativePatternsFromPatternSets,
+  makeGlobalPatternSet,
+  makeLocalPatternSet,
+  makeShouldRebuild,
+} from './patterns.js';
 import { AbortController } from './abort-controller-polyfill.js';
 
 function log(msg: string) {
@@ -46,14 +51,14 @@ export const createWatcher = (
   const localPatternSets = Object.keys(config.generates)
     .map(filename => normalizeOutputParam(config.generates[filename]))
     .map(conf => makeLocalPatternSet(conf));
-  const allPatterns = flattenPatternSets([globalPatternSet, ...localPatternSets]);
+  const allAffirmativePatterns = allAffirmativePatternsFromPatternSets([globalPatternSet, ...localPatternSets]);
 
   const shouldRebuild = makeShouldRebuild({ globalPatternSet, localPatternSets });
 
   let watcherSubscription: Awaited<ReturnType<typeof subscribe>>;
 
   const runWatcher = async (abortSignal: AbortSignal) => {
-    const watchDirectory = await findHighestCommonDirectory(allPatterns);
+    const watchDirectory = await findHighestCommonDirectory(allAffirmativePatterns);
 
     const parcelWatcher = await import('@parcel/watcher');
     debugLog(`[Watcher] Parcel watcher loaded...`);

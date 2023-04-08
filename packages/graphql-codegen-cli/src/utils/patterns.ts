@@ -15,17 +15,17 @@ function log(msg: string) {
 type NegatedPattern = `!${string}`;
 
 /**
- * Flatten a list of pattern sets to be a list of the original patterns that
- * were used to create them (i.e., including both affirmative and negative).
+ * Flatten a list of pattern sets to be a list of only the affirmative patterns
+ * are contained in all of them.
  *
  * This can be used, for example, to find the "longest common prefix directory"
- * by examining `mm.scan(pattern).base` for each `pattern`
+ * by examining `mm.scan(pattern).base` for each `pattern`.
  */
-export const flattenPatternSets = (patternSets: PatternSet[]) => {
+export const allAffirmativePatternsFromPatternSets = (patternSets: PatternSet[]) => {
   return patternSets.flatMap(patternSet => [
-    ...patternSet.watch.patterns,
-    ...patternSet.documents.patterns,
-    ...patternSet.schemas.patterns,
+    ...patternSet.watch.affirmative,
+    ...patternSet.documents.affirmative,
+    ...patternSet.schemas.affirmative,
   ]);
 };
 
