@@ -3,14 +3,7 @@ import { isValidPath } from '@graphql-tools/utils';
 import { normalizeInstanceOrArray, Types } from '@graphql-codegen/plugin-helpers';
 import isGlob from 'is-glob';
 import mm from 'micromatch';
-import { getLogger } from './logger.js';
-import logSymbols from 'log-symbols';
 import { CodegenContext } from '../config.js';
-
-function log(msg: string) {
-  // double spaces to inline the message with Listr
-  getLogger().info(`  ${msg}`);
-}
 
 type NegatedPattern = `!${string}`;
 
@@ -56,12 +49,7 @@ export const makeShouldRebuild = ({
   const localMatchers = localPatternSets.map(localPatternSet => {
     return (path: string) => {
       // Is path negated by any negating watch pattern?
-      if (
-        matchesAnyAffirmativePattern(
-          path,
-          invertNegatedPatterns([...globalPatternSet.watch.negated, ...localPatternSet.watch.negated])
-        )
-      ) {
+      if (matchesAnyNegatedPattern(path, [...globalPatternSet.watch.negated, ...localPatternSet.watch.negated])) {
         // Short circut: negations in watch patterns take priority
         return false;
       }
@@ -78,12 +66,24 @@ export const makeShouldRebuild = ({
       }
 
       // Does path match documents patterns (without being negated)?
-      if (pathMatches(path, [...globalPatternSet.documents.patterns, ...localPatternSet.documents.patterns])) {
+      if (
+        matchesAnyAffirmativePattern(path, [
+          ...globalPatternSet.documents.affirmative,
+          ...localPatternSet.documents.affirmative,
+        ]) &&
+        !matchesAnyNegatedPattern(path, [...globalPatternSet.documents.negated, ...localPatternSet.documents.negated])
+      ) {
         return true;
       }
 
       // Does path match schemas patterns (without being negated)?
-      if (pathMatches(path, [...globalPatternSet.schemas.patterns, ...localPatternSet.schemas.patterns])) {
+      if (
+        matchesAnyAffirmativePattern(path, [
+          ...globalPatternSet.schemas.affirmative,
+          ...localPatternSet.schemas.affirmative,
+        ]) &&
+        !matchesAnyNegatedPattern(path, [...globalPatternSet.schemas.negated, ...localPatternSet.schemas.negated])
+      ) {
         return true;
       }
 
@@ -222,25 +222,6 @@ type PatternSet = {
 };
 
 /**
- * Return true `true` if `relativeCandidatePath` matches at least one pattern
- * in `patterns` AND is not negated by any negation pattern in `patterns`
- *
- * @param relativeCandidatePath A relative path to evaluate against the patterns
- */
-const pathMatches = (relativeCandidatePath: string, patterns: string[]) => {
-  if (isAbsolute(relativeCandidatePath)) {
-    throw new Error('pathMatches should only be called with relative path');
-  }
-
-  // We use the default micromatch export because it is the only function that
-  // implements the compound matching logic as desired (.isMatch does not remove negations).
-  // This means we don't get a nice boolean result and must check array length instead
-  const match = mm([relativeCandidatePath], patterns, { cwd: process.cwd() }).length === 1;
-
-  return match;
-};
-
-/**
  * Filter the provided list of patterns to include only "affirmative" (non-negated) patterns.
  *
  * @param patterns List of micromatch patterns (or paths) to filter
@@ -273,16 +254,9 @@ const invertNegatedPatterns = (patterns: string[]) => {
       throw new Error(`onlyNegatedPatterns got a non-negated pattern: ${pattern}`);
     }
 
-    // SAFETY: Defensive programming, it's possible some picomatch/micromatch logic
-    // could call a patter negated but without its prefix !. We don't know how to
-    // handle this, but it's not worth crashing over, so warn the user and leave the pattern untransformed
-    if (scanned.negated && scanned.prefix !== '!') {
-      log(`${logSymbols.warning} Got confusing pattern, appears negated but without ! prefix: ${pattern}`);
-      return pattern;
-    }
-
-    // Remove the leading !
-    return pattern.slice(1);
+    // Remove the leading prefix (NOTE: this is not always "!")
+    // e.g. mm.scan("!./foo/bar/never-watch.graphql").prefix === '!./'
+    return pattern.slice(scanned.prefix.length);
   });
 };
 
@@ -305,4 +279,17 @@ const matchesAnyAffirmativePattern = (relativeCandidatePath: string, affirmative
   // micromatch.isMatch does not omit matches that are negated by negation patterns,
   // which is why we require this function only examine affirmative patterns
   return mm.isMatch(relativeCandidatePath, affirmativePatterns);
+};
+
+/**
+ * Return true if relativeCandidatePath matches any of the negatedPatterns
+ *
+ * This function will invert the negated patterns and then call matchesAnyAffirmativePattern
+ *
+ * @param relativeCandidatePath A relative path to evaluate against the suppliednegatedPatterns
+ * @param negatedPatterns A list of patterns, containing no negated patterns, to evaluate
+ */
+const matchesAnyNegatedPattern = (relativeCandidatePath: string, negatedPatterns: string[]) => {
+  // NOTE: No safety check that negatedPatterns contains only negated, because that will happen in invertedNegatedPatterns
+  return matchesAnyAffirmativePattern(relativeCandidatePath, invertNegatedPatterns(negatedPatterns));
 };

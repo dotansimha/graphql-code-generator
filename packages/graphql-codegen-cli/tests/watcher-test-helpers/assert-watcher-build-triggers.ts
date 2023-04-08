@@ -23,19 +23,19 @@ export const assertBuildTriggers = async (
     keepWatching,
   }: {
     /**
-     * Array of relative paths that SHOULD trigger build during watch mode
+     * Array of relative (from CWD) paths that SHOULD trigger build during watch mode
      *
-     * Each path will be converted to absolute path relative from `process.cwd()`
-     * before dispatching it as a change event, which is consistent with how
-     * ParcelWatcher dispatches events (always containing an absolute path).
+     * Each path will be converted to an absolute path before dispatching it as
+     * a change event, which is consistent with how ParcelWatcher dispatches
+     * events (always containing an absolute path).
      */
     shouldTriggerBuild: string[];
     /**
-     * Array of relative paths that SHOULD NOT trigger build during watch mode
+     * Array of relative (from CWD) paths that SHOULD NOT trigger build during watch mode
      *
-     * Each path will be converted to absolute path relative from `process.cwd()`
-     * before dispatching it as a change event, which is consistent with how
-     * ParcelWatcher dispatches events (always containing an absolute path).
+     * Each path will be converted to an absolute path before dispatching it as
+     * a change event, which is consistent with how ParcelWatcher dispatches
+     * events (always containing an absolute path).
      *
      * NOTE: If a path would match one of the ignore patterns passed to Parcel,
      * because we do not implement the C++ code that evaluates those paths, it

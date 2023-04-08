@@ -99,13 +99,52 @@ describe('Watch targets', () => {
     const mockWatcher = await setupMockWatcher({
       filepath: './foo/some-config.ts',
       config: {
-        schema: './foo/something.ts',
+        schema: [
+          './foo/something.ts',
+          './foo/**/match-schema-everywhere.graphql',
+          '!**/exclude-schema-everywhere.graphql',
+        ],
+        watch: ['!**/exclude-watch-everywhere.graphql', 'foo/**/match-watch-everywhere.graphql'],
+        documents: ['foo/**/match-doc-everywhere.graphql', '!**/exclude-doc-everywhere.graphql'],
         generates: {
-          ['./foo/some-output.ts']: {
-            documents: ['./foo/bar/*.graphql'],
+          // globally inclued paths should be included even when a local pattern negates them
+          ['./foo/local-exclusions-dont-precede-global-inclusions.ts']: {
+            watchPattern: ['!foo/global-beats-local/match-watch-everywhere.graphql'],
+            documents: ['!foo/global-beats-local/match-doc-everywhere.graphql'],
+            schema: ['!foo/global-beats-local/match-schema-everywhere.graphql'],
           },
+          // globally negated paths should be excluded even when a local pattern matches them
+          ['./foo/local-inclusions-dont-precede-global-exclusions.ts']: {
+            watchPattern: ['foo/global-beats-local/exclude-watch-everywhere.graphql'],
+            documents: ['foo/global-beats-local/exclude-doc-everywhere.graphql'],
+            schema: ['foo/global-beats-local/exclude-schema-everywhere.graphql'],
+          },
+          // local watchPattern negation should override local documents match
+          ['./foo/some-output.ts']: {
+            watchPattern: '!./foo/bar/never-watch.graphql',
+            documents: ['./foo/bar/*.graphql', '!./foo/bar/never.graphql'],
+          },
+          // local watchPattern negation should override local schema match
           ['./foo/some-other-output.ts']: {
-            documents: ['./foo/some-other-bar/*.graphql'],
+            documents: './foo/some-other-bar/*.graphql',
+            watchPattern: ['!foo/some-other-bar/schemas/never-watch-schema.graphql'],
+            schema: ['./foo/some-other-bar/schemas/*.graphql', '!foo/some-other-bar/schemas/never-schema.graphql'],
+          },
+          // match in one local group, negation in another local group, should still match
+          ['./foo/alphabet/types-no-sigma.ts']: {
+            schema: './foo/alphabet/schema/no-sigma.graphql',
+            documents: [
+              './foo/alphabet/queries/*.graphql', // zeta implicitly included (should always match)
+              '!**/sigma.graphql', // sigma excluded here
+            ],
+          },
+          // match in one local group, negation in another local group, should still match
+          ['./foo/alphabet/types-no-zeta.ts']: {
+            schema: './foo/alphabet/schema/no-sigma.graphql',
+            documents: [
+              './foo/alphabet/queries/sigma.graphql', // sigma explicitly included (should always match)
+              '!./foo/alphabet/queries/zeta.graphql', // zeta excluded here
+            ],
           },
           ['./foo/some-preset-bar/']: {
             preset: 'near-operation-file',
@@ -125,6 +164,53 @@ describe('Watch targets', () => {
       shouldTriggerBuild: [
         './foo/some-config.ts', // config file
         './foo/bar/fizzbuzz.graphql',
+        './foo/some-other-bar/schemas/fizzbuzz.graphql', // included by wildcard
+        //
+        // match in one local group, negation in another local group, should still match
+        './foo/alphabet/queries/zeta.graphql', // excluded in types-no-zeta, but included in types-no-sigma
+        './foo/alphabet/queries/sigma.graphql', // excluded in types-no-sigma, but included in types-no-sigma
+        //
+        // globally inclued paths should be included even when a local pattern negates them
+        // watch
+        './foo/match-watch-everywhere.graphql',
+        './foo/fizz/match-watch-everywhere.graphql',
+        './foo/fizz/buzz/match-watch-everywhere.graphql',
+        './foo/fizz/buzz/foobarbaz/match-watch-everywhere.graphql',
+        // doc
+        './foo/match-doc-everywhere.graphql',
+        './foo/fizz/match-doc-everywhere.graphql',
+        './foo/fizz/buzz/match-doc-everywhere.graphql',
+        './foo/fizz/buzz/foobarbaz/match-doc-everywhere.graphql',
+        // schema
+        './foo/match-schema-everywhere.graphql',
+        './foo/fizz/match-schema-everywhere.graphql',
+        './foo/fizz/buzz/match-schema-everywhere.graphql',
+        './foo/fizz/buzz/foobarbaz/match-schema-everywhere.graphql',
+      ],
+      shouldNotTriggerBuild: [
+        //
+        // paths outside of watch directory should be excluded
+        '.git/index.lock', // totally unrelated
+        'match-watch-everywhere.graphql', // would match pattern if under foo
+        //
+        // pattern matching should work as expected
+        './foo/bar/something.ts', // unrelated file (non-matching extension)
+        './foo/some-other-bar/nested/directory/blah.graphql', // no greedy pattern (**/*) to match
+        //
+        // output files should be excluded
+        './foo/some-output.ts', // output file (note: should be ignored by parcel anyway)
+        //
+        // locally negated paths should be excluded even when a local pattern matches them
+        './foo/bar/never.graphql', // excluded in same document set
+        './foo/bar/never-watch.graphql', // excluded by local watchPattern, matched by local docs
+        './foo/some-other-bar/schemas/never-schema.graphql', // excluded by local schema group
+        './foo/some-other-bar/schemas/never-watch-schema.graphql', // excluded by local watchPattern group
+        //
+        // globally negated paths should be excluded even when a local pattern matches them
+        './foo/alphabet/queries/exclude-watch-everywhere.graphql', // included in types-no-sigma.ts, but globaly excluded
+        'foo/global-beats-local/exclude-watch-everywhere.graphql',
+        'foo/global-beats-local/exclude-doc-everywhere.graphql',
+        'foo/global-beats-local/exclude-schema-everywhere.graphql',
       ],
       pathsWouldBeIgnoredByParcelWatcher: [
         // note: expectations should be relative from cwd; assertion helper converts
@@ -136,11 +222,6 @@ describe('Watch targets', () => {
         // note: globs are tested for exact match with argument passed to subscribe options,
         //       so they should be specified relative from watchDirectory, _not_ cwd (see typedoc)
         'some-preset-bar/**/*.generated.tsx', // output of preset
-      ],
-      shouldNotTriggerBuild: [
-        './foo/bar/something.ts', // unrelated file
-        './foo/some-output.ts', // output file (note: should be ignored by parcel anyway)
-        '.git/index.lock',
       ],
     });
   });
