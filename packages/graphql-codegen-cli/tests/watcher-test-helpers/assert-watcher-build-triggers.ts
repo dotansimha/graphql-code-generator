@@ -23,15 +23,15 @@ export const assertBuildTriggers = async (
     keepWatching,
   }: {
     /**
-     * Array of relative (from CWD) paths that SHOULD trigger build during watch mode
+     * Optional array of relative (from CWD) paths that SHOULD trigger build during watch mode
      *
      * Each path will be converted to an absolute path before dispatching it as
      * a change event, which is consistent with how ParcelWatcher dispatches
      * events (always containing an absolute path).
      */
-    shouldTriggerBuild: string[];
+    shouldTriggerBuild?: string[];
     /**
-     * Array of relative (from CWD) paths that SHOULD NOT trigger build during watch mode
+     * Optional array of relative (from CWD) paths that SHOULD NOT trigger build during watch mode
      *
      * Each path will be converted to an absolute path before dispatching it as
      * a change event, which is consistent with how ParcelWatcher dispatches
@@ -44,7 +44,7 @@ export const assertBuildTriggers = async (
      * but keep in mind that in production, the real Parcel watcher would (hopefully)
      * never dispatch an event with an ignored path to the subscribe callback.
      */
-    shouldNotTriggerBuild: string[];
+    shouldNotTriggerBuild?: string[];
     /**
      * Optional array specifying paths (_not_ globs) that should be included
      * in the `options.ignore` value passed to {@link ParcelWatcher.subscribe}.
@@ -112,6 +112,10 @@ export const assertBuildTriggers = async (
     watchDirectory,
     subscribeOpts,
   } = mockWatcher;
+
+  // These are optional, but to avoid if/else nesting, set them to empty list if not specified
+  shouldTriggerBuild ??= [];
+  shouldNotTriggerBuild ??= [];
 
   // Wrap in a try/finally block so even if there's an error, we can stop the watcher
   // This way, we avoid misleading "cannot log after tests are done" error
