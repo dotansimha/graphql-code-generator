@@ -64,26 +64,44 @@ type Book {
 
 #### 2. Install Server Preset
 
-<PackageCmd packages={['-D @eddeee888/gcg-typescript-resolver-files']} />
+<PackageCmd packages={['-D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files']} />
 
 #### 3. Configure Codegen Config
 
-Create or update your `codegen.ts` as follows:
+Create or update your Codegen config as follows:
+
+<Tabs items={['codegen.ts','codegen.yml']}>
+
+<Tab>
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
-import { preset } from '@eddeee888/gcg-typescript-resolver-files'
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files'
 
 const config: CodegenConfig = {
   schema: '**/schema.graphql',
   generates: {
-    'src/schema': {
-      preset
-    }
+    'src/schema': defineConfig()
   }
 }
 export default config
 ```
+
+</Tab>
+
+<Tab>
+
+```yml filename="codegen.yml"
+schema: '**/schema.graphql'
+generates:
+  src/schema:
+    preset: '@eddeee888/gcg-typescript-resolver-files'
+    watchPattern: '**/*.mappers.ts'
+```
+
+</Tab>
+
+</Tabs>
 
 <Callout type="info">
 
@@ -140,21 +158,22 @@ We can use generated files in GraphQL API implementation:
 <Tabs items={['GraphQL Yoga','Apollo Server']}>
 
 <Tab>
+
 ```ts filename="src/server.ts"
-import { createYoga, createSchema } from 'graphql-yoga';
-import { createServer } from 'http';
+import { createYoga, createSchema } from 'graphql-yoga'
+import { createServer } from 'http'
 import { typeDefs } from './schema/typeDefs.generated'
 import { resolvers } from './schema/resolvers.generated'
 
 const yoga = createYoga({ schema: createSchema({ typeDefs, resolvers }) })
 const server = createServer(yoga)
 server.listen(3000)
-
-````
+```
 
 </Tab>
 
 <Tab>
+
 ```ts filename="src/server.ts"
 import { ApolloServer } from 'apollo-server'
 import { typeDefs } from './schema/typeDefs.generated'
@@ -166,8 +185,7 @@ const server = new ApolloServer({ typeDefs, resolvers })
 server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`)
 })
-
-````
+```
 
 </Tab>
 
