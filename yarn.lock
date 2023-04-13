@@ -3555,10 +3555,10 @@
     "@tanstack/query-core" "4.27.0"
     use-sync-external-store "^1.2.0"
 
-"@theguild/algolia@1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.1.5.tgz#41a9122cacfb085f1d64fec24f3f6d83963a60b6"
-  integrity sha512-SH6VqkpAy6wfzeEU/bg5o3q8MZ4g7OBkmorbKwKKeXK4+gnN4Pdet6WTGNVxn3ygb8jXyI6E75g9n0Fz485+vg==
+"@theguild/algolia@1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.1.6.tgz#3479f5b2f75d2cbfbd95f5f522a01b595890b89c"
+  integrity sha512-W90vwIPdiUB5tMh316gPdKsXV9cH8r3KcyBNE7PixYtHz8c3lWPYpmnjssV6YAoIexogRGy+FhQBGHCgWMdmGg==
   dependencies:
     algoliasearch "^4.14.3"
     commander "^10.0.0"
@@ -3568,10 +3568,10 @@
     lodash.sortby "^4.7.0"
     remove-markdown "^0.5.0"
 
-"@theguild/components@4.5.8":
-  version "4.5.8"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.8.tgz#f95d617c61168476f85f87f032c6b0f1881e0358"
-  integrity sha512-FogSV0QjfbAnrTJfnn7Yjr7J75zwtSBYXLMneOmh3VBIdherYCums9MxTm7JGHrAzVJz/Gf8B4dQX11ZI0zZ5Q==
+"@theguild/components@4.5.9":
+  version "4.5.9"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.9.tgz#124c22dea7a7236bd5a22c574bbb5fd925d7a09b"
+  integrity sha512-aaAd1/4C49RkhhEv9CHunAga3KTtgjK8du0WaKG9Qmb/Lpko+DwafruVEy3nq0QxZri4OVy7nY6E3qppcmqDCg==
   dependencies:
     "@algolia/autocomplete-js" "1.8.3"
     "@algolia/autocomplete-plugin-algolia-insights" "1.8.3"
