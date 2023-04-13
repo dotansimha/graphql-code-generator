@@ -91,6 +91,7 @@ export class TsVisitor<
         null,
         enumNames,
         pluginConfig.enumPrefix,
+        pluginConfig.enumSuffix,
         this.config.enumValues,
         false,
         this.config.directiveArgumentAndInputFieldMappings,
@@ -361,6 +362,7 @@ export class TsVisitor<
 
     const enumTypeName = this.convertName(node, {
       useTypesPrefix: this.config.enumPrefix,
+      useTypesSuffix: this.config.enumSuffix,
     });
 
     if (this.config.enumsAsTypes) {

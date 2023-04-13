@@ -11,6 +11,7 @@ export type SelectionSetProcessorConfig = {
   namespacedImportName: string | null;
   convertName: ConvertNameFn<any>;
   enumPrefix: boolean | null;
+  enumSuffix: boolean | null;
   scalars: ScalarsMap;
   formatNamedField(name: string, type?: GraphQLOutputType | GraphQLNamedType | null, isConditional?: boolean): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;

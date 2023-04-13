@@ -2644,6 +2644,58 @@ describe('TypeScript Operations Plugin', () => {
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
     });
 
+    it('Should produce valid output with preResolveTypes=true and enums with suffixes set', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test($e: Information_EntryType!) {
+          info {
+            ...information
+          }
+          infoArgTest(e: $e) {
+            ...information
+          }
+        }
+
+        fragment information on Information {
+          entries {
+            id
+            value
+          }
+        }
+      `);
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Information {
+          entries: [Information_Entry!]!
+        }
+
+        enum Information_EntryType {
+          NAME
+          ADDRESS
+        }
+
+        type Information_Entry {
+          id: Information_EntryType!
+          value: String
+        }
+
+        type Query {
+          infoArgTest(e: Information_EntryType!): Information
+          info: Information
+        }
+      `);
+      const config = { preResolveTypes: true, typesSuffix: 'I', enumSuffix: false };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      const o = await validate(content, config, testSchema);
+      expect(o).toBeSimilarStringTo(` export type TestQueryVariablesI = Exact<{
+        e: Information_EntryType;
+      }>;`);
+      expect(o).toContain(`export type QueryI = {`);
+      expect(o).toContain(`export enum Information_EntryType {`);
+      expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
+    });
+
     it('Should build a basic selection set based on basic query', async () => {
       const ast = parse(/* GraphQL */ `
         query dummy {

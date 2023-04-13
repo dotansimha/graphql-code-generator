@@ -53,6 +53,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   onlyEnums: boolean;
   onlyOperationTypes: boolean;
   enumPrefix: boolean;
+  enumSuffix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
   entireFieldWrapperValue: string;
@@ -226,6 +227,32 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+  /**
+   * @default true
+   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
+   *
+   * @exampleMarkdown
+   * ## Disable enum suffixes
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          typesSuffix: 'I',
+   *          enumSuffix: false
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  enumSuffix?: boolean;
   /**
    * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
    * @default T
@@ -482,6 +509,7 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       onlyEnums: getConfigValue(rawConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
@@ -843,7 +871,12 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('enum')
-      .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
+      .withName(
+        this.convertName(node, {
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        })
+      )
       .withComment(node.description as any as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
@@ -981,7 +1014,10 @@ export class BaseTypesVisitor<
     const schemaType = this._schema.getType(node.name as any);
 
     if (schemaType && isEnumType(schemaType)) {
-      return this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
+      return this.convertName(node, {
+        useTypesPrefix: this.config.enumPrefix,
+        useTypesSuffix: this.config.enumSuffix,
+      });
     }
 
     return this.convertName(node);

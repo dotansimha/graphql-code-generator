@@ -76,6 +76,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       namespacedImportName: this.config.namespacedImportName,
       convertName: this.convertName.bind(this),
       enumPrefix: this.config.enumPrefix,
+      enumSuffix: this.config.enumSuffix,
       scalars: this.scalars,
       formatNamedField,
       wrapTypeWithModifiers(baseType, type) {
@@ -107,6 +108,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config.namespacedImportName,
         enumsNames,
         this.config.enumPrefix,
+        this.config.enumSuffix,
         this.config.enumValues,
         this.config.arrayInputCoercion,
         undefined,
