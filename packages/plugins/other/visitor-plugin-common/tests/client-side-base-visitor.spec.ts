@@ -202,4 +202,75 @@ describe('getImports', () => {
       }
     });
   });
+
+  describe('when documentMode "graphQLTag"', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        a: A
+      }
+
+      type A {
+        foo: String
+        bar: String
+      }
+    `);
+
+    it('imports FragmentDocs', () => {
+      const fileName = 'fooBarQuery';
+      const importPath = `src/queries/${fileName}`;
+
+      const document = parse(
+        `query fooBarQuery {
+          a {
+            ...fields
+          }
+        }
+        fragment fields on A {
+          foo
+          bar
+        }
+      `
+      );
+
+      const visitor = new ClientSideBaseVisitor(
+        schema,
+        (document.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+          fragmentDef => ({
+            node: fragmentDef,
+            name: fragmentDef.name.value,
+            onType: fragmentDef.typeCondition.name.value,
+            isExternal: false,
+          })
+        ),
+        {
+          emitLegacyCommonJSImports: true,
+          importDocumentNodeExternallyFrom: 'near-operation-file',
+          documentMode: DocumentMode.graphQLTag,
+          fragmentImports: [
+            {
+              baseDir: '/',
+              baseOutputDir: '',
+              outputPath: '',
+              importSource: {
+                path: '~types',
+                identifiers: [
+                  { name: 'FieldsFragmentDoc', kind: 'document' },
+                  { name: 'FieldsFragment', kind: 'type' },
+                ],
+              },
+              emitLegacyCommonJSImports: true,
+              typesImport: false,
+            },
+          ],
+        },
+        {},
+        [{ document, location: importPath }]
+      );
+
+      visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
+
+      const imports = visitor.getImports();
+      expect(imports.some(i => i.includes('FragmentDoc'))).toBeTruthy();
+    });
+  });
 });
