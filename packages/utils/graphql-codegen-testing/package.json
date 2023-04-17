@@ -48,7 +48,8 @@
     "tslib": "~2.5.0"
   },
   "devDependencies": {
-    "@types/lz-string": "1.3.34"
+    "@types/lz-string": "1.3.34",
+    "jest-diff": "^29.5.0"
   },
   "publishConfig": {
     "directory": "dist",
