@@ -17,7 +17,7 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
     "dev": "ts-node src/main.ts",
-    "test:end2end": "yarn jest"
+    "test:end2end": "pnpm jest"
   },
   "type": "commonjs",
   "bob": false
