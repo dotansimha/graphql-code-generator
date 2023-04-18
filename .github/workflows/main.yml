@@ -17,6 +17,7 @@ jobs:
     name: Linting Check
     uses: the-guild-org/shared-config/.github/workflows/lint.yml@main
     with:
+      packageManager: pnpm
       script: pnpm ci:lint
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
