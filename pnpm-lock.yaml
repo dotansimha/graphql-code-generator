@@ -43,6 +43,9 @@ importers:
       bob-the-bundler:
         specifier: 6.0.0
         version: 6.0.0(ts-node@10.9.1)(typescript@5.0.4)
+      dotenv:
+        specifier: ^16.0.3
+        version: 16.0.3
       eslint:
         specifier: 8.38.0
         version: 8.38.0
@@ -10229,7 +10232,6 @@ packages:
   /dotenv@16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
-    dev: false
 
   /dotenv@8.6.0:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
