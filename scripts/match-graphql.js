@@ -19,7 +19,5 @@ if (pkg.pnpm.overrides.graphql.startsWith(version)) {
 const npmVersion = version.includes('-') ? version : `^${version}`;
 pkg.devDependencies.graphql = npmVersion;
 pkg.pnpm.overrides.graphql = npmVersion;
-pkg.pnpm.overrides['**/apollo-language-server/graphql'] = npmVersion;
-pkg.pnpm.overrides['**/@types/graphql-upload/graphql'] = npmVersion;
 
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');
