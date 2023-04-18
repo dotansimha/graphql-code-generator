@@ -10,6 +10,7 @@
     "generate-json-config": "tsx generate-config-json-schema.ts"
   },
   "devDependencies": {
+    "@graphql-codegen/graphql-modules-preset": "3.1.2",
     "@theguild/algolia": "1.1.6",
     "@theguild/tailwind-config": "0.2.1",
     "@types/dedent": "0.7.0",
@@ -52,6 +53,7 @@
     "@graphql-codegen/typescript-graphql-request": "4.5.8",
     "@graphql-codegen/typescript-mongodb": "2.4.6",
     "@graphql-codegen/typescript-msw": "1.1.6",
+    "@graphql-codegen/typescript-nhost": "0.0.1",
     "@graphql-codegen/typescript-operations": "3.0.3",
     "@graphql-codegen/typescript-react-apollo": "3.3.7",
     "@graphql-codegen/typescript-react-query": "4.1.0",
@@ -59,7 +61,6 @@
     "@graphql-codegen/typescript-rtk-query": "2.4.1",
     "@graphql-codegen/typescript-stencil-apollo": "2.3.6",
     "@graphql-codegen/typescript-type-graphql": "2.3.6",
-    "@graphql-codegen/typescript-nhost": "0.0.1",
     "@graphql-codegen/typescript-urql": "3.7.3",
     "@graphql-codegen/typescript-vue-apollo": "3.3.7",
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.3.6",

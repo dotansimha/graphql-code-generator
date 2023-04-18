@@ -1546,6 +1546,9 @@ importers:
         specifier: 0.56.0
         version: 0.56.0
     devDependencies:
+      '@graphql-codegen/graphql-modules-preset':
+        specifier: 3.1.2
+        version: link:../packages/presets/graphql-modules
       '@theguild/algolia':
         specifier: 1.1.6
         version: 1.1.6
