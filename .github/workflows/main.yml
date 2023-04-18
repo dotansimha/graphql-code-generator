@@ -17,7 +17,7 @@ jobs:
     name: Linting Check
     uses: the-guild-org/shared-config/.github/workflows/lint.yml@main
     with:
-      script: yarn ci:lint
+      script: pnpm ci:lint
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
   prettier-check:
@@ -30,8 +30,9 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 16
+          packageManager: pnpm
       - name: Prettier Check
-        run: yarn prettier:check
+        run: pnpm prettier:check
   dev-tests-old:
     name: Validating dev-tests
     runs-on: ubuntu-latest
@@ -47,13 +48,14 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 16
+          packageManager: pnpm
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           CI: true
       - name: Test dev-tests ${{matrix.method}}
         run: |
-          yarn run generate:examples:${{matrix.method}}
+          pnpm run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
   dev-tests:
     name: Examples
@@ -65,6 +67,7 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 16
+          packageManager: pnpm
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: 1.65.0
@@ -75,19 +78,19 @@ jobs:
         run: |
           npm run build-wasm
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           CI: true
       - name: Generate and Diff Codegen Artifacts
         run: |
-          yarn examples:codegen
+          pnpm examples:codegen
           git diff --exit-code -- examples/
       - name: Build Examples
         run: |
-          yarn examples:build
+          pnpm examples:build
       - name: End2End Test Examples
         run: |
-          yarn examples:test:end2end
+          pnpm examples:test:end2end
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest
@@ -98,12 +101,13 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 16
+          packageManager: pnpm
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           CI: true
       - name: Test ESM & CJS integrity
-        run: yarn bob check
+        run: pnpm bob check
   test:
     name: Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL v${{matrix.graphql_version}}
     runs-on: ubuntu-latest
@@ -128,21 +132,23 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: ${{matrix.node_version}}
+          packageManager: pnpm
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
-        run: yarn
-      - name: Cache Jest
-        uses: actions/cache@v3
-        with:
-          path: .cache/jest
-          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
+        run: pnpm i
+      # TODO: why even?
+      # - name: Cache Jest
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: .cache/jest
+      #     key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{hashFiles('yarn.lock')}}
+      #     restore-keys: |
+      #       ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Test
-        run: yarn test
+        run: pnpm test
         env:
           CI: true
   test-rust-swc-plugin:

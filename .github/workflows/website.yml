@@ -22,7 +22,7 @@ jobs:
         name: setup env
         with:
           nodeVersion: 18
-          packageManager: yarn
+          packageManager: pnpm
 
       - uses: the-guild-org/shared-config/website-cf@main
         name: build and deploy website
@@ -39,5 +39,5 @@ jobs:
           projectName: graphql-code-generator
           prId: ${{ github.event.pull_request.number }}
           websiteDirectory: ./
-          buildScript: yarn build && cd website && yarn build
+          buildScript: pnpm build && cd website && pnpm build
           artifactDir: website/out
