@@ -8,6 +8,7 @@ build/
 CHANGELOG.md
 .husky/_/
 .changeset/*.md
+pnpm-lock.yaml
 
 # temporarily ignore follow files because prettier-ignore comments don't work in mdx2
 # see https://github.com/prettier/prettier/pull/12208
