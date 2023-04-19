@@ -76,7 +76,7 @@
     "yargs": "^17.0.0"
   },
   "optionalDependencies": {
-    "@parcel/watcher": "^2.1.0",
+    "@parcel/watcher": "^2.1.0"
   }
   "devDependencies": {
     "@graphql-tools/merge": "8.4.0",
