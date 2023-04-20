@@ -19,7 +19,8 @@ import {
 import gqlTag from 'graphql-tag';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import { LoadedFragment, ParsedImport } from './types.js';
-import { buildScalarsFromConfig, getConfigValue } from './utils.js';
+import { buildScalarsFromConfig, unique, flatten, getConfigValue, groupBy } from './utils.js';
+import { FragmentImport, ImportDeclaration, generateFragmentImportStatement } from './imports.js';
 
 gqlTag.enableExperimentalFragmentVariables();
 
@@ -616,7 +617,7 @@ export class ClientSideBaseVisitor<
     return path;
   }
 
-  public getImports(): string[] {
+  public getImports(options: { excludeFragments?: boolean } = {}): string[] {
     for (const i of this._additionalImports || []) {
       this._imports.add(i);
     }
@@ -667,6 +668,31 @@ export class ClientSideBaseVisitor<
       }
       default:
         break;
+    }
+
+    const excludeFragments =
+      options.excludeFragments || this.config.globalNamespace || this.config.documentMode !== DocumentMode.graphQLTag;
+
+    if (!excludeFragments) {
+      const deduplicatedImports = Object.values(groupBy(this.config.fragmentImports, fi => fi.importSource.path))
+        .map(
+          (fragmentImports): ImportDeclaration<FragmentImport> => ({
+            ...fragmentImports[0],
+            importSource: {
+              ...fragmentImports[0].importSource,
+              identifiers: unique(
+                flatten(fragmentImports.map(fi => fi.importSource.identifiers)),
+                identifier => identifier.name
+              ),
+            },
+            emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+          })
+        )
+        .filter(fragmentImport => fragmentImport.outputPath !== fragmentImport.importSource.path);
+
+      for (const fragmentImport of deduplicatedImports) {
+        this._imports.add(generateFragmentImportStatement(fragmentImport, 'document'));
+      }
     }
 
     return Array.from(this._imports);

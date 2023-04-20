@@ -530,3 +530,19 @@ export function isOneOfInputObjectType(
 
   return isOneOfType;
 }
+
+export function groupBy<T>(array: Array<T>, key: (item: T) => string | number): { [key: string]: Array<T> } {
+  return array.reduce<{ [key: string]: Array<T> }>((acc, item) => {
+    const group = (acc[key(item)] ??= []);
+    group.push(item);
+    return acc;
+  }, {});
+}
+
+export function flatten<T>(array: Array<Array<T>>): Array<T> {
+  return ([] as Array<T>).concat(...array);
+}
+
+export function unique<T>(array: Array<T>, key: (item: T) => string | number = item => item.toString()): Array<T> {
+  return Object.values(array.reduce((acc, item) => ({ [key(item)]: item, ...acc }), {}));
+}
