@@ -16,7 +16,7 @@ import {
   makeLocalPatternSet,
   makeShouldRebuild,
 } from './patterns.js';
-import { AbortController } from '@whatwg-node/fetch';
+import { AbortController } from './abort-controller-polyfill.js';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -156,6 +156,7 @@ export const createWatcher = (
   };
 
   // Use an AbortController for shutdown signals
+  // NOTE: This will be polyfilled on Node 14 (or any environment without it defined)
   const abortController = new AbortController();
 
   /**
