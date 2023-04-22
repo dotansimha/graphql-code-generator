@@ -568,7 +568,6 @@ export class BaseResolversVisitor<
   protected _resolversTypes: ResolverTypes = {};
   protected _resolversParentTypes: ResolverParentTypes = {};
   protected _hasReferencedResolversUnionTypes = false;
-  protected _hasReferencedResolversUnionParentTypes = false;
   protected _hasReferencedResolversInterfaceTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
   protected _resolversUnionParentTypes: Record<string, string> = {};
@@ -635,22 +634,15 @@ export class BaseResolversVisitor<
       clearWrapper: type => this.clearResolverTypeWrapper(type),
       getTypeToUse: name => this.getTypeToUse(name),
       currentType: 'ResolversTypes',
-      referencedUnionType: 'ResolversUnionTypes',
     });
     this._resolversParentTypes = this.createResolversFields({
       applyWrapper: type => type,
       clearWrapper: type => type,
       getTypeToUse: name => this.getParentTypeToUse(name),
-      referencedUnionType: 'ResolversUnionParentTypes',
       currentType: 'ResolversParentTypes',
       shouldInclude: namedType => !isEnumType(namedType),
     });
-    this._resolversUnionTypes = this.createResolversUnionTypes({
-      getTypeToUse: this.getTypeToUse,
-    });
-    this._resolversUnionParentTypes = this.createResolversUnionTypes({
-      getTypeToUse: this.getParentTypeToUse,
-    });
+    this._resolversUnionTypes = this.createResolversUnionTypes();
     this._resolversInterfaceTypes = this.createResolversInterfaceTypes();
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
     this._directiveContextTypesMap = this.createDirectivedContextType();
@@ -719,14 +711,12 @@ export class BaseResolversVisitor<
     applyWrapper,
     clearWrapper,
     getTypeToUse,
-    referencedUnionType,
     currentType,
     shouldInclude,
   }: {
     applyWrapper: (str: string) => string;
     clearWrapper: (str: string) => string;
     getTypeToUse: (str: string) => string;
-    referencedUnionType: 'ResolversUnionTypes' | 'ResolversUnionParentTypes';
     currentType: 'ResolversTypes' | 'ResolversParentTypes';
     shouldInclude?: (type: GraphQLNamedType) => boolean;
   }): ResolverTypes {
@@ -778,13 +768,10 @@ export class BaseResolversVisitor<
         prev[typeName] = applyWrapper(`${type}<${generic}>['${typeName}']`);
         return prev;
       } else if (isUnionType(schemaType)) {
-        if (referencedUnionType === 'ResolversUnionTypes') {
-          this._hasReferencedResolversUnionTypes = true;
-        } else if (referencedUnionType === 'ResolversUnionParentTypes') {
-          this._hasReferencedResolversUnionParentTypes = true;
-        }
-        const resolversType = this.convertName(referencedUnionType);
-        prev[typeName] = applyWrapper(`${resolversType}['${typeName}']`);
+        this._hasReferencedResolversUnionTypes = true;
+        const type = this.convertName('ResolversUnionTypes');
+        const generic = this.convertName(currentType);
+        prev[typeName] = applyWrapper(`${type}<${generic}>['${typeName}']`);
       } else if (isEnumType(schemaType)) {
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
       } else {
@@ -877,11 +864,7 @@ export class BaseResolversVisitor<
     return `Array<${t}>`;
   }
 
-  protected createResolversUnionTypes({
-    getTypeToUse,
-  }: {
-    getTypeToUse: (name: string) => string;
-  }): Record<string, string> {
+  protected createResolversUnionTypes(): Record<string, string> {
     if (!this._hasReferencedResolversUnionTypes) {
       return {};
     }
@@ -889,61 +872,15 @@ export class BaseResolversVisitor<
     const allSchemaTypes = this._schema.getTypeMap();
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
-    const unionTypes = typeNames.reduce((res, typeName) => {
+    const unionTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
       const schemaType = allSchemaTypes[typeName];
 
       if (isUnionType(schemaType)) {
-        const referencedTypes = schemaType
-          .getTypes()
-          .map(unionMemberType => {
-            const isUnionMemberMapped = this.config.mappers[unionMemberType.name];
-
-            // 1. If mapped without placehoder, just use it without doing extra checks
-            if (isUnionMemberMapped && !hasPlaceholder(isUnionMemberMapped.type)) {
-              return { typename: unionMemberType.name, unionMemberValue: isUnionMemberMapped.type };
-            }
-
-            // 2. Work out value for union member type
-            // 2a. By default, use the typescript type
-            let unionMemberValue = this.convertName(unionMemberType.name, {}, true);
-
-            // 2b. Find fields to Omit if needed.
-            //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
-            //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
-            const fieldsToOmit = this.getRelevantFieldsToOmit({ schemaType: unionMemberType, getTypeToUse });
-            if (fieldsToOmit.length > 0) {
-              unionMemberValue = this.replaceFieldsInType(unionMemberValue, fieldsToOmit);
-            }
-
-            // 2c. If union member is mapped with placeholder, use the "type with maybe Omit" as {T}
-            if (isUnionMemberMapped && hasPlaceholder(isUnionMemberMapped.type)) {
-              return {
-                typename: unionMemberType.name,
-                unionMemberValue: replacePlaceholder(isUnionMemberMapped.type, unionMemberValue),
-              };
-            }
-
-            // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
-            const hasDefaultMapper = !!this.config.defaultMapper?.type;
-            const isScalar = this.config.scalars[typeName];
-            if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-              const finalTypename = isScalar ? this._getScalar(typeName) : unionMemberValue;
-              return {
-                typename: unionMemberType.name,
-                unionMemberValue: replacePlaceholder(this.config.defaultMapper.type, finalTypename),
-              };
-            }
-
-            return { typename: unionMemberType.name, unionMemberValue };
-          })
-          .map(({ typename, unionMemberValue }) => {
-            const nonOptionalTypenameModifier = this.config.resolversNonOptionalTypename.unionMember
-              ? ` & { __typename: '${typename}' }`
-              : '';
-
-            return `( ${unionMemberValue}${nonOptionalTypenameModifier} )`; // Must wrap every union member in explicit "( )" to separate the members
-          });
-        res[typeName] = referencedTypes.join(' | ');
+        res[typeName] = this.getAbstractMembersType({
+          typeName,
+          memberTypes: schemaType.getTypes(),
+          isTypenameNonOptional: this.config.resolversNonOptionalTypename.unionMember,
+        });
       }
       return res;
     }, {});
@@ -1116,28 +1053,10 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
-      .withName(this.convertName('ResolversUnionTypes'))
+      .withName(this.convertName('ResolversUnionTypes'), `<RefType extends Record<string, unknown>>`)
       .withComment('Mapping of union types')
       .withBlock(
         Object.entries(this._resolversUnionTypes)
-          .map(([typeName, value]) => indent(`${typeName}: ${value}${this.getPunctuation(declarationKind)}`))
-          .join('\n')
-      ).string;
-  }
-
-  public buildResolversUnionParentTypes(): string {
-    if (Object.keys(this._resolversUnionParentTypes).length === 0) {
-      return '';
-    }
-
-    const declarationKind = 'type';
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind(declarationKind)
-      .withName(this.convertName('ResolversUnionParentTypes'))
-      .withComment('Mapping of union parent types')
-      .withBlock(
-        Object.entries(this._resolversUnionParentTypes)
           .map(([typeName, value]) => indent(`${typeName}: ${value}${this.getPunctuation(declarationKind)}`))
           .join('\n')
       ).string;
