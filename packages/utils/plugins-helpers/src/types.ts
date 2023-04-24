@@ -184,7 +184,7 @@ export namespace Types {
   }
 
   export interface GitHubSchemaOptions {
-    [githubProtocol: string]: { token: string };
+    [githubProtocol: `github:${string}`]: { token: string };
   }
 
   export type SchemaGlobPath = string;
