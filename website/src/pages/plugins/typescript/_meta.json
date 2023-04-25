@@ -13,6 +13,7 @@
   "typescript-mongodb": "mongodb",
   "typescript-msw": "msw",
   "typescript-oclif": "oclif",
+  "typescript-nhost": "nhost",
   "typescript-operations": "operations",
   "typescript-react-apollo": "react-apollo",
   "typescript-react-query": "react-query",
