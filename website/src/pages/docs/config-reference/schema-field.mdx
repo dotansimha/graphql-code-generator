@@ -498,6 +498,58 @@ export default config;
 
 ```
 
+### Delayed Schema Generator
+
+You can also specify a function that adds a new schema using schemas and documents after they have been loaded.
+
+```ts {6-11}
+import { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: [
+    'http://localhost:3000/graphql',
+    {
+      'delayed-schema-generator': ({ documents }) => {
+        // The "generateMySchemaString" is defined by you
+        return generateMySchemaString(documents);
+      },
+    },
+  ],
+  // ...
+};
+export default config;
+```
+
+This function can also be loaded from a file. Create a `my-generator.ts` file that exports the generator function as follows:
+
+```ts
+import { Types } from '@graphql-codegen/plugin-helpers';
+
+export const generator: Types.DelayedSchemaGeneratorFunction = () => {
+  return 'extend type Query { test: String! }';
+};
+```
+
+Specify the created file instead of the function:
+
+```ts {6-8}
+import { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: [
+    'http://localhost:3000/graphql',
+    {
+      'delayed-schema-generator': './my-generator.ts',
+    },
+  ],
+  // ...
+};
+export default config;
+```
+
+The delayed schema generator can be used to provide the types for local-only fields when a document transform inserts them into documents. For more details, please refer to the [documentation](/docs/advanced/document-transform#schema-for-added-fields-from-a-document-transform).
+
+
 ## Custom Schema Loader
 
 If your schema has a different or complicated way of loading, you can point to a single code file that works for you.

@@ -168,3 +168,105 @@ module.exports = {
   }
 }
 ```
+
+## Schema for added fields from a document transform
+
+When adding [local-only fields](/docs/integrations/apollo-local-state) using a document transform, you may want to dynamically add the field types to schema. By using the [delayed schema generator](/docs/config-reference/schema-field#delayed-schema-generator), you can reference your documents and existing schemas to dynamically add the field types for these fields.
+
+Consider a scenario where a `@useMyTool` directive is used to add a local-only field named `localOnlyFieldForMyTool`.
+
+The document transform would look like this:
+
+```ts
+import { Types } from '@graphql-codegen/plugin-helpers'
+import { FieldNode, Kind, visit } from 'graphql'
+
+// This document transform will add a local-only field to any field that has the @useMyTool directive.
+// For example:
+//   Before: query MyQuery { user @useMyTool { field } }
+//   After:  query MyQuery { user @useMyTool { field localOnlyFieldForMyTool @client } }
+export const documentTransform: Types.DocumentTransformObject = {
+  transform: ({ documents }) => {
+    return documents.map(documentFile => {
+      documentFile.document = visit(documentFile.document, {
+        Field: {
+          leave(fieldNode) {
+            if (!fieldNode.directives) return undefined
+            const addFieldDirective = fieldNode.directives.find(directive => directive.name.value === 'useMyTool')
+            if (!addFieldDirective) return undefined
+
+            const localOnlyField: FieldNode = {
+              kind: Kind.FIELD,
+              name: { kind: Kind.NAME, value: 'localOnlyFieldForMyTool' },
+              directives: [{ kind: Kind.DIRECTIVE, name: { kind: Kind.NAME, value: 'client' } }]
+            }
+
+            return {
+              ...fieldNode,
+              selectionSet: {
+                ...fieldNode.selectionSet!,
+                selections: [...fieldNode.selectionSet!.selections, localOnlyField]
+              }
+            }
+          }
+        }
+      })
+      return documentFile
+    })
+  }
+}
+```
+
+Define the delayed schema generator as follows:
+
+```ts
+import { TypeInfo, concatAST, isNonNullType, isObjectType, visit, visitWithTypeInfo } from 'graphql'
+
+// This generates a schema that adds a local-only field type.
+// For example: extend type UserType { localOnlyFieldForMyTool: String! }
+export const schemaGenerator = ({ schemaAst, documents }) => {
+  const typeInfo = new TypeInfo(schemaAst)
+  const typeNames = []
+  visit(
+    concatAST(documents.map(file => file.document)),
+    visitWithTypeInfo(typeInfo, {
+      Field: {
+        leave(fieldNode) {
+          if (!fieldNode.directives) return
+          const addFieldDirective = fieldNode.directives.find(directive => directive.name.value === 'useMyTool')
+          if (!addFieldDirective) return
+
+          const type = typeInfo.getType()
+          if (isNonNullType(type) && isObjectType(type.ofType)) {
+            typeNames.push(type.ofType.name)
+          }
+        }
+      }
+    })
+  )
+  if (typeNames.length > 0) {
+    return typeNames.map(name => `extend type ${name} { localOnlyFieldForMyTool: String! }`).join('\n')
+  }
+  return ''
+}
+```
+
+Configure both as shown below:
+
+```ts {5, 10}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+import { documentTransform } from './my-transform'
+import { schemaGenerator } from './my-schema-generator'
+
+const config: CodegenConfig = {
+  schema: ['https://localhost:4000/graphql', { 'delayed-schema-generator': schemaGenerator }],
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      documentTransforms: [documentTransform]
+    }
+  }
+}
+export default config
+```

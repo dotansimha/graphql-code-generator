@@ -242,6 +242,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         },
         documents: [],
         documentTransforms: options.documentTransforms,
+        delayedSchemaGenerators: options.delayedSchemaGenerators,
       };
     }
 
@@ -269,6 +270,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         config: {},
         documents: [],
         documentTransforms: options.documentTransforms,
+        delayedSchemaGenerators: options.delayedSchemaGenerators,
       };
     }
 
@@ -284,6 +286,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         },
         documents: sources,
         documentTransforms: options.documentTransforms,
+        delayedSchemaGenerators: options.delayedSchemaGenerators,
       },
       {
         filename: `${options.baseOutputDir}gql${gqlArtifactFileExtension}`,
@@ -296,6 +299,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         },
         documents: sources,
         documentTransforms: options.documentTransforms,
+        delayedSchemaGenerators: options.delayedSchemaGenerators,
       },
       ...(isPersistedOperations
         ? [
@@ -320,6 +324,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
               config: {},
               documents: sources,
               documentTransforms: options.documentTransforms,
+              delayedSchemaGenerators: options.delayedSchemaGenerators,
             },
           ]
         : []),

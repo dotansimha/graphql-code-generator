@@ -19,6 +19,7 @@ import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
 import { getDocumentTransform } from './documentTransforms.js';
+import { getDelayedSchemaGenerator, isDelayedSchemaGeneratorConfig } from './delayed-schema-generator.js';
 
 /**
  * Poor mans ESM detection.
@@ -229,7 +230,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         async () => {
                           debugLog(`[CLI] Loading Schemas`);
                           const schemaPointerMap: any = {};
-                          const allSchemaDenormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
+                          const allSchemaDenormalizedPointers = [...rootSchemas, ...outputSpecificSchemas].filter(
+                            schema => !isDelayedSchemaGeneratorConfig(schema)
+                          );
 
                           for (const denormalizedPtr of allSchemaDenormalizedPointers) {
                             if (typeof denormalizedPtr === 'string') {
@@ -329,6 +332,15 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                               )
                             : [];
 
+                          const delayedSchemaGenerators = await Promise.all(
+                            [...rootSchemas, ...outputSpecificSchemas]
+                              .filter(isDelayedSchemaGeneratorConfig)
+                              .map(
+                                async generatorConfig =>
+                                  await getDelayedSchemaGenerator(generatorConfig, makeDefaultLoader(context.cwd))
+                              )
+                          );
+
                           const outputs: Types.GenerateOptions[] = preset
                             ? await context.profiler.run(
                                 async () =>
@@ -344,6 +356,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                     pluginContext,
                                     profiler: context.profiler,
                                     documentTransforms,
+                                    delayedSchemaGenerators,
                                   }),
                                 `Build Generates Section: ${filename}`
                               )
@@ -359,6 +372,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                   pluginContext,
                                   profiler: context.profiler,
                                   documentTransforms,
+                                  delayedSchemaGenerators,
                                 },
                               ];
 
