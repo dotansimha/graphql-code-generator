@@ -105,4 +105,5 @@ export interface ParsedImport {
 
 export interface ResolversNonOptionalTypenameConfig {
   unionMember?: boolean;
+  interfaceImplementingType?: boolean;
 }
