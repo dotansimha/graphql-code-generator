@@ -83,6 +83,11 @@ export type ClientPresetConfig = {
          * @description Name of the property that will be added to the `DocumentNode` with the hash of the operation.
          */
         hashPropertyName?: string;
+        /**
+         * @description Algorithm used to generate the hash, could be useful if your server expects something specific (e.g., Apollo Server expects `sha256`).
+         * @default `sha1`
+         */
+        hashAlgorithm?: 'sha1' | 'sha256';
       };
 };
 
@@ -143,6 +148,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           omitDefinitions:
             (typeof options.presetConfig.persistedDocuments === 'object' &&
               options.presetConfig.persistedDocuments.mode) === 'replaceDocumentWithHash' || false,
+          hashAlgorithm:
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.hashAlgorithm) ||
+            'sha1',
         }
       : null;
 
@@ -180,7 +189,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
       if (persistedDocuments) {
         const documentString = normalizeAndPrintDocumentNode(documentNode);
-        const hash = generateDocumentHash(documentString);
+        const hash = generateDocumentHash(documentString, persistedDocuments.hashAlgorithm);
         persistedDocumentsMap.set(hash, documentString);
         return { ...meta, [persistedDocuments.hashPropertyName]: hash };
       }
