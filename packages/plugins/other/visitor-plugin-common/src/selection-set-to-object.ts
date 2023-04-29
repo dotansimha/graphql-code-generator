@@ -51,6 +51,11 @@ type FragmentSpreadUsage = {
   selectionNodes: Array<SelectionNode>;
 };
 
+type TypenameField = {
+  name: string;
+  type: string;
+};
+
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
 }
@@ -437,7 +442,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     let requireTypename = false;
 
     // usages via fragment typescript type
-    const fragmentsSpreadUsages: string[] = [];
+    const fragmentsSpreadUsages: FragmentSpreadUsage[] = [];
 
     // ensure we mutate no function params
     selectionNodes = [...selectionNodes];
@@ -495,7 +500,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       }
 
       if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
-        fragmentsSpreadUsages.push(selectionNode.typeName);
+        fragmentsSpreadUsages.push(selectionNode);
         continue;
       }
 
@@ -548,10 +553,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       this._config.skipTypeNameForRoot
     );
     const transformed: ProcessResult = [
-      // Only add the typename field if we're not merging fragment
-      // types. If we are merging, we need to wait until we know all
-      // the involved typenames.
-      ...(typeInfoField && (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask')
+      ...(typeInfoField && this.needsTypenameField(fragmentsSpreadUsages)
         ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
         : []),
       ...this._processor.transformPrimitiveFields(
@@ -585,13 +587,32 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     if (fragmentsSpreadUsages.length) {
       if (this._config.inlineFragmentTypes === 'combine') {
-        fields.push(...fragmentsSpreadUsages);
+        fields.push(...fragmentsSpreadUsages.map(({ typeName }) => typeName));
       } else if (this._config.inlineFragmentTypes === 'mask') {
-        fields.push(`{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages.map(name => `'${name}': ${name}`).join(`;`)} } }`);
+        fields.push(
+          `{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages
+            .map(({ typeName }) => `'${typeName}': ${typeName}`)
+            .join(`;`)} } }`
+        );
       }
     }
 
     return { typeInfo: typeInfoField, fields };
+  }
+
+  /**
+   * When masking the fragments, typename will always be added.
+   * When combining the fragments, typename will be added only if there
+   * are no fragments.
+   * When merging fragments, we need to wait until we know all the involved
+   * typenames, so we don't add the typename field.
+   */
+  private needsTypenameField(fragmentsSpreadUsages: FragmentSpreadUsage[]) {
+    if (this._config.inlineFragmentTypes === 'combine' && fragmentsSpreadUsages.length > 0) {
+      return false;
+    }
+
+    return !this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask';
   }
 
   protected buildTypeNameField(
@@ -600,7 +621,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     addTypename: boolean = this._config.addTypename,
     queriedForTypename: boolean = this._queriedForTypename,
     skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
-  ): { name: string; type: string } {
+  ): TypenameField | null {
     const rootTypes = getRootTypes(this._schema);
     if (rootTypes.has(type) && skipTypeNameForRoot && !queriedForTypename) {
       return null;
