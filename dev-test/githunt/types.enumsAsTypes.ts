@@ -57,14 +57,16 @@ export type EntryCommentsArgs = {
 };
 
 /** A list of options for the sort order of the feed */
-export type FeedType =
+export const FeedTypeValues = [
   /** Sort by a combination of freshness and score, using Reddit's algorithm */
-  | 'HOT'
+  'HOT',
   /** Newest entries first */
-  | 'NEW'
+  'NEW',
   /** Highest score entries first */
-  | 'TOP';
+  'TOP',
+] as const;
 
+export type FeedType = typeof FeedTypeValues[number];
 export type Mutation = {
   __typename?: 'Mutation';
   /** Comment on a repository, returns the new comment */
@@ -159,8 +161,9 @@ export type Vote = {
 };
 
 /** The type of vote to record, when submitting a vote */
-export type VoteType = 'CANCEL' | 'DOWN' | 'UP';
+export const VoteTypeValues = ['CANCEL', 'DOWN', 'UP'] as const;
 
+export type VoteType = typeof VoteTypeValues[number];
 export type OnCommentAddedSubscriptionVariables = Exact<{
   repoFullName: Scalars['String'];
 }>;

@@ -98,12 +98,6 @@ const config: CodegenConfig = {
       config: { enumsAsTypes: true },
       plugins: ['typescript', 'typescript-operations'],
     },
-    './dev-test/githunt/types.d.ts': {
-      schema: './dev-test/githunt/schema.json',
-      documents: './dev-test/githunt/**/*.graphql',
-      config: { enumsAsTypes: true },
-      plugins: ['typescript', 'typescript-operations'],
-    },
     './dev-test/githunt/types.avoidOptionals.ts': {
       schema: './dev-test/githunt/schema.json',
       documents: './dev-test/githunt/**/*.graphql',
@@ -151,7 +145,7 @@ const config: CodegenConfig = {
       config: { preResolveTypes: true, onlyOperationTypes: true },
       plugins: ['typescript', 'typescript-operations'],
     },
-    './dev-test/star-wars/types.d.ts': {
+    './dev-test/star-wars/types.enumsAsTypes.ts': {
       schema: './dev-test/star-wars/schema.json',
       config: { enumsAsTypes: true },
       plugins: ['typescript', 'typescript-operations'],
@@ -162,7 +156,7 @@ const config: CodegenConfig = {
       presetConfig: { baseTypesPath: 'types.ts', filename: 'generated.ts' },
       plugins: ['typescript', 'typescript-resolvers'],
     },
-    './dev-test/star-wars/types.globallyAvailable.d.ts': {
+    './dev-test/star-wars/types.globallyAvailable.ts': {
       schema: './dev-test/star-wars/schema.json',
       documents: './dev-test/star-wars/**/*.graphql',
       config: { enumsAsTypes: true, noExport: true },
