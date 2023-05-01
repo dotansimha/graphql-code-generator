@@ -165,12 +165,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes = {
-  PaymentOption: CreditCard | Paypal;
-};
-
-/** Mapping of union parent types */
-export type ResolversUnionParentTypes = {
+export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
   PaymentOption: CreditCard | Paypal;
 };
 
@@ -185,7 +180,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
-  PaymentOption: ResolverTypeWrapper<ResolversUnionTypes['PaymentOption']>;
+  PaymentOption: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['PaymentOption']>;
   Paypal: ResolverTypeWrapper<Paypal>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -205,7 +200,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Mutation: {};
-  PaymentOption: ResolversUnionParentTypes['PaymentOption'];
+  PaymentOption: ResolversUnionTypes<ResolversParentTypes>['PaymentOption'];
   Paypal: Paypal;
   Query: {};
   String: Scalars['String'];

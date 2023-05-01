@@ -109,4 +109,5 @@ export type FragmentDirectives = {
 
 export interface ResolversNonOptionalTypenameConfig {
   unionMember?: boolean;
+  interfaceImplementingType?: boolean;
 }
