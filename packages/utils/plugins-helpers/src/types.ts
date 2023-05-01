@@ -92,6 +92,10 @@ export namespace Types {
      * @description HTTP Method to use, either POST (default) or GET.
      */
     method?: string;
+    /**
+     * @description Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection.
+     */
+    handleAsSDL?: boolean;
   }
   export interface UrlSchemaWithOptions {
     [url: string]: UrlSchemaOptions;
