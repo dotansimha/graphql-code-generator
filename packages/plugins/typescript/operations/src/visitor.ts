@@ -66,9 +66,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const formatNamedField = (
       name: string,
       type: GraphQLOutputType | GraphQLNamedType | null,
-      isConditional = false
+      isConditional = false,
+      isOptional = false
     ): string => {
-      const optional = isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
+      const optional =
+        isOptional || isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
       return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
 

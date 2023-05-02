@@ -21,7 +21,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
 
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
+    fields: PrimitiveField[],
+    unsetTypes?: boolean
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -36,6 +37,20 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       const useInnerType = field.isConditional && isNonNullType(fieldObj.type);
       const innerType = useInnerType ? removeNonNullWrapper(fieldObj.type) : undefined;
 
+      const name = this.config.formatNamedField(
+        field.fieldName,
+        useInnerType ? innerType : fieldObj.type,
+        field.isConditional,
+        unsetTypes
+      );
+
+      if (unsetTypes) {
+        return {
+          name,
+          type: 'never',
+        };
+      }
+
       if (isEnumType(baseType)) {
         typeToUse =
           (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
@@ -44,11 +59,6 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         typeToUse = this.config.scalars[baseType.name];
       }
 
-      const name = this.config.formatNamedField(
-        field.fieldName,
-        useInnerType ? innerType : fieldObj.type,
-        field.isConditional
-      );
       const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
 
       return {
@@ -60,7 +70,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
 
   transformAliasesPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveAliasedFields[]
+    fields: PrimitiveAliasedFields[],
+    unsetTypes?: boolean
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -84,7 +95,14 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
           this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
       }
 
-      const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type);
+      const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type, undefined, unsetTypes);
+      if (unsetTypes) {
+        return {
+          type: 'never',
+          name,
+        };
+      }
+
       const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
 
       return {
@@ -94,14 +112,14 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     });
   }
 
-  transformLinkFields(fields: LinkField[]): ProcessResult {
+  transformLinkFields(fields: LinkField[], unsetTypes?: boolean): ProcessResult {
     if (fields.length === 0) {
       return [];
     }
 
     return fields.map(field => ({
       name: field.alias || field.name,
-      type: field.selectionSet,
+      type: unsetTypes ? 'never' : field.selectionSet,
     }));
   }
 }
