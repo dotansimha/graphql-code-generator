@@ -2,7 +2,7 @@ import * as addPlugin from '@graphql-codegen/add';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
-import * as typescriptPlugin from '@graphql-codegen/typescript';
+// import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode } from 'graphql';
@@ -10,9 +10,9 @@ import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
 
-export { default as babelOptimizerPlugin } from './babel.js';
-
 import * as typescriptASTPoweredPlugin from './typescript-ast-visitor';
+
+export { default as babelOptimizerPlugin } from './babel.js';
 
 export type FragmentMaskingConfig = {
   /** @description Name of the function that should be used for unmasking a masked fragment property.
@@ -163,10 +163,9 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       ...options.pluginMap,
       [`add`]: addPlugin,
       // TODO: Remove this
-      [`typescript`]: typescriptPlugin,
       [`typescript-operations`]: typescriptOperationPlugin,
-      [`typescript-ast-client-preset-only`]: typescriptASTPoweredPlugin,
       // END TODO -----------------
+      [`typescript-ast-client-preset-only`]: typescriptASTPoweredPlugin,
       [`typed-document-node`]: {
         ...typedDocumentNodePlugin,
         plugin: async (...args: Parameters<PluginFunction>) => {
@@ -230,7 +229,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         schema: options.schema,
         config: {
           useTypeImports: options.config.useTypeImports,
-          unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
+          unmaskFunctionName: fragmentMaskingConfig?.unmaskFunctionName,
         },
         documents: [],
         documentTransforms: options.documentTransforms,
@@ -269,9 +268,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         filename: `${options.baseOutputDir}graphql.ts`,
         plugins: [
           { [`add`]: { content: `/* eslint-disable */` } },
-          { [`typescript`]: {} },
-          { [`typescript-operations`]: {} },
           { [`typescript-ast-client-preset-only`]: {} },
+          { [`typescript-operations`]: {} },
           {
             [`typed-document-node`]: {
               unstable_onExecutableDocumentNode: onExecutableDocumentNode,
