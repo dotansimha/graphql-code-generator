@@ -1,4 +1,4 @@
-import { ASTNode, FragmentDefinitionNode } from 'graphql';
+import { ASTNode, FragmentDefinitionNode, DirectiveNode } from 'graphql';
 import { ParsedMapper } from './mappers.js';
 
 /**
@@ -102,6 +102,10 @@ export interface ParsedImport {
   moduleName: string | null;
   propName: string;
 }
+
+export type FragmentDirectives = {
+  fragmentDirectives?: Array<DirectiveNode>;
+};
 
 export interface ResolversNonOptionalTypenameConfig {
   unionMember?: boolean;

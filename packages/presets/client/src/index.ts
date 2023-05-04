@@ -4,7 +4,7 @@ import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 // import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
-import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode } from 'graphql';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
@@ -230,6 +230,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         config: {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig?.unmaskFunctionName,
+          emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+          isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
         documents: [],
         documentTransforms: options.documentTransforms,

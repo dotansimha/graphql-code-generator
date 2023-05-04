@@ -5,12 +5,15 @@ import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
 import { DepGraph } from 'dependency-graph';
 import {
+  DefinitionNode,
+  DirectiveNode,
   DocumentNode,
   FragmentDefinitionNode,
   FragmentSpreadNode,
   GraphQLSchema,
   Kind,
   OperationDefinitionNode,
+  SelectionNode,
   print,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
@@ -407,19 +410,15 @@ export class ClientSideBaseVisitor<
       }
 
       let metaString = '';
-
       if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
-        const meta = this._onExecutableDocumentNode({
-          kind: Kind.DOCUMENT,
-          definitions,
-        });
+        const meta = this._getGraphQLCodegenMetadata(node, definitions);
 
         if (meta) {
-          metaString = `"__meta__":${JSON.stringify(meta)},`;
-
           if (this._omitDefinitions === true) {
-            return `{${metaString.slice(0, -1)}}`;
+            return `{${`"__meta__":${JSON.stringify(meta)},`.slice(0, -1)}}`;
           }
+
+          metaString = `"__meta__":${JSON.stringify(meta)},`;
         }
       }
 
@@ -427,20 +426,19 @@ export class ClientSideBaseVisitor<
     }
 
     if (this.config.documentMode === DocumentMode.string) {
-      let meta: ExecutableDocumentNodeMeta | void;
+      if (node.kind === Kind.FRAGMENT_DEFINITION) {
+        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify({ fragmentName: node.name.value })})`;
+      }
 
       if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
-        meta = this._onExecutableDocumentNode({
-          kind: Kind.DOCUMENT,
-          definitions: gqlTag([doc]).definitions,
-        });
+        const meta = this._getGraphQLCodegenMetadata(node, gqlTag([doc]).definitions);
 
-        if (meta && this._omitDefinitions === true) {
-          return `{${`"__meta__":${JSON.stringify(meta)},`.slice(0, -1)}}`;
+        if (meta) {
+          if (this._omitDefinitions === true) {
+            return `{${`"__meta__":${JSON.stringify(meta)},`.slice(0, -1)}}`;
+          }
+          return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify(meta)})`;
         }
-      }
-      if (meta) {
-        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify(meta)})`;
       }
 
       return `new TypedDocumentString(\`${doc}\`)`;
@@ -449,6 +447,56 @@ export class ClientSideBaseVisitor<
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
 
     return (gqlImport.propName || 'gql') + '`' + doc + '`';
+  }
+
+  protected _getGraphQLCodegenMetadata(
+    node: OperationDefinitionNode,
+    definitions?: ReadonlyArray<DefinitionNode>
+  ): Record<string, any> | void | undefined {
+    let meta: Record<string, any> | void | undefined;
+
+    meta = this._onExecutableDocumentNode({
+      kind: Kind.DOCUMENT,
+      definitions,
+    });
+
+    const deferredFields = this._findDeferredFields(node);
+    if (Object.keys(deferredFields).length) {
+      meta = {
+        ...meta,
+        deferredFields,
+      };
+    }
+
+    return meta;
+  }
+
+  protected _findDeferredFields(node: OperationDefinitionNode): { [fargmentName: string]: string[] } {
+    const deferredFields: { [fargmentName: string]: string[] } = {};
+    const queue: SelectionNode[] = [...node.selectionSet.selections];
+    while (queue.length) {
+      const selection = queue.shift();
+      if (
+        selection.kind === Kind.FRAGMENT_SPREAD &&
+        selection.directives.some((d: DirectiveNode) => d.name.value === 'defer')
+      ) {
+        const fragmentName = selection.name.value;
+        const fragment = this.fragmentsGraph.getNodeData(fragmentName);
+        if (fragment) {
+          const fields = fragment.node.selectionSet.selections.reduce<string[]>((acc, selection) => {
+            if (selection.kind === Kind.FIELD) {
+              acc.push(selection.name.value);
+            }
+            return acc;
+          }, []);
+
+          deferredFields[fragmentName] = fields;
+        }
+      } else if (selection.kind === Kind.FIELD && selection.selectionSet) {
+        queue.push(...selection.selectionSet.selections);
+      }
+    }
+    return deferredFields;
   }
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {

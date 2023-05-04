@@ -2020,6 +2020,11 @@
               },
               {
                 "children": [],
+                "title": "Fragment Masking with @defer directive",
+                "anchor": "fragment-masking-with-defer-directive"
+              },
+              {
+                "children": [],
                 "title": "Fragment Masking and testing",
                 "anchor": "fragment-masking-and-testing"
               },
