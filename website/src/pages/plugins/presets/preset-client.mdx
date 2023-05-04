@@ -182,7 +182,7 @@ export default Film
 `useFragment()` can be used without following React's rules of hooks.
 To avoid any issue with ESLint, we recommend changing its naming to `getFragmentData()` by setting the proper `unmaskFunctionName` value:
 
-```ts filename="codegen.ts" {10-12}
+```ts filename="codegen.ts" {9-11}
 import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
@@ -310,7 +310,7 @@ describe('<ProfileName />', () => {
 
 `client-preset`'s Fragment Masking can be disabled as follow:
 
-```ts filename="codegen.ts" {10-12}
+```ts filename="codegen.ts" {9-11}
 import { type CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
@@ -341,7 +341,7 @@ It is also commonly used to reduce the size of the client bundle as well as to i
 
 Persisted documents can be enabled by setting the `persistedDocuments` option to `true`:
 
-```ts filename="codegen.ts" {10-12}
+```ts filename="codegen.ts" {9-11}
 import { type CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {

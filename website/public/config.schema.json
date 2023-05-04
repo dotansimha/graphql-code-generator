@@ -3592,7 +3592,11 @@
           "description": "Specify a Node module name, or a custom file, to be used instead of standard `fetch`",
           "type": "string"
         },
-        "method": { "description": "HTTP Method to use, either POST (default) or GET.", "type": "string" }
+        "method": { "description": "HTTP Method to use, either POST (default) or GET.", "type": "string" },
+        "handleAsSDL": {
+          "description": "Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection.",
+          "type": "boolean"
+        }
       }
     },
     "Types.LocalSchemaPathWithOptions": {

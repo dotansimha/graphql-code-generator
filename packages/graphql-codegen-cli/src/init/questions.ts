@@ -172,7 +172,7 @@ function normalizeTargets(targets: Tags[] | Tags[][]): Tags[] {
 
 export function getOutputDefaultValue(answers: Answers) {
   if (answers.targets.includes(Tags.client)) {
-    return 'src/gql';
+    return 'src/gql/';
   }
   if (answers.plugins.some(plugin => plugin.defaultExtension === '.tsx')) {
     return 'src/generated/graphql.tsx';

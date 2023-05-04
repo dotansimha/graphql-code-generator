@@ -9,7 +9,11 @@ import { buildSchema, parse } from 'graphql';
 
 const noopSchema = buildSchema(`type Query { _: Int }`);
 
-export default declare((api, opts): PluginObj => {
+type ClientBabelPresetOptions = {
+  artifactDirectory?: string;
+  gqlTagName?: string;
+};
+export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
   const visitor = new ClientSideBaseVisitor(noopSchema, [], {}, {});
 
   const artifactDirectory = opts['artifactDirectory'] ?? '';
