@@ -56,7 +56,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
           (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
           this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
       } else if (this.config.scalars[baseType.name]) {
-        typeToUse = this.config.scalars[baseType.name];
+        typeToUse = this.config.scalars[baseType.name].output;
       }
 
       const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
@@ -87,7 +87,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       }
       const fieldObj = schemaType.getFields()[aliasedField.fieldName];
       const baseType = getBaseType(fieldObj.type);
-      let typeToUse = this.config.scalars[baseType.name] || baseType.name;
+      let typeToUse = this.config.scalars[baseType.name]?.output || baseType.name;
 
       if (isEnumType(baseType)) {
         typeToUse =

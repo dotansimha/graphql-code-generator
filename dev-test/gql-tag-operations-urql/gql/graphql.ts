@@ -9,44 +9,44 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Date: any;
-  Url: any;
+  ID: { input: string | number; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  Date: { input: any; output: any };
+  Url: { input: any; output: any };
 };
 
 export type Meta = {
   __typename?: 'Meta';
-  count?: Maybe<Scalars['Int']>;
+  count?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createTweet?: Maybe<Tweet>;
   deleteTweet?: Maybe<Tweet>;
-  markTweetRead?: Maybe<Scalars['Boolean']>;
+  markTweetRead?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type MutationCreateTweetArgs = {
-  body?: InputMaybe<Scalars['String']>;
+  body?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationDeleteTweetArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type MutationMarkTweetReadArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type Notification = {
   __typename?: 'Notification';
-  date?: Maybe<Scalars['Date']>;
-  id?: Maybe<Scalars['ID']>;
-  type?: Maybe<Scalars['String']>;
+  date?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
@@ -60,51 +60,51 @@ export type Query = {
 };
 
 export type QueryNotificationsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QueryTweetArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type QueryTweetsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort_field?: InputMaybe<Scalars['String']>;
-  sort_order?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort_field?: InputMaybe<Scalars['String']['input']>;
+  sort_order?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type Stat = {
   __typename?: 'Stat';
-  likes?: Maybe<Scalars['Int']>;
-  responses?: Maybe<Scalars['Int']>;
-  retweets?: Maybe<Scalars['Int']>;
-  views?: Maybe<Scalars['Int']>;
+  likes?: Maybe<Scalars['Int']['output']>;
+  responses?: Maybe<Scalars['Int']['output']>;
+  retweets?: Maybe<Scalars['Int']['output']>;
+  views?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Tweet = {
   __typename?: 'Tweet';
   Author?: Maybe<User>;
   Stats?: Maybe<Stat>;
-  body?: Maybe<Scalars['String']>;
-  date?: Maybe<Scalars['Date']>;
-  id: Scalars['ID'];
+  body?: Maybe<Scalars['String']['output']>;
+  date?: Maybe<Scalars['Date']['output']>;
+  id: Scalars['ID']['output'];
 };
 
 export type User = {
   __typename?: 'User';
-  avatar_url?: Maybe<Scalars['Url']>;
-  first_name?: Maybe<Scalars['String']>;
-  full_name?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  last_name?: Maybe<Scalars['String']>;
+  avatar_url?: Maybe<Scalars['Url']['output']>;
+  first_name?: Maybe<Scalars['String']['output']>;
+  full_name?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  last_name?: Maybe<Scalars['String']['output']>;
   /** @deprecated Field no longer supported */
-  name?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 export type FooQueryVariables = Exact<{ [key: string]: never }>;
