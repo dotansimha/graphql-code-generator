@@ -2227,15 +2227,15 @@ describe('TypeScript Operations Plugin', () => {
           id
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+        export type testQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type TestQuery = (
+        export type testQuery = (
           { notifications: Array<(
             { id: string }
             & { __typename?: 'TextNotification' | 'ImageNotification' }
@@ -2260,7 +2260,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2321,7 +2321,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2332,12 +2332,12 @@ describe('TypeScript Operations Plugin', () => {
            & { __typename?: 'A' }
          );
 
-         type N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment = (
+         type N_zhJJUzpMTyh98zugnx0IKwiLetPNjV8KybSlmpAEUU_Fragment = (
            { id: string }
            & { __typename?: 'B' | 'C' | 'D' | 'E' }
          );
 
-         export type NFragment = N_A_Fragment | N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment;
+         export type NFragment = N_A_Fragment | N_zhJJUzpMTyh98zugnx0IKwiLetPNjV8KybSlmpAEUU_Fragment;
       `);
       await validate(content, config);
     });
@@ -2352,7 +2352,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2381,15 +2381,15 @@ describe('TypeScript Operations Plugin', () => {
           id
         }
       `);
-      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+        export type testQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type TestQuery = { notifications: Array<{ id: string }> };
+        export type testQuery = { notifications: Array<{ id: string }> };
       `);
       await validate(content, config);
     });
@@ -2403,7 +2403,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
