@@ -35,7 +35,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   const sourceFile = createSourceFile('graphql.ts', '', ScriptTarget.ES2020, false, ScriptKind.TSX);
   const printer = createPrinter({ omitTrailingSemicolon: false, newLine: NewLineKind.CarriageReturnLineFeed });
 
-  const visitor = new TsVisitor(_schema, config);
+  const visitor = new TsVisitor(_schema, config, {}, sourceFile, printer);
 
   const visitorResult = oldVisit(ast, { leave: visitor as any }); // todo
   const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);

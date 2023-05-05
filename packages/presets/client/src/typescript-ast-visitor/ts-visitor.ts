@@ -1,32 +1,36 @@
 import {
   AvoidOptionalsConfig,
   BaseTypesVisitor,
-  DeclarationBlock,
   DeclarationKind,
   getConfigValue,
   indent,
-  isOneOfInputObjectType,
   ParsedTypesConfig,
-  transformComment,
-  wrapWithSingleQuotes,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import {
-  EnumTypeDefinitionNode,
   FieldDefinitionNode,
   GraphQLObjectType,
   GraphQLSchema,
-  InputValueDefinitionNode,
   isEnumType,
   Kind,
   ListTypeNode,
   NamedTypeNode,
   NonNullTypeNode,
-  TypeDefinitionNode,
-  UnionTypeDefinitionNode,
 } from 'graphql';
 import { TypeScriptPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object.js';
+import {
+  factory,
+  TypeNode,
+  Printer,
+  SourceFile,
+  SyntaxKind,
+  EnumMember,
+  Expression,
+  addSyntheticLeadingComment,
+  Node,
+  EmitHint,
+} from 'typescript';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
@@ -53,7 +57,15 @@ export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
   TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig
 > extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
-  constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
+  sourceFile: SourceFile | null = null;
+  printer: Printer | null = null;
+  constructor(
+    schema: GraphQLSchema,
+    pluginConfig: TRawConfig,
+    additionalConfig: Partial<TParsedConfig> = {},
+    sourceFile: SourceFile,
+    printer: Printer
+  ) {
     super(schema, pluginConfig, {
       noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
@@ -62,7 +74,7 @@ export class TsVisitor<
         pluginConfig.inputMaybeValue,
         getConfigValue(pluginConfig.maybeValue, 'Maybe<T>')
       ),
-      constEnums: getConfigValue(pluginConfig.constEnums, false),
+      constEnums: false, // I hope so
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
       futureProofUnions: getConfigValue(pluginConfig.futureProofUnions, false),
@@ -76,6 +88,9 @@ export class TsVisitor<
       wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
       ...additionalConfig,
     } as TParsedConfig);
+
+    this.sourceFile = sourceFile;
+    this.printer = printer;
 
     autoBind(this);
     const enumNames = Object.values(schema.getTypeMap())
@@ -100,6 +115,10 @@ export class TsVisitor<
       enumNameValueSeparator: ' =',
       ignoreExport: this.config.noExport,
     });
+  }
+
+  protected _printNode(node: Node): string {
+    return this.printer?.printNode(EmitHint.Unspecified, node, this.sourceFile!) || '';
   }
 
   protected _getTypeForNode(node: NamedTypeNode): string {
@@ -194,17 +213,6 @@ export class TsVisitor<
     return `${this.getExportPrefix()}type InputMaybe<T> = ${this.config.inputMaybeValue};`;
   }
 
-  protected clearOptional(str: string): string {
-    if (str.startsWith('Maybe')) {
-      return str.replace(/Maybe<(.*?)>$/, '$1');
-    }
-    if (str.startsWith('InputMaybe')) {
-      return str.replace(/InputMaybe<(.*?)>$/, '$1');
-    }
-
-    return str;
-  }
-
   protected getExportPrefix(): string {
     if (this.config.noExport) {
       return '';
@@ -228,30 +236,6 @@ export class TsVisitor<
     return `${this.getMaybeWrapper(ancestors)}<${super.ListType(node, key, parent, path, ancestors)}>`;
   }
 
-  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
-
-    let withFutureAddedValue: string[] = [];
-    if (this.config.futureProofUnions) {
-      withFutureAddedValue = [
-        this.config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
-      ];
-    }
-    const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
-      .concat(...withFutureAddedValue)
-      .join(' | ');
-
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName(node))
-      .withComment(node.description as any as string)
-      .withContent(possibleTypes).string;
-    // return super.UnionTypeDefinition(node, key, parent).concat(withFutureAddedValue).join("");
-  }
-
   protected wrapWithListType(str: string): string {
     return `${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${str}>`;
   }
@@ -259,7 +243,14 @@ export class TsVisitor<
   NonNullType(node: NonNullTypeNode): string {
     const baseValue = super.NonNullType(node);
 
-    return this.clearOptional(baseValue);
+    if (baseValue.startsWith('Maybe')) {
+      return baseValue.replace(/Maybe<(.*?)>$/, '$1');
+    }
+    if (baseValue.startsWith('InputMaybe')) {
+      return baseValue.replace(/InputMaybe<(.*?)>$/, '$1');
+    }
+
+    return baseValue;
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
@@ -279,176 +270,6 @@ export class TsVisitor<
         }: ${typeString}${this.getPunctuation(type)}`
       )
     );
-  }
-
-  InputValueDefinition(
-    node: InputValueDefinitionNode,
-    key?: number | string,
-    parent?: any,
-    _path?: Array<string | number>,
-    ancestors?: Array<TypeDefinitionNode>
-  ): string {
-    const originalFieldNode = parent[key] as FieldDefinitionNode;
-
-    const addOptionalSign =
-      !this.config.avoidOptionals.inputValue &&
-      (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
-        (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
-    const comment = this.getNodeComment(node);
-    const declarationKind = this.config.declarationKind.type;
-
-    let type: string = node.type as any as string;
-    if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
-      type = this._getDirectiveOverrideType(node.directives) || type;
-    }
-
-    const readonlyPrefix = this.config.immutableTypes ? 'readonly ' : '';
-
-    const buildFieldDefinition = (isOneOf = false) => {
-      return `${readonlyPrefix}${node.name}${addOptionalSign && !isOneOf ? '?' : ''}: ${
-        isOneOf ? this.clearOptional(type) : type
-      }${this.getPunctuation(declarationKind)}`;
-    };
-
-    const realParentDef = ancestors?.[ancestors.length - 1];
-    if (realParentDef) {
-      const parentType = this._schema.getType(realParentDef.name.value);
-
-      if (isOneOfInputObjectType(parentType)) {
-        if (originalFieldNode.type.kind === Kind.NON_NULL_TYPE) {
-          throw new Error(
-            'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
-          );
-        }
-        const fieldParts: Array<string> = [];
-        for (const fieldName of Object.keys(parentType.getFields())) {
-          // Why the heck is node.name a string and not { value: string } at runtime ?!
-          if (fieldName === (node.name as any as string)) {
-            fieldParts.push(buildFieldDefinition(true));
-            continue;
-          }
-          fieldParts.push(`${readonlyPrefix}${fieldName}?: never;`);
-        }
-        return comment + indent(`{ ${fieldParts.join(' ')} }`);
-      }
-    }
-
-    return comment + indent(buildFieldDefinition());
-  }
-
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const enumName = node.name as any as string;
-
-    // In case of mapped external enum string
-    if (this.config.enumValues[enumName]?.sourceFile) {
-      return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
-    }
-
-    const getValueFromConfig = (enumValue: string | number) => {
-      if (
-        this.config.enumValues[enumName]?.mappedValues &&
-        typeof this.config.enumValues[enumName].mappedValues?.[enumValue] !== 'undefined'
-      ) {
-        return this.config.enumValues[enumName].mappedValues?.[enumValue];
-      }
-      return null;
-    };
-
-    const withFutureAddedValue = [
-      this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
-    ];
-
-    const enumTypeName = this.convertName(node, {
-      useTypesPrefix: this.config.enumPrefix,
-    });
-
-    if (this.config.enumsAsTypes) {
-      return new DeclarationBlock(this._declarationBlockConfig)
-        .export()
-        .asKind('type')
-        .withComment(node.description as any as string)
-        .withName(enumTypeName)
-        .withContent(
-          '\n' +
-            node.values
-              .map(enumOption => {
-                const name = enumOption.name as unknown as string;
-                const enumValue: string | number = getValueFromConfig(name) ?? name;
-                const comment = transformComment(enumOption.description as any as string, 1);
-
-                return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
-              })
-              .concat(...withFutureAddedValue)
-              .join('\n')
-        ).string;
-    }
-
-    if (this.config.numericEnums) {
-      const block = new DeclarationBlock(this._declarationBlockConfig)
-        .export()
-        .withComment(node.description as any as string)
-        .withName(enumTypeName)
-        .asKind('enum')
-        .withBlock(
-          node.values
-            .map((enumOption, i) => {
-              const valueFromConfig = getValueFromConfig(enumOption.name as unknown as string);
-              const enumValue: string | number = valueFromConfig ?? i;
-              const comment = transformComment(enumOption.description as any as string, 1);
-              const optionName = this.makeValidEnumIdentifier(
-                this.convertName(enumOption, {
-                  useTypesPrefix: false,
-                  transformUnderscore: true,
-                })
-              );
-              return comment + indent(optionName) + ` = ${enumValue}`;
-            })
-            .concat(...withFutureAddedValue)
-            .join(',\n')
-        ).string;
-
-      return block;
-    }
-
-    if (this.config.enumsAsConst) {
-      const typeName = `export type ${enumTypeName} = typeof ${enumTypeName}[keyof typeof ${enumTypeName}];`;
-      const enumAsConst = new DeclarationBlock({
-        ...this._declarationBlockConfig,
-        blockTransformer: block => {
-          return block + ' as const';
-        },
-      })
-        .export()
-        .asKind('const')
-        .withName(enumTypeName)
-        .withComment(node.description as any as string)
-        .withBlock(
-          node.values
-            .map(enumOption => {
-              const optionName = this.makeValidEnumIdentifier(
-                this.convertName(enumOption, {
-                  useTypesPrefix: false,
-                  transformUnderscore: true,
-                })
-              );
-              const comment = transformComment(enumOption.description as any as string, 1);
-              const name = enumOption.name as unknown as string;
-              const enumValue: string | number = getValueFromConfig(name) ?? name;
-
-              return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
-            })
-            .join(',\n')
-        ).string;
-
-      return [enumAsConst, typeName].join('\n');
-    }
-
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind(this.config.constEnums ? 'const enum' : 'enum')
-      .withName(enumTypeName)
-      .withComment(node.description as any as string)
-      .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 
   protected getPunctuation(_declarationKind: DeclarationKind): string {
@@ -480,3 +301,75 @@ export function normalizeAvoidOptionals(avoidOptionals?: boolean | AvoidOptional
     ...avoidOptionals,
   };
 }
+
+export const enumNode = ({
+  name,
+  members,
+  comment,
+  useExport,
+}: {
+  name: string;
+  members: readonly EnumMember[];
+  comment?: string;
+  useExport: true;
+}) => {
+  const enumDeclaration = factory.createEnumDeclaration(
+    useExport ? [factory.createModifier(SyntaxKind.ExportKeyword)] : [],
+    name,
+    members
+  );
+
+  if (comment) {
+    addSyntheticLeadingComment(enumDeclaration, SyntaxKind.MultiLineCommentTrivia, comment, true);
+  }
+
+  return enumDeclaration;
+};
+
+export const typeNode = ({
+  name,
+  type,
+  comment,
+  useExport,
+}: {
+  name: string;
+  type: TypeNode;
+  comment?: string;
+  useExport: true;
+}) => {
+  const typeAliasDeclaration = factory.createTypeAliasDeclaration(
+    useExport ? [factory.createModifier(SyntaxKind.ExportKeyword)] : [],
+    name,
+    undefined,
+    type
+  );
+
+  if (comment) {
+    addSyntheticLeadingComment(typeAliasDeclaration, SyntaxKind.MultiLineCommentTrivia, comment, true);
+  }
+
+  return typeAliasDeclaration;
+};
+
+export const variableDeclarationNode = ({
+  name,
+  expression,
+  comment,
+  useExport,
+}: {
+  name: string;
+  expression: Expression;
+  comment?: string;
+  useExport: true;
+}) => {
+  const constDelacartion = factory.createVariableStatement(
+    useExport ? [factory.createModifier(SyntaxKind.ExportKeyword)] : [],
+    factory.createVariableDeclarationList([factory.createVariableDeclaration(name, undefined, undefined, expression)])
+  );
+
+  if (comment) {
+    addSyntheticLeadingComment(constDelacartion, SyntaxKind.MultiLineCommentTrivia, comment, true);
+  }
+
+  return constDelacartion;
+};
