@@ -3,6 +3,7 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 import { useMonorepo } from '@graphql-codegen/testing';
 import makeDir from 'make-dir';
 import { generate } from '../src/generate-and-save.js';
+import { createContext } from '../src/config.js';
 import * as fs from '../src/utils/file-system.js';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -74,6 +75,22 @@ describe('generate-and-save', () => {
     expect(fileReadSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
     expect(writeSpy).not.toHaveBeenCalled();
+  });
+
+  test('should not error when there is ignoreNoDocuments config option is present', async () => {
+    jest.spyOn(fs, 'writeFile').mockImplementation();
+    const config = await createContext({
+      config: './tests/test-files/graphql.config.json',
+      project: undefined,
+      errorsOnly: true,
+      overwrite: true,
+      profile: true,
+      require: [],
+      silent: false,
+      watch: false,
+    });
+
+    await generate(config, false);
   });
 
   test('should use global overwrite option and write a file', async () => {
