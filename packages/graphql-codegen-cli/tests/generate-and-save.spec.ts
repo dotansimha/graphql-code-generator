@@ -77,7 +77,7 @@ describe('generate-and-save', () => {
     expect(writeSpy).not.toHaveBeenCalled();
   });
 
-  test('should not error when there is ignoreNoDocuments config option is present', async () => {
+  test('should not error when ignoreNoDocuments config option is present', async () => {
     jest.spyOn(fs, 'writeFile').mockImplementation();
     const config = await createContext({
       config: './tests/test-files/graphql.config.json',
