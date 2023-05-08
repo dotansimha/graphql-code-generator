@@ -16,7 +16,7 @@ function useCodegen(config: string | undefined, schema: string | undefined, docu
   const [output, setOutput] = useState<{filename: string, content: string}[] | null>(null);
 
   useEffect(() => {
-    if (!config || !schema || !documents) return;
+    if (!config) return;
     generate(config, schema, documents).then(result => {
       if (typeof result === 'string') {
         setOutput(null);

@@ -9,6 +9,7 @@ export type Config = {
       presetConfig?: {
         baseTypesPath: string;
         extension: string;
+        typesPath: string;
       };
     }
   >;

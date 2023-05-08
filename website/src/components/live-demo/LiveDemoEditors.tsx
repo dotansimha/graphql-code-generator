@@ -22,7 +22,7 @@ export interface LiveDemoEditorsProps {
   documents: string | undefined;
   setConfig: (newText: string | undefined) => void;
   config: string | undefined;
-  error: string | undefined;
+  error: string | null;
   output: { filename: string; content: string }[] | null;
 }
 
@@ -87,7 +87,7 @@ export function LiveDemoEditors({
               onClick={() => setIndex(i)}
               key={outputItem.filename}
               className={classnames(
-                'h-2/3 min-w-[30%] rounded-t-md px-2 text-center font-mono text-xs font-bold',
+                'h-2/3 min-w-[15%] rounded-t-md px-2 text-center font-mono text-xs font-bold',
                 index === i && 'bg-neutral-800 text-white'
               )}
             >

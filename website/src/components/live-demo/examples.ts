@@ -79,7 +79,7 @@ export const EXAMPLES: Record<
       description: `This is an example of using a Client preset (recommended).`,
       tags: ['typescript', 'frontend'],
       config: `generates:
-  types.ts:
+  gql/:
     preset: client`,
       schema: TS_SCHEMA,
     },
