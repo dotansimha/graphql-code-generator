@@ -20,6 +20,7 @@ export interface LiveDemoEditorsProps {
   schema: string | undefined;
   setDocuments: (newText: string | undefined) => void;
   documents: string | undefined;
+  operationsFile?: { filename: string; content: string; language: string };
   setConfig: (newText: string | undefined) => void;
   config: string | undefined;
   error: string | null;
@@ -31,6 +32,7 @@ export function LiveDemoEditors({
   schema,
   setDocuments,
   documents,
+  operationsFile,
   setConfig,
   config,
   error,
@@ -62,15 +64,15 @@ export function LiveDemoEditors({
       <div className={classes.column}>
         <div className={classes.title}>
           <Image alt="GraphQL logo" src={graphqlLogo} placeholder="empty" loading="eager" className="h-7 w-7" />
-          operation.graphql
+          {operationsFile?.filename ?? 'operation.graphql'}
         </div>
         <Editor
-          lang="graphql"
+          lang={operationsFile?.language ?? 'graphql'}
           onEdit={newText => {
             setDocuments(newText !== READ_ONLY_DOCUMENTS_TEXT ? newText : undefined);
           }}
-          value={documents === undefined ? READ_ONLY_DOCUMENTS_TEXT : documents}
-          readOnly={documents === undefined}
+          value={documents === undefined ? READ_ONLY_DOCUMENTS_TEXT : operationsFile?.content || documents}
+          readOnly={documents === undefined || !!operationsFile}
         />
       </div>
       <div className={classes.column}>

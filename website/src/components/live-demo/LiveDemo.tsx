@@ -11,13 +11,13 @@ const groupedExamples = Object.entries(EXAMPLES).map(([catName, category]) => ({
   options: category.map((t, index) => ({ ...t, selectId: `${catName}__${index}` })),
 }));
 
-function useCodegen(config: string | undefined, schema: string | undefined, documents: string | undefined, templateName: string) {
+function useCodegen(config: string | undefined, schema: string | undefined, documents: string | undefined, templateName: string, operationsFileName?: string) {
   const [error, setError] = useState<string | null>(null);
   const [output, setOutput] = useState<{filename: string, content: string}[] | null>(null);
 
   useEffect(() => {
-    if (!config) return;
-    generate(config, schema, documents).then(result => {
+    if (!config || !schema) return;
+    generate(config, schema, documents, operationsFileName).then(result => {
       if (typeof result === 'string') {
         setOutput(null);
         setError(result);
@@ -42,14 +42,16 @@ export default function LiveDemo(): ReactElement {
   const [template, setTemplate] = useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
   const [schema, setSchema] = useState<string | undefined>(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
   const [documents, setDocuments] = useState<string | undefined>(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);
+  const [operationsFile, setOperationsFile] = useState<{filename: string, content: string, language: string} | undefined>(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].operationsFile);
   const [config, setConfig] = useState<string | undefined>(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].config);
-  const { output, error } = useCodegen(config, schema, documents, template);
+  const { output, error } = useCodegen(config, schema, documents, template, operationsFile?.filename);
 
   const changeTemplate = (value: string | undefined) => {
     if (!value) return;
     const [catName, index] = value.split('__');
     setSchema(EXAMPLES[catName][Number(index)].schema);
     setDocuments(EXAMPLES[catName][Number(index)].documents);
+    setOperationsFile(EXAMPLES[catName][Number(index)].operationsFile);
     setConfig(EXAMPLES[catName][Number(index)].config);
     setTemplate(value);
   };
@@ -101,6 +103,7 @@ export default function LiveDemo(): ReactElement {
         schema={schema}
         setDocuments={setDocuments}
         documents={documents}
+        operationsFile={operationsFile}
         setConfig={setConfig}
         config={config}
         error={error}

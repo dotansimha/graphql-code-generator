@@ -1,5 +1,5 @@
 import { codegen } from '@graphql-codegen/core';
-import { GraphQLError, parse } from 'graphql';
+import { parse } from 'graphql';
 import { load } from 'js-yaml';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';
 import { normalizeConfig } from './utils';
@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
   window.global = window; // type-graphql error - global is not defined
 }
 
-export async function generate(config: string, schema: string, documents?: string) {
+export async function generate(config: string, schema: string, documents?: string, documtentsLocation?: string) {
   try {
     const outputs = [];
     const cleanTabs = config.replace(/\t/g, '  ');
@@ -30,8 +30,9 @@ export async function generate(config: string, schema: string, documents?: strin
         documents: documents
           ? [
               {
-                location: 'operation.graphql',
+                location: documtentsLocation || 'operation.graphql',
                 document: parse(documents),
+                rawSDL: documents,
               },
             ]
           : [],
@@ -64,7 +65,7 @@ export async function generate(config: string, schema: string, documents?: strin
         runConfigurations.push(
           ...(await presetFn.buildGeneratesSection({
             baseOutputDir: filename,
-            presetConfig: outputOptions.presetConfig || {},
+            presetConfig: { ...outputOptions.presetConfig, typesPath: 'graphql.ts', baseTypesPath: 'graphql.ts' },
             ...props,
           }))
         );
