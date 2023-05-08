@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
   window.global = window; // type-graphql error - global is not defined
 }
 
-export async function generate(config: string, schema: string, documents?: string, documtentsLocation?: string) {
+export async function generate(config: string, schema: string, documents?: string, documentsLocation?: string) {
   try {
     const outputs = [];
     const cleanTabs = config.replace(/\t/g, '  ');
@@ -19,7 +19,7 @@ export async function generate(config: string, schema: string, documents?: strin
     const runConfigurations = [];
 
     for (const [filename, outputOptions] of Object.entries(generates)) {
-      const plugins = normalizeConfig(outputOptions.plugins || (outputOptions.preset ? [] : outputOptions));
+      const plugins = normalizeConfig(outputOptions.plugins || outputOptions);
       const outputConfig = outputOptions.config;
       const pluginMap: Record<string, any> = {};
 
@@ -30,7 +30,7 @@ export async function generate(config: string, schema: string, documents?: strin
         documents: documents
           ? [
               {
-                location: documtentsLocation || 'operation.graphql',
+                location: documentsLocation || 'operation.graphql',
                 document: parse(documents),
                 rawSDL: documents,
               },
@@ -42,18 +42,18 @@ export async function generate(config: string, schema: string, documents?: strin
         },
       };
 
-      if (!outputOptions.preset) {
-        await Promise.all(
-          plugins?.map(async pluginElement => {
-            const [pluginName] = Object.keys(pluginElement);
-            try {
-              pluginMap[pluginName] = await pluginLoaderMap[pluginName as keyof typeof pluginLoaderMap]();
-            } catch (e) {
-              console.error(e);
-            }
-          })
-        );
+      await Promise.all(
+        plugins?.map(async pluginElement => {
+          const [pluginName] = Object.keys(pluginElement);
+          try {
+            pluginMap[pluginName as string] = await pluginLoaderMap[pluginName as keyof typeof pluginLoaderMap]();
+          } catch (e) {
+            console.error(e);
+          }
+        })
+      );
 
+      if (!outputOptions.preset) {
         runConfigurations.push({
           filename,
           ...props,

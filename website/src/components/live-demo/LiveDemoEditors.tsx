@@ -97,7 +97,7 @@ export function LiveDemoEditors({
             </button>
           ))}
         </div>
-        <Editor readOnly lang={mode} value={error || output?.[index].content || ''} />
+        <Editor readOnly lang={mode} value={error || output?.[index]?.content || ''} />
       </div>
     </div>
   );
