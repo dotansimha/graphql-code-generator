@@ -11,8 +11,8 @@ const groupedExamples = Object.entries(EXAMPLES).map(([catName, category]) => ({
   options: category.map((t, index) => ({ ...t, selectId: `${catName}__${index}` })),
 }));
 
-function useCodegen(config: string, schema: string, documents?: string, templateName: string) {
-  const [error, setError] = useState(null);
+function useCodegen(config: string, schema: string, documents: string | undefined, templateName: string) {
+  const [error, setError] = useState<string | null>(null);
   const [output, setOutput] = useState(null);
 
   useEffect(() => {
@@ -44,11 +44,12 @@ export default function LiveDemo(): ReactElement {
   const [config, setConfig] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].config);
   const { output, error } = useCodegen(config, schema, documents, template);
 
-  const changeTemplate = (value: string) => {
+  const changeTemplate = (value: string | undefined) => {
+    if (!value) return;
     const [catName, index] = value.split('__');
-    setSchema(EXAMPLES[catName][index].schema);
-    setDocuments(EXAMPLES[catName][index].documents);
-    setConfig(EXAMPLES[catName][index].config);
+    setSchema(EXAMPLES[catName][Number(index)].schema);
+    setDocuments(EXAMPLES[catName][Number(index)].documents);
+    setConfig(EXAMPLES[catName][Number(index)].config);
     setTemplate(value);
   };
 
@@ -72,15 +73,15 @@ export default function LiveDemo(): ReactElement {
           }}
           isMulti={false}
           isClearable={false}
-          onChange={e => changeTemplate(e.selectId)}
+          onChange={e => changeTemplate(e?.selectId)}
           getOptionValue={o => o.selectId}
           getOptionLabel={o => (
             <div className="flex items-center justify-end gap-1.5">
               <span className="mr-auto">{o.name}</span>
               {o.tags?.map(t => {
-                const icon = icons[t];
+                const icon = icons[t as keyof typeof icons];
                 return icon ? (
-                  <Image key={t} src={icon} placeholder="empty" loading="eager" className="max-h-[20px] w-auto" />
+                  <Image alt='Icon' key={t} src={icon} placeholder="empty" loading="eager" className="max-h-[20px] w-auto" />
                 ) : (
                   <span key={t} className="rounded-lg bg-gray-200 px-2 text-xs text-gray-800">
                     {t}
@@ -88,7 +89,8 @@ export default function LiveDemo(): ReactElement {
                 );
               })}
             </div>
-          )}
+            // fix react-select types
+          ) as any as string}
           defaultValue={groupedExamples[0].options[0]}
           options={groupedExamples}
         />
