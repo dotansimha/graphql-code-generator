@@ -75,6 +75,15 @@ export const EXAMPLES: Record<
 > = {
   TypeScript: [
     {
+      name: 'Client preset',
+      description: `This is an example of using a Client preset (recommended).`,
+      tags: ['typescript', 'frontend'],
+      config: `generates:
+  types.ts:
+    preset: client`,
+      schema: TS_SCHEMA,
+    },
+    {
       name: 'Schema types',
       description: `This is the simplest example of generating output based on a GraphQL Schema. Codegen will generate the compatible base type, based on your schema. These type declarations are 1:1 to your schema, and it will be used as base types for other Codegen plugins (such as \`typescript-operations\`), while combined into the same file.`,
       tags: ['typescript', 'frontend', 'backend'],

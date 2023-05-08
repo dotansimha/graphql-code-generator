@@ -11,11 +11,12 @@ const groupedExamples = Object.entries(EXAMPLES).map(([catName, category]) => ({
   options: category.map((t, index) => ({ ...t, selectId: `${catName}__${index}` })),
 }));
 
-function useCodegen(config: string, schema: string, documents: string | undefined, templateName: string) {
+function useCodegen(config: string | undefined, schema: string | undefined, documents: string | undefined, templateName: string) {
   const [error, setError] = useState<string | null>(null);
-  const [output, setOutput] = useState(null);
+  const [output, setOutput] = useState<{filename: string, content: string}[] | null>(null);
 
   useEffect(() => {
+    if (!config || !schema || !documents) return;
     generate(config, schema, documents).then(result => {
       if (typeof result === 'string') {
         setOutput(null);
@@ -39,9 +40,9 @@ export default function LiveDemo(): ReactElement {
   const { resolvedTheme } = useTheme();
   const isDarkTheme = resolvedTheme === 'dark';
   const [template, setTemplate] = useState(`${DEFAULT_EXAMPLE.catName}__${DEFAULT_EXAMPLE.index}`);
-  const [schema, setSchema] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
-  const [documents, setDocuments] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);
-  const [config, setConfig] = useState(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].config);
+  const [schema, setSchema] = useState<string | undefined>(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].schema);
+  const [documents, setDocuments] = useState<string | undefined>(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].documents);
+  const [config, setConfig] = useState<string | undefined>(EXAMPLES[DEFAULT_EXAMPLE.catName][DEFAULT_EXAMPLE.index].config);
   const { output, error } = useCodegen(config, schema, documents, template);
 
   const changeTemplate = (value: string | undefined) => {

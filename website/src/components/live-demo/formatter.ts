@@ -1,6 +1,6 @@
 import { extname } from 'path';
 
-type Config = {
+export type Config = {
   generates: Record<
     string,
     {
