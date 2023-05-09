@@ -108,7 +108,7 @@ config: {
 ```ts
 config: {
   scalars: {
-    ID: 'string' // Means it `string` will be used for both ID's input and output types
+    ID: 'string' // This means `string` will be used for both ID's input and output types
   }
 }
 ```
