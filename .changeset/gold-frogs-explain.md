@@ -1,8 +1,8 @@
 ---
-'@graphql-codegen/visitor-plugin-common': major
-'@graphql-codegen/typescript-operations': major
-'@graphql-codegen/typescript': major
-'@graphql-codegen/typescript-resolvers': major
+'@graphql-codegen/visitor-plugin-common': minor
+'@graphql-codegen/typescript-operations': minor
+'@graphql-codegen/typescript': minor
+'@graphql-codegen/typescript-resolvers': minor
 ---
 
 Implement Scalars with input/output types
@@ -113,7 +113,7 @@ config: {
 }
 ```
 
-3. BREAKING CHANGE: External module Scalar types need to be an object with input/output fields
+3. (Potential) BREAKING CHANGE: External module Scalar types need to be an object with input/output fields
 
 ```ts
 config: {
@@ -136,4 +136,4 @@ export type Scalars = {
 
 ---
 
-BREAKING CHANGES: This changes Scalar types could be referenced in other plugins. If you are a plugin maintainer and reference Scalar, please update your plugin to use the correct input/output types.
+(Potential) BREAKING CHANGE: This changes Scalar types which could be referenced in other plugins. If you are a plugin maintainer and reference Scalar, please update your plugin to use the correct input/output types.
