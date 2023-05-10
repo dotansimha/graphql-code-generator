@@ -753,7 +753,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           return null;
         }
 
-        return { name: declarationName, content: possibleFields.join(' & ') };
+        const content = possibleFields
+          .map(selectionObject => {
+            if (typeof selectionObject === 'string') return selectionObject;
+
+            return '(' + selectionObject.union.join(' | ') + ')';
+          })
+          .join(' & ');
+
+        return { name: declarationName, content };
       })
       .filter(Boolean);
 
