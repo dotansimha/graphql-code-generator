@@ -1658,18 +1658,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
