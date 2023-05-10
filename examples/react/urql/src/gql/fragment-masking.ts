@@ -58,6 +58,6 @@ export function isFragmentReady<TQuery, TFrag>(
 
   const fragName = fragmentNode.__meta__?.fragmentName;
 
-  const fields = fragName ? deferredFields[fragName] : [];
+  const fields = (fragName && deferredFields[fragName]) || [];
   return fields.length > 0 && fields.every(field => data && field in data);
 }

@@ -86,7 +86,7 @@ export function isFragmentReady<TQuery, TFrag>(
 
   const fragName = fragmentNode.__meta__?.fragmentName;
 
-  const fields = fragName ? deferredFields[fragName] : [];
+  const fields = (fragName && deferredFields[fragName]) || [];
   return fields.length > 0 && fields.every(field => data && field in data);
 }
 `;
@@ -105,7 +105,7 @@ export function isFragmentReady<TQuery, TFrag>(
   const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
   const fragName = fragDef?.name?.value;
 
-  const fields = fragName ? deferredFields[fragName] : [];
+  const fields = (fragName && deferredFields[fragName]) || [];
   return fields.length > 0 && fields.every(field => data && field in data);
 }
 `;
