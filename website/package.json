@@ -14,7 +14,7 @@
     "@theguild/tailwind-config": "0.2.1",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
-    "@types/node": "18.15.11",
+    "@types/node": "18.16.8",
     "@types/react": "18.0.37",
     "fast-xml-parser": "4.2.0",
     "jsonpath": "1.1.1",
