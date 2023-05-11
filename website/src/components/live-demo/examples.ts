@@ -62,6 +62,25 @@ const TS_QUERY = dedent(/* GraphQL */ `
   }
 `);
 
+export const APP_TSX = `\
+import { useQuery } from '@apollo/client';
+
+import { graphql } from './gql/gql';
+
+const findUserQuery = graphql(\`${TS_QUERY}\`);
+
+function App() {
+  const { data } = useQuery(findUserQuery, { variables: { userId: 10 } });
+  return (
+    <div className="App">
+      {data?.user?.username}
+    </div>
+  );
+}
+
+export default App;
+`;
+
 export const EXAMPLES: Record<
   string,
   {
@@ -71,9 +90,29 @@ export const EXAMPLES: Record<
     config: string;
     schema: string;
     documents?: string;
+    operationsFile?: {
+      filename: string;
+      content: string;
+      language: string;
+    };
   }[]
 > = {
   TypeScript: [
+    {
+      name: 'Client preset',
+      description: `This is an example of using a Client preset (recommended).`,
+      tags: ['typescript', 'frontend'],
+      config: `generates:
+  gql/:
+    preset: client`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
+      operationsFile: {
+        filename: 'App.tsx',
+        content: APP_TSX,
+        language: 'typescript',
+      },
+    },
     {
       name: 'Schema types',
       description: `This is the simplest example of generating output based on a GraphQL Schema. Codegen will generate the compatible base type, based on your schema. These type declarations are 1:1 to your schema, and it will be used as base types for other Codegen plugins (such as \`typescript-operations\`), while combined into the same file.`,

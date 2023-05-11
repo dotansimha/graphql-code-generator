@@ -4,6 +4,7 @@ export const presetLoaderMap = {
   'import-types': () => import('@graphql-codegen/import-types-preset'),
   'java-apollo-android': () => import('@graphql-codegen/java-apollo-android'),
   'near-operation-file': () => import('@graphql-codegen/near-operation-file-preset'),
+  client: () => import('@graphql-codegen/client-preset'),
 };
 
 export const pluginLoaderMap = {
