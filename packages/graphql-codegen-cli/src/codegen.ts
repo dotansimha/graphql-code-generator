@@ -274,10 +274,20 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                           const hash = JSON.stringify(documentPointerMap);
                           const result = await cache('documents', hash, async () => {
-                            const documents = await context.loadDocuments(documentPointerMap);
-                            return {
-                              documents,
-                            };
+                            try {
+                              const documents = await context.loadDocuments(documentPointerMap);
+                              return {
+                                documents,
+                              };
+                            } catch (error) {
+                              if (config.ignoreNoDocuments) {
+                                return {
+                                  documents: [],
+                                };
+                              }
+
+                              throw error;
+                            }
                           });
 
                           outputDocuments = result.documents;
