@@ -431,6 +431,37 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 
       expect(result.content).not.toBeSimilarStringTo('export type ResolversInterfaceTypes');
     });
+
+    it('resolversNonOptionalTypename - excludes types', async () => {
+      const result = await plugin(
+        resolversTestingSchema,
+        [],
+        {
+          resolversNonOptionalTypename: {
+            unionMember: true,
+            interfaceImplementingType: true,
+            excludeTypes: ['ChildUnion', 'AnotherNode', 'Node'],
+          },
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+          ChildUnion: ( Child ) | ( MyOtherType );
+          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+          Node: ( SomeNode );
+          AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+          WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } & { __typename: 'AnotherNodeWithChild' } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } & { __typename: 'AnotherNodeWithAll' } );
+          WithChildren: ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } & { __typename: 'AnotherNodeWithAll' } );
+        };
+      `);
+    });
   });
 
   it('directiveResolverMappings - should generate correct types (import definition)', async () => {
