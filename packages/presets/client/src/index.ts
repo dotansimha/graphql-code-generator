@@ -101,7 +101,9 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
     if (!isOutputFolderLike(options.baseOutputDir)) {
-      throw new Error('[client-preset] target output should be a directory, ex: "src/gql/"');
+      throw new Error(
+        '[client-preset] target output should be a directory, ex: "src/gql/". Make sure you add "/" at the end of the directory path'
+      );
     }
 
     if (options.plugins.length > 0 && Object.keys(options.plugins).some(p => p.startsWith('typescript'))) {
