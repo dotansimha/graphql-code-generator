@@ -3105,10 +3105,10 @@
     "@napi-rs/simple-git-win32-arm64-msvc" "0.1.8"
     "@napi-rs/simple-git-win32-x64-msvc" "0.1.8"
 
-"@next/bundle-analyzer@13.3.1":
-  version "13.3.1"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-13.3.1.tgz#df6c8c969646456b694dc1cd41d2847eae331248"
-  integrity sha512-Qkd0ENOczIyJlKjjN7ENwQ2S5B6wqrTnVlzfWqAImw38VNgaVqZRgaM9Ph8JM43E6iLPjsMOHh8EN/7FxHyQ/g==
+"@next/bundle-analyzer@13.4.1":
+  version "13.4.1"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-13.4.1.tgz#b565f042b9623268e2891f529c144e5c152049d0"
+  integrity sha512-wbSVjc1RM43vLuvMLZL2hSq6+76VgyVWqgpgk4AlJM//KjynVMezo+c6HI8tRzMI0p0txzDtSUA3na32fuY67A==
   dependencies:
     webpack-bundle-analyzer "4.7.0"
 
@@ -3531,10 +3531,10 @@
     "@tanstack/query-core" "4.29.1"
     use-sync-external-store "^1.2.0"
 
-"@theguild/algolia@1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.1.6.tgz#3479f5b2f75d2cbfbd95f5f522a01b595890b89c"
-  integrity sha512-W90vwIPdiUB5tMh316gPdKsXV9cH8r3KcyBNE7PixYtHz8c3lWPYpmnjssV6YAoIexogRGy+FhQBGHCgWMdmGg==
+"@theguild/algolia@1.1.7":
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@theguild/algolia/-/algolia-1.1.7.tgz#b368b215ba5b180f8eac82e6c259e1ea669bc454"
+  integrity sha512-ywNXpDN1qgYDo0UxAOI819VaqSJdEixLDTSfAoENwN5vPtQwtmKu6ejOqBR3rSf/KDFMc3KTYJ8fh+zYj2ZhvA==
   dependencies:
     algoliasearch "^4.14.3"
     commander "^10.0.0"
@@ -3544,17 +3544,17 @@
     lodash.sortby "^4.7.0"
     remove-markdown "^0.5.0"
 
-"@theguild/components@4.5.10":
-  version "4.5.10"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.10.tgz#17b63813276639ae75bc3148364d1b3fd2edf0b3"
-  integrity sha512-GtnJsP2U5ervbQpWHvpwVE3ZJxm9abRENp32NYNoLkWnDk2sKPwIbtlVWn5lqo5I8D8fcg8jiio96X/r/BfKbg==
+"@theguild/components@4.5.11":
+  version "4.5.11"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.5.11.tgz#fa5a853f69edf9931f83a45364709defba76b3ce"
+  integrity sha512-CMgvCPYygzW5rqrN+kuk4Pj0pnGvwiUctiXoV/kic/8jh9PwtABxa6dxQoZCUr6fYhcxzR5SJPOLlnrbd8Mr3Q==
   dependencies:
     "@algolia/autocomplete-js" "1.9.2"
     "@algolia/autocomplete-plugin-algolia-insights" "1.9.2"
     "@algolia/autocomplete-plugin-query-suggestions" "1.9.2"
     "@algolia/autocomplete-theme-classic" "1.9.2"
     "@giscus/react" "2.2.8"
-    "@next/bundle-analyzer" "13.3.1"
+    "@next/bundle-analyzer" "13.4.1"
     "@radix-ui/react-navigation-menu" "1.1.2"
     algoliasearch "4.17.0"
     clsx "1.2.1"
@@ -3562,8 +3562,8 @@
     fuzzy "^0.1.3"
     mermaid "10.0.2"
     next-videos "1.5.0"
-    nextra "2.4.2"
-    nextra-theme-docs "2.4.2"
+    nextra "2.5.0"
+    nextra-theme-docs "2.5.0"
     react-instantsearch-dom "6.39.1"
     react-paginate "8.2.0"
     react-player "2.12.0"
@@ -10740,10 +10740,10 @@ next@13.4.2, next@^13.3.0:
     "@next/swc-win32-ia32-msvc" "13.4.2"
     "@next/swc-win32-x64-msvc" "13.4.2"
 
-nextra-theme-docs@2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.4.2.tgz#40519660073481c783d3a172eb3d9ed44b7f123d"
-  integrity sha512-5H6NJ38TlbgetNx9HjMmQcNpsp6GFH26TfjLVC0RWxhEPuoutSFpJ8RjWKXv6WEaWaL500CoErW0/DeXzuQGUg==
+nextra-theme-docs@2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-2.5.0.tgz#91f422711a4bf9888e9bfe3af6dc5baf36fc6892"
+  integrity sha512-xmJx0xj0Mewfr/h4xkZH5TuTB6qWeygCGW384ySqZA81LargQjEqw8a25BSif8dWaMAZZ+oIBOvJ2Et+CJytQQ==
   dependencies:
     "@headlessui/react" "^1.7.10"
     "@popperjs/core" "^2.11.6"
@@ -10758,10 +10758,10 @@ nextra-theme-docs@2.4.2:
     scroll-into-view-if-needed "^3.0.0"
     zod "^3.20.2"
 
-nextra@2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.4.2.tgz#f9f130f1b47727ef661fa2ad63033e9d7c9960be"
-  integrity sha512-FH2BTCF8q3aBtc1w1pj1N6LMFyiMP5KL+w6Ph4s2M5FwTtv150dSNWWw5Hy2GgxLTi391B/CRkO31OCjp9trkA==
+nextra@2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/nextra/-/nextra-2.5.0.tgz#0b9ca9a70e4a26390ed5aab7b5f3f3ae290aba51"
+  integrity sha512-YvknuUvV2fdFY3F3gsxNFA2lwDWg3KHEAiyumUxZKOnW8+yTwocXGFccD76Py9fYxcmUL9ARo+PEusnXlWmLeQ==
   dependencies:
     "@mdx-js/mdx" "^2.3.0"
     "@mdx-js/react" "^2.3.0"
@@ -10778,7 +10778,7 @@ nextra@2.4.2:
     remark-gfm "^3.0.1"
     remark-math "^5.1.1"
     remark-reading-time "^2.0.1"
-    shiki "^0.14.0"
+    shiki "^0.14.2"
     slash "^3.0.0"
     title "^3.5.3"
     unist-util-remove "^3.1.1"
@@ -12622,10 +12622,10 @@ shell-quote@^1.7.3:
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.8.0.tgz#20d078d0eaf71d54f43bd2ba14a1b5b9bfa5c8ba"
   integrity sha512-QHsz8GgQIGKlRi24yFc6a6lN69Idnx634w49ay6+jA5yFh7a1UY+4Rp6HPx/L/1zcEDPEij8cIsiqR6bQsE5VQ==
 
-shiki@^0.14.0:
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.14.1.tgz#9fbe082d0a8aa2ad63df4fbf2ee11ec924aa7ee1"
-  integrity sha512-+Jz4nBkCBe0mEDqo1eKRcCdjRtrCjozmcbTUjbPTX7OOJfEbTZzlUWlZtGe3Gb5oV1/jnojhG//YZc3rs9zSEw==
+shiki@^0.14.2:
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.14.2.tgz#d51440800b701392b31ce2336036058e338247a1"
+  integrity sha512-ltSZlSLOuSY0M0Y75KA+ieRaZ0Trf5Wl3gutE7jzLuIcWxLp5i/uEnLoQWNvgKXQ5OMpGkJnVMRLAuzjc0LJ2A==
   dependencies:
     ansi-sequence-parser "^1.1.0"
     jsonc-parser "^3.2.0"
