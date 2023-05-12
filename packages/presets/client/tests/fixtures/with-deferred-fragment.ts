@@ -24,3 +24,13 @@ const Fragment = gql(/* GraphQL */ `
     value
   }
 `);
+
+//@ts-ignore
+const NestedFragment = gql(/* GraphQL */ `
+  fragment foo on Foo {
+    id
+    ... on Foo @defer {
+      value
+    }
+  }
+`);

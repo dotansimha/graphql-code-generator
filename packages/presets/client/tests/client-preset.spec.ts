@@ -1803,6 +1803,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -1837,6 +1838,7 @@ export * from "./gql.js";`);
 
         export type Foo = {
           __typename?: 'Foo';
+          id?: Maybe<Scalars['String']>;
           value?: Maybe<Scalars['String']>;
         };
 
@@ -1864,7 +1866,10 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
+        export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooDocument = {"__meta__":{"deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
         export const FoosDocument = {"__meta__":{"deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
       `);
@@ -1880,6 +1885,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -1917,6 +1923,7 @@ export * from "./gql.js";`);
 
         export type Foo = {
           __typename?: 'Foo';
+          id?: Maybe<Scalars['String']>;
           value?: Maybe<Scalars['String']>;
         };
 
@@ -1944,7 +1951,10 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
+        export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooDocument = {"__meta__":{"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
         export const FoosDocument = {"__meta__":{"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
       `);
@@ -1960,6 +1970,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -1997,6 +2008,7 @@ export * from "./gql.js";`);
 
         export type Foo = {
           __typename?: 'Foo';
+          id?: Maybe<Scalars['String']>;
           value?: Maybe<Scalars['String']>;
         };
 
@@ -2024,6 +2036,8 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export class TypedDocumentString<TResult, TVariables>
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
@@ -2043,6 +2057,14 @@ export * from "./gql.js";`);
           value
         }
             \`, {"fragmentName":"Foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }
+            \`, {"fragmentName":"foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
         export const FooDocument = new TypedDocumentString(\`
             query Foo {
           foo {
@@ -2051,6 +2073,12 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
         }\`, {"deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
         export const FoosDocument = new TypedDocumentString(\`
             query Foos {
@@ -2060,6 +2088,12 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
         }\`, {"deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
@@ -2074,6 +2108,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -2114,6 +2149,7 @@ export * from "./gql.js";`);
 
         export type Foo = {
           __typename?: 'Foo';
+          id?: Maybe<Scalars['String']>;
           value?: Maybe<Scalars['String']>;
         };
 
@@ -2141,6 +2177,8 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export class TypedDocumentString<TResult, TVariables>
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
@@ -2160,6 +2198,14 @@ export * from "./gql.js";`);
           value
         }
             \`, {"fragmentName":"Foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }
+            \`, {"fragmentName":"foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
         export const FooDocument = new TypedDocumentString(\`
             query Foo {
           foo {
@@ -2168,7 +2214,13 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
-        }\`, {"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }\`, {"hash":"2687841b00fe0b3b4fd0dfa2e943f80936594f58","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
         export const FoosDocument = new TypedDocumentString(\`
             query Foos {
           foos {
@@ -2177,7 +2229,13 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
-        }\`, {"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }\`, {"hash":"8db613cc1f12f64dbde9cd6fef167fd12246330d","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
   });
