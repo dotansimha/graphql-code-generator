@@ -57,7 +57,7 @@
     "jest-junit": "15.0.0",
     "lint-staged": "13.2.1",
     "patch-package": "6.5.1",
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "prettier-plugin-svelte": "2.10.0",
     "rimraf": "4.4.1",
     "ts-jest": "28.0.8",
@@ -78,7 +78,7 @@
     ]
   },
   "resolutions": {
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "babel-jest": "28.1.3",
     "jest-runner": "28.1.3",
     "graphql": "16.6.0",
