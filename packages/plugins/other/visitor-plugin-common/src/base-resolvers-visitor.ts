@@ -542,6 +542,49 @@ export interface RawResolversConfig extends RawConfig {
   /**
    * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
    * @default false
+   *
+   * @exampleMarkdown
+   * ## Enable for all
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['typescript', 'typescript-resolver'],
+   *        config: {
+   *          resolversNonOptionalTypename: true // or { unionMember: true, interfaceImplementingType: true }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## Enable except for some types
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['typescript', 'typescript-resolver'],
+   *        config: {
+   *          resolversNonOptionalTypename: {
+   *            unionMember: true,
+   *            interfaceImplementingType: true,
+   *            excludeTypes: ['MyType'],
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
    */
   resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
   /**
@@ -876,10 +919,11 @@ export class BaseResolversVisitor<
       const schemaType = allSchemaTypes[typeName];
 
       if (isUnionType(schemaType)) {
+        const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
         res[typeName] = this.getAbstractMembersType({
           typeName,
           memberTypes: schemaType.getTypes(),
-          isTypenameNonOptional: this.config.resolversNonOptionalTypename.unionMember,
+          isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
         });
       }
       return res;
@@ -913,10 +957,12 @@ export class BaseResolversVisitor<
           }
         }
 
+        const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
+
         res[typeName] = this.getAbstractMembersType({
           typeName,
           memberTypes: implementingTypes,
-          isTypenameNonOptional: this.config.resolversNonOptionalTypename.interfaceImplementingType,
+          isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
         });
       }
 
