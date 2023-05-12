@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from 'react';
 import { Image } from '@theguild/components';
 import { load } from 'js-yaml';
 import { Editor } from './Editor';
-import { getMode } from './formatter';
+import { Config, getMode } from './formatter';
 import codegenLogo from '../../../public/assets/img/gql-codegen-icon.svg';
 import graphqlLogo from '../../../public/assets/img/GraphQL_Logo.svg';
 import classnames from 'classnames';
@@ -15,21 +15,34 @@ const classes = {
 
 const READ_ONLY_DOCUMENTS_TEXT = `# This example isn't\n# using GraphQL operations`;
 
+export interface LiveDemoEditorsProps {
+  setSchema: (newText: string | undefined) => void;
+  schema: string | undefined;
+  setDocuments: (newText: string | undefined) => void;
+  documents: string | undefined;
+  operationsFile?: { filename: string; content: string; language: string };
+  setConfig: (newText: string | undefined) => void;
+  config: string | undefined;
+  error: string | null;
+  output: { filename: string; content: string }[] | null;
+}
+
 export function LiveDemoEditors({
   setSchema,
   schema,
   setDocuments,
   documents,
+  operationsFile,
   setConfig,
   config,
   error,
   output,
-}): ReactElement {
+}: LiveDemoEditorsProps): ReactElement {
   const [index, setIndex] = useState(0);
   let mode: ReturnType<typeof getMode> = 'javascript';
 
   try {
-    const parsedConfig = load(config || '');
+    const parsedConfig = load(config || '') as Config;
     mode = getMode(parsedConfig);
   } catch (e) {
     console.error(e);
@@ -51,15 +64,15 @@ export function LiveDemoEditors({
       <div className={classes.column}>
         <div className={classes.title}>
           <Image alt="GraphQL logo" src={graphqlLogo} placeholder="empty" loading="eager" className="h-7 w-7" />
-          operation.graphql
+          {operationsFile?.filename ?? 'operation.graphql'}
         </div>
         <Editor
-          lang="graphql"
+          lang={operationsFile?.language ?? 'graphql'}
           onEdit={newText => {
             setDocuments(newText !== READ_ONLY_DOCUMENTS_TEXT ? newText : undefined);
           }}
-          value={documents === undefined ? READ_ONLY_DOCUMENTS_TEXT : documents}
-          readOnly={documents === undefined}
+          value={documents === undefined ? READ_ONLY_DOCUMENTS_TEXT : operationsFile?.content || documents}
+          readOnly={documents === undefined || !!operationsFile}
         />
       </div>
       <div className={classes.column}>
@@ -76,7 +89,7 @@ export function LiveDemoEditors({
               onClick={() => setIndex(i)}
               key={outputItem.filename}
               className={classnames(
-                'h-2/3 min-w-[30%] rounded-t-md px-2 text-center font-mono text-xs font-bold',
+                'h-2/3 min-w-[15%] rounded-t-md px-2 text-center font-mono text-xs font-bold',
                 index === i && 'bg-neutral-800 text-white'
               )}
             >
@@ -84,7 +97,7 @@ export function LiveDemoEditors({
             </button>
           ))}
         </div>
-        <Editor readOnly lang={mode} value={error || output?.[index].content} />
+        <Editor readOnly lang={mode} value={error || output?.[index]?.content || ''} />
       </div>
     </div>
   );

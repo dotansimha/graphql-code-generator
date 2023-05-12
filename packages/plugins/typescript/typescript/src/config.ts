@@ -334,7 +334,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *     'path/to/file.ts': {
    *       plugins: ['typescript'],
    *       config: {
-   *         inputMaybeValue: T | null | undefined
+   *         inputMaybeValue: 'T | null | undefined'
    *       }
    *     }
    *   }

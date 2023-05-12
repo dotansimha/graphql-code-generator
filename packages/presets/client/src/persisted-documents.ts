@@ -5,8 +5,8 @@ import { type DocumentNode, Kind, visit } from 'graphql';
 /**
  * This function generates a hash from a document node.
  */
-export function generateDocumentHash(operation: string): string {
-  const shasum = crypto.createHash('sha1');
+export function generateDocumentHash(operation: string, algorithm: 'sha1' | 'sha256' | (string & {})): string {
+  const shasum = crypto.createHash(algorithm);
   shasum.update(operation);
   return shasum.digest('hex');
 }

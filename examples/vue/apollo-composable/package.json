@@ -11,14 +11,14 @@
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.7",
+    "@apollo/client": "^3.7.10",
     "@vue/apollo-composable": "4.0.0-beta.4",
     "graphql": "^16.6.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^3.3.0",
-    "@graphql-codegen/client-preset": "^3.0.0",
+    "@graphql-codegen/cli": "^3.3.1",
+    "@graphql-codegen/client-preset": "^3.0.1",
     "@vitejs/plugin-vue": "^4.0.0",
     "typescript": "^5.0.0",
     "vite": "^4.1.0",

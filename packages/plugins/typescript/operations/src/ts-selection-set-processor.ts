@@ -11,7 +11,8 @@ import { GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
+    fields: PrimitiveField[],
+    unsetTypes?: boolean
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -22,6 +23,10 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       this.config.convertName(schemaType.name, {
         useTypesPrefix: true,
       });
+
+    if (unsetTypes) {
+      return [`MakeEmpty<${parentName}, ${fields.map(field => `'${field.fieldName}'`).join(' | ')}>`];
+    }
 
     let hasConditionals = false;
     const conditilnalsList: string[] = [];

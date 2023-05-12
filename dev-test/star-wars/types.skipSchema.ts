@@ -3,6 +3,8 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -246,6 +248,24 @@ export type CreateReviewForEpisodeMutationVariables = Exact<{
 export type CreateReviewForEpisodeMutation = {
   __typename?: 'Mutation';
   createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
+};
+
+export type ExcludeQueryAlphaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryAlphaQuery = {
+  __typename?: 'Query';
+  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
+};
+
+export type ExcludeQueryBetaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryBetaQuery = {
+  __typename?: 'Query';
+  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
 };
 
 export type HeroAndFriendsNamesQueryVariables = Exact<{

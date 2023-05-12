@@ -130,7 +130,7 @@ export async function generate(
 
   // watch mode
   if (config.watch) {
-    return createWatcher(context, writeOutput);
+    return createWatcher(context, writeOutput).runningWatcher;
   }
 
   const outputFiles = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
