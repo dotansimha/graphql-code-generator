@@ -1,0 +1,9 @@
+# This file should be excluded by all dev-test/codegen.ts patterns that otherwise
+# include files from dev-test-outer-dir, so that when running `yarn watch:examples`,
+# updating this file should _never_ trigger rebuild
+query NothingShouldUseThisQuery {
+  currentUser {
+    login
+    avatar_url
+  }
+}

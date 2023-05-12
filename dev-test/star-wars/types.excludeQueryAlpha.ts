@@ -1,12 +1,10 @@
-type Maybe<T> = T | null;
-type InputMaybe<T> = Maybe<T>;
-type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
-type Scalars = {
+export type Scalars = {
   ID: string;
   String: string;
   Boolean: boolean;
@@ -15,7 +13,7 @@ type Scalars = {
 };
 
 /** A character from the Star Wars universe */
-type Character = {
+export type Character = {
   /** The movies this character appears in */
   appearsIn: Array<Maybe<Episode>>;
   /** The friends of the character, or an empty list if they have none */
@@ -29,20 +27,20 @@ type Character = {
 };
 
 /** A character from the Star Wars universe */
-type CharacterFriendsConnectionArgs = {
+export type CharacterFriendsConnectionArgs = {
   after?: InputMaybe<Scalars['ID']>;
   first?: InputMaybe<Scalars['Int']>;
 };
 
 /** The input object sent when passing a color */
-type ColorInput = {
+export type ColorInput = {
   blue: Scalars['Int'];
   green: Scalars['Int'];
   red: Scalars['Int'];
 };
 
 /** An autonomous mechanical character in the Star Wars universe */
-type Droid = Character & {
+export type Droid = Character & {
   __typename?: 'Droid';
   /** The movies this droid appears in */
   appearsIn: Array<Maybe<Episode>>;
@@ -59,22 +57,23 @@ type Droid = Character & {
 };
 
 /** An autonomous mechanical character in the Star Wars universe */
-type DroidFriendsConnectionArgs = {
+export type DroidFriendsConnectionArgs = {
   after?: InputMaybe<Scalars['ID']>;
   first?: InputMaybe<Scalars['Int']>;
 };
 
 /** The episodes in the Star Wars trilogy */
-type Episode =
+export enum Episode {
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
-  | 'EMPIRE'
+  Empire = 'EMPIRE',
   /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
-  | 'JEDI'
+  Jedi = 'JEDI',
   /** Star Wars Episode IV: A New Hope, released in 1977. */
-  | 'NEWHOPE';
+  Newhope = 'NEWHOPE',
+}
 
 /** A connection object for a character's friends */
-type FriendsConnection = {
+export type FriendsConnection = {
   __typename?: 'FriendsConnection';
   /** The edges for each of the character's friends. */
   edges?: Maybe<Array<Maybe<FriendsEdge>>>;
@@ -87,7 +86,7 @@ type FriendsConnection = {
 };
 
 /** An edge object for a character's friends */
-type FriendsEdge = {
+export type FriendsEdge = {
   __typename?: 'FriendsEdge';
   /** A cursor used for pagination */
   cursor: Scalars['ID'];
@@ -96,7 +95,7 @@ type FriendsEdge = {
 };
 
 /** A humanoid creature from the Star Wars universe */
-type Human = Character & {
+export type Human = Character & {
   __typename?: 'Human';
   /** The movies this human appears in */
   appearsIn: Array<Maybe<Episode>>;
@@ -119,37 +118,38 @@ type Human = Character & {
 };
 
 /** A humanoid creature from the Star Wars universe */
-type HumanFriendsConnectionArgs = {
+export type HumanFriendsConnectionArgs = {
   after?: InputMaybe<Scalars['ID']>;
   first?: InputMaybe<Scalars['Int']>;
 };
 
 /** A humanoid creature from the Star Wars universe */
-type HumanHeightArgs = {
+export type HumanHeightArgs = {
   unit?: InputMaybe<LengthUnit>;
 };
 
 /** Units of height */
-type LengthUnit =
+export enum LengthUnit {
   /** Primarily used in the United States */
-  | 'FOOT'
+  Foot = 'FOOT',
   /** The standard unit around the world */
-  | 'METER';
+  Meter = 'METER',
+}
 
 /** The mutation type, represents all updates we can make to our data */
-type Mutation = {
+export type Mutation = {
   __typename?: 'Mutation';
   createReview?: Maybe<Review>;
 };
 
 /** The mutation type, represents all updates we can make to our data */
-type MutationCreateReviewArgs = {
+export type MutationCreateReviewArgs = {
   episode?: InputMaybe<Episode>;
   review: ReviewInput;
 };
 
 /** Information for paginating this connection */
-type PageInfo = {
+export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['ID']>;
   hasNextPage: Scalars['Boolean'];
@@ -157,7 +157,7 @@ type PageInfo = {
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type Query = {
+export type Query = {
   __typename?: 'Query';
   character?: Maybe<Character>;
   droid?: Maybe<Droid>;
@@ -169,42 +169,42 @@ type Query = {
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type QueryCharacterArgs = {
+export type QueryCharacterArgs = {
   id: Scalars['ID'];
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type QueryDroidArgs = {
+export type QueryDroidArgs = {
   id: Scalars['ID'];
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type QueryHeroArgs = {
+export type QueryHeroArgs = {
   episode?: InputMaybe<Episode>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type QueryHumanArgs = {
+export type QueryHumanArgs = {
   id: Scalars['ID'];
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type QueryReviewsArgs = {
+export type QueryReviewsArgs = {
   episode: Episode;
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type QuerySearchArgs = {
+export type QuerySearchArgs = {
   text?: InputMaybe<Scalars['String']>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
-type QueryStarshipArgs = {
+export type QueryStarshipArgs = {
   id: Scalars['ID'];
 };
 
 /** Represents a review for a movie */
-type Review = {
+export type Review = {
   __typename?: 'Review';
   /** Comment about the movie */
   commentary?: Maybe<Scalars['String']>;
@@ -213,7 +213,7 @@ type Review = {
 };
 
 /** The input object sent when someone is creating a new review */
-type ReviewInput = {
+export type ReviewInput = {
   /** Comment about the movie, optional */
   commentary?: InputMaybe<Scalars['String']>;
   /** Favorite color, optional */
@@ -222,9 +222,9 @@ type ReviewInput = {
   stars: Scalars['Int'];
 };
 
-type SearchResult = Droid | Human | Starship;
+export type SearchResult = Droid | Human | Starship;
 
-type Starship = {
+export type Starship = {
   __typename?: 'Starship';
   /** The ID of the starship */
   id: Scalars['ID'];
@@ -234,43 +234,34 @@ type Starship = {
   name: Scalars['String'];
 };
 
-type StarshipLengthArgs = {
+export type StarshipLengthArgs = {
   unit?: InputMaybe<LengthUnit>;
 };
 
-type CreateReviewForEpisodeMutationVariables = Exact<{
+export type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;
 }>;
 
-type CreateReviewForEpisodeMutation = {
+export type CreateReviewForEpisodeMutation = {
   __typename?: 'Mutation';
   createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
 };
 
-type ExcludeQueryAlphaQueryVariables = Exact<{
+export type ExcludeQueryBetaQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
 
-type ExcludeQueryAlphaQuery = {
+export type ExcludeQueryBetaQuery = {
   __typename?: 'Query';
   hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
 };
 
-type ExcludeQueryBetaQueryVariables = Exact<{
+export type HeroAndFriendsNamesQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
 
-type ExcludeQueryBetaQuery = {
-  __typename?: 'Query';
-  hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
-};
-
-type HeroAndFriendsNamesQueryVariables = Exact<{
-  episode?: InputMaybe<Episode>;
-}>;
-
-type HeroAndFriendsNamesQuery = {
+export type HeroAndFriendsNamesQuery = {
   __typename?: 'Query';
   hero?:
     | {
@@ -286,9 +277,9 @@ type HeroAndFriendsNamesQuery = {
     | null;
 };
 
-type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
+export type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
 
-type HeroAppearsInQuery = {
+export type HeroAppearsInQuery = {
   __typename?: 'Query';
   hero?:
     | { __typename?: 'Droid'; name: string; appearsIn: Array<Episode | null> }
@@ -296,11 +287,11 @@ type HeroAppearsInQuery = {
     | null;
 };
 
-type HeroDetailsQueryVariables = Exact<{
+export type HeroDetailsQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
 
-type HeroDetailsQuery = {
+export type HeroDetailsQuery = {
   __typename?: 'Query';
   hero?:
     | { __typename?: 'Droid'; primaryFunction?: string | null; name: string }
@@ -312,13 +303,13 @@ type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction?: stri
 
 type HeroDetails_Human_Fragment = { __typename?: 'Human'; height?: number | null; name: string };
 
-type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
+export type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
-type HeroDetailsWithFragmentQueryVariables = Exact<{
+export type HeroDetailsWithFragmentQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
 
-type HeroDetailsWithFragmentQuery = {
+export type HeroDetailsWithFragmentQuery = {
   __typename?: 'Query';
   hero?:
     | { __typename?: 'Droid'; primaryFunction?: string | null; name: string }
@@ -326,40 +317,40 @@ type HeroDetailsWithFragmentQuery = {
     | null;
 };
 
-type HeroNameQueryVariables = Exact<{
+export type HeroNameQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
 
-type HeroNameQuery = {
+export type HeroNameQuery = {
   __typename?: 'Query';
   hero?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
 };
 
-type HeroNameConditionalInclusionQueryVariables = Exact<{
+export type HeroNameConditionalInclusionQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
   includeName: Scalars['Boolean'];
 }>;
 
-type HeroNameConditionalInclusionQuery = {
+export type HeroNameConditionalInclusionQuery = {
   __typename?: 'Query';
   hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
-type HeroNameConditionalExclusionQueryVariables = Exact<{
+export type HeroNameConditionalExclusionQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
   skipName: Scalars['Boolean'];
 }>;
 
-type HeroNameConditionalExclusionQuery = {
+export type HeroNameConditionalExclusionQuery = {
   __typename?: 'Query';
   hero?: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
 };
 
-type HeroParentTypeDependentFieldQueryVariables = Exact<{
+export type HeroParentTypeDependentFieldQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
 
-type HeroParentTypeDependentFieldQuery = {
+export type HeroParentTypeDependentFieldQuery = {
   __typename?: 'Query';
   hero?:
     | {
@@ -379,27 +370,27 @@ type HeroParentTypeDependentFieldQuery = {
     | null;
 };
 
-type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
+export type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
 
-type HeroTypeDependentAliasedFieldQuery = {
+export type HeroTypeDependentAliasedFieldQuery = {
   __typename?: 'Query';
   hero?: { __typename?: 'Droid'; property?: string | null } | { __typename?: 'Human'; property?: string | null } | null;
 };
 
-type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: number | null };
+export type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: number | null };
 
-type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
+export type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
-type HumanWithNullHeightQuery = {
+export type HumanWithNullHeightQuery = {
   __typename?: 'Query';
   human?: { __typename?: 'Human'; name: string; mass?: number | null } | null;
 };
 
-type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
+export type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
 
-type TwoHeroesQuery = {
+export type TwoHeroesQuery = {
   __typename?: 'Query';
   r2?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
   luke?: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;

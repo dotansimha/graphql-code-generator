@@ -1,0 +1,6 @@
+# This file should be excluded by pattern matching in types.excludeQueryBeta
+query ExcludeQueryBeta($episode: Episode) {
+  hero(episode: $episode) {
+    name
+  }
+}

@@ -254,6 +254,30 @@ export type CreateReviewForEpisodeMutation = {
   } | null;
 };
 
+export type ExcludeQueryAlphaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryAlphaQuery = {
+  readonly __typename?: 'Query';
+  readonly hero?:
+    | { readonly __typename?: 'Droid'; readonly name: string }
+    | { readonly __typename?: 'Human'; readonly name: string }
+    | null;
+};
+
+export type ExcludeQueryBetaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryBetaQuery = {
+  readonly __typename?: 'Query';
+  readonly hero?:
+    | { readonly __typename?: 'Droid'; readonly name: string }
+    | { readonly __typename?: 'Human'; readonly name: string }
+    | null;
+};
+
 export type HeroAndFriendsNamesQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
 }>;
