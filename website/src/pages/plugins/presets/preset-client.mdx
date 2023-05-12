@@ -182,7 +182,7 @@ export default Film
 `useFragment()` can be used without following React's rules of hooks.
 To avoid any issue with ESLint, we recommend changing its naming to `getFragmentData()` by setting the proper `unmaskFunctionName` value:
 
-```ts filename="codegen.ts" {10-12}
+```ts filename="codegen.ts" {9-11}
 import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
@@ -252,6 +252,61 @@ When dealing with nested Fragments, the `useFragment()` should also be used in a
 
 You can find a complete working example here: [Nested Fragment example on GitHub](https://github.com/charlypoly/codegen-repros/blob/master/client-preset-nested-fragments-interface/src/App.tsx).
 
+### Fragment Masking with @defer directive
+
+If you use the `@defer` directive and have a Fragment Masking setup, you can use an `isFragmentReady` helper to check if the deferred fragment data is already resolved.
+The `isFragmentReady` function takes three arguments: the query document, the fragment definition, and the data returned by the
+query. You can use it to conditionally render components based on whether the data for a deferred
+fragment is available, as shown in the example below:
+
+```jsx
+// index.tsx
+import { useQuery } from '@apollo/client';
+import { useFragment, graphql, FragmentType, isFragmentReady } from './gql';
+
+const OrdersFragment = graphql(`
+  fragment OrdersFragment on User {
+    orders {
+      id
+      total
+    }
+  }
+`)
+const GetUserQueryWithDefer = graphql(`
+  query GetUser($id: ID!) {
+    user(id: $id) {
+      id
+      name
+      ...OrdersFragment @defer
+    }
+  }
+`)
+
+const OrdersList = (props: { data: FragmentType<typeof OrdersFragment> }) => {
+  const data = useFragment(OrdersFragment, props.data);
+  return (
+    // render orders list
+  )
+};
+
+function App() {
+  const { data } = useQuery(GetUserQueryWithDefer);
+  return (
+    <div className="App">
+      {data && (
+        <>
+          <span>Name: {data.name}</span>
+          <span>Id: {data.name}</span>
+          {isFragmentReady(GetUserQueryWithDefer, OrdersFragment, data) // <- HERE
+						&& <OrdersList data={data} />}
+        </>
+      )}
+    </div>
+  );
+}
+export default App;
+```
+
 ### Fragment Masking and testing
 
 A React component that relies on Fragment Masking won't accept "plain object" as follows:
@@ -310,7 +365,7 @@ describe('<ProfileName />', () => {
 
 `client-preset`'s Fragment Masking can be disabled as follow:
 
-```ts filename="codegen.ts" {10-12}
+```ts filename="codegen.ts" {9-11}
 import { type CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
@@ -341,7 +396,7 @@ It is also commonly used to reduce the size of the client bundle as well as to i
 
 Persisted documents can be enabled by setting the `persistedDocuments` option to `true`:
 
-```ts filename="codegen.ts" {10-12}
+```ts filename="codegen.ts" {9-11}
 import { type CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {

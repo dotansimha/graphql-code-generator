@@ -21,11 +21,12 @@ import {
   SelectionSetNode,
   StringValueNode,
   TypeNode,
+  DirectiveNode,
 } from 'graphql';
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -408,7 +409,7 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
 };
 
 export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
-  fields: FieldNode[];
+  fields: (FieldNode & FragmentDirectives)[];
   spreads: FragmentSpreadNode[];
   inlines: InlineFragmentNode[];
 } {
@@ -436,6 +437,11 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
 export function hasConditionalDirectives(field: FieldNode): boolean {
   const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
   return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
+}
+
+export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {
+  const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
+  return directives?.some(directive => INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {
@@ -523,4 +529,20 @@ export function isOneOfInputObjectType(
   isOneOfTypeCache.set(namedType, isOneOfType);
 
   return isOneOfType;
+}
+
+export function groupBy<T>(array: Array<T>, key: (item: T) => string | number): { [key: string]: Array<T> } {
+  return array.reduce<{ [key: string]: Array<T> }>((acc, item) => {
+    const group = (acc[key(item)] ??= []);
+    group.push(item);
+    return acc;
+  }, {});
+}
+
+export function flatten<T>(array: Array<Array<T>>): Array<T> {
+  return ([] as Array<T>).concat(...array);
+}
+
+export function unique<T>(array: Array<T>, key: (item: T) => string | number = item => item.toString()): Array<T> {
+  return Object.values(array.reduce((acc, item) => ({ [key(item)]: item, ...acc }), {}));
 }
