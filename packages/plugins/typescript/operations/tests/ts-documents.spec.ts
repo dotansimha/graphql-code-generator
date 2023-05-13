@@ -2644,7 +2644,7 @@ describe('TypeScript Operations Plugin', () => {
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
     });
 
-    it('Should produce valid output with preResolveTypes=true and enums with suffixes set', async () => {
+    it('Should produce valid output with preResolveTypes=true and enums with no suffixes', async () => {
       const ast = parse(/* GraphQL */ `
         query test($e: Information_EntryType!) {
           info {
