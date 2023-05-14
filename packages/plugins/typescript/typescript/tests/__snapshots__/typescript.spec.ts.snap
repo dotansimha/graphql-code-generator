@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TypeScript should use implementing types as node type - issue #5126 1`] = `
+exports[`TypeScript should use implementing types as node type and properly inherit nested interfaces - issue #5126, #7615 1`] = `
 "/** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -48,7 +48,7 @@ export type NoInterface = {
   hello: Hello;
 };
 
-export type NestedInterface = {
+export type NestedInterface = Foo & {
   field: Scalars['String'];
 };
 
