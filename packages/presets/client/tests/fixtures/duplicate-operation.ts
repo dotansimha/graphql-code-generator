@@ -10,8 +10,4 @@ const A1 = gql`
 `;
 
 //@ts-ignore
-const A2 = gql`
-  query a {
-    a
-  }
-`;
+const A2 = gql(`query a { a }`);

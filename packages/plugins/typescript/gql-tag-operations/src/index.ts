@@ -22,6 +22,15 @@ export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocume
   : never;
 `.split(`\n`);
 
+const gqlTrimTypePartial = `
+type Spaces = "\\n" | "  ";
+type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`
+  ? GqlTrim<U>
+  : T extends \`\${infer U}\${Spaces}\${infer V}\`
+  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>
+  : T;
+`.split(`\n`);
+
 export const plugin: PluginFunction<{
   sourcesWithOperations: Array<SourceWithOperations>;
   useTypeImports?: boolean;
@@ -42,6 +51,15 @@ export const plugin: PluginFunction<{
   },
   _info
 ) => {
+  const genericReturnPartial = `
+    export function ${gqlTagName}<S extends string>(
+      source: S
+    ): GqlTrim<S> extends keyof typeof documents
+      ? (typeof documents)[GqlTrim<S>]
+      : unknown {
+      return (documents as any)[source] ?? {};
+    }
+    `.split('\n');
   if (documentMode === DocumentMode.string) {
     const code = [`import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`, `\n`];
 
@@ -53,19 +71,7 @@ export const plugin: PluginFunction<{
       code.push('const documents = {}');
     }
 
-    if (sourcesWithOperations.length > 0) {
-      code.push(
-        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports), `\n`].join(
-          ''
-        )
-      );
-    }
-
-    code.push(
-      [`export function ${gqlTagName}(source: string) {\n`, `  return (documents as any)[source] ?? {};\n`, `}\n`].join(
-        ''
-      )
-    );
+    code.push([...genericReturnPartial, ...gqlTrimTypePartial].join(''));
 
     return code.join('\n');
   }
@@ -96,24 +102,11 @@ export const plugin: PluginFunction<{
         ` * The query argument is unknown!\n`,
         ` * Please regenerate the types.\n`,
         ` */\n`,
-        `export function ${gqlTagName}(source: string): unknown;\n`,
         `\n`,
-      ].join('')
-    );
 
-    if (sourcesWithOperations.length > 0) {
-      code.push(
-        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports), `\n`].join('')
-      );
-    }
-
-    code.push(
-      [
-        `export function ${gqlTagName}(source: string) {\n`,
-        `  return (documents as any)[source] ?? {};\n`,
-        `}\n`,
-        `\n`,
+        ...genericReturnPartial,
         ...documentTypePartial,
+        ...gqlTrimTypePartial,
       ].join('')
     );
 
@@ -126,7 +119,7 @@ export const plugin: PluginFunction<{
     [
       `\n`,
       ...(sourcesWithOperations.length > 0
-        ? getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports)
+        ? getGqlOverloadChunk(sourcesWithOperations, gqlTagName, emitLegacyCommonJSImports)
         : []),
       `export function ${gqlTagName}(source: string): unknown;\n`,
       `\n`,
@@ -152,8 +145,11 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
     const operation = operations[0];
-
-    lines.add(`    ${JSON.stringify(originalString)}: types.${operation.initialName},\n`);
+    let trimmedString = originalString.trim();
+    while (trimmedString.match(/(\n| {2})/)) {
+      trimmedString = trimmedString.replace(/(\n| {2})/, ' ');
+    }
+    lines.add(`    ${JSON.stringify(trimmedString)}: types.${operation.initialName},\n`);
   }
 
   lines.add(`};\n`);
@@ -161,12 +157,9 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
   return lines;
 }
 
-type Mode = 'lookup' | 'augmented';
-
 function getGqlOverloadChunk(
   sourcesWithOperations: Array<SourceWithOperations>,
   gqlTagName: string,
-  mode: Mode,
   emitLegacyCommonJSImports?: boolean
 ) {
   const lines = new Set<string>();
@@ -175,12 +168,9 @@ function getGqlOverloadChunk(
   // would print very long `gql` function signatures (duplicating the source).
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
-    const returnType =
-      mode === 'lookup'
-        ? `(typeof documents)[${JSON.stringify(originalString)}]`
-        : emitLegacyCommonJSImports
-        ? `typeof import('./graphql').${operations[0].initialName}`
-        : `typeof import('./graphql.js').${operations[0].initialName}`;
+    const returnType = emitLegacyCommonJSImports
+      ? `typeof import('./graphql').${operations[0].initialName}`
+      : `typeof import('./graphql.js').${operations[0].initialName}`;
     lines.add(
       `/**\n * The ${gqlTagName} function is used to parse GraphQL queries into a document that can be used by GraphQL clients.\n */\n` +
         `export function ${gqlTagName}(source: ${JSON.stringify(originalString)}): ${returnType};\n`

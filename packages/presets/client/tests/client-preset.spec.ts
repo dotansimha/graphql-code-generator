@@ -50,9 +50,9 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
-          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
-          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+          "query A { a }": types.ADocument,
+          "query B { b }": types.BDocument,
+          "fragment C on Query { c }": types.CFragmentDoc,
       };
 
       /**
@@ -67,26 +67,8 @@ export * from "./gql";`);
        * The query argument is unknown!
        * Please regenerate the types.
        */
-      export function graphql(source: string): unknown;
 
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
-
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
 
     // graphql.ts
@@ -137,9 +119,9 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
-          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
-          "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+          "query a { a }": types.ADocument,
+          "query b { b }": types.BDocument,
+          "fragment C on Query { c }": types.CFragmentDoc,
       };
 
       /**
@@ -154,26 +136,8 @@ export * from "./gql";`);
        * The query argument is unknown!
        * Please regenerate the types.
        */
-      export function graphql(source: string): unknown;
 
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
-
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
 
     // graphql.ts
@@ -216,9 +180,9 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
-          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
-          "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+          "query a { a }": types.ADocument,
+          "query b { b }": types.BDocument,
+          "fragment C on Query { c }": types.CFragmentDoc,
       };
 
       /**
@@ -233,26 +197,8 @@ export * from "./gql";`);
        * The query argument is unknown!
        * Please regenerate the types.
        */
-      export function graphql(source: string): unknown;
 
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query b {\\n    b\\n  }\\n"): (typeof documents)["\\n  query b {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
-
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
   });
 
@@ -296,9 +242,9 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
-          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
-          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+          "query A { a }": types.ADocument,
+          "query B { b }": types.BDocument,
+          "fragment C on Query { c }": types.CFragmentDoc,
       };
 
       /**
@@ -313,26 +259,8 @@ export * from "./gql";`);
        * The query argument is unknown!
        * Please regenerate the types.
        */
-      export function graphql(source: string): unknown;
 
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
-
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
@@ -426,9 +354,9 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
-          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
-          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+          "query A { a }": types.ADocument,
+          "query B { b }": types.BDocument,
+          "fragment C on Query { c }": types.CFragmentDoc,
       };
 
       /**
@@ -443,26 +371,8 @@ export * from "./gql";`);
        * The query argument is unknown!
        * Please regenerate the types.
        */
-      export function graphql(source: string): unknown;
 
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
-
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
@@ -549,7 +459,7 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
-          "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
+          "query a { a }": types.ADocument,
       };
 
       /**
@@ -564,18 +474,8 @@ export * from "./gql";`);
        * The query argument is unknown!
        * Please regenerate the types.
        */
-      export function graphql(source: string): unknown;
 
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query a {\\n    a\\n  }\\n"): (typeof documents)["\\n  query a {\\n    a\\n  }\\n"];
-
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
-
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
@@ -611,7 +511,7 @@ export * from "./gql";`);
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
     `);
 
-    expect(gqlFile.content.match(/query a {/g).length).toBe(3);
+    expect(gqlFile.content.match(/query a {/g).length).toBe(1);
   });
 
   describe('fragment masking', () => {
@@ -662,9 +562,9 @@ export * from "./gql";`);
          * Therefore it is highly recommended to use the babel or swc plugin for production.
          */
         const documents = {
-            "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
-            "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
-            "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+            "query A { a }": types.ADocument,
+            "query B { b }": types.BDocument,
+            "fragment C on Query { c }": types.CFragmentDoc,
         };
 
         /**
@@ -679,26 +579,8 @@ export * from "./gql";`);
          * The query argument is unknown!
          * Please regenerate the types.
          */
-        export function graphql(source: string): unknown;
 
-        /**
-         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-         */
-        export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-        /**
-         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-         */
-        export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-        /**
-         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-         */
-        export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-        export function graphql(source: string) {
-          return (documents as any)[source] ?? {};
-        }
-
-        export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
       `);
     });
 
@@ -981,9 +863,9 @@ export * from "./gql.js";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
       const documents = {
-          "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
-          "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
-          "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
+          "query A { a }": types.ADocument,
+          "query B { b }": types.BDocument,
+          "fragment C on Query { c }": types.CFragmentDoc,
       };
 
       /**
@@ -998,26 +880,8 @@ export * from "./gql.js";`);
        * The query argument is unknown!
        * Please regenerate the types.
        */
-      export function graphql(source: string): unknown;
 
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query A {\\n    a\\n  }\\n"): (typeof documents)["\\n  query A {\\n    a\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  query B {\\n    b\\n  }\\n"): (typeof documents)["\\n  query B {\\n    b\\n  }\\n"];
-      /**
-       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-       */
-      export function graphql(source: "\\n  fragment C on Query {\\n    c\\n  }\\n"): (typeof documents)["\\n  fragment C on Query {\\n    c\\n  }\\n"];
-
-      export function graphql(source: string) {
-        return (documents as any)[source] ?? {};
-      }
-
-      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
 
     // graphql.ts
@@ -1192,13 +1056,8 @@ export * from "./gql.js";`);
          * The query argument is unknown!
          * Please regenerate the types.
          */
-        export function graphql(source: string): unknown;
 
-        export function graphql(source: string) {
-          return (documents as any)[source] ?? {};
-        }
-
-        export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
       `);
       // graphql.ts
       const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -2398,29 +2257,12 @@ export * from "./gql.js";`);
          * Therefore it is highly recommended to use the babel or swc plugin for production.
          */
         const documents = {
-            "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
-            "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": types.FoosDocument,
-            "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": types.FooFragmentDoc,
+            "query Foo { foo { ...Foo } }": types.FooDocument,
+            "query Foos { foos { ...Foo } }": types.FoosDocument,
+            "fragment Foo on Foo { value }": types.FooFragmentDoc,
         };
 
-        /**
-         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-         */
-        export function graphql(source: "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n"): typeof import('./graphql').FooDocument;
-        /**
-         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-         */
-        export function graphql(source: "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n"): typeof import('./graphql').FoosDocument;
-        /**
-         * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
-         */
-        export function graphql(source: "\\n  fragment Foo on Foo {\\n    value\\n  }\\n"): typeof import('./graphql').FooFragmentDoc;
-
-
-        export function graphql(source: string) {
-          return (documents as any)[source] ?? {};
-        }
-        "
+            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
       `);
     });
   });
