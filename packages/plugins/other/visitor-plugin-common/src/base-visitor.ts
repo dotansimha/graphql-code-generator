@@ -102,6 +102,10 @@ export interface RawConfig {
    *        // plugins...
    *        config: {
    *          scalars: {
+   *            ID: {
+   *              input: 'string',
+   *              output: 'string | number'
+   *            }
    *            DateTime: 'Date',
    *            JSON: '{ [key: string]: any }',
    *          }
@@ -394,7 +398,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
     this.scalars = {};
     for (const key of Object.keys(this.config.scalars || {})) {
-      this.scalars[key] = this.config.scalars[key].type;
+      this.scalars[key] = {
+        input: this.config.scalars[key]?.input?.type,
+        output: this.config.scalars[key]?.output?.type,
+      };
     }
 
     autoBind(this);

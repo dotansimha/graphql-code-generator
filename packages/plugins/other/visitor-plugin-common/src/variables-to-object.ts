@@ -60,7 +60,7 @@ export class OperationVariablesToObject {
   protected getScalar(name: string): string {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
 
-    return `${prefix}Scalars['${name}']`;
+    return `${prefix}Scalars['${name}']['input']`;
   }
 
   protected getDirectiveMapping(name: string): string {

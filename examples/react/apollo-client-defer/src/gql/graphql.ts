@@ -9,27 +9,27 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string | number; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
 };
 
 export type Query = {
   __typename?: 'Query';
-  alphabet: Array<Scalars['String']>;
+  alphabet: Array<Scalars['String']['output']>;
   /** A field that resolves fast. */
-  fastField: Scalars['String'];
+  fastField: Scalars['String']['output'];
   /**
    * A field that resolves slowly.
    * Maybe you want to @defer this field ;)
    */
-  slowField: Scalars['String'];
+  slowField: Scalars['String']['output'];
 };
 
 export type QuerySlowFieldArgs = {
-  waitFor?: Scalars['Int'];
+  waitFor?: Scalars['Int']['input'];
 };
 
 export type SlowFieldFragmentFragment = { __typename?: 'Query'; slowField: string } & {
