@@ -137,8 +137,7 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
     `/**\n * Map of all GraphQL operations in the project.\n *\n * This map has several performance disadvantages:\n`
   );
   lines.add(` * 1. It is not tree-shakeable, so it will include all operations in the project.\n`);
-  lines.add(` * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.\n`);
-  lines.add(` * 3. It does not support dead code elimination, so it will add unused operations.\n *\n`);
+  lines.add(` * 2. It does not support dead code elimination, so it will add unused operations.\n *\n`);
   lines.add(` * Therefore it is highly recommended to use the babel or swc plugin for production.\n */\n`);
   lines.add(`const documents = {\n`);
 
