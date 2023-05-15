@@ -187,6 +187,10 @@ export namespace Types {
     'apollo-engine': ApolloEngineOptions;
   }
 
+  export interface GitHubSchemaOptions {
+    [githubProtocol: `github:${string}`]: { token: string };
+  }
+
   export type SchemaGlobPath = string;
   /**
    * @description A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).
@@ -195,6 +199,7 @@ export namespace Types {
     | string
     | UrlSchemaWithOptions
     | ApolloEngineSchemaOptions
+    | GitHubSchemaOptions
     | LocalSchemaPathWithOptions
     | SchemaGlobPath
     | SchemaWithLoader
