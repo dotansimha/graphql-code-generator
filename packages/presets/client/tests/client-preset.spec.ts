@@ -2477,40 +2477,39 @@ export * from "./gql.js";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toContain(`
+      expect(graphqlFile.content).toBeSimilarStringTo(`
         export const VideoDocument = new TypedDocumentString(\`
-            query Video($id: ID!) {
-          video(id: $id) {
-            ...DetailsFragment
-            __typename
+          query Video($id: ID!) {
+            video(id: $id) {
+              ...DetailsFragment
+              __typename
+            }
           }
-        }
-            fragment DetailsFragment on Video {
-          title
-          __typename
-          ...MovieFragment
-          ...EpisodeFragment
-        }
-        fragment EpisodeFragment on Episode {
-          id
-          title
-          show {
+          fragment EpisodeFragment on Episode {
             id
             title
+            show {
+              id
+              title
+            }
+            releaseDate
+            __typename
           }
-          releaseDate
-          __typename
-        }
-        fragment MovieFragment on Movie {
-          id
-          title
-          collection {
+          fragment MovieFragment on Movie {
             id
+            title
+            collection {
+              id
+            }
+            releaseDate
+            __typename
           }
-          releaseDate
-          __typename
-        }
-        \`) as unknown as TypedDocumentString<VideoQuery, VideoQueryVariables>;"
+          fragment DetailsFragment on Video {
+            title
+            __typename
+            ...MovieFragment
+            ...EpisodeFragment
+          }\`) as unknown as TypedDocumentString<VideoQuery, VideoQueryVariables>;
       `);
     });
   });
