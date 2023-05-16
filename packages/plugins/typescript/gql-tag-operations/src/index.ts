@@ -57,7 +57,11 @@ export const plugin: PluginFunction<{
     ): GqlTrim<S> extends keyof typeof documents
       ? (typeof documents)[GqlTrim<S>]
       : unknown {
-      return (documents as any)[source] ?? {};
+      let trimmedString = source.trim();
+      while (trimmedString.match(/(\\n| {2})/)) {
+        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");
+      }
+      return (documents as any)[trimmedString] ?? {};
     }
     `.split('\n');
   if (documentMode === DocumentMode.string) {
