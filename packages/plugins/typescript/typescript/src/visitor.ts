@@ -105,7 +105,7 @@ export class TsVisitor<
     });
   }
 
-  protected _getTypeForNode(node: NamedTypeNode): string {
+  protected _getTypeForNode(node: NamedTypeNode, isVisitingInputType: boolean): string {
     const typeAsString = node.name as any as string;
 
     if (this.config.useImplementingTypes) {
@@ -128,7 +128,7 @@ export class TsVisitor<
       }
     }
 
-    const typeString = super._getTypeForNode(node);
+    const typeString = super._getTypeForNode(node, isVisitingInputType);
     const schemaType = this._schema.getType(node.name as any as string);
 
     if (isEnumType(schemaType)) {
@@ -252,7 +252,7 @@ export class TsVisitor<
     }
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t)))
       .concat(...withFutureAddedValue)
       .join(' | ');
 
