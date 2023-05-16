@@ -1961,6 +1961,9 @@ describe('TypeScript', () => {
         scalar MyScalar
         scalar MyOtherScalar
         scalar MyAliasedScalar
+        scalar OrgScalar
+        scalar OrgOtherScalar
+        scalar OrgAliasedScalar
 
         type MyType {
           foo: String
@@ -1968,6 +1971,9 @@ describe('TypeScript', () => {
           baz: MyOtherScalar!
           qux: MyAliasedScalar!
           tux(in: MyScalar!): MyScalar!
+          ay: OrgScalar!
+          bee: OrgOtherScalar!
+          ce: OrgAliasedScalar!
         }
       `);
       const result = (await plugin(
@@ -1978,6 +1984,9 @@ describe('TypeScript', () => {
             MyScalar: '../../scalars#default',
             MyOtherScalar: '../../scalars#MyOtherScalar',
             MyAliasedScalar: '../../scalars#MyAliasedScalar as AliasedScalar',
+            OrgScalar: '@org/scalars#default',
+            OrgOtherScalar: '@org/scalars#OrgOtherScalar',
+            OrgAliasedScalar: '@org/scalars#OrgOtherScalar as OrgAliasedScalar',
           },
         },
         { outputFile: '' }
@@ -1987,6 +1996,9 @@ describe('TypeScript', () => {
       expect(result.prepend).toContain(`import MyScalar from '../../scalars';`);
       expect(result.prepend).toContain(`import { MyOtherScalar } from '../../scalars';`);
       expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalar } from '../../scalars';`);
+      expect(result.prepend).toContain(`import OrgScalar from '@org/scalars';`);
+      expect(result.prepend).toContain(`import { OrgOtherScalar } from '@org/scalars';`);
+      expect(result.prepend).toContain(`import { OrgOtherScalar as OrgAliasedScalar } from '@org/scalars';`);
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
           ID: { input: string | number; output: string; }
@@ -1997,6 +2009,9 @@ describe('TypeScript', () => {
           MyScalar: { input: MyScalar['input']; output: MyScalar['output']; }
           MyOtherScalar: { input: MyOtherScalar['input']; output: MyOtherScalar['output']; }
           MyAliasedScalar: { input: AliasedScalar['input']; output: AliasedScalar['output']; }
+          OrgScalar: { input: OrgScalar['input']; output: OrgScalar['output']; }
+          OrgOtherScalar: { input: OrgOtherScalar['input']; output: OrgOtherScalar['output']; }
+          OrgAliasedScalar: { input: OrgAliasedScalar['input']; output: OrgAliasedScalar['output']; }
         };`);
 
       expect(result.content).toBeSimilarStringTo(`
