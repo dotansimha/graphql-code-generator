@@ -44,8 +44,7 @@ export * from "./gql";`);
        *
        * This map has several performance disadvantages:
        * 1. It is not tree-shakeable, so it will include all operations in the project.
-       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-       * 3. It does not support dead code elimination, so it will add unused operations.
+       * 2. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
@@ -68,7 +67,7 @@ export * from "./gql";`);
        * Please regenerate the types.
        */
 
-          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
 
     // graphql.ts
@@ -113,8 +112,7 @@ export * from "./gql";`);
        *
        * This map has several performance disadvantages:
        * 1. It is not tree-shakeable, so it will include all operations in the project.
-       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-       * 3. It does not support dead code elimination, so it will add unused operations.
+       * 2. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
@@ -137,7 +135,7 @@ export * from "./gql";`);
        * Please regenerate the types.
        */
 
-          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
 
     // graphql.ts
@@ -174,8 +172,7 @@ export * from "./gql";`);
        *
        * This map has several performance disadvantages:
        * 1. It is not tree-shakeable, so it will include all operations in the project.
-       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-       * 3. It does not support dead code elimination, so it will add unused operations.
+       * 2. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
@@ -198,7 +195,7 @@ export * from "./gql";`);
        * Please regenerate the types.
        */
 
-          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
   });
 
@@ -236,8 +233,7 @@ export * from "./gql";`);
        *
        * This map has several performance disadvantages:
        * 1. It is not tree-shakeable, so it will include all operations in the project.
-       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-       * 3. It does not support dead code elimination, so it will add unused operations.
+       * 2. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
@@ -260,7 +256,7 @@ export * from "./gql";`);
        * Please regenerate the types.
        */
 
-          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
@@ -348,8 +344,7 @@ export * from "./gql";`);
        *
        * This map has several performance disadvantages:
        * 1. It is not tree-shakeable, so it will include all operations in the project.
-       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-       * 3. It does not support dead code elimination, so it will add unused operations.
+       * 2. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
@@ -372,7 +367,7 @@ export * from "./gql";`);
        * Please regenerate the types.
        */
 
-          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
@@ -453,8 +448,7 @@ export * from "./gql";`);
        *
        * This map has several performance disadvantages:
        * 1. It is not tree-shakeable, so it will include all operations in the project.
-       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-       * 3. It does not support dead code elimination, so it will add unused operations.
+       * 2. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
@@ -475,7 +469,7 @@ export * from "./gql";`);
        * Please regenerate the types.
        */
 
-          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
@@ -556,8 +550,7 @@ export * from "./gql";`);
          *
          * This map has several performance disadvantages:
          * 1. It is not tree-shakeable, so it will include all operations in the project.
-         * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-         * 3. It does not support dead code elimination, so it will add unused operations.
+         * 2. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
          */
@@ -580,7 +573,7 @@ export * from "./gql";`);
          * Please regenerate the types.
          */
 
-            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
       `);
     });
 
@@ -857,8 +850,7 @@ export * from "./gql.js";`);
        *
        * This map has several performance disadvantages:
        * 1. It is not tree-shakeable, so it will include all operations in the project.
-       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-       * 3. It does not support dead code elimination, so it will add unused operations.
+       * 2. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        */
@@ -881,7 +873,7 @@ export * from "./gql.js";`);
        * Please regenerate the types.
        */
 
-          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+          export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
     `);
 
     // graphql.ts
@@ -1057,7 +1049,7 @@ export * from "./gql.js";`);
          * Please regenerate the types.
          */
 
-            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
       `);
       // graphql.ts
       const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -2251,8 +2243,7 @@ export * from "./gql.js";`);
          *
          * This map has several performance disadvantages:
          * 1. It is not tree-shakeable, so it will include all operations in the project.
-         * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
-         * 3. It does not support dead code elimination, so it will add unused operations.
+         * 2. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
          */
@@ -2262,7 +2253,7 @@ export * from "./gql.js";`);
             "fragment Foo on Foo { value }": types.FooFragmentDoc,
         };
 
-            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      return (documents as any)[source] ?? {};    }    type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
+            export function graphql<S extends string>(      source: S    ): GqlTrim<S> extends keyof typeof documents      ? (typeof documents)[GqlTrim<S>]      : unknown {      let trimmedString = source.trim();      while (trimmedString.match(/(\\n| {2})/)) {        trimmedString = trimmedString.replace(/(\\n| {2})/, " ");      }      return (documents as any)[trimmedString] ?? {};    }    type Spaces = "\\n" | "  ";type GqlTrim<T> = T extends \`\${Spaces}\${infer U}\` | \`\${infer U}\${Spaces}\`  ? GqlTrim<U>  : T extends \`\${infer U}\${Spaces}\${infer V}\`  ? GqlTrim<\`\${GqlTrim<U>} \${GqlTrim<V>}\`>  : T;"
       `);
     });
   });
