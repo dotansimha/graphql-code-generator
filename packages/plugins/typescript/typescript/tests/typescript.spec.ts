@@ -2059,8 +2059,8 @@ describe('TypeScript', () => {
         {
           scalars: {
             MyScalar: {
-              input: '../../scalarsInput#default',
-              output: '../../scalarsOutput#default',
+              input: '../../scalarsInput#default as MyScalarInput',
+              output: '../../scalarsOutput#default as MyScalarOutput',
             },
             MyOtherScalar: {
               input: '../../scalars#MyOtherScalarInput',
@@ -2071,8 +2071,8 @@ describe('TypeScript', () => {
               output: '../../scalars#MyAliasedScalar as AliasedScalarOutput',
             },
             OrgScalar: {
-              input: '@org/scalars-input#default',
-              output: '@org/scalars-output#default',
+              input: '@org/scalars-input#default as OrgScalarInput',
+              output: '@org/scalars-output#default as OrgScalarOutput',
             },
             OrgOtherScalar: {
               input: '@org/scalars#OrgOtherScalarInput',
@@ -2087,15 +2087,14 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      // It seems like we don't group imports...
-      expect(result.prepend).toContain(`import MyScalar from '../../scalarsInput';`);
-      expect(result.prepend).toContain(`import MyScalar from '../../scalarsOutput';`);
+      expect(result.prepend).toContain(`import MyScalarInput from '../../scalarsInput';`);
+      expect(result.prepend).toContain(`import MyScalarOutput from '../../scalarsOutput';`);
       expect(result.prepend).toContain(`import { MyOtherScalarInput } from '../../scalars';`);
       expect(result.prepend).toContain(`import { MyOtherScalarOutput } from '../../scalars';`);
       expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalarInput } from '../../scalars';`);
       expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalarOutput } from '../../scalars';`);
-      expect(result.prepend).toContain(`import OrgScalar from '@org/scalars-input';`);
-      expect(result.prepend).toContain(`import OrgScalar from '@org/scalars-output';`);
+      expect(result.prepend).toContain(`import OrgScalarInput from '@org/scalars-input';`);
+      expect(result.prepend).toContain(`import OrgScalarOutput from '@org/scalars-output';`);
       expect(result.prepend).toContain(`import { OrgOtherScalarInput } from '@org/scalars';`);
       expect(result.prepend).toContain(`import { OrgOtherScalarOutput } from '@org/scalars';`);
       expect(result.prepend).toContain(`import { OrgOtherScalar as OrgAliasedScalarInput } from '@org/scalars';`);
@@ -2107,10 +2106,10 @@ describe('TypeScript', () => {
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-          MyScalar: { input: MyScalar; output: MyScalar; }
+          MyScalar: { input: MyScalarInput; output: MyScalarOutput; }
           MyOtherScalar: { input: MyOtherScalarInput; output: MyOtherScalarOutput; }
           MyAliasedScalar: { input: AliasedScalarInput; output: AliasedScalarOutput; }
-          OrgScalar: { input: OrgScalar; output: OrgScalar; }
+          OrgScalar: { input: OrgScalarInput; output: OrgScalarOutput; }
           OrgOtherScalar: { input: OrgOtherScalarInput; output: OrgOtherScalarOutput; }
           OrgAliasedScalar: { input: OrgAliasedScalarInput; output: OrgAliasedScalarOutput; }
         };`);
