@@ -2022,6 +2022,110 @@ describe('TypeScript', () => {
           baz: Scalars['MyOtherScalar']['output'];
           qux: Scalars['MyAliasedScalar']['output'];
           tux: Scalars['MyScalar']['output'];
+          ay: Scalars['OrgScalar']['output'];
+          bee: Scalars['OrgOtherScalar']['output'];
+          ce: Scalars['OrgAliasedScalar']['output'];
+        };`);
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyTypeTuxArgs = {
+          in: Scalars['MyScalar']['input'];
+        }`);
+      validateTs(result);
+    });
+
+    it('Should import a type of a mapped scalar for input/output mapping', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        scalar MyScalar
+        scalar MyOtherScalar
+        scalar MyAliasedScalar
+        scalar OrgScalar
+        scalar OrgOtherScalar
+        scalar OrgAliasedScalar
+
+        type MyType {
+          foo: String
+          bar: MyScalar!
+          baz: MyOtherScalar!
+          qux: MyAliasedScalar!
+          tux(in: MyScalar!): MyScalar!
+          ay: OrgScalar!
+          bee: OrgOtherScalar!
+          ce: OrgAliasedScalar!
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          scalars: {
+            MyScalar: {
+              input: '../../scalarsInput#default',
+              output: '../../scalarsOutput#default',
+            },
+            MyOtherScalar: {
+              input: '../../scalars#MyOtherScalarInput',
+              output: '../../scalars#MyOtherScalarOutput',
+            },
+            MyAliasedScalar: {
+              input: '../../scalars#MyAliasedScalar as AliasedScalarInput',
+              output: '../../scalars#MyAliasedScalar as AliasedScalarOutput',
+            },
+            OrgScalar: {
+              input: '@org/scalars-input#default',
+              output: '@org/scalars-output#default',
+            },
+            OrgOtherScalar: {
+              input: '@org/scalars#OrgOtherScalarInput',
+              output: '@org/scalars#OrgOtherScalarOutput',
+            },
+            OrgAliasedScalar: {
+              input: '@org/scalars#OrgOtherScalar as OrgAliasedScalarInput',
+              output: '@org/scalars#OrgOtherScalar as OrgAliasedScalarOutput',
+            },
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      // It seems like we don't group imports...
+      expect(result.prepend).toContain(`import MyScalar from '../../scalarsInput';`);
+      expect(result.prepend).toContain(`import MyScalar from '../../scalarsOutput';`);
+      expect(result.prepend).toContain(`import { MyOtherScalarInput } from '../../scalars';`);
+      expect(result.prepend).toContain(`import { MyOtherScalarOutput } from '../../scalars';`);
+      expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalarInput } from '../../scalars';`);
+      expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalarOutput } from '../../scalars';`);
+      expect(result.prepend).toContain(`import OrgScalar from '@org/scalars-input';`);
+      expect(result.prepend).toContain(`import OrgScalar from '@org/scalars-output';`);
+      expect(result.prepend).toContain(`import { OrgOtherScalarInput } from '@org/scalars';`);
+      expect(result.prepend).toContain(`import { OrgOtherScalarOutput } from '@org/scalars';`);
+      expect(result.prepend).toContain(`import { OrgOtherScalar as OrgAliasedScalarInput } from '@org/scalars';`);
+      expect(result.prepend).toContain(`import { OrgOtherScalar as OrgAliasedScalarOutput } from '@org/scalars';`);
+      expect(result.content).toBeSimilarStringTo(`
+        export type Scalars = {
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+          MyScalar: { input: MyScalar; output: MyScalar; }
+          MyOtherScalar: { input: MyOtherScalarInput; output: MyOtherScalarOutput; }
+          MyAliasedScalar: { input: AliasedScalarInput; output: AliasedScalarOutput; }
+          OrgScalar: { input: OrgScalar; output: OrgScalar; }
+          OrgOtherScalar: { input: OrgOtherScalarInput; output: OrgOtherScalarOutput; }
+          OrgAliasedScalar: { input: OrgAliasedScalarInput; output: OrgAliasedScalarOutput; }
+        };`);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType';
+          foo?: Maybe<Scalars['String']['output']>;
+          bar: Scalars['MyScalar']['output'];
+          baz: Scalars['MyOtherScalar']['output'];
+          qux: Scalars['MyAliasedScalar']['output'];
+          tux: Scalars['MyScalar']['output'];
+          ay: Scalars['OrgScalar']['output'];
+          bee: Scalars['OrgOtherScalar']['output'];
+          ce: Scalars['OrgAliasedScalar']['output'];
         };`);
       expect(result.content).toBeSimilarStringTo(`
         export type MyTypeTuxArgs = {
