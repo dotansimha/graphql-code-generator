@@ -350,14 +350,8 @@ export function buildScalars(
           const mappedScalar = scalarsMapping[name];
           if (typeof mappedScalar === 'object' && mappedScalar.input && mappedScalar.output) {
             result[name] = {
-              input: {
-                isExternal: false,
-                type: mappedScalar.input,
-              },
-              output: {
-                isExternal: false,
-                type: mappedScalar.output,
-              },
+              input: parseMapper(mappedScalar.input, name),
+              output: parseMapper(mappedScalar.output, name),
             };
           } else {
             result[name] = {
