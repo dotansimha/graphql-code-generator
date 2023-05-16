@@ -329,26 +329,15 @@ export function buildScalars(
             input: inputMapper,
             output: outputMapper,
           };
-        } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
-          const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
-
-          const inputMapper = parseMapper(normalizedScalar.input, name);
-          if (inputMapper.isExternal) {
-            inputMapper.type += "['input']";
-          }
-
-          const outputMapper = parseMapper(normalizedScalar.output, name);
-          if (outputMapper.isExternal) {
-            outputMapper.type += "['output']";
-          }
-
-          result[name] = {
-            input: inputMapper,
-            output: outputMapper,
-          };
         } else if (scalarsMapping?.[name]) {
           const mappedScalar = scalarsMapping[name];
-          if (typeof mappedScalar === 'object' && mappedScalar.input && mappedScalar.output) {
+          if (typeof mappedScalar === 'string') {
+            const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
+            result[name] = {
+              input: parseMapper(normalizedScalar.input, name),
+              output: parseMapper(normalizedScalar.output, name),
+            };
+          } else if (typeof mappedScalar === 'object' && mappedScalar.input && mappedScalar.output) {
             result[name] = {
               input: parseMapper(mappedScalar.input, name),
               output: parseMapper(mappedScalar.output, name),

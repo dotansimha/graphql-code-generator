@@ -2006,12 +2006,12 @@ describe('TypeScript', () => {
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-          MyScalar: { input: MyScalar['input']; output: MyScalar['output']; }
-          MyOtherScalar: { input: MyOtherScalar['input']; output: MyOtherScalar['output']; }
-          MyAliasedScalar: { input: AliasedScalar['input']; output: AliasedScalar['output']; }
-          OrgScalar: { input: OrgScalar['input']; output: OrgScalar['output']; }
-          OrgOtherScalar: { input: OrgOtherScalar['input']; output: OrgOtherScalar['output']; }
-          OrgAliasedScalar: { input: OrgAliasedScalar['input']; output: OrgAliasedScalar['output']; }
+          MyScalar: { input: MyScalar; output: MyScalar; }
+          MyOtherScalar: { input: MyOtherScalar; output: MyOtherScalar; }
+          MyAliasedScalar: { input: AliasedScalar; output: AliasedScalar; }
+          OrgScalar: { input: OrgScalar; output: OrgScalar; }
+          OrgOtherScalar: { input: OrgOtherScalar; output: OrgOtherScalar; }
+          OrgAliasedScalar: { input: OrgAliasedScalar; output: OrgAliasedScalar; }
         };`);
 
       expect(result.content).toBeSimilarStringTo(`
