@@ -12,7 +12,7 @@
     "test:end2end": "start-server-and-test start http://127.0.0.1:3000 test"
   },
   "dependencies": {
-    "@graphql-tools/executor-http": "^0.1.8",
+    "@graphql-tools/executor-http": "^1.0.0-rc-20230517125140-6b16e710",
     "next": "^13.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

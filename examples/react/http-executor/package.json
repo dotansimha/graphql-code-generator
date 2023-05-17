@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@graphql-tools/executor-http": "^0.1.8",
+    "@graphql-tools/executor-http": "^1.0.0-rc-20230517125140-6b16e710",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
