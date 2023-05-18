@@ -67,7 +67,7 @@
     "@graphql-codegen/urql-introspection": "2.2.1",
     "@graphql-codegen/client-preset": "3.0.1",
     "@monaco-editor/react": "4.5.0",
-    "@theguild/components": "4.5.11",
+    "@theguild/components": "4.5.12",
     "classnames": "2.3.2",
     "date-fns": "2.29.3",
     "dedent": "0.7.0",
