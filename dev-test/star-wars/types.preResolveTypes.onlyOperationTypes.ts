@@ -7,18 +7,18 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string | number; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
 };
 
 /** The input object sent when passing a color */
 export type ColorInput = {
-  blue: Scalars['Int'];
-  green: Scalars['Int'];
-  red: Scalars['Int'];
+  blue: Scalars['Int']['input'];
+  green: Scalars['Int']['input'];
+  red: Scalars['Int']['input'];
 };
 
 /** The episodes in the Star Wars trilogy */
@@ -42,11 +42,11 @@ export enum LengthUnit {
 /** The input object sent when someone is creating a new review */
 export type ReviewInput = {
   /** Comment about the movie, optional */
-  commentary?: InputMaybe<Scalars['String']>;
+  commentary?: InputMaybe<Scalars['String']['input']>;
   /** Favorite color, optional */
   favoriteColor?: InputMaybe<ColorInput>;
   /** 0-5 stars */
-  stars: Scalars['Int'];
+  stars: Scalars['Int']['input'];
 };
 
 export type CreateReviewForEpisodeMutationVariables = Exact<{
@@ -148,7 +148,7 @@ export type HeroNameQuery = {
 
 export type HeroNameConditionalInclusionQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
-  includeName: Scalars['Boolean'];
+  includeName: Scalars['Boolean']['input'];
 }>;
 
 export type HeroNameConditionalInclusionQuery = {
@@ -158,7 +158,7 @@ export type HeroNameConditionalInclusionQuery = {
 
 export type HeroNameConditionalExclusionQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
-  skipName: Scalars['Boolean'];
+  skipName: Scalars['Boolean']['input'];
 }>;
 
 export type HeroNameConditionalExclusionQuery = {
