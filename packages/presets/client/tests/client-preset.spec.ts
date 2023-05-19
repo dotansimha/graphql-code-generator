@@ -2424,7 +2424,7 @@ export * from "./gql.js";`);
       `);
     });
 
-    it.only('correctly resolves nested fragments', async () => {
+    it('correctly resolves nested fragments', async () => {
       const result = await executeCodegen({
         schema: [
           /* GraphQL */ `
