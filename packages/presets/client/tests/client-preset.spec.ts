@@ -29,12 +29,12 @@ describe('client-preset', () => {
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+    expect(indexFile?.content).toEqual(`export * from "./fragment-masking";
 export * from "./gql";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -116,12 +116,12 @@ export * from "./gql";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+    expect(indexFile?.content).toEqual(`export * from "./fragment-masking";
 export * from "./gql";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -200,7 +200,7 @@ export * from "./gql";`);
       },
     });
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -280,7 +280,7 @@ export * from "./gql";`);
 
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -335,7 +335,7 @@ export * from "./gql";`);
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
@@ -378,10 +378,10 @@ export * from "./gql";`);
       export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
 
-    expect(graphqlFile.content).toContain(
+    expect(graphqlFile?.content).toContain(
       "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'"
     );
-    expect(gqlFile.content).toContain(
+    expect(gqlFile?.content).toContain(
       "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'"
     );
   });
@@ -410,7 +410,7 @@ export * from "./gql";`);
 
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -465,7 +465,7 @@ export * from "./gql";`);
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
@@ -508,7 +508,7 @@ export * from "./gql";`);
       export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
 
-    expect(graphqlFile.content).toContain("__typename: 'Query';");
+    expect(graphqlFile?.content).toContain("__typename: 'Query';");
   });
 
   it('prevent duplicate operations', async () => {
@@ -533,7 +533,7 @@ export * from "./gql";`);
 
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -578,7 +578,7 @@ export * from "./gql";`);
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
@@ -611,7 +611,7 @@ export * from "./gql";`);
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
     `);
 
-    expect(gqlFile.content.match(/query a {/g).length).toBe(3);
+    expect(gqlFile?.content.match(/query a {/g)?.length).toBe(3);
   });
 
   describe('fragment masking', () => {
@@ -644,9 +644,9 @@ export * from "./gql";`);
       expect(fileNames).toContain('out1/graphql.ts');
 
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toMatchInlineSnapshot(`"export * from "./gql";"`);
+      expect(indexFile?.content).toMatchInlineSnapshot(`"export * from "./gql";"`);
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toMatchInlineSnapshot(`
+      expect(gqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import * as types from './graphql';
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -753,11 +753,11 @@ export * from "./gql";`);
 
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
-      expect(gqlFile.content).toMatchInlineSnapshot(`
+
+      expect(gqlFile?.content).toMatchInlineSnapshot(`
         "import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
         import { FragmentDefinitionNode } from 'graphql';
         import { Incremental } from './graphql';
-
 
         export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
           infer TType,
@@ -823,31 +823,31 @@ export * from "./gql";`);
         "
       `);
 
-      expect(gqlFile.content).toBeSimilarStringTo(`
+      expect(gqlFile?.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentTypeDecoration<TType, any>,
         fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
       ): TType;
       `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
+      expect(gqlFile?.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentTypeDecoration<TType, any>,
         fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
       ): TType | null | undefined;
       `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
+      expect(gqlFile?.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentTypeDecoration<TType, any>,
         fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
       ): ReadonlyArray<TType>;
       `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
+      expect(gqlFile?.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentTypeDecoration<TType, any>,
         fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
       ): ReadonlyArray<TType> | null | undefined;
       `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
+      expect(gqlFile?.content).toBeSimilarStringTo(`
       export function iLikeTurtles<TType>(
         _documentNode: DocumentTypeDecoration<TType, any>,
         fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
@@ -960,12 +960,12 @@ export * from "./gql";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+    expect(indexFile?.content).toEqual(`export * from "./fragment-masking.js";
 export * from "./gql.js";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql.js';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -1169,12 +1169,12 @@ export * from "./gql.js";`);
       expect(result).toHaveLength(4);
       // index.ts (re-exports)
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+      expect(indexFile?.content).toEqual(`export * from "./fragment-masking.js";
 export * from "./gql.js";`);
 
       // gql.ts
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toMatchInlineSnapshot(`
+      expect(gqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import * as types from './graphql.js';
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -1244,7 +1244,7 @@ export * from "./gql.js";`);
       emitLegacyCommonJSImports: false,
     });
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
@@ -1314,7 +1314,7 @@ export * from "./gql.js";`);
 
       const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "b61b879c1eb0040bce65d70c8adfb1ae9360f52f": "query A { a }",
           "c3ea9f3f937d47d72c70055ea55c7cf88a35e608": "query B { b }"
@@ -1322,7 +1322,7 @@ export * from "./gql.js";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
@@ -1395,7 +1395,7 @@ export * from "./gql.js";`);
 
       const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "b61b879c1eb0040bce65d70c8adfb1ae9360f52f": "query A { a }",
           "c3ea9f3f937d47d72c70055ea55c7cf88a35e608": "query B { b }"
@@ -1403,7 +1403,7 @@ export * from "./gql.js";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
@@ -1476,7 +1476,7 @@ export * from "./gql.js";`);
 
       const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "b61b879c1eb0040bce65d70c8adfb1ae9360f52f": "query A { a }",
           "c3ea9f3f937d47d72c70055ea55c7cf88a35e608": "query B { b }"
@@ -1484,7 +1484,7 @@ export * from "./gql.js";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
@@ -1567,7 +1567,7 @@ export * from "./gql.js";`);
         emitLegacyCommonJSImports: false,
       });
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
@@ -1738,7 +1738,7 @@ export * from "./gql.js";`);
       },
     });
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
@@ -2267,7 +2267,7 @@ export * from "./gql.js";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
@@ -2381,7 +2381,7 @@ export * from "./gql.js";`);
       });
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toMatchInlineSnapshot(`
+      expect(gqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import * as types from './graphql';
 

@@ -2,13 +2,15 @@ import * as addPlugin from '@graphql-codegen/add';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
 import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
-import * as typescriptPlugin from '@graphql-codegen/typescript';
+// import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode } from 'graphql';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
+
+import * as typescriptASTPoweredPlugin from './typescript-ast-visitor';
 
 export { default as babelOptimizerPlugin } from './babel.js';
 
@@ -175,8 +177,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const pluginMap = {
       ...options.pluginMap,
       [`add`]: addPlugin,
-      [`typescript`]: typescriptPlugin,
+      // TODO: Remove this
       [`typescript-operations`]: typescriptOperationPlugin,
+      // END TODO -----------------
+      [`typescript-ast-client-preset-only`]: typescriptASTPoweredPlugin,
       [`typed-document-node`]: {
         ...typedDocumentNodePlugin,
         plugin: async (...args: Parameters<PluginFunction>) => {
@@ -206,19 +210,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
       return undefined;
     }
-
-    const plugins: Array<Types.ConfiguredPlugin> = [
-      { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
-      { [`typescript-operations`]: {} },
-      {
-        [`typed-document-node`]: {
-          unstable_onExecutableDocumentNode: onExecutableDocumentNode,
-          unstable_omitDefinitions: persistedDocuments?.omitDefinitions ?? false,
-        },
-      },
-      ...options.plugins,
-    ];
 
     const genDtsPlugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
@@ -253,7 +244,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         schema: options.schema,
         config: {
           useTypeImports: options.config.useTypeImports,
-          unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
+          unmaskFunctionName: fragmentMaskingConfig?.unmaskFunctionName,
           emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
@@ -292,7 +283,18 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     return [
       {
         filename: `${options.baseOutputDir}graphql.ts`,
-        plugins,
+        plugins: [
+          { [`add`]: { content: `/* eslint-disable */` } },
+          { [`typescript-ast-client-preset-only`]: {} },
+          { [`typescript-operations`]: {} },
+          {
+            [`typed-document-node`]: {
+              unstable_onExecutableDocumentNode: onExecutableDocumentNode,
+              unstable_omitDefinitions: persistedDocuments?.omitDefinitions ?? false,
+            },
+          },
+          ...options.plugins,
+        ],
         pluginMap,
         schema: options.schema,
         config: {
