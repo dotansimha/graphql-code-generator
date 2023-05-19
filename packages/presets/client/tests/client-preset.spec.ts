@@ -2423,5 +2423,94 @@ export * from "./gql.js";`);
         "
       `);
     });
+
+    it('correctly resolves nested fragments', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            scalar Date
+
+            type Query {
+              video(id: ID!): Video!
+            }
+
+            interface Video {
+              id: ID!
+              title: String!
+            }
+
+            type Movie implements Video {
+              id: ID!
+              title: String!
+              releaseDate: Date!
+              collection: Collection
+            }
+
+            type Collection {
+              id: ID!
+              title: String!
+            }
+
+            type Episode implements Video {
+              id: ID!
+              title: String!
+              show: Show!
+              releaseDate: Date!
+            }
+
+            type Show {
+              id: ID!
+              title: String!
+              releaseDate: Date!
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-nested-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toBeSimilarStringTo(`
+        export const VideoDocument = new TypedDocumentString(\`
+          query Video($id: ID!) {
+            video(id: $id) {
+              ...DetailsFragment
+              __typename
+            }
+          }
+          fragment EpisodeFragment on Episode {
+            id
+            title
+            show {
+              id
+              title
+            }
+            releaseDate
+            __typename
+          }
+          fragment MovieFragment on Movie {
+            id
+            title
+            collection {
+              id
+            }
+            releaseDate
+            __typename
+          }
+          fragment DetailsFragment on Video {
+            title
+            __typename
+            ...MovieFragment
+            ...EpisodeFragment
+          }\`) as unknown as TypedDocumentString<VideoQuery, VideoQueryVariables>;
+      `);
+    });
   });
 });
