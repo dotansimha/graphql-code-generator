@@ -102,8 +102,8 @@ export type IResolversParentTypes = {
 export type ResolversParentTypesI = {
   Query: {}
   A: AI
-  Boolean: Scalars['Boolean']
-  String: Scalars['String']
+  Boolean: Scalars['Boolean']['output']
+  String: Scalars['String']['output']
 };
 `
     );
