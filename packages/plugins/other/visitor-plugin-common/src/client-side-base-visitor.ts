@@ -358,6 +358,7 @@ export class ClientSideBaseVisitor<
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const includeNestedFragments =
       this.config.documentMode === DocumentMode.documentNode ||
+      this.config.documentMode === DocumentMode.string ||
       (this.config.dedupeFragments && node.kind === 'OperationDefinition');
     const fragmentNames = this._extractFragments(node, includeNestedFragments);
     const fragments = this._transformFragments(fragmentNames);
