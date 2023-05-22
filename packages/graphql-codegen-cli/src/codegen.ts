@@ -11,7 +11,6 @@ import {
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { AggregateError } from '@graphql-tools/utils';
 import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
 import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
