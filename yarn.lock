@@ -5784,6 +5784,16 @@ cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+cosmiconfig@^8.1.0, cosmiconfig@^8.1.3:
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-8.1.3.tgz#0e614a118fcc2d9e5afc2f87d53cd09931015689"
+  integrity sha512-/UkO2JKI18b5jVMJUp0lvKFMpa/Gye+ZgZjKD+DGEN9y7NRcf/nK1A0sp67ONmKtnDCNMS44E6jrk0Yc3bDuUw==
+  dependencies:
+    import-fresh "^3.2.1"
+    js-yaml "^4.1.0"
+    parse-json "^5.0.0"
+    path-type "^4.0.0"
+
 create-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
@@ -7935,7 +7945,7 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-graphql-config@^4.1.0, graphql-config@^4.5.0:
+graphql-config@^4.1.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-4.5.0.tgz#257c2338950b8dce295a27f75c5f6c39f8f777b2"
   integrity sha512-x6D0/cftpLUJ0Ch1e5sj1TZn6Wcxx4oMfmhaG9shM0DKajA9iR+j1z86GSTQ19fShbGvrSSvbIQsHku6aQ6BBw==
@@ -7950,6 +7960,23 @@ graphql-config@^4.1.0, graphql-config@^4.5.0:
     jiti "1.17.1"
     minimatch "4.2.3"
     string-env-interpolation "1.0.1"
+    tslib "^2.4.0"
+
+graphql-config@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-5.0.0.tgz#3cf3bc3c5360af7479db853fb586b65dc31368dc"
+  integrity sha512-eufDhNGdxhzyIHUnJTVuHn5/4d6iCC64J1q4sNrUQqokQpQO+ZeRogGqg7UF978HmQCfi0U42l3d7CKOmuwB8Q==
+  dependencies:
+    "@graphql-tools/graphql-file-loader" "^8.0.0"
+    "@graphql-tools/json-file-loader" "^8.0.0"
+    "@graphql-tools/load" "^8.0.0"
+    "@graphql-tools/merge" "^9.0.0"
+    "@graphql-tools/url-loader" "^8.0.0"
+    "@graphql-tools/utils" "^10.0.0"
+    cosmiconfig "^8.1.0"
+    jiti "^1.18.2"
+    minimatch "^4.2.3"
+    string-env-interpolation "^1.0.1"
     tslib "^2.4.0"
 
 graphql-helix@1.13.0:
@@ -9295,10 +9322,15 @@ jest@28.1.3:
     import-local "^3.0.2"
     jest-cli "^28.1.3"
 
-jiti@1.17.1, jiti@^1.17.1:
+jiti@1.17.1:
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.17.1.tgz#264daa43ee89a03e8be28c3d712ccc4eb9f1e8ed"
   integrity sha512-NZIITw8uZQFuzQimqjUxIrIcEdxYDFIe/0xYfIlVXTkiBjjyBEvgasj5bb0/cHtPRD/NziPbT312sFrkI5ALpw==
+
+jiti@^1.17.1, jiti@^1.18.2:
+  version "1.18.2"
+  resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.18.2.tgz#80c3ef3d486ebf2450d9335122b32d121f2a83cd"
+  integrity sha512-QAdOptna2NYiSSpv0O/BwoHBSmz4YhpzJHyi+fnMRTXFjp7B8i/YG5Z8IfusxB1ufjcD2Sre1F3R+nX3fvy7gg==
 
 joi@^17.7.0:
   version "17.7.1"
@@ -10640,7 +10672,7 @@ minimatch@3.1.2, minimatch@^3.0.4, minimatch@^3.0.5, minimatch@^3.1.2:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimatch@4.2.3:
+minimatch@4.2.3, minimatch@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-4.2.3.tgz#b4dcece1d674dee104bb0fb833ebb85a78cbbca6"
   integrity sha512-lIUdtK5hdofgCTu3aT0sOaHsYR37viUuIc0rwnnDXImbwFRcumyLMeZaM0t0I/fgxS6s6JMfu0rLD1Wz9pv1ng==
