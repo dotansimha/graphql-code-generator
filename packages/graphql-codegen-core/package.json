@@ -38,8 +38,8 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^4.1.0",
-    "@graphql-tools/schema": "^9.0.0",
-    "@graphql-tools/utils": "^9.1.1",
+    "@graphql-tools/schema": "^10.0.0",
+    "@graphql-tools/utils": "^10.0.0",
     "tslib": "~2.5.0"
   },
   "main": "dist/cjs/index.js",
