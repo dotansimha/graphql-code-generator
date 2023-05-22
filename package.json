@@ -1,6 +1,10 @@
 {
   "name": "graphql-code-generator",
   "private": true,
+  "engines": {
+    "node": ">= 16.0.0"
+  },
+  "packageManager": "yarn@1.22.19",
   "scripts": {
     "postinstall": "patch-package && husky install",
     "fix-bins": "node scripts/fix-bin.js",
