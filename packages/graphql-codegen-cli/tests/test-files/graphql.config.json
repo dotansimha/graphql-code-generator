@@ -1,0 +1,14 @@
+{
+  "schema": ["../test-documents/schema.graphql"],
+  "documents": ["../test-documents/empty.graphql"],
+  "extensions": {
+    "codegen": {
+      "ignoreNoDocuments": true,
+      "generates": {
+        "./gql/": {
+          "preset": "client"
+        }
+      }
+    }
+  }
+}

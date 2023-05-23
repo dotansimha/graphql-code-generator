@@ -1,4 +1,4 @@
-import { CodegenConfig } from '@graphql-codegen/cli';
+import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   hooks: { afterAllFileWrite: ['prettier --write'] },
@@ -55,7 +55,11 @@ const config: CodegenConfig = {
     },
     './dev-test/githunt/graphql-declared-modules.d.ts': {
       schema: './dev-test/githunt/schema.json',
-      documents: ['./dev-test/githunt/**/*.graphql', './dev-test-outer-dir/githunt/**/*.graphql'],
+      documents: [
+        './dev-test/githunt/**/*.graphql',
+        './dev-test-outer-dir/githunt/**/*.graphql',
+        '!**/nothing-should-use-this-query.graphql',
+      ],
       plugins: ['typescript-graphql-files-modules'],
     },
     './dev-test/githunt/typed-document-nodes.ts': {
@@ -119,6 +123,16 @@ const config: CodegenConfig = {
     './dev-test/star-wars/types.ts': {
       schema: './dev-test/star-wars/schema.json',
       documents: './dev-test/star-wars/**/*.graphql',
+      plugins: ['typescript', 'typescript-operations'],
+    },
+    './dev-test/star-wars/types.excludeQueryAlpha.ts': {
+      schema: './dev-test/star-wars/schema.json',
+      documents: ['./dev-test/star-wars/**/*.graphql', '!./dev-test/star-wars/**/ExcludeQueryAlpha.graphql'],
+      plugins: ['typescript', 'typescript-operations'],
+    },
+    './dev-test/star-wars/types.excludeQueryBeta.ts': {
+      schema: './dev-test/star-wars/schema.json',
+      documents: ['./dev-test/star-wars/**/*.graphql', '!./dev-test/star-wars/**/ExcludeQueryBeta.graphql'],
       plugins: ['typescript', 'typescript-operations'],
     },
     './dev-test/star-wars/types.preResolveTypes.ts': {
