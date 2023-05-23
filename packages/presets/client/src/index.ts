@@ -130,6 +130,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
+      flattenGeneratedTypes: options.config.flattenGeneratedTypes,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
