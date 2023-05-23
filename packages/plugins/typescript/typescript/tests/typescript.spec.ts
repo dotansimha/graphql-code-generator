@@ -3085,6 +3085,21 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should allow to disable typesSuffix for enums', async () => {
+      const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { typesSuffix: 'I', enumSuffix: false },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export enum E {`);
+      expect(result.content).toContain(`e?: Maybe<E>;`);
+
+      validateTs(result);
+    });
+
     it('Should enable typesPrefix for enums by default', async () => {
       const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
       const result = await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' });

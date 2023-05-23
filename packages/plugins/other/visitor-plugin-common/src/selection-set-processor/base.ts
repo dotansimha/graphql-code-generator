@@ -11,6 +11,7 @@ export type SelectionSetProcessorConfig = {
   namespacedImportName: string | null;
   convertName: ConvertNameFn<any>;
   enumPrefix: boolean | null;
+  enumSuffix: boolean | null;
   scalars: NormalizedScalarsMap;
   formatNamedField(
     name: string,

@@ -54,7 +54,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       if (isEnumType(baseType)) {
         typeToUse =
           (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
-          this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
+          this.config.convertName(baseType.name, {
+            useTypesPrefix: this.config.enumPrefix,
+            useTypesSuffix: this.config.enumSuffix,
+          });
       } else if (this.config.scalars[baseType.name]) {
         typeToUse = this.config.scalars[baseType.name].output;
       }
@@ -92,7 +95,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       if (isEnumType(baseType)) {
         typeToUse =
           (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
-          this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
+          this.config.convertName(baseType.name, {
+            useTypesPrefix: this.config.enumPrefix,
+            useTypesSuffix: this.config.enumSuffix,
+          });
       }
 
       const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type, undefined, unsetTypes);
