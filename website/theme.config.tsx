@@ -1,22 +1,26 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint sort-keys: error */
 import { useRouter } from 'next/router';
-import { defineConfig, Giscus, ChatBotSearch, useTheme } from '@theguild/components';
+import { defineConfig, Giscus, useTheme } from '@theguild/components';
+import { MendableSearchBar } from '@mendable/search';
 
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
   search: {
-    component: props => (
-      <ChatBotSearch
-        apiURL="/api/gpt-bot"
-        placeholder="How do I use plugins?"
-        title="Ask The Guild's AI Bot"
-        accentColor="var(--colors-accent)"
-        sampleQuestion={['How do I use custom scalars?', 'How do I set up codegen?', 'What is a plugin?']}
-        {...props}
-      />
-    ),
+    component: () => {
+      return (
+        <div className="hidden w-[300px] sm:block">
+          <MendableSearchBar
+            style={{ darkMode: false, accentColor: 'rgb(0, 76, 163)' }}
+            placeholder="How to setup codegen?"
+            dialogPlaceholder="What are you looking for?"
+            anon_key={process.env.NEXT_PUBLIC_MENDABLE_ANON_KEY!}
+          />
+        </div>
+      );
+    },
   },
+
   main({ children }) {
     const { resolvedTheme } = useTheme();
     const { route } = useRouter();
