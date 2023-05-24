@@ -10,21 +10,21 @@
     "test:end2end": "exit 0"
   },
   "dependencies": {
-    "@graphql-codegen/core": "3.1.0",
-    "@graphql-codegen/plugin-helpers": "4.2.0",
-    "@graphql-codegen/typed-document-node": "4.0.0",
-    "@graphql-codegen/typescript": "3.0.3",
-    "@graphql-codegen/typescript-operations": "3.0.3",
-    "@graphql-codegen/typescript-resolvers": "3.2.0",
-    "@graphql-tools/graphql-file-loader": "7.5.16",
-    "@graphql-tools/load": "7.8.13",
-    "@graphql-tools/schema": "9.0.17",
+    "@graphql-codegen/core": "4.0.0",
+    "@graphql-codegen/plugin-helpers": "5.0.0",
+    "@graphql-codegen/typed-document-node": "5.0.0",
+    "@graphql-codegen/typescript": "4.0.0",
+    "@graphql-codegen/typescript-operations": "4.0.0",
+    "@graphql-codegen/typescript-resolvers": "4.0.0",
+    "@graphql-tools/graphql-file-loader": "8.0.0",
+    "@graphql-tools/load": "8.0.0",
+    "@graphql-tools/schema": "10.0.0",
     "graphql": "16.6.0",
     "graphql-tag": "2.12.6",
-    "prettier": "2.8.7"
+    "prettier": "2.8.8"
   },
   "devDependencies": {
-    "@types/node": "18.15.11",
+    "@types/node": "18.16.13",
     "tsup": "6.7.0"
   }
 }

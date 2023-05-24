@@ -3,13 +3,15 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string | number; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
 };
 
 /** A character from the Star Wars universe */
@@ -21,22 +23,22 @@ export type Character = {
   /** The friends of the character exposed as a connection with edges */
   readonly friendsConnection: FriendsConnection;
   /** The ID of the character */
-  readonly id: Scalars['ID'];
+  readonly id: Scalars['ID']['output'];
   /** The name of the character */
-  readonly name: Scalars['String'];
+  readonly name: Scalars['String']['output'];
 };
 
 /** A character from the Star Wars universe */
 export type CharacterFriendsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['ID']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** The input object sent when passing a color */
 export type ColorInput = {
-  readonly blue: Scalars['Int'];
-  readonly green: Scalars['Int'];
-  readonly red: Scalars['Int'];
+  readonly blue: Scalars['Int']['input'];
+  readonly green: Scalars['Int']['input'];
+  readonly red: Scalars['Int']['input'];
 };
 
 /** An autonomous mechanical character in the Star Wars universe */
@@ -49,17 +51,17 @@ export type Droid = Character & {
   /** The friends of the droid exposed as a connection with edges */
   readonly friendsConnection: FriendsConnection;
   /** The ID of the droid */
-  readonly id: Scalars['ID'];
+  readonly id: Scalars['ID']['output'];
   /** What others call this droid */
-  readonly name: Scalars['String'];
+  readonly name: Scalars['String']['output'];
   /** This droid's primary function */
-  readonly primaryFunction?: Maybe<Scalars['String']>;
+  readonly primaryFunction?: Maybe<Scalars['String']['output']>;
 };
 
 /** An autonomous mechanical character in the Star Wars universe */
 export type DroidFriendsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['ID']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** The episodes in the Star Wars trilogy */
@@ -82,14 +84,14 @@ export type FriendsConnection = {
   /** Information for paginating this connection */
   readonly pageInfo: PageInfo;
   /** The total number of friends */
-  readonly totalCount?: Maybe<Scalars['Int']>;
+  readonly totalCount?: Maybe<Scalars['Int']['output']>;
 };
 
 /** An edge object for a character's friends */
 export type FriendsEdge = {
   readonly __typename?: 'FriendsEdge';
   /** A cursor used for pagination */
-  readonly cursor: Scalars['ID'];
+  readonly cursor: Scalars['ID']['output'];
   /** The character represented by this friendship edge */
   readonly node?: Maybe<Character>;
 };
@@ -104,23 +106,23 @@ export type Human = Character & {
   /** The friends of the human exposed as a connection with edges */
   readonly friendsConnection: FriendsConnection;
   /** Height in the preferred unit, default is meters */
-  readonly height?: Maybe<Scalars['Float']>;
+  readonly height?: Maybe<Scalars['Float']['output']>;
   /** The home planet of the human, or null if unknown */
-  readonly homePlanet?: Maybe<Scalars['String']>;
+  readonly homePlanet?: Maybe<Scalars['String']['output']>;
   /** The ID of the human */
-  readonly id: Scalars['ID'];
+  readonly id: Scalars['ID']['output'];
   /** Mass in kilograms, or null if unknown */
-  readonly mass?: Maybe<Scalars['Float']>;
+  readonly mass?: Maybe<Scalars['Float']['output']>;
   /** What this human calls themselves */
-  readonly name: Scalars['String'];
+  readonly name: Scalars['String']['output'];
   /** A list of starships this person has piloted, or an empty list if none */
   readonly starships?: Maybe<ReadonlyArray<Maybe<Starship>>>;
 };
 
 /** A humanoid creature from the Star Wars universe */
 export type HumanFriendsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['ID']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A humanoid creature from the Star Wars universe */
@@ -151,9 +153,9 @@ export type MutationCreateReviewArgs = {
 /** Information for paginating this connection */
 export type PageInfo = {
   readonly __typename?: 'PageInfo';
-  readonly endCursor?: Maybe<Scalars['ID']>;
-  readonly hasNextPage: Scalars['Boolean'];
-  readonly startCursor?: Maybe<Scalars['ID']>;
+  readonly endCursor?: Maybe<Scalars['ID']['output']>;
+  readonly hasNextPage: Scalars['Boolean']['output'];
+  readonly startCursor?: Maybe<Scalars['ID']['output']>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
@@ -170,12 +172,12 @@ export type Query = {
 
 /** The query type, represents all of the entry points into our object graph */
 export type QueryCharacterArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 /** The query type, represents all of the entry points into our object graph */
 export type QueryDroidArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 /** The query type, represents all of the entry points into our object graph */
@@ -185,7 +187,7 @@ export type QueryHeroArgs = {
 
 /** The query type, represents all of the entry points into our object graph */
 export type QueryHumanArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 /** The query type, represents all of the entry points into our object graph */
@@ -195,31 +197,31 @@ export type QueryReviewsArgs = {
 
 /** The query type, represents all of the entry points into our object graph */
 export type QuerySearchArgs = {
-  text?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The query type, represents all of the entry points into our object graph */
 export type QueryStarshipArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 /** Represents a review for a movie */
 export type Review = {
   readonly __typename?: 'Review';
   /** Comment about the movie */
-  readonly commentary?: Maybe<Scalars['String']>;
+  readonly commentary?: Maybe<Scalars['String']['output']>;
   /** The number of stars this review gave, 1-5 */
-  readonly stars: Scalars['Int'];
+  readonly stars: Scalars['Int']['output'];
 };
 
 /** The input object sent when someone is creating a new review */
 export type ReviewInput = {
   /** Comment about the movie, optional */
-  readonly commentary?: InputMaybe<Scalars['String']>;
+  readonly commentary?: InputMaybe<Scalars['String']['input']>;
   /** Favorite color, optional */
   readonly favoriteColor?: InputMaybe<ColorInput>;
   /** 0-5 stars */
-  readonly stars: Scalars['Int'];
+  readonly stars: Scalars['Int']['input'];
 };
 
 export type SearchResult = Droid | Human | Starship;
@@ -227,11 +229,11 @@ export type SearchResult = Droid | Human | Starship;
 export type Starship = {
   readonly __typename?: 'Starship';
   /** The ID of the starship */
-  readonly id: Scalars['ID'];
+  readonly id: Scalars['ID']['output'];
   /** Length of the starship, along the longest axis */
-  readonly length?: Maybe<Scalars['Float']>;
+  readonly length?: Maybe<Scalars['Float']['output']>;
   /** The name of the starship */
-  readonly name: Scalars['String'];
+  readonly name: Scalars['String']['output'];
 };
 
 export type StarshipLengthArgs = {
@@ -250,6 +252,30 @@ export type CreateReviewForEpisodeMutation = {
     readonly stars: number;
     readonly commentary?: string | null;
   } | null;
+};
+
+export type ExcludeQueryAlphaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryAlphaQuery = {
+  readonly __typename?: 'Query';
+  readonly hero?:
+    | { readonly __typename?: 'Droid'; readonly name: string }
+    | { readonly __typename?: 'Human'; readonly name: string }
+    | null;
+};
+
+export type ExcludeQueryBetaQueryVariables = Exact<{
+  episode?: InputMaybe<Episode>;
+}>;
+
+export type ExcludeQueryBetaQuery = {
+  readonly __typename?: 'Query';
+  readonly hero?:
+    | { readonly __typename?: 'Droid'; readonly name: string }
+    | { readonly __typename?: 'Human'; readonly name: string }
+    | null;
 };
 
 export type HeroAndFriendsNamesQueryVariables = Exact<{
@@ -342,7 +368,7 @@ export type HeroNameQuery = {
 
 export type HeroNameConditionalInclusionQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
-  includeName: Scalars['Boolean'];
+  includeName: Scalars['Boolean']['input'];
 }>;
 
 export type HeroNameConditionalInclusionQuery = {
@@ -355,7 +381,7 @@ export type HeroNameConditionalInclusionQuery = {
 
 export type HeroNameConditionalExclusionQueryVariables = Exact<{
   episode?: InputMaybe<Episode>;
-  skipName: Scalars['Boolean'];
+  skipName: Scalars['Boolean']['input'];
 }>;
 
 export type HeroNameConditionalExclusionQuery = {

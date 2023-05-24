@@ -1,5 +1,48 @@
 # @graphql-codegen/cli
 
+## 4.0.0
+
+### Major Changes
+
+- [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Require Node.js `>= 16`. Drop support for Node.js 14
+
+### Patch Changes
+
+- [#9449](https://github.com/dotansimha/graphql-code-generator/pull/9449) [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@^5.0.0` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.0.0) (from `^4.5.0`, in `dependencies`)
+
+- [#9449](https://github.com/dotansimha/graphql-code-generator/pull/9449) [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/apollo-engine-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/apollo-engine-loader/v/8.0.0) (from `^7.3.6`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/code-file-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/code-file-loader/v/8.0.0) (from `^7.3.17`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/git-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/git-loader/v/8.0.0) (from `^7.2.13`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/github-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/github-loader/v/8.0.0) (from `^7.3.28`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/graphql-file-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/graphql-file-loader/v/8.0.0) (from `^7.5.0`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/json-file-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/json-file-loader/v/8.0.0) (from `^7.4.1`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/load@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/load/v/8.0.0) (from `^7.8.0`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/prisma-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/prisma-loader/v/8.0.0) (from `^7.2.69`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/url-loader@^8.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/8.0.0) (from `^7.17.17`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/utils@^10.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.0.0) (from `^9.0.0`, in `dependencies`)
+  - Updated dependency [`cosmiconfig@^8.1.3` ↗︎](https://www.npmjs.com/package/cosmiconfig/v/8.1.3) (from `^7.0.0`, in `dependencies`)
+  - Updated dependency [`graphql-config@^5.0.1` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.0.1) (from `^4.5.0`, in `dependencies`)
+
+- [#9371](https://github.com/dotansimha/graphql-code-generator/pull/9371) [`d431f426e`](https://github.com/dotansimha/graphql-code-generator/commit/d431f426eb594b820ac712b9f5c616f4badf6bff) Thanks [@Axxxx0n](https://github.com/Axxxx0n)! - Fixed option ignoreNoDocuments when using graphql configs
+
+- [#9275](https://github.com/dotansimha/graphql-code-generator/pull/9275) [`2a5da5894`](https://github.com/dotansimha/graphql-code-generator/commit/2a5da589468eb5970587187adae9892ff1f13134) Thanks [@milesrichardson](https://github.com/milesrichardson)! - Trigger rebuilds in watch mode while respecting rules of precedence and negation, both in terms of global (top-level) config vs. local (per-output target) config, and in terms of watch patterns (higher priority) vs. documents/schemas (lower priority). This fixes an issue with overly-aggressive rebuilds during watch mode.
+
+- Updated dependencies [[`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`f46803a8c`](https://github.com/dotansimha/graphql-code-generator/commit/f46803a8c70840280529a52acbb111c865712af2), [`63827fabe`](https://github.com/dotansimha/graphql-code-generator/commit/63827fabede76b2380d40392aba2a3ccb099f0c4), [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0)]:
+  - @graphql-codegen/core@4.0.0
+  - @graphql-codegen/plugin-helpers@5.0.0
+
+## 3.3.1
+
+### Patch Changes
+
+- [#9267](https://github.com/dotansimha/graphql-code-generator/pull/9267) [`183749346`](https://github.com/dotansimha/graphql-code-generator/commit/1837493464e0b661520deb38c1e5cbd5ed46f978) Thanks [@milesrichardson](https://github.com/milesrichardson)! - Fix watch mode to listen to longest common directory prefix of relevant files, rather than only files below the current working directory (fixes #9266).
+
+- [#9280](https://github.com/dotansimha/graphql-code-generator/pull/9280) [`ca1d72c40`](https://github.com/dotansimha/graphql-code-generator/commit/ca1d72c408a5f45ecdb17d556e1a3f7d6811cdf4) Thanks [@saihaj](https://github.com/saihaj)! - fix the default output directory for init command
+
 ## 3.3.0
 
 ### Minor Changes

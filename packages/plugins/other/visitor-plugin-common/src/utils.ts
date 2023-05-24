@@ -21,11 +21,12 @@ import {
   SelectionSetNode,
   StringValueNode,
   TypeNode,
+  DirectiveNode,
 } from 'graphql';
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -283,8 +284,25 @@ export function buildScalars(
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
+  function normalizeScalarType(type: string | { input: string; output: string }): { input: string; output: string } {
+    if (typeof type === 'string') {
+      return {
+        input: type,
+        output: type,
+      };
+    }
+
+    return {
+      input: type.input,
+      output: type.output,
+    };
+  }
+
   for (const name of Object.keys(defaultScalarsMapping)) {
-    result[name] = parseMapper(defaultScalarsMapping[name]);
+    result[name] = {
+      input: parseMapper(defaultScalarsMapping[name].input),
+      output: parseMapper(defaultScalarsMapping[name].output),
+    };
   }
 
   if (schema) {
@@ -296,28 +314,70 @@ export function buildScalars(
       .map((scalarType: GraphQLScalarType) => {
         const { name } = scalarType;
         if (typeof scalarsMapping === 'string') {
-          const value = parseMapper(scalarsMapping + '#' + name, name);
-          result[name] = value;
-        } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
-          const value = parseMapper(scalarsMapping[name], name);
-          result[name] = value;
-        } else if (scalarsMapping?.[name]) {
+          const inputMapper = parseMapper(scalarsMapping + '#' + name, name);
+
+          if (inputMapper.isExternal) {
+            inputMapper.type += "['input']";
+          }
+
+          const outputMapper = parseMapper(scalarsMapping + '#' + name, name);
+          if (outputMapper.isExternal) {
+            outputMapper.type += "['output']";
+          }
+
           result[name] = {
-            isExternal: false,
-            type: JSON.stringify(scalarsMapping[name]),
+            input: inputMapper,
+            output: outputMapper,
           };
+        } else if (scalarsMapping?.[name]) {
+          const mappedScalar = scalarsMapping[name];
+          if (typeof mappedScalar === 'string') {
+            const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
+            result[name] = {
+              input: parseMapper(normalizedScalar.input, name),
+              output: parseMapper(normalizedScalar.output, name),
+            };
+          } else if (typeof mappedScalar === 'object' && mappedScalar.input && mappedScalar.output) {
+            result[name] = {
+              input: parseMapper(mappedScalar.input, name),
+              output: parseMapper(mappedScalar.output, name),
+            };
+          } else {
+            result[name] = {
+              input: {
+                isExternal: false,
+                type: JSON.stringify(mappedScalar),
+              },
+              output: {
+                isExternal: false,
+                type: JSON.stringify(mappedScalar),
+              },
+            };
+          }
         } else if (scalarType.extensions?.codegenScalarType) {
           result[name] = {
-            isExternal: false,
-            type: scalarType.extensions.codegenScalarType as string,
+            input: {
+              isExternal: false,
+              type: scalarType.extensions.codegenScalarType as string,
+            },
+            output: {
+              isExternal: false,
+              type: scalarType.extensions.codegenScalarType as string,
+            },
           };
         } else if (!defaultScalarsMapping[name]) {
           if (defaultScalarType === null) {
             throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
           }
           result[name] = {
-            isExternal: false,
-            type: defaultScalarType,
+            input: {
+              isExternal: false,
+              type: defaultScalarType,
+            },
+            output: {
+              isExternal: false,
+              type: defaultScalarType,
+            },
           };
         }
       });
@@ -327,12 +387,22 @@ export function buildScalars(
     }
     for (const name of Object.keys(scalarsMapping)) {
       if (typeof scalarsMapping[name] === 'string') {
-        const value = parseMapper(scalarsMapping[name], name);
-        result[name] = value;
-      } else {
+        const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
         result[name] = {
-          isExternal: false,
-          type: JSON.stringify(scalarsMapping[name]),
+          input: parseMapper(normalizedScalar.input, name),
+          output: parseMapper(normalizedScalar.output, name),
+        };
+      } else {
+        const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
+        result[name] = {
+          input: {
+            isExternal: false,
+            type: JSON.stringify(normalizedScalar.input),
+          },
+          output: {
+            isExternal: false,
+            type: JSON.stringify(normalizedScalar.output),
+          },
         };
       }
     }
@@ -408,7 +478,7 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
 };
 
 export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
-  fields: FieldNode[];
+  fields: (FieldNode & FragmentDirectives)[];
   spreads: FragmentSpreadNode[];
   inlines: InlineFragmentNode[];
 } {
@@ -436,6 +506,11 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
 export function hasConditionalDirectives(field: FieldNode): boolean {
   const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
   return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
+}
+
+export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {
+  const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
+  return directives?.some(directive => INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {

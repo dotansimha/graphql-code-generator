@@ -533,7 +533,7 @@
         "anchor": "custom-schema-loader"
       }
     ],
-    "content": "2741d5131dc2271008489e0448732efe",
+    "content": "e915dbb1de2cd152d6847b91fdb643c0",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/config-reference/schema-field",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
@@ -907,7 +907,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "7b8da3457823d1a7eaf18f8c7ad407aa",
+    "content": "e031466d35030d94eec5fc12cbb61246",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/installation",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
@@ -2020,6 +2020,11 @@
               },
               {
                 "children": [],
+                "title": "Fragment Masking with @defer directive",
+                "anchor": "fragment-masking-with-defer-directive"
+              },
+              {
+                "children": [],
                 "title": "Fragment Masking and testing",
                 "anchor": "fragment-masking-and-testing"
               },
@@ -2602,7 +2607,7 @@
       "typescript"
     ],
     "source": "Code Generator",
-    "title": "typescript-nhost",
+    "title": "nhost",
     "type": "Documentation"
   },
   {

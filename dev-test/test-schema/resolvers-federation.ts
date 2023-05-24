@@ -4,32 +4,34 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  _FieldSet: any;
+  ID: { input: string | number; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  _FieldSet: { input: any; output: any };
 };
 
 export type Address = {
   __typename?: 'Address';
-  city?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']['output']>;
   lines: Lines;
-  state?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']['output']>;
 };
 
 export type Book = {
   __typename?: 'Book';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type Lines = {
   __typename?: 'Lines';
-  line1: Scalars['String'];
-  line2?: Maybe<Scalars['String']>;
+  line1: Scalars['String']['output'];
+  line2?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
@@ -40,9 +42,9 @@ export type Query = {
 export type User = {
   __typename?: 'User';
   address?: Maybe<Address>;
-  email: Scalars['String'];
-  id: Scalars['Int'];
-  name: Scalars['String'];
+  email: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -129,27 +131,27 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Address: ResolverTypeWrapper<Address>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   Book: ResolverTypeWrapper<Book>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Lines: ResolverTypeWrapper<Lines>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Address: Address;
-  String: Scalars['String'];
+  String: Scalars['String']['output'];
   Book: Book;
-  ID: Scalars['ID'];
+  ID: Scalars['ID']['output'];
   Lines: Lines;
   Query: {};
   User: User;
-  Int: Scalars['Int'];
-  Boolean: Scalars['Boolean'];
+  Int: Scalars['Int']['output'];
+  Boolean: Scalars['Boolean']['output'];
 };
 
 export type AddressResolvers<

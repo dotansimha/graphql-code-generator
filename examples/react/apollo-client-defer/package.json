@@ -1,0 +1,36 @@
+{
+  "name": "example-react-apollo-client-defer",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.7.10",
+    "@graphql-yoga/plugin-defer-stream": "^1.7.3",
+    "graphql": "^16.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "graphql-yoga": "3.9.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^4.0.0",
+    "@graphql-codegen/client-preset": "^4.0.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "cypress": "12.12.0",
+    "serve": "14.2.0",
+    "start-server-and-test": "2.0.0",
+    "typescript": "4.9.5",
+    "vite": "^4.1.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start:yoga": "node src/yoga.mjs",
+    "start": "yarn start:yoga & serve -s dist",
+    "test": "cypress run",
+    "test:end2end": "start-server-and-test start http://localhost:3000 test",
+    "codegen": "graphql-codegen --config codegen.ts"
+  }
+}

@@ -49,6 +49,8 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
 export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
 export const MAKE_OPTIONAL_SIGNATURE = `type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };`;
 export const MAKE_MAYBE_SIGNATURE = `type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };`;
+export const MAKE_EMPTY_SIGNATURE = `type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };`;
+export const MAKE_INCREMENTAL_SIGNATURE = `type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };`;
 
 export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
@@ -91,6 +93,7 @@ export class TsVisitor<
         null,
         enumNames,
         pluginConfig.enumPrefix,
+        pluginConfig.enumSuffix,
         this.config.enumValues,
         false,
         this.config.directiveArgumentAndInputFieldMappings,
@@ -103,7 +106,7 @@ export class TsVisitor<
     });
   }
 
-  protected _getTypeForNode(node: NamedTypeNode): string {
+  protected _getTypeForNode(node: NamedTypeNode, isVisitingInputType: boolean): string {
     const typeAsString = node.name as any as string;
 
     if (this.config.useImplementingTypes) {
@@ -126,7 +129,7 @@ export class TsVisitor<
       }
     }
 
-    const typeString = super._getTypeForNode(node);
+    const typeString = super._getTypeForNode(node, isVisitingInputType);
     const schemaType = this._schema.getType(node.name as any as string);
 
     if (isEnumType(schemaType)) {
@@ -159,6 +162,8 @@ export class TsVisitor<
       this.getExactDefinition(),
       this.getMakeOptionalDefinition(),
       this.getMakeMaybeDefinition(),
+      this.getMakeEmptyDefinition(),
+      this.getIncrementalDefinition(),
     ];
 
     if (this.config.wrapFieldDefinitions) {
@@ -185,6 +190,14 @@ export class TsVisitor<
     if (this.config.onlyEnums) return '';
 
     return `${this.getExportPrefix()}${MAKE_MAYBE_SIGNATURE}`;
+  }
+
+  public getMakeEmptyDefinition(): string {
+    return `${this.getExportPrefix()}${MAKE_EMPTY_SIGNATURE}`;
+  }
+
+  public getIncrementalDefinition(): string {
+    return `${this.getExportPrefix()}${MAKE_INCREMENTAL_SIGNATURE}`;
   }
 
   public getMaybeValue(): string {
@@ -240,7 +253,7 @@ export class TsVisitor<
     }
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t)))
       .concat(...withFutureAddedValue)
       .join(' | ');
 
@@ -361,6 +374,7 @@ export class TsVisitor<
 
     const enumTypeName = this.convertName(node, {
       useTypesPrefix: this.config.enumPrefix,
+      useTypesSuffix: this.config.enumSuffix,
     });
 
     if (this.config.enumsAsTypes) {
