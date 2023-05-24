@@ -20,7 +20,7 @@ Please avoid installing `graphql`, `@graphql-codegen/cli`, and its plugins as gl
 ## Monorepo Project
 
 <Callout type="warning">
-If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and files. This might break and fail in case of hoisting.
+If you are using Monorepo setup (Lerna/pNPM Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and files. This might break and fail in case of hoisting.
 
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
 

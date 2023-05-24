@@ -6,7 +6,7 @@ This example showcases how to use GraphQL Code Generator for building a type-saf
 
 ```
 # generate code
-yarn codegen
+pnpm codegen
 # run the server
-yarn dev
+pnpm dev
 ```

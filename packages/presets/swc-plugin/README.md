@@ -7,7 +7,7 @@ This plugin works for [SWC](https://swc.rs) only.
 ### Installation
 
 ```bash
-yarn add -D @graphql-codegen/client-preset-swc-plugin
+pnpm add -D @graphql-codegen/client-preset-swc-plugin
 ```
 
 ### Usage
