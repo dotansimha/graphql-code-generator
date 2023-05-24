@@ -1,5 +1,83 @@
 # @graphql-codegen/typed-document-node
 
+## 5.0.0
+
+### Major Changes
+
+- [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Require Node.js `>= 16`. Drop support for Node.js 14
+
+### Minor Changes
+
+- [#9196](https://github.com/dotansimha/graphql-code-generator/pull/9196) [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96) Thanks [@beerose](https://github.com/beerose)! - Add `@defer` directive support
+
+  When a query includes a deferred fragment field, the server will return a partial response with the non-deferred fields first, followed by the remaining fields once they have been resolved.
+
+  Once start using the `@defer` directive in your queries, the generated code will automatically include support for the directive.
+
+  ```jsx
+  // src/index.tsx
+  import { graphql } from './gql';
+  const OrdersFragment = graphql(`
+    fragment OrdersFragment on User {
+      orders {
+        id
+        total
+      }
+    }
+  `);
+  const GetUserQuery = graphql(`
+    query GetUser($id: ID!) {
+      user(id: $id) {
+        id
+        name
+        ...OrdersFragment @defer
+      }
+    }
+  `);
+  ```
+
+  The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
+
+  ```tsx
+  // gql/graphql.ts
+  export type GetUserQuery = { __typename?: 'Query'; id: string; name: string } & ({
+    __typename?: 'Query';
+  } & {
+    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> };
+  });
+  ```
+
+  Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred
+  fragment is available:
+
+  ```jsx
+  const OrdersList = (props: { data: FragmentType<typeof OrdersFragment> }) => {
+    const data = useFragment(OrdersFragment, props.data);
+    return (
+      // render orders list
+    )
+  };
+
+  function App() {
+    const { data } = useQuery(GetUserQuery);
+    return (
+      {data && (
+        <>
+          {isFragmentReady(GetUserQuery, OrdersFragment, data)
+  					&& <OrdersList data={data} />}
+        </>
+      )}
+    );
+  }
+  export default App;
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`f46803a8c`](https://github.com/dotansimha/graphql-code-generator/commit/f46803a8c70840280529a52acbb111c865712af2), [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96), [`ba84a3a27`](https://github.com/dotansimha/graphql-code-generator/commit/ba84a3a2758d94dac27fcfbb1bafdf3ed7c32929), [`63827fabe`](https://github.com/dotansimha/graphql-code-generator/commit/63827fabede76b2380d40392aba2a3ccb099f0c4), [`50471e651`](https://github.com/dotansimha/graphql-code-generator/commit/50471e6514557db827cd26157262401c6c600a8c), [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c), [`ca02ad172`](https://github.com/dotansimha/graphql-code-generator/commit/ca02ad172a0e8f52570fdef4271ec286d883236d), [`e1dc75f3c`](https://github.com/dotansimha/graphql-code-generator/commit/e1dc75f3c598bf7f83138ca533619716fc73f823), [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0), [`5950f5a68`](https://github.com/dotansimha/graphql-code-generator/commit/5950f5a6843cdd92b9d5b8ced3a97b68eadf9f30), [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c)]:
+  - @graphql-codegen/plugin-helpers@5.0.0
+  - @graphql-codegen/visitor-plugin-common@4.0.0
+
 ## 4.0.1
 
 ### Patch Changes
