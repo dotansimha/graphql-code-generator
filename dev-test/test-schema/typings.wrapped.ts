@@ -8,11 +8,11 @@ declare namespace GraphQL {
   export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
   /** All built-in and custom scalars, mapped to their actual values */
   export type Scalars = {
-    ID: string;
-    String: string;
-    Boolean: boolean;
-    Int: number;
-    Float: number;
+    ID: { input: string | number; output: string };
+    String: { input: string; output: string };
+    Boolean: { input: boolean; output: boolean };
+    Int: { input: number; output: number };
+    Float: { input: number; output: number };
   };
 
   export type Query = {
@@ -22,13 +22,13 @@ declare namespace GraphQL {
   };
 
   export type QueryUserByIdArgs = {
-    id: Scalars['Int'];
+    id: Scalars['Int']['input'];
   };
 
   export type User = {
     __typename?: 'User';
-    email: Scalars['String'];
-    id: Scalars['Int'];
-    name: Scalars['String'];
+    email: Scalars['String']['output'];
+    id: Scalars['Int']['output'];
+    name: Scalars['String']['output'];
   };
 }

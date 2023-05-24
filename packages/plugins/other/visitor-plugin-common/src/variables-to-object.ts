@@ -24,6 +24,7 @@ export class OperationVariablesToObject {
     protected _namespacedImportName: string | null = null,
     protected _enumNames: string[] = [],
     protected _enumPrefix = true,
+    protected _enumSuffix = true,
     protected _enumValues: ParsedEnumValuesMap = {},
     protected _applyCoercion: Boolean = false,
     protected _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {}
@@ -60,7 +61,7 @@ export class OperationVariablesToObject {
   protected getScalar(name: string): string {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
 
-    return `${prefix}Scalars['${name}']`;
+    return `${prefix}Scalars['${name}']['input']`;
   }
 
   protected getDirectiveMapping(name: string): string {
@@ -104,6 +105,7 @@ export class OperationVariablesToObject {
       } else {
         typeValue = `${prefix}${this._convertName(baseType, {
           useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,
+          useTypesSuffix: this._enumNames.includes(typeName) ? this._enumSuffix : true,
         })}`;
       }
     }

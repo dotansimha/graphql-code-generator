@@ -347,18 +347,18 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename?: 'Query';
-        a?: Maybe<Scalars['String']>;
-        b?: Maybe<Scalars['String']>;
-        c?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -477,18 +477,18 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename: 'Query';
-        a?: Maybe<Scalars['String']>;
-        b?: Maybe<Scalars['String']>;
-        c?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -590,16 +590,16 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename?: 'Query';
-        a?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1256,18 +1256,18 @@ export * from "./gql.js";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename?: 'Query';
-        a?: Maybe<Scalars['String']>;
-        b?: Maybe<Scalars['String']>;
-        c?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
       };
 
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1334,18 +1334,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1415,18 +1415,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1496,18 +1496,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1579,18 +1579,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1658,18 +1658,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1750,17 +1750,17 @@ export * from "./gql.js";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type A = {
         __typename?: 'A';
         a: A;
-        b: Scalars['String'];
+        b: Scalars['String']['output'];
       };
 
       export type Query = {
@@ -1829,17 +1829,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          id?: Maybe<Scalars['String']>;
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -1914,17 +1914,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          id?: Maybe<Scalars['String']>;
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -1999,17 +1999,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          id?: Maybe<Scalars['String']>;
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -2140,17 +2140,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          id?: Maybe<Scalars['String']>;
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -2279,16 +2279,16 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          value?: Maybe<Scalars['String']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -2421,6 +2421,95 @@ export * from "./gql.js";`);
           return (documents as any)[source] ?? {};
         }
         "
+      `);
+    });
+
+    it('correctly resolves nested fragments', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            scalar Date
+
+            type Query {
+              video(id: ID!): Video!
+            }
+
+            interface Video {
+              id: ID!
+              title: String!
+            }
+
+            type Movie implements Video {
+              id: ID!
+              title: String!
+              releaseDate: Date!
+              collection: Collection
+            }
+
+            type Collection {
+              id: ID!
+              title: String!
+            }
+
+            type Episode implements Video {
+              id: ID!
+              title: String!
+              show: Show!
+              releaseDate: Date!
+            }
+
+            type Show {
+              id: ID!
+              title: String!
+              releaseDate: Date!
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-nested-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toBeSimilarStringTo(`
+        export const VideoDocument = new TypedDocumentString(\`
+          query Video($id: ID!) {
+            video(id: $id) {
+              ...DetailsFragment
+              __typename
+            }
+          }
+          fragment EpisodeFragment on Episode {
+            id
+            title
+            show {
+              id
+              title
+            }
+            releaseDate
+            __typename
+          }
+          fragment MovieFragment on Movie {
+            id
+            title
+            collection {
+              id
+            }
+            releaseDate
+            __typename
+          }
+          fragment DetailsFragment on Video {
+            title
+            __typename
+            ...MovieFragment
+            ...EpisodeFragment
+          }\`) as unknown as TypedDocumentString<VideoQuery, VideoQueryVariables>;
       `);
     });
   });

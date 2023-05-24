@@ -23,8 +23,8 @@ describe('BaseResolversVisitor.createResolversFields', () => {
      * export type ResolversParentTypes = {
      *   Query: {}
      *   A: Omit<A, 'b'> & { b?: Maybe<ResolversParentTypes['B']> }
-     *   Boolean: Scalars['Boolean']
-     *   String: Scalars['String']
+     *   Boolean: Scalars['Boolean']['output']
+     *   String: Scalars['String']['output']
      * };
      */
     const visitor = new BaseResolversVisitor(
@@ -42,8 +42,8 @@ describe('BaseResolversVisitor.createResolversFields', () => {
 export type ResolversParentTypes = {
   Query: {}
   A: A
-  Boolean: Scalars['Boolean']
-  String: Scalars['String']
+  Boolean: Scalars['Boolean']['output']
+  String: Scalars['String']['output']
 };
 `
     );
@@ -56,8 +56,8 @@ export type ResolversParentTypes = {
      * export type ResolversParentTypes = {
      *   Query: {}
      *   A: Omit<A, 'b'> & { b?: Maybe<ResolversParentTypes['B']> }
-     *   Boolean: Scalars['Boolean']
-     *   String: Scalars['String']
+     *   Boolean: Scalars['Boolean']['output']
+     *   String: Scalars['String']['output']
      * };
      */
     const visitor = new BaseResolversVisitor(
@@ -77,8 +77,33 @@ export type ResolversParentTypes = {
 export type IResolversParentTypes = {
   Query: {}
   A: IA
-  Boolean: Scalars['Boolean']
-  String: Scalars['String']
+  Boolean: Scalars['Boolean']['output']
+  String: Scalars['String']['output']
+};
+`
+    );
+  });
+
+  it('generates proper types when typesSuffix is used along with `enumSuffix: false`', () => {
+    const visitor = new BaseResolversVisitor(
+      {
+        mappers: {
+          B: './some-file#B',
+        },
+        typesSuffix: 'I',
+        enumSuffix: false,
+      },
+      {} as ParsedResolversConfig,
+      schema
+    );
+
+    expect(visitor.buildResolversParentTypes()).toEqual(
+      `/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypesI = {
+  Query: {}
+  A: AI
+  Boolean: Scalars['Boolean']['output']
+  String: Scalars['String']['output']
 };
 `
     );

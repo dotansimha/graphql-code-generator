@@ -2508,7 +2508,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type MeQueryVariables = Exact<{
-          repoFullName: Scalars['String'];
+          repoFullName: Scalars['String']['input'];
         }>;`
       );
       expect(content).toBeSimilarStringTo(`
@@ -2640,6 +2640,58 @@ describe('TypeScript Operations Plugin', () => {
         e: Information_EntryType;
       }>;`);
       expect(o).toContain(`export type IQuery = {`);
+      expect(o).toContain(`export enum Information_EntryType {`);
+      expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
+    });
+
+    it('Should produce valid output with preResolveTypes=true and enums with no suffixes', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test($e: Information_EntryType!) {
+          info {
+            ...information
+          }
+          infoArgTest(e: $e) {
+            ...information
+          }
+        }
+
+        fragment information on Information {
+          entries {
+            id
+            value
+          }
+        }
+      `);
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Information {
+          entries: [Information_Entry!]!
+        }
+
+        enum Information_EntryType {
+          NAME
+          ADDRESS
+        }
+
+        type Information_Entry {
+          id: Information_EntryType!
+          value: String
+        }
+
+        type Query {
+          infoArgTest(e: Information_EntryType!): Information
+          info: Information
+        }
+      `);
+      const config = { preResolveTypes: true, typesSuffix: 'I', enumSuffix: false };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      const o = await validate(content, config, testSchema);
+      expect(o).toBeSimilarStringTo(` export type TestQueryVariablesI = Exact<{
+        e: Information_EntryType;
+      }>;`);
+      expect(o).toContain(`export type QueryI = {`);
       expect(o).toContain(`export enum Information_EntryType {`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
     });
@@ -2823,14 +2875,14 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          username?: InputMaybe<Scalars['String']>;
-          email?: InputMaybe<Scalars['String']>;
-          password: Scalars['String'];
+          username?: InputMaybe<Scalars['String']['input']>;
+          email?: InputMaybe<Scalars['String']['input']>;
+          password: Scalars['String']['input'];
           input?: InputMaybe<InputType>;
           mandatoryInput: InputType;
-          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
-          requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
-          innerRequired: Array<Scalars['String']> | Scalars['String'];
+          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+          requireString: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
+          innerRequired: Array<Scalars['String']['input']> | Scalars['String']['input'];
         }>;`
       );
       await validate(content, config, schema);
@@ -2849,7 +2901,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          test?: InputMaybe<Scalars['DateTime']>;
+          test?: InputMaybe<Scalars['DateTime']['input']>;
         }>;`
       );
       await validate(content, config);
@@ -3203,7 +3255,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = Exact<{
-          reverse?: InputMaybe<Scalars['Boolean']>;
+          reverse?: InputMaybe<Scalars['Boolean']['input']>;
         }>;
       `);
     });
@@ -4053,11 +4105,11 @@ describe('TypeScript Operations Plugin', () => {
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
@@ -4066,18 +4118,18 @@ describe('TypeScript Operations Plugin', () => {
         };
 
         export type Concept = {
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
 
         export type Dimension = Concept & {
           __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
 
         export type DimValue = {
           __typename?: 'DimValue';
           dimension?: Maybe<Dimension>;
-          value: Scalars['String'];
+          value: Scalars['String']['output'];
         };
 
         export type Searchable = Dimension | DimValue;
@@ -4163,11 +4215,11 @@ describe('TypeScript Operations Plugin', () => {
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
@@ -4177,7 +4229,7 @@ describe('TypeScript Operations Plugin', () => {
 
         export type Dimension = {
           __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
         export type SearchableFragmentFragment = { __typename?: 'Dimension', id?: string | null };
 
@@ -4251,11 +4303,11 @@ describe('TypeScript Operations Plugin', () => {
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
@@ -4265,7 +4317,7 @@ describe('TypeScript Operations Plugin', () => {
 
         export type Dimension = {
           __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
 
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
@@ -5465,9 +5517,9 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
-        requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
-        innerRequired: Array<Scalars['String']> | Scalars['String'];
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+        requireString: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
+        innerRequired: Array<Scalars['String']['input']> | Scalars['String']['input'];
       }>;`);
       await validate(content, config);
     });
@@ -5497,9 +5549,9 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-        requireString: Array<InputMaybe<Scalars['String']>>;
-        innerRequired: Array<Scalars['String']>;
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+        requireString: Array<InputMaybe<Scalars['String']['input']>>;
+        innerRequired: Array<Scalars['String']['input']>;
       }>;`);
       await validate(content, config);
     });
@@ -6040,7 +6092,7 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean'];
+        showAddress: Scalars['Boolean']['input'];
       }>;
 
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
@@ -6093,8 +6145,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean'];
-        showName: Scalars['Boolean'];
+        showAddress: Scalars['Boolean']['input'];
+        showName: Scalars['Boolean']['input'];
       }>;
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };`);
     });
@@ -6141,8 +6193,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean'];
-        showName: Scalars['Boolean'];
+        showAddress: Scalars['Boolean']['input'];
+        showName: Scalars['Boolean']['input'];
       }>;
 
       export type UserQuery = (

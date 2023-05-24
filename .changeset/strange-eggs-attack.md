@@ -3,4 +3,4 @@
 '@graphql-codegen/client-preset': patch
 ---
 
-Support @defer directive in nested fragments
+Include nested fragments in string documentMode

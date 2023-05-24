@@ -9,11 +9,11 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string | number; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
 };
 
 export type Query = {
@@ -23,22 +23,22 @@ export type Query = {
    *  Generates a new answer for th
    * guessing game
    */
-  answer: Array<Scalars['Int']>;
-  testArr1?: Maybe<Array<Maybe<Scalars['String']>>>;
-  testArr2: Array<Maybe<Scalars['String']>>;
-  testArr3: Array<Scalars['String']>;
+  answer: Array<Scalars['Int']['output']>;
+  testArr1?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  testArr2: Array<Maybe<Scalars['String']['output']>>;
+  testArr3: Array<Scalars['String']['output']>;
   userById?: Maybe<User>;
 };
 
 export type QueryUserByIdArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 export type User = {
   __typename?: 'User';
-  email: Scalars['String'];
-  id: Scalars['Int'];
-  name: Scalars['String'];
+  email: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -113,19 +113,19 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Boolean: Scalars['Boolean'];
-  Int: Scalars['Int'];
+  Boolean: Scalars['Boolean']['output'];
+  Int: Scalars['Int']['output'];
   Query: {};
-  String: Scalars['String'];
+  String: Scalars['String']['output'];
   User: User;
 };
 

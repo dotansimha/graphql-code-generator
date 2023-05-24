@@ -12,10 +12,10 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-tools/optimize": "^1.3.0",
+    "@graphql-tools/optimize": "^2.0.0",
     "@graphql-codegen/plugin-helpers": "^4.2.0",
-    "@graphql-tools/relay-operation-optimizer": "^6.5.0",
-    "@graphql-tools/utils": "^9.0.0",
+    "@graphql-tools/relay-operation-optimizer": "^7.0.0",
+    "@graphql-tools/utils": "^10.0.0",
     "auto-bind": "~4.0.0",
     "dependency-graph": "^0.11.0",
     "graphql-tag": "^2.11.0",

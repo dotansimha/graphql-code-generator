@@ -18,6 +18,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _namespacedImportName: string | null = null,
     _enumNames: string[] = [],
     _enumPrefix = true,
+    _enumSuffix = true,
     _enumValues: ParsedEnumValuesMap = {},
     _applyCoercion: Boolean = false,
     _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {},
@@ -29,6 +30,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       _namespacedImportName,
       _enumNames,
       _enumPrefix,
+      _enumSuffix,
       _enumValues,
       _applyCoercion,
       _directiveArgumentAndInputFieldMappings
