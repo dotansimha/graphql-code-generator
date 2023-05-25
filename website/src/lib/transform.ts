@@ -26,7 +26,7 @@ export function transformDocs() {
     throw new Error(`Config-transform: failed to build TS generator...`);
   }
 
-  const schema = generator.getSchemaForSymbols([ROOT_IDENTIFIER, ...pluginsAndPresets.map(f => f.identifier)], );
+  const schema = generator.getSchemaForSymbols([ROOT_IDENTIFIER, ...pluginsAndPresets.map(f => f.identifier)]);
 
   if (!schema.definitions) {
     throw new Error('Config-transform: "schema.definitions" is not defined');
