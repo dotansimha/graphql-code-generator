@@ -3,7 +3,7 @@ export type PresetConfig = { file: string; identifier: string; name: string };
 
 export const presetsConfigurations: PresetConfig[] = [
   {
-    file: 'node_modules/@graphql-codegen/graphql-modules-preset/src/config.ts',
+    file: '../packages/presets/graphql-modules/src/config.ts',
     identifier: 'ModulesConfig',
     name: 'graphql-modules-preset',
   },
