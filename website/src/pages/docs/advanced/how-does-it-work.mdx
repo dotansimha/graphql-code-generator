@@ -112,12 +112,12 @@ export default config;
 
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Date: any;
+  ID: { input: string | number; output: string; };
+  String: { input: string; output: string; };
+  Boolean: { input: boolean; output: boolean; };
+  Int: { input: number; output: number; };
+  Float: { input: number; output: number; };
+  Date: { input: any; output: any; };
 };
 
 export type Query = {
@@ -131,12 +131,12 @@ export type Query = {
 
 
 export type QueryUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type QuerySearchArgs = {
-  term: Scalars['String'];
+  term: Scalars['String']['input'];
 };
 
 export enum Role {
@@ -145,36 +145,36 @@ export enum Role {
 }
 
 export type Node = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type SearchResult = User | Chat | ChatMessage;
 
 export type User = Node & {
   __typename?: 'User';
-  id: Scalars['ID'];
-  username: Scalars['String'];
-  email: Scalars['String'];
+  id: Scalars['ID']['output'];
+  username: Scalars['String']['output'];
+  email: Scalars['String']['output'];
   role: Role;
 };
 
 export type Chat = Node & {
   __typename?: 'Chat';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   users: Array<User>;
   messages: Array<ChatMessage>;
 };
 
 export type ChatMessage = Node & {
   __typename?: 'ChatMessage';
-  id: Scalars['ID'];
-  content: Scalars['String'];
-  time: Scalars['Date'];
+  id: Scalars['ID']['output'];
+  content: Scalars['String']['output'];
+  time: Scalars['Date']['output'];
   user: User;
 };
 
 export type FindUserQueryVariables = Exact<{
-  userId: Scalars['ID'];
+  userId: Scalars['ID']['input'];
 }>;
 
 

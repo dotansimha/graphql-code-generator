@@ -15,16 +15,26 @@ export type ParsedDirectiveArgumentAndInputFieldMappings = { [name: string]: Par
 /**
  * Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used
  */
-export type ScalarsMap = string | { [name: string]: string };
+export type ScalarsMap = string | { [name: string]: string | { input: string; output: string } };
 /**
  * A normalized map between GraphQL scalar name and the identifier name
  */
-export type NormalizedScalarsMap = { [name: string]: string };
+export type NormalizedScalarsMap = {
+  [name: string]: {
+    input: string;
+    output: string;
+  };
+};
 /**
  * Parsed scalars map - a mapping between GraphQL scalar name and the parsed mapper object,
  * including all required information for generting code for that mapping.
  */
-export type ParsedScalarsMap = { [name: string]: ParsedMapper };
+export type ParsedScalarsMap = {
+  [name: string]: {
+    input: ParsedMapper;
+    output: ParsedMapper;
+  };
+};
 /**
  * A raw configuration for enumValues map - can be represented with a single string value for a file path,
  * a map between enum name and a file path, or a map between enum name and an object with explicit enum values.
@@ -110,4 +120,5 @@ export type FragmentDirectives = {
 export interface ResolversNonOptionalTypenameConfig {
   unionMember?: boolean;
   interfaceImplementingType?: boolean;
+  excludeTypes?: string[];
 }

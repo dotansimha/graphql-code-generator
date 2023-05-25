@@ -66,6 +66,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeWrapperSignature: string;
   federation: boolean;
   enumPrefix: boolean;
+  enumSuffix: boolean;
   optionalResolveType: boolean;
   immutableTypes: boolean;
   namespacedImportName: string;
@@ -500,6 +501,33 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+
+  /**
+   * @default true
+   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
+   *
+   * @exampleMarkdown
+   * ## Disable enum suffixes
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['typescript', 'typescript-resolver'],
+   *        config: {
+   *          typesSuffix: 'I',
+   *          enumSuffix: false
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  enumSuffix?: boolean;
   /**
    * @default false
    * @description Sets the `__resolveType` field as optional field.
@@ -542,6 +570,49 @@ export interface RawResolversConfig extends RawConfig {
   /**
    * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
    * @default false
+   *
+   * @exampleMarkdown
+   * ## Enable for all
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['typescript', 'typescript-resolver'],
+   *        config: {
+   *          resolversNonOptionalTypename: true // or { unionMember: true, interfaceImplementingType: true }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## Enable except for some types
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        plugins: ['typescript', 'typescript-resolver'],
+   *        config: {
+   *          resolversNonOptionalTypename: {
+   *            unionMember: true,
+   *            interfaceImplementingType: true,
+   *            excludeTypes: ['MyType'],
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
    */
   resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
   /**
@@ -592,6 +663,7 @@ export class BaseResolversVisitor<
       immutableTypes: getConfigValue(rawConfig.immutableTypes, false),
       optionalResolveType: getConfigValue(rawConfig.optionalResolveType, false),
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       federation: getConfigValue(rawConfig.federation, false),
       resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
       enumValues: parseEnumValues({
@@ -773,7 +845,14 @@ export class BaseResolversVisitor<
         const generic = this.convertName(currentType);
         prev[typeName] = applyWrapper(`${type}<${generic}>['${typeName}']`);
       } else if (isEnumType(schemaType)) {
-        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix }, true);
+        prev[typeName] = this.convertName(
+          typeName,
+          {
+            useTypesPrefix: this.config.enumPrefix,
+            useTypesSuffix: this.config.enumSuffix,
+          },
+          true
+        );
       } else {
         prev[typeName] = this.convertName(typeName, {}, true);
 
@@ -876,10 +955,11 @@ export class BaseResolversVisitor<
       const schemaType = allSchemaTypes[typeName];
 
       if (isUnionType(schemaType)) {
+        const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
         res[typeName] = this.getAbstractMembersType({
           typeName,
           memberTypes: schemaType.getTypes(),
-          isTypenameNonOptional: this.config.resolversNonOptionalTypename.unionMember,
+          isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
         });
       }
       return res;
@@ -913,10 +993,12 @@ export class BaseResolversVisitor<
           }
         }
 
+        const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
+
         res[typeName] = this.getAbstractMembersType({
           typeName,
           memberTypes: implementingTypes,
-          isTypenameNonOptional: this.config.resolversNonOptionalTypename.interfaceImplementingType,
+          isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
         });
       }
 
@@ -1235,7 +1317,9 @@ export class BaseResolversVisitor<
   }
 
   protected _getScalar(name: string): string {
-    return `${this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''}Scalars['${name}']`;
+    return `${
+      this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
+    }Scalars['${name}']['output']`;
   }
 
   NamedType(node: NamedTypeNode): string {

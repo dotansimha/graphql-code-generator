@@ -431,6 +431,37 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 
       expect(result.content).not.toBeSimilarStringTo('export type ResolversInterfaceTypes');
     });
+
+    it('resolversNonOptionalTypename - excludes types', async () => {
+      const result = await plugin(
+        resolversTestingSchema,
+        [],
+        {
+          resolversNonOptionalTypename: {
+            unionMember: true,
+            interfaceImplementingType: true,
+            excludeTypes: ['ChildUnion', 'AnotherNode', 'Node'],
+          },
+        },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+          ChildUnion: ( Child ) | ( MyOtherType );
+          MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+          Node: ( SomeNode );
+          AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
+          WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } & { __typename: 'AnotherNodeWithChild' } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } & { __typename: 'AnotherNodeWithAll' } );
+          WithChildren: ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } & { __typename: 'AnotherNodeWithAll' } );
+        };
+      `);
+    });
   });
 
   it('directiveResolverMappings - should generate correct types (import definition)', async () => {
@@ -861,9 +892,9 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
-      arg: Scalars['Int'];
-      arg2: Scalars['String'];
-      arg3: Scalars['Boolean'];
+      arg: Scalars['Int']['input'];
+      arg2: Scalars['String']['input'];
+      arg3: Scalars['Boolean']['input'];
     };
     `);
 
@@ -937,9 +968,9 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
-      arg: Scalars['Int'];
-      arg2: Scalars['String'];
-      arg3: Scalars['Boolean'];
+      arg: Scalars['Int']['input'];
+      arg2: Scalars['String']['input'];
+      arg3: Scalars['Boolean']['input'];
     };`);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1014,9 +1045,9 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
-      arg: Scalars['Int'];
-      arg2: Scalars['String'];
-      arg3: Scalars['Boolean'];
+      arg: Scalars['Int']['input'];
+      arg2: Scalars['String']['input'];
+      arg3: Scalars['Boolean']['input'];
     };
     `);
 
@@ -1105,9 +1136,9 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
-      arg: Scalars['Int'];
-      arg2: Scalars['String'];
-      arg3: Scalars['Boolean'];
+      arg: Scalars['Int']['input'];
+      arg2: Scalars['String']['input'];
+      arg3: Scalars['Boolean']['input'];
     };
     `);
 
@@ -1180,9 +1211,9 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
-      arg: Scalars['Int'];
-      arg2: Scalars['String'];
-      arg3: Scalars['Boolean'];
+      arg: Scalars['Int']['input'];
+      arg2: Scalars['String']['input'];
+      arg3: Scalars['Boolean']['input'];
     };
     `);
 
@@ -1254,9 +1285,9 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
-      arg: Scalars['Int'];
-      arg2: Scalars['String'];
-      arg3: Scalars['Boolean'];
+      arg: Scalars['Int']['input'];
+      arg2: Scalars['String']['input'];
+      arg3: Scalars['Boolean']['input'];
     };
     `);
 
@@ -1329,9 +1360,9 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {
-      arg: Scalars['Int'];
-      arg2: Scalars['String'];
-      arg3: Scalars['Boolean'];
+      arg: Scalars['Int']['input'];
+      arg2: Scalars['String']['input'];
+      arg3: Scalars['Boolean']['input'];
     };
     `);
 
@@ -1639,13 +1670,13 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(tsContent.content).toBeSimilarStringTo(`
       export type CccFoo = {
         __typename?: 'CCCFoo';
-        foo: Scalars['String'];
+        foo: Scalars['String']['output'];
       };
     `);
     expect(tsContent.content).toBeSimilarStringTo(`
       export type CccBar = {
         __typename?: 'CCCBar';
-        bar: Scalars['String'];
+        bar: Scalars['String']['output'];
       };
     `);
 
@@ -1658,21 +1689,21 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     /** Mapping between all available schema types and the resolvers types */
     export type ResolversTypes = {
       CCCFoo: ResolverTypeWrapper<CccFoo>;
-      String: ResolverTypeWrapper<Scalars['String']>;
+      String: ResolverTypeWrapper<Scalars['String']['output']>;
       CCCBar: ResolverTypeWrapper<CccBar>;
       Query: ResolverTypeWrapper<{}>;
       CCCUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['CCCUnion']>;
-      Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
     };
     `);
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         CCCFoo: CccFoo;
-        String: Scalars['String'];
+        String: Scalars['String']['output'];
         CCCBar: CccBar;
         Query: {};
         CCCUnion: ResolversUnionTypes<ResolversParentTypes>['CCCUnion'];
-        Boolean: Scalars['Boolean'];
+        Boolean: Scalars['Boolean']['output'];
       };
     `);
     expect(content.content).toBeSimilarStringTo(`
@@ -1925,9 +1956,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         Subscription: ResolverTypeWrapper<{}>;
         Query: ResolverTypeWrapper<{}>;
         Mutation: ResolverTypeWrapper<{}>;
-        String: ResolverTypeWrapper<Scalars['String']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
         Post: ResolverTypeWrapper<Post>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
       };
     `);
   });
@@ -1958,9 +1989,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         Subscription: {};
         Query: {};
         Mutation: {};
-        String: Scalars['String'];
+        String: Scalars['String']['output'];
         Post: Post;
-        Boolean: Scalars['Boolean'];
+        Boolean: Scalars['Boolean']['output'];
       };
     `);
   });
@@ -2010,32 +2041,32 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         Query: ResolverTypeWrapper<{}>;
-        ID: ResolverTypeWrapper<Scalars['ID']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         StandardError: ResolverTypeWrapper<StandardError>;
-        String: ResolverTypeWrapper<Scalars['String']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
         User: ResolverTypeWrapper<User>;
         UserResult: ResolverTypeWrapper<UserResult>;
         UserPayload: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['UserPayload']>;
         Post: ResolverTypeWrapper<Post>;
         PostsResult: ResolverTypeWrapper<PostsResult>;
         PostsPayload:  ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['PostsPayload']>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
       };
     `);
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         Query: {};
-        ID: Scalars['ID'];
+        ID: Scalars['ID']['output'];
         StandardError: StandardError;
-        String: Scalars['String'];
+        String: Scalars['String']['output'];
         User: User;
         UserResult: UserResult;
         UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
         Post: Post;
         PostsResult: PostsResult;
         PostsPayload: ResolversUnionTypes<ResolversParentTypes>['PostsPayload'];
-        Boolean: Scalars['Boolean'];
+        Boolean: Scalars['Boolean']['output'];
       };
     `);
   });
@@ -2072,14 +2103,14 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
-        String: ResolverTypeWrapper<Scalars['String']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
         Child: ResolverTypeWrapper<Child>;
         MyOtherType: ResolverTypeWrapper<MyOtherType>;
         ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
         Query: ResolverTypeWrapper<{}>;
         Subscription: ResolverTypeWrapper<{}>;
         Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
-        ID: ResolverTypeWrapper<Scalars['ID']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
         AnotherNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['AnotherNode']>;
         WithChild: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['WithChild']>;
@@ -2087,23 +2118,23 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         AnotherNodeWithChild: ResolverTypeWrapper<Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
         AnotherNodeWithAll: ResolverTypeWrapper<Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']>, unionChildren: Array<ResolversTypes['ChildUnion']> }>;
         MyUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['MyUnion']>;
-        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
-        Int: ResolverTypeWrapper<Scalars['Int']>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']['output']>;
+        Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
       };
     `);
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         MyType: Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
-        String: Scalars['String'];
+        String: Scalars['String']['output'];
         Child: Child;
         MyOtherType: MyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
-        ID: Scalars['ID'];
+        ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
         AnotherNode: ResolversInterfaceTypes<ResolversParentTypes>['AnotherNode'];
         WithChild: ResolversInterfaceTypes<ResolversParentTypes>['WithChild'];
@@ -2111,9 +2142,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         AnotherNodeWithChild: Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
         AnotherNodeWithAll: Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']>, unionChildren: Array<ResolversParentTypes['ChildUnion']> };
         MyUnion: ResolversUnionTypes<ResolversParentTypes>['MyUnion'];
-        MyScalar: Scalars['MyScalar'];
-        Int: Scalars['Int'];
-        Boolean: Scalars['Boolean'];
+        MyScalar: Scalars['MyScalar']['output'];
+        Int: Scalars['Int']['output'];
+        Boolean: Scalars['Boolean']['output'];
       };
     `);
   });
@@ -2138,14 +2169,14 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(content.content).toBeSimilarStringTo(`
       export type I_ResolversTypes_Types = {
         MyType: ResolverTypeWrapper<Omit<I_MyType_Types, 'unionChild'> & { unionChild?: Maybe<I_ResolversTypes_Types['ChildUnion']> }>;
-        String: ResolverTypeWrapper<Scalars['String']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
         Child: ResolverTypeWrapper<I_Child_Types>;
         MyOtherType: ResolverTypeWrapper<I_MyOtherType_Types>;
         ChildUnion: ResolverTypeWrapper<I_ResolversUnionTypes_Types<I_ResolversTypes_Types>['ChildUnion']>;
         Query: ResolverTypeWrapper<{}>;
         Subscription: ResolverTypeWrapper<{}>;
         Node: ResolverTypeWrapper<I_ResolversInterfaceTypes_Types<I_ResolversTypes_Types>['Node']>;
-        ID: ResolverTypeWrapper<Scalars['ID']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         SomeNode: ResolverTypeWrapper<I_SomeNode_Types>;
         AnotherNode: ResolverTypeWrapper<I_ResolversInterfaceTypes_Types<I_ResolversTypes_Types>['AnotherNode']>;
         WithChild: ResolverTypeWrapper<I_ResolversInterfaceTypes_Types<I_ResolversTypes_Types>['WithChild']>;
@@ -2153,23 +2184,23 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         AnotherNodeWithChild: ResolverTypeWrapper<Omit<I_AnotherNodeWithChild_Types, 'unionChild'> & { unionChild?: Maybe<I_ResolversTypes_Types['ChildUnion']> }>;
         AnotherNodeWithAll: ResolverTypeWrapper<Omit<I_AnotherNodeWithAll_Types, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<I_ResolversTypes_Types['ChildUnion']>, unionChildren: Array<I_ResolversTypes_Types['ChildUnion']> }>;
         MyUnion: ResolverTypeWrapper<I_ResolversUnionTypes_Types<I_ResolversTypes_Types>['MyUnion']>;
-        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>;
-        Int: ResolverTypeWrapper<Scalars['Int']>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        MyScalar: ResolverTypeWrapper<Scalars['MyScalar']['output']>;
+        Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
       };
     `);
 
     expect(content.content).toBeSimilarStringTo(`
       export type I_ResolversParentTypes_Types = {
         MyType: Omit<I_MyType_Types, 'unionChild'> & { unionChild?: Maybe<I_ResolversParentTypes_Types['ChildUnion']> };
-        String: Scalars['String'];
+        String: Scalars['String']['output'];
         Child: I_Child_Types;
         MyOtherType: I_MyOtherType_Types;
         ChildUnion: I_ResolversUnionTypes_Types<I_ResolversParentTypes_Types>['ChildUnion'];
         Query: {};
         Subscription: {};
         Node: I_ResolversInterfaceTypes_Types<I_ResolversParentTypes_Types>['Node'];
-        ID: Scalars['ID'];
+        ID: Scalars['ID']['output'];
         SomeNode: I_SomeNode_Types;
         AnotherNode: I_ResolversInterfaceTypes_Types<I_ResolversParentTypes_Types>['AnotherNode'];
         WithChild: I_ResolversInterfaceTypes_Types<I_ResolversParentTypes_Types>['WithChild'];
@@ -2177,9 +2208,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         AnotherNodeWithChild: Omit<I_AnotherNodeWithChild_Types, 'unionChild'> & { unionChild?: Maybe<I_ResolversParentTypes_Types['ChildUnion']> };
         AnotherNodeWithAll: Omit<I_AnotherNodeWithAll_Types, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<I_ResolversParentTypes_Types['ChildUnion']>, unionChildren: Array<I_ResolversParentTypes_Types['ChildUnion']> };
         MyUnion: I_ResolversUnionTypes_Types<I_ResolversParentTypes_Types>['MyUnion'];
-        MyScalar: Scalars['MyScalar'];
-        Int: Scalars['Int'];
-        Boolean: Scalars['Boolean'];
+        MyScalar: Scalars['MyScalar']['output'];
+        Int: Scalars['Int']['output'];
+        Boolean: Scalars['Boolean']['output'];
       };
     `);
   });
@@ -2233,9 +2264,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         Subscription: ResolverTypeWrapper<RootValueType>;
         Query: ResolverTypeWrapper<RootValueType>;
         Mutation: ResolverTypeWrapper<RootValueType>;
-        String: ResolverTypeWrapper<Scalars['String']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
         Post: ResolverTypeWrapper<Post>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
       };
     `);
 
@@ -2313,9 +2344,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         MySubscription: ResolverTypeWrapper<MyRoot>;
         MyQuery: ResolverTypeWrapper<MyRoot>;
         MyMutation: ResolverTypeWrapper<MyRoot>;
-        String: ResolverTypeWrapper<Scalars['String']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
         Post: ResolverTypeWrapper<Post>;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
       };
     `);
   });
@@ -2762,8 +2793,8 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       export type IResolversTypes = {
         Query: ResolverTypeWrapper<{}>;
         Test: Test;
-        Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-        String: ResolverTypeWrapper<Scalars['String']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
       };`);
     });
 

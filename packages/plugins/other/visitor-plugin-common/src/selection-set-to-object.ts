@@ -459,10 +459,13 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         // then don't have a typename for naming the fragment.
         acc[
           selectedTypes.length <= 3
-            ? selectedTypes.join('_')
+            ? // Remove quote marks to produce a valid type name
+              selectedTypes.map(t => t.replace(/'/g, '')).join('_')
             : createHash('sha256')
                 .update(selectedTypes.join() || transformedSet || '')
+                // Remove invalid characters to produce a valid type name
                 .digest('base64')
+                .replace(/[=+/]/g, '')
         ] = [transformedSet];
       }
       return acc;
@@ -753,7 +756,15 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           return null;
         }
 
-        return { name: declarationName, content: possibleFields.join(' & ') };
+        const content = possibleFields
+          .map(selectionObject => {
+            if (typeof selectionObject === 'string') return selectionObject;
+
+            return '(' + selectionObject.union.join(' | ') + ')';
+          })
+          .join(' & ');
+
+        return { name: declarationName, content };
       })
       .filter(Boolean);
 

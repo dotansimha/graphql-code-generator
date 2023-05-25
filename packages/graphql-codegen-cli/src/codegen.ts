@@ -11,7 +11,6 @@ import {
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { AggregateError } from '@graphql-tools/utils';
 import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
 import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
@@ -274,10 +273,20 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                           const hash = JSON.stringify(documentPointerMap);
                           const result = await cache('documents', hash, async () => {
-                            const documents = await context.loadDocuments(documentPointerMap);
-                            return {
-                              documents,
-                            };
+                            try {
+                              const documents = await context.loadDocuments(documentPointerMap);
+                              return {
+                                documents,
+                              };
+                            } catch (error) {
+                              if (config.ignoreNoDocuments) {
+                                return {
+                                  documents: [],
+                                };
+                              }
+
+                              throw error;
+                            }
                           });
 
                           outputDocuments = result.documents;

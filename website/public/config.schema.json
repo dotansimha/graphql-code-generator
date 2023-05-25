@@ -585,6 +585,10 @@
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
+        "enumSuffix": {
+          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "fieldWrapperValue": {
           "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.\nDefault value: \"T\"",
           "type": "string"
@@ -735,6 +739,10 @@
         },
         "enumPrefix": {
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "enumSuffix": {
+          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "fieldWrapperValue": {
@@ -1150,6 +1158,10 @@
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
+        "enumSuffix": {
+          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "fieldWrapperValue": {
           "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.\nDefault value: \"T\"",
           "type": "string"
@@ -1537,6 +1549,10 @@
         "federation": { "description": "Supports Apollo Federation\nDefault value: \"false\"", "type": "boolean" },
         "enumPrefix": {
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "enumSuffix": {
+          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "optionalResolveType": {
@@ -2970,6 +2986,10 @@
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
+        "enumSuffix": {
+          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
         "fieldWrapperValue": {
           "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.\nDefault value: \"T\"",
           "type": "string"
@@ -3106,6 +3126,10 @@
         "federation": { "description": "Supports Apollo Federation\nDefault value: \"false\"", "type": "boolean" },
         "enumPrefix": {
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "enumSuffix": {
+          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "optionalResolveType": {
@@ -3249,6 +3273,10 @@
         },
         "enumPrefix": {
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "enumSuffix": {
+          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "fieldWrapperValue": {

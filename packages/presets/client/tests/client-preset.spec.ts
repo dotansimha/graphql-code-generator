@@ -347,18 +347,18 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename?: 'Query';
-        a?: Maybe<Scalars['String']>;
-        b?: Maybe<Scalars['String']>;
-        c?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -477,18 +477,18 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename: 'Query';
-        a?: Maybe<Scalars['String']>;
-        b?: Maybe<Scalars['String']>;
-        c?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -590,16 +590,16 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename?: 'Query';
-        a?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -817,7 +817,7 @@ export * from "./gql";`);
           const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
           const fragName = fragDef?.name?.value;
 
-          const fields = fragName ? deferredFields[fragName] : [];
+          const fields = (fragName && deferredFields[fragName]) || [];
           return fields.length > 0 && fields.every(field => data && field in data);
         }
         "
@@ -1256,18 +1256,18 @@ export * from "./gql.js";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type Query = {
         __typename?: 'Query';
-        a?: Maybe<Scalars['String']>;
-        b?: Maybe<Scalars['String']>;
-        c?: Maybe<Scalars['String']>;
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
       };
 
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1334,18 +1334,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1415,18 +1415,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1496,18 +1496,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1579,18 +1579,18 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
           __typename?: 'Query';
-          a?: Maybe<Scalars['String']>;
-          b?: Maybe<Scalars['String']>;
-          c?: Maybe<Scalars['String']>;
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1606,6 +1606,87 @@ export * from "./gql.js";`);
 
         export const AaaDocument = {"__meta__":{"cacheKeys":["aaa"],"hash":"682f60dea844320c05fcb4fb6c4118015902c9a8"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"aaa"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AaaQuery, AaaQueryVariables>;
         export const BbbDocument = {"__meta__":{"cacheKeys":["bbb"],"hash":"2a8e0849914b13ebc13b112ba5a502678d757511"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"bbb"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BbbQuery, BbbQueryVariables>;"
+      `);
+    });
+
+    it('hashAlgorithm="sha256"', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: {
+                hashAlgorithm: 'sha256',
+              },
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
+          "a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__meta__":{"hash":"7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
   });
@@ -1669,17 +1750,17 @@ export * from "./gql.js";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
+        ID: { input: string | number; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
       };
 
       export type A = {
         __typename?: 'A';
         a: A;
-        b: Scalars['String'];
+        b: Scalars['String']['output'];
       };
 
       export type Query = {
@@ -1722,6 +1803,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -1747,16 +1829,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -1783,7 +1866,10 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
+        export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooDocument = {"__meta__":{"deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
         export const FoosDocument = {"__meta__":{"deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
       `);
@@ -1799,6 +1885,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -1827,16 +1914,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -1863,7 +1951,10 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
+        export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooDocument = {"__meta__":{"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
         export const FoosDocument = {"__meta__":{"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
       `);
@@ -1879,6 +1970,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -1907,16 +1999,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -1943,6 +2036,8 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export class TypedDocumentString<TResult, TVariables>
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
@@ -1962,6 +2057,14 @@ export * from "./gql.js";`);
           value
         }
             \`, {"fragmentName":"Foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }
+            \`, {"fragmentName":"foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
         export const FooDocument = new TypedDocumentString(\`
             query Foo {
           foo {
@@ -1970,6 +2073,12 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
         }\`, {"deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
         export const FoosDocument = new TypedDocumentString(\`
             query Foos {
@@ -1979,6 +2088,12 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
         }\`, {"deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
@@ -1993,6 +2108,7 @@ export * from "./gql.js";`);
             }
 
             type Foo {
+              id: String
               value: String
             }
           `,
@@ -2024,16 +2140,17 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          value?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -2060,6 +2177,8 @@ export * from "./gql.js";`);
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
+        export type FooFragment = { __typename?: 'Foo', id?: string | null } & ({ __typename?: 'Foo', value?: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+
         export class TypedDocumentString<TResult, TVariables>
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
@@ -2079,6 +2198,14 @@ export * from "./gql.js";`);
           value
         }
             \`, {"fragmentName":"Foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
+        export const FooFragmentDoc = new TypedDocumentString(\`
+            fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }
+            \`, {"fragmentName":"foo"}) as unknown as TypedDocumentString<FooFragment, unknown>;
         export const FooDocument = new TypedDocumentString(\`
             query Foo {
           foo {
@@ -2087,7 +2214,13 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
-        }\`, {"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }\`, {"hash":"2687841b00fe0b3b4fd0dfa2e943f80936594f58","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
         export const FoosDocument = new TypedDocumentString(\`
             query Foos {
           foos {
@@ -2096,7 +2229,13 @@ export * from "./gql.js";`);
         }
             fragment Foo on Foo {
           value
-        }\`, {"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+        }
+        fragment foo on Foo {
+          id
+          ... on Foo @defer {
+            value
+          }
+        }\`, {"hash":"8db613cc1f12f64dbde9cd6fef167fd12246330d","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
   });
@@ -2140,16 +2279,16 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string | number; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Foo = {
           __typename?: 'Foo';
-          value?: Maybe<Scalars['String']>;
+          value?: Maybe<Scalars['String']['output']>;
         };
 
         export type Query = {
@@ -2282,6 +2421,95 @@ export * from "./gql.js";`);
           return (documents as any)[source] ?? {};
         }
         "
+      `);
+    });
+
+    it('correctly resolves nested fragments', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            scalar Date
+
+            type Query {
+              video(id: ID!): Video!
+            }
+
+            interface Video {
+              id: ID!
+              title: String!
+            }
+
+            type Movie implements Video {
+              id: ID!
+              title: String!
+              releaseDate: Date!
+              collection: Collection
+            }
+
+            type Collection {
+              id: ID!
+              title: String!
+            }
+
+            type Episode implements Video {
+              id: ID!
+              title: String!
+              show: Show!
+              releaseDate: Date!
+            }
+
+            type Show {
+              id: ID!
+              title: String!
+              releaseDate: Date!
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-nested-fragment.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toBeSimilarStringTo(`
+        export const VideoDocument = new TypedDocumentString(\`
+          query Video($id: ID!) {
+            video(id: $id) {
+              ...DetailsFragment
+              __typename
+            }
+          }
+          fragment EpisodeFragment on Episode {
+            id
+            title
+            show {
+              id
+              title
+            }
+            releaseDate
+            __typename
+          }
+          fragment MovieFragment on Movie {
+            id
+            title
+            collection {
+              id
+            }
+            releaseDate
+            __typename
+          }
+          fragment DetailsFragment on Video {
+            title
+            __typename
+            ...MovieFragment
+            ...EpisodeFragment
+          }\`) as unknown as TypedDocumentString<VideoQuery, VideoQueryVariables>;
       `);
     });
   });
