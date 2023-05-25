@@ -14,7 +14,7 @@ const prettierOptions = prettier.resolveConfig.sync(CWD);
 async function generate(): Promise<void> {
   const { schema } = transformDocs();
   // Remove non-standard keys
-  jsonPath.apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
+  // jsonPath.apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
 
   // Remove default to avoid annoying auto-complete
   jsonPath.apply(schema, `$..*`, v => {
