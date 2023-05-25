@@ -22,7 +22,7 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
 
   const [mdx, mdxHeader] = await Promise.all([
     compileMdx(source, {
-      unstable_defaultShowCopyCode: true,
+      defaultShowCopyCode: true,
     }),
     compileMdx(
       `
@@ -47,7 +47,5 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
         compiledHeader: mdxHeader.result,
       },
     },
-    // The page will be considered as stale and regenerated every 24 hours.
-    revalidate: 60 * 60 * 24,
   };
 };
