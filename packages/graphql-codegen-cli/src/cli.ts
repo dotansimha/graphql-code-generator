@@ -35,7 +35,7 @@ export async function ensureGraphQlPackage() {
     throw new Error(
       `Unable to load "graphql" package. Please make sure to install "graphql" as a dependency! \n
        To install "graphql", run:
-         yarn add graphql
+         pnpm add graphql
        Or, with NPM:
          npm install --save graphql`
     );

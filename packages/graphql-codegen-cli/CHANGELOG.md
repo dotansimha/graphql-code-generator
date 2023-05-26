@@ -77,7 +77,7 @@
   Then, run Codegen CLI in `watch` mode:
 
   ```shell
-  yarn graphql-codegen --watch
+  pnpm graphql-codegen --watch
   ```
 
   Now, updating `*.mappers.ts` files re-runs Codegen! 🎉

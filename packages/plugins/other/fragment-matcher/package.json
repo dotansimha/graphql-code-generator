@@ -13,7 +13,7 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:*",
     "tslib": "~2.5.0"
   },
   "peerDependencies": {
@@ -46,5 +46,8 @@
     "directory": "dist",
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "graphql-tag": "^2.12.6"
+  }
 }

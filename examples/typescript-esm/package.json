@@ -14,7 +14,7 @@
     "codegen": "graphql-codegen-esm --config codegen.cjs",
     "build": "tsc",
     "start": "node dist/main.js",
-    "test:end2end": "yarn start"
+    "test:end2end": "pnpm start"
   },
   "type": "module",
   "bob": false

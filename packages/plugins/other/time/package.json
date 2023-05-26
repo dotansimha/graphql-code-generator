@@ -12,7 +12,7 @@
     "lint": "eslint **/*.ts"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:*",
     "moment": "~2.29.1"
   },
   "devDependencies": {

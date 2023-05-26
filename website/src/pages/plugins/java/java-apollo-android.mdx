@@ -15,7 +15,7 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 To get started with these plugins and preset, make sure you have the following installed:
 
 - Node.js (10 or later)
-- NPM or Yarn
+- NPM or Pnpm
 
 Run the following in your Android project:
 
@@ -43,7 +43,7 @@ To integrate with your Gradle build, you can add the following to your app Gradl
 
 ```
 preBuild.doFirst {
-  def proc = "yarn graphql-codegen".execute()
+  def proc = "pnpm graphql-codegen".execute()
   proc.waitForProcessOutput(System.out, System.err)
 }
 

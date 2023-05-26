@@ -17,7 +17,7 @@ export default withGuildDocs({
     // Todo: remove it before merge to master
     ignoreBuildErrors: true,
   },
-  webpack(config, meta) {
+  webpack(config) {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       module: false,

@@ -13,22 +13,28 @@
     "test": "jest --no-watchman --config ../../../jest.config.js"
   },
   "devDependencies": {
+    "@babel/types": "^7.18.13",
+    "@types/babel__core": "^7.20.0",
     "@types/babel__helper-plugin-utils": "7.10.0",
-    "@types/babel__template": "7.4.1"
+    "@types/babel__template": "7.4.1",
+    "@types/babel__traverse": "^7.18.5",
+    "jiti": "^1.17.1"
   },
   "dependencies": {
+    "@babel/core": "7.21.8",
     "@babel/helper-plugin-utils": "^7.20.2",
     "@babel/template": "^7.20.7",
-    "@graphql-codegen/add": "^5.0.0",
-    "@graphql-codegen/typed-document-node": "^5.0.0",
-    "@graphql-codegen/typescript": "^4.0.0",
-    "@graphql-codegen/typescript-operations": "^4.0.0",
-    "@graphql-codegen/gql-tag-operations": "4.0.0",
-    "@graphql-codegen/plugin-helpers": "^5.0.0",
-    "@graphql-codegen/visitor-plugin-common": "^4.0.0",
-    "@graphql-typed-document-node/core": "3.2.0",
+    "@babel/traverse": "^7.21.4",
+    "@graphql-codegen/add": "workspace:*",
+    "@graphql-codegen/gql-tag-operations": "workspace:*",
+    "@graphql-codegen/plugin-helpers": "workspace:*",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*",
+    "@graphql-codegen/typescript-operations": "workspace:*",
+    "@graphql-codegen/visitor-plugin-common": "workspace:*",
     "@graphql-tools/documents": "^1.0.0",
     "@graphql-tools/utils": "^10.0.0",
+    "@graphql-typed-document-node/core": "3.2.0",
     "tslib": "~2.5.0"
   },
   "peerDependencies": {

@@ -17,12 +17,13 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 18
+          packageManager: pnpm
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Build Website
-        run: yarn workspace website run build
+        run: pnpm --filter=website run build
 
       - name: Compare
         run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt

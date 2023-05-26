@@ -1,7 +1,7 @@
-diff --git a/node_modules/listr2/dist/index.cjs b/node_modules/listr2/dist/index.cjs
+diff --git a/dist/index.cjs b/dist/index.cjs
 index 97af302..8715bd9 100644
---- a/node_modules/listr2/dist/index.cjs
-+++ b/node_modules/listr2/dist/index.cjs
+--- a/dist/index.cjs
++++ b/dist/index.cjs
 @@ -406,7 +406,7 @@ var _DefaultRenderer = class {
      }
      str = `${icon} ${str}`;

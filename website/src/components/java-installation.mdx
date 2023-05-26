@@ -13,7 +13,7 @@ plugins {
 Then, add the following in order to make sure you are running the code-generator on each build:
 
 ```
-build.dependsOn yarn
+build.dependsOn pnpm
 ```
 
 Then, create a `package.json` file in your project root, with the following content:
@@ -48,10 +48,10 @@ generates:
 Also, make sure you add the following to your `.gitignore` file:
 
 ```gitignore filename=".gitignore"
-yarn.lock
+pnpm-lock.yaml
 node_modules
 ```
 
-Now, run `gradle yarn` to install the dependencies for the first time.
+Now, run `gradle pnpm` to install the dependencies for the first time.
 
 Next time, the codegen will run automatically each time you run your Gradle build script.

@@ -800,7 +800,7 @@
     "headings": [
       "Scripts Integration",
       "Watch Mode",
-      "Monorepo and Yarn Workspaces",
+      "Monorepo and Pnpm Workspaces",
       "What's next?"
     ],
     "toc": [
@@ -816,8 +816,8 @@
       },
       {
         "children": [],
-        "title": "Monorepo and Yarn Workspaces",
-        "anchor": "monorepo-and-yarn-workspaces"
+        "title": "Monorepo and Pnpm Workspaces",
+        "anchor": "monorepo-and-Pnpm-workspaces"
       },
       {
         "children": [],

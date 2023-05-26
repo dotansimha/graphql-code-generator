@@ -1,0 +1,8 @@
+packages:
+  - packages/*
+  - packages/utils/*
+  - packages/plugins/typescript/*
+  - packages/plugins/other/*
+  - packages/presets/*
+  - website
+  - examples/**/*

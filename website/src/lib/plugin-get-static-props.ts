@@ -23,6 +23,7 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
   const [mdx, mdxHeader] = await Promise.all([
     compileMdx(source, {
       defaultShowCopyCode: true,
+      codeHighlight: false,
     }),
     compileMdx(
       `
@@ -35,7 +36,8 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
       )}|
 
 ## Installation
-`
+`,
+      { codeHighlight: false }
     ),
   ]);
 

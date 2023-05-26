@@ -80,7 +80,7 @@ body:
         After reading the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow), Check out and update the current state of this issue:
 
         - [ ] 1. The issue provides a [minimal reproduction](https://stackoverflow.com/help/minimal-reproducible-example) available on [GitHub](https://github.com/dotansimha/graphql-code-generator-issue-sandbox-template), [Stackblitz](https://stackblitz.com/github/dotansimha/graphql-code-generator-issue-sandbox-template) or [CodeSandbox](https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template).
-          - _Make sure to fork this template and run `yarn generate` in the terminal._
+          - _Make sure to fork this template and run `pnpm generate` in the terminal._
           - _Please make sure the Codegen and plugins version under `package.json` matches yours._
         - [ ] 2. A failing test has been provided
         - [ ] 3. A local solution has been provided
