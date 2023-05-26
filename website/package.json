@@ -1,6 +1,6 @@
 {
   "name": "website",
-  "version": "1.17.7",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,10 +16,10 @@
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
     "@types/node": "18.16.13",
-    "@types/react": "18.2.6",
+    "@types/react": "18.2.7",
     "fast-xml-parser": "4.2.2",
     "jsonpath": "1.1.1",
-    "prettier-plugin-tailwindcss": "0.2.8"
+    "prettier-plugin-tailwindcss": "0.3.0"
   },
   "dependencies": {
     "@graphql-codegen/add": "workspace:*",
@@ -74,7 +74,7 @@
     "dedent": "0.7.0",
     "graphql": "16.6.0",
     "js-yaml": "4.1.0",
-    "next": "13.4.2",
+    "next": "13.3.0",
     "next-mdx-remote": "4.4.1",
     "next-sitemap": "4.0.9",
     "react": "18.2.0",

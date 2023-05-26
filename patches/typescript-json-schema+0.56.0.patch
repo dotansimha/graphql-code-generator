@@ -1,7 +1,7 @@
-diff --git a/node_modules/typescript-json-schema/dist/typescript-json-schema.js b/node_modules/typescript-json-schema/dist/typescript-json-schema.js
+diff --git a/dist/typescript-json-schema.js b/dist/typescript-json-schema.js
 index d5aa7f7..b5f0978 100644
---- a/node_modules/typescript-json-schema/dist/typescript-json-schema.js
-+++ b/node_modules/typescript-json-schema/dist/typescript-json-schema.js
+--- a/dist/typescript-json-schema.js
++++ b/dist/typescript-json-schema.js
 @@ -302,6 +302,8 @@ var annotationKeywords = {
      description: true,
      default: true,
