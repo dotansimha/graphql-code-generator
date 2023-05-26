@@ -882,8 +882,7 @@
     "headings": [
       "Global Installation",
       "Monorepo Project",
-      "Setup",
-      "What's next?"
+      "Setup"
     ],
     "toc": [
       {
@@ -912,14 +911,9 @@
         ],
         "title": "Setup",
         "anchor": "setup"
-      },
-      {
-        "children": [],
-        "title": "What's next?",
-        "anchor": "whats-next"
       }
     ],
-    "content": "e031466d35030d94eec5fc12cbb61246",
+    "content": "c74506f1b257355da489b79ad5c2e8ec",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/installation",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
