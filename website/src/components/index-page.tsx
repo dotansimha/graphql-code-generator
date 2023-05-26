@@ -14,7 +14,7 @@ export function IndexPage(): ReactElement {
         title="Generate code from your GraphQL schema"
         description="Generate code from your GraphQL schema and operations with a simple CLI"
         link={{
-          href: '/docs/getting-started',
+          href: '/docs/getting-started/installation',
           children: 'Try It Now',
           title: 'Get started with GraphQL Code Generator',
         }}

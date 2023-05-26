@@ -1,10 +1,11 @@
 ---
-description: 'GraphQL Code Generator is a tool for generating code from GraphQL schema and operations. It can generate code for various platforms, such as React, Angular, Node, and more.'
+title: Quick Start
+description: GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack. From back-end to front-end, GraphQL Code Generator automates the generation of typed Queries, Mutations and, Subscriptions for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
+import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
 
-# Installation
+# Quick Start
 
 Make sure that you add both the `graphql` and `@graphql-codegen/cli` packages in your project's dependencies:
 
@@ -51,17 +52,17 @@ Once GraphQL Code Generator is installed and added to your project's development
 
 If you are looking for the **best way to leverage GraphQL Code Generator on your stack**, you should read one of our _Guides_.
 
-On top of each plugin documentation, we provide one Guide for the most famous framework such as [React](/docs/guides/react) or [Apollo Server](/docs/guides/graphql-server-apollo-yoga). Each guide exposes the best plugins and configurations available for each framework and stack (React with Apollo / URQL / React Query, Angular with Apollo, …).
+#### Client
 
-Otherwise, if you **prefer exploring plugins and skipping the high-level explanations**, the go-to resource will be the [plugins documentation](/plugins) and the [`codegen.yaml` API reference documentation](/docs/config-reference/codegen-config).
+We recommend using [a `client` preset](/plugins/presets/preset-client) that has a recommended configuration for the client applications. You can follow one of the following guides:
 
-## What's next?
-
-Get started with our guides:
-
-- [React and Vue](/docs/guides/react-vue)
+- [React](/docs/guides/react-vue)
+- [Vue](/docs/guides/react-vue)
 - [Angular](/docs/guides/angular)
 - [Svelte](/docs/guides/svelte)
+
+#### Server
+
 - [Apollo and Yoga server](/docs/guides/graphql-server-apollo-yoga)
 - [Apollo and Yoga server with Server Preset](/docs/guides/graphql-server-apollo-yoga-with-server-preset)
 - [GraphQL Modules](/docs/guides/graphql-modules)
