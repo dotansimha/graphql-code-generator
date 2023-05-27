@@ -12,9 +12,16 @@ export default defineConfig({
         <div className="hidden w-[300px] sm:block">
           <MendableSearchBar
             style={{ darkMode: false, accentColor: 'rgb(0, 76, 163)' }}
-            placeholder="How to setup codegen?"
+            placeholder="Ask AI assistant"
             dialogPlaceholder="What are you looking for?"
             anon_key={process.env.NEXT_PUBLIC_MENDABLE_ANON_KEY!}
+            botIcon={<span>🤖</span>}
+            userIcon={<span>🧑‍💻</span>}
+            messageSettings={{
+              openSourcesInNewTab: false,
+              prettySources: true,
+            }}
+            js={true}
           />
         </div>
       );
