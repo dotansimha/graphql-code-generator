@@ -9,7 +9,7 @@ export default defineConfig({
   search: {
     component: () => {
       return (
-        <div className="hidden w-[300px] sm:block">
+        <div className="hidden w-[250px] sm:block">
           <MendableSearchBar
             style={{ darkMode: false, accentColor: 'rgb(0, 76, 163)' }}
             placeholder="Ask AI assistant"
