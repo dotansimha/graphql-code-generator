@@ -21,7 +21,7 @@ export default defineConfig({
               openSourcesInNewTab: false,
               prettySources: true,
             }}
-            // welcomeMessage="Hi, I'm your AI assistant. How can I help you?"
+            welcomeMessage="Hi, I'm your AI assistant. How can I help you?"
           />
         </div>
       );
