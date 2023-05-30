@@ -95,9 +95,9 @@ export function PluginsPage() {
 
   return (
     <MarketplaceSearch
-      title="Explore Plugins"
+      title="Explore Plugins & Presets"
       tagsFilter={ALL_TAGS}
-      placeholder="Find plugins..."
+      placeholder="Search..."
       primaryList={{
         title: 'Trending',
         items: trendingItems,

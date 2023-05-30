@@ -24,7 +24,7 @@
     "prettier": "2.8.8"
   },
   "devDependencies": {
-    "@types/node": "18.16.13",
+    "@types/node": "18.16.16",
     "tsup": "6.7.0"
   }
 }

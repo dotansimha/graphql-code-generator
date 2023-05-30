@@ -74,6 +74,8 @@ export const icons: Record<Icon, StaticImageData> = {
 /* eslint-disable */
 
 export const ALL_TAGS = [
+  'preset',
+  'plugin',
   'typescript',
   'csharp',
   'dart',
@@ -96,8 +98,6 @@ export const ALL_TAGS = [
   'relay',
   'jsdoc',
   'resolvers',
-  'plugin',
-  'preset',
   'hasura',
   'validation',
   'yup',

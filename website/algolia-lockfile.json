@@ -12,6 +12,18 @@
     "type": "Documentation"
   },
   {
+    "objectID": "code-generator-_app",
+    "headings": [],
+    "toc": [],
+    "content": "f4ef1264bf701e221c7233d18748eff9",
+    "url": "https://www.the-guild.dev/graphql/codegen/_app",
+    "domain": "https://www.the-guild.dev/graphql/codegen",
+    "hierarchy": [],
+    "source": "Code Generator",
+    "title": "_app",
+    "type": "Documentation"
+  },
+  {
     "objectID": "code-generator-docs-advanced-document-transform",
     "headings": [
       "Basic Usage",
@@ -625,7 +637,7 @@
         "anchor": "10-feature-your-plugin-on-the-plugins-hub"
       }
     ],
-    "content": "9f56712abf7cf75627f776620c5f491c",
+    "content": "957fe4fa2b0372369eb2b7381d883beb",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/custom-codegen/contributing",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
@@ -870,8 +882,7 @@
     "headings": [
       "Global Installation",
       "Monorepo Project",
-      "Setup",
-      "What's next?"
+      "Setup"
     ],
     "toc": [
       {
@@ -900,14 +911,9 @@
         ],
         "title": "Setup",
         "anchor": "setup"
-      },
-      {
-        "children": [],
-        "title": "What's next?",
-        "anchor": "whats-next"
       }
     ],
-    "content": "e031466d35030d94eec5fc12cbb61246",
+    "content": "c74506f1b257355da489b79ad5c2e8ec",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/installation",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
