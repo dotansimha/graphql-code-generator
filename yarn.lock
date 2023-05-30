@@ -3202,10 +3202,10 @@
     "@types/mdx" "^2.0.0"
     "@types/react" ">=16"
 
-"@mendable/search@0.0.108":
-  version "0.0.108"
-  resolved "https://registry.yarnpkg.com/@mendable/search/-/search-0.0.108.tgz#248d0e932c39a6db12bb834d4c01d74a5e3972cf"
-  integrity sha512-TsnbH9Fz93YKIYpaGpYW8GzkYOC4FINxRbMZwZU3mr7cl23yQHzk9ghD0vATh7BtjfcrDiq9FlXtwBO2VVukig==
+"@mendable/search@0.0.106":
+  version "0.0.106"
+  resolved "https://registry.yarnpkg.com/@mendable/search/-/search-0.0.106.tgz#367be07210d76211d1c4143edaeb2b07fbdeba66"
+  integrity sha512-zlIrgXR5pzE6GYsppk3x6deLUR4yoD2LJlKVcUVFSj4Ex+QFXGXyygeUdhPknfe0AX/wY5C8eQn46MfGW1uSPg==
   dependencies:
     posthog-js "^1.45.1"
 
