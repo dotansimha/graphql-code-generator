@@ -20,11 +20,117 @@ import {
 } from 'typescript';
 import {
   buildScalarsFromConfig,
+  convertFactory,
   parseEnumValues,
   transformComment,
   transformDirectiveArgumentAndInputFieldMappings,
 } from '@graphql-codegen/visitor-plugin-common';
-import { visit } from 'graphql';
+import {
+  ASTNode,
+  DirectiveDefinitionNode,
+  DirectiveNode,
+  EnumValueDefinitionNode,
+  FieldDefinitionNode,
+  GraphQLSchema,
+  InputValueDefinitionNode,
+  isEnumType,
+  Kind,
+  NamedTypeNode,
+  print,
+  visit,
+} from 'graphql';
+
+export function indent(str: string, count = 1): string {
+  return new Array(count).fill('  ').join('') + str;
+}
+
+function getDeprecationReason(directive: DirectiveNode): string | void {
+  if ((directive.name as any) === 'deprecated') {
+    const hasArguments = directive.arguments.length > 0;
+    let reason = 'Field no longer supported';
+    if (hasArguments) {
+      reason = directive.arguments[0].value as any;
+    }
+    return reason;
+  }
+}
+
+function getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
+  let commentText: string = node.description as any;
+  const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+  if (deprecationDirective) {
+    const deprecationReason = getDeprecationReason(deprecationDirective);
+    commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
+  }
+  const comment = transformComment(commentText, 1);
+  return comment;
+}
+
+function getKindsFromAncestors(ancestors: readonly (ASTNode | readonly ASTNode[])[]) {
+  if (!ancestors) return [];
+
+  return ancestors
+    .map(t => {
+      return 'length' in t ? t.map(t => t.kind) : t.kind;
+    })
+    .filter(Boolean);
+}
+
+function MaybeString(ancestors: readonly (ASTNode | readonly ASTNode[])[], children: string) {
+  const currentVisitContext = getKindsFromAncestors(ancestors);
+  const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+
+  return isInputContext ? `InputMaybe<${children}>` : `Maybe<${children}>`;
+}
+
+function convertName(
+  node: ASTNode | string,
+  options?: { useTypesPrefix?: boolean; useTypesSuffix?: boolean; typesPrefix?: string; typesSuffix?: string }
+): string {
+  const useTypesPrefix = typeof options?.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+  const useTypesSuffix = typeof options?.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
+
+  let convertedName = '';
+
+  if (useTypesPrefix && options?.typesPrefix) {
+    convertedName += options?.typesPrefix;
+  }
+
+  // todo?
+  const convert = convertFactory({ namingConvention: 'keep' });
+  convertedName += convert(node, {
+    prefix: options?.typesPrefix,
+    suffix: options?.typesSuffix,
+  });
+
+  if (useTypesSuffix && options?.typesSuffix) {
+    convertedName += options?.typesSuffix;
+  }
+
+  return convertedName;
+}
+
+function getTypeForNode(node: NamedTypeNode, config: TypeScriptPluginConfig, schema: GraphQLSchema, scalars): string {
+  const typename = typeof node.name === 'string' ? node.name : node.name.value;
+
+  // todo
+  if (scalars[typename]) {
+    return `Scalars['${typename}']`;
+  }
+
+  // const { enumValues } = config;
+  // if (enumValues && enumValues[typename as keyof TypeScriptPluginConfig['enumValues']]) {
+  //   return enumValues[typename as keyof TypeScriptPluginConfig['enumValues']]?.typeIdentifier;
+  // }
+
+  const schemaType = schema.getType(typename);
+
+  if (schemaType && isEnumType(schemaType)) {
+    return convertName(node, { useTypesPrefix: config.enumPrefix, typesPrefix: config.typesPrefix });
+  }
+
+  return convertName(node);
+}
 
 export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema,
@@ -36,39 +142,120 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   const sourceFile = createSourceFile('graphql.ts', '', ScriptTarget.ES2020, false, ScriptKind.TSX);
   const printer = createPrinter({ omitTrailingSemicolon: false, newLine: NewLineKind.CarriageReturnLineFeed });
 
+  const scalarsMap = buildScalarsFromConfig(schema, config);
+
   const gqlTsLeaveVisitors = new TsVisitor(_schema, config, {}, sourceFile, printer);
 
-  type VisitorResultTypeScriptAST = {}; // <- TODO
+  type VisitorResultTypeScriptAST = string; // <- TODO
   const visitorResult = visit<VisitorResultTypeScriptAST>(gqlDocumentNode, {
     // TODO: 1
-    NamedType: {
-      leave(_node, _key, _parent, _path, _ancestors) {
-        return {};
+    InputValueDefinition: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        return gqlTsLeaveVisitors.InputValueDefinition(node as any);
+      },
+    },
+    Name: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        return node.value;
       },
     },
     // TODO: 2
-    ListType: {
-      leave(_node, _key, _parent, _path, _ancestors) {
-        return 'BREAK';
+    UnionTypeDefinition: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        return gqlTsLeaveVisitors.UnionTypeDefinition(node as any, _key, _parent);
       },
     },
     // TODO: 3
-    NonNullType: {
-      leave(_node, _key, _parent, _path, _ancestors) {
-        return 'BREAK';
+    InterfaceTypeDefinition: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        return gqlTsLeaveVisitors.InterfaceTypeDefinition(node as any, _key, _parent);
       },
     },
     // TODO: 4
-    FieldDefinition: {
+    ScalarTypeDefinition: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        return gqlTsLeaveVisitors.ScalarTypeDefinition(node as any);
+      },
+    },
+    // TODO: 5
+    EnumTypeDefinition: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        return gqlTsLeaveVisitors.EnumTypeDefinition(node as any, _key, _parent);
+      },
+    },
+    DirectiveDefinition: {
       leave(_node, _key, _parent, _path, _ancestors) {
-        return 'BREAK';
+        return '';
+      },
+    },
+    SchemaDefinition: {
+      leave(_node, _key, _parent, _path, _ancestors) {
+        return '';
+      },
+    },
+    // TODO: 6
+    ObjectTypeDefinition: {
+      leave(node, key, parent, _path, _ancestors) {
+        return gqlTsLeaveVisitors.ObjectTypeDefinition(node as any, key!, parent);
+      },
+    },
+    // TODO: 7
+    InputObjectTypeDefinition: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        return gqlTsLeaveVisitors.InputObjectTypeDefinition(node as any);
+      },
+    },
+    NamedType: {
+      leave(node, _key, _parent, _path, ancestors) {
+        const isVisitingInputType = getKindsFromAncestors(ancestors).includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+
+        let typeToUse = getTypeForNode(node as any as NamedTypeNode, config, _schema, scalarsMap);
+
+        if (!isVisitingInputType && config.fieldWrapperValue && config.wrapFieldDefinitions) {
+          typeToUse = `FieldWrapper<${typeToUse}>`;
+        }
+
+        return MaybeString(ancestors, typeToUse);
+      },
+    },
+    ListType: {
+      leave(node, _key, _parent, _path, ancestors) {
+        return MaybeString(ancestors, `Array<${node.type}>`);
+      },
+    },
+    NonNullType: {
+      leave(node, _key, _parent, _path, _ancestors) {
+        if (node.type.startsWith('Maybe')) {
+          return node.type.replace(/Maybe<(.*?)>$/, '$1');
+        }
+        if (node.type.startsWith('InputMaybe')) {
+          return node.type.replace(/InputMaybe<(.*?)>$/, '$1');
+        }
+
+        return node.type;
+      },
+    },
+    FieldDefinition: {
+      leave(node, key, parent, _path, _ancestors) {
+        const typeString = config.wrapFieldDefinitions
+          ? `EntireFieldWrapper<${node.type}>`
+          : (node.type as any as string);
+        // TODO
+        const originalFieldNode = (parent as any)[key as number];
+        const addOptionalSign =
+          !(config.avoidOptionals as any)?.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+        const comment = getNodeComment(node as any as FieldDefinitionNode);
+
+        return (
+          comment +
+          indent(`${config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString};`)
+        );
       },
     },
   });
   const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
 
   // Scalars
-  const scalarsMap = buildScalarsFromConfig(schema, config);
   const scalars_ = Object.keys(scalarsMap).map(scalarName => {
     const scalarValue = scalarsMap[scalarName].type;
     const scalarType = schema.getType(scalarName);
