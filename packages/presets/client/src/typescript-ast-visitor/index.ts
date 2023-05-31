@@ -24,20 +24,47 @@ import {
   transformComment,
   transformDirectiveArgumentAndInputFieldMappings,
 } from '@graphql-codegen/visitor-plugin-common';
+import { visit } from 'graphql';
 
 export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema,
   documents,
   config
 ) => {
-  const { schema: _schema, ast } = transformSchemaAST(schema, config);
+  const { schema: _schema, ast: gqlDocumentNode } = transformSchemaAST(schema, config);
 
   const sourceFile = createSourceFile('graphql.ts', '', ScriptTarget.ES2020, false, ScriptKind.TSX);
   const printer = createPrinter({ omitTrailingSemicolon: false, newLine: NewLineKind.CarriageReturnLineFeed });
 
-  const visitor = new TsVisitor(_schema, config, {}, sourceFile, printer);
+  const gqlTsLeaveVisitors = new TsVisitor(_schema, config, {}, sourceFile, printer);
 
-  const visitorResult = oldVisit(ast, { leave: visitor as any }); // todo
+  type VisitorResultTypeScriptAST = {}; // <- TODO
+  const visitorResult = visit<VisitorResultTypeScriptAST>(gqlDocumentNode, {
+    // TODO: 1
+    NamedType: {
+      leave(_node, _key, _parent, _path, _ancestors) {
+        return {};
+      },
+    },
+    // TODO: 2
+    ListType: {
+      leave(_node, _key, _parent, _path, _ancestors) {
+        return 'BREAK';
+      },
+    },
+    // TODO: 3
+    NonNullType: {
+      leave(_node, _key, _parent, _path, _ancestors) {
+        return 'BREAK';
+      },
+    },
+    // TODO: 4
+    FieldDefinition: {
+      leave(_node, _key, _parent, _path, _ancestors) {
+        return 'BREAK';
+      },
+    },
+  });
   const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
 
   // Scalars
@@ -261,11 +288,12 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   );
 
   return {
+    // tsAST: TODO,
     prepend: [
       enumImportsDeclaration,
       directiveImportsDeclaration,
-      ...visitor.getScalarsImports(),
-      ...visitor.getWrapperDefinitions(),
+      ...gqlTsLeaveVisitors.getScalarsImports(),
+      ...gqlTsLeaveVisitors.getWrapperDefinitions(),
     ].filter(Boolean),
     content: [
       // todo: yes, that sucks
