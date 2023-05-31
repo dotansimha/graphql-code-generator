@@ -21,6 +21,8 @@ import {
 import {
   buildScalarsFromConfig,
   convertFactory,
+  DeclarationBlock,
+  isOneOfInputObjectType,
   parseEnumValues,
   transformComment,
   transformDirectiveArgumentAndInputFieldMappings,
@@ -33,9 +35,11 @@ import {
   FieldDefinitionNode,
   GraphQLSchema,
   InputValueDefinitionNode,
+  InterfaceTypeDefinitionNode,
   isEnumType,
   Kind,
   NamedTypeNode,
+  ObjectTypeDefinitionNode,
   print,
   visit,
 } from 'graphql';
@@ -108,6 +112,80 @@ function convertName(
   }
 
   return convertedName;
+}
+
+function getObjectTypeDeclarationBlock(
+  node: ObjectTypeDefinitionNode,
+  originalNode: ObjectTypeDefinitionNode,
+  config: TypeScriptPluginConfig
+): DeclarationBlock {
+  const optionalTypename = config.nonOptionalTypename ? '__typename' : '__typename?';
+  const allFields = [
+    ...(config.addTypename
+      ? [indent(`${config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}';}`)]
+      : []),
+    ...node.fields,
+  ] as string[];
+  const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => convertName(i)) : [];
+
+  const declarationBlock = new DeclarationBlock({
+    enumNameValueSeparator: ' =',
+    ignoreExport: config.noExport,
+  })
+    .export()
+    .asKind('type')
+    .withName(convertName(node))
+    .withComment(node.description as any as string);
+
+  // if (type === 'interface' || type === 'class') {
+  //   if (interfacesNames.length > 0) {
+  //     const keyword = interfacesType === 'interface' && type === 'class' ? 'implements' : 'extends';
+
+  //     declarationBlock.withContent(`${keyword} ` + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+  //   }
+
+  //   declarationBlock.withBlock(allFields.join('\n'));
+  // } else {
+  appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
+  // }
+
+  return declarationBlock;
+}
+
+function buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, config: any) {
+  const fieldsWithArguments = node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
+  return fieldsWithArguments
+    .map(field => {
+      const name =
+        node.name.value +
+        (config.addUnderscoreToArgsType ? '_' : '') +
+        convertName(field, {
+          useTypesPrefix: false,
+          useTypesSuffix: false,
+        }) +
+        'Args';
+
+      if (config.onlyEnums) return '';
+
+      return new DeclarationBlock({
+        enumNameValueSeparator: ' =',
+        ignoreExport: config.noExport,
+      })
+        .export()
+        .asKind('type')
+        .withName(convertName(name))
+        .withComment(node.description);
+    })
+    .join('\n\n');
+}
+
+function appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
+  block.withContent(mergeInterfaces(interfaces, fields.length > 0));
+  block.withBlock(fields.join('\n'));
+}
+
+function mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
+  return interfaces.join(' & ') + (interfaces.length && hasOtherFields ? ' & ' : '');
 }
 
 function getTypeForNode(node: NamedTypeNode, config: TypeScriptPluginConfig, schema: GraphQLSchema, scalars): string {
@@ -196,13 +274,43 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
     // TODO: 6
     ObjectTypeDefinition: {
       leave(node, key, parent, _path, _ancestors) {
-        return gqlTsLeaveVisitors.ObjectTypeDefinition(node as any, key!, parent);
+        if (config.onlyOperationTypes || config.onlyEnums) return '';
+        // const originalNode = parent[key] as any;
+
+        // return [getObjectTypeDeclarationBlock(node, originalNode, config).string, buildArgumentsBlock(originalNode)]
+        //   .filter(f => f)
+        //   .join('\n\n');
+
+        return gqlTsLeaveVisitors.ObjectTypeDefinition(node as any, key, parent);
       },
     },
-    // TODO: 7
     InputObjectTypeDefinition: {
       leave(node, _key, _parent, _path, _ancestors) {
-        return gqlTsLeaveVisitors.InputObjectTypeDefinition(node as any);
+        if (config.onlyEnums) return '';
+
+        // Why the heck is node.name a string and not { value: string } at runtime ?!
+        if (isOneOfInputObjectType(_schema.getType(node.name as unknown as string))) {
+          const declarationKind = 'type';
+          return new DeclarationBlock({
+            enumNameValueSeparator: ' =',
+            ignoreExport: config.noExport,
+          })
+            .export()
+            .asKind(declarationKind)
+            .withName(convertName(node))
+            .withComment(node.description as any as string)
+            .withContent(`\n` + node.fields.join('\n  |')).string;
+        }
+
+        return new DeclarationBlock({
+          enumNameValueSeparator: ' =',
+          ignoreExport: config.noExport,
+        })
+          .export()
+          .asKind('type')
+          .withName(convertName(node))
+          .withComment(node.description as any as string)
+          .withBlock(node.fields.join('\n')).string;
       },
     },
     NamedType: {
