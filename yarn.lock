@@ -2369,6 +2369,17 @@
     tslib "^2.4.0"
     value-or-promise "1.0.12"
 
+"@graphql-tools/executor@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/executor/-/executor-0.0.15.tgz#cbd29af2ec54213a52f6c516a7792b3e626a4c49"
+  integrity sha512-6U7QLZT8cEUxAMXDP4xXVplLi6RBwx7ih7TevlBto66A/qFp3PDb6o/VFo07yBKozr8PGMZ4jMfEWBGxmbGdxA==
+  dependencies:
+    "@graphql-tools/utils" "9.2.1"
+    "@graphql-typed-document-node/core" "3.1.2"
+    "@repeaterjs/repeater" "3.0.4"
+    tslib "^2.4.0"
+    value-or-promise "1.0.12"
+
 "@graphql-tools/executor@^0.0.18":
   version "0.0.18"
   resolved "https://registry.yarnpkg.com/@graphql-tools/executor/-/executor-0.0.18.tgz#5b9f881d59484ea55278de3b4743ece8d68bc6e7"
@@ -2569,7 +2580,7 @@
     value-or-promise "^1.0.11"
     ws "^8.12.0"
 
-"@graphql-tools/utils@9.2.1", "@graphql-tools/utils@^9.0.0", "@graphql-tools/utils@^9.0.1", "@graphql-tools/utils@^9.1.1", "@graphql-tools/utils@^9.2.1":
+"@graphql-tools/utils@9.2.1", "@graphql-tools/utils@^9.0.0", "@graphql-tools/utils@^9.1.1", "@graphql-tools/utils@^9.2.1":
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-9.2.1.tgz#1b3df0ef166cfa3eae706e3518b17d5922721c57"
   integrity sha512-WUw506Ql6xzmOORlriNrD6Ugx+HjVgYxt9KCXD9mHAak+eaXSwuGGPyE60hy9xaDEoXKBsG7SkG69ybitaVl6A==
@@ -2600,6 +2611,11 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
+"@graphql-typed-document-node/core@3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.2.tgz#6fc464307cbe3c8ca5064549b806360d84457b04"
+  integrity sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==
+
 "@graphql-typed-document-node/core@3.2.0", "@graphql-typed-document-node/core@^3.1.1":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
@@ -2611,6 +2627,13 @@
   integrity sha512-6npFz7eZz33mXgSm1waBLMjUNG0D5hTc/p5Hcs1mojkT3KsLpCOFokzTEKboNsBhKevYcaVa/xeA7WBj4UYMLg==
   dependencies:
     tslib "^2.3.1"
+
+"@graphql-yoga/plugin-defer-stream@^1.7.3":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-defer-stream/-/plugin-defer-stream-1.9.1.tgz#160fa643e6ffdcb0f1340d8774845fde1d20045e"
+  integrity sha512-YTY9mwd3g2N8AcdDTd/EHKjiHCfRYidY0RwZLAnue3eWxbsAp/2VEXMEk5HBwb1rm2AIzSytryR5+aaH5itshw==
+  dependencies:
+    "@graphql-tools/utils" "^9.2.1"
 
 "@graphql-yoga/plugin-persisted-operations@1.9.1":
   version "1.9.1"
@@ -8009,6 +8032,24 @@ graphql-ws@5.11.3:
   version "5.11.3"
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.11.3.tgz#eaf8e6baf669d167975cff13ad86abca4ecfe82f"
   integrity sha512-fU8zwSgAX2noXAsuFiCZ8BtXeXZOzXyK5u1LloCdacsVth4skdBMPO74EG51lBoWSIZ8beUocdpV8+cQHBODnQ==
+
+graphql-yoga@3.7.3:
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/graphql-yoga/-/graphql-yoga-3.7.3.tgz#6b26b3bf4b8d87005cbdfdef34f4c0e7fc1e9286"
+  integrity sha512-u0Xs4iUfsCcZPVTM1kwd+zVJsX0IsYQ0N8s/aU6Ch/Ez2P1cppLRrFPb7WqN0eK+pMipUuyVC9Wm/cIbQdprkA==
+  dependencies:
+    "@envelop/core" "^3.0.4"
+    "@envelop/validation-cache" "^5.1.2"
+    "@graphql-tools/executor" "^0.0.15"
+    "@graphql-tools/schema" "^9.0.0"
+    "@graphql-tools/utils" "^9.2.1"
+    "@graphql-yoga/logger" "^0.0.1"
+    "@graphql-yoga/subscription" "^3.1.0"
+    "@whatwg-node/fetch" "^0.8.2"
+    "@whatwg-node/server" "^0.7.3"
+    dset "^3.1.1"
+    lru-cache "^8.0.0"
+    tslib "^2.3.1"
 
 graphql-yoga@3.9.1:
   version "3.9.1"
@@ -13762,7 +13803,7 @@ typescript-json-schema@0.56.0:
     typescript "~4.9.5"
     yargs "^17.1.1"
 
-typescript@4.9.5, typescript@5.0.4, typescript@^5.0.0, typescript@~4.9.5:
+typescript@4.9.5, typescript@5.0.3, typescript@5.0.4, typescript@^5.0.0, typescript@~4.9.5:
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
   integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
