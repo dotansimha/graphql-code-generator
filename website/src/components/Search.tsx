@@ -1,17 +1,5 @@
 import { MendableSearchBar } from '@mendable/search';
 import { useTheme, useMounted } from '@theguild/components';
-// import { useSyncExternalStore } from 'react';
-
-// const darkModeStore = {
-//   subscribe(callback: () => void) {
-//     const mutationObserver = new MutationObserver(callback);
-//     mutationObserver.observe(document.documentElement, { attributeFilter: ['class'] });
-
-//     return () => mutationObserver.disconnect();
-//   },
-//   getSnapshot: () => document.documentElement.classList.contains('dark'),
-//   getServerSnapshot: () => false,
-// };
 
 export function Search() {
   const { resolvedTheme } = useTheme();
