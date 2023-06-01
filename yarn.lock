@@ -8001,10 +8001,10 @@ graphql-config@^4.1.0:
     string-env-interpolation "1.0.1"
     tslib "^2.4.0"
 
-graphql-config@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-5.0.1.tgz#4a0d2d3db0b6b3bd856e4db7627e5c8970e10a8d"
-  integrity sha512-cOi5RUK1QOoqwfzCeyVxRn6nsFqzjq7rs93ZvqT+gNxTgmhpROg3ZetgdbhC/yUWnguDM4S9GoHak+Xh9jLZeA==
+graphql-config@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-5.0.2.tgz#7e962f94ccddcc2ee0aa71d75cf4491ec5092bdb"
+  integrity sha512-7TPxOrlbiG0JplSZYCyxn2XQtqVhXomEjXUmWJVSS5ET1nPhOJSsIb/WTwqWhcYX6G0RlHXSj9PLtGTKmxLNGg==
   dependencies:
     "@graphql-tools/graphql-file-loader" "^8.0.0"
     "@graphql-tools/json-file-loader" "^8.0.0"
