@@ -2,31 +2,12 @@
 /* eslint sort-keys: error */
 import { useRouter } from 'next/router';
 import { defineConfig, Giscus, useTheme } from '@theguild/components';
-import { MendableSearchBar } from '@mendable/search';
+import { Search } from './src/components/Search';
 
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
   search: {
-    component: () => {
-      return (
-        <div className="hidden w-[250px] sm:block">
-          <MendableSearchBar
-            style={{ darkMode: false, accentColor: 'rgb(0, 76, 163)' }}
-            placeholder="Ask a question"
-            dialogPlaceholder="What are you looking for?"
-            anon_key={process.env.NEXT_PUBLIC_MENDABLE_ANON_KEY!}
-            botIcon={<span>🤖</span>}
-            userIcon={<span>🧑‍💻</span>}
-            messageSettings={{
-              openSourcesInNewTab: false,
-              prettySources: true,
-            }}
-            welcomeMessage="Hi, I'm your AI assistant. How can I help you?"
-            cmdShortcutKey="Ctrl+K"
-          />
-        </div>
-      );
-    },
+    component: Search,
   },
 
   main({ children }) {
