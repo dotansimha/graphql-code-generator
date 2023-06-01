@@ -21,6 +21,7 @@ import {
   Kind,
   ListTypeNode,
   NamedTypeNode,
+  NameNode,
   NonNullTypeNode,
   TypeDefinitionNode,
   UnionTypeDefinitionNode,
@@ -365,6 +366,24 @@ export class TsVisitor<
       }
       return null;
     };
+
+    function wrapWithSingleQuotes(value: string | number | NameNode, skipNumericCheck = false): string {
+      if (skipNumericCheck) {
+        if (typeof value === 'number') {
+          return String(value);
+        }
+        return `'${value}'`;
+      }
+
+      if (
+        typeof value === 'number' ||
+        (typeof value === 'string' && !Number.isNaN(parseInt(value)) && parseFloat(value).toString() === value)
+      ) {
+        return String(value);
+      }
+
+      return `'${value}'`;
+    }
 
     const withFutureAddedValue = [
       this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],

@@ -1,4 +1,4 @@
-import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 
 import { TypeScriptPluginConfig } from './config';
@@ -29,7 +29,6 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import {
   ASTNode,
-  DirectiveDefinitionNode,
   DirectiveNode,
   EnumValueDefinitionNode,
   FieldDefinitionNode,
@@ -40,7 +39,7 @@ import {
   Kind,
   NamedTypeNode,
   ObjectTypeDefinitionNode,
-  print,
+  UnionTypeDefinitionNode,
   visit,
 } from 'graphql';
 
@@ -120,10 +119,12 @@ function getObjectTypeDeclarationBlock(
   config: TypeScriptPluginConfig
 ): DeclarationBlock {
   const optionalTypename = config.nonOptionalTypename ? '__typename' : '__typename?';
+  const type = 'type';
+  const interfacesType = 'interface';
   const allFields = [
-    ...(config.addTypename
-      ? [indent(`${config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}';}`)]
-      : []),
+    ...(config.skipTypename
+      ? []
+      : [indent(`${config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}';`)]),
     ...node.fields,
   ] as string[];
   const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => convertName(i)) : [];
@@ -133,7 +134,7 @@ function getObjectTypeDeclarationBlock(
     ignoreExport: config.noExport,
   })
     .export()
-    .asKind('type')
+    .asKind(type)
     .withName(convertName(node))
     .withComment(node.description as any as string);
 
@@ -144,10 +145,10 @@ function getObjectTypeDeclarationBlock(
   //     declarationBlock.withContent(`${keyword} ` + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
   //   }
 
-  //   declarationBlock.withBlock(allFields.join('\n'));
+  //   declarationBlock.withBlock(this.mergeAllFields(allFields, false));
   // } else {
-  appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
   // }
+  appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
 
   return declarationBlock;
 }
@@ -174,9 +175,9 @@ function buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefin
         .export()
         .asKind('type')
         .withName(convertName(name))
-        .withComment(node.description);
+        .withComment(node.description).string;
     })
-    .join('\n\n');
+    .join('\n');
 }
 
 function appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
@@ -210,6 +211,32 @@ function getTypeForNode(node: NamedTypeNode, config: TypeScriptPluginConfig, sch
   return convertName(node);
 }
 
+function clearOptional(str: string): string {
+  if (str.startsWith('Maybe')) {
+    return str.replace(/Maybe<(.*?)>$/, '$1');
+  }
+
+  return str;
+}
+
+function _getDirectiveOverrideType(
+  directives: ReadonlyArray<DirectiveNode>,
+  config: TypeScriptPluginConfig
+): string | null {
+  const type = directives
+    .map(directive => {
+      const directiveName = directive.name as any as string;
+      if (config.directiveArgumentAndInputFieldMappings[directiveName]) {
+        return `DirectiveArgumentAndInputFieldMappings['${directiveName}']`;
+      }
+      return null;
+    })
+    .reverse()
+    .find(a => !!a);
+
+  return type || null;
+}
+
 export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema,
   documents,
@@ -226,10 +253,55 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
 
   type VisitorResultTypeScriptAST = string; // <- TODO
   const visitorResult = visit<VisitorResultTypeScriptAST>(gqlDocumentNode, {
-    // TODO: 1
     InputValueDefinition: {
-      leave(node, _key, _parent, _path, _ancestors) {
-        return gqlTsLeaveVisitors.InputValueDefinition(node as any);
+      leave(node, key, parent, _path, ancestors) {
+        const originalFieldNode = parent[key] as FieldDefinitionNode;
+
+        const avoidOptionalsConfig = typeof config.avoidOptionals === 'object' ? config.avoidOptionals : {};
+
+        const addOptionalSign =
+          !avoidOptionalsConfig.inputValue &&
+          (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
+            (!avoidOptionalsConfig.defaultValue && node.defaultValue !== undefined));
+        const comment = getNodeComment(node);
+
+        let type: string = node.type as any as string;
+        if (node.directives && config.directiveArgumentAndInputFieldMappings) {
+          type = _getDirectiveOverrideType(node.directives, config) || type;
+        }
+
+        const readonlyPrefix = config.immutableTypes ? 'readonly ' : '';
+
+        const buildFieldDefinition = (isOneOf = false) => {
+          return `${readonlyPrefix}${node.name}${addOptionalSign && !isOneOf ? '?' : ''}: ${
+            isOneOf ? clearOptional(type) : type
+          };`;
+        };
+
+        const realParentDef = ancestors?.[ancestors.length - 1];
+        if (realParentDef) {
+          const parentType = _schema.getType(realParentDef.name.value);
+
+          if (isOneOfInputObjectType(parentType)) {
+            if (originalFieldNode.type.kind === Kind.NON_NULL_TYPE) {
+              throw new Error(
+                'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+              );
+            }
+            const fieldParts: Array<string> = [];
+            for (const fieldName of Object.keys(parentType.getFields())) {
+              // Why the heck is node.name a string and not { value: string } at runtime ?!
+              if (fieldName === (node.name as any as string)) {
+                fieldParts.push(buildFieldDefinition(true));
+                continue;
+              }
+              fieldParts.push(`${readonlyPrefix}${fieldName}?: never;`);
+            }
+            return comment + indent(`{ ${fieldParts.join(' ')} }`);
+          }
+        }
+
+        return comment + indent(buildFieldDefinition());
       },
     },
     Name: {
@@ -237,28 +309,54 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
         return node.value;
       },
     },
-    // TODO: 2
     UnionTypeDefinition: {
-      leave(node, _key, _parent, _path, _ancestors) {
-        return gqlTsLeaveVisitors.UnionTypeDefinition(node as any, _key, _parent);
+      leave(node, key, parent, _path, _ancestors) {
+        if (config.onlyOperationTypes || config.onlyEnums) return '';
+
+        let withFutureAddedValue: string[] = [];
+        if (config.futureProofUnions) {
+          withFutureAddedValue = [
+            config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
+          ];
+        }
+        const originalNode = parent[key] as UnionTypeDefinitionNode;
+        const possibleTypes = originalNode.types
+          .map(t => (scalarsMap[t.name.value] ? `Scalars['${t.name.value}']` : convertName(t)))
+          .concat(...withFutureAddedValue)
+          .join(' | ');
+
+        return new DeclarationBlock({
+          enumNameValueSeparator: ' =',
+          ignoreExport: config.noExport,
+        })
+          .export()
+          .asKind('type')
+          .withName(convertName(node))
+          .withComment(node.description as any as string)
+          .withContent(possibleTypes).string;
       },
     },
-    // TODO: 3
     InterfaceTypeDefinition: {
-      leave(node, _key, _parent, _path, _ancestors) {
-        return gqlTsLeaveVisitors.InterfaceTypeDefinition(node as any, _key, _parent);
+      leave(node, key, parent, _path, _ancestors) {
+        if (config.onlyOperationTypes || config.onlyEnums) return '';
+        const originalNode = parent[key];
+
+        const declarationBlock = new DeclarationBlock({
+          enumNameValueSeparator: ' =',
+          ignoreExport: config.noExport,
+        })
+          .export()
+          .asKind('interface')
+          .withName(convertName(node))
+          .withComment(node.description as any as string)
+          .withBlock(node.fields.join('\n'));
+
+        return [declarationBlock.string, buildArgumentsBlock(originalNode, config)].filter(f => f).join('\n\n');
       },
     },
-    // TODO: 4
     ScalarTypeDefinition: {
-      leave(node, _key, _parent, _path, _ancestors) {
-        return gqlTsLeaveVisitors.ScalarTypeDefinition(node as any);
-      },
-    },
-    // TODO: 5
-    EnumTypeDefinition: {
-      leave(node, _key, _parent, _path, _ancestors) {
-        return gqlTsLeaveVisitors.EnumTypeDefinition(node as any, _key, _parent);
+      leave(_node, _key, _parent, _path, _ancestors) {
+        return '';
       },
     },
     DirectiveDefinition: {
@@ -271,17 +369,15 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
         return '';
       },
     },
-    // TODO: 6
     ObjectTypeDefinition: {
       leave(node, key, parent, _path, _ancestors) {
         if (config.onlyOperationTypes || config.onlyEnums) return '';
-        // const originalNode = parent[key] as any;
+        const originalNode = parent[key] as any;
 
-        // return [getObjectTypeDeclarationBlock(node, originalNode, config).string, buildArgumentsBlock(originalNode)]
-        //   .filter(f => f)
-        //   .join('\n\n');
-
-        return gqlTsLeaveVisitors.ObjectTypeDefinition(node as any, key, parent);
+        return [
+          getObjectTypeDeclarationBlock(node, originalNode, config).string,
+          buildArgumentsBlock(originalNode, config),
+        ].join('');
       },
     },
     InputObjectTypeDefinition: {

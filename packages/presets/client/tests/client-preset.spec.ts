@@ -1138,7 +1138,7 @@ export * from "./gql.js";`);
 
     expect(EventQueryDocument.match(/fragment SharedComponentFragment on User/g)?.length).toBe(1);
 
-    await cleanUp();
+    // await cleanUp();
   });
 
   describe('when no operations are found', () => {
