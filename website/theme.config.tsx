@@ -22,6 +22,7 @@ export default defineConfig({
               prettySources: true,
             }}
             welcomeMessage="Hi, I'm your AI assistant. How can I help you?"
+            cmdShortcutKey="Ctrl+K"
           />
         </div>
       );
