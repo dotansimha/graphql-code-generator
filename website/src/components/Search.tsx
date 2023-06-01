@@ -1,5 +1,5 @@
 import { MendableSearchBar } from '@mendable/search';
-import { useTheme } from '@theguild/components';
+import { useTheme, useMounted } from '@theguild/components';
 // import { useSyncExternalStore } from 'react';
 
 // const darkModeStore = {
@@ -15,16 +15,14 @@ import { useTheme } from '@theguild/components';
 
 export function Search() {
   const { resolvedTheme } = useTheme();
-  // const darkMode = useSyncExternalStore(
-  //   darkModeStore.subscribe,
-  //   darkModeStore.getSnapshot,
-  //   darkModeStore.getServerSnapshot
-  // );
-
+  const isMounted = useMounted();
   return (
-    <div className="hidden w-[250px] sm:block">
+    <div className="w-[250px] max-sm:hidden">
       <MendableSearchBar
-        style={{ darkMode: resolvedTheme === 'dark', accentColor: 'rgb(0, 76, 163)' }}
+        style={{
+          darkMode: isMounted && resolvedTheme === 'dark',
+          accentColor: 'rgb(0, 76, 163)',
+        }}
         placeholder="Ask a question"
         dialogPlaceholder="What are you looking for?"
         anon_key={process.env.NEXT_PUBLIC_MENDABLE_ANON_KEY!}
