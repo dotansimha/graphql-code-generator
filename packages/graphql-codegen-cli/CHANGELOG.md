@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 4.0.1
+
+### Patch Changes
+
+- [#9479](https://github.com/dotansimha/graphql-code-generator/pull/9479) [`0aa444b5d`](https://github.com/dotansimha/graphql-code-generator/commit/0aa444b5d092565c321643a55fb05c7301e303bf) Thanks [@gilgardosh](https://github.com/gilgardosh)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@^5.0.2` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.0.2) (from `^5.0.1`, in `dependencies`)
+
+- [#9479](https://github.com/dotansimha/graphql-code-generator/pull/9479) [`0aa444b5d`](https://github.com/dotansimha/graphql-code-generator/commit/0aa444b5d092565c321643a55fb05c7301e303bf) Thanks [@gilgardosh](https://github.com/gilgardosh)! - Update graphql-config to v^5.0.2
+
 ## 4.0.0
 
 ### Major Changes
