@@ -2,7 +2,6 @@ import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 
 import { TypeScriptPluginConfig } from './config';
-import { TsVisitor } from './ts-visitor';
 import { includeIntrospectionTypesDefinitions } from './graphql-visitor-utils';
 import {
   addSyntheticLeadingComment,
@@ -242,8 +241,6 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   const printer = createPrinter({ omitTrailingSemicolon: false, newLine: NewLineKind.CarriageReturnLineFeed });
 
   const scalarsMap = buildScalarsFromConfig(schema, config);
-
-  const gqlTsLeaveVisitors = new TsVisitor(_schema, config, {}, sourceFile, printer);
 
   type VisitorResultTypeScriptAST = string; // <- TODO
   const visitorResult = visit<VisitorResultTypeScriptAST>(gqlDocumentNode, {
@@ -677,8 +674,8 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
     prepend: [
       enumImportsDeclaration,
       directiveImportsDeclaration,
-      ...gqlTsLeaveVisitors.getScalarsImports(),
-      ...gqlTsLeaveVisitors.getWrapperDefinitions(),
+      ...getScalarsImports(scalarsMap, config.useTypeImports ?? false),
+      ...getWrapperDefinitions(config),
     ].filter(Boolean),
     content: [
       // todo: yes, that sucks
@@ -691,3 +688,64 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
       .join('\n'),
   };
 };
+
+function getScalarsImports(scalars: ParsedScalarsMap, useTypeImports: boolean): string[] {
+  return Object.keys(scalars)
+    .map(enumName => {
+      const mappedValue = scalars[enumName];
+
+      if (mappedValue.isExternal) {
+        return buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default, useTypeImports);
+      }
+
+      return '';
+    })
+    .filter(Boolean);
+}
+
+function buildTypeImport(identifier: string, source: string, asDefault = false, useTypeImports: boolean): string {
+  if (asDefault) {
+    if (useTypeImports) {
+      return `import type { default as ${identifier} } from '${source}';`;
+    }
+    return `import ${identifier} from '${source}';`;
+  }
+  return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
+}
+
+export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
+export const MAKE_OPTIONAL_SIGNATURE = `type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };`;
+export const MAKE_MAYBE_SIGNATURE = `type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };`;
+
+function getWrapperDefinitions(config: TypeScriptPluginConfig): string[] {
+  if (config.onlyEnums) return [];
+  let exportPrefix = 'export ';
+  if (config.noExport) {
+    exportPrefix = '';
+  }
+
+  const exactDefinition = `${exportPrefix}${EXACT_SIGNATURE}`;
+
+  const optionalDefinition = `${exportPrefix}${MAKE_OPTIONAL_SIGNATURE}`;
+
+  const maybeDefinition = `${exportPrefix}${MAKE_MAYBE_SIGNATURE}`;
+
+  const maybeValue = `${exportPrefix}type Maybe<T> = ${config.maybeValue || 'T | null'};`;
+
+  const inputMaybeValue = `${exportPrefix}type InputMaybe<T> = ${config.inputMaybeValue || 'Maybe<T>'};`;
+
+  const definitions: string[] = [maybeValue, inputMaybeValue, exactDefinition, optionalDefinition, maybeDefinition];
+
+  if (config.wrapFieldDefinitions) {
+    const fieldWrapperDefinition = `${exportPrefix}type FieldWrapper<T> = ${config.fieldWrapperValue};`;
+    definitions.push(fieldWrapperDefinition);
+  }
+  if (config.wrapEntireFieldDefinitions) {
+    const entireFieldWrapperDefinition = `${exportPrefix}type EntireFieldWrapper<T> = ${
+      config.entireFieldWrapperValue || 'T'
+    };`;
+    definitions.push(entireFieldWrapperDefinition);
+  }
+
+  return definitions;
+}
