@@ -1021,10 +1021,12 @@ export * from "./gql.js";`);
   });
 
   it('should dedupe fragments - #8670', async () => {
-    const dir = path.join(__dirname, 'tmp/duplicate-fragments');
+    const dir = path.join(__dirname, '/tmp/duplicate-fragments/out1/');
     const cleanUp = async () => {
+      console.log('CLEANUP', dir);
       await fs.promises.rm(dir, { recursive: true, force: true });
     };
+    await cleanUp();
 
     const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
     const result = await executeCodegen({

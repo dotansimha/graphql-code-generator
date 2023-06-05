@@ -25,7 +25,6 @@
     "@graphql-codegen/plugin-helpers": "^4.2.0",
     "@graphql-codegen/schema-ast": "^3.0.1",
     "@graphql-codegen/typed-document-node": "^4.0.1",
-    "@graphql-codegen/typescript": "^3.0.4",
     "@graphql-codegen/typescript-operations": "^3.0.4",
     "@graphql-codegen/visitor-plugin-common": "^3.1.1",
     "@graphql-tools/documents": "^0.1.0",
