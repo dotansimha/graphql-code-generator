@@ -81,7 +81,7 @@ function getObjectTypeDeclarationBlock(
     .export()
     .asKind('type')
     .withName(convertName(node))
-    .withComment(node.description as any as string);
+    .withComment(node.description || '');
 
   appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
 
@@ -158,7 +158,7 @@ function _getDirectiveOverrideType(
 ): string | null {
   const type = directives
     .map(directive => {
-      const directiveName = directive.name as any as string;
+      const directiveName = directive.name.value;
       if (config.directiveArgumentAndInputFieldMappings?.[directiveName]) {
         return `DirectiveArgumentAndInputFieldMappings['${directiveName}']`;
       }
@@ -171,7 +171,7 @@ function _getDirectiveOverrideType(
 }
 
 export function getDeprecationReason(directive: DirectiveNode): string | void {
-  if ((directive.name as any) === 'deprecated') {
+  if (directive.name.value === 'deprecated') {
     const hasArguments = !!directive.arguments?.length;
     let reason = 'Field no longer supported';
     if (hasArguments) {
@@ -182,13 +182,13 @@ export function getDeprecationReason(directive: DirectiveNode): string | void {
 }
 
 export function getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
-  let commentText: string = node.description as any;
+  let commentText = node.description?.value;
   const deprecationDirective = node.directives?.find(v => v.name.value === 'deprecated');
   if (deprecationDirective) {
     const deprecationReason = getDeprecationReason(deprecationDirective);
     commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
   }
-  const comment = transformComment(commentText, 1);
+  const comment = transformComment(commentText || '', 1);
   return comment;
 }
 
@@ -212,7 +212,7 @@ export function typeScriptASTVisitor(
   return {
     InputValueDefinition: {
       leave(node, key, parent, _path, ancestors) {
-        const originalFieldNode = parent[key] as FieldDefinitionNode;
+        const originalFieldNode = Array.isArray(parent) ? parent[Number(key)] : parent;
 
         const avoidOptionalsConfig = typeof config.avoidOptionals === 'object' ? config.avoidOptionals : {};
 
@@ -220,9 +220,9 @@ export function typeScriptASTVisitor(
           !avoidOptionalsConfig.inputValue &&
           (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
             (!avoidOptionalsConfig.defaultValue && node.defaultValue !== undefined));
-        const comment = getNodeComment(node as any as InputValueDefinitionNode);
+        const comment = getNodeComment(node);
 
-        let type: string = node.type as any as string;
+        let type: string = node.type;
         if (node.directives && config.directiveArgumentAndInputFieldMappings) {
           type = _getDirectiveOverrideType(node.directives, config) || type;
         }
@@ -235,7 +235,7 @@ export function typeScriptASTVisitor(
           };`;
         };
 
-        const realParentDef = ancestors?.[ancestors.length - 1];
+        const realParentDef = ancestors?.[ancestors.length - 1] as ObjectTypeDefinitionNode;
         if (realParentDef) {
           const parentType = _schema.getType(realParentDef.name.value);
 
@@ -248,7 +248,7 @@ export function typeScriptASTVisitor(
             const fieldParts: Array<string> = [];
             for (const fieldName of Object.keys(parentType.getFields())) {
               // Why the heck is node.name a string and not { value: string } at runtime ?!
-              if (fieldName === (node.name as any as string)) {
+              if (fieldName === node.name) {
                 fieldParts.push(buildFieldDefinition(true));
                 continue;
               }
@@ -276,9 +276,9 @@ export function typeScriptASTVisitor(
             config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
           ];
         }
-        const originalNode = parent[key] as UnionTypeDefinitionNode;
+        const originalNode: UnionTypeDefinitionNode = Array.isArray(parent) ? parent[Number(key)] : parent;
         const possibleTypes = originalNode.types
-          .map(t => (scalarsMap[t.name.value] ? `Scalars['${t.name.value}']` : convertName(t)))
+          ?.map(t => (scalarsMap[t.name.value] ? `Scalars['${t.name.value}']` : convertName(t)))
           .concat(...withFutureAddedValue)
           .join(' | ');
 
@@ -289,14 +289,14 @@ export function typeScriptASTVisitor(
           .export()
           .asKind('type')
           .withName(convertName(node))
-          .withComment(node.description as any as string)
-          .withContent(possibleTypes).string;
+          .withComment(node.description)
+          .withContent(possibleTypes || '').string;
       },
     },
     InterfaceTypeDefinition: {
       leave(node, key, parent, _path, _ancestors) {
         if (config.onlyOperationTypes || config.onlyEnums) return '';
-        const originalNode = parent[key];
+        const originalNode = Array.isArray(parent) ? parent[Number(key)] : parent;
 
         const declarationBlock = new DeclarationBlock({
           enumNameValueSeparator: ' =',
@@ -305,8 +305,8 @@ export function typeScriptASTVisitor(
           .export()
           .asKind('interface')
           .withName(convertName(node))
-          .withComment(node.description as any as string)
-          .withBlock(node.fields.join('\n'));
+          .withComment(node.description)
+          .withBlock(node.fields?.join('\n') || '');
 
         return [declarationBlock.string, buildArgumentsBlock(originalNode, config)].filter(f => f).join('\n\n');
       },
@@ -329,9 +329,8 @@ export function typeScriptASTVisitor(
     ObjectTypeDefinition: {
       leave(node, key, parent, _path, _ancestors) {
         if (config.onlyOperationTypes || config.onlyEnums) return '';
-        const originalNode = parent[key] as any;
-
-        const name: string = node.name as any;
+        const originalNode = Array.isArray(parent) ? parent[Number(key)] : parent;
+        const name = node.name;
 
         if (typesToInclude && !typesToInclude.some(type => type.name === name)) {
           return null;
@@ -362,8 +361,8 @@ export function typeScriptASTVisitor(
             .export()
             .asKind(declarationKind)
             .withName(convertName(node))
-            .withComment(node.description as any as string)
-            .withContent(`\n` + node.fields.join('\n  |')).string;
+            .withComment(node.description)
+            .withContent(`\n` + node.fields?.join('\n  |')).string;
         }
 
         return new DeclarationBlock({
@@ -373,15 +372,15 @@ export function typeScriptASTVisitor(
           .export()
           .asKind('type')
           .withName(convertName(node))
-          .withComment(node.description as any as string)
-          .withBlock(node.fields.join('\n')).string;
+          .withComment(node.description)
+          .withBlock(node.fields?.join('\n') || '').string;
       },
     },
     NamedType: {
       leave(node, _key, _parent, _path, ancestors) {
         const isVisitingInputType = getKindsFromAncestors(ancestors).includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
 
-        let typeToUse = getTypeForNode(node as any as NamedTypeNode, config, _schema, scalarsMap);
+        let typeToUse = getTypeForNode(node, config, _schema, scalarsMap);
 
         if (!isVisitingInputType && config.fieldWrapperValue && config.wrapFieldDefinitions) {
           typeToUse = `FieldWrapper<${typeToUse}>`;
@@ -409,14 +408,12 @@ export function typeScriptASTVisitor(
     },
     FieldDefinition: {
       leave(node, key, parent, _path, _ancestors) {
-        const typeString = config.wrapFieldDefinitions
-          ? `EntireFieldWrapper<${node.type}>`
-          : (node.type as any as string);
-        // TODO
-        const originalFieldNode = (parent as any)[key as number];
-        const addOptionalSign =
-          !(config.avoidOptionals as any)?.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
-        const comment = getNodeComment(node as any as FieldDefinitionNode);
+        const typeString = config.wrapFieldDefinitions ? `EntireFieldWrapper<${node.type}>` : node.type;
+        const originalFieldNode = Array.isArray(parent) ? parent[Number(key)] : parent;
+
+        const avoidOptionalsConfig = typeof config.avoidOptionals === 'object' ? config.avoidOptionals : {};
+        const addOptionalSign = !avoidOptionalsConfig.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+        const comment = getNodeComment(node);
 
         return (
           comment +
