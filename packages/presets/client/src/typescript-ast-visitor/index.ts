@@ -23,6 +23,7 @@ import {
   convertFactory,
   DeclarationBlock,
   isOneOfInputObjectType,
+  ParsedScalarsMap,
   parseEnumValues,
   transformComment,
   transformDirectiveArgumentAndInputFieldMappings,
@@ -49,10 +50,10 @@ export function indent(str: string, count = 1): string {
 
 function getDeprecationReason(directive: DirectiveNode): string | void {
   if ((directive.name as any) === 'deprecated') {
-    const hasArguments = directive.arguments.length > 0;
+    const hasArguments = !!directive.arguments?.length;
     let reason = 'Field no longer supported';
     if (hasArguments) {
-      reason = directive.arguments[0].value as any;
+      reason = directive.arguments[0].value.kind;
     }
     return reason;
   }
@@ -60,7 +61,7 @@ function getDeprecationReason(directive: DirectiveNode): string | void {
 
 function getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
   let commentText: string = node.description as any;
-  const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+  const deprecationDirective = node.directives?.find(v => v.name.value === 'deprecated');
   if (deprecationDirective) {
     const deprecationReason = getDeprecationReason(deprecationDirective);
     commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
@@ -119,13 +120,11 @@ function getObjectTypeDeclarationBlock(
   config: TypeScriptPluginConfig
 ): DeclarationBlock {
   const optionalTypename = config.nonOptionalTypename ? '__typename' : '__typename?';
-  const type = 'type';
-  const interfacesType = 'interface';
   const allFields = [
     ...(config.skipTypename
       ? []
       : [indent(`${config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}';`)]),
-    ...node.fields,
+    ...(node.fields || []),
   ] as string[];
   const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => convertName(i)) : [];
 
@@ -134,27 +133,17 @@ function getObjectTypeDeclarationBlock(
     ignoreExport: config.noExport,
   })
     .export()
-    .asKind(type)
+    .asKind('type')
     .withName(convertName(node))
     .withComment(node.description as any as string);
 
-  // if (type === 'interface' || type === 'class') {
-  //   if (interfacesNames.length > 0) {
-  //     const keyword = interfacesType === 'interface' && type === 'class' ? 'implements' : 'extends';
-
-  //     declarationBlock.withContent(`${keyword} ` + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
-  //   }
-
-  //   declarationBlock.withBlock(this.mergeAllFields(allFields, false));
-  // } else {
-  // }
   appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
 
   return declarationBlock;
 }
 
 function buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, config: any) {
-  const fieldsWithArguments = node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
+  const fieldsWithArguments = node.fields?.filter(field => field.arguments && field.arguments.length > 0) || [];
   return fieldsWithArguments
     .map(field => {
       const name =
@@ -175,7 +164,7 @@ function buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefin
         .export()
         .asKind('type')
         .withName(convertName(name))
-        .withComment(node.description).string;
+        .withComment(node.description || null).string;
     })
     .join('\n');
 }
@@ -189,7 +178,12 @@ function mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string 
   return interfaces.join(' & ') + (interfaces.length && hasOtherFields ? ' & ' : '');
 }
 
-function getTypeForNode(node: NamedTypeNode, config: TypeScriptPluginConfig, schema: GraphQLSchema, scalars): string {
+function getTypeForNode(
+  node: NamedTypeNode,
+  config: TypeScriptPluginConfig,
+  schema: GraphQLSchema,
+  scalars: ParsedScalarsMap
+): string {
   const typename = typeof node.name === 'string' ? node.name : node.name.value;
 
   // todo
@@ -226,7 +220,7 @@ function _getDirectiveOverrideType(
   const type = directives
     .map(directive => {
       const directiveName = directive.name as any as string;
-      if (config.directiveArgumentAndInputFieldMappings[directiveName]) {
+      if (config.directiveArgumentAndInputFieldMappings?.[directiveName]) {
         return `DirectiveArgumentAndInputFieldMappings['${directiveName}']`;
       }
       return null;
@@ -263,7 +257,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
           !avoidOptionalsConfig.inputValue &&
           (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
             (!avoidOptionalsConfig.defaultValue && node.defaultValue !== undefined));
-        const comment = getNodeComment(node);
+        const comment = getNodeComment(node as any as InputValueDefinitionNode);
 
         let type: string = node.type as any as string;
         if (node.directives && config.directiveArgumentAndInputFieldMappings) {
