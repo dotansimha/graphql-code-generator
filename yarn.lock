@@ -1836,6 +1836,11 @@
     tslib "~2.4.0"
     unixify "^1.0.0"
 
+"@graphql-codegen/client-preset-swc-plugin@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/client-preset-swc-plugin/-/client-preset-swc-plugin-0.2.0.tgz#096e87c4d9eed62540775253689ee00043e4cd4b"
+  integrity sha512-wibvCKuB+pP1ggNzZnkMLQgfyr0l+71kZsfK9M9GxxV8kaFGypbT3eN2XP4U8wH35GTaceLDg9jTg2JSUpcWdg==
+
 "@graphql-codegen/flow-operations@2.3.6":
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/flow-operations/-/flow-operations-2.3.6.tgz#324f15d96f38c18272678a86e30b678bc4480cb6"
@@ -14152,7 +14157,7 @@ villus@^2.1.0:
   resolved "https://registry.yarnpkg.com/villus/-/villus-2.2.1.tgz#fd74a724862281e4673e00ee4302e3ea1eabaab1"
   integrity sha512-vnrY62rf5Yzfew0fZbHQ7b51NpcWKbNDxxmq98NNhBRXjt8gVtbbXsOpRatnKINxsZPPzH+zLJGnTj95F0InHQ==
 
-vite@^4.1.0:
+vite@^4.1.0, vite@^4.3.9:
   version "4.3.9"
   resolved "https://registry.yarnpkg.com/vite/-/vite-4.3.9.tgz#db896200c0b1aa13b37cdc35c9e99ee2fdd5f96d"
   integrity sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==

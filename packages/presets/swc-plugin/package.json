@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/client-preset-swc-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A SWC plugin for https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
   "license": "MIT",
   "bob": false,
@@ -11,8 +11,8 @@
   ],
   "main": "swc_plugin.wasm",
   "scripts": {
-    "build-wasm": "cargo build --target wasm32-wasi --release && cp target/wasm32-wasi/release/swc_plugin.wasm ./",
-    "debug": "cargo build --target wasm32-wasi && cp target/wasm32-wasi/debug/swc_plugin.wasm ./"
+    "build-wasm": "cargo build --target wasm32-unknown-unknown --release && cp target/wasm32-unknown-unknown/release/swc_plugin.wasm ./",
+    "debug": "cargo build --target wasm32-unknown-unknown && cp target/wasm32-unknown-unknown/debug/swc_plugin.wasm ./"
   },
   "homepage": "https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
   "repository": {
