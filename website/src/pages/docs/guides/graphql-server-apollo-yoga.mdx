@@ -76,10 +76,16 @@ const config: CodegenConfig = {
   schema: 'schema.graphql',
   generates: {
     './resolvers-types.ts': {
+      plugins: ['typescript', 'typescript-resolvers'],
       config: {
+        scalars: {
+          ID: {
+            input: 'string',
+            output: 'string | number'
+          },
+        },
         useIndexSignature: true,
       },
-      plugins: ['typescript', 'typescript-resolvers'],
     },
   },
 };
@@ -96,6 +102,14 @@ const config: CodegenConfig = {
   generates: {
     './resolvers-types.ts': {
       plugins: ['typescript', 'typescript-resolvers'],
+      config: {
+        scalars: {
+          ID: {
+            input: 'string',
+            output: 'string | number'
+          },
+        },
+      },
     },
   },
 };
