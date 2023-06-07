@@ -1,5 +1,4 @@
 import {
-  DeclarationBlock,
   ParsedScalarsMap,
   convertFactory,
   isOneOfInputObjectType,
@@ -13,7 +12,6 @@ import {
   InputValueDefinitionNode,
   Kind,
   ObjectTypeDefinitionNode,
-  InterfaceTypeDefinitionNode,
   NamedTypeNode,
   GraphQLSchema,
   isEnumType,
@@ -92,42 +90,6 @@ function getObjectTypeDeclarationBlock(
   });
 
   return printNode(declarationBlock);
-}
-
-function buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, config: any) {
-  const fieldsWithArguments = node.fields?.filter(field => field.arguments && field.arguments.length > 0) || [];
-  return fieldsWithArguments
-    .map(field => {
-      const name =
-        node.name.value +
-        (config.addUnderscoreToArgsType ? '_' : '') +
-        convertName(field, {
-          useTypesPrefix: false,
-          useTypesSuffix: false,
-        }) +
-        'Args';
-
-      if (config.onlyEnums) return '';
-
-      return new DeclarationBlock({
-        enumNameValueSeparator: ' =',
-        ignoreExport: config.noExport,
-      })
-        .export()
-        .asKind('type')
-        .withName(convertName(name))
-        .withComment(node.description || null).string;
-    })
-    .join('\n');
-}
-
-function appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
-  block.withContent(mergeInterfaces(interfaces, fields.length > 0));
-  block.withBlock(fields.join('\n'));
-}
-
-function mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
-  return interfaces.join(' & ') + (interfaces.length && hasOtherFields ? ' & ' : '');
 }
 
 function getTypeForNode(
@@ -298,33 +260,37 @@ export function typeScriptASTVisitor(
           .join(' | ');
 
         // TODO: It seems we're missing a test
-        return new DeclarationBlock({
-          enumNameValueSeparator: ' =',
-          ignoreExport: config.noExport,
-        })
-          .export()
-          .asKind('type')
-          .withName(convertName(node))
-          .withComment(node.description)
-          .withContent(possibleTypes || '').string;
+        const declarationBlock = typeNodeDeclaration({
+          name: convertName(node),
+          useExport: config.noExport ? false : true,
+          comment: node.description?.value,
+          type: tsf.createTypeLiteralNode(
+            possibleTypes
+              ?.split(' | ')
+              .map(f => tsf.createPropertySignature(undefined, f.replace(';', ''), undefined, undefined))
+          ),
+        });
+
+        return printNode(declarationBlock);
       },
     },
     InterfaceTypeDefinition: {
-      leave(node, key, parent, _path, _ancestors) {
+      leave(node, _key, _parent, _path, _ancestors) {
         if (config.onlyOperationTypes || config.onlyEnums) return '';
-        const originalNode = Array.isArray(parent) ? parent[Number(key)] : parent;
 
-        const declarationBlock = new DeclarationBlock({
-          enumNameValueSeparator: ' =',
-          ignoreExport: config.noExport,
-        })
-          .export()
-          .asKind('interface')
-          .withName(convertName(node))
-          .withComment(node.description)
-          .withBlock(node.fields?.join('\n') || '');
+        const typeElementArray: ts.TypeElement[] =
+          node.fields?.map(f => {
+            return tsf.createPropertySignature(undefined, f.replace(';', ''), undefined, undefined);
+          }) || [];
 
-        return [declarationBlock.string, buildArgumentsBlock(originalNode, config)].filter(f => f).join('\n\n');
+        const interfaceDeclarationBlock = interfaceNodeDeclaration({
+          name: convertName(node),
+          useExport: config.noExport ? false : true,
+          comment: node.description?.value,
+          type: typeElementArray,
+        });
+
+        return printNode(interfaceDeclarationBlock);
       },
     },
     ScalarTypeDefinition: {
@@ -365,28 +331,16 @@ export function typeScriptASTVisitor(
         if (config.onlyEnums) return '';
 
         // Why the heck is node.name a string and not { value: string } at runtime ?!
-        if (isOneOfInputObjectType(_schema.getType(node.name as unknown as string))) {
-          const declarationKind = 'type';
-          return new DeclarationBlock({
-            enumNameValueSeparator: ' =',
-            ignoreExport: config.noExport,
-          })
-            .export()
-            .asKind(declarationKind)
-            .withName(convertName(node))
-            .withComment(node.description)
-            .withContent(`\n` + node.fields?.join('\n  |')).string;
-        }
+        const declarationBlock = typeNodeDeclaration({
+          name: convertName(node),
+          useExport: config.noExport ? false : true,
+          comment: node.description?.value,
+          type: tsf.createTypeLiteralNode(
+            node.fields?.map(f => tsf.createPropertySignature(undefined, f.replace(';', ''), undefined, undefined))
+          ),
+        });
 
-        return new DeclarationBlock({
-          enumNameValueSeparator: ' =',
-          ignoreExport: config.noExport,
-        })
-          .export()
-          .asKind('type')
-          .withName(convertName(node))
-          .withComment(node.description)
-          .withBlock(node.fields?.join('\n') || '').string;
+        return printNode(declarationBlock);
       },
     },
     NamedType: {
@@ -460,6 +414,32 @@ export const typeNodeDeclaration = ({
   }
 
   return typeAliasDeclaration;
+};
+
+export const interfaceNodeDeclaration = ({
+  name,
+  type,
+  comment,
+  useExport,
+}: {
+  name: string;
+  type: ts.TypeElement[];
+  comment?: string | undefined;
+  useExport: boolean;
+}) => {
+  const interfaceDeclaration = tsf.createInterfaceDeclaration(
+    useExport ? [tsf.createModifier(ts.SyntaxKind.ExportKeyword)] : [],
+    tsf.createIdentifier(name),
+    undefined,
+    undefined,
+    type
+  );
+
+  if (comment) {
+    ts.addSyntheticLeadingComment(interfaceDeclaration, ts.SyntaxKind.MultiLineCommentTrivia, comment, true);
+  }
+
+  return interfaceDeclaration;
 };
 
 const printNode = (node: ts.Node | ts.Node[]) => {
