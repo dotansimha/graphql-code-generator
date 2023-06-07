@@ -86,6 +86,27 @@
   };
   ```
 
+  Here's the recommended config when generating server types with `typescript-resolvers`:
+
+  ```ts
+  const config: CodegenConfig = {
+    // ...
+    generates: {
+      'path/to/file': {
+        plugins: ['typescript', 'typescript-resolvers'],
+        config: {
+          scalars: {
+            ID: {
+              input: 'string',
+              output: 'string | number'
+            },
+          }
+        },
+      },
+    },
+  };
+  ```
+
   ***
 
   Config changes:
