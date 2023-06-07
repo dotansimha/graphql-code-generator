@@ -65,21 +65,21 @@ function getObjectTypeDeclarationBlock(
   originalNode: ObjectTypeDefinitionNode,
   config: TypeScriptPluginConfig
 ) {
-  const optionalTypename = config.nonOptionalTypename ? '__typename' : '__typename?';
-  const allFields = [
-    ...(config.skipTypename
-      ? []
-      : [indent(`${config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}'`)]),
-    ...(node.fields || []),
-  ] as string[];
+  const allFields = (node.fields as any as string[]) || [];
 
   const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => convertName(i)) : [];
 
   const intersectionType = tsf.createIntersectionTypeNode([
     ...interfacesNames.map(i => tsf.createTypeReferenceNode(i, undefined)),
-    tsf.createTypeLiteralNode(
-      allFields.map(f => tsf.createPropertySignature(undefined, f.replace(';', ''), undefined, undefined))
-    ),
+    tsf.createTypeLiteralNode([
+      tsf.createPropertySignature(
+        config.immutableTypes ? [tsf.createModifier(ts.SyntaxKind.ReadonlyKeyword)] : [],
+        tsf.createIdentifier('__typename'),
+        config.nonOptionalTypename ? undefined : tsf.createToken(ts.SyntaxKind.QuestionToken),
+        tsf.createLiteralTypeNode(tsf.createStringLiteral(node.name as any as string))
+      ),
+      ...allFields.map(f => tsf.createPropertySignature(undefined, f.replace(';', ''), undefined, undefined)),
+    ]),
   ]);
 
   const declarationBlock = typeNodeDeclaration({
@@ -444,7 +444,10 @@ export const interfaceNodeDeclaration = ({
 
 const printNode = (node: ts.Node | ts.Node[]) => {
   const sourceFile = ts.createSourceFile('graphql.ts', '', ts.ScriptTarget.ES2020, false, ts.ScriptKind.TSX);
-  const printer = ts.createPrinter({ omitTrailingSemicolon: false, newLine: ts.NewLineKind.CarriageReturnLineFeed });
+  const printer = ts.createPrinter({
+    omitTrailingSemicolon: false,
+    newLine: ts.NewLineKind.CarriageReturnLineFeed,
+  });
   if (Array.isArray(node)) {
     return printer.printList(ts.ListFormat.MultiLine, tsf.createNodeArray(node), sourceFile);
   }

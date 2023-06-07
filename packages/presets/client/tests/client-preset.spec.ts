@@ -353,7 +353,7 @@ export * from "./gql";`);
       };
 
       export type Query = {
-            __typename?: 'Query';
+          __typename?: "Query";
             a?: Maybe<Scalars['String']>;
             b?: Maybe<Scalars['String']>;
             c?: Maybe<Scalars['String']>;
@@ -480,7 +480,7 @@ export * from "./gql";`);
       };
 
       export type Query = {
-            __typename: 'Query';
+          __typename: "Query";
             a?: Maybe<Scalars['String']>;
             b?: Maybe<Scalars['String']>;
             c?: Maybe<Scalars['String']>;
@@ -502,7 +502,7 @@ export * from "./gql";`);
       export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
 
-    expect(graphqlFile?.content).toContain("__typename: 'Query';");
+    expect(graphqlFile?.content).toContain('__typename: "Query";');
   });
 
   it('prevent duplicate operations', async () => {
@@ -590,7 +590,7 @@ export * from "./gql";`);
       };
 
       export type Query = {
-            __typename?: 'Query';
+          __typename?: "Query";
             a?: Maybe<Scalars['String']>;
       };
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1255,7 +1255,7 @@ export * from "./gql.js";`);
       };
 
       export type Query = {
-            __typename?: 'Query';
+          __typename?: "Query";
             a?: Maybe<Scalars['String']>;
             b?: Maybe<Scalars['String']>;
             c?: Maybe<Scalars['String']>;
@@ -1330,7 +1330,7 @@ export * from "./gql.js";`);
         };
 
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               a?: Maybe<Scalars['String']>;
               b?: Maybe<Scalars['String']>;
               c?: Maybe<Scalars['String']>;
@@ -1408,7 +1408,7 @@ export * from "./gql.js";`);
         };
 
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               a?: Maybe<Scalars['String']>;
               b?: Maybe<Scalars['String']>;
               c?: Maybe<Scalars['String']>;
@@ -1486,7 +1486,7 @@ export * from "./gql.js";`);
         };
 
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               a?: Maybe<Scalars['String']>;
               b?: Maybe<Scalars['String']>;
               c?: Maybe<Scalars['String']>;
@@ -1566,7 +1566,7 @@ export * from "./gql.js";`);
         };
 
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               a?: Maybe<Scalars['String']>;
               b?: Maybe<Scalars['String']>;
               c?: Maybe<Scalars['String']>;
@@ -1653,12 +1653,12 @@ export * from "./gql.js";`);
       };
 
       export type A = {
-            __typename?: 'A';
+          __typename?: "A";
             a: A;
             b: Scalars['String'];
       };
       export type Query = {
-            __typename?: 'Query';
+          __typename?: "Query";
             a: A;
       };
       export type AbFragment = (
@@ -1727,11 +1727,11 @@ export * from "./gql.js";`);
         };
 
         export type Foo = {
-              __typename?: 'Foo';
+            __typename?: "Foo";
               value?: Maybe<Scalars['String']>;
         };
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               foo?: Maybe<Foo>;
               foos?: Maybe<Array<Maybe<Foo>>>;
         };
@@ -1803,11 +1803,11 @@ export * from "./gql.js";`);
         };
 
         export type Foo = {
-              __typename?: 'Foo';
+            __typename?: "Foo";
               value?: Maybe<Scalars['String']>;
         };
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               foo?: Maybe<Foo>;
               foos?: Maybe<Array<Maybe<Foo>>>;
         };
@@ -1879,11 +1879,11 @@ export * from "./gql.js";`);
         };
 
         export type Foo = {
-              __typename?: 'Foo';
+            __typename?: "Foo";
               value?: Maybe<Scalars['String']>;
         };
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               foo?: Maybe<Foo>;
               foos?: Maybe<Array<Maybe<Foo>>>;
         };
@@ -1992,11 +1992,11 @@ export * from "./gql.js";`);
         };
 
         export type Foo = {
-              __typename?: 'Foo';
+            __typename?: "Foo";
               value?: Maybe<Scalars['String']>;
         };
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               foo?: Maybe<Foo>;
               foos?: Maybe<Array<Maybe<Foo>>>;
         };
@@ -2104,11 +2104,11 @@ export * from "./gql.js";`);
         };
 
         export type Foo = {
-              __typename?: 'Foo';
+            __typename?: "Foo";
               value?: Maybe<Scalars['String']>;
         };
         export type Query = {
-              __typename?: 'Query';
+            __typename?: "Query";
               foo?: Maybe<Foo>;
               foos?: Maybe<Array<Maybe<Foo>>>;
         };
