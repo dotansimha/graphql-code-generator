@@ -4,12 +4,13 @@ import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
-import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { DocumentNode } from 'graphql';
-import babelOptimizerPlugin from './babel.js';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
+
+export { default as babelOptimizerPlugin } from './babel.js';
 
 export type FragmentMaskingConfig = {
   /** @description Name of the function that should be used for unmasking a masked fragment property.
@@ -68,7 +69,7 @@ export type ClientPresetConfig = {
    */
   onExecutableDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
   /** Persisted operations configuration. */
-  persistedOperations?:
+  persistedDocuments?:
     | boolean
     | {
         /**
@@ -82,6 +83,15 @@ export type ClientPresetConfig = {
          * @description Name of the property that will be added to the `DocumentNode` with the hash of the operation.
          */
         hashPropertyName?: string;
+        /**
+         * @description Algorithm used to generate the hash, could be useful if your server expects something specific (e.g., Apollo Server expects `sha256`).
+         *
+         * The algorithm parameter is typed with known algorithms and as a string rather than a union because it solely depends on Crypto's algorithms supported
+         * by the version of OpenSSL on the platform.
+         *
+         * @default `sha1`
+         */
+        hashAlgorithm?: 'sha1' | 'sha256' | (string & {});
       };
 };
 
@@ -91,7 +101,9 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
   buildGeneratesSection: options => {
     if (!isOutputFolderLike(options.baseOutputDir)) {
-      throw new Error('[client-preset] target output should be a directory, ex: "src/gql/"');
+      throw new Error(
+        '[client-preset] target output should be a directory, ex: "src/gql/". Make sure you add "/" at the end of the directory path'
+      );
     }
 
     if (options.plugins.length > 0 && Object.keys(options.plugins).some(p => p.startsWith('typescript'))) {
@@ -100,8 +112,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       );
     }
 
-    // eslint-disable-next-line no-implicit-coercion
-    const isPersistedOperations = !!options.presetConfig?.persistedOperations ?? false;
+    const isPersistedOperations = !!options.presetConfig?.persistedDocuments ?? false;
 
     const reexports: Array<string> = [];
 
@@ -118,6 +129,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       dedupeFragments: options.config.dedupeFragments,
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
+      documentMode: options.config.documentMode,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
@@ -133,15 +145,19 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const onExecutableDocumentNodeHook = options.presetConfig.onExecutableDocumentNode ?? null;
     const isMaskingFragments = fragmentMaskingConfig != null;
 
-    const persistedOperations = options.presetConfig.persistedOperations
+    const persistedDocuments = options.presetConfig.persistedDocuments
       ? {
           hashPropertyName:
-            (typeof options.presetConfig.persistedOperations === 'object' &&
-              options.presetConfig.persistedOperations.hashPropertyName) ||
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.hashPropertyName) ||
             'hash',
           omitDefinitions:
-            (typeof options.presetConfig.persistedOperations === 'object' &&
-              options.presetConfig.persistedOperations.mode) === 'replaceDocumentWithHash' || false,
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.mode) === 'replaceDocumentWithHash' || false,
+          hashAlgorithm:
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              options.presetConfig.persistedDocuments.hashAlgorithm) ||
+            'sha1',
         }
       : null;
 
@@ -154,7 +170,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const sources = sourcesWithOperations.map(({ source }) => source);
 
     const tdnFinished = createDeferred();
-    const persistedOperationsMap = new Map<string, string>();
+    const persistedDocumentsMap = new Map<string, string>();
 
     const pluginMap = {
       ...options.pluginMap,
@@ -177,11 +193,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     function onExecutableDocumentNode(documentNode: DocumentNode) {
       const meta = onExecutableDocumentNodeHook?.(documentNode);
 
-      if (persistedOperations) {
+      if (persistedDocuments) {
         const documentString = normalizeAndPrintDocumentNode(documentNode);
-        const hash = generateDocumentHash(documentString);
-        persistedOperationsMap.set(hash, documentString);
-        return { ...meta, [persistedOperations.hashPropertyName]: hash };
+        const hash = generateDocumentHash(documentString, persistedDocuments.hashAlgorithm);
+        persistedDocumentsMap.set(hash, documentString);
+        return { ...meta, [persistedDocuments.hashPropertyName]: hash };
       }
 
       if (meta) {
@@ -198,7 +214,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       {
         [`typed-document-node`]: {
           unstable_onExecutableDocumentNode: onExecutableDocumentNode,
-          unstable_omitDefinitions: persistedOperations?.omitDefinitions ?? false,
+          unstable_omitDefinitions: persistedDocuments?.omitDefinitions ?? false,
         },
       },
       ...options.plugins,
@@ -238,8 +254,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         config: {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
+          emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+          isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
         documents: [],
+        documentTransforms: options.documentTransforms,
       };
     }
 
@@ -256,13 +275,17 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         plugins: [
           {
             [`add`]: {
-              content: reexports.map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`).join('\n'),
+              content: reexports
+                .sort()
+                .map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`)
+                .join('\n'),
             },
           },
         ],
         schema: options.schema,
         config: {},
         documents: [],
+        documentTransforms: options.documentTransforms,
       };
     }
 
@@ -277,6 +300,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           ...forwardedConfig,
         },
         documents: sources,
+        documentTransforms: options.documentTransforms,
       },
       {
         filename: `${options.baseOutputDir}gql${gqlArtifactFileExtension}`,
@@ -288,6 +312,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           gqlTagName: options.presetConfig.gqlTagName || 'graphql',
         },
         documents: sources,
+        documentTransforms: options.documentTransforms,
       },
       ...(isPersistedOperations
         ? [
@@ -303,7 +328,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
                   plugin: async () => {
                     await tdnFinished.promise;
                     return {
-                      content: JSON.stringify(Object.fromEntries(persistedOperationsMap.entries()), null, 2),
+                      content: JSON.stringify(Object.fromEntries(persistedDocumentsMap.entries()), null, 2),
                     };
                   },
                 },
@@ -311,6 +336,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
               schema: options.schema,
               config: {},
               documents: sources,
+              documentTransforms: options.documentTransforms,
             },
           ]
         : []),
@@ -319,8 +345,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     ];
   },
 };
-
-export { babelOptimizerPlugin };
 
 type Deferred<T = void> = {
   resolve: (value: T) => void;

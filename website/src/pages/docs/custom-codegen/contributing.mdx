@@ -1,3 +1,7 @@
+---
+description: Create a new GraphQL Code Generator plugin for your favorite language or platform.
+---
+
 import { Callout } from '@theguild/components'
 
 # Contributing
@@ -5,7 +9,7 @@ import { Callout } from '@theguild/components'
 When your new plugin is ready, you can either:
 
 - maintain it in your repo and npm package
-- contribute and make it part of the GraphQL Code Generator community repo ([`dotansimha/graphql-code-generator-community`](dotansimha/graphql-code-generator-community))
+- contribute and make it part of the GraphQL Code Generator community repo ([`dotansimha/graphql-code-generator-community`](https://github.com/dotansimha/graphql-code-generator-community))
 
 The GraphQL Code Generator community repository contains plugins for all languages and platforms.
 If your plugin could be helpful for others, please consider creating a PR and maintaining it in our repo.
@@ -17,7 +21,7 @@ To be able to clone, build and develop codegen, you'll need to have the followin
 
 - [GitHub Account](https://github.com)
 - [Git](https://git-scm.com/downloads)
-- [Node.js](https://nodejs.org/en) (v10/v12/v13)
+- [Node.js](https://nodejs.org/en) (v16+)
 - [Yarn](https://yarnpkg.com) (v1)
 - Any code editor (we recommend [VSCode](https://code.visualstudio.com))
 
@@ -98,6 +102,7 @@ Make sure to follow the following instructions:
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   }
+}
 ```
 
 <Callout>This will make sure that your plugin is compatible with our build and test system.</Callout>
@@ -117,7 +122,7 @@ Make sure to follow the following instructions:
 ```
 
 <Callout>
-`graphql` must be a devDependency in order to allow developers to choose their own version.
+`graphql` must be a `devDependency` in order to allow developers to choose their own version.
 
 `tslib` is required to compile plugins.
 
@@ -164,7 +169,7 @@ You can follow the plugin tips in [Write Your Plugin](./write-your-plugin), [Val
 
 ## 7. Test your plugin
 
-To test your plugin, create a test file - `tests/plugin.spec.ts` with the following content:
+To test your plugin, create a test file `tests/plugin.spec.ts` with the following content:
 
 ```ts filename="plugin.spec.ts"
 import { plugin } from '../src'
@@ -197,6 +202,8 @@ yarn test
 You can also test the integration of your plugin with the codegen core and cli, the integration with other plugins and the output for some complex schemas and operations.
 
 To do that, make sure everything is built by using `yarn build` in the root directory, then you can use it in `./dev-test/codegen.ts`, and run `yarn generate:examples` in the project root directory to run it.
+
+If you would like to test "watch mode" in the same way, you can run `yarn watch:examples`.
 
 ## 9. Documentation
 
@@ -265,17 +272,11 @@ Please find the proper category for your plugin (usually based on the target lan
 
    For example, the `@graphql-codegen/typescript-react-apollo` plugin has a page at `website/src/pages/plugins/typescript/typescript-react-apollo.mdx`.
 
-<br />
-
 2. Add your plugin's package as a dependency of the `website/package.json` and run `yarn install` at the root of the repository.
-
-<br />
 
 3. Update the `website/src/lib/plugins-docs.ts` file by adding your plugin to the `pluginsConfigurations` array.
 
 You must provide the relative link to your plugin typing definition. You will find examples with the existing plugins.
-
-<br />
 
 4. Each plugin belongs to a category (ex: `@graphql-codegen/typescript-react-apollo` belongs to the `typescript` category). Make sure that your plugin is assigned to the proper category by updating the `website/src/category-to-packages.mjs` file:
 

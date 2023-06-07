@@ -5,10 +5,10 @@ export function isListrError(err: Error & { name?: unknown; errors?: unknown }):
 }
 
 export function cliError(err: any, exitOnError = true) {
-  let msg: string;
+  let msg: string | Error;
 
   if (err instanceof Error) {
-    msg = err.message || err.toString();
+    msg = err;
   } else if (typeof err === 'string') {
     msg = err;
   } else {

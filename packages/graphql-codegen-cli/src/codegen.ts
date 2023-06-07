@@ -11,13 +11,13 @@ import {
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { AggregateError } from '@graphql-tools/utils';
 import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
 import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
+import { getDocumentTransform } from './documentTransforms.js';
 
 /**
  * Poor mans ESM detection.
@@ -196,7 +196,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         task: (ctx, task) => {
           const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
             const outputConfig = generates[filename];
-            const hasPreset = Boolean(outputConfig.preset);
+            const hasPreset = !!outputConfig.preset;
 
             const title = `Generate to ${filename}`;
 
@@ -273,10 +273,20 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                           const hash = JSON.stringify(documentPointerMap);
                           const result = await cache('documents', hash, async () => {
-                            const documents = await context.loadDocuments(documentPointerMap);
-                            return {
-                              documents,
-                            };
+                            try {
+                              const documents = await context.loadDocuments(documentPointerMap);
+                              return {
+                                documents,
+                              };
+                            } catch (error) {
+                              if (config.ignoreNoDocuments) {
+                                return {
+                                  documents: [],
+                                };
+                              }
+
+                              throw error;
+                            }
                           });
 
                           outputDocuments = result.documents;
@@ -316,6 +326,18 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
                           };
 
+                          const documentTransforms = Array.isArray(outputConfig.documentTransforms)
+                            ? await Promise.all(
+                                outputConfig.documentTransforms.map(async (config, index) => {
+                                  return await getDocumentTransform(
+                                    config,
+                                    makeDefaultLoader(context.cwd),
+                                    `the element at index ${index} of the documentTransforms`
+                                  );
+                                })
+                              )
+                            : [];
+
                           const outputs: Types.GenerateOptions[] = preset
                             ? await context.profiler.run(
                                 async () =>
@@ -330,6 +352,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                     pluginMap,
                                     pluginContext,
                                     profiler: context.profiler,
+                                    documentTransforms,
                                   }),
                                 `Build Generates Section: ${filename}`
                               )
@@ -344,6 +367,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                   pluginMap,
                                   pluginContext,
                                   profiler: context.profiler,
+                                  documentTransforms,
                                 },
                               ];
 

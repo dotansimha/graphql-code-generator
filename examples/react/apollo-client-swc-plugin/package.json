@@ -1,0 +1,27 @@
+{
+  "name": "example-apollo-client-swc-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.7.10",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
+    "@graphql-codegen/client-preset": "^4.0.0",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@vitejs/plugin-react-swc": "^3.3.0",
+    "@types/react": "18.2.7",
+    "@types/react-dom": "18.2.4",
+    "typescript": "5.0.4",
+    "vite": "^4.1.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node scripts/test.js",
+    "test:end2end": "exit 0",
+    "codegen": "graphql-codegen --config codegen.ts"
+  }
+}

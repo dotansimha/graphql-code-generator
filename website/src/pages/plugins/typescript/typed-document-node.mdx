@@ -1,11 +1,17 @@
 ---
 title: typed-document-node
+description: Generate TypedDocumentNode for GraphQL operations. This plugin is a wrapper for graphql-typed-document-node.
 ---
 
 import { Callout } from '@theguild/components'
 import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
 export const getStaticProps = pluginGetStaticProps(__filename)
+
+<Callout>
+For new projects, we recommend using the [`client-preset`](/plugins/presets/preset-client), which uses `typed-document-node` under the hood.
+
+</Callout>
 
 <PluginHeader hasOperationsNote />
 

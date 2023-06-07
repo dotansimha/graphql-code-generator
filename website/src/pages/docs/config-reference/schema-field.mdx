@@ -1,3 +1,7 @@
+---
+description: How to specify your GraphQL Schema in GraphQL Code Generator. Learn how to load your schema from a remote server, local file, or multiple files.
+---
+
 import { Callout } from '@theguild/components'
 
 # `schema` field
@@ -150,6 +154,26 @@ const config: CodegenConfig = {
     {
       'http://localhost:3000/graphql': {
         method: 'GET',
+      }
+    }
+  ]
+};
+export default config;
+
+```
+
+##### `handleAsSDL`
+
+Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection. Example use case is when using schema registry like [GraphQL Hive](https://docs.graphql-hive.com/features/high-availability-cdn#graphql-schema-sdl).
+
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: [
+    {
+      'http://localhost:3000/sdl': {
+        handleAsSDL: true,
       }
     }
   ]
@@ -421,7 +445,33 @@ export default config;
 
 ### GitHub
 
-You can load your schema file from a remote GitHub file, using the following syntax:
+You can load your schema file from a remote GitHub file using one of the following approaches:
+
+#### Provide GitHub token in Codegen Config
+
+Provide the GitHub path to your schema and token using the following syntax:
+
+```ts {4,5,6,7}
+import { CodegenConfig } from '@graphql-codegen/cli';
+
+const config: CodegenConfig = {
+  schema: {
+    'github:user/repo#branchName:path/to/file.graphql':
+      { token: "<YOUR GITHUB TOKEN>" }
+  }
+};
+export default config;
+```
+
+Then, run codegen:
+
+```bash
+yarn graphql-codegen
+```
+
+#### Provide GitHub token via Codegen CLI
+
+Alternatively, you can provide just the GitHub path to your schema:
 
 ```ts {4}
 import { CodegenConfig } from '@graphql-codegen/cli';
@@ -432,6 +482,11 @@ const config: CodegenConfig = {
 export default config;
 ```
 
+Then, provide your GitHub token using the `GITHU_TOKEN` environment variable when running codegen:
+
+```bash
+GITHUB_TOKEN=<YOUR GITHUB TOKEN> yarn graphql-codegen
+```
 
 <Callout>You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.</Callout>
 

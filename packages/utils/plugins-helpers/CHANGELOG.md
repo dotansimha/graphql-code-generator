@@ -1,5 +1,181 @@
 # @graphql-codegen/plugin-helpers
 
+## 5.0.0
+
+### Major Changes
+
+- [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Require Node.js `>= 16`. Drop support for Node.js 14
+
+### Patch Changes
+
+- [#9449](https://github.com/dotansimha/graphql-code-generator/pull/9449) [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@^10.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.0.0) (from `^9.0.0`, in `dependencies`)
+
+- [#9332](https://github.com/dotansimha/graphql-code-generator/pull/9332) [`f46803a8c`](https://github.com/dotansimha/graphql-code-generator/commit/f46803a8c70840280529a52acbb111c865712af2) Thanks [@eddeee888](https://github.com/eddeee888)! - Update GitHub loader TypeScript type and usage docs
+
+- [#9360](https://github.com/dotansimha/graphql-code-generator/pull/9360) [`63827fabe`](https://github.com/dotansimha/graphql-code-generator/commit/63827fabede76b2380d40392aba2a3ccb099f0c4) Thanks [@beerose](https://github.com/beerose)! - Add handleAsSDL property to UrlSchemaOptions type
+
+## 4.2.0
+
+### Minor Changes
+
+- [#9151](https://github.com/dotansimha/graphql-code-generator/pull/9151) [`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29) Thanks [@'./user/schema.mappers#UserMapper',](https://github.com/'./user/schema.mappers#UserMapper',)! - Add `watchPattern` config option for `generates` sections.
+
+  By default, `watch` mode automatically watches all GraphQL schema and document files. This means when a change is detected, Codegen CLI is run.
+
+  A user may want to run Codegen CLI when non-schema and non-document files are changed. Each `generates` section now has a `watchPattern` option to allow more file patterns to be added to the list of patterns to watch.
+
+  In the example below, mappers are exported from `schema.mappers.ts` files. We want to re-run Codegen if the content of `*.mappers.ts` files change because they change the generated types file. To solve this, we can add mapper file patterns to watch using the glob pattern used for schema and document files.
+
+  ```ts
+  // codegen.ts
+  const config: CodegenConfig = {
+    schema: 'src/schema/**/*.graphql',
+    generates: {
+      'src/schema/types.ts': {
+        plugins: ['typescript', 'typescript-resolvers'],
+        config: {
+          mappers: {
+
+            Book: './book/schema.mappers#BookMapper',
+          },
+        }
+        watchPattern: 'src/schema/**/*.mappers.ts', // Watches mapper files in `watch` mode. Use an array for multiple patterns e.g. `['src/*.pattern1.ts','src/*.pattern2.ts']`
+      },
+    },
+  };
+  ```
+
+  Then, run Codegen CLI in `watch` mode:
+
+  ```shell
+  yarn graphql-codegen --watch
+  ```
+
+  Now, updating `*.mappers.ts` files re-runs Codegen! 🎉
+
+  Note: `watchPattern` is only used in `watch` mode i.e. running CLI with `--watch` flag.
+
+### Patch Changes
+
+- [`f104619ac`](https://github.com/dotansimha/graphql-code-generator/commit/f104619acd27c9d62a06bc577737500880731087) Thanks [@saihaj](https://github.com/saihaj)! - Resolve issue with nesting fields in `@provides` directive being prevented
+
+## 4.1.0
+
+### Minor Changes
+
+- [#8893](https://github.com/dotansimha/graphql-code-generator/pull/8893) [`a118c307a`](https://github.com/dotansimha/graphql-code-generator/commit/a118c307a35bbb97b7cbca0f178a88276032a26c) Thanks [@n1ru4l](https://github.com/n1ru4l)! - mark `plugins` in config optional
+
+- [#8723](https://github.com/dotansimha/graphql-code-generator/pull/8723) [`a3309e63e`](https://github.com/dotansimha/graphql-code-generator/commit/a3309e63efed880e6f74ce6fcbf82dd3d7857a15) Thanks [@kazekyo](https://github.com/kazekyo)! - Introduce a new feature called DocumentTransform.
+
+  DocumentTransform is a functionality that allows you to modify `documents` before they are processed by plugins. You can use functions passed to the `documentTransforms` option to make changes to GraphQL documents.
+
+  To use this feature, you can write `documentTransforms` as follows:
+
+  ```ts
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://localhost:4000/graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        documentTransforms: [
+          {
+            transform: ({ documents }) => {
+              // Make some changes to the documents
+              return documents;
+            },
+          },
+        ],
+      },
+    },
+  };
+  export default config;
+  ```
+
+  For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the following code:
+
+  ```js
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import { visit } from 'graphql';
+
+  const config: CodegenConfig = {
+    schema: 'https://localhost:4000/graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        documentTransforms: [
+          {
+            transform: ({ documents }) => {
+              return documents.map(documentFile => {
+                documentFile.document = visit(documentFile.document, {
+                  Directive: {
+                    leave(node) {
+                      if (node.name.value === 'localOnlyDirective') return null;
+                    },
+                  },
+                });
+                return documentFile;
+              });
+            },
+          },
+        ],
+      },
+    },
+  };
+  export default config;
+  ```
+
+  DocumentTransform can also be specified by file name. You can create a custom file for a specific transformation and pass it to `documentTransforms`.
+
+  Let's create the document transform as a file:
+
+  ```js
+  module.exports = {
+    transform: ({ documents }) => {
+      // Make some changes to the documents
+      return documents;
+    },
+  };
+  ```
+
+  Then, you can specify the file name as follows:
+
+  ```ts
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'https://localhost:4000/graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        documentTransforms: ['./my-document-transform.js'],
+      },
+    },
+  };
+  export default config;
+  ```
+
+### Patch Changes
+
+- [#8879](https://github.com/dotansimha/graphql-code-generator/pull/8879) [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`tslib@~2.5.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.5.0) (from `~2.4.0`, in `dependencies`)
+
+## 4.0.0
+
+### Major Changes
+
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
+
+### Patch Changes
+
+- [#8871](https://github.com/dotansimha/graphql-code-generator/pull/8871) [`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5) Thanks [@B2o5T](https://github.com/B2o5T)! - eslint fixes
+
 ## 3.1.2
 
 ### Patch Changes

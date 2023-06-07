@@ -1,0 +1,25 @@
+import { Callout, PackageCmd } from '@theguild/components'
+
+# GraphQL-CLI Deprecation
+
+The `GraphQL-CLI` is no longer maintained, and we recommend using the `GraphQL-Codegen` CLI directly instead.
+
+<Callout type="warning">The plugin `@graphql-cli/codegen` is deprecated, and no longer maintained!</Callout>
+
+## Migrating from GraphQL-CLI to Codegen CLI
+
+The Codegen plugin for `GraphQL-CLI` was wrapping the commands implemented in GraphQL-CLI, in order to provide a unified experience. You can switch to use GraphQL-Codegen CLI directly.
+
+Remove `@graphql-cli/codegen` and [install the GraphQL Codegen CLI (`@graphql-codegen/cli`)](/docs/getting-started/installation). Then migration your commands to use the Codegen CLI directly:
+
+Before:
+
+```
+graphql generate
+```
+
+After:
+
+```
+graphql-codegen
+```

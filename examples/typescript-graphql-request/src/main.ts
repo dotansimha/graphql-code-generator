@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { GraphQLClient } from 'graphql-request';
-import { gql } from './gql';
+import { graphql } from './gql';
+import { AllPeopleQueryQuery } from './gql/graphql';
 
-const AllPeopleQueryDocument = gql(/* GraphQL */ `
+const AllPeopleQueryDocument = graphql(/* GraphQL */ `
   query AllPeopleQuery {
     allPeople(first: 5) {
       edges {
@@ -17,7 +18,7 @@ const AllPeopleQueryDocument = gql(/* GraphQL */ `
   }
 `);
 
-const AllPeopleWithVariablesQueryDocument = gql(/* GraphQL */ `
+const AllPeopleWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query AllPeopleWithVariablesQuery($first: Int!) {
     allPeople(first: $first) {
       edges {
@@ -36,10 +37,15 @@ const apiUrl = 'https://swapi-graphql.netlify.app/.netlify/functions/index';
 
 const client = new GraphQLClient(apiUrl);
 
-client.request(AllPeopleQueryDocument).then(res => {
-  console.log(res?.allPeople?.edges);
-});
+export const getPeople = async (first?: number) => {
+  let res: AllPeopleQueryQuery;
+  if (first) {
+    res = await client.request(AllPeopleWithVariablesQueryDocument.toString(), { first });
+  } else {
+    res = await client.request(AllPeopleQueryDocument.toString());
+  }
+  return res?.allPeople?.edges;
+};
 
-client.request(AllPeopleWithVariablesQueryDocument, { first: 10 }).then(res => {
-  console.log(res?.allPeople?.edges);
-});
+getPeople().then(res => console.log(res));
+getPeople(10).then(res => console.log(res));

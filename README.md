@@ -6,7 +6,7 @@
 
 GraphQL Code Generator is a tool that generates code out of your GraphQL schema. Whether you are developing a frontend or backend, you can utilize GraphQL Code Generator to generate output from your GraphQL Schema and GraphQL Documents (query/mutation/subscription/fragment).
 
-By analyzing the schema and documents and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphQL Code Generator got you covered.
+By analyzing the schema and documents and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphQL Code Generator has you covered.
 
 GraphQL Code Generator lets you choose the output that you need, based on _plugins_, which are very flexible and customizable. You can also write your _plugins_ to generate custom outputs that match your needs.
 
@@ -18,7 +18,7 @@ We currently support and maintain [these plugins](https://the-guild.dev/graphql/
 
 > You can find the complete instructions in [GraphQL Code Generator website](https://the-guild.dev/graphql/codegen/docs/getting-started/installation).
 
-Start by installing the basic deps of GraphQL Codegen;
+Start by installing the basic deps of GraphQL Codegen:
 
 ```bash
 yarn add graphql
@@ -47,7 +47,7 @@ If this is your first time contributing to this project, please do read our [Con
 
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
-For a contribution guide specific to this project, please refer to: http://the-guild.dev/graphql/codegen/docs/custom-codegen/contributing
+For a contribution guide specific to this project, please refer to: http://the-guild.dev/graphql/codegen/docs/custom-codegen/contributing.
 
 ## Code of Conduct
 

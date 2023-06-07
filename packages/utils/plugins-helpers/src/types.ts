@@ -19,6 +19,7 @@ export namespace Types {
     pluginContext?: { [key: string]: any };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
+    documentTransforms?: ConfiguredDocumentTransform[];
   }
 
   export type FileOutput = {
@@ -91,6 +92,10 @@ export namespace Types {
      * @description HTTP Method to use, either POST (default) or GET.
      */
     method?: string;
+    /**
+     * @description Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection.
+     */
+    handleAsSDL?: boolean;
   }
   export interface UrlSchemaWithOptions {
     [url: string]: UrlSchemaOptions;
@@ -182,6 +187,10 @@ export namespace Types {
     'apollo-engine': ApolloEngineOptions;
   }
 
+  export interface GitHubSchemaOptions {
+    [githubProtocol: string]: { token: string };
+  }
+
   export type SchemaGlobPath = string;
   /**
    * @description A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).
@@ -190,6 +199,7 @@ export namespace Types {
     | string
     | UrlSchemaWithOptions
     | ApolloEngineSchemaOptions
+    | GitHubSchemaOptions
     | LocalSchemaPathWithOptions
     | SchemaGlobPath
     | SchemaWithLoader
@@ -246,7 +256,7 @@ export namespace Types {
      * You can find a list of available plugins here: https://the-guild.dev/graphql/codegen/docs/plugins/index
      * Need a custom plugin? read this: https://the-guild.dev/graphql/codegen/docs/custom-codegen/index
      */
-    plugins: OutputConfig[];
+    plugins?: OutputConfig[];
     /**
      * @description If your setup uses Preset to have a more dynamic setup and output, set the name of your preset here.
      *
@@ -316,6 +326,14 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
+    /**
+     * @description DocumentTransform changes documents before executing plugins.
+     */
+    documentTransforms?: OutputDocumentTransform[];
+    /**
+     * @description: Additional file pattern to watch when using watch mode
+     */
+    watchPattern?: string | string[];
   }
 
   /* Output Builder Preset */
@@ -340,6 +358,7 @@ export namespace Types {
     };
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
+    documentTransforms?: ConfiguredDocumentTransform[];
   };
 
   export type OutputPreset<TPresetConfig = any> = {
@@ -441,6 +460,8 @@ export namespace Types {
      */
     watch?: boolean | string | string[];
     /**
+     * @deprecated this is not necessary since we are using `@parcel/watcher` instead of `chockidar`.
+     *
      * @description Allows overriding the behavior of watch to use stat polling over native file watching support.
      *
      * Config fields have the same defaults and sematics as the identically named ones for chokidar.
@@ -610,6 +631,28 @@ export namespace Types {
         skipValidationAgainstSchema?: boolean;
       }
     | boolean;
+
+  export type DocumentTransformFunction<Config = object> = (options: {
+    documents: Types.DocumentFile[];
+    schema: DocumentNode;
+    config: Config;
+    pluginContext?: { [key: string]: any };
+  }) => Types.Promisable<Types.DocumentFile[]>;
+
+  export type DocumentTransformObject<T = object> = {
+    transform: DocumentTransformFunction<T>;
+  };
+
+  export type DocumentTransformFileName = string;
+  export type DocumentTransformFileConfig<T = object> = { [name: DocumentTransformFileName]: T };
+  export type DocumentTransformFile<T> = DocumentTransformFileName | DocumentTransformFileConfig<T>;
+
+  export type OutputDocumentTransform<T = object> = DocumentTransformObject<T> | DocumentTransformFile<T>;
+  export type ConfiguredDocumentTransform<T = object> = {
+    name: string;
+    transformObject: DocumentTransformObject<T>;
+    config?: T;
+  };
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {

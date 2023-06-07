@@ -52,6 +52,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         this.config.namespacedImportName,
         [],
         this.config.enumPrefix,
+        this.config.enumSuffix,
         this.config.enumValues
       )
     );
@@ -74,7 +75,10 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    const avoidOptionals = this.config.avoidOptionals?.resolvers ?? this.config.avoidOptionals === true;
+    const avoidOptionals =
+      typeof this.config.avoidOptionals === 'object'
+        ? this.config.avoidOptionals?.resolvers
+        : !!this.config.avoidOptionals === true;
     return `${schemaTypeName}${avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(declarationKind)}`;
   }
 

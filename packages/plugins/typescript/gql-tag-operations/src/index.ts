@@ -1,4 +1,5 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { Source } from '@graphql-tools/utils';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 
@@ -27,12 +28,48 @@ export const plugin: PluginFunction<{
   augmentedModuleName?: string;
   gqlTagName?: string;
   emitLegacyCommonJSImports?: boolean;
+  documentMode?: DocumentMode;
 }> = (
   _,
   __,
-  { sourcesWithOperations, useTypeImports, augmentedModuleName, gqlTagName = 'gql', emitLegacyCommonJSImports },
+  {
+    sourcesWithOperations,
+    useTypeImports,
+    augmentedModuleName,
+    gqlTagName = 'gql',
+    emitLegacyCommonJSImports,
+    documentMode,
+  },
   _info
 ) => {
+  if (documentMode === DocumentMode.string) {
+    const code = [`import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`, `\n`];
+
+    // We need the mapping from source as written to full document source to
+    // handle fragments. An identity function would not suffice.
+    if (sourcesWithOperations.length > 0) {
+      code.push([...getDocumentRegistryChunk(sourcesWithOperations)].join(''));
+    } else {
+      code.push('const documents = {}');
+    }
+
+    if (sourcesWithOperations.length > 0) {
+      code.push(
+        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports), `\n`].join(
+          ''
+        )
+      );
+    }
+
+    code.push(
+      [`export function ${gqlTagName}(source: string) {\n`, `  return (documents as any)[source] ?? {};\n`, `}\n`].join(
+        ''
+      )
+    );
+
+    return code.join('\n');
+  }
+
   if (augmentedModuleName == null) {
     const code = [
       `import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
@@ -54,7 +91,7 @@ export const plugin: PluginFunction<{
         `/**\n * The ${gqlTagName} function is used to parse GraphQL queries into a document that can be used by GraphQL clients.\n *\n`,
         ` *\n * @example\n`,
         ' * ```ts\n',
-        ' * const query = gql(`query GetUser($id: ID!) { user(id: $id) { name } }`);\n',
+        ` * const query = ${gqlTagName}` + '(`query GetUser($id: ID!) { user(id: $id) { name } }`);\n',
         ' * ```\n *\n',
         ` * The query argument is unknown!\n`,
         ` * Please regenerate the types.\n`,
@@ -109,7 +146,7 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
   lines.add(` * 1. It is not tree-shakeable, so it will include all operations in the project.\n`);
   lines.add(` * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.\n`);
   lines.add(` * 3. It does not support dead code elimination, so it will add unused operations.\n *\n`);
-  lines.add(` * Therefore it is highly recommended to use the babel-plugin for production.\n */\n`);
+  lines.add(` * Therefore it is highly recommended to use the babel or swc plugin for production.\n */\n`);
   lines.add(`const documents = {\n`);
 
   for (const { operations, ...rest } of sourcesWithOperations) {

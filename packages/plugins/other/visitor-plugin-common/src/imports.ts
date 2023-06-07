@@ -96,5 +96,5 @@ export function clearExtension(path: string): string {
 }
 
 export function fixLocalFilePath(path: string): string {
-  return !path.startsWith('..') ? `./${path}` : path;
+  return path.startsWith('..') ? path : `./${path}`;
 }

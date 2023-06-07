@@ -1,4 +1,5 @@
-import { createServer } from '@graphql-yoga/node';
+import { createYoga, createSchema } from 'graphql-yoga';
+import { createServer } from 'http';
 import type { Resolvers } from './type-defs.d';
 
 const typeDefs = /* GraphQL */ `
@@ -31,11 +32,13 @@ const resolvers: Resolvers = {
   },
 };
 
-const server = createServer({
-  schema: {
+const yoga = createYoga({
+  schema: createSchema({
     typeDefs,
     resolvers,
-  },
+  }),
 });
 
-server.start();
+const server = createServer(yoga);
+
+server.listen(3000);

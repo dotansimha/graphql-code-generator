@@ -69,6 +69,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         enumsAsTypes: true,
       },
       schemaAst: options.schemaAst!,
+      documentTransforms: options.documentTransforms,
     };
 
     const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, '');
@@ -91,7 +92,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         schema: options.schema,
         documents: [],
         plugins: [
-          ...options.plugins.filter(p => typeof p === 'object' && Boolean(p.add)),
+          ...options.plugins.filter(p => typeof p === 'object' && !!p.add),
           {
             'graphql-modules-plugin': {},
           },
@@ -120,6 +121,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         },
         config: options.config,
         schemaAst: options.schemaAst,
+        documentTransforms: options.documentTransforms,
       };
     });
 

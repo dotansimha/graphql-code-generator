@@ -1,0 +1,5 @@
+/target
+^target/
+target
+swc_plugin.wasm
+*.wasm

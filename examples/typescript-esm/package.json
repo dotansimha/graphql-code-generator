@@ -3,17 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@graphql-codegen/cli": "2.16.4",
-    "@graphql-codegen/gql-tag-operations-preset": "1.7.4"
+    "@graphql-codegen/cli": "4.0.1",
+    "@graphql-codegen/client-preset": "4.0.0"
   },
   "dependencies": {
-    "@graphql-typed-document-node/core": "3.1.1",
+    "@graphql-typed-document-node/core": "3.2.0",
     "graphql": "16.6.0"
   },
   "scripts": {
-    "codegen": "graphql-codegen-esm --config codegen.yml",
+    "codegen": "graphql-codegen-esm --config codegen.cjs",
     "build": "tsc",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "test:end2end": "yarn start"
   },
   "type": "module",
   "bob": false

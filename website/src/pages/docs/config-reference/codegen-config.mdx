@@ -1,3 +1,7 @@
+---
+description: Learn how to configure GraphQL Code Generator to generate code from your GraphQL schema and documents.
+---
+
 import { PackageCmd, Callout } from '@theguild/components'
 
 # `codegen.ts` file
@@ -24,8 +28,7 @@ const config: CodegenConfig = {
   documents: ['src/**/*.tsx'],
   generates: {
     './src/gql/': {
-      preset: 'client',
-      plugins: []
+      preset: 'client'
     }
   }
 }
@@ -107,8 +110,7 @@ const config: CodegenConfig = {
   documents: ['src/**/*.tsx'],
   generates: {
     './src/gql/': {
-      preset: 'client',
-      plugins: []
+      preset: 'client'
     }
   }
 }
@@ -178,7 +180,8 @@ For more detailed output, you can also enable the `verbose: true` or `--verbose`
 GraphQL-Codegen is uses [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig) library to manage configuration loading.
 
 That means you can use `codegen.yml`, `codegen.json`, `codegen.js`, or `codegen.ts` as configuration files. You can also specify the entire configuration under a key called `"codegen"` in your `package.json`.
-
 For more information, [please refer to `cosmiconfig` documentation](https://github.com/davidtheclark/cosmiconfig#cosmiconfig).
+
+For TypeScript files, GraphQL-Codegen uses [`jiti` loader](https://github.com/unjs/jiti) to load the configuration. That means you can additionally use `.mts`, and `.cts` extensions.
 
 GraphQL-Codegen is also integrable with [GraphQL-Config](https://graphql-config.com), so you can specify `.graphqlrc` as your configuration file.

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/graphql-modules-preset",
-  "version": "2.5.11",
+  "version": "4.0.0",
   "description": "GraphQL Code Generator preset for modularized schema",
   "repository": {
     "type": "git",
@@ -15,12 +15,12 @@
     "@types/parse-filepath": "1.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^3.1.2",
-    "@graphql-codegen/visitor-plugin-common": "2.13.7",
-    "@graphql-tools/utils": "^9.0.0",
+    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "@graphql-codegen/visitor-plugin-common": "4.0.0",
+    "@graphql-tools/utils": "^10.0.0",
     "parse-filepath": "^1.0.2",
     "change-case-all": "1.0.15",
-    "tslib": "~2.4.0"
+    "tslib": "~2.5.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"

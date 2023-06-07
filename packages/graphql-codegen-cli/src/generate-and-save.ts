@@ -19,13 +19,14 @@ export async function generate(
   await context.profiler.run(() => lifecycleHooks(config.hooks).afterStart(), 'Lifecycle: afterStart');
 
   let previouslyGeneratedFilenames: string[] = [];
+
   function removeStaleFiles(config: Types.Config, generationResult: Types.FileOutput[]) {
     const filenames = generationResult.map(o => o.filename);
     // find stale files from previous build which are not present in current build
     const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
-    staleFilenames.forEach(filename => {
+    for (const filename of staleFilenames) {
       if (shouldOverwrite(config, filename)) {
-        return unlinkFile(filename, err => {
+        unlinkFile(filename, err => {
           const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
           if (err) {
             debugLog(`Cannot remove stale file: ${prettyFilename}\n${err}`);
@@ -34,11 +35,12 @@ export async function generate(
           }
         });
       }
-    });
+    }
     previouslyGeneratedFilenames = filenames;
   }
 
   const recentOutputHash = new Map<string, string>();
+
   async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
       return generationResult;
@@ -128,7 +130,7 @@ export async function generate(
 
   // watch mode
   if (config.watch) {
-    return createWatcher(context, writeOutput);
+    return createWatcher(context, writeOutput).runningWatcher;
   }
 
   const outputFiles = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
@@ -144,7 +146,7 @@ export async function generate(
 }
 
 function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.overwrite === undefined ? true : Boolean(config.overwrite);
+  const globalValue = config.overwrite === undefined ? true : !!config.overwrite;
   const outputConfig = config.generates[outputPath];
 
   if (!outputConfig) {

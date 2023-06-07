@@ -53,6 +53,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   onlyEnums: boolean;
   onlyOperationTypes: boolean;
   enumPrefix: boolean;
+  enumSuffix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
   entireFieldWrapperValue: string;
@@ -226,6 +227,32 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+  /**
+   * @default true
+   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
+   *
+   * @exampleMarkdown
+   * ## Disable enum suffixes
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          typesSuffix: 'I',
+   *          enumSuffix: false
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  enumSuffix?: boolean;
   /**
    * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
    * @default T
@@ -482,6 +509,7 @@ export class BaseTypesVisitor<
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       onlyEnums: getConfigValue(rawConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
@@ -529,17 +557,21 @@ export class BaseTypesVisitor<
   }
 
   public getScalarsImports(): string[] {
-    return Object.keys(this.config.scalars)
-      .map(enumName => {
-        const mappedValue = this.config.scalars[enumName];
+    return Object.keys(this.config.scalars).reduce((res, enumName) => {
+      const mappedValue = this.config.scalars[enumName];
 
-        if (mappedValue.isExternal) {
-          return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
-        }
+      if (mappedValue.input.isExternal) {
+        res.push(this._buildTypeImport(mappedValue.input.import, mappedValue.input.source, mappedValue.input.default));
+      }
 
-        return null;
-      })
-      .filter(a => a);
+      if (mappedValue.output.isExternal) {
+        res.push(
+          this._buildTypeImport(mappedValue.output.import, mappedValue.output.source, mappedValue.output.default)
+        );
+      }
+
+      return res;
+    }, []);
   }
 
   public getDirectiveArgumentAndInputFieldMappingsImports(): string[] {
@@ -559,12 +591,20 @@ export class BaseTypesVisitor<
   public get scalarsDefinition(): string {
     if (this.config.onlyEnums) return '';
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
-      const scalarValue = this.config.scalars[scalarName].type;
+      const inputScalarValue = this.config.scalars[scalarName].input.type;
+      const outputScalarValue = this.config.scalars[scalarName].output.type;
       const scalarType = this._schema.getType(scalarName);
       const comment = scalarType?.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
       const { scalar } = this._parsedConfig.declarationKind;
 
-      return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
+      return (
+        comment +
+        indent(
+          `${scalarName}: { input: ${inputScalarValue}${this.getPunctuation(
+            scalar
+          )} output: ${outputScalarValue}${this.getPunctuation(scalar)} }`
+        )
+      );
     });
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -677,7 +717,7 @@ export class BaseTypesVisitor<
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t)))
       .join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -843,7 +883,12 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('enum')
-      .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
+      .withName(
+        this.convertName(node, {
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        })
+      )
       .withComment(node.description as any as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
@@ -879,7 +924,7 @@ export class BaseTypesVisitor<
             ? schemaEnumType.getValue(enumOption.name as any).value
             : undefined;
         let enumValue: string | number =
-          typeof schemaEnumValue !== 'undefined' ? schemaEnumValue : (enumOption.name as any);
+          typeof schemaEnumValue === 'undefined' ? (enumOption.name as any) : schemaEnumValue;
 
         if (
           this.config.enumValues[typeName]?.mappedValues &&
@@ -945,8 +990,8 @@ export class BaseTypesVisitor<
       .join('\n\n');
   }
 
-  protected _getScalar(name: string): string {
-    return `Scalars['${name}']`;
+  protected _getScalar(name: string, type: 'input' | 'output'): string {
+    return `Scalars['${name}']['${type}']`;
   }
 
   protected _getDirectiveArgumentNadInputFieldMapping(name: string): string {
@@ -963,16 +1008,16 @@ export class BaseTypesVisitor<
         return null;
       })
       .reverse()
-      .find(a => Boolean(a));
+      .find(a => !!a);
 
     return type || null;
   }
 
-  protected _getTypeForNode(node: NamedTypeNode): string {
+  protected _getTypeForNode(node: NamedTypeNode, isVisitingInputType: boolean): string {
     const typeAsString = node.name as any as string;
 
     if (this.scalars[typeAsString]) {
-      return this._getScalar(typeAsString);
+      return this._getScalar(typeAsString, isVisitingInputType ? 'input' : 'output');
     }
     if (this.config.enumValues[typeAsString]) {
       return this.config.enumValues[typeAsString].typeIdentifier;
@@ -981,7 +1026,10 @@ export class BaseTypesVisitor<
     const schemaType = this._schema.getType(node.name as any);
 
     if (schemaType && isEnumType(schemaType)) {
-      return this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
+      return this.convertName(node, {
+        useTypesPrefix: this.config.enumPrefix,
+        useTypesSuffix: this.config.enumSuffix,
+      });
     }
 
     return this.convertName(node);
@@ -990,7 +1038,7 @@ export class BaseTypesVisitor<
   NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
     const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
     const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
-    const typeToUse = this._getTypeForNode(node);
+    const typeToUse = this._getTypeForNode(node, isVisitingInputType);
 
     if (!isVisitingInputType && this.config.fieldWrapperValue && this.config.wrapFieldDefinitions) {
       return `FieldWrapper<${typeToUse}>`;

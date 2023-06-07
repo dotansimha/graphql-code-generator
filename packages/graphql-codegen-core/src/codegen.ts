@@ -19,6 +19,7 @@ import {
   shouldValidateDocumentsAgainstSchema,
   shouldValidateDuplicateDocuments,
 } from './utils.js';
+import { transformDocuments } from './transform-document.js';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -71,7 +72,20 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const schemaDocumentNode =
     mergeNeeded || !options.schema ? getCachedDocumentNodeFromSchema(schemaInstance) : options.schema;
 
-  if (schemaInstance && documents.length > 0 && shouldValidateDocumentsAgainstSchema(skipDocumentsValidation)) {
+  const documentTransforms = Array.isArray(options.documentTransforms) ? options.documentTransforms : [];
+  const transformedDocuments = await transformDocuments({
+    ...options,
+    documentTransforms,
+    schema: schemaDocumentNode,
+    schemaAst: schemaInstance,
+    profiler,
+  });
+
+  if (
+    schemaInstance &&
+    transformedDocuments.length > 0 &&
+    shouldValidateDocumentsAgainstSchema(skipDocumentsValidation)
+  ) {
     const ignored = ['NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
     if (typeof skipDocumentsValidation === 'object' && skipDocumentsValidation.ignoreRules) {
       ignored.push(...asArray(skipDocumentsValidation.ignoreRules));
@@ -87,18 +101,18 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       const rules = specifiedRules.filter(rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)));
       const schemaHash = extractHashFromSchema(schemaInstance);
 
-      if (!schemaHash || !options.cache || documents.some(d => typeof d.hash !== 'string')) {
+      if (!schemaHash || !options.cache || transformedDocuments.some(d => typeof d.hash !== 'string')) {
         return Promise.resolve(
           validateGraphQlDocuments(
             schemaInstance,
-            [...documents.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
+            [...transformedDocuments.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
             rules
           )
         );
       }
 
       const cacheKey = [schemaHash]
-        .concat(documents.map(doc => doc.hash))
+        .concat(transformedDocuments.map(doc => doc.hash))
         .concat(JSON.stringify(fragments))
         .join(',');
 
@@ -106,7 +120,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         Promise.resolve(
           validateGraphQlDocuments(
             schemaInstance,
-            [...documents.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
+            [...transformedDocuments.flatMap(d => d.document), ...fragments.flatMap(f => f.document)],
             rules
           )
         )
@@ -130,13 +144,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       const pluginPackage = options.pluginMap[name];
       const pluginConfig = plugin[name] || {};
 
-      const execConfig =
-        typeof pluginConfig !== 'object'
-          ? pluginConfig
-          : {
-              ...options.config,
-              ...pluginConfig,
-            };
+      const execConfig = typeof pluginConfig === 'object' ? { ...options.config, ...pluginConfig } : pluginConfig;
 
       const result = await profiler.run(
         () =>
@@ -147,7 +155,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
               parentConfig: options.config,
               schema: schemaDocumentNode,
               schemaAst: schemaInstance,
-              documents: options.documents,
+              documents: transformedDocuments,
               outputFilename: options.filename,
               allPlugins: options.plugins,
               skipDocumentsValidation: options.skipDocumentsValidation,
@@ -254,7 +262,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
     return deduplicatedDefinitions.add(node);
   }
 
-  files.forEach(file => {
+  for (const file of files) {
     const deduplicatedDefinitions = new Set<DefinitionNode>();
     visit(file.document, {
       OperationDefinition(node) {
@@ -265,18 +273,18 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       },
     });
     (file.document as any).definitions = Array.from(deduplicatedDefinitions);
-  });
+  }
 
   const kinds = Object.keys(definitionMap);
 
-  kinds.forEach(kind => {
+  for (const kind of kinds) {
     const definitionKindMap = definitionMap[kind];
     const names = Object.keys(definitionKindMap);
     if (names.length) {
       const duplicated = names.filter(name => definitionKindMap[name].contents.size > 1);
 
       if (!duplicated.length) {
-        return;
+        continue;
       }
 
       const list = duplicated
@@ -287,10 +295,10 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
             .map(filepath => {
               return `
               - ${filepath}
-            `.trimRight();
+            `.trimEnd();
             })
             .join('')}
-    `.trimRight()
+    `.trimEnd()
         )
         .join('');
 
@@ -301,5 +309,5 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
         `
       );
     }
-  });
+  }
 }

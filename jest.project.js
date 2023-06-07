@@ -5,7 +5,7 @@ const { pathsToModuleNameMapper } = require('ts-jest');
 const ROOT_DIR = __dirname;
 const TSCONFIG = resolve(ROOT_DIR, 'tsconfig.json');
 const tsconfig = require(TSCONFIG);
-const CI = Boolean(process.env.CI);
+const CI = !!process.env.CI;
 
 module.exports = ({ dirname, projectMode = true }) => {
   const pkg = require(resolve(dirname, 'package.json'));
@@ -23,7 +23,7 @@ module.exports = ({ dirname, projectMode = true }) => {
     setupFiles: [`${ROOT_DIR}/dev-test/setup.js`],
     collectCoverage: false,
     testTimeout: 20_000,
-    resolver: 'bob-the-bundler/jest-resolver.js',
+    resolver: './node_modules/bob-the-bundler/jest-resolver.cjs',
     snapshotFormat: {
       escapeString: false,
     },

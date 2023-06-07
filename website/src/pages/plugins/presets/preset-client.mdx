@@ -1,10 +1,12 @@
 ---
 title: client-preset
+description: The client preset provides typed GraphQL operations (Query, Mutation and Subscription) by perfectly integrating with your favorite GraphQL clients.
 ---
 
-import { Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+import { Tree, File, Folder } from '../../../components/file-tree'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
@@ -36,15 +38,25 @@ For step-by-step instructions, please [refer to our dedicated guide](/docs/guide
 
 ## Config API
 
+<Callout type="info">
+  The `client` preset only exposes a set of underlying plugin's config options. The preset is somewhat opinionated and
+  crafted carefully for an optimal developer experience.
+</Callout>
+
 The `client` preset allows the following `config` options:
 
-- [`scalars`](/plugins/typescript/typescript#config-api-reference): Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
-- [`strictScalars`](/plugins/typescript/typescript#config-api-reference): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
-- [`namingConvention`](/plugins/typescript/typescript#config-api-reference): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`
-- [`useTypeImports`](/plugins/typescript/typescript#config-api-reference): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's `"importsNotUsedAsValues": "error"` option.
-- [`skipTypename`](/plugins/typescript/typescript#config-api-reference): Does not add `__typename` to the generated types, unless it was specified in the selection set.
-- [`enumsAsTypes`](/plugins/typescript/typescript#config-api-reference): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns
-- [`arrayInputCoercion`](/plugins/typescript/typescript-operations#config-api-reference): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
+- [`scalars`](/plugins/typescript/typescript#scalars): Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
+- [`defaultScalarType`](/plugins/typescript/typescript#defaultscalartype): Allows you to override the type that unknown `scalars` will have. Defaults to `any`.
+- [`strictScalars`](/plugins/typescript/typescript#strictscalars): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
+- [`namingConvention`](/plugins/typescript/typescript#namingconvention): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`.
+- [`useTypeImports`](/plugins/typescript/typescript#usetypeimports): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's [`"importsNotUsedAsValues": "error"`](https://www.typescriptlang.org/tsconfig#importsNotUsedAsValues) option.
+- [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
+- [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
+- [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
+- [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
+- [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
+- [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
+- [`documentMode`](#documentmode): Allows you to control how the documents are generated.
 
 For more information or feature request, please [refer to the repository discussions](https://github.com/dotansimha/graphql-code-generator/discussions).
 
@@ -52,14 +64,14 @@ For more information or feature request, please [refer to the repository discuss
 
 As explained in [our guide](/docs/guides/react-vue), the `client-preset` comes with Fragment Masking enabled by default.
 
-This section covers this concept and associated options in details.
+This section covers this concept and associated options in detail.
 
 ### Embrace Fragment Masking principles
 
-Fragment Masking helps expressing components data-dependencies with GraphQL Fragments.
+Fragment Masking helps express components' data dependencies with GraphQL Fragments.
 
 By doing so, we ensure that the tree of data is properly passed down to the components without "leaking" data.
-It also allow to colocate the Fragment definitions with their components counterparts:
+It also allows to colocate the Fragment definitions with their components counterparts:
 
 ```tsx filename="src/Film.tsx" {4-11}
 import { FragmentType, useFragment } from './gql/fragment-masking'
@@ -90,7 +102,7 @@ export default Film
 For a deeper and more visual explanation of Fragment Masking, please refer to [Laurin](https://twitter.com/n1rual)'s article: [Unleash the power of Fragments with GraphQL Codegen
 ](https://the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen)
 
-For a introduction on how to design your GraphQL Query to leverage Fragment Masking, please refer to [our guide](/docs/guides/react-vue).
+For an introduction on how to design your GraphQL Query to leverage Fragment Masking, please refer to [our guide](/docs/guides/react-vue).
 
 #### The `FragmentType<T>` type
 
@@ -130,17 +142,19 @@ export default Film
 <Callout type="warning">
 **`FragmentType<T>` is not the Fragment's type**
 
-A common misconception is too mix `FragmentType<T>` and the Fragment's type.
-You might need to get the Fragment's type directly, for example, for helper functions or testing.
-In this scenario, you will need to import it from the generated files, as described in the next section.
+A common misconception is to mix `FragmentType<T>` and the Fragment's type.
+For example, for helper functions, testing, or if you don't use Fragment Masking,
+you should get the Fragment's type directly. In this scenario, you must import
+it from the generated files or extract it from the Fragment's definition,
+as described in [the next section](#getting-a-fragments-type).
 
 </Callout>
 
 #### The `useFragment()` helper
 
-The `useFragment()` function helps narrowing down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
+The `useFragment()` function helps narrow down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
 
-```tsx filename="src/Film.tsx" {16-17}
+```tsx filename="src/Film.tsx" {14-15}
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
@@ -173,7 +187,7 @@ export default Film
 `useFragment()` can be used without following React's rules of hooks.
 To avoid any issue with ESLint, we recommend changing its naming to `getFragmentData()` by setting the proper `unmaskFunctionName` value:
 
-```ts filename="codegen.ts" {10-12}
+```ts filename="codegen.ts" {9-11}
 import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
@@ -182,7 +196,6 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
-      plugins: [],
       presetConfig: {
         fragmentMasking: { unmaskFunctionName: 'getFragmentData' }
       }
@@ -197,7 +210,7 @@ export default config
 
 ### Getting a Fragment's type
 
-To get a Fragment's type is achieved by importing the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
+Getting a Fragment's type is achieved by importing the type that corresponds to your fragment, which is named based on the fragment name with a `Fragment` suffix:
 
 ```tsx filename="src/Film.tsx" {1, 8, 15}
 import { FilmItemFragment } from './gql'
@@ -219,11 +232,85 @@ function myFilmHelper(film: FilmItemFragment) {
 }
 ```
 
+Or, if you have access to the Fragment's definition, you can extract the type from it without having to "guess" the name:
+
+```tsx filename="src/Film.tsx" {1, 3, 12}
+import { ResultOf } from '@graphql-typed-document-node/core'
+
+export const FilmFragment = graphql(/* GraphQL */ `
+  fragment FilmItem on Film {
+    id
+    title
+    releaseDate
+    producers
+  }
+`)
+
+function myFilmHelper(film: ResultOf<typeof FilmFragment>) {
+  // ...
+}
+```
+
 ### Fragment Masking with nested Fragments
 
 When dealing with nested Fragments, the `useFragment()` should also be used in a "nested way".
 
 You can find a complete working example here: [Nested Fragment example on GitHub](https://github.com/charlypoly/codegen-repros/blob/master/client-preset-nested-fragments-interface/src/App.tsx).
+
+### Fragment Masking with @defer directive
+
+If you use the `@defer` directive and have a Fragment Masking setup, you can use an `isFragmentReady` helper to check if the deferred fragment data is already resolved.
+The `isFragmentReady` function takes three arguments: the query document, the fragment definition, and the data returned by the
+query. You can use it to conditionally render components based on whether the data for a deferred
+fragment is available, as shown in the example below:
+
+```jsx
+// index.tsx
+import { useQuery } from '@apollo/client';
+import { useFragment, graphql, FragmentType, isFragmentReady } from './gql';
+
+const OrdersFragment = graphql(`
+  fragment OrdersFragment on User {
+    orders {
+      id
+      total
+    }
+  }
+`)
+const GetUserQueryWithDefer = graphql(`
+  query GetUser($id: ID!) {
+    user(id: $id) {
+      id
+      name
+      ...OrdersFragment @defer
+    }
+  }
+`)
+
+const OrdersList = (props: { data: FragmentType<typeof OrdersFragment> }) => {
+  const data = useFragment(OrdersFragment, props.data);
+  return (
+    // render orders list
+  )
+};
+
+function App() {
+  const { data } = useQuery(GetUserQueryWithDefer);
+  return (
+    <div className="App">
+      {data && (
+        <>
+          <span>Name: {data.name}</span>
+          <span>Id: {data.name}</span>
+          {isFragmentReady(GetUserQueryWithDefer, OrdersFragment, data) // <- HERE
+						&& <OrdersList data={data} />}
+        </>
+      )}
+    </div>
+  );
+}
+export default App;
+```
 
 ### Fragment Masking and testing
 
@@ -263,7 +350,7 @@ describe('<ProfileName />', () => {
 })
 ```
 
-Since the component expect to receive "Masked data", you will need to import the `makeFragmentData()` helper to "build" some masked data, as follow:
+Since the component expects to receive "Masked data", you will need to import the `makeFragmentData()` helper to "build" some masked data, as follow:
 
 ```tsx filename="ProfileName.spec.ts" {7}
 // ...
@@ -283,8 +370,8 @@ describe('<ProfileName />', () => {
 
 `client-preset`'s Fragment Masking can be disabled as follow:
 
-```ts filename="codegen.ts" {10-12}
-import { CodegenConfig } from '@graphql-codegen/cli'
+```ts filename="codegen.ts" {9-11}
+import { type CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'schema.graphql',
@@ -292,7 +379,6 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
-      plugins: [],
       presetConfig: {
         fragmentMasking: false
       }
@@ -303,28 +389,283 @@ const config: CodegenConfig = {
 export default config
 ```
 
+## Persisted documents
+
+Persisted documents (often also referred to as persisted queries or persisted documents) is a technique for reducing client to server upstream traffic by sending a unique identifier instead of the full GraphQL document.
+It is also commonly used to reduce the size of the client bundle as well as to improve security by preventing the client from sending and executing arbitrary GraphQL operations.
+
+<Callout type="info">
+  You can find [a functional example using GraphQL Yoga within our Codegen Examples on
+  GitHub](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/persisted-documents).
+</Callout>
+
+Persisted documents can be enabled by setting the `persistedDocuments` option to `true`:
+
+```ts filename="codegen.ts" {9-11}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      presetConfig: {
+        persistedDocuments: true
+      }
+    }
+  }
+}
+```
+
+By enabling this option GraphQL Code Generator will generate an additional file `persisted-documents.json` within your artifacts location.
+
+<Tree>
+  <Folder name="gql" defaultOpen>
+    <File name="fragment-masking.ts" />
+    <File name="gql.ts" />
+    <File name="graphql.ts" />
+    <File name="index.ts" />
+    <File name="persisted-documents.json" active />
+  </Folder>
+</Tree>
+
+This file contains a mapping of the document's hash to the document's content.
+
+```json filename="persisted-documents.json"
+{
+  "b2c3d4e5f6g7h8i9j0a1": "query Hello { hello }",
+  "kae4fe7f6g7h8i9ej0ag": "mutation echo($msg: String!) { echo(message: $msg) }"
+}
+```
+
+In addition the document hash will be added to the generated document node as a `hash` property.
+
+```ts filename="app.ts"
+import { graphql } from './gql'
+
+const HelloQuery = graphql(/* GraphQL */ `
+  query Hello {
+    hello
+  }
+`)
+
+// logs "b2c3d4e5f6g7h8i9j0a1"
+console.log(HelloQuery['__meta__']['hash'])
+```
+
+This hash can be used in the network layer of your GraphQL client to send the document hash instead of the document string.
+
+<Callout type="info">
+  Note that the server you sent the document hash to must be able to resolve the document hash to the document string.
+</Callout>
+
+```ts filename="Fetch example"
+import { graphql } from './gql'
+
+const HelloQuery = graphql(/* GraphQL */ `
+  query Hello {
+    hello
+  }
+`)
+
+const response = await fetch('http://yoga/graphql', {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    accept: 'application/json'
+  },
+  body: JSON.stringify({
+    extensions: {
+      persistedQuery: {
+        version: 1,
+        sha256Hash: HelloQuery['__meta__']['hash']
+      }
+    }
+  })
+})
+
+console.log(response.status)
+console.log(await response.json())
+```
+
 ## Reducing bundle size: Babel plugin
 
 Large scale projects might want to enable code splitting or tree shaking on the `client-preset` generated files.
+This is because instead of using the map which contains all GraphQL operations in the project,
+we can use the specific generated document types.
 
-The `client-preset` comes with a Babel plugin that enables it.
+The `client-preset` comes with a Babel and a swc plugin that enables it.
 
-To configure it, update (or create) your `.babelrc.js` as follow:
+### Babel plugin
+
+To configure the Babel plugin, update (or create) your `.babelrc.js` as follow:
 
 ```js filename=".babelrc.js"
 const { babelOptimizerPlugin } = require('@graphql-codegen/client-preset')
 
 module.exports = {
   presets: ['react-app'],
-  plugins: [[babelOptimizerPlugin, { artifactDirectory: './src/gql' }]]
+  plugins: [[babelOptimizerPlugin, { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]]
+}
+```
+
+### SWC plugin
+
+<Callout type="warning">
+  As of 2023/03/11, SWC's custom plugins is still an experimental feature, that means unexpected breaking changes that
+  makes specific nextjs versions or our plugin incompatible are possible, so please file an issue
+  [here](https://github.com/dotansimha/graphql-code-generator/issues/new?assignees=&labels=&template=bug_report.yml&title=@graphql-codegen/client-preset-swc-plugin%20...)
+  if you faced any unexpected behavior/errors while using the plugin.
+
+Pro tip: if you faced the following obscure error, or the nextjs `dev` script just instantly terminates the process without any errors,
+it most likely means that SWC is not happy with your nextjs version, so try upgrading it to `latest` if possible,
+then let us know of your current broken version to try fixing it or documenting its no longer supported.
+
+```sh
+thread '<unnamed>' panicked at 'failed to invoke plugin: failed to invoke plugin on 'Some("/app/node_modules/next/dist/client/router.js")'
+```
+
+</Callout>
+
+The SWC plugin is not bundled in the `client-preset` package, so you will need to install it separately:
+
+<PackageCmd packages={['-D @graphql-codegen/client-preset-swc-plugin']} />
+
+#### General
+
+To use the SWC plugin without Next.js, update your `.swcrc` to add the following:
+
+```json5 filename=".swcrc"
+{
+  // ...
+  jsc: {
+    // ...
+    experimental: {
+      plugins: [
+        ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+      ]
+    }
+  }
+}
+```
+
+#### Vite React
+
+To use the SWC plugin with Vite React, update your `vite.config.ts` to add the following:
+
+```ts filename="vite.config.ts" {2,8-10}
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react({
+      plugins: [
+        ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+      ]
+    })
+  ]
+})
+```
+
+#### Next.js
+
+To use the SWC plugin with Next.js, update your `next.config.js` to add the following:
+
+```js filename="next.config.js"
+const nextConfig = {
+  // ...
+  experimental: {
+    swcPlugins: [
+      ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+    ]
+  }
 }
 ```
 
 Note that you will need to provide the `artifactDirectory` path that should be the same as the one configured in your `codegen.ts`
 
-<Callout type="info">
-**SWC plugin**
+## DocumentMode
 
-A SWC plugin is planned for Next.js users, stay tuned by [following the releases](https://github.com/dotansimha/graphql-code-generator/releases).
+The `DocumentMode` option can be used to control how the plugin will generate the document nodes.
 
-</Callout>
+By default, the generated documents are of type `TypedDocumentNode` which is a fully typed GraphQL operation AST. Example:
+
+```ts filename="out/gql.ts"
+export type HelloQueryVariables = Exact<{ [key: string]: never }>
+
+export type HelloQuery = { __typename?: 'Query'; hello: string }
+
+export const HelloDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'hello' },
+      selectionSet: { kind: 'SelectionSet', selections: [{ kind: 'Field', name: { kind: 'Name', value: 'hello' } }] }
+    }
+  ]
+} as unknown as DocumentNode<HelloQuery, HelloQueryVariables>
+```
+
+The `documentMode` option can be used to change the generated documents to `string`:
+
+```ts filename="codegen.ts" {9-11}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      config: {
+        documentMode: 'string'
+      }
+    }
+  }
+}
+```
+
+This will generate the following:
+
+```ts filename="out/gql.ts"
+export type HelloQueryVariables = Exact<{ [key: string]: never }>
+
+export type HelloQuery = { __typename?: 'Query'; hello: string }
+
+export const HelloDocument = new TypedDocumentString(`
+  query hello {
+    hello
+  }
+`) as unknown as TypedDocumentString<HelloQuery, HelloQueryVariables>
+```
+
+It can then be used as follow:
+
+```ts filename="Fetch example"
+import { graphql } from './gql'
+
+const helloQuery = graphql(`
+  query hello {
+    hello
+  }
+`)
+
+fetch('https:<your-graphql-api>', {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify({
+    query: helloQuery.toString()
+  })
+})
+```
+
+### When to use a string DocumentMode?
+
+The `string` DocumentMode is useful when you want to reduce the bundle size of your application as you will get string literals instead of typed ASTs. This is useful when your GraphQL client allows you to send a string literal as the query and you don't need to use the AST on the client, e.g. when using `graphql-request`, SWR, React Query, etc.

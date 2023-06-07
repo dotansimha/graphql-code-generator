@@ -21,11 +21,12 @@ import {
   SelectionSetNode,
   StringValueNode,
   TypeNode,
+  DirectiveNode,
 } from 'graphql';
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -59,7 +60,7 @@ export function wrapWithSingleQuotes(value: string | number | NameNode, skipNume
 
   if (
     typeof value === 'number' ||
-    (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
+    (typeof value === 'string' && !Number.isNaN(parseInt(value)) && parseFloat(value).toString() === value)
   ) {
     return String(value);
   }
@@ -149,7 +150,7 @@ export class DeclarationBlock {
   }
 
   withComment(comment: string | StringValueNode | null, disabled = false): DeclarationBlock {
-    const nonEmptyComment = Boolean(isStringValueNode(comment) ? comment.value : comment);
+    const nonEmptyComment = !!(isStringValueNode(comment) ? comment.value : comment);
 
     if (nonEmptyComment && !disabled) {
       this._comment = transformComment(comment, 0);
@@ -218,7 +219,7 @@ export class DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
       const before = '{' + blockWrapper;
       const after = blockWrapper + '}';
-      const block = [before, this._block, after].filter(val => Boolean(val)).join('\n');
+      const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer(block)})`;
@@ -232,7 +233,7 @@ export class DeclarationBlock {
     }
 
     return stripTrailingSpaces(
-      (this._comment ? this._comment : '') +
+      (this._comment || '') +
         result +
         (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
           ? ''
@@ -283,9 +284,26 @@ export function buildScalars(
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
-  Object.keys(defaultScalarsMapping).forEach(name => {
-    result[name] = parseMapper(defaultScalarsMapping[name]);
-  });
+  function normalizeScalarType(type: string | { input: string; output: string }): { input: string; output: string } {
+    if (typeof type === 'string') {
+      return {
+        input: type,
+        output: type,
+      };
+    }
+
+    return {
+      input: type.input,
+      output: type.output,
+    };
+  }
+
+  for (const name of Object.keys(defaultScalarsMapping)) {
+    result[name] = {
+      input: parseMapper(defaultScalarsMapping[name].input),
+      output: parseMapper(defaultScalarsMapping[name].output),
+    };
+  }
 
   if (schema) {
     const typeMap = schema.getTypeMap();
@@ -296,28 +314,70 @@ export function buildScalars(
       .map((scalarType: GraphQLScalarType) => {
         const { name } = scalarType;
         if (typeof scalarsMapping === 'string') {
-          const value = parseMapper(scalarsMapping + '#' + name, name);
-          result[name] = value;
-        } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
-          const value = parseMapper(scalarsMapping[name], name);
-          result[name] = value;
-        } else if (scalarsMapping?.[name]) {
+          const inputMapper = parseMapper(scalarsMapping + '#' + name, name);
+
+          if (inputMapper.isExternal) {
+            inputMapper.type += "['input']";
+          }
+
+          const outputMapper = parseMapper(scalarsMapping + '#' + name, name);
+          if (outputMapper.isExternal) {
+            outputMapper.type += "['output']";
+          }
+
           result[name] = {
-            isExternal: false,
-            type: JSON.stringify(scalarsMapping[name]),
+            input: inputMapper,
+            output: outputMapper,
           };
+        } else if (scalarsMapping?.[name]) {
+          const mappedScalar = scalarsMapping[name];
+          if (typeof mappedScalar === 'string') {
+            const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
+            result[name] = {
+              input: parseMapper(normalizedScalar.input, name),
+              output: parseMapper(normalizedScalar.output, name),
+            };
+          } else if (typeof mappedScalar === 'object' && mappedScalar.input && mappedScalar.output) {
+            result[name] = {
+              input: parseMapper(mappedScalar.input, name),
+              output: parseMapper(mappedScalar.output, name),
+            };
+          } else {
+            result[name] = {
+              input: {
+                isExternal: false,
+                type: JSON.stringify(mappedScalar),
+              },
+              output: {
+                isExternal: false,
+                type: JSON.stringify(mappedScalar),
+              },
+            };
+          }
         } else if (scalarType.extensions?.codegenScalarType) {
           result[name] = {
-            isExternal: false,
-            type: scalarType.extensions.codegenScalarType as string,
+            input: {
+              isExternal: false,
+              type: scalarType.extensions.codegenScalarType as string,
+            },
+            output: {
+              isExternal: false,
+              type: scalarType.extensions.codegenScalarType as string,
+            },
           };
         } else if (!defaultScalarsMapping[name]) {
           if (defaultScalarType === null) {
             throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
           }
           result[name] = {
-            isExternal: false,
-            type: defaultScalarType,
+            input: {
+              isExternal: false,
+              type: defaultScalarType,
+            },
+            output: {
+              isExternal: false,
+              type: defaultScalarType,
+            },
           };
         }
       });
@@ -325,17 +385,27 @@ export function buildScalars(
     if (typeof scalarsMapping === 'string') {
       throw new Error('Cannot use string scalars mapping when building without a schema');
     }
-    Object.keys(scalarsMapping).forEach(name => {
+    for (const name of Object.keys(scalarsMapping)) {
       if (typeof scalarsMapping[name] === 'string') {
-        const value = parseMapper(scalarsMapping[name], name);
-        result[name] = value;
-      } else {
+        const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
         result[name] = {
-          isExternal: false,
-          type: JSON.stringify(scalarsMapping[name]),
+          input: parseMapper(normalizedScalar.input, name),
+          output: parseMapper(normalizedScalar.output, name),
+        };
+      } else {
+        const normalizedScalar = normalizeScalarType(scalarsMapping[name]);
+        result[name] = {
+          input: {
+            isExternal: false,
+            type: JSON.stringify(normalizedScalar.input),
+          },
+          output: {
+            isExternal: false,
+            type: JSON.stringify(normalizedScalar.output),
+          },
         };
       }
-    });
+    }
   }
 
   return result;
@@ -408,7 +478,7 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
 };
 
 export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
-  fields: FieldNode[];
+  fields: (FieldNode & FragmentDirectives)[];
   spreads: FragmentSpreadNode[];
   inlines: InlineFragmentNode[];
 } {
@@ -436,6 +506,11 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
 export function hasConditionalDirectives(field: FieldNode): boolean {
   const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
   return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
+}
+
+export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {
+  const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
+  return directives?.some(directive => INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value));
 }
 
 type WrapModifiersOptions = {
@@ -523,4 +598,20 @@ export function isOneOfInputObjectType(
   isOneOfTypeCache.set(namedType, isOneOfType);
 
   return isOneOfType;
+}
+
+export function groupBy<T>(array: Array<T>, key: (item: T) => string | number): { [key: string]: Array<T> } {
+  return array.reduce<{ [key: string]: Array<T> }>((acc, item) => {
+    const group = (acc[key(item)] ??= []);
+    group.push(item);
+    return acc;
+  }, {});
+}
+
+export function flatten<T>(array: Array<Array<T>>): Array<T> {
+  return ([] as Array<T>).concat(...array);
+}
+
+export function unique<T>(array: Array<T>, key: (item: T) => string | number = item => item.toString()): Array<T> {
+  return Object.values(array.reduce((acc, item) => ({ [key(item)]: item, ...acc }), {}));
 }

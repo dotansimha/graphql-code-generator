@@ -10,7 +10,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
  * 3. It does not support dead code elimination, so it will add unused operations.
  *
- * Therefore it is highly recommended to use the babel-plugin for production.
+ * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
   '\n  fragment TweetFragment on Tweet {\n    id\n    body\n    ...TweetAuthorFragment\n  }\n':
@@ -23,45 +23,45 @@ const documents = {
 };
 
 /**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  *
  *
  * @example
  * ```ts
- * const query = gql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
+ * const query = graphql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
  * ```
  *
  * The query argument is unknown!
  * Please regenerate the types.
  */
-export function gql(source: string): unknown;
+export function graphql(source: string): unknown;
 
 /**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(
+export function graphql(
   source: '\n  fragment TweetFragment on Tweet {\n    id\n    body\n    ...TweetAuthorFragment\n  }\n'
-): typeof documents['\n  fragment TweetFragment on Tweet {\n    id\n    body\n    ...TweetAuthorFragment\n  }\n'];
+): (typeof documents)['\n  fragment TweetFragment on Tweet {\n    id\n    body\n    ...TweetAuthorFragment\n  }\n'];
 /**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(
+export function graphql(
   source: '\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n'
-): typeof documents['\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n'];
+): (typeof documents)['\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n'];
 /**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(
+export function graphql(
   source: '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'
-): typeof documents['\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'];
+): (typeof documents)['\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'];
 /**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(
+export function graphql(
   source: '\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n'
-): typeof documents['\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n'];
+): (typeof documents)['\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n'];
 
-export function gql(source: string) {
+export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 

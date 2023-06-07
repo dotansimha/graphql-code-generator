@@ -102,6 +102,10 @@ export interface RawConfig {
    *        // plugins...
    *        config: {
    *          scalars: {
+   *            ID: {
+   *              input: 'string',
+   *              output: 'string | number'
+   *            }
    *            DateTime: 'Date',
    *            JSON: '{ [key: string]: any }',
    *          }
@@ -345,6 +349,7 @@ export interface RawConfig {
    * Instead - all of them are imported to the Operation node.
    * @type boolean
    * @default false
+   * @deprecated This option is no longer needed. It will be removed in the next major version.
    */
   dedupeFragments?: boolean;
   /**
@@ -381,20 +386,23 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       externalFragments: rawConfig.externalFragments || [],
       fragmentImports: rawConfig.fragmentImports || [],
       addTypename: !rawConfig.skipTypename,
-      nonOptionalTypename: Boolean(rawConfig.nonOptionalTypename),
-      useTypeImports: Boolean(rawConfig.useTypeImports),
-      dedupeFragments: Boolean(rawConfig.dedupeFragments),
-      allowEnumStringTypes: Boolean(rawConfig.allowEnumStringTypes),
+      nonOptionalTypename: !!rawConfig.nonOptionalTypename,
+      useTypeImports: !!rawConfig.useTypeImports,
+      dedupeFragments: !!rawConfig.dedupeFragments,
+      allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       emitLegacyCommonJSImports:
-        rawConfig.emitLegacyCommonJSImports === undefined ? true : Boolean(rawConfig.emitLegacyCommonJSImports),
+        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       ...((additionalConfig || {}) as any),
     };
 
     this.scalars = {};
-    Object.keys(this.config.scalars || {}).forEach(key => {
-      this.scalars[key] = this.config.scalars[key].type;
-    });
+    for (const key of Object.keys(this.config.scalars || {})) {
+      this.scalars[key] = {
+        input: this.config.scalars[key]?.input?.type,
+        output: this.config.scalars[key]?.output?.type,
+      };
+    }
 
     autoBind(this);
   }

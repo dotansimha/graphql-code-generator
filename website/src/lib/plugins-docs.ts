@@ -17,11 +17,6 @@ export const presetsConfigurations: PresetConfig[] = [
     identifier: 'ImportTypesConfig',
     name: 'import-types-preset',
   },
-  {
-    file: '../node_modules/@graphql-codegen/gql-tag-operations-preset/src/index.ts',
-    identifier: 'GqlTagConfig',
-    name: 'gql-tag-operations-preset',
-  },
 ];
 
 export const pluginsConfigurations: PluginConfig[] = [
@@ -119,6 +114,11 @@ export const pluginsConfigurations: PluginConfig[] = [
     file: '../node_modules/@graphql-codegen/typescript-apollo-angular/typings/config.d.ts',
     identifier: 'ApolloAngularRawPluginConfig',
     name: 'typescript-apollo-angular',
+  },
+  {
+    file: '../node_modules/@graphql-codegen/typescript-nhost/typings/config.d.ts',
+    identifier: 'NhostPluginConfig',
+    name: 'typescript-nhost',
   },
   {
     file: '../node_modules/@graphql-codegen/typescript-urql/typings/config.d.ts',

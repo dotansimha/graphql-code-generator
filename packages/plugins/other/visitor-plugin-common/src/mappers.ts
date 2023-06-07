@@ -16,7 +16,7 @@ export interface ExternalParsedMapper {
 }
 
 export function isExternalMapperType(m: ParsedMapper): m is ExternalParsedMapper {
-  return Boolean((m as ExternalParsedMapper).import);
+  return !!(m as ExternalParsedMapper).import;
 }
 
 enum MapperKind {
@@ -177,11 +177,11 @@ export function transformMappers(
 ): ParsedResolversConfig['mappers'] {
   const result: ParsedResolversConfig['mappers'] = {};
 
-  Object.keys(rawMappers).forEach(gqlTypeName => {
+  for (const gqlTypeName of Object.keys(rawMappers)) {
     const mapperDef = rawMappers[gqlTypeName];
     const parsedMapper = parseMapper(mapperDef, gqlTypeName, mapperTypeSuffix);
     result[gqlTypeName] = parsedMapper;
-  });
+  }
 
   return result;
 }
@@ -192,11 +192,11 @@ export function transformDirectiveArgumentAndInputFieldMappings(
 ): ParsedDirectiveArgumentAndInputFieldMappings {
   const result: ParsedDirectiveArgumentAndInputFieldMappings = {};
 
-  Object.keys(rawDirectiveArgumentAndInputFieldMappings).forEach(directive => {
+  for (const directive of Object.keys(rawDirectiveArgumentAndInputFieldMappings)) {
     const mapperDef = rawDirectiveArgumentAndInputFieldMappings[directive];
     const parsedMapper = parseMapper(mapperDef, directive, directiveArgumentAndInputFieldMappingTypeSuffix);
     result[directive] = parsedMapper;
-  });
+  }
 
   return result;
 }

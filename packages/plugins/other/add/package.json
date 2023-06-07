@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/add",
-  "version": "3.2.3",
+  "version": "5.0.0",
   "description": "GraphQL Code Generator plugin for adding custom content to your output file",
   "repository": {
     "type": "git",
@@ -12,8 +12,8 @@
     "lint": "eslint **/*.ts"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^3.1.1",
-    "tslib": "~2.4.0"
+    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "tslib": "~2.5.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"

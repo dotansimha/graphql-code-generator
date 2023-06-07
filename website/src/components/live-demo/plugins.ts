@@ -4,12 +4,14 @@ export const presetLoaderMap = {
   'import-types': () => import('@graphql-codegen/import-types-preset'),
   'java-apollo-android': () => import('@graphql-codegen/java-apollo-android'),
   'near-operation-file': () => import('@graphql-codegen/near-operation-file-preset'),
+  client: () => import('@graphql-codegen/client-preset'),
 };
 
 export const pluginLoaderMap = {
   add: () => import('@graphql-codegen/add'),
   'c-sharp': () => import('@graphql-codegen/c-sharp'),
   'c-sharp-operations': () => import('@graphql-codegen/c-sharp-operations'),
+  'flutter-freezed': () => import('@graphql-codegen/flutter-freezed'),
   flow: () => import('@graphql-codegen/flow'),
   'flow-operations': () => import('@graphql-codegen/flow-operations'),
   'flow-resolvers': () => import('@graphql-codegen/flow-resolvers'),

@@ -11,7 +11,8 @@ import { GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveField[]
+    fields: PrimitiveField[],
+    unsetTypes?: boolean
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -22,6 +23,10 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       this.config.convertName(schemaType.name, {
         useTypesPrefix: true,
       });
+
+    if (unsetTypes) {
+      return [`MakeEmpty<${parentName}, ${fields.map(field => `'${field.fieldName}'`).join(' | ')}>`];
+    }
 
     let hasConditionals = false;
     const conditilnalsList: string[] = [];
@@ -39,9 +44,11 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       const avoidOptional =
         // TODO: check type and exec only if relevant
         this.config.avoidOptionals === true ||
-        this.config.avoidOptionals.field ||
-        this.config.avoidOptionals.inputValue ||
-        this.config.avoidOptionals.object;
+        (typeof this.config.avoidOptionals === 'object' &&
+          (this.config.avoidOptionals.field ||
+            this.config.avoidOptionals.inputValue ||
+            this.config.avoidOptionals.object));
+
       const transform = avoidOptional ? 'MakeMaybe' : 'MakeOptional';
       resString = `${
         this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''

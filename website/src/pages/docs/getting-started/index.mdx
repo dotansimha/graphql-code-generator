@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack. From back-end to front-end, GraphQL Code Generator automates the generation of typed Queries, Mutations and, Subscriptions for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 ---
 
 import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
@@ -270,7 +271,6 @@ const config: CodegenConfig = {
    generates: {
       './src/gql/': {
         preset: 'client',
-        plugins: []
       }
    }
 }
@@ -472,7 +472,8 @@ server.listen().then(({ url }) => {
 <Tab>
 ```ts
 import { readFileSync } from 'node:fs'
-import { createServer } from '@graphql-yoga/node'
+import { createServer } from 'node:http'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { Resolvers } from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
@@ -483,9 +484,13 @@ const resolvers: Resolvers = {
   }
 }
 
-const server = createServer({ typeDefs, resolvers })
+const schema = createSchema({ typeDefs, resolvers })
+const yoga = createYoga({ schema })
+const server = createServer(yoga)
 
-server.start()
+server.listen(4000, () => {
+  console.log('GraphQL Server is listening on http://localhost:4000/graphql');
+})
 ```
 </Tab>
 

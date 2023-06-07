@@ -1,7 +1,8 @@
-import { createHash } from 'crypto';
+import { createHash, BinaryToTextEncoding } from 'crypto';
 import { promises } from 'fs';
 import { createRequire } from 'module';
 import { resolve } from 'path';
+
 import {
   createNoopProfiler,
   createProfiler,
@@ -10,7 +11,7 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
+import jiti from 'jiti';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
 import { GraphQLConfig } from 'graphql-config';
 import { env } from 'string-env-interpolation';
@@ -49,8 +50,8 @@ export function generateSearchPlaces(moduleName: string) {
   return [...regular.concat(dot), 'package.json'];
 }
 
-function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
-  function loader(filepath: string, content: string) {
+function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): CodegenConfigLoader {
+  return async function loader(filepath, content) {
     if (typeof process !== 'undefined' && 'env' in process) {
       content = env(content);
     }
@@ -74,14 +75,13 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts') {
     }
 
     if (ext === 'ts') {
-      // #8437: conflict with `graphql-config` also using TypeScriptLoader(), causing a double `ts-node` register.
-      const tsLoader = TypeScriptLoader({ transpileOnly: true });
-      return tsLoader(filepath, content);
+      const jitiLoader = jiti('', { interopDefault: true });
+      return jitiLoader(filepath);
     }
-  }
-
-  return loader;
+  };
 }
+
+export type CodegenConfigLoader = (filepath: string, content: string) => Promise<Types.Config> | Types.Config;
 
 export interface LoadCodegenConfigOptions {
   /**
@@ -105,7 +105,7 @@ export interface LoadCodegenConfigOptions {
   /**
    * Overrides or extends the loaders for specific file extensions
    */
-  loaders?: Record<string, (filepath: string, content: string) => Promise<Types.Config> | Types.Config>;
+  loaders?: Record<string, CodegenConfigLoader>;
 }
 
 export interface LoadCodegenConfigResult {
@@ -133,6 +133,8 @@ export async function loadCodegenConfig({
       '.yml': customLoader('yaml'),
       '.js': customLoader('js'),
       '.ts': customLoader('ts'),
+      '.mts': customLoader('ts'),
+      '.cts': customLoader('ts'),
       noExt: customLoader('yaml'),
       ...customLoaders,
     },
@@ -208,7 +210,7 @@ export function buildOptions() {
         if (typeof watch === 'string' || Array.isArray(watch)) {
           return watch;
         }
-        return Boolean(watch);
+        return !!watch;
       },
     },
     r: {
@@ -446,8 +448,8 @@ export function ensureContext(input: CodegenContext | Types.Config): CodegenCont
   return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
 }
 
-function hashContent(content: string): string {
-  return createHash('sha256').update(content).digest('hex');
+function hashContent(content: string, encoding: BinaryToTextEncoding = 'hex'): string {
+  return createHash('sha256').update(content).digest(encoding);
 }
 
 function hashSchema(schema: GraphQLSchema): string {
@@ -488,7 +490,7 @@ function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile
 }
 
 export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
-  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : Boolean(config.emitLegacyCommonJSImports);
+  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : !!config.emitLegacyCommonJSImports;
   // const outputConfig = config.generates[outputPath];
 
   // if (!outputConfig) {

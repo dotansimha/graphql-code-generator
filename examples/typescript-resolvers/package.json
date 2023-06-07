@@ -3,18 +3,20 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@graphql-codegen/cli": "2.16.4",
-    "@graphql-codegen/typescript": "2.8.7",
-    "@graphql-codegen/typescript-resolvers": "2.7.12"
+    "@graphql-codegen/cli": "4.0.1",
+    "@graphql-codegen/typescript": "4.0.0",
+    "@graphql-codegen/typescript-resolvers": "4.0.0"
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "@graphql-yoga/node": "3.3.0"
+    "graphql-yoga": "3.9.1"
   },
   "scripts": {
-    "codegen": "graphql-codegen --config codegen.yml",
+    "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
-    "dev": "ts-node src/main.ts"
+    "dev": "ts-node src/main.ts",
+    "test": "exit 0",
+    "test:end2end": "exit 0"
   },
   "type": "commonjs",
   "bob": false
