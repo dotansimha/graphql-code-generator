@@ -22,6 +22,8 @@ import {
 } from 'graphql';
 import { TypeScriptPluginConfig } from './config';
 import { ASTReducer } from 'graphql/language/visitor';
+import * as ts from 'typescript';
+const tsf = ts.factory;
 
 export function indent(str: string, count = 1): string {
   return new Array(count).fill('  ').join('') + str;
@@ -64,28 +66,32 @@ function getObjectTypeDeclarationBlock(
   node: ObjectTypeDefinitionNode,
   originalNode: ObjectTypeDefinitionNode,
   config: TypeScriptPluginConfig
-): DeclarationBlock {
+) {
   const optionalTypename = config.nonOptionalTypename ? '__typename' : '__typename?';
   const allFields = [
     ...(config.skipTypename
       ? []
-      : [indent(`${config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}';`)]),
+      : [indent(`${config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}'`)]),
     ...(node.fields || []),
   ] as string[];
+
   const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => convertName(i)) : [];
 
-  const declarationBlock = new DeclarationBlock({
-    enumNameValueSeparator: ' =',
-    ignoreExport: config.noExport,
-  })
-    .export()
-    .asKind('type')
-    .withName(convertName(node))
-    .withComment(node.description || '');
+  const intersectionType = tsf.createIntersectionTypeNode([
+    ...interfacesNames.map(i => tsf.createTypeReferenceNode(i, undefined)),
+    tsf.createTypeLiteralNode(
+      allFields.map(f => tsf.createPropertySignature(undefined, f.replace(';', ''), undefined, undefined))
+    ),
+  ]);
 
-  appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
+  const declarationBlock = typeNodeDeclaration({
+    name: convertName(node),
+    useExport: config.noExport ? false : true,
+    comment: node.description?.value,
+    type: intersectionType,
+  });
 
-  return declarationBlock;
+  return printNode(declarationBlock);
 }
 
 function buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, config: any) {
@@ -210,6 +216,14 @@ export function typeScriptASTVisitor(
   // todo
 ): ASTReducer<any> {
   return {
+    Document: {
+      leave(node) {
+        const sourceFile = ts.createSourceFile('filename.ts', '', ts.ScriptTarget.Latest, false, ts.ScriptKind.TSX);
+
+        (node as any).__tempNewValue = sourceFile;
+        return node;
+      },
+    },
     InputValueDefinition: {
       leave(node, key, parent, _path, ancestors) {
         const originalFieldNode = Array.isArray(parent) ? parent[Number(key)] : parent;
@@ -254,6 +268,7 @@ export function typeScriptASTVisitor(
               }
               fieldParts.push(`${readonlyPrefix}${fieldName}?: never;`);
             }
+
             return comment + indent(`{ ${fieldParts.join(' ')} }`);
           }
         }
@@ -282,6 +297,7 @@ export function typeScriptASTVisitor(
           .concat(...withFutureAddedValue)
           .join(' | ');
 
+        // TODO: It seems we're missing a test
         return new DeclarationBlock({
           enumNameValueSeparator: ' =',
           ignoreExport: config.noExport,
@@ -336,15 +352,12 @@ export function typeScriptASTVisitor(
           return null;
         }
 
-        return [
-          getObjectTypeDeclarationBlock(node, originalNode, config).string,
-          buildArgumentsBlock(originalNode, config),
-        ].join('');
+        return [getObjectTypeDeclarationBlock(node, originalNode, config)].join('');
       },
     },
     EnumTypeDefinition: {
       leave() {
-        return '';
+        return null;
       },
     },
     InputObjectTypeDefinition: {
@@ -423,3 +436,37 @@ export function typeScriptASTVisitor(
     },
   };
 }
+
+export const typeNodeDeclaration = ({
+  name,
+  type,
+  comment,
+  useExport,
+}: {
+  name: string;
+  type: ts.TypeNode;
+  comment?: string | undefined;
+  useExport: boolean;
+}) => {
+  const typeAliasDeclaration = tsf.createTypeAliasDeclaration(
+    useExport ? [tsf.createModifier(ts.SyntaxKind.ExportKeyword)] : [],
+    name,
+    undefined,
+    type
+  );
+
+  if (comment) {
+    ts.addSyntheticLeadingComment(typeAliasDeclaration, ts.SyntaxKind.MultiLineCommentTrivia, comment, true);
+  }
+
+  return typeAliasDeclaration;
+};
+
+const printNode = (node: ts.Node | ts.Node[]) => {
+  const sourceFile = ts.createSourceFile('graphql.ts', '', ts.ScriptTarget.ES2020, false, ts.ScriptKind.TSX);
+  const printer = ts.createPrinter({ omitTrailingSemicolon: false, newLine: ts.NewLineKind.CarriageReturnLineFeed });
+  if (Array.isArray(node)) {
+    return printer.printList(ts.ListFormat.MultiLine, tsf.createNodeArray(node), sourceFile);
+  }
+  return printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
+};

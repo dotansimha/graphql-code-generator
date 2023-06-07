@@ -107,7 +107,9 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
 
   const scalarsMap = buildScalarsFromConfig(schema, config);
 
+  // TODO: Next step: This must not be a string anymore. We need to map GQL AST to TS AST.
   const visitorResult: DocumentNode = visit(gqlDocumentNode, typeScriptASTVisitor(_schema, scalarsMap, config));
+
   const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
 
   // Scalars
