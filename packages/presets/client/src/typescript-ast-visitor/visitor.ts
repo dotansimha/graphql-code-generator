@@ -382,10 +382,18 @@ export function typeScriptASTVisitor(
         const addOptionalSign = !avoidOptionalsConfig.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
         const comment = getNodeComment(node);
 
-        return (
-          comment +
-          indent(`${config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString};`)
+        const typeFieldDeclaration = tsf.createPropertySignature(
+          config.immutableTypes ? [tsf.createModifier(ts.SyntaxKind.ReadonlyKeyword)] : [],
+          tsf.createIdentifier(node.name),
+          addOptionalSign ? tsf.createToken(ts.SyntaxKind.QuestionToken) : undefined,
+          tsf.createTypeReferenceNode(tsf.createIdentifier(typeString), undefined)
         );
+
+        if (comment) {
+          ts.addSyntheticLeadingComment(typeFieldDeclaration, ts.SyntaxKind.MultiLineCommentTrivia, comment, true);
+        }
+
+        return printNode(typeFieldDeclaration);
       },
     },
   };
