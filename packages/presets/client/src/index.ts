@@ -116,22 +116,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const reexports: Array<string> = [];
 
-    // the `client` preset is restricting the config options inherited from `typescript`, `typescript-operations` and others.
-    const forwardedConfig = {
-      scalars: options.config.scalars,
-      defaultScalarType: options.config.defaultScalarType,
-      strictScalars: options.config.strictScalars,
-      namingConvention: options.config.namingConvention,
-      useTypeImports: options.config.useTypeImports,
-      skipTypename: options.config.skipTypename,
-      arrayInputCoercion: options.config.arrayInputCoercion,
-      enumsAsTypes: options.config.enumsAsTypes,
-      dedupeFragments: options.config.dedupeFragments,
-      nonOptionalTypename: options.config.nonOptionalTypename,
-      avoidOptionals: options.config.avoidOptionals,
-      documentMode: options.config.documentMode,
-    };
-
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
     let fragmentMaskingConfig: FragmentMaskingConfig | null = null;
 
@@ -252,9 +236,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         ],
         schema: options.schema,
         config: {
-          useTypeImports: options.config.useTypeImports,
+          ...options.config,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
-          emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
         documents: [],
@@ -283,7 +266,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           },
         ],
         schema: options.schema,
-        config: {},
+        config,
         documents: [],
         documentTransforms: options.documentTransforms,
       };
@@ -296,8 +279,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         pluginMap,
         schema: options.schema,
         config: {
+          ...options.config,
           inlineFragmentTypes: isMaskingFragments ? 'mask' : options.config['inlineFragmentTypes'],
-          ...forwardedConfig,
         },
         documents: sources,
         documentTransforms: options.documentTransforms,
@@ -334,7 +317,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
                 },
               },
               schema: options.schema,
-              config: {},
+              config,
               documents: sources,
               documentTransforms: options.documentTransforms,
             },

@@ -2513,4 +2513,30 @@ export * from "./gql.js";`);
       `);
     });
   });
+
+  // Note: The main test for "dedupeOperationSuffix" happens elsewhere. This is just a regression test to verify that
+  // the preset doesn't fundamentally break it.
+  it('Test for dedupeOperationSuffix', async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            a: String
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/operation-suffix.ts'),
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            dedupeOperationSuffix: true,
+          },
+        },
+      },
+    });
+
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toContain('export type SomeQuery =');
+  });
 });
