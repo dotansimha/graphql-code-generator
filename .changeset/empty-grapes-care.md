@@ -3,7 +3,6 @@
 '@graphql-codegen/typescript-operations': patch
 '@graphql-codegen/typescript': patch
 '@graphql-codegen/typescript-resolvers': patch
-'@graphql-codegen/cli': patch
 '@graphql-codegen/client-preset': patch
 ---
 
