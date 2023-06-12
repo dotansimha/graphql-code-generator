@@ -2,7 +2,7 @@ import { NormalizedScalarsMap } from './types.js';
 
 export const DEFAULT_SCALARS: NormalizedScalarsMap = {
   ID: {
-    input: 'string | number',
+    input: 'string',
     output: 'string',
   },
   String: {

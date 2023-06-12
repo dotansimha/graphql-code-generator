@@ -4105,7 +4105,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -4215,7 +4215,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -4303,7 +4303,7 @@ describe('TypeScript Operations Plugin', () => {
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
