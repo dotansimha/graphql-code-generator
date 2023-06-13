@@ -719,7 +719,7 @@ describe('Codegen Executor', () => {
 
       expect(output.length).toBe(1);
       expect(output[0].content).toBeSimilarStringTo(`export type Scalars = {
-        ID: { input: string | number; output: string; }
+        ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }

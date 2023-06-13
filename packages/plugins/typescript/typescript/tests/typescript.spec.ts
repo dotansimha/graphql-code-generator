@@ -23,7 +23,7 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -336,7 +336,7 @@ describe('TypeScript', () => {
       expect(result.content).not.toBeSimilarStringTo(`/** My custom scalar */`);
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
-          ID: { input: string | number; output: string;   }
+          ID: { input: string; output: string;   }
           String: { input: string; output: string;   }
           Boolean: { input: boolean; output: boolean;   }
           Int: { input: number; output: number;   }
@@ -1891,7 +1891,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
-        ID: { input: string | number; output: string;   }
+        ID: { input: string; output: string;   }
         String: { input: string; output: string;   }
         Boolean: { input: boolean; output: boolean;   }
         Int: { input: number; output: number;   }
@@ -1933,7 +1933,7 @@ describe('TypeScript', () => {
       expect(result.prepend).toContain(`import { Boolean } from '../../scalars';`);
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: String['input']; output: String['output']; }
           Boolean: { input: Boolean['input']; output: Boolean['output']; }
           Int: { input: number; output: number; }
@@ -2001,7 +2001,7 @@ describe('TypeScript', () => {
       expect(result.prepend).toContain(`import { OrgOtherScalar as OrgAliasedScalar } from '@org/scalars';`);
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -2101,7 +2101,7 @@ describe('TypeScript', () => {
       expect(result.prepend).toContain(`import { OrgOtherScalar as OrgAliasedScalarOutput } from '@org/scalars';`);
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -2147,7 +2147,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -2188,7 +2188,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -2229,7 +2229,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -2285,7 +2285,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
