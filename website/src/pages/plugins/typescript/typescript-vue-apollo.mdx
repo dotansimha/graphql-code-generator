@@ -6,7 +6,7 @@ description: GraphQL Code Generator plugin for Vue Apollo. It generates Vue Apol
 import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
 <Callout type="info">
 
@@ -16,7 +16,7 @@ We now recommend using the `client-preset` package for a **better developer expe
 
 </Callout>
 
-<PluginHeader hasOperationsNote />
+<PluginHeader />
 
 <PluginApiDocs />
 

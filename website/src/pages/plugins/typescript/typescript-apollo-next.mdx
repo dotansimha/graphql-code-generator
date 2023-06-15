@@ -5,9 +5,9 @@ description: Apollo Client plugin for GraphQL Code Generator. Generates React Ap
 
 import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
-<PluginHeader hasOperationsNote />
+<PluginHeader />
 
 This plugin generates:
 

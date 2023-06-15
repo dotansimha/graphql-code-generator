@@ -5,9 +5,9 @@ description: GraphQL Code Generator plugin for Nhost Typescript SDK. It generate
 
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
-<PluginHeader hasOperationsNote />
+<PluginHeader />
 <PluginApiDocs />
 
 This plugin generates the schema for the [`Typescript Nhost SDK`](https://docs.nhost.io/reference/javascript).
