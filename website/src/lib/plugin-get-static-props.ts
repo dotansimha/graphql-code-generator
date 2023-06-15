@@ -7,7 +7,7 @@ import { transformDocs } from '@/lib/transform';
 
 // Can't be used in plugin.tsx due incorrect tree shaking:
 // Module not found: Can't resolve 'fs'
-export const pluginGetStaticProps = (fileName: string) => async () => {
+export const pluginGetStaticProps = (fileName: string, { isDev = true } = {}) => async () => {
   const identifier = parse(fileName).name;
   const plugin = PACKAGES[identifier];
   if (!plugin) {
@@ -35,6 +35,10 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
       )}|
 
 ## Installation
+
+\`\`\`sh npm2yarn
+npm i ${isDev ? '-D ' : ''}${npmPackage}
+\`\`\`
 `
     ),
   ]);
@@ -42,7 +46,6 @@ export const pluginGetStaticProps = (fileName: string) => async () => {
   return {
     props: {
       ssg: {
-        npmPackage,
         compiledSource: mdx.result,
         compiledHeader: mdxHeader.result,
       },

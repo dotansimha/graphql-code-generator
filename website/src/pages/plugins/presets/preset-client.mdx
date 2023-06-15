@@ -3,10 +3,9 @@ title: client-preset
 description: The client preset provides typed GraphQL operations (Query, Mutation and Subscription) by perfectly integrating with your favorite GraphQL clients.
 ---
 
-import { Callout } from '@theguild/components'
+import { Callout, FileTree } from '@theguild/components'
 import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-import { Tree, File, Folder } from '../../../components/file-tree'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
@@ -420,15 +419,15 @@ const config: CodegenConfig = {
 
 By enabling this option GraphQL Code Generator will generate an additional file `persisted-documents.json` within your artifacts location.
 
-<Tree>
-  <Folder name="gql" defaultOpen>
-    <File name="fragment-masking.ts" />
-    <File name="gql.ts" />
-    <File name="graphql.ts" />
-    <File name="index.ts" />
-    <File name="persisted-documents.json" active />
-  </Folder>
-</Tree>
+<FileTree>
+  <FileTree.Folder name="gql" defaultOpen>
+    <FileTree.File name="fragment-masking.ts" />
+    <FileTree.File name="gql.ts" />
+    <FileTree.File name="graphql.ts" />
+    <FileTree.File name="index.ts" />
+    <FileTree.File name="persisted-documents.json" active />
+  </FileTree.Folder>
+</FileTree>
 
 This file contains a mapping of the document's hash to the document's content.
 
