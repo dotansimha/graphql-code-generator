@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "@graphql-codegen/cli": "4.0.1",
-    "@graphql-codegen/client-preset": "4.0.0",
+    "@graphql-codegen/client-preset": "4.0.1",
     "babel-jest": "28.1.3",
     "jest": "28.1.3"
   },
