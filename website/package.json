@@ -68,7 +68,7 @@
     "@graphql-codegen/client-preset": "4.0.0",
     "@mendable/search": "0.0.108",
     "@monaco-editor/react": "4.5.1",
-    "@theguild/components": "4.6.3",
+    "@theguild/components": "5.0.0",
     "classnames": "2.3.2",
     "date-fns": "2.29.3",
     "dedent": "0.7.0",

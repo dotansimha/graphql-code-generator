@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { PackageCmd, useSSG } from '@theguild/components';
+import { LegacyPackageCmd, useSSG } from '@theguild/components';
 import { MDXRemote } from 'next-mdx-remote';
 import ClientNote from './client-note.mdx';
 
@@ -16,7 +16,7 @@ export const PluginHeader = ({
   return (
     <>
       <MDXRemote compiledSource={compiledHeader} />
-      <PackageCmd packages={[`${isDev ? '-D ' : ''}${npmPackage}`]} />
+      <LegacyPackageCmd packages={[`${isDev ? '-D ' : ''}${npmPackage}`]} />
       {hasOperationsNote && <ClientNote />}
     </>
   );
