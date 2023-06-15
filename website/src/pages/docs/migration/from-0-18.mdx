@@ -2,7 +2,7 @@
 description: Migrating to 1.0.0. What has changed? How to migrate? What are the new features?
 ---
 
-import { Callout, Tabs, Tab, PackageCmd } from '@theguild/components'
+import { Callout, Tabs, Tab } from '@theguild/components'
 
 # Migration to 1.0.0
 
@@ -127,7 +127,9 @@ It will generates for you types that are pointing to the new form of types. It s
 
 To use it, start by installing from NPM:
 
-<PackageCmd packages={['-D @graphql-codegen/typescript-compatibility']} />
+```sh npm2yarn
+npm i -D @graphql-codegen/typescript-compatibility
+```
 
 Then, add it to your codegen configuration:
 

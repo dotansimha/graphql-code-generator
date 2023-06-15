@@ -2,7 +2,7 @@
 description: GraphQL Code Generator can generate typed results for your GraphQL operations. This tutorial uses GraphQL Yoga, but the practices are applicable to testing any GraphQL server.
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Guide: API Testing
 
@@ -22,15 +22,15 @@ Refer to [GraphQL Codegen - Yoga example](https://github.com/dotansimha/graphql-
 
 Install the following dependencies:
 
-<PackageCmd packages={['graphql-yoga']} />
+```sh npm2yarn
+npm i graphql-yoga
+```
 
 Install the following development dependencies:
 
-<PackageCmd
-  packages={[
-    '-D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset jest @babel/core @babel/preset-env @babel/preset-typescript babel-jest @graphql-typed-document-node/core'
-  ]}
-/>
+```sh npm2yarn
+npm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset jest @babel/core @babel/preset-env @babel/preset-typescript babel-jest @graphql-typed-document-node/core
+```
 
 ## Setup
 
@@ -185,7 +185,7 @@ describe('Yoga Tests', () => {
 
 We can then generate the types for the referenced GraphQL operation using the GraphQL Code Generator CLI.
 
-```bash
+```sh
 npx graphql-codegen
 ```
 
@@ -193,7 +193,7 @@ As the command was run, the TypeScript errors within the test file should have d
 
 For convenience and writing tests it is recommended to run GraphQL Code Generator in watch mode.
 
-```bash
+```sh
 npx graphql-codegen --watch
 ```
 

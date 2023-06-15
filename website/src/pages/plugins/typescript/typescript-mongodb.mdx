@@ -6,9 +6,9 @@ description: GraphQL Code Generator plugin for generating TypeScript types for M
 import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { isDev: false })
 
-<PluginHeader isDev={false} />
+<PluginHeader />
 
 <Callout type="warning">
   Don't install this plugin as `devDependency`, because you need to import the directives from it.

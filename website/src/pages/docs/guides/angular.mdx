@@ -2,7 +2,7 @@
 description: GraphQL Code Generator provides the @graphql-codegen/typescript-apollo-angular plugin that generates full-typed Apollo GraphQL services.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Guide: Angular
 
@@ -93,16 +93,14 @@ Just a few configuration steps are required to get those Apollo services:
 
 ### Install
 
-<PackageCmd
-  packages={[
-    'graphql',
-    '-D typescript',
-    '-D @graphql-codegen/cli',
-    '-D @graphql-codegen/typescript',
-    '-D @graphql-codegen/typescript-operations',
-    '-D @graphql-codegen/typescript-apollo-angular'
-  ]}
-/>
+```sh npm2yarn
+npm i graphql
+npm i -D typescript
+npm i -D @graphql-codegen/cli
+npm i -D @graphql-codegen/typescript
+npm i -D @graphql-codegen/typescript-operations
+npm i -D @graphql-codegen/typescript-apollo-angular
+```
 
 ### Configure the plugin
 
@@ -146,7 +144,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 Running the following generates the `graphql/generated.ts` file.
 
-<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+```sh npm2yarn
+npm run generate
+```
 
 We can now update our code as follows:
 

@@ -6,9 +6,9 @@ description: GraphQL Code Generator plugin for Angular services using Apollo Ang
 import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
-<PluginHeader hasOperationsNote />
+<PluginHeader />
 <PluginApiDocs />
 
 ## How to use?
