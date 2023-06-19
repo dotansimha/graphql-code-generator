@@ -138,7 +138,7 @@ function _getDirectiveOverrideType(
   return type || null;
 }
 
-export function getDeprecationReason(directive: DirectiveNode): string | void {
+function getDeprecationReason(directive: DirectiveNode): string | void {
   if (directive.name.value === 'deprecated') {
     const hasArguments = !!directive.arguments?.length;
     let reason = 'Field no longer supported';
@@ -149,7 +149,7 @@ export function getDeprecationReason(directive: DirectiveNode): string | void {
   }
 }
 
-export function getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
+function getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
   let commentText = node.description?.value;
   const deprecationDirective = node.directives?.find(v => v.name.value === 'deprecated');
   if (deprecationDirective) {
@@ -160,7 +160,7 @@ export function getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNo
   return comment;
 }
 
-export function getKindsFromAncestors(ancestors: readonly (ASTNode | readonly ASTNode[])[]) {
+function getKindsFromAncestors(ancestors: readonly (ASTNode | readonly ASTNode[])[]) {
   if (!ancestors) return [];
 
   return ancestors
@@ -347,13 +347,28 @@ export function typeScriptASTVisitor(
       leave(node, _key, _parent, _path, ancestors) {
         const isVisitingInputType = getKindsFromAncestors(ancestors).includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
 
-        let typeToUse = getTypeForNode(node, config, _schema, scalarsMap);
+        const typeToUse = getTypeForNode(node, config, _schema, scalarsMap);
 
+        let declaration: ts.ExpressionStatement;
         if (!isVisitingInputType && config.fieldWrapperValue && config.wrapFieldDefinitions) {
-          typeToUse = `FieldWrapper<${typeToUse}>`;
+          declaration = tsf.createExpressionStatement(
+            tsf.createExpressionWithTypeArguments(tsf.createIdentifier('FieldWrapper'), [
+              tsf.createTypeReferenceNode(tsf.createIdentifier(typeToUse), undefined),
+            ])
+          );
+        } else {
+          const currentVisitContext = getKindsFromAncestors(ancestors);
+          const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+
+          declaration = tsf.createExpressionStatement(
+            tsf.createExpressionWithTypeArguments(tsf.createIdentifier(isInputContext ? 'InputMaybe' : 'Maybe'), [
+              tsf.createTypeReferenceNode(tsf.createIdentifier(typeToUse), undefined),
+            ])
+          );
         }
 
-        return MaybeString(ancestors, typeToUse);
+        // todo: ;
+        return printNode(declaration).replace(';', '');
       },
     },
     ListType: {
