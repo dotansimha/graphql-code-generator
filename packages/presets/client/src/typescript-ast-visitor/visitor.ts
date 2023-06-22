@@ -23,17 +23,6 @@ import { ASTReducer } from 'graphql/language/visitor';
 import * as ts from 'typescript';
 const tsf = ts.factory;
 
-export function indent(str: string, count = 1): string {
-  return new Array(count).fill('  ').join('') + str;
-}
-
-function MaybeString(ancestors: readonly (ASTNode | readonly ASTNode[])[], children: string) {
-  const currentVisitContext = getKindsFromAncestors(ancestors);
-  const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
-
-  return isInputContext ? `InputMaybe<${children}>` : `Maybe<${children}>`;
-}
-
 function convertName(
   node: ASTNode | string,
   options?: { useTypesPrefix?: boolean; useTypesSuffix?: boolean; typesPrefix?: string; typesSuffix?: string }
@@ -97,19 +86,23 @@ function getTypeForNode(
   config: TypeScriptPluginConfig,
   schema: GraphQLSchema,
   scalars: ParsedScalarsMap
-): string {
+): ts.TypeNode {
   const typename = typeof node.name === 'string' ? node.name : node.name.value;
 
   if (scalars[typename]) {
-    return `Scalars['${typename}']`;
+    return tsf.createIndexedAccessTypeNode(
+      tsf.createTypeReferenceNode(tsf.createIdentifier('Scalars'), undefined),
+      tsf.createLiteralTypeNode(tsf.createStringLiteral('String'))
+    );
   }
   const schemaType = schema.getType(typename);
 
   if (schemaType && isEnumType(schemaType)) {
-    return convertName(node, { useTypesPrefix: config.enumPrefix, typesPrefix: config.typesPrefix });
+    const name = convertName(node, { useTypesPrefix: config.enumPrefix, typesPrefix: config.typesPrefix });
+    return tsf.createTypeReferenceNode(name, undefined);
   }
 
-  return convertName(node);
+  return tsf.createTypeReferenceNode(convertName(node), undefined);
 }
 
 function clearOptional(str: string): string {
@@ -231,11 +224,11 @@ export function typeScriptASTVisitor(
               fieldParts.push(`${readonlyPrefix}${fieldName}?: never;`);
             }
 
-            return comment + indent(`{ ${fieldParts.join(' ')} }`);
+            return comment + `  { ${fieldParts.join(' ')} }`;
           }
         }
 
-        return comment + indent(buildFieldDefinition());
+        return comment + '  ' + buildFieldDefinition();
       },
     },
     Name: {
@@ -352,9 +345,7 @@ export function typeScriptASTVisitor(
         let declaration: ts.ExpressionStatement;
         if (!isVisitingInputType && config.fieldWrapperValue && config.wrapFieldDefinitions) {
           declaration = tsf.createExpressionStatement(
-            tsf.createExpressionWithTypeArguments(tsf.createIdentifier('FieldWrapper'), [
-              tsf.createTypeReferenceNode(tsf.createIdentifier(typeToUse), undefined),
-            ])
+            tsf.createExpressionWithTypeArguments(tsf.createIdentifier('FieldWrapper'), [typeToUse])
           );
         } else {
           const currentVisitContext = getKindsFromAncestors(ancestors);
@@ -362,7 +353,7 @@ export function typeScriptASTVisitor(
 
           declaration = tsf.createExpressionStatement(
             tsf.createExpressionWithTypeArguments(tsf.createIdentifier(isInputContext ? 'InputMaybe' : 'Maybe'), [
-              tsf.createTypeReferenceNode(tsf.createIdentifier(typeToUse), undefined),
+              typeToUse,
             ])
           );
         }
@@ -373,7 +364,17 @@ export function typeScriptASTVisitor(
     },
     ListType: {
       leave(node, _key, _parent, _path, ancestors) {
-        return MaybeString(ancestors, `Array<${node.type}>`);
+        const currentVisitContext = getKindsFromAncestors(ancestors);
+        const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+        const declaration = tsf.createExpressionStatement(
+          tsf.createExpressionWithTypeArguments(tsf.createIdentifier(isInputContext ? 'InputMaybe' : 'Maybe'), [
+            tsf.createTypeReferenceNode(tsf.createIdentifier('Array'), [
+              tsf.createTypeReferenceNode(tsf.createIdentifier(node.type), undefined),
+            ]),
+          ])
+        );
+        // todo: ;
+        return printNode(declaration).replace(';', '');
       },
     },
     NonNullType: {
