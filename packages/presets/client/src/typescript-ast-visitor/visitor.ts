@@ -395,7 +395,6 @@ export function typeScriptASTVisitor(
     },
     FieldDefinition: {
       leave(node, key, parent, _path, _ancestors) {
-        const typeString = config.wrapFieldDefinitions ? `EntireFieldWrapper<${node.type}>` : node.type;
         const originalFieldNode = Array.isArray(parent) ? parent[Number(key)] : parent;
 
         const avoidOptionalsConfig = typeof config.avoidOptionals === 'object' ? config.avoidOptionals : {};
@@ -406,7 +405,11 @@ export function typeScriptASTVisitor(
           config.immutableTypes ? [tsf.createModifier(ts.SyntaxKind.ReadonlyKeyword)] : [],
           tsf.createIdentifier(node.name),
           addOptionalSign ? tsf.createToken(ts.SyntaxKind.QuestionToken) : undefined,
-          tsf.createTypeReferenceNode(tsf.createIdentifier(typeString), undefined)
+          config.wrapFieldDefinitions
+            ? tsf.createTypeReferenceNode(tsf.createIdentifier('EntireFieldWrapper'), [
+                tsf.createTypeReferenceNode(tsf.createIdentifier(node.type), undefined),
+              ])
+            : tsf.createTypeReferenceNode(tsf.createIdentifier(node.type), undefined)
         );
 
         if (comment) {
