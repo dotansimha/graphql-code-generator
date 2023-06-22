@@ -116,19 +116,22 @@ function clearOptional(str: string): string {
 function _getDirectiveOverrideType(
   directives: ReadonlyArray<DirectiveNode>,
   config: TypeScriptPluginConfig
-): string | null {
-  const type = directives
+): ts.TypeNode | null {
+  const typeNode = directives
     .map(directive => {
       const directiveName = directive.name.value;
       if (config.directiveArgumentAndInputFieldMappings?.[directiveName]) {
-        return `DirectiveArgumentAndInputFieldMappings['${directiveName}']`;
+        return tsf.createIndexedAccessTypeNode(
+          tsf.createTypeReferenceNode(tsf.createIdentifier('DirectiveArgumentAndInputFieldMappings'), undefined),
+          tsf.createLiteralTypeNode(tsf.createStringLiteral(directiveName))
+        );
       }
       return null;
     })
     .reverse()
     .find(a => !!a);
 
-  return type || null;
+  return typeNode || null;
 }
 
 function getDeprecationReason(directive: DirectiveNode): string | void {
@@ -193,7 +196,8 @@ export function typeScriptASTVisitor(
 
         let type: string = node.type;
         if (node.directives && config.directiveArgumentAndInputFieldMappings) {
-          type = _getDirectiveOverrideType(node.directives, config) || type;
+          const typeNode = _getDirectiveOverrideType(node.directives, config);
+          type = typeNode ? printNode(typeNode) : type;
         }
 
         const readonlyPrefix = config.immutableTypes ? 'readonly ' : '';
@@ -466,7 +470,7 @@ export const interfaceNodeDeclaration = ({
   return interfaceDeclaration;
 };
 
-const printNode = (node: ts.Node | ts.Node[]) => {
+const printNode = (node: ts.Node | ts.TypeNode | ts.Node[]) => {
   const sourceFile = ts.createSourceFile('graphql.ts', '', ts.ScriptTarget.ES2020, false, ts.ScriptKind.TSX);
   const printer = ts.createPrinter({
     omitTrailingSemicolon: false,
