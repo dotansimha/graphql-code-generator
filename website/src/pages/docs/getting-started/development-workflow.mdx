@@ -65,6 +65,28 @@ const config: CodegenConfig = {
 export default config
 ```
 
+## Handle Merge Conflicts
+
+If you check generated files under source control, you'll probably end up dealing with merge conflicts. Those conflicts are easy to resolve because all you have to do is to generate those files again, but still, having to resolve those conflicts manually could be quite disruptive.
+
+To avoid that, you can define a [custom merge driver](https://git-scm.com/docs/gitattributes#_defining_a_custom_merge_driver) and let Git handle it for you!
+
+The first thing we need to do, is to define a custom merge driver in your `.gitconfig` file. Ideally, we would like also to install fresh dependencies to make sure we're using the latest version of the codegen, so we'll use `yarn install` (or your alternative command) as part of the merge driver, then the command used to generate the files, in this context: `yarn generate`:
+
+```ini filename=".gitconfig"
+[merge "graphql-codegen"]
+    name = "graphql codegen merge driver"
+    driver = yarn install && yarn generate
+```
+
+Finally, we need to associate the merge driver with the generated files. We can do that by adding the following to your `.gitattributes` file:
+
+```ini filename=".gitattributes"
+__generated_graphql_types__/** merge=graphql-codegen
+```
+
+From now on, every time Git encounter a merge conflict related to the generated files, it will run our custom merge driver behind the scene. You won't even notice it anymore!
+
 ## Monorepo and Yarn Workspaces
 
 If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or [Lerna](https://github.com/lerna/lerna), we recommend installing the codegen in the root of your monorepo.
