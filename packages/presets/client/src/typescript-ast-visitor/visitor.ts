@@ -78,7 +78,7 @@ function getObjectTypeDeclarationBlock(
     type: intersectionType,
   });
 
-  return printNode(declarationBlock);
+  return declarationBlock;
 }
 
 function getTypeForNode(
@@ -244,28 +244,35 @@ export function typeScriptASTVisitor(
       leave(node, key, parent, _path, _ancestors) {
         if (config.onlyOperationTypes || config.onlyEnums) return '';
 
-        let withFutureAddedValue: string[] = [];
-        if (config.futureProofUnions) {
-          withFutureAddedValue = [
-            config.immutableTypes ? `{ readonly __typename?: "%other" }` : `{ __typename?: "%other" }`,
-          ];
-        }
         const originalNode: UnionTypeDefinitionNode = Array.isArray(parent) ? parent[Number(key)] : parent;
-        const possibleTypes = originalNode.types
-          ?.map(t => (scalarsMap[t.name.value] ? `Scalars['${t.name.value}']` : convertName(t)))
-          .concat(...withFutureAddedValue)
-          .join(' | ');
+        const possibleTypeNodes: ts.TypeNode[] =
+          originalNode.types?.map(t =>
+            scalarsMap[t.name.value]
+              ? tsf.createIndexedAccessTypeNode(
+                  tsf.createTypeReferenceNode(tsf.createIdentifier('Scalars'), undefined),
+                  tsf.createLiteralTypeNode(tsf.createStringLiteral(t.name.value))
+                )
+              : tsf.createTypeReferenceNode(convertName(t), undefined)
+          ) || [];
+
+        if (config.futureProofUnions) {
+          const propertyExpression = tsf.createTypeLiteralNode([
+            tsf.createPropertySignature(
+              config.immutableTypes ? [tsf.createToken(ts.SyntaxKind.ReadonlyKeyword)] : undefined,
+              tsf.createIdentifier('__typename'),
+              tsf.createToken(ts.SyntaxKind.QuestionToken),
+              tsf.createLiteralTypeNode(tsf.createStringLiteral('%other'))
+            ),
+          ]);
+          possibleTypeNodes.push(propertyExpression);
+        }
 
         // TODO: It seems we're missing a test
         const declarationBlock = typeNodeDeclaration({
           name: convertName(node),
           useExport: config.noExport ? false : true,
           comment: node.description?.value,
-          type: tsf.createTypeLiteralNode(
-            possibleTypes
-              ?.split(' | ')
-              .map(f => tsf.createPropertySignature(undefined, f.replace(';', ''), undefined, undefined))
-          ),
+          type: tsf.createUnionTypeNode(possibleTypeNodes),
         });
 
         return printNode(declarationBlock);
@@ -315,7 +322,7 @@ export function typeScriptASTVisitor(
           return null;
         }
 
-        return [getObjectTypeDeclarationBlock(node, originalNode, config)].join('');
+        return printNode(getObjectTypeDeclarationBlock(node, originalNode, config));
       },
     },
     EnumTypeDefinition: {
