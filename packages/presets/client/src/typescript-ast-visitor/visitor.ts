@@ -1,9 +1,4 @@
-import {
-  ParsedScalarsMap,
-  convertFactory,
-  isOneOfInputObjectType,
-  transformComment,
-} from '@graphql-codegen/visitor-plugin-common';
+import { ParsedScalarsMap, convertFactory, transformComment } from '@graphql-codegen/visitor-plugin-common';
 import {
   ASTNode,
   DirectiveNode,
@@ -105,14 +100,6 @@ function getTypeForNode(
   return tsf.createTypeReferenceNode(convertName(node), undefined);
 }
 
-function clearOptional(str: string): string {
-  if (str.startsWith('Maybe')) {
-    return str.replace(/Maybe<(.*?)>$/, '$1');
-  }
-
-  return str;
-}
-
 function _getDirectiveOverrideType(
   directives: ReadonlyArray<DirectiveNode>,
   config: TypeScriptPluginConfig
@@ -183,7 +170,8 @@ export function typeScriptASTVisitor(
       },
     },
     InputValueDefinition: {
-      leave(node, key, parent, _path, ancestors) {
+      // todo: there are no tests for this
+      leave(node, key, parent, _path) {
         const originalFieldNode = Array.isArray(parent) ? parent[Number(key)] : parent;
 
         const avoidOptionalsConfig = typeof config.avoidOptionals === 'object' ? config.avoidOptionals : {};
@@ -200,39 +188,18 @@ export function typeScriptASTVisitor(
           type = typeNode ? printNode(typeNode) : type;
         }
 
-        const readonlyPrefix = config.immutableTypes ? 'readonly ' : '';
+        const fieldDeclaration = tsf.createPropertySignature(
+          config.immutableTypes ? [tsf.createToken(ts.SyntaxKind.ReadonlyKeyword)] : undefined,
+          tsf.createIdentifier(node.name),
+          addOptionalSign ? tsf.createToken(ts.SyntaxKind.QuestionToken) : undefined,
+          tsf.createTypeReferenceNode(tsf.createIdentifier(type), undefined)
+        );
 
-        const buildFieldDefinition = (isOneOf = false) => {
-          return `${readonlyPrefix}${node.name}${addOptionalSign && !isOneOf ? '?' : ''}: ${
-            isOneOf ? clearOptional(type) : type
-          };`;
-        };
-
-        const realParentDef = ancestors?.[ancestors.length - 1] as ObjectTypeDefinitionNode;
-        if (realParentDef) {
-          const parentType = _schema.getType(realParentDef.name.value);
-
-          if (isOneOfInputObjectType(parentType)) {
-            if (originalFieldNode.type.kind === Kind.NON_NULL_TYPE) {
-              throw new Error(
-                'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
-              );
-            }
-            const fieldParts: Array<string> = [];
-            for (const fieldName of Object.keys(parentType.getFields())) {
-              // Why the heck is node.name a string and not { value: string } at runtime ?!
-              if (fieldName === node.name) {
-                fieldParts.push(buildFieldDefinition(true));
-                continue;
-              }
-              fieldParts.push(`${readonlyPrefix}${fieldName}?: never;`);
-            }
-
-            return comment + `  { ${fieldParts.join(' ')} }`;
-          }
+        if (comment) {
+          ts.addSyntheticLeadingComment(fieldDeclaration, ts.SyntaxKind.MultiLineCommentTrivia, comment, true);
         }
 
-        return comment + '  ' + buildFieldDefinition();
+        return printNode(fieldDeclaration);
       },
     },
     Name: {
@@ -388,6 +355,7 @@ export function typeScriptASTVisitor(
         return printNode(declaration).replace(';', '');
       },
     },
+    // todo: leaving this for later once we're working on AST
     NonNullType: {
       leave(node, _key, _parent, _path, _ancestors) {
         if (node.type.startsWith('Maybe')) {
