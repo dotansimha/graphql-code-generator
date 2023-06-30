@@ -919,6 +919,7 @@ export class BaseTypesVisitor<
         const optionName = this.makeValidEnumIdentifier(
           this.convertName(enumOption, {
             useTypesPrefix: false,
+            useTypesSuffix: false,
             transformUnderscore: true,
           })
         );

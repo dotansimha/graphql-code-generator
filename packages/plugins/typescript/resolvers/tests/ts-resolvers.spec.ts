@@ -2928,7 +2928,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         { outputFile: 'graphql.ts' }
       )) as Types.ComplexPluginOutput;
 
-      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {\n  role?: Maybe<UserRole>;\n};`);
+      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {\n  role?: Maybe<GqlUserRole>;\n};`);
       expect(output.content).toContain(
         `export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`
       );
