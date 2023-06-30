@@ -830,7 +830,10 @@ export class BaseResolversVisitor<
       } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
         prev[typeName] =
           this.config.enumValues[typeName].sourceIdentifier ||
-          this.convertName(this.config.enumValues[typeName].typeIdentifier);
+          this.convertName(this.config.enumValues[typeName].typeIdentifier, {
+            useTypesPrefix: this.config.enumPrefix,
+            useTypesSuffix: this.config.enumSuffix,
+          });
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
       } else if (isScalar) {

@@ -853,14 +853,18 @@ export class BaseTypesVisitor<
     return Object.keys(this.config.enumValues)
       .flatMap(enumName => {
         const mappedValue = this.config.enumValues[enumName];
+        const typeIdentifier = this.convertName(enumName, {
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        });
 
         if (mappedValue.sourceFile) {
           if (mappedValue.isDefault) {
-            return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
+            return [this._buildTypeImport(typeIdentifier, mappedValue.sourceFile, true)];
           }
 
           return this.handleEnumValueMapper(
-            mappedValue.typeIdentifier,
+            typeIdentifier,
             mappedValue.importIdentifier,
             mappedValue.sourceIdentifier,
             mappedValue.sourceFile
@@ -1020,7 +1024,10 @@ export class BaseTypesVisitor<
       return this._getScalar(typeAsString, isVisitingInputType ? 'input' : 'output');
     }
     if (this.config.enumValues[typeAsString]) {
-      return this.config.enumValues[typeAsString].typeIdentifier;
+      return this.convertName(this.config.enumValues[typeAsString].typeIdentifier, {
+        useTypesPrefix: this.config.enumPrefix,
+        useTypesSuffix: this.config.enumSuffix,
+      });
     }
 
     const schemaType = this._schema.getType(node.name as any);
