@@ -96,6 +96,10 @@
         "hooks": {
           "$ref": "#/definitions/Partial",
           "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks"
+        },
+        "noSilentErrors": {
+          "description": "Alows to raise errors if any matched files are not valid GraphQL. Default: false.",
+          "type": "boolean"
         }
       }
     },
