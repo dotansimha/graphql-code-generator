@@ -237,18 +237,30 @@ const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
 
 /**
  * Find the longest common prefix of an array of paths, where each item in
- * the array an array of path segments which comprise an absolute path when
- * joined together by a path separator
+ * the array is an array of path segments which comprise an absolute path when
+ * joined together by a path separator.
  *
  * Adapted from:
  * https://duncan-mcardle.medium.com/leetcode-problem-14-longest-common-prefix-javascript-3bc6a2f777c4
  *
- * @param splitPaths An array of arrays, where each item is a path split by its separator
- * @returns An array of path segments representing the longest common prefix of splitPaths
+ * This version has been adjusted to support Windows paths, by treating the drive letter 
+ * as a separate segment and accounting for Windows-style backslashes as path separators.
+ *
+ * @param splitPaths An array of arrays, where each item is a path split by its separator.
+ *                   The first item is treated separately as it could be a drive letter in Windows.
+ * @returns An array of path segments representing the longest common prefix of splitPaths.
  */
 const longestCommonPrefix = (splitPaths: string[][]): string[] => {
   // Return early on empty input
   if (!splitPaths.length) {
+    return [];
+  }
+
+  // Added: handle Windows drive letters
+  const driveLetter = splitPaths[0][0];
+  if (driveLetter && splitPaths.every(string => string[0] === driveLetter)) {
+    splitPaths = splitPaths.map(path => path.slice(1));
+  } else {
     return [];
   }
 
@@ -257,9 +269,9 @@ const longestCommonPrefix = (splitPaths: string[][]): string[] => {
     // Check if this path segment is present in the same position of every path
     if (!splitPaths.every(string => string[i] === splitPaths[0][i])) {
       // If not, return the path segments up to and including the previous segment
-      return splitPaths[0].slice(0, i);
+      return [driveLetter, ...splitPaths[0].slice(0, i)];
     }
   }
 
-  return splitPaths[0];
+  return [driveLetter, ...splitPaths[0]];
 };
