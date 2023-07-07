@@ -55,7 +55,6 @@
     "@graphql-tools/prisma-loader": "^8.0.0",
     "@graphql-tools/url-loader": "^8.0.0",
     "@graphql-tools/utils": "^10.0.0",
-    "@parcel/watcher": "^2.1.0",
     "@whatwg-node/fetch": "^0.8.0",
     "chalk": "^4.1.0",
     "cosmiconfig": "^8.1.3",
@@ -78,6 +77,7 @@
   },
   "devDependencies": {
     "@graphql-tools/merge": "9.0.0",
+    "@parcel/watcher": "^2.1.0",
     "@types/debounce": "1.2.1",
     "@types/inquirer": "8.2.6",
     "@types/is-glob": "4.0.2",
@@ -92,7 +92,13 @@
     "prettier": "2.8.8"
   },
   "peerDependencies": {
+    "@parcel/watcher": "^2.1.0",
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@parcel/watcher": {
+      "optional": true
+    }
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

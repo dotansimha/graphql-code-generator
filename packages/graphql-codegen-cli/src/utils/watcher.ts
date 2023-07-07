@@ -60,7 +60,17 @@ export const createWatcher = (
   const runWatcher = async (abortSignal: AbortSignal) => {
     const watchDirectory = await findHighestCommonDirectory(allAffirmativePatterns);
 
-    const parcelWatcher = await import('@parcel/watcher');
+    // Try to load the parcel watcher, but don't fail if it's not available.
+    let parcelWatcher: typeof import('@parcel/watcher');
+    try {
+      parcelWatcher = await import('@parcel/watcher');
+    } catch (err) {
+      log(
+        `Parcel watcher not found. To use this feature, please make sure to provide @parcel/watcher as a peer dependency.`
+      );
+      return;
+    }
+
     debugLog(`[Watcher] Parcel watcher loaded...`);
 
     let isShutdown = false;

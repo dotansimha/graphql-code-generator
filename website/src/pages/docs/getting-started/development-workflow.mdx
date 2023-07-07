@@ -2,6 +2,8 @@
 description: How to integrate GraphQL Code Generator into your development workflow. Learn how to run it in watch mode, or as part of your CI flow.
 ---
 
+import { Callout } from '@theguild/components'
+
 # Development workflow
 
 GraphQL Code Generator should be integrated as part of your development workflow.
@@ -27,6 +29,13 @@ This way, the codegen generates the output according to your configuration befor
 It's also helpful to run the codegen during your continuous integration flow and ensure that your code continually compiles with the generated output; this way, you can detect breaking changes in your GraphQL schema and GraphQL documents.
 
 ## Watch Mode
+
+<Callout type="info">
+Watch mode was made optional to reduce install size in CI and prevent build errors in certain environments.
+
+To use watch mode, make sure to provide `@parcel/watcher` as a peer dependency.
+
+</Callout>
 
 If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
 
