@@ -825,7 +825,7 @@
         "anchor": "whats-next"
       }
     ],
-    "content": "5be7e6a5267a8fb977b59acf5a74d959",
+    "content": "e288318aca1de59a387c3c28c3e0abe3",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/development-workflow",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
@@ -913,7 +913,7 @@
         "anchor": "setup"
       }
     ],
-    "content": "5f0939f1e1658e4dda001a4441a934fd",
+    "content": "2c4dd42cec4906229f4594ede093a8d8",
     "url": "https://www.the-guild.dev/graphql/codegen/docs/getting-started/installation",
     "domain": "https://www.the-guild.dev/graphql/codegen",
     "hierarchy": [
@@ -1532,6 +1532,35 @@
     ],
     "source": "Code Generator",
     "title": "v0.18 -> v1.0",
+    "type": "Documentation"
+  },
+  {
+    "objectID": "code-generator-docs-migration-from-4-0",
+    "headings": [
+      "What has changed?",
+      "How to migrate?"
+    ],
+    "toc": [
+      {
+        "children": [],
+        "title": "What has changed?",
+        "anchor": "what-has-changed"
+      },
+      {
+        "children": [],
+        "title": "How to migrate?",
+        "anchor": "how-to-migrate"
+      }
+    ],
+    "content": "d87f2c53e033b94b6ea23a998e6de095",
+    "url": "https://www.the-guild.dev/graphql/codegen/docs/migration/from-4-0",
+    "domain": "https://www.the-guild.dev/graphql/codegen",
+    "hierarchy": [
+      "docs",
+      "migration"
+    ],
+    "source": "Code Generator",
+    "title": "v4.0 -> v5.0",
     "type": "Documentation"
   },
   {
