@@ -10,8 +10,8 @@
     "generate-json-config": "tsx generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/algolia": "1.1.7",
-    "@theguild/tailwind-config": "0.2.1",
+    "@theguild/algolia": "1.1.8",
+    "@theguild/tailwind-config": "0.2.2",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
     "@types/node": "18.16.16",
