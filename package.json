@@ -60,7 +60,7 @@
     "jest-docblock": "28.1.1",
     "jest-junit": "16.0.0",
     "lint-staged": "13.2.2",
-    "patch-package": "6.5.1",
+    "patch-package": "7.0.2",
     "prettier": "2.8.8",
     "prettier-plugin-svelte": "2.10.1",
     "rimraf": "4.4.1",
