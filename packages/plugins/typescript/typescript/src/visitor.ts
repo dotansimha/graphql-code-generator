@@ -426,7 +426,8 @@ export class TsVisitor<
     }
 
     if (this.config.enumsAsConst) {
-      const typeName = `export type ${enumTypeName} = typeof ${enumTypeName}[keyof typeof ${enumTypeName}];`;
+      const futureProofType = this.config.futureProofEnums ? ` | '%future added value'` : '';
+      const typeName = `export type ${enumTypeName} = typeof ${enumTypeName}[keyof typeof ${enumTypeName}]${futureProofType};`;
       const enumAsConst = new DeclarationBlock({
         ...this._declarationBlockConfig,
         blockTransformer: block => {
