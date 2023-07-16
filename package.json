@@ -1,6 +1,10 @@
 {
   "name": "graphql-code-generator",
   "private": true,
+  "engines": {
+    "node": ">= 16.0.0"
+  },
+  "packageManager": "yarn@1.22.19",
   "scripts": {
     "postinstall": "patch-package && husky install",
     "fix-bins": "node scripts/fix-bin.js",
@@ -39,31 +43,31 @@
     "examples/**/*"
   ],
   "devDependencies": {
-    "@babel/core": "7.21.4",
-    "@babel/preset-env": "7.21.4",
-    "@babel/preset-typescript": "7.21.4",
+    "@babel/core": "7.22.8",
+    "@babel/preset-env": "7.22.7",
+    "@babel/preset-typescript": "7.22.5",
     "@changesets/changelog-github": "0.4.8",
-    "@changesets/cli": "2.26.0",
+    "@changesets/cli": "2.26.2",
     "@theguild/eslint-config": "0.9.0",
     "@theguild/prettier-config": "0.1.1",
     "@types/jest": "28.1.8",
     "babel-jest": "28.1.3",
-    "bob-the-bundler": "4.1.1",
-    "eslint": "8.38.0",
+    "bob-the-bundler": "6.0.0",
+    "eslint": "8.40.0",
     "graphql": "16.6.0",
     "husky": "8.0.3",
     "jest": "28.1.3",
     "jest-docblock": "28.1.1",
-    "jest-junit": "15.0.0",
-    "lint-staged": "13.2.1",
+    "jest-junit": "16.0.0",
+    "lint-staged": "13.2.2",
     "patch-package": "6.5.1",
-    "prettier": "2.8.7",
-    "prettier-plugin-svelte": "2.10.0",
+    "prettier": "2.8.8",
+    "prettier-plugin-svelte": "2.10.1",
     "rimraf": "4.4.1",
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
-    "tslib": "2.5.0",
-    "tsx": "3.12.6",
+    "tslib": "2.5.2",
+    "tsx": "3.12.7",
     "typescript": "5.0.4"
   },
   "lint-staged": {
@@ -78,7 +82,7 @@
     ]
   },
   "resolutions": {
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "babel-jest": "28.1.3",
     "jest-runner": "28.1.3",
     "graphql": "16.6.0",
@@ -86,6 +90,7 @@
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0",
     "ts-node": "10.9.1",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "cosmiconfig": "8.1.3"
   }
 }

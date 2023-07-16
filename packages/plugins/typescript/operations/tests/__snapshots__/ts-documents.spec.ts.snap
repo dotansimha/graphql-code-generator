@@ -5,15 +5,15 @@ exports[`TypeScript Operations Plugin Config should include fragment variable de
 
 
 export type TextNotificationFragmentFragmentVariables = Exact<{
-  skip: Scalars['Boolean'];
+  skip: Scalars['Boolean']['input'];
 }>;
 "
 `;
 
 exports[`TypeScript Operations Plugin Issues #2699 - Issues with multiple interfaces and unions 1`] = `
 "export type GetEntityBrandDataQueryVariables = Exact<{
-  gid: Scalars['ID'];
-  brand: Scalars['ID'];
+  gid: Scalars['ID']['input'];
+  brand: Scalars['ID']['input'];
 }>;
 
 
@@ -69,42 +69,44 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type Venue = {
-  id: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type GpsPosition = {
   __typename?: 'GPSPosition';
-  lat: Scalars['Float'];
-  lng: Scalars['Float'];
+  lat: Scalars['Float']['output'];
+  lng: Scalars['Float']['output'];
 };
 
 export type VenueWithPosition = {
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   gpsPosition: GpsPosition;
 };
 
 export type Hotel = VenueWithPosition & Venue & {
   __typename?: 'Hotel';
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   gpsPosition: GpsPosition;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
 };
 
 export type Transport = Venue & {
   __typename?: 'Transport';
-  id: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -358,13 +360,15 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type Query = {
@@ -373,18 +377,18 @@ export type Query = {
 };
 
 export type Concept = {
-  id?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']['output']>;
 };
 
 export type Dimension = Concept & {
   __typename?: 'Dimension';
-  id?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']['output']>;
 };
 
 export type DimValue = {
   __typename?: 'DimValue';
   dimension?: Maybe<Dimension>;
-  value: Scalars['String'];
+  value: Scalars['String']['output'];
 };
 
 export type Searchable = Dimension | DimValue;
@@ -474,45 +478,47 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type Error = {
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type Error1 = Error & {
   __typename?: 'Error1';
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type Error2 = Error & {
   __typename?: 'Error2';
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type Error3 = Error & {
   __typename?: 'Error3';
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
   info?: Maybe<AdditionalInfo>;
 };
 
 export type AdditionalInfo = {
   __typename?: 'AdditionalInfo';
-  message: Scalars['String'];
-  message2: Scalars['String'];
+  message: Scalars['String']['output'];
+  message2: Scalars['String']['output'];
 };
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  login: Scalars['String'];
+  id: Scalars['ID']['output'];
+  login: Scalars['String']['output'];
 };
 
 export type UserResult = User | Error2 | Error3;
@@ -567,47 +573,49 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type Error = {
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type Error1 = Error & {
   __typename?: 'Error1';
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type Error2 = Error & {
   __typename?: 'Error2';
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type Error3 = Error & {
   __typename?: 'Error3';
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
   info?: Maybe<AdditionalInfo>;
 };
 
 export type AdditionalInfo = {
   __typename?: 'AdditionalInfo';
-  message: Scalars['String'];
-  message2: Scalars['String'];
+  message: Scalars['String']['output'];
+  message2: Scalars['String']['output'];
 };
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  login: Scalars['String'];
-  test?: Maybe<Scalars['String']>;
-  test2?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  login: Scalars['String']['output'];
+  test?: Maybe<Scalars['String']['output']>;
+  test2?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserResult = User | Error2 | Error3;

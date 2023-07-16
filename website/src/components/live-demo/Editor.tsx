@@ -9,9 +9,9 @@ export function Editor({
   onEdit,
 }: {
   lang: string;
-  value: string;
+  value: string | undefined;
   readOnly?: boolean;
-  onEdit?: (value?: string) => void;
+  onEdit?: (value: string | undefined) => void;
 }): ReactElement {
   const { resolvedTheme } = useTheme();
   return (

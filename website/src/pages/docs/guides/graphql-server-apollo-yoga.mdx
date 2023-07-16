@@ -1,7 +1,7 @@
 ---
 description: GraphQL Code Generator's `@graphql-codegen/typescript-resolvers` plugin generates TypeScript types for your GraphQL API's resolvers.
 ---
-import { PackageCmd, Tabs, Tab, Callout } from '@theguild/components'
+import { Tabs, Tab, Callout } from '@theguild/components'
 
 # Guide: GraphQL Yoga / Apollo Server
 
@@ -61,7 +61,9 @@ type Query {
 
 **2. Install the `@graphql-codegen/typescript-resolvers` plugin**
 
-<PackageCmd packages={['-D @graphql-codegen/cli @graphql-codegen/typescript-resolvers @graphql-codegen/typescript']} />
+```sh npm2yarn
+npm i -D @graphql-codegen/cli @graphql-codegen/typescript-resolvers @graphql-codegen/typescript
+```
 
 **3. Configure the plugin**
 
@@ -118,7 +120,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 Running the following generates the `graphql/generated.tsx` file.
 
-<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+```sh npm2yarn
+npm run generate
+```
 
 We can now write/migrate our GraphQL API implementation as follows:
 

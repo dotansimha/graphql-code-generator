@@ -1,5 +1,367 @@
 # @graphql-codegen/typescript-resolvers
 
+## 4.0.1
+
+### Patch Changes
+
+- [#9497](https://github.com/dotansimha/graphql-code-generator/pull/9497) [`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a) Thanks [@eddeee888](https://github.com/eddeee888)! - Revert default ID scalar input type to string
+
+  We changed the ID Scalar input type from `string` to `string | number` in the latest major version of `typescript` plugin. This causes issues for server plugins (e.g. typescript-resolvers) that depends on `typescript` plugin. This is because the scalar type needs to be manually inverted on setup which is confusing.
+
+- Updated dependencies [[`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a)]:
+  - @graphql-codegen/visitor-plugin-common@4.0.1
+  - @graphql-codegen/typescript@4.0.1
+
+## 4.0.0
+
+### Major Changes
+
+- [#9375](https://github.com/dotansimha/graphql-code-generator/pull/9375) [`ba84a3a27`](https://github.com/dotansimha/graphql-code-generator/commit/ba84a3a2758d94dac27fcfbb1bafdf3ed7c32929) Thanks [@eddeee888](https://github.com/eddeee888)! - Implement Scalars with input/output types
+
+  In GraphQL, Scalar types can be different for client and server. For example, given the native GraphQL ID:
+
+  - A client may send `string` or `number` in the input
+  - A client receives `string` in its selection set (i.e output)
+  - A server receives `string` in the resolver (GraphQL parses `string` or `number` received from the client to `string`)
+  - A server may return `string` or `number` (GraphQL serializes the value to `string` before sending it to the client )
+
+  Currently, we represent every Scalar with only one type. This is what codegen generates as base type:
+
+  ```ts
+  export type Scalars = {
+    ID: string;
+  };
+  ```
+
+  Then, this is used in both input and output type e.g.
+
+  ```ts
+  export type Book = {
+    __typename?: 'Book';
+    id: Scalars['ID']; // Output's ID can be `string` 👍
+  };
+
+  export type QueryBookArgs = {
+    id: Scalars['ID']; // Input's ID can be `string` or `number`. However, the type is only `string` here 👎
+  };
+  ```
+
+  This PR extends each Scalar to have input and output:
+
+  ```ts
+  export type Scalars = {
+    ID: {
+      input: string | number;
+      output: string;
+    };
+  };
+  ```
+
+  Then, each input/output GraphQL type can correctly refer to the correct input/output scalar type:
+
+  ```ts
+  export type Book = {
+    __typename?: 'Book';
+    id: Scalars['ID']['output']; // Output's ID can be `string` 👍
+  };
+
+  export type QueryBookArgs = {
+    id: Scalars['ID']['input']; // Input's ID can be `string` or `number` 👍
+  };
+  ```
+
+  Note that for `typescript-resolvers`, the type of ID needs to be inverted. However, the referenced types in GraphQL input/output types should still work correctly:
+
+  ```ts
+  export type Scalars = {
+    ID: {
+      input: string;
+      output: string | number;
+    }
+  }
+
+  export type Book = {
+    __typename?: "Book";
+    id: Scalars["ID"]['output']; // Resolvers can return `string` or `number` in ID fields 👍
+  };
+
+  export type QueryBookArgs = {
+    id: Scalars["ID"]['input']; // Resolvers receive `string` in ID fields 👍
+  };
+
+  export type ResolversTypes = {
+    ID: ID: ResolverTypeWrapper<Scalars['ID']['output']>; // Resolvers can return `string` or `number` in ID fields 👍
+  }
+
+  export type ResolversParentTypes = {
+    ID: Scalars['ID']['output']; // Resolvers receive `string` or `number` from parents 👍
+  };
+  ```
+
+  ***
+
+  Config changes:
+
+  1. Scalars option can now take input/output types:
+
+  ```ts
+  config: {
+    scalars: {
+      ID: {
+        input: 'string',
+        output: 'string | number'
+      }
+    }
+  }
+  ```
+
+  2. If a string is given (instead of an object with input/output fields), it will be used as both input and output types:
+
+  ```ts
+  config: {
+    scalars: {
+      ID: 'string'; // This means `string` will be used for both ID's input and output types
+    }
+  }
+  ```
+
+  3. BREAKING CHANGE: External module Scalar types need to be an object with input/output fields
+
+  ```ts
+  config: {
+    scalars: {
+      ID: './path/to/scalar-module';
+    }
+  }
+  ```
+
+  If correctly, wired up, the following will be generated:
+
+  ```ts
+  // Previously, imported `ID` type can be a primitive type, now it must be an object with input/output fields
+  import { ID } from './path/to/scalar-module';
+
+  export type Scalars = {
+    ID: { input: ID['input']; output: ID['output'] };
+  };
+  ```
+
+  ***
+
+  BREAKING CHANGE: This changes Scalar types which could be referenced in other plugins. If you are a plugin maintainer and reference Scalar, please update your plugin to use the correct input/output types.
+
+- [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Require Node.js `>= 16`. Drop support for Node.js 14
+
+### Minor Changes
+
+- [#9196](https://github.com/dotansimha/graphql-code-generator/pull/9196) [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96) Thanks [@beerose](https://github.com/beerose)! - Add `@defer` directive support
+
+  When a query includes a deferred fragment field, the server will return a partial response with the non-deferred fields first, followed by the remaining fields once they have been resolved.
+
+  Once start using the `@defer` directive in your queries, the generated code will automatically include support for the directive.
+
+  ```jsx
+  // src/index.tsx
+  import { graphql } from './gql';
+  const OrdersFragment = graphql(`
+    fragment OrdersFragment on User {
+      orders {
+        id
+        total
+      }
+    }
+  `);
+  const GetUserQuery = graphql(`
+    query GetUser($id: ID!) {
+      user(id: $id) {
+        id
+        name
+        ...OrdersFragment @defer
+      }
+    }
+  `);
+  ```
+
+  The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
+
+  ```tsx
+  // gql/graphql.ts
+  export type GetUserQuery = { __typename?: 'Query'; id: string; name: string } & ({
+    __typename?: 'Query';
+  } & {
+    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> };
+  });
+  ```
+
+  Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred
+  fragment is available:
+
+  ```jsx
+  const OrdersList = (props: { data: FragmentType<typeof OrdersFragment> }) => {
+    const data = useFragment(OrdersFragment, props.data);
+    return (
+      // render orders list
+    )
+  };
+
+  function App() {
+    const { data } = useQuery(GetUserQuery);
+    return (
+      {data && (
+        <>
+          {isFragmentReady(GetUserQuery, OrdersFragment, data)
+  					&& <OrdersList data={data} />}
+        </>
+      )}
+    );
+  }
+  export default App;
+  ```
+
+- [#9339](https://github.com/dotansimha/graphql-code-generator/pull/9339) [`50471e651`](https://github.com/dotansimha/graphql-code-generator/commit/50471e6514557db827cd26157262401c6c600a8c) Thanks [@AaronMoat](https://github.com/AaronMoat)! - Add excludeTypes config to resolversNonOptionalTypename
+
+  This disables the adding of `__typename` in resolver types for any specified typename. This could be useful e.g. if you're wanting to enable this for all new types going forward but not do a big migration.
+
+  Usage example:
+
+  ```typescript
+  const config: CodegenConfig = {
+    schema: 'src/schema/**/*.graphql',
+    generates: {
+      'src/schema/types.ts': {
+        plugins: ['typescript', 'typescript-resolvers'],
+        config: {
+          resolversNonOptionalTypename: {
+            unionMember: true,
+            excludeTypes: ['MyType'],
+          },
+        },
+      },
+    },
+  };
+  ```
+
+- [#9229](https://github.com/dotansimha/graphql-code-generator/pull/9229) [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c) Thanks [@eddeee888](https://github.com/eddeee888)! - Use generic to simplify ResolversUnionTypes
+
+  This follows the `ResolversInterfaceTypes`'s approach where the `RefType` generic is used to refer back to `ResolversTypes` or `ResolversParentTypes` in cases of nested Union types
+
+- [#9304](https://github.com/dotansimha/graphql-code-generator/pull/9304) [`e1dc75f3c`](https://github.com/dotansimha/graphql-code-generator/commit/e1dc75f3c598bf7f83138ca533619716fc73f823) Thanks [@esfomeado](https://github.com/esfomeado)! - Added support for disabling suffixes on Enums.
+
+- [#9229](https://github.com/dotansimha/graphql-code-generator/pull/9229) [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c) Thanks [@eddeee888](https://github.com/eddeee888)! - Extract interfaces to ResolversInterfaceTypes and add to resolversNonOptionalTypename
+
+  1. `ResolversInterfaceTypes` is a new type that keeps track of a GraphQL interface and its implementing types.
+
+  For example, consider this schema:
+
+  ```graphql
+  extend type Query {
+    character(id: ID!): CharacterNode
+  }
+
+  interface CharacterNode {
+    id: ID!
+  }
+
+  type Wizard implements CharacterNode {
+    id: ID!
+    screenName: String!
+    spells: [String!]!
+  }
+
+  type Fighter implements CharacterNode {
+    id: ID!
+    screenName: String!
+    powerLevel: Int!
+  }
+  ```
+
+  The generated types will look like this:
+
+  ```ts
+  export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+    CharacterNode: Fighter | Wizard;
+  };
+
+  export type ResolversTypes = {
+    // other types...
+    CharacterNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['CharacterNode']>;
+    Fighter: ResolverTypeWrapper<Fighter>;
+    Wizard: ResolverTypeWrapper<Wizard>;
+    // other types...
+  };
+
+  export type ResolversParentTypes = {
+    // other types...
+    CharacterNode: ResolversInterfaceTypes<ResolversParentTypes>['CharacterNode'];
+    Fighter: Fighter;
+    Wizard: Wizard;
+    // other types...
+  };
+  ```
+
+  The `RefType` generic is used to reference back to `ResolversTypes` and `ResolversParentTypes` in some cases such as field returning a Union.
+
+  2. `resolversNonOptionalTypename` also affects `ResolversInterfaceTypes`
+
+  Using the schema above, if we use `resolversNonOptionalTypename` option:
+
+  ```typescript
+  const config: CodegenConfig = {
+    schema: 'src/schema/**/*.graphql',
+    generates: {
+      'src/schema/types.ts': {
+        plugins: ['typescript', 'typescript-resolvers'],
+        config: {
+          resolversNonOptionalTypename: true, // Or `resolversNonOptionalTypename: { interfaceImplementingType: true }`
+        },
+      },
+    },
+  };
+  ```
+
+  Then, the generated type looks like this:
+
+  ```ts
+  export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+    CharacterNode: (Fighter & { __typename: 'Fighter' }) | (Wizard & { __typename: 'Wizard' });
+  };
+
+  export type ResolversTypes = {
+    // other types...
+    CharacterNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['CharacterNode']>;
+    Fighter: ResolverTypeWrapper<Fighter>;
+    Wizard: ResolverTypeWrapper<Wizard>;
+    // other types...
+  };
+
+  export type ResolversParentTypes = {
+    // other types...
+    CharacterNode: ResolversInterfaceTypes<ResolversParentTypes>['CharacterNode'];
+    Fighter: Fighter;
+    Wizard: Wizard;
+    // other types...
+  };
+  ```
+
+### Patch Changes
+
+- [#9449](https://github.com/dotansimha/graphql-code-generator/pull/9449) [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/utils@^10.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.0.0) (from `^9.0.0`, in `dependencies`)
+- Updated dependencies [[`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`f46803a8c`](https://github.com/dotansimha/graphql-code-generator/commit/f46803a8c70840280529a52acbb111c865712af2), [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96), [`ba84a3a27`](https://github.com/dotansimha/graphql-code-generator/commit/ba84a3a2758d94dac27fcfbb1bafdf3ed7c32929), [`63827fabe`](https://github.com/dotansimha/graphql-code-generator/commit/63827fabede76b2380d40392aba2a3ccb099f0c4), [`50471e651`](https://github.com/dotansimha/graphql-code-generator/commit/50471e6514557db827cd26157262401c6c600a8c), [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c), [`ca02ad172`](https://github.com/dotansimha/graphql-code-generator/commit/ca02ad172a0e8f52570fdef4271ec286d883236d), [`e1dc75f3c`](https://github.com/dotansimha/graphql-code-generator/commit/e1dc75f3c598bf7f83138ca533619716fc73f823), [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0), [`5950f5a68`](https://github.com/dotansimha/graphql-code-generator/commit/5950f5a6843cdd92b9d5b8ced3a97b68eadf9f30), [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c)]:
+  - @graphql-codegen/plugin-helpers@5.0.0
+  - @graphql-codegen/visitor-plugin-common@4.0.0
+  - @graphql-codegen/typescript@4.0.0
+
+## 3.2.1
+
+### Patch Changes
+
+- [#9231](https://github.com/dotansimha/graphql-code-generator/pull/9231) [`402cb8ac0`](https://github.com/dotansimha/graphql-code-generator/commit/402cb8ac0f0c347b186d295c4b69c19e25a65d00) Thanks [@eddeee888](https://github.com/eddeee888)! - Implement resolversNonOptionalTypename for mapper cases
+
+- Updated dependencies [[`386cf9044`](https://github.com/dotansimha/graphql-code-generator/commit/386cf9044a41d87ed45069b22d26b30f4b262a85), [`402cb8ac0`](https://github.com/dotansimha/graphql-code-generator/commit/402cb8ac0f0c347b186d295c4b69c19e25a65d00)]:
+  - @graphql-codegen/visitor-plugin-common@3.1.1
+  - @graphql-codegen/typescript@3.0.4
+
 ## 3.2.0
 
 ### Minor Changes

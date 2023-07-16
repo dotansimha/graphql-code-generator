@@ -2,7 +2,7 @@
 description: GraphQL Code Generator is a tool that generates code from your GraphQL schema and operations. It can generate TypeScript, Flow, Swift, Kotlin, and more.
 ---
 
-import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
+import { Tabs, Tab, Callout } from '@theguild/components'
 
 # Guide: React and Vue
 
@@ -129,8 +129,10 @@ export default config
 
 **Usage with `@tanstack/react-query`**
 
-For the best developer experience, we recommend using `@tanstack/react-query` with `graphql-request@^5.0.0`. <br/>
-If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I: React Query with a custom fetcher setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query is properly setup.
+If you are using `@tanstack/react-query`, we recommend using it with `graphql-request@^5.0.0` to get the best developer experience.
+
+If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I: React Query with a custom fetcher
+setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query is properly setup.
 
 </Callout>
 
@@ -549,7 +551,7 @@ Then write type-safe code like the following:
 
 ```ts filename="Application Code"
 import { useGraphQL } from './use-graphql.js'
-import { gql } from './generated/grahql.js'
+import { gql } from './generated/graphql.js'
 
 const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {
@@ -633,7 +635,7 @@ Then write type-safe code like the following:
 
 ```ts filename="Application Code"
 import { useGraphQL } from './use-graphql.js'
-import { gql } from './generated/grahql.js'
+import { gql } from './generated/graphql.js'
 
 const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {

@@ -5,7 +5,7 @@ export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>>
   infer TType,
   any
 >
-  ? TType extends { ' $fragmentName'?: infer TKey }
+  ? [TType] extends [{ ' $fragmentName'?: infer TKey }]
     ? TKey extends string
       ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
       : never
@@ -22,22 +22,28 @@ export function makeFragmentData<
 
 const defaultUnmaskFunctionName = 'useFragment';
 
-const modifyType = (rawType: string, opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }) =>
-  `${
+const modifyType = (
+  rawType: string,
+  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false; empty?: boolean }
+) => {
+  return `${
     opts.list === 'only-list'
       ? `ReadonlyArray<${rawType}>`
       : opts.list === 'with-list'
       ? `${rawType} | ReadonlyArray<${rawType}>`
       : rawType
   }${opts.nullable ? ' | null | undefined' : ''}`;
+};
 
 const createUnmaskFunctionTypeDefinition = (
   unmaskFunctionName = defaultUnmaskFunctionName,
   opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
-) => `export function ${unmaskFunctionName}<TType>(
+) => {
+  return `export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: ${modifyType('FragmentType<DocumentTypeDecoration<TType, any>>', opts)}
+  fragmentType: ${modifyType(`FragmentType<DocumentTypeDecoration<TType, any>>`, opts)}
 ): ${modifyType('TType', opts)}`;
+};
 
 const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
   `// return non-nullable if \`fragmentType\` is non-nullable\n${createUnmaskFunctionTypeDefinition(
@@ -66,6 +72,44 @@ ${createUnmaskFunctionTypeDefinitions(unmaskFunctionName)
 }
 `;
 
+const isFragmentReadyFunction = (isStringDocumentMode: boolean) => {
+  if (isStringDocumentMode) {
+    return `\
+export function isFragmentReady<TQuery, TFrag>(
+  queryNode: TypedDocumentString<TQuery, any>,
+  fragmentNode: TypedDocumentString<TFrag, any>,
+  data: FragmentType<TypedDocumentString<Incremental<TFrag>, any>> | null | undefined
+): data is FragmentType<typeof fragmentNode> {
+  const deferredFields = queryNode.__meta__?.deferredFields as Record<string, (keyof TFrag)[]>;
+  const fragName = fragmentNode.__meta__?.fragmentName as string | undefined;
+
+  if (!deferredFields || !fragName) return true;
+
+  const fields = deferredFields[fragName] ?? [];
+  return fields.length > 0 && fields.every(field => data && field in data);
+}
+`;
+  }
+  return `\
+export function isFragmentReady<TQuery, TFrag>(
+  queryNode: DocumentTypeDecoration<TQuery, any>,
+  fragmentNode: TypedDocumentNode<TFrag>,
+  data: FragmentType<TypedDocumentNode<Incremental<TFrag>, any>> | null | undefined
+): data is FragmentType<typeof fragmentNode> {
+  const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, (keyof TFrag)[]> } }).__meta__
+    ?.deferredFields;
+
+  if (!deferredFields) return true;
+
+  const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
+  const fragName = fragDef?.name?.value;
+
+  const fields = (fragName && deferredFields[fragName]) || [];
+  return fields.length > 0 && fields.every(field => data && field in data);
+}
+`;
+};
+
 /**
  * Plugin for generating fragment masking helper functions.
  */
@@ -73,20 +117,39 @@ export const plugin: PluginFunction<{
   useTypeImports?: boolean;
   augmentedModuleName?: string;
   unmaskFunctionName?: string;
-}> = (_, __, { useTypeImports, augmentedModuleName, unmaskFunctionName }, _info) => {
-  const documentNodeImport = `${
-    useTypeImports ? 'import type' : 'import'
-  } { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';\n`;
+  emitLegacyCommonJSImports?: boolean;
+  isStringDocumentMode?: boolean;
+}> = (
+  _,
+  __,
+  { useTypeImports, augmentedModuleName, unmaskFunctionName, emitLegacyCommonJSImports, isStringDocumentMode },
+  _info
+) => {
+  const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { ResultOf, DocumentTypeDecoration${
+    isStringDocumentMode ? '' : ', TypedDocumentNode'
+  } } from '@graphql-typed-document-node/core';\n`;
+
+  const deferFragmentHelperImports = `${useTypeImports ? 'import type' : 'import'} { Incremental${
+    isStringDocumentMode ? ', TypedDocumentString' : ''
+  } } from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`;
+
+  const fragmentDefinitionNodeImport = isStringDocumentMode
+    ? ''
+    : `${useTypeImports ? 'import type' : 'import'} { FragmentDefinitionNode } from 'graphql';\n`;
 
   if (augmentedModuleName == null) {
     return [
       documentNodeImport,
+      fragmentDefinitionNodeImport,
+      deferFragmentHelperImports,
       `\n`,
       fragmentTypeHelper,
       `\n`,
       createUnmaskFunction(unmaskFunctionName),
       `\n`,
       makeFragmentDataHelper,
+      `\n`,
+      isFragmentReadyFunction(isStringDocumentMode),
     ].join(``);
   }
 

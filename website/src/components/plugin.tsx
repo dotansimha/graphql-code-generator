@@ -1,26 +1,12 @@
 import { ReactElement } from 'react';
-import { PackageCmd, useSSG } from '@theguild/components';
+import { useSSG, Tab, Tabs, Callout } from '@theguild/components';
 import { MDXRemote } from 'next-mdx-remote';
-import ClientNote from './client-note.mdx';
 
-export const PluginHeader = ({
-  isDev = true,
-  hasOperationsNote = false,
-}: {
-  isDev?: boolean;
-  hasOperationsNote?: boolean;
-}): ReactElement => {
+export function PluginHeader(): ReactElement {
   // Get the data from SSG, and render it as a component.
-  const { npmPackage, compiledHeader } = useSSG();
-
-  return (
-    <>
-      <MDXRemote compiledSource={compiledHeader} />
-      <PackageCmd packages={[`${isDev ? '-D ' : ''}${npmPackage}`]} />
-      {hasOperationsNote && <ClientNote />}
-    </>
-  );
-};
+  const { compiledHeader } = useSSG();
+  return <MDXRemote compiledSource={compiledHeader} components={{ $Tab: Tab, $Tabs: Tabs, Callout }} />;
+}
 
 export const PluginApiDocs = (): ReactElement => {
   // Get the data from SSG, and render it as a component.

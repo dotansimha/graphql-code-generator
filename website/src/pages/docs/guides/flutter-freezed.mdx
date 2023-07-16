@@ -2,13 +2,11 @@
 description: Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
-
 # Guide: Dart/Flutter
 
 Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
 
-Currently this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work is ongoing to make it way easier to work with GraphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL](https://www.kitql.dev/)
+Currently, this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work is ongoing to make it way easier to work with GraphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL](https://www.kitql.dev/)
 
 ## TL;DR
 
@@ -177,7 +175,10 @@ node_modules/
 
 6. Install the `graphql-code-generator` and the `flutter-freezed` plugin
 
-<PackageCmd packages={['graphql', '-D typescript', '-D @graphql-codegen/cli @graphql-codegen/flutter-freezed']} />
+```sh npm2yarn
+npm i graphql
+npm i -D typescript @graphql-codegen/cli @graphql-codegen/flutter-freezed
+```
 
 7. Create a `codegen.ts` file at the root of the Flutter project with the following:
 

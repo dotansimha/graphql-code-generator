@@ -233,7 +233,7 @@ describe('Codegen Executor', () => {
 
       expect(output.length).toBe(1);
       expect(output[0].filename).toBe('out.ts');
-      expect(output[0].content).toContain(`hello?: Maybe<Scalars['String']>`);
+      expect(output[0].content).toContain(`hello?: Maybe<Scalars['String']['output']>`);
     });
   });
 
@@ -734,12 +734,12 @@ describe('Codegen Executor', () => {
 
       expect(output.length).toBe(1);
       expect(output[0].content).toBeSimilarStringTo(`export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
-        UniqueID: any;
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+        UniqueID: { input: any; output: any; }
       };`);
     });
   });

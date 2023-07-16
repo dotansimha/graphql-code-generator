@@ -2,7 +2,7 @@
 description: Generate typed code for SvelteKit and Apollo. GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit _native_, and other clients.
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Guide: Svelte / Kit
 
@@ -69,11 +69,9 @@ Just a few configuration steps are required to get observable Apollo queries wit
 
 **1. Install the `graphql-codegen-svelte-apollo` plugin**
 
-<PackageCmd
-  packages={[
-    '-D graphql-codegen-svelte-apollo @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/cli typescript graphql'
-  ]}
-/>
+```sh npm2yarn
+npm i -D graphql-codegen-svelte-apollo @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/cli typescript graphql
+```
 
 **2. Configure the plugin**
 
@@ -120,7 +118,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 Running the following generates the `graphql/generated.ts` file.
 
-<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+```sh npm2yarn
+npm run generate
+```
 
 We can now update our code as follows:
 
@@ -150,7 +150,10 @@ Just a few configuration steps are required to get SvelteKit stores fully typed 
 
 **1. Install the plugin**
 
-<PackageCmd packages={['@kitql/client', '-D @kitql/graphql-codegen']} />
+```sh npm2yarn
+npm i @kitql/client
+npm i -D @kitql/graphql-codegen
+```
 
 **2. Configure the plugin**
 
@@ -185,7 +188,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 Running the following generates the `graphql/generated.ts` file.
 
-<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+```sh npm2yarn
+npm run generate
+```
 
 We can now update our code as follows:
 

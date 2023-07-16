@@ -2227,15 +2227,15 @@ describe('TypeScript Operations Plugin', () => {
           id
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+        export type testQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type TestQuery = (
+        export type testQuery = (
           { notifications: Array<(
             { id: string }
             & { __typename?: 'TextNotification' | 'ImageNotification' }
@@ -2260,7 +2260,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2321,7 +2321,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2332,12 +2332,12 @@ describe('TypeScript Operations Plugin', () => {
            & { __typename?: 'A' }
          );
 
-         type N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment = (
+         type N_zhJJUzpMTyh98zugnx0IKwiLetPNjV8KybSlmpAEUU_Fragment = (
            { id: string }
            & { __typename?: 'B' | 'C' | 'D' | 'E' }
          );
 
-         export type NFragment = N_A_Fragment | N_ZhJjUzpMTyh98zugnx0IKwiLetPNjV8KYbSlmpAeuu_Fragment;
+         export type NFragment = N_A_Fragment | N_zhJJUzpMTyh98zugnx0IKwiLetPNjV8KybSlmpAEUU_Fragment;
       `);
       await validate(content, config);
     });
@@ -2352,7 +2352,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2381,15 +2381,15 @@ describe('TypeScript Operations Plugin', () => {
           id
         }
       `);
-      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+        export type testQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type TestQuery = { notifications: Array<{ id: string }> };
+        export type testQuery = { notifications: Array<{ id: string }> };
       `);
       await validate(content, config);
     });
@@ -2403,7 +2403,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true };
+      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' };
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
@@ -2508,7 +2508,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type MeQueryVariables = Exact<{
-          repoFullName: Scalars['String'];
+          repoFullName: Scalars['String']['input'];
         }>;`
       );
       expect(content).toBeSimilarStringTo(`
@@ -2640,6 +2640,58 @@ describe('TypeScript Operations Plugin', () => {
         e: Information_EntryType;
       }>;`);
       expect(o).toContain(`export type IQuery = {`);
+      expect(o).toContain(`export enum Information_EntryType {`);
+      expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
+    });
+
+    it('Should produce valid output with preResolveTypes=true and enums with no suffixes', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test($e: Information_EntryType!) {
+          info {
+            ...information
+          }
+          infoArgTest(e: $e) {
+            ...information
+          }
+        }
+
+        fragment information on Information {
+          entries {
+            id
+            value
+          }
+        }
+      `);
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Information {
+          entries: [Information_Entry!]!
+        }
+
+        enum Information_EntryType {
+          NAME
+          ADDRESS
+        }
+
+        type Information_Entry {
+          id: Information_EntryType!
+          value: String
+        }
+
+        type Query {
+          infoArgTest(e: Information_EntryType!): Information
+          info: Information
+        }
+      `);
+      const config = { preResolveTypes: true, typesSuffix: 'I', enumSuffix: false };
+      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
+        outputFile: '',
+      });
+
+      const o = await validate(content, config, testSchema);
+      expect(o).toBeSimilarStringTo(` export type TestQueryVariablesI = Exact<{
+        e: Information_EntryType;
+      }>;`);
+      expect(o).toContain(`export type QueryI = {`);
       expect(o).toContain(`export enum Information_EntryType {`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
     });
@@ -2823,14 +2875,14 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          username?: InputMaybe<Scalars['String']>;
-          email?: InputMaybe<Scalars['String']>;
-          password: Scalars['String'];
+          username?: InputMaybe<Scalars['String']['input']>;
+          email?: InputMaybe<Scalars['String']['input']>;
+          password: Scalars['String']['input'];
           input?: InputMaybe<InputType>;
           mandatoryInput: InputType;
-          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
-          requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
-          innerRequired: Array<Scalars['String']> | Scalars['String'];
+          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+          requireString: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
+          innerRequired: Array<Scalars['String']['input']> | Scalars['String']['input'];
         }>;`
       );
       await validate(content, config, schema);
@@ -2849,7 +2901,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          test?: InputMaybe<Scalars['DateTime']>;
+          test?: InputMaybe<Scalars['DateTime']['input']>;
         }>;`
       );
       await validate(content, config);
@@ -3203,7 +3255,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = Exact<{
-          reverse?: InputMaybe<Scalars['Boolean']>;
+          reverse?: InputMaybe<Scalars['Boolean']['input']>;
         }>;
       `);
     });
@@ -4049,13 +4101,15 @@ describe('TypeScript Operations Plugin', () => {
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
@@ -4064,18 +4118,18 @@ describe('TypeScript Operations Plugin', () => {
         };
 
         export type Concept = {
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
 
         export type Dimension = Concept & {
           __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
 
         export type DimValue = {
           __typename?: 'DimValue';
           dimension?: Maybe<Dimension>;
-          value: Scalars['String'];
+          value: Scalars['String']['output'];
         };
 
         export type Searchable = Dimension | DimValue;
@@ -4157,13 +4211,15 @@ describe('TypeScript Operations Plugin', () => {
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
@@ -4173,7 +4229,7 @@ describe('TypeScript Operations Plugin', () => {
 
         export type Dimension = {
           __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
         export type SearchableFragmentFragment = { __typename?: 'Dimension', id?: string | null };
 
@@ -4243,13 +4299,15 @@ describe('TypeScript Operations Plugin', () => {
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: string;
-          String: string;
-          Boolean: boolean;
-          Int: number;
-          Float: number;
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
         };
 
         export type Query = {
@@ -4259,7 +4317,7 @@ describe('TypeScript Operations Plugin', () => {
 
         export type Dimension = {
           __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']>;
+          id?: Maybe<Scalars['String']['output']>;
         };
 
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
@@ -5459,9 +5517,9 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
-        requireString: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
-        innerRequired: Array<Scalars['String']> | Scalars['String'];
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+        requireString: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
+        innerRequired: Array<Scalars['String']['input']> | Scalars['String']['input'];
       }>;`);
       await validate(content, config);
     });
@@ -5491,9 +5549,9 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-        requireString: Array<InputMaybe<Scalars['String']>>;
-        innerRequired: Array<Scalars['String']>;
+        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+        requireString: Array<InputMaybe<Scalars['String']['input']>>;
+        innerRequired: Array<Scalars['String']['input']>;
       }>;`);
       await validate(content, config);
     });
@@ -6034,7 +6092,7 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean'];
+        showAddress: Scalars['Boolean']['input'];
       }>;
 
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
@@ -6087,8 +6145,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean'];
-        showName: Scalars['Boolean'];
+        showAddress: Scalars['Boolean']['input'];
+        showName: Scalars['Boolean']['input'];
       }>;
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };`);
     });
@@ -6135,8 +6193,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean'];
-        showName: Scalars['Boolean'];
+        showAddress: Scalars['Boolean']['input'];
+        showName: Scalars['Boolean']['input'];
       }>;
 
       export type UserQuery = (
@@ -6431,6 +6489,717 @@ function test(q: GetEntityBrandDataQuery): void {
           & Pick<Group, 'id'>
         ) }
       );`);
+    });
+  });
+
+  describe('incremental delivery directive handling', () => {
+    it('should generate an union of initial and deferred fields for fragments (preResolveTypes: true)', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          widgetPreference: String!
+          clearanceLevel: String!
+          favoriteFood: String!
+          leastFavoriteFood: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+          widgetPreference
+        }
+
+        fragment FoodFragment on User {
+          favoriteFood
+          leastFavoriteFood
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Test a secondary named fragment defer
+            ...FoodFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: true },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserQuery = {
+          __typename?: 'Query',
+          user: {
+            __typename?: 'User',
+            clearanceLevel: string,
+            name: string,
+            phone: {
+              __typename?: 'Phone',
+              home: string
+            },
+            employment: {
+              __typename?: 'Employment',
+              title: string
+            }
+          } & ({ __typename?: 'User', email: string }
+              | { __typename?: 'User', email?: never })
+            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
+              | { __typename?: 'User', address?: never })
+            & ({ __typename?: 'User', widgetCount: number, widgetPreference: string }
+              | { __typename?: 'User', widgetCount?: never, widgetPreference?: never })
+            & ({ __typename?: 'User', favoriteFood: string, leastFavoriteFood: string }
+              | { __typename?: 'User', favoriteFood?: never, leastFavoriteFood?: never }) };
+      `);
+    });
+
+    it('should generate an union of initial and deferred fields for fragments using MakeEmpty (preResolveTypes: false)', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: false },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type WidgetFragmentFragment = (
+          { __typename?: 'User' }
+          & Pick<User, 'widgetCount'>
+        );
+
+        export type EmploymentFragmentFragment = (
+          { __typename?: 'User' }
+          & { employment: (
+            { __typename?: 'Employment' }
+            & Pick<Employment, 'title'>
+          ) }
+        );
+
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type UserQuery = (
+          { __typename?: 'Query' }
+          & { user: (
+            { __typename?: 'User' }
+            & Pick<User, 'clearanceLevel' | 'name'>
+            & { phone: (
+              { __typename?: 'Phone' }
+              & Pick<Phone, 'home'>
+            ), employment: (
+              { __typename?: 'Employment' }
+              & Pick<Employment, 'title'>
+            ) }
+          ) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'email'>
+          ) | (
+            { __typename?: 'User' }
+            & MakeEmpty<User, 'email'>
+          )) & ((
+            { __typename?: 'User' }
+            & { address: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          ) | (
+            { __typename?: 'User' }
+            & { address?: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          )) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'widgetCount'>
+          ) | (
+            { __typename?: 'User' }
+            & MakeEmpty<User, 'widgetCount'>
+          )) }
+        );
+      `);
+    });
+
+    it('should generate an union of initial and deferred fields for fragments MakeEmpty (avoidOptionals: true)', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetName: String!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetName
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+          preResolveTypes: false,
+        },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type WidgetFragmentFragment = (
+          { __typename?: 'User' }
+          & Pick<User, 'widgetName' | 'widgetCount'>
+        );
+
+        export type EmploymentFragmentFragment = (
+          { __typename?: 'User' }
+          & { employment: (
+            { __typename?: 'Employment' }
+            & Pick<Employment, 'title'>
+          ) }
+        );
+
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+        export type UserQuery = (
+          { __typename?: 'Query' }
+          & { user: (
+            { __typename?: 'User' }
+            & Pick<User, 'clearanceLevel' | 'name'>
+            & { phone: (
+              { __typename?: 'Phone' }
+              & Pick<Phone, 'home'>
+            ), employment: (
+              { __typename?: 'Employment' }
+              & Pick<Employment, 'title'>
+            ) }
+          ) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'email'>
+          ) | (
+            { __typename?: 'User' }
+            & MakeEmpty<User, 'email'>
+          )) & ((
+            { __typename?: 'User' }
+            & { address: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          ) | (
+            { __typename?: 'User' }
+            & { address?: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'street1'>
+            ) }
+          )) & ((
+            { __typename?: 'User' }
+            & Pick<User, 'widgetName' | 'widgetCount'>
+          ) | (
+            { __typename?: 'User' }
+            & MakeEmpty<User, 'widgetName' | 'widgetCount'>
+          )) }
+        );
+      `);
+    });
+
+    it('should support "preResolveTypes: true" and "avoidOptionals: true" together', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String!
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          avoidOptionals: true,
+          preResolveTypes: true,
+        },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserQuery = {
+          __typename?: 'Query',
+          user: {
+            __typename?: 'User',
+            clearanceLevel: string,
+            name: string,
+            phone: { __typename?: 'Phone', home: string },
+            employment: { __typename?: 'Employment', title: string }
+          } & ({ __typename?: 'User', email: string }
+              | { __typename?: 'User', email?: never })
+            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
+              | { __typename?: 'User', address?: never })
+            & ({ __typename?: 'User', widgetCount: number }
+              | { __typename?: 'User', widgetCount?: never })
+          };
+      `);
+    });
+
+    it('should resolve optionals according to maybeValue together with avoidOptionals and deferred fragments', async () => {
+      const schema = buildSchema(`
+        type Address {
+          street1: String
+        }
+
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetName: String!
+          widgetCount: Int!
+          clearanceLevel: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(`
+        fragment WidgetFragment on User {
+          widgetName
+          widgetCount
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
+          }
+        }
+
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
+            }
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+          maybeValue: "T | 'specialType'",
+          avoidOptionals: true,
+        },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserQuery = {
+          __typename?: 'Query',
+          user: {
+            __typename?: 'User',
+            clearanceLevel: string,
+            name: string,
+            phone: { __typename?: 'Phone', home: string },
+            employment: { __typename?: 'Employment', title: string }
+          } & ({ __typename?: 'User', email: string }
+              | { __typename?: 'User', email?: never })
+            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string | 'specialType' } }
+              | { __typename?: 'User', address?: never })
+            & ({ __typename?: 'User', widgetName: string, widgetCount: number }
+              | { __typename?: 'User', widgetName?: never, widgetCount?: never })
+          };
+      `);
+    });
+
+    it('should generate correct types with inlineFragmentTypes: "mask""', async () => {
+      const schema = buildSchema(`
+      type Address {
+        street1: String!
+      }
+
+      type Phone {
+        home: String!
+      }
+
+      type Employment {
+        title: String!
+      }
+
+      type User {
+        name: String!
+        email: String!
+        address: Address!
+        phone: Phone!
+        employment: Employment!
+        widgetCount: Int!
+        widgetPreference: String!
+        clearanceLevel: String!
+        favoriteFood: String!
+        leastFavoriteFood: String!
+      }
+
+      type Query {
+        user: User!
+      }
+    `);
+
+      const fragment = parse(`
+      fragment WidgetFragment on User {
+        widgetCount
+        widgetPreference
+      }
+
+      fragment FoodFragment on User {
+        favoriteFood
+        leastFavoriteFood
+      }
+
+      fragment EmploymentFragment on User {
+        employment {
+          title
+        }
+      }
+
+      query user {
+        user {
+          # Test inline fragment defer
+          ... @defer {
+            email
+          }
+
+          # Test inline fragment defer with nested selection set
+          ... @defer {
+            address {
+              street1
+            }
+          }
+
+          # Test named fragment defer
+          ...WidgetFragment @defer
+
+          # Test a secondary named fragment defer
+          ...FoodFragment @defer
+
+          # Not deferred fields, fragments, selection sets, etc are left alone
+          name
+          phone {
+            home
+          }
+          ...EmploymentFragment
+          ... {
+            clearanceLevel
+          }
+        }
+      }
+    `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        { preResolveTypes: true, inlineFragmentTypes: 'mask' },
+        { outputFile: 'graphql.ts' }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type WidgetFragmentFragment = { __typename?: 'User', widgetCount: number, widgetPreference: string } & { ' $fragmentName'?: 'WidgetFragmentFragment' };
+
+      export type FoodFragmentFragment = { __typename?: 'User', favoriteFood: string, leastFavoriteFood: string } & { ' $fragmentName'?: 'FoodFragmentFragment' };
+
+      export type EmploymentFragmentFragment = { __typename?: 'User', employment: { __typename?: 'Employment', title: string } } & { ' $fragmentName'?: 'EmploymentFragmentFragment' };
+
+      export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+      export type UserQuery = {
+        __typename?: 'Query',
+        user: (
+        {
+          __typename?: 'User',
+          clearanceLevel: string,
+          name: string,
+          phone: { __typename?: 'Phone', home: string }
+        } & { ' $fragmentRefs'?: { 'EmploymentFragmentFragment': EmploymentFragmentFragment } }
+      ) & ({ __typename?: 'User', email: string } | { __typename?: 'User', email?: never }) & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } } | { __typename?: 'User', address?: never }) & (
+        { __typename?: 'User' }
+        & { ' $fragmentRefs'?: { 'WidgetFragmentFragment': Incremental<WidgetFragmentFragment> } }
+      ) & (
+        { __typename?: 'User' }
+        & { ' $fragmentRefs'?: { 'FoodFragmentFragment': Incremental<FoodFragmentFragment> } }
+      ) };
+    `);
     });
   });
 

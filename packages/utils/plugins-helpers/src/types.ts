@@ -93,6 +93,10 @@ export namespace Types {
      * @description HTTP Method to use, either POST (default) or GET.
      */
     method?: string;
+    /**
+     * @description Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection.
+     */
+    handleAsSDL?: boolean;
   }
   export interface UrlSchemaWithOptions {
     [url: string]: UrlSchemaOptions;
@@ -184,6 +188,10 @@ export namespace Types {
     'apollo-engine': ApolloEngineOptions;
   }
 
+  export interface GitHubSchemaOptions {
+    [githubProtocol: string]: { token: string };
+  }
+
   export type SchemaGlobPath = string;
 
   export type DelayedSchemaGeneratorFunction<T = any> = (options: {
@@ -208,6 +216,7 @@ export namespace Types {
     | string
     | UrlSchemaWithOptions
     | ApolloEngineSchemaOptions
+    | GitHubSchemaOptions
     | LocalSchemaPathWithOptions
     | SchemaGlobPath
     | SchemaWithLoader
@@ -553,6 +562,10 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
+    /**
+     * @description Alows to raise errors if any matched files are not valid GraphQL. Default: false.
+     */
+    noSilentErrors?: boolean;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };

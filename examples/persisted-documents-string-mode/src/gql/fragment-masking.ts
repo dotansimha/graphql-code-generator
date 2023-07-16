@@ -1,8 +1,9 @@
 import { ResultOf, DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+import { Incremental, TypedDocumentString } from './graphql';
 
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> =
   TDocumentType extends DocumentTypeDecoration<infer TType, any>
-    ? TType extends { ' $fragmentName'?: infer TKey }
+    ? [TType] extends [{ ' $fragmentName'?: infer TKey }]
       ? TKey extends string
         ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
         : never
@@ -45,4 +46,17 @@ export function makeFragmentData<F extends DocumentTypeDecoration<any, any>, FT 
   _fragment: F
 ): FragmentType<F> {
   return data as FragmentType<F>;
+}
+export function isFragmentReady<TQuery, TFrag>(
+  queryNode: TypedDocumentString<TQuery, any>,
+  fragmentNode: TypedDocumentString<TFrag, any>,
+  data: FragmentType<TypedDocumentString<Incremental<TFrag>, any>> | null | undefined
+): data is FragmentType<typeof fragmentNode> {
+  const deferredFields = queryNode.__meta__?.deferredFields as Record<string, (keyof TFrag)[]>;
+  const fragName = fragmentNode.__meta__?.fragmentName as string | undefined;
+
+  if (!deferredFields || !fragName) return true;
+
+  const fields = deferredFields[fragName] ?? [];
+  return fields.length > 0 && fields.every(field => data && field in data);
 }

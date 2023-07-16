@@ -3,11 +3,11 @@
 exports[`TypeScript should use implementing types as node type - issue #5126 1`] = `
 "/** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type Matrix = {
@@ -16,26 +16,26 @@ export type Matrix = {
 };
 
 export type Pill = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type RedPill = Pill & {
   __typename?: 'RedPill';
-  red: Scalars['String'];
+  red: Scalars['String']['output'];
 };
 
 export type GreenPill = Pill & {
   __typename?: 'GreenPill';
-  green: Scalars['String'];
+  green: Scalars['String']['output'];
 };
 
 export type Foo = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type Bar = Foo & {
   __typename?: 'Bar';
-  lol: Scalars['String'];
+  lol: Scalars['String']['output'];
 };
 
 export type Hello = {
@@ -49,17 +49,17 @@ export type NoInterface = {
 };
 
 export type NestedInterface = {
-  field: Scalars['String'];
+  field: Scalars['String']['output'];
 };
 
 export type NestedType1 = NestedInterface & {
   __typename?: 'NestedType1';
-  hi: Scalars['String'];
+  hi: Scalars['String']['output'];
 };
 
 export type NestedType2 = NestedInterface & {
   __typename?: 'NestedType2';
-  ho: Scalars['String'];
+  ho: Scalars['String']['output'];
 };
 
 export type NestedField = {

@@ -52,6 +52,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         this.config.namespacedImportName,
         [],
         this.config.enumPrefix,
+        this.config.enumSuffix,
         this.config.enumValues
       )
     );

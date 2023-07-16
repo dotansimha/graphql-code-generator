@@ -2,8 +2,6 @@
 description: GraphQL Code Generator's `@graphql-codegen/graphql-modules-preset` plugin helps to generate resolvers type for each module of a GraphQL Modules GraphQL API.
 ---
 
-import { PackageCmd } from '@theguild/components'
-
 # Guide: GraphQL Modules
 
 GraphQL Code Generator's `@graphql-codegen/graphql-modules-preset` plugin helps to
@@ -28,11 +26,9 @@ Just a few configuration steps are required to get the resolvers types generated
 
 ### Install
 
-<PackageCmd
-  packages={[
-    '-D @graphql-codegen/graphql-modules-preset @graphql-codegen/typescript-resolvers @graphql-codegen/typescript'
-  ]}
-/>
+```sh npm2yarn
+npm i -D @graphql-codegen/graphql-modules-preset @graphql-codegen/typescript-resolvers @graphql-codegen/typescript
+```
 
 ### Configure the plugin
 
@@ -79,7 +75,9 @@ Assuming that, as recommended, your `package.json` has the following script:
 
 Running the following generates the `graphql/generated.tsx` file.
 
-<PackageCmd packages={[{ name: 'generate', cmd: 'run' }]} />
+```sh npm2yarn
+npm run generate
+```
 
 The User module resolvers would be:
 
