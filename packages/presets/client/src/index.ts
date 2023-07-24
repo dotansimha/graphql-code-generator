@@ -360,3 +360,5 @@ function createDeferred<T = void>(): Deferred<T> {
   });
   return d;
 }
+
+export { addTypenameSelectionDocumentTransform } from './add-typename-selection-document-transform.js';
