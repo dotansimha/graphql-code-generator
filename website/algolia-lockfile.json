@@ -2024,8 +2024,8 @@
       "Getting started",
       "Config API",
       "Fragment Masking",
-      "Persisted documents",
-      "Reducing bundle size: Babel plugin",
+      "Persisted Documents",
+      "Reducing Bundle Size",
       "DocumentMode"
     ],
     "toc": [
@@ -2055,7 +2055,7 @@
               },
               {
                 "children": [],
-                "title": "Fragment Masking with @defer directive",
+                "title": "Fragment Masking with @defer Directive",
                 "anchor": "fragment-masking-with-defer-directive"
               },
               {
@@ -2077,8 +2077,20 @@
         "anchor": "fragment-masking"
       },
       {
-        "children": [],
-        "title": "Persisted documents",
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "title": "Normalized Caches (urql and Apollo Client)",
+                "anchor": "normalized-caches-urql-and-apollo-client"
+              }
+            ],
+            "title": "Enable Persisted Documents",
+            "anchor": "enable-persisted-documents"
+          }
+        ],
+        "title": "Persisted Documents",
         "anchor": "persisted-documents"
       },
       {
@@ -2087,16 +2099,16 @@
             "children": [
               {
                 "children": [],
-                "title": "SWC plugin",
+                "title": "SWC Plugin",
                 "anchor": "swc-plugin"
               }
             ],
-            "title": "Babel plugin",
+            "title": "Babel Plugin",
             "anchor": "babel-plugin"
           }
         ],
-        "title": "Reducing bundle size: Babel plugin",
-        "anchor": "reducing-bundle-size-babel-plugin"
+        "title": "Reducing Bundle Size",
+        "anchor": "reducing-bundle-size"
       },
       {
         "children": [
