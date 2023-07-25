@@ -224,23 +224,26 @@ export const createWatcher = (
  *
  * @param files List of relative and/or absolute file paths (or micromatch patterns)
  */
-
 const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
   const dirPaths = files
     .map(filePath => (isAbsolute(filePath) ? filePath : resolve(filePath)))
-    .map(patterned => mm.scan(patterned).base)
-    .map(path => normalize(path)); // Added normalization here
+    .map(filePath => normalize(filePath)) // Normalize the file paths
+    .map(patterned => mm.scan(patterned).base);
+
+  // Log the dirPaths for debugging
+  debugLog(`[Watcher] dirPaths: ${JSON.stringify(dirPaths)}`);
 
   return (async (maybeValidPath: string) => {
-    const normalizedPath = normalize(maybeValidPath); // Normalize the path before checking accessibility
-    debugLog(`[Watcher] Longest common prefix of all files: ${normalizedPath}...`);
+    debugLog(`[Watcher] Longest common prefix of all files: ${maybeValidPath}...`);
     try {
-      await access(normalizedPath); // Access the normalized path
-      return normalizedPath;
-    } catch {
-      log(`[Watcher] Longest common prefix (${normalizedPath}) is not accessible`);
-      log(`[Watcher] Watching current working directory (${normalize(process.cwd())}) instead`);
-      return normalize(process.cwd());
+      await access(maybeValidPath);
+      debugLog(`[Watcher] Access to ${maybeValidPath} successful.`);
+      return maybeValidPath;
+    } catch (error) {
+      debugLog(`[Watcher] Error accessing path: ${error.message}`);
+      log(`[Watcher] Longest common prefix (${maybeValidPath}) is not accessible`);
+      log(`[Watcher] Watching current working directory (${process.cwd()}) instead`);
+      return process.cwd();
     }
   })(longestCommonPrefix(dirPaths.map(path => path.split(sep))).join(sep));
 };
@@ -257,19 +260,17 @@ const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
  * @returns An array of path segments representing the longest common prefix of splitPaths
  */
 const longestCommonPrefix = (splitPaths: string[][]): string[] => {
-  // Return early on empty input
   if (!splitPaths.length) {
     return [];
   }
 
-  // Loop through the segments of the first path
   for (let i = 0; i <= splitPaths[0].length; i++) {
-    // Check if this path segment is present in the same position of every path
     if (!splitPaths.every(string => string[i] === splitPaths[0][i])) {
-      // If not, return the path segments up to and including the previous segment
+      debugLog(`[Watcher] longestCommonPrefix at index ${i}: ${splitPaths[0].slice(0, i).join(sep)}`);
       return splitPaths[0].slice(0, i);
     }
   }
 
+  debugLog(`[Watcher] longestCommonPrefix: ${splitPaths[0].join(sep)}`);
   return splitPaths[0];
 };
