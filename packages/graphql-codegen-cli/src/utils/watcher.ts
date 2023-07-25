@@ -1,4 +1,4 @@
-import { join, isAbsolute, relative, resolve, sep } from 'path';
+import { join, isAbsolute, relative, resolve, sep, normalize } from 'path';
 import { normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import type { subscribe } from '@parcel/watcher';
 import debounce from 'debounce';
@@ -60,7 +60,17 @@ export const createWatcher = (
   const runWatcher = async (abortSignal: AbortSignal) => {
     const watchDirectory = await findHighestCommonDirectory(allAffirmativePatterns);
 
-    const parcelWatcher = await import('@parcel/watcher');
+    // Try to load the parcel watcher, but don't fail if it's not available.
+    let parcelWatcher: typeof import('@parcel/watcher');
+    try {
+      parcelWatcher = await import('@parcel/watcher');
+    } catch (err) {
+      log(
+        `Parcel watcher not found. To use this feature, please make sure to provide @parcel/watcher as a peer dependency.`
+      );
+      return;
+    }
+
     debugLog(`[Watcher] Parcel watcher loaded...`);
 
     let isShutdown = false;
@@ -214,53 +224,41 @@ export const createWatcher = (
  *
  * @param files List of relative and/or absolute file paths (or micromatch patterns)
  */
+
 const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
-  // Map files to a list of basePaths, where "base" is the result of mm.scan(pathOrPattern)
-  // e.g. mm.scan("/**/foo/bar").base -> "/" ; mm.scan("/foo/bar/**/fizz/*.graphql") -> /foo/bar
   const dirPaths = files
     .map(filePath => (isAbsolute(filePath) ? filePath : resolve(filePath)))
-    .map(patterned => mm.scan(patterned).base);
+    .map(patterned => mm.scan(patterned).base)
+    .map(path => normalize(path)); // Added normalization here
 
-  // Return longest common prefix if it's accessible, otherwise process.cwd()
   return (async (maybeValidPath: string) => {
-    debugLog(`[Watcher] Longest common prefix of all files: ${maybeValidPath}...`);
+    const normalizedPath = normalize(maybeValidPath); // Normalize the path before checking accessibility
+    debugLog(`[Watcher] Longest common prefix of all files: ${normalizedPath}...`);
     try {
-      await access(maybeValidPath);
-      return maybeValidPath;
+      await access(normalizedPath); // Access the normalized path
+      return normalizedPath;
     } catch {
-      log(`[Watcher] Longest common prefix (${maybeValidPath}) is not accessible`);
-      log(`[Watcher] Watching current working directory (${process.cwd()}) instead`);
-      return process.cwd();
+      log(`[Watcher] Longest common prefix (${normalizedPath}) is not accessible`);
+      log(`[Watcher] Watching current working directory (${normalize(process.cwd())}) instead`);
+      return normalize(process.cwd());
     }
   })(longestCommonPrefix(dirPaths.map(path => path.split(sep))).join(sep));
 };
 
 /**
  * Find the longest common prefix of an array of paths, where each item in
- * the array is an array of path segments which comprise an absolute path when
- * joined together by a path separator.
+ * the array an array of path segments which comprise an absolute path when
+ * joined together by a path separator
  *
  * Adapted from:
  * https://duncan-mcardle.medium.com/leetcode-problem-14-longest-common-prefix-javascript-3bc6a2f777c4
  *
- * This version has been adjusted to support Windows paths, by treating the drive letter 
- * as a separate segment and accounting for Windows-style backslashes as path separators.
- *
- * @param splitPaths An array of arrays, where each item is a path split by its separator.
- *                   The first item is treated separately as it could be a drive letter in Windows.
- * @returns An array of path segments representing the longest common prefix of splitPaths.
+ * @param splitPaths An array of arrays, where each item is a path split by its separator
+ * @returns An array of path segments representing the longest common prefix of splitPaths
  */
 const longestCommonPrefix = (splitPaths: string[][]): string[] => {
   // Return early on empty input
   if (!splitPaths.length) {
-    return [];
-  }
-
-  // Added: handle Windows drive letters
-  const driveLetter = splitPaths[0][0];
-  if (driveLetter && splitPaths.every(string => string[0] === driveLetter)) {
-    splitPaths = splitPaths.map(path => path.slice(1));
-  } else {
     return [];
   }
 
@@ -269,9 +267,9 @@ const longestCommonPrefix = (splitPaths: string[][]): string[] => {
     // Check if this path segment is present in the same position of every path
     if (!splitPaths.every(string => string[i] === splitPaths[0][i])) {
       // If not, return the path segments up to and including the previous segment
-      return [driveLetter, ...splitPaths[0].slice(0, i)];
+      return splitPaths[0].slice(0, i);
     }
   }
 
-  return [driveLetter, ...splitPaths[0]];
+  return splitPaths[0];
 };
