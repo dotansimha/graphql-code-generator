@@ -411,7 +411,7 @@ export class ClientSideBaseVisitor<
       }
 
       let metaString = '';
-      if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
+      if (this._onExecutableDocumentNode) {
         const meta = this._getGraphQLCodegenMetadata(node, definitions);
 
         if (meta) {
@@ -428,7 +428,9 @@ export class ClientSideBaseVisitor<
 
     if (this.config.documentMode === DocumentMode.string) {
       if (node.kind === Kind.FRAGMENT_DEFINITION) {
-        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify({ fragmentName: node.name.value })})`;
+        const meta = this._getGraphQLCodegenMetadata(node, gqlTag([doc]).definitions);
+
+        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify({ fragmentName: node.name.value, ...meta })})`;
       }
 
       if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
@@ -451,15 +453,17 @@ export class ClientSideBaseVisitor<
   }
 
   protected _getGraphQLCodegenMetadata(
-    node: OperationDefinitionNode,
+    node: OperationDefinitionNode | FragmentDefinitionNode,
     definitions?: ReadonlyArray<DefinitionNode>
   ): Record<string, any> | void | undefined {
     let meta: Record<string, any> | void | undefined;
 
-    meta = this._onExecutableDocumentNode({
-      kind: Kind.DOCUMENT,
-      definitions,
-    });
+    if (node.kind === Kind.OPERATION_DEFINITION) {
+      meta = this._onExecutableDocumentNode({
+        kind: Kind.DOCUMENT,
+        definitions,
+      });
+    }
 
     const deferredFields = this._findDeferredFields(node);
     if (Object.keys(deferredFields).length) {
@@ -472,7 +476,9 @@ export class ClientSideBaseVisitor<
     return meta;
   }
 
-  protected _findDeferredFields(node: OperationDefinitionNode): { [fargmentName: string]: string[] } {
+  protected _findDeferredFields(node: OperationDefinitionNode | FragmentDefinitionNode): {
+    [fargmentName: string]: string[];
+  } {
     const deferredFields: { [fargmentName: string]: string[] } = {};
     const queue: SelectionNode[] = [...node.selectionSet.selections];
     while (queue.length) {
