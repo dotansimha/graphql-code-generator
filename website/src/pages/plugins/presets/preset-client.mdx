@@ -256,7 +256,7 @@ When dealing with nested Fragments, the `useFragment()` should also be used in a
 
 You can find a complete working example here: [Nested Fragment example on GitHub](https://github.com/charlypoly/codegen-repros/blob/master/client-preset-nested-fragments-interface/src/App.tsx).
 
-### Fragment Masking with @defer directive
+### Fragment Masking with @defer Directive
 
 If you use the `@defer` directive and have a Fragment Masking setup, you can use an `isFragmentReady` helper to check if the deferred fragment data is already resolved.
 The `isFragmentReady` function takes three arguments: the query document, the fragment definition, and the data returned by the
@@ -388,15 +388,17 @@ const config: CodegenConfig = {
 export default config
 ```
 
-## Persisted documents
+## Persisted Documents
 
-Persisted documents (often also referred to as persisted queries or persisted documents) is a technique for reducing client to server upstream traffic by sending a unique identifier instead of the full GraphQL document.
-It is also commonly used to reduce the size of the client bundle as well as to improve security by preventing the client from sending and executing arbitrary GraphQL operations.
+Persisted documents (often also referred to as persisted queries or persisted operations) is a technique for reducing client to server upstream traffic by sending a unique identifier instead of the full GraphQL document.
+It is also commonly used to reduce the size of the client bundle as well as to improve security by preventing the client from sending and executing arbitrary GraphQL operations (and thus reducing attack surface).
 
 <Callout type="info">
   You can find [a functional example using GraphQL Yoga within our Codegen Examples on
   GitHub](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/persisted-documents).
 </Callout>
+
+### Enable Persisted Documents
 
 Persisted documents can be enabled by setting the `persistedDocuments` option to `true`:
 
@@ -488,7 +490,55 @@ console.log(response.status)
 console.log(await response.json())
 ```
 
-## Reducing bundle size: Babel plugin
+### Normalized Caches (urql and Apollo Client)
+
+Urql is a popular GraphQL client that utilizes a normalized cache.
+Because the client utilizes the `__typename` fields to normalize the cache, it is important that the `__typename` field is included in the persisted documents.
+The `addTypenameSelectionDocumentTransform` document transform can be used for achieving this.
+
+```ts filename="codegen.ts" {1,15}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+import { addTypenameDocumentTransform } from '@graphql-codegen/client-preset'
+
+const config: CodegenConfig = {
+  schema: './**/*.graphqls',
+  documents: ['./**/*.{ts,tsx}'],
+  ignoreNoDocuments: true,
+  generates: {
+    './gql/': {
+      preset: 'client',
+      plugins: [],
+      presetConfig: {
+        persistedDocuments: true
+      },
+      documentTransforms: [addTypenameDocumentTransform]
+    }
+  }
+}
+
+export default config
+```
+
+Afterwards, you can send the hashes to the server.
+
+```ts filename="Example with urql" {2,8-13}
+import { createClient, cacheExchange } from '@urql/core'
+import { persistedExchange } from '@urql/exchange-persisted'
+
+const client = new createClient({
+  url: 'YOUR_GRAPHQL_ENDPOINT',
+  exchanges: [
+    cacheExchange,
+    persistedExchange({
+      enforcePersistedQueries: true,
+      enableForMutation: true,
+      generateHash: (_, document) => Promise.resolve(document['__meta__']['hash'])
+    })
+  ]
+})
+```
+
+## Reducing Bundle Size
 
 Large scale projects might want to enable code splitting or tree shaking on the `client-preset` generated files.
 This is because instead of using the map which contains all GraphQL operations in the project,
@@ -496,7 +546,7 @@ we can use the specific generated document types.
 
 The `client-preset` comes with a Babel and a swc plugin that enables it.
 
-### Babel plugin
+### Babel Plugin
 
 To configure the Babel plugin, update (or create) your `.babelrc.js` as follow:
 
@@ -509,7 +559,7 @@ module.exports = {
 }
 ```
 
-### SWC plugin
+### SWC Plugin
 
 <Callout type="warning">
   As of 2023/03/11, SWC's custom plugins is still an experimental feature, that means unexpected breaking changes that
