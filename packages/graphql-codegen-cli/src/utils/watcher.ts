@@ -66,7 +66,7 @@ export const createWatcher = (
       parcelWatcher = await import('@parcel/watcher');
     } catch (err) {
       log(
-        `Failed to import @parcel/watcher, a required dependency for watch mode, due to the following error:\n${err}`
+        `Failed to import @parcel/watcher with the following error (to use watch mode, install https://www.npmjs.com/package/@parcel/watcher):\n${err}`
       );
       return;
     }
