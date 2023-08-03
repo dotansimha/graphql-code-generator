@@ -10,8 +10,8 @@
     "generate-json-config": "tsx generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/algolia": "1.1.8",
-    "@theguild/tailwind-config": "0.2.2",
+    "@theguild/algolia": "1.1.9",
+    "@theguild/tailwind-config": "0.3.0",
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
     "@types/node": "18.16.19",
@@ -68,7 +68,7 @@
     "@graphql-codegen/client-preset": "4.1.0",
     "@mendable/search": "0.0.108",
     "@monaco-editor/react": "4.5.1",
-    "@theguild/components": "5.0.0",
+    "@theguild/components": "5.2.1",
     "classnames": "2.3.2",
     "date-fns": "2.29.3",
     "dedent": "0.7.0",
