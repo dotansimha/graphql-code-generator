@@ -311,6 +311,54 @@ function App() {
 export default App;
 ```
 
+### Fragment Unmasking utility types
+
+`UnmaskResultOf<DocumentType>` and `UnmaskFragmentType<FragmentType>` are two utility types available to unmask fragments.
+
+They recursively flatten masked fragments by resolving ` $fragmentRefs` and merging them to the root fragment/operation, in short, they will turn a masked fragment containing fragment references to a flatted/inlined fragment.
+
+Could be useful for incremental adoption of Fragment Masking or when unmasking is helpful, e.g., within utilities or tests.
+
+For example:
+
+```ts {24-35}
+const FilmItemFragment = graphql(`
+  fragment FilmItem on Film {
+    id
+    title
+  }
+`)
+
+const AllFilmsFragment = graphql(`
+  fragment AllFilms on Root {
+    allFilms {
+      films {
+        ...FilmItem
+      }
+    }
+  }
+`)
+
+const myQuery = graphql(`
+  query Films {
+    ...AllFilms
+  }
+`) // DocumentTypeDecoration<R, V>
+
+// Fragment references are all inlined rather than referring to ` $fragmentRefs`.
+type UnmaskedData = UnmaskResultOf<typeof myQuery>
+//   ^? type UnmaskedData = {
+//        __typename: 'Root' | undefined,
+//        allFilms: {
+//          films: {
+//            __typename?: "Film" | undefined;
+//            id: string;
+//            title?: string | null | undefined;
+//          }[] | null | undefined
+//        } | null | undefined
+//      }
+```
+
 ### Fragment Masking and testing
 
 A React component that relies on Fragment Masking won't accept "plain object" as follows:
