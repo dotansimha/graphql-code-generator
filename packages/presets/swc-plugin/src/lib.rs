@@ -6,6 +6,7 @@ use swc_core::{
     common::Span,
     ecma::{
         ast::*,
+        atoms::atom,
         utils::quote_ident,
         visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
     },
@@ -179,9 +180,19 @@ impl VisitMut for GraphQLVisitor {
 
         let platform_specific_path = self.get_relative_import_path("graphql");
 
+        // Add import after any "use client" directive, since it must come before any other expression
+        let mut index = 0;
+        if let ModuleItem::Stmt(Stmt::Expr(ExprStmt { expr, .. })) = &module.body[0] {
+            if let Expr::Lit(Lit::Str(Str { value, .. })) = &**expr {
+                if atom!("use client") == *value {
+                    index = 1;
+                }
+            }
+        }
+
         for operation_or_fragment_name in &self.graphql_operations_or_fragments_to_import {
             module.body.insert(
-                0,
+                index,
                 ModuleItem::ModuleDecl(ModuleDecl::Import(ImportDecl {
                     span: Default::default(),
                     specifiers: vec![ImportSpecifier::Named(ImportNamedSpecifier {
