@@ -2933,6 +2933,33 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         `export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`
       );
     });
+
+    it("#9100 - should use the rhs of 'import as' when using external enum with different name", async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MyIssue9100GraphqlEnum {
+          FOO
+          BAR
+        }
+      `);
+
+      const config = {
+        federation: true,
+        enumValues: {
+          MyIssue9100GraphqlEnum: '../enum#MyIssue9100TSEnum',
+        },
+      };
+
+      const tsContent = (await tsPlugin(testSchema, [], config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+      const output = await plugin(testSchema, [], config, { outputFile: 'graphql.ts' });
+
+      expect(tsContent.prepend).toContain(`import { MyIssue9100TSEnum as MyIssue9100GraphqlEnum } from '../enum';`);
+      expect(tsContent.content).toContain(`export { MyIssue9100GraphqlEnum };`);
+      expect(output.content).toContain(
+        `export type ResolversTypes = {\n  MyIssue9100GraphqlEnum: MyIssue9100GraphqlEnum;`
+      );
+    });
   });
 
   it('Should generate resolvers with replaced internalResolversPrefix if specified', async () => {
