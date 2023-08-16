@@ -167,13 +167,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversUnionTypes<RefType extends { [key: string]: unknown }> = ResolversObject<{
   ChildUnion: ( Child ) | ( MyOtherType );
   MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversInterfaceTypes<RefType extends { [key: string]: unknown }> = ResolversObject<{
   Node: ( SomeNode );
   AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
   WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
@@ -426,13 +426,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversUnionTypes<RefType extends { [key: string]: unknown }> = ResolversObject<{
   ChildUnion: ( Types.Child ) | ( Types.MyOtherType );
   MyUnion: ( Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Types.MyOtherType );
 }>;
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversInterfaceTypes<RefType extends { [key: string]: unknown }> = ResolversObject<{
   Node: ( Types.SomeNode );
   AnotherNode: ( Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
   WithChild: ( Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
@@ -771,13 +771,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversUnionTypes<RefType extends { [key: string]: unknown }> = ResolversObject<{
   ChildUnion: ( Child ) | ( MyOtherType );
   MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversInterfaceTypes<RefType extends { [key: string]: unknown }> = ResolversObject<{
   Node: ( SomeNode );
   AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
   WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
