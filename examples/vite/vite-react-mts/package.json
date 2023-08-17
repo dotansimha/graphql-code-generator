@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
-    "@graphql-codegen/client-preset": "4.1.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "cypress": "12.12.0",

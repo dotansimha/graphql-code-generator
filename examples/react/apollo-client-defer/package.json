@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/client-preset": "^4.1.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.15",
