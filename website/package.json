@@ -66,7 +66,7 @@
     "@graphql-codegen/typescript-vue-urql": "2.3.6",
     "@graphql-codegen/urql-introspection": "2.2.1",
     "@graphql-codegen/client-preset": "4.1.0",
-    "@mendable/search": "0.0.108",
+    "@mendable/search": "0.0.151",
     "@monaco-editor/react": "4.5.1",
     "@theguild/components": "5.2.1",
     "classnames": "2.3.2",
