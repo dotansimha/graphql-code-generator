@@ -12,9 +12,9 @@
     "babel-jest": "28.1.3",
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
-    "@babel/core": "7.22.8",
-    "@babel/preset-env": "7.22.7",
-    "@babel/preset-typescript": "7.22.5"
+    "@babel/core": "7.22.11",
+    "@babel/preset-env": "7.22.10",
+    "@babel/preset-typescript": "7.22.11"
   },
   "scripts": {
     "test": "jest",
