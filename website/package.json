@@ -15,7 +15,7 @@
     "@types/dedent": "0.7.0",
     "@types/jsonpath": "0.2.0",
     "@types/node": "18.16.19",
-    "@types/react": "18.2.7",
+    "@types/react": "18.2.21",
     "fast-xml-parser": "4.2.7",
     "jsonpath": "1.1.1",
     "prettier-plugin-tailwindcss": "0.2.8"
