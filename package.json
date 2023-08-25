@@ -68,7 +68,7 @@
     "ts-node": "10.9.1",
     "tslib": "2.6.2",
     "tsx": "3.12.7",
-    "typescript": "5.0.4"
+    "typescript": "5.2.2"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
@@ -90,7 +90,7 @@
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0",
     "ts-node": "10.9.1",
-    "typescript": "5.0.4",
+    "typescript": "5.2.2",
     "cosmiconfig": "8.1.3"
   }
 }

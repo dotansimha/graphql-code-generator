@@ -13,7 +13,7 @@
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
     "@vitejs/plugin-react": "^3.1.0",
-    "typescript": "5.0.4",
+    "typescript": "5.2.2",
     "serve": "14.2.1",
     "cypress": "12.17.4",
     "start-server-and-test": "2.0.0",
