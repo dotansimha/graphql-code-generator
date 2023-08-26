@@ -1900,9 +1900,9 @@
     eslint-visitor-keys "^3.3.0"
 
 "@eslint-community/regexpp@^4.4.0", "@eslint-community/regexpp@^4.6.0", "@eslint-community/regexpp@^4.6.1":
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/@eslint-community/regexpp/-/regexpp-4.7.0.tgz#96e7c05e738327602ae5942437f9c6b177ec279a"
-  integrity sha512-+HencqxU7CFJnQb7IKtuNBqS6Yx3Tz4kOL8BJXo+JyeiBm5MEX6pO8onXDkjrkCRlfYXS1Axro15ZjVFe9YgsA==
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@eslint-community/regexpp/-/regexpp-4.8.0.tgz#11195513186f68d42fbf449f9a7136b2c0c92005"
+  integrity sha512-JylOEEzDiOryeUnFbQz+oViCXS0KsvR1mvHkoMiu5+UiBvy+RYX7tzlIIIEstF/gVa2tj9AQXk3dgnxv6KxhFg==
 
 "@eslint/eslintrc@^2.1.2":
   version "2.1.2"
@@ -1920,9 +1920,9 @@
     strip-json-comments "^3.1.1"
 
 "@eslint/js@^8.47.0":
-  version "8.47.0"
-  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.47.0.tgz#5478fdf443ff8158f9de171c704ae45308696c7d"
-  integrity sha512-P6omY1zv5MItm93kLM8s2vr1HICJH8v0dvddDhysbIuZ+vcjOHg5Zbkf1mTkcmi2JA9oBG2anOkRnW8WJTS8Og==
+  version "8.48.0"
+  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.48.0.tgz#642633964e217905436033a2bd08bf322849b7fb"
+  integrity sha512-ZSjtmelB7IJfWD2Fvb7+Z+ChTIKWq6kjda95fLcQKNS5aheVHn4IkfgRQE3sIIzTcSLwLcLZUD9UBt+V7+h+Pw==
 
 "@floating-ui/core@^1.2.1":
   version "1.2.1"
@@ -8070,14 +8070,15 @@ find-yarn-workspace-root@^2.0.0:
     micromatch "^4.0.2"
 
 flat-cache@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/flat-cache/-/flat-cache-3.0.4.tgz#61b0338302b2fe9f957dcc32fc2a87f1c3048b11"
-  integrity sha512-dm9s5Pw7Jc0GvMYbshN6zchCA9RgQlzzEZX3vylR9IqFfS8XciblUXOKfW6SiuJ0e13eDYZoZV5wdrev7P3Nwg==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/flat-cache/-/flat-cache-3.1.0.tgz#0e54ab4a1a60fe87e2946b6b00657f1c99e1af3f"
+  integrity sha512-OHx4Qwrrt0E4jEIcI5/Xb+f+QmJYNj2rrK8wiIdQOIrB9WrrJL8cjZvXdXuBTkkEwEqLycb5BeZDV1o2i9bTew==
   dependencies:
-    flatted "^3.1.0"
+    flatted "^3.2.7"
+    keyv "^4.5.3"
     rimraf "^3.0.2"
 
-flatted@^3.1.0:
+flatted@^3.2.7:
   version "3.2.7"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
@@ -8427,9 +8428,9 @@ globals@^11.1.0:
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
 globals@^13.19.0:
-  version "13.20.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-13.20.0.tgz#ea276a1e508ffd4f1612888f9d1bad1e2717bf82"
-  integrity sha512-Qg5QtVkCy/kv3FUSlu4ukeZDVf9ee0iXLAUYX13gbR17bnejFTzr4iS9bY7kwCf1NztRNm1t91fjOiyx4CSwPQ==
+  version "13.21.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-13.21.0.tgz#163aae12f34ef502f5153cfbdd3600f36c63c571"
+  integrity sha512-ybyme3s4yy/t/3s35bewwXKOf7cvzfreG2lH0lZl0JB7I4GxRP2ghxOK/Nb9EkRXdbBXZLfq/p/0W2JUONB/Gg==
   dependencies:
     type-fest "^0.20.2"
 
@@ -10113,6 +10114,11 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
+json-buffer@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
+  integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
+
 json-parse-even-better-errors@^2.3.0, json-parse-even-better-errors@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/json-parse-even-better-errors/-/json-parse-even-better-errors-2.3.1.tgz#7c47805a94319928e05777405dc12e1f7a4ee02d"
@@ -10251,6 +10257,13 @@ katex@^0.16.0, katex@^0.16.7:
   integrity sha512-Xk9C6oGKRwJTfqfIbtr0Kes9OSv6IFsuhFGc7tW4urlpMJtuh+7YhzU6YEG9n8gmWKcMAFzkp7nr+r69kV0zrA==
   dependencies:
     commander "^8.3.0"
+
+keyv@^4.5.3:
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.3.tgz#00873d2b046df737963157bd04f294ca818c9c25"
+  integrity sha512-QCiSav9WaX1PgETJ+SpNnx2PRRapJ/oRSXM4VO5OGYGSjrxbKPVFVhB3l2OCbLCk329N8qyAtsJjSjvVBWzEug==
+  dependencies:
+    json-buffer "3.0.1"
 
 khroma@^2.0.0:
   version "2.0.0"
