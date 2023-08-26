@@ -19,12 +19,12 @@
     "@graphql-tools/graphql-file-loader": "8.0.0",
     "@graphql-tools/load": "8.0.0",
     "@graphql-tools/schema": "10.0.0",
-    "graphql": "16.6.0",
+    "graphql": "16.8.0",
     "graphql-tag": "2.12.6",
     "prettier": "2.8.8"
   },
   "devDependencies": {
-    "@types/node": "18.16.19",
+    "@types/node": "18.17.11",
     "tsup": "6.7.0"
   }
 }
