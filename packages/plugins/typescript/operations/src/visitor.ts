@@ -24,6 +24,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   immutableTypes: boolean;
   noExport: boolean;
   maybeValue: string;
+  allowUndefinedQueryVariables: boolean;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
@@ -41,6 +42,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
         preResolveTypes: getConfigValue(config.preResolveTypes, true),
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
+        allowUndefinedQueryVariables: getConfigValue(config.allowUndefinedQueryVariables, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
@@ -133,9 +135,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return ';';
   }
 
-  protected applyVariablesWrapper(variablesBlock: string): string {
+  protected applyVariablesWrapper(variablesBlock: string, operationType: string): string {
     const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
+    const extraType = this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
 
-    return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>`;
+    return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 }
