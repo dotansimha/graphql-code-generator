@@ -2513,4 +2513,41 @@ export * from "./gql.js";`);
       `);
     });
   });
+
+  it('respects skipDocumentsValidation', async () => {
+    // test against a document using urql's @populate directive, which will
+    // fail validation if the ScalarLeafsRule is enabled
+    await expect(
+      executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Mutation {
+              saveVideo(id: ID!): Video!
+            }
+
+            type Video {
+              id: ID!
+              title: String!
+              movie: Movie!
+            }
+
+            type Movie implements Video {
+              id: ID!
+              title: String!
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/with-populate.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+              skipDocumentsValidation: { ignoreRules: ['ScalarLeafsRule'] },
+            },
+          },
+        },
+      })
+    ).resolves.toBeDefined();
+  });
 });
