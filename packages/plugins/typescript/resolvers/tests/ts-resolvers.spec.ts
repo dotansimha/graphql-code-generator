@@ -1468,7 +1468,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextType>>;
+        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextType, {}>>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
         unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
@@ -1492,7 +1492,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextType>>;
+        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextType, {}>>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
         unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
@@ -1516,7 +1516,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextTypeOne>>;
+        foo?: Resolver<ResolversTypes['String'], ParentType, AuthenticatedContext<ContextTypeOne, {}>>;
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
         withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
         unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;

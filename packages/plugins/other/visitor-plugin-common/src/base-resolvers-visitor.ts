@@ -21,8 +21,10 @@ import {
   NameNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
+  ObjectValueNode,
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
+  ValueNode,
 } from 'graphql';
 import { BaseVisitor, BaseVisitorConvertOptions, ParsedConfig, RawConfig } from './base-visitor.js';
 import { parseEnumValues } from './enum-values.js';
@@ -50,6 +52,49 @@ import {
   wrapTypeWithModifiers,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
+
+const objectNodeToObject = (objectNode: ObjectValueNode) => {
+  const { fields } = objectNode;
+  return fields.reduce(
+    (acc, field) => ({
+      ...acc,
+      [field.name.value]: valueNodeToValue(field.value),
+    }),
+    {}
+  );
+};
+
+const valueNodeToValue = (value: ValueNode): unknown => {
+  if (value.kind === 'StringValue') {
+    return value.value;
+  }
+  if (value.kind === 'ObjectValue') {
+    return objectNodeToObject(value);
+  }
+  if (value.kind === 'ListValue') {
+    return value.values.map(valueNodeToValue);
+  }
+  if (value.kind === 'NullValue') {
+    return null;
+  }
+  if (value.kind === 'BooleanValue') {
+    return value.value;
+  }
+  if (value.kind === 'IntValue') {
+    return parseInt(value.value, 10);
+  }
+  if (value.kind === 'FloatValue') {
+    return parseFloat(value.value);
+  }
+  if (value.kind === 'EnumValue') {
+    return value.value;
+  }
+  if (value.kind === 'Variable') {
+    // variables doesn't make sense in this context
+    return null;
+  }
+  return null;
+};
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -1475,7 +1520,13 @@ export class BaseResolversVisitor<
       const name = directive.name as unknown as string;
       const directiveMap = this._directiveContextTypesMap[name];
       if (directiveMap) {
-        contextType = `${directiveMap.type}<${contextType}>`;
+        const args = directive.arguments.reduce((prev, { name, value }) => {
+          return {
+            ...prev,
+            [name.value]: valueNodeToValue(value),
+          };
+        }, {});
+        contextType = `${directiveMap.type}<${contextType}, ${JSON.stringify(args)}>`;
       }
     }
     return contextType;
