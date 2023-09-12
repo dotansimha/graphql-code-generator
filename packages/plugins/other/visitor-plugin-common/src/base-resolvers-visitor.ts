@@ -3,6 +3,8 @@ import { getRootTypeNames } from '@graphql-tools/utils';
 import autoBind from 'auto-bind';
 import {
   ASTNode,
+  ConstObjectValueNode,
+  ConstValueNode,
   DirectiveDefinitionNode,
   EnumTypeDefinitionNode,
   FieldDefinitionNode,
@@ -21,10 +23,8 @@ import {
   NameNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
-  ObjectValueNode,
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
-  ValueNode,
 } from 'graphql';
 import { BaseVisitor, BaseVisitorConvertOptions, ParsedConfig, RawConfig } from './base-visitor.js';
 import { parseEnumValues } from './enum-values.js';
@@ -53,18 +53,21 @@ import {
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 
-const objectNodeToObject = (objectNode: ObjectValueNode) => {
+// converts an ObjectValueNode to the JS object it represents
+const objectNodeToObject = (objectNode: ConstObjectValueNode) => {
   const { fields } = objectNode;
-  return fields.reduce(
-    (acc, field) => ({
+  return fields.reduce((acc, field) => {
+    // for some reason this does not seem to match the type
+    const fieldName = field.name as unknown as string;
+    return {
       ...acc,
-      [field.name.value]: valueNodeToValue(field.value),
-    }),
-    {}
-  );
+      [fieldName]: valueNodeToValue(field.value),
+    };
+  }, {});
 };
 
-const valueNodeToValue = (value: ValueNode): unknown => {
+// converts an ValueNode to the JS value it represents
+const valueNodeToValue = (value: ConstValueNode): unknown => {
   if (value.kind === 'StringValue') {
     return value.value;
   }
@@ -88,10 +91,6 @@ const valueNodeToValue = (value: ValueNode): unknown => {
   }
   if (value.kind === 'EnumValue') {
     return value.value;
-  }
-  if (value.kind === 'Variable') {
-    // variables doesn't make sense in this context
-    return null;
   }
   return null;
 };
@@ -1520,10 +1519,12 @@ export class BaseResolversVisitor<
       const name = directive.name as unknown as string;
       const directiveMap = this._directiveContextTypesMap[name];
       if (directiveMap) {
-        const args = directive.arguments.reduce((prev, { name, value }) => {
+        const args = directive.arguments?.reduce((prev, { name, value }) => {
+          // for some reason this does not seem to match the type
+          const argumentName = name as unknown as string;
           return {
             ...prev,
-            [name.value]: valueNodeToValue(value),
+            [argumentName]: valueNodeToValue(value),
           };
         }, {});
         contextType = `${directiveMap.type}<${contextType}, ${JSON.stringify(args)}>`;

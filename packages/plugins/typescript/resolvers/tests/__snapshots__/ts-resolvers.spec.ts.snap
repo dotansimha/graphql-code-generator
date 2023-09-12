@@ -24,6 +24,7 @@ export type Scalars = {
 export type MyType = {
   __typename?: 'MyType';
   foo: Scalars['String']['output'];
+  bar: Scalars['String']['output'];
   otherType?: Maybe<MyOtherType>;
   withArgs?: Maybe<Scalars['String']['output']>;
   unionChild?: Maybe<ChildUnion>;
@@ -234,12 +235,15 @@ export type MyDirectiveDirectiveArgs = {
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = { };
+export type AuthenticatedDirectiveArgs = {
+  role?: Maybe<Scalars['String']['input']>;
+};
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyTypeResolvers<ContextType = any, ParentType = ResolversParentTypes['MyType']> = ResolversObject<{
   foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
   withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
   unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
@@ -493,12 +497,15 @@ export type MyDirectiveDirectiveArgs = {
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = { };
+export type AuthenticatedDirectiveArgs = {
+  role?: Types.Maybe<Types.Scalars['String']['input']>;
+};
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = ResolversObject<{
   foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   otherType?: Resolver<Types.Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
   withArgs?: Resolver<Types.Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<Types.MyTypeWithArgsArgs, 'arg2'>>;
   unionChild?: Resolver<Types.Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
@@ -628,6 +635,7 @@ export type Scalars = {
 export type MyType = {
   __typename?: 'MyType';
   foo: Scalars['String']['output'];
+  bar: Scalars['String']['output'];
   otherType?: Maybe<MyOtherType>;
   withArgs?: Maybe<Scalars['String']['output']>;
   unionChild?: Maybe<ChildUnion>;
@@ -838,12 +846,15 @@ export type MyDirectiveDirectiveArgs = {
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AuthenticatedDirectiveArgs = { };
+export type AuthenticatedDirectiveArgs = {
+  role?: Maybe<Scalars['String']['input']>;
+};
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = any, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = ResolversObject<{
   foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>;
   withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>;
   unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
