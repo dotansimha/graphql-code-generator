@@ -3,8 +3,8 @@ import { getRootTypeNames } from '@graphql-tools/utils';
 import autoBind from 'auto-bind';
 import {
   ASTNode,
-  ConstObjectValueNode,
-  ConstValueNode,
+  ObjectValueNode,
+  ValueNode,
   DirectiveDefinitionNode,
   EnumTypeDefinitionNode,
   FieldDefinitionNode,
@@ -54,7 +54,7 @@ import {
 import { OperationVariablesToObject } from './variables-to-object.js';
 
 // converts an ObjectValueNode to the JS object it represents
-const objectNodeToObject = (objectNode: ConstObjectValueNode) => {
+const objectNodeToObject = (objectNode: ObjectValueNode) => {
   const { fields } = objectNode;
   return fields.reduce((acc, field) => {
     // for some reason this does not seem to match the type
@@ -67,7 +67,7 @@ const objectNodeToObject = (objectNode: ConstObjectValueNode) => {
 };
 
 // converts an ValueNode to the JS value it represents
-const valueNodeToValue = (value: ConstValueNode): unknown => {
+const valueNodeToValue = (value: ValueNode): unknown => {
   if (value.kind === 'StringValue') {
     return value.value;
   }
