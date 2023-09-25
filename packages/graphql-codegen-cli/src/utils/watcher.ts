@@ -84,7 +84,7 @@ export const createWatcher = (
     }, 100);
     emitWatching(watchDirectory);
 
-    const ignored: string[] = [];
+    const ignored: string[] = ['**/.git/**'];
     for (const entry of Object.keys(config.generates).map(filename => ({
       filename,
       config: normalizeOutputParam(config.generates[filename]),
