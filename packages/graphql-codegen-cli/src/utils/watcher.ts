@@ -1,4 +1,4 @@
-import { join, isAbsolute, relative, resolve, sep } from 'path';
+import { join, isAbsolute, relative, resolve, sep, normalize } from 'path';
 import { normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import type { subscribe } from '@parcel/watcher';
 import debounce from 'debounce';
@@ -225,19 +225,22 @@ export const createWatcher = (
  * @param files List of relative and/or absolute file paths (or micromatch patterns)
  */
 const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
-  // Map files to a list of basePaths, where "base" is the result of mm.scan(pathOrPattern)
-  // e.g. mm.scan("/**/foo/bar").base -> "/" ; mm.scan("/foo/bar/**/fizz/*.graphql") -> /foo/bar
   const dirPaths = files
     .map(filePath => (isAbsolute(filePath) ? filePath : resolve(filePath)))
+    .map(filePath => normalize(filePath)) // Normalize the file paths
     .map(patterned => mm.scan(patterned).base);
 
-  // Return longest common prefix if it's accessible, otherwise process.cwd()
+  // Log the dirPaths for debugging
+  debugLog(`[Watcher] dirPaths: ${JSON.stringify(dirPaths)}`);
+
   return (async (maybeValidPath: string) => {
     debugLog(`[Watcher] Longest common prefix of all files: ${maybeValidPath}...`);
     try {
       await access(maybeValidPath);
+      debugLog(`[Watcher] Access to ${maybeValidPath} successful.`);
       return maybeValidPath;
-    } catch {
+    } catch (error) {
+      debugLog(`[Watcher] Error accessing path: ${error.message}`);
       log(`[Watcher] Longest common prefix (${maybeValidPath}) is not accessible`);
       log(`[Watcher] Watching current working directory (${process.cwd()}) instead`);
       return process.cwd();
@@ -257,19 +260,17 @@ const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
  * @returns An array of path segments representing the longest common prefix of splitPaths
  */
 const longestCommonPrefix = (splitPaths: string[][]): string[] => {
-  // Return early on empty input
   if (!splitPaths.length) {
     return [];
   }
 
-  // Loop through the segments of the first path
   for (let i = 0; i <= splitPaths[0].length; i++) {
-    // Check if this path segment is present in the same position of every path
     if (!splitPaths.every(string => string[i] === splitPaths[0][i])) {
-      // If not, return the path segments up to and including the previous segment
+      debugLog(`[Watcher] longestCommonPrefix at index ${i}: ${splitPaths[0].slice(0, i).join(sep)}`);
       return splitPaths[0].slice(0, i);
     }
   }
 
+  debugLog(`[Watcher] longestCommonPrefix: ${splitPaths[0].join(sep)}`);
   return splitPaths[0];
 };
