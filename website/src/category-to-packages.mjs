@@ -26,6 +26,7 @@ export const CategoryToPackages = {
     'typescript-apollo-client-helpers',
     'typescript-apollo-next',
     'typescript-document-nodes',
+    'typescript-fabbrica',
     'typescript-generic-sdk',
     'typescript-graphql-files-modules',
     'typescript-graphql-request',

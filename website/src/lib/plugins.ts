@@ -277,6 +277,12 @@ export const PACKAGES: Record<
     icon: 'typescript',
     tags: ['plugin', 'typescript'],
   },
+  'typescript-fabbrica': {
+    title: 'TypeScript Mock Data Factory',
+    npmPackage: '@mizdra/graphql-codegen-typescript-fabbrica',
+    icon: 'typescript',
+    tags: ['plugin', 'typescript'],
+  },
   'typescript-generic-sdk': {
     title: 'TypeScript Generic SDK',
     npmPackage: '@graphql-codegen/typescript-generic-sdk',
