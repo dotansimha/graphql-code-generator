@@ -9,7 +9,6 @@ export default defineConfig({
   search: {
     component: Search,
   },
-
   main({ children }) {
     const { resolvedTheme } = useTheme();
     const { route } = useRouter();
