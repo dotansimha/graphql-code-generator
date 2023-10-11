@@ -40,7 +40,7 @@
     "@graphql-codegen/plugin-helpers": "^5.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/utils": "^10.0.0",
-    "tslib": "~2.5.0"
+    "tslib": "~2.6.0"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
