@@ -1,4 +1,4 @@
-{
+export default {
   "react-vue": "React / Vue",
   "angular": "Angular",
   "svelte": "Svelte / Kit",

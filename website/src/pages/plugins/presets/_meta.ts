@@ -1,4 +1,4 @@
-{
+export default {
   "preset-client": "client-preset",
   "graphql-modules-preset": "graphql-modules",
   "import-types-preset": "import-types",

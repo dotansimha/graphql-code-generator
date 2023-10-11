@@ -1,4 +1,4 @@
-{
+export default {
   "add": "add",
   "fragment-matcher": "fragment-matcher",
   "hasura-allow-list": "hasura-allow-list",

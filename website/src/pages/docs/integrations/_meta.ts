@@ -1,4 +1,4 @@
-{
+export default {
   "vscode": "VSCode Extension",
   "prettier": "Prettier & Linters",
   "federation": "Apollo Federation",

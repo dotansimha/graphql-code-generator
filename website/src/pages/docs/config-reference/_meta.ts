@@ -1,4 +1,4 @@
-{
+export default {
   "codegen-config": "codegen.ts",
   "schema-field": "schema field",
   "documents-field": "documents field",

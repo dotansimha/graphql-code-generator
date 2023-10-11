@@ -1,4 +1,4 @@
-{
+export default {
   "named-operations-object": "named-operations-object",
   "relay-operation-optimizer": "relay-operation-optimizer",
   "typed-document-node": "typed-document-node",

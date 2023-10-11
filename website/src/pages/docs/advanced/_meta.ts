@@ -1,4 +1,4 @@
-{
+export default {
   "generated-files-colocation": "Generated files colocation",
   "programmatic-usage": "Programmatic Usage",
   "how-does-it-work": "How does it work?",

@@ -1,4 +1,4 @@
-{
+export default {
   "getting-started": "Getting Started",
   "guides": "Guides",
   "config-reference": "Config Reference",
