@@ -1,3 +1,3 @@
 export default {
-  "c-sharp-operations": "operations"
-}
+  'c-sharp-operations': 'operations',
+};

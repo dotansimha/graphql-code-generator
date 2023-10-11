@@ -1,6 +1,6 @@
 export default {
-  "preset-client": "client-preset",
-  "graphql-modules-preset": "graphql-modules",
-  "import-types-preset": "import-types",
-  "near-operation-file-preset": "near-operation-file"
-}
+  'preset-client': 'client-preset',
+  'graphql-modules-preset': 'graphql-modules',
+  'import-types-preset': 'import-types',
+  'near-operation-file-preset': 'near-operation-file',
+};

@@ -1,7 +1,7 @@
 export default {
-  "generated-files-colocation": "Generated files colocation",
-  "programmatic-usage": "Programmatic Usage",
-  "how-does-it-work": "How does it work?",
-  "profiler": "Profiler",
-  "document-transform": "Document Transform"
-}
+  'generated-files-colocation': 'Generated files colocation',
+  'programmatic-usage': 'Programmatic Usage',
+  'how-does-it-work': 'How does it work?',
+  profiler: 'Profiler',
+  'document-transform': 'Document Transform',
+};
