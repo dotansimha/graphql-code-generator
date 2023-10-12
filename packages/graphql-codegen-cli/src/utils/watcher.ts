@@ -229,7 +229,11 @@ const findHighestCommonDirectory = async (files: string[]): Promise<string> => {
   // e.g. mm.scan("/**/foo/bar").base -> "/" ; mm.scan("/foo/bar/**/fizz/*.graphql") -> /foo/bar
   const dirPaths = files
     .map(filePath => (isAbsolute(filePath) ? filePath : resolve(filePath)))
-    .map(patterned => mm.scan(patterned).base);
+    // mm.scan doesn't know how to handle Windows \ path separator
+    .map(patterned => patterned.replace(/\\/g, '/'))
+    .map(patterned => mm.scan(patterned).base)
+    // revert the separators to the platform-supported ones
+    .map(base => base.replace(/\//g, sep));
 
   // Return longest common prefix if it's accessible, otherwise process.cwd()
   return (async (maybeValidPath: string) => {
