@@ -15,9 +15,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
   '\n  fragment TweetFragment on Tweet {\n    id\n    body\n    ...TweetAuthorFragment\n  }\n':
     types.TweetFragmentFragmentDoc,
+  '\n  fragment TweetStatsFragment on Tweet {\n    id\n    Stats {\n      views\n    }\n  }\n':
+    types.TweetStatsFragmentFragmentDoc,
   '\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n':
     types.TweetAuthorFragmentFragmentDoc,
-  '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n':
+  '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n      ...TweetStatsFragment\n    }\n  }\n':
     types.TweetsFragmentFragmentDoc,
   '\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n': types.TweetAppQueryDocument,
 };
@@ -46,14 +48,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+  source: '\n  fragment TweetStatsFragment on Tweet {\n    id\n    Stats {\n      views\n    }\n  }\n'
+): (typeof documents)['\n  fragment TweetStatsFragment on Tweet {\n    id\n    Stats {\n      views\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
   source: '\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n'
 ): (typeof documents)['\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'
-): (typeof documents)['\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n'];
+  source: '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n      ...TweetStatsFragment\n    }\n  }\n'
+): (typeof documents)['\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n      ...TweetStatsFragment\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

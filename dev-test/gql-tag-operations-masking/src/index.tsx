@@ -11,6 +11,15 @@ const TweetFragment = graphql(/* GraphQL */ `
   }
 `);
 
+const TweetStatsFragment = graphql(/* GraphQL */ `
+  fragment TweetStatsFragment on Tweet {
+    id
+    Stats {
+      views
+    }
+  }
+`);
+
 const TweetAuthorFragment = graphql(/* GraphQL */ `
   fragment TweetAuthorFragment on Tweet {
     id
@@ -26,6 +35,7 @@ const TweetsFragment = graphql(/* GraphQL */ `
     Tweets {
       id
       ...TweetFragment
+      ...TweetStatsFragment
     }
   }
 `);
@@ -47,6 +57,12 @@ const Tweet = (props: { tweet: FragmentType<typeof TweetFragment> }) => {
   );
 };
 
+const TweetStats = (props: { tweet: FragmentType<typeof TweetStatsFragment> }) => {
+  const tweet = useFragment(TweetStatsFragment, props.tweet);
+
+  return <div>{tweet.Stats?.views} views</div>;
+};
+
 const TweetAuthor = (props: { tweet: FragmentType<typeof TweetAuthorFragment> }) => {
   const tweet = useFragment(TweetAuthorFragment, props.tweet);
 
@@ -56,7 +72,16 @@ const TweetAuthor = (props: { tweet: FragmentType<typeof TweetAuthorFragment> })
 const Tweets = (props: { tweets: FragmentType<typeof TweetsFragment> | undefined }) => {
   const tweets = useFragment(TweetsFragment, props.tweets);
 
-  return <ul>{tweets?.Tweets?.map(tweet => <Tweet key={tweet.id} tweet={tweet} />) ?? null}</ul>;
+  return (
+    <ul>
+      {tweets?.Tweets?.map(tweet => (
+        <div key={tweet.id}>
+          <Tweet tweet={tweet} />
+          <TweetStats tweet={tweet} />
+        </div>
+      )) ?? null}
+    </ul>
+  );
 };
 
 const App = () => {
