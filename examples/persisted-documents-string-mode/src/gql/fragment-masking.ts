@@ -82,7 +82,7 @@ export function makeFragmentData<F extends DocumentTypeDecoration<any, any>>(
   data: UnmaskFragment<FragmentType<F>>,
   _fragment: F
 ): FragmentType<F> {
-  return data as FragmentType<F>;
+  return data as any;
 }
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: TypedDocumentString<TQuery, any>,

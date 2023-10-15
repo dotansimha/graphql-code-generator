@@ -61,7 +61,7 @@ export type UnmaskFragment<F> = UnionFieldToIntersection<Flatten<F>>;
 export function makeFragmentData<
   F extends DocumentTypeDecoration<any, any>,
 >(data: UnmaskFragment<FragmentType<F>>, _fragment: F): FragmentType<F> {
-  return data as FragmentType<F>;
+  return data as any;
 }`;
 
 const defaultUnmaskFunctionName = 'useFragment';
