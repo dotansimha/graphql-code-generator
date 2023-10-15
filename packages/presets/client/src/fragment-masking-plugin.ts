@@ -169,7 +169,7 @@ export const plugin: PluginFunction<{
   { useTypeImports, augmentedModuleName, unmaskFunctionName, emitLegacyCommonJSImports, isStringDocumentMode },
   _info
 ) => {
-  const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { ResultOf, DocumentTypeDecoration${
+  const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { DocumentTypeDecoration${
     isStringDocumentMode ? '' : ', TypedDocumentNode'
   } } from '@graphql-typed-document-node/core';\n`;
 
