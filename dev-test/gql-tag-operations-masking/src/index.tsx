@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import { gql, FragmentType, useFragment } from '../gql';
+import { graphql, FragmentType, useFragment } from '../gql';
 import { useQuery } from 'urql';
 
-const TweetFragment = gql(/* GraphQL */ `
+const TweetFragment = graphql(/* GraphQL */ `
   fragment TweetFragment on Tweet {
     id
     body
@@ -11,7 +11,7 @@ const TweetFragment = gql(/* GraphQL */ `
   }
 `);
 
-const TweetAuthorFragment = gql(/* GraphQL */ `
+const TweetAuthorFragment = graphql(/* GraphQL */ `
   fragment TweetAuthorFragment on Tweet {
     id
     author {
@@ -21,7 +21,7 @@ const TweetAuthorFragment = gql(/* GraphQL */ `
   }
 `);
 
-const TweetsFragment = gql(/* GraphQL */ `
+const TweetsFragment = graphql(/* GraphQL */ `
   fragment TweetsFragment on Query {
     Tweets {
       id
@@ -30,7 +30,7 @@ const TweetsFragment = gql(/* GraphQL */ `
   }
 `);
 
-const TweetAppQuery = gql(/* GraphQL */ `
+const TweetAppQuery = graphql(/* GraphQL */ `
   query TweetAppQuery {
     ...TweetsFragment
   }
