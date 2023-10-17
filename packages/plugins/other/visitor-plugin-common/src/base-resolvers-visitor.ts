@@ -838,10 +838,7 @@ export class BaseResolversVisitor<
         // usable as a identifier. We should instead use the `typeIdentifier`.
         const isAsImport = importIdentifier === sourceIdentifier && sourceIdentifier !== typeIdentifier;
 
-        prev[typeName] = isAsImport
-          ? this.config.enumValues[typeName].typeIdentifier
-          : this.config.enumValues[typeName].sourceIdentifier ||
-            this.convertName(this.config.enumValues[typeName].typeIdentifier);
+        prev[typeName] = isAsImport ? typeIdentifier : sourceIdentifier || this.convertName(typeIdentifier);
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
       } else if (isScalar) {
