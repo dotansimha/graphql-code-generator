@@ -714,7 +714,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return (
       Object.keys(grouped)
         .map(typeName => {
-          const hasUnions = grouped[typeName].filter(s => typeof s !== 'string' && s.union).length > 0;
           const relevant = grouped[typeName].filter(Boolean);
 
           if (relevant.length === 0) {
@@ -728,6 +727,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
               return '(' + selectionObject.union.join(' | ') + ')';
             })
             .join(' & ');
+
+          const hasUnions = grouped[typeName].filter(s => typeof s !== 'string' && s.union).length > 0;
 
           return relevant.length > 1 && !hasUnions ? `( ${res} )` : res;
         })
