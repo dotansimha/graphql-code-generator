@@ -3,7 +3,7 @@ title: fragment-matcher
 description: Generate fragment matcher for Apollo Client. This plugin is required for using fragments with Apollo Client.
 ---
 
-import { Callout, Tabs, Tab } from '@theguild/components'
+import { Callout, Tabs } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
 export const getStaticProps = pluginGetStaticProps(__filename)
@@ -13,7 +13,7 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 ## How to use?
 
 <Tabs items={['Usage with Apollo Client 3', 'Usage with Apollo Client 2']}>
-<Tab>
+<Tabs.Tab>
 If you are using Apollo Client 3, update your codegen config accordingly, and then use it in your Apollo cache instance:
 
 ```ts
@@ -28,9 +28,9 @@ const cache = new InMemoryCache({ possibleTypes: generatedIntrospection.possible
 <Callout>
 [Read more about fragment matcher and its usage on Apollo Client](https://apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually).
 </Callout>
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 If you are using version 2 of Apollo-Client, you need to specify the `apolloClientVersion: 2{:ts}` configuration, and then use it like that:
 
 ```ts
@@ -46,7 +46,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 const cache = new InMemoryCache({ fragmentMatcher })
 ```
 
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 <PluginApiDocs />

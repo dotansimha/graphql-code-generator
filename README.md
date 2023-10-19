@@ -1,5 +1,3 @@
-[![GraphQL Conf 2023](/GraphQLConf-2023-Banner.png)](https://graphql.org/conf/)
-
 [![CodeGen](./logo.svg)](https://the-guild.dev/graphql/codegen)
 
 [![npm version](https://badge.fury.io/js/%40graphql-codegen%2Fcli.svg)](https://badge.fury.io/js/%40graphql-codegen%2Fcli)

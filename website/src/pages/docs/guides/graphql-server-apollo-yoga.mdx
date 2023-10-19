@@ -1,7 +1,7 @@
 ---
 description: GraphQL Code Generator's `@graphql-codegen/typescript-resolvers` plugin generates TypeScript types for your GraphQL API's resolvers.
 ---
-import { Tabs, Tab, Callout } from '@theguild/components'
+import { Tabs, Callout } from '@theguild/components'
 
 # Guide: GraphQL Yoga / Apollo Server
 
@@ -70,7 +70,7 @@ npm i -D @graphql-codegen/cli @graphql-codegen/typescript-resolvers @graphql-cod
 Create or update your `codegen.ts` file as follows:
 
 <Tabs items={['Apollo Server', 'GraphQL Yoga']}>
-<Tab>
+<Tabs.Tab>
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -87,9 +87,9 @@ const config: CodegenConfig = {
 };
 export default config;
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -103,7 +103,7 @@ const config: CodegenConfig = {
 };
 export default config;
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 **4. Run the codegen and update your code**
@@ -127,7 +127,7 @@ npm run generate
 We can now write/migrate our GraphQL API implementation as follows:
 
 <Tabs items={['Apollo Server', 'GraphQL Yoga']}>
-<Tab>
+<Tabs.Tab>
 ```ts
 import { readFileSync } from 'node:fs'
 import { ApolloServer } from 'apollo-server'
@@ -148,9 +148,9 @@ server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`)
 })
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```ts
 import { readFileSync } from 'node:fs'
 import { createYoga, createSchema } from 'graphql-yoga';
@@ -171,7 +171,7 @@ const server = createServer(yoga)
 
 server.listen(3000)
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 A complete tutorial, written by The Guild's CTO, Dotan Simha, is available on our blog: [Better Type Safety for your GraphQL resolvers with GraphQL Codegen](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen).

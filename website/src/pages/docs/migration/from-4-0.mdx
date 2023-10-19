@@ -2,7 +2,7 @@
 description: Migrating to 5.0.0. What has changed? How to migrate? What are the new features?
 ---
 
-import { Tabs, Tab } from '@theguild/components'
+import { Tabs } from '@theguild/components'
 
 # Migration to 5.0.0
 
@@ -19,7 +19,7 @@ To use `@graphql-codegen/cli`'s watch mode (based on @parcel/watcher) you need t
 Start by updating your package.json
 
 <Tabs items={['Before', 'After']}>
-<Tab>
+<Tabs.Tab>
 ```json filename="package.json"
 {
   "devDependencies": {
@@ -29,9 +29,9 @@ Start by updating your package.json
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```json filename="package.json"
 {
   "devDependencies": {
@@ -42,13 +42,13 @@ Start by updating your package.json
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 If you had issues with `@parcel/watcher` previously, you can make NPM and Yarn silently discard any build errors, by using `optionalDependencies` instead:
 
 <Tabs items={['Before', 'After', 'After (Alternative)']}>
-<Tab>
+<Tabs.Tab>
 ```json filename="package.json"
 {
   "devDependencies": {
@@ -58,9 +58,9 @@ If you had issues with `@parcel/watcher` previously, you can make NPM and Yarn s
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```json filename="package.json"
 {
   "devDependencies": {
@@ -73,9 +73,9 @@ If you had issues with `@parcel/watcher` previously, you can make NPM and Yarn s
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```json filename="package.json"
 {
   "devDependencies": {
@@ -91,5 +91,5 @@ If you had issues with `@parcel/watcher` previously, you can make NPM and Yarn s
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
