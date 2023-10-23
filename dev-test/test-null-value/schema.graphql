@@ -1,0 +1,32 @@
+schema {
+  query: QueryRoot
+}
+
+interface BaseCartLine {
+  id: String!
+  quantity: Int!
+}
+
+type BaseCartLineConnection {
+  id: String!
+  nodes: [BaseCartLine!]!
+}
+
+type Cart {
+  id: String!
+  lines: BaseCartLineConnection!
+}
+
+type CartLine implements BaseCartLine {
+  id: String!
+  quantity: Int!
+}
+
+type ComponentizableCartLine implements BaseCartLine {
+  id: String!
+  quantity: Int!
+}
+
+type QueryRoot {
+  cart: Cart
+}
