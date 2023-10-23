@@ -52,7 +52,7 @@
     "@graphql-codegen/typescript-graphql-request": "5.0.0",
     "@graphql-codegen/typescript-mongodb": "2.4.6",
     "@graphql-codegen/typescript-msw": "1.1.6",
-    "@graphql-codegen/typescript-nhost": "0.0.1",
+    "@graphql-codegen/typescript-nhost": "0.0.2",
     "@graphql-codegen/typescript-operations": "4.0.1",
     "@graphql-codegen/typescript-react-apollo": "3.3.7",
     "@graphql-codegen/typescript-react-query": "4.1.0",

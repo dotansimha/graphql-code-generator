@@ -2258,16 +2258,16 @@
     change-case-all "1.0.14"
     tslib "~2.4.0"
 
-"@graphql-codegen/typescript-nhost@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-nhost/-/typescript-nhost-0.0.1.tgz#81a222ed9b03b6265c94b23f11e2cfd3ac567544"
-  integrity sha512-ISVfpk7PYqWEhcA5Ypky7X9Fyosb9etxyGkT85rW4AK9VrshwN32osbA1Zkmsx3WhoZxIBpGzUk1Vf4YNYSurg==
+"@graphql-codegen/typescript-nhost@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-nhost/-/typescript-nhost-0.0.2.tgz#e29bd26073c2bac548d67b42899f6992d7a53646"
+  integrity sha512-DhBqEyTZti3MARYXKezgX2TgG0aTM5AgEuGm96sWHR7OxkrXx73VX+lsC2xARI/vue7liqxjJLDOxBjV5CpqjQ==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^4.0.0"
     "@graphql-codegen/typescript" "^3.0.0"
     "@graphql-codegen/visitor-plugin-common" "3.0.0"
     "@urql/introspection" "^1.0.0"
-    tslib "~2.5.0"
+    tslib "~2.6.0"
 
 "@graphql-codegen/typescript-react-apollo@3.3.7":
   version "3.3.7"
