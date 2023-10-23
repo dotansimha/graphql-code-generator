@@ -7,6 +7,7 @@ export default {
   'typescript-apollo-client-helpers': 'apollo-client-helpers',
   'typescript-apollo-next': 'apollo-next',
   'typescript-document-nodes': 'document-nodes',
+  'typescript-fabbrica': 'fabbrica',
   'typescript-generic-sdk': 'generic-sdk',
   'typescript-graphql-files-modules': 'graphql-files-modules',
   'typescript-graphql-request': 'graphql-request',
