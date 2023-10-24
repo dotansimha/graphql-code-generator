@@ -13,7 +13,7 @@
     "@theguild/algolia": "1.1.9",
     "@theguild/tailwind-config": "0.3.0",
     "@types/dedent": "0.7.1",
-    "@types/jsonpath": "0.2.0",
+    "@types/jsonpath": "0.2.2",
     "@types/node": "18.17.11",
     "@types/react": "18.2.21",
     "fast-xml-parser": "4.2.7",

@@ -4350,10 +4350,10 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/jsonpath@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@types/jsonpath/-/jsonpath-0.2.0.tgz#13c62db22a34d9c411364fac79fd374d63445aa1"
-  integrity sha512-v7qlPA0VpKUlEdhghbDqRoKMxFB3h3Ch688TApBJ6v+XLDdvWCGLJIYiPKGZnS6MAOie+IorCfNYVHOPIHSWwQ==
+"@types/jsonpath@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@types/jsonpath/-/jsonpath-0.2.2.tgz#b8b98ad2f0d912d343ff27d91bc406ccf90028b2"
+  integrity sha512-uo4BNABD0IVcJQjOmOq/atfxHVTniFaQEHrrGSANpWyS96ecej/85YXLvLWNe+tLshUz9/IbMbzImbKNo71WxA==
 
 "@types/katex@^0.16.0":
   version "0.16.3"
@@ -8625,15 +8625,10 @@ graphql-yoga@4.0.4:
     lru-cache "^10.0.0"
     tslib "^2.5.2"
 
-graphql@16.8.0, graphql@^16.6.0:
+graphql@16.8.0, graphql@^16.0.0, graphql@^16.6.0:
   version "16.8.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.0.tgz#374478b7f27b2dc6153c8f42c1b80157f79d79d4"
   integrity sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==
-
-graphql@^16.0.0:
-  version "16.8.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.1.tgz#1930a965bef1170603702acdb68aedd3f3cf6f07"
-  integrity sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==
 
 gray-matter@^4.0.3:
   version "4.0.3"
