@@ -4290,10 +4290,10 @@
   resolved "https://registry.yarnpkg.com/@types/is-empty/-/is-empty-1.2.1.tgz#18d7256a73e43ec51f8b75c25fbdc31350be52a6"
   integrity sha512-a3xgqnFTuNJDm1fjsTjHocYJ40Cz3t8utYpi5GNaxzrJC2HSD08ym+whIL7fNqiqBCdM9bcqD1H/tORWAFXoZw==
 
-"@types/is-glob@4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@types/is-glob/-/is-glob-4.0.2.tgz#c243dd0d09eac2992130142419ff2308ffd988bf"
-  integrity sha512-4j5G9Y5jljDSICQ1R2f/Rcyoj6DZmYGneny+p/cDkjep0rkqNg0W73Ty0bVjMUTZgLXHf8oiMjg1XC3CDwCz+g==
+"@types/is-glob@4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@types/is-glob/-/is-glob-4.0.3.tgz#b97d028880beddb482b44d45f25fc2de55b2d051"
+  integrity sha512-tqNnLL4n5kvr6Kq2hGfs9xlqPilqBizbEgAXMfdSVsXle0Hrj5PhSeDg56fMCU+qWLRX4rR9kj4jj++rHPErjw==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.4"
@@ -8625,15 +8625,10 @@ graphql-yoga@4.0.4:
     lru-cache "^10.0.0"
     tslib "^2.5.2"
 
-graphql@16.8.0, graphql@^16.6.0:
+graphql@16.8.0, graphql@^16.0.0, graphql@^16.6.0:
   version "16.8.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.0.tgz#374478b7f27b2dc6153c8f42c1b80157f79d79d4"
   integrity sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==
-
-graphql@^16.0.0:
-  version "16.8.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.1.tgz#1930a965bef1170603702acdb68aedd3f3cf6f07"
-  integrity sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==
 
 gray-matter@^4.0.3:
   version "4.0.3"
