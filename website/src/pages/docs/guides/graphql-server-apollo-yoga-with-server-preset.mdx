@@ -2,7 +2,7 @@
 description: GraphQL Code Generator's server preset, `@eddeee888/gcg-typescript-resolver-files`, helps GraphQL APIs work at any scale by enforcing best practices such as type-safety and schema module conventions.
 ---
 
-import { Callout, Tabs, Tab } from '@theguild/components'
+import { Callout, Tabs } from '@theguild/components'
 
 # Guide: GraphQL Yoga / Apollo Server with Server Preset
 
@@ -74,7 +74,7 @@ Create or update your Codegen config as follows:
 
 <Tabs items={['codegen.ts','codegen.yml']}>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -89,9 +89,9 @@ const config: CodegenConfig = {
 export default config
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
 ```yaml filename="codegen.yml"
 schema: '**/schema.graphql'
@@ -101,7 +101,7 @@ generates:
     watchPattern: '**/*.mappers.ts'
 ```
 
-</Tab>
+</Tabs.Tab>
 
 </Tabs>
 
@@ -161,7 +161,7 @@ We can use generated files in GraphQL API implementation:
 
 <Tabs items={['GraphQL Yoga','Apollo Server']}>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="src/server.ts"
 import { createYoga, createSchema } from 'graphql-yoga'
@@ -174,9 +174,9 @@ const server = createServer(yoga)
 server.listen(3000)
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="src/server.ts"
 import { ApolloServer } from 'apollo-server'
@@ -191,7 +191,7 @@ server.listen().then(({ url }) => {
 })
 ```
 
-</Tab>
+</Tabs.Tab>
 
 </Tabs>
 

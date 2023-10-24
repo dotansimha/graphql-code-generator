@@ -141,7 +141,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *     'path/to/file.ts': {
    *       plugins: ['typescript'],
    *       config: {
-   *         enumsAsTypes: true
+   *         enumsAsTypes: true,
    *         futureProofEnums: true
    *       }
    *     }

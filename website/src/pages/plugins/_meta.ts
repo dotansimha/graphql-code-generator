@@ -1,0 +1,12 @@
+export default {
+  '*': {
+    theme: {
+      layout: 'default',
+    },
+  },
+  typescript: 'TypeScript',
+  presets: 'Presets',
+  java: 'Java',
+  'c-sharp': 'C-Sharp',
+  flow: 'Flow',
+};

@@ -221,6 +221,17 @@ const config: CodegenConfig = {
       preset: 'client',
       presetConfig: { fragmentMasking: true },
     },
+    './dev-test/test-null-value/result.d.ts': {
+      schema: './dev-test/test-null-value/schema.graphql',
+      documents: ['./dev-test/test-null-value/query.ts'],
+      plugins: ['typescript', 'typescript-operations'],
+      config: {
+        // The combination of these two flags caused the following issue:
+        // https://github.com/dotansimha/graphql-code-generator/pull/9709
+        skipTypename: true,
+        mergeFragmentTypes: true,
+      },
+    },
   },
 };
 
