@@ -96,6 +96,10 @@
         "hooks": {
           "$ref": "#/definitions/Partial",
           "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks"
+        },
+        "noSilentErrors": {
+          "description": "Alows to raise errors if any matched files are not valid GraphQL. Default: false.",
+          "type": "boolean"
         }
       }
     },
@@ -1158,10 +1162,6 @@
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
-        "enumSuffix": {
-          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "fieldWrapperValue": {
           "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.\nDefault value: \"T\"",
           "type": "string"
@@ -1582,6 +1582,10 @@
         "onlyResolveTypeForInterfaces": {
           "type": "boolean",
           "description": "Turning this flag to `true` will generate resolver signature that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.\nDefault value: \"false\""
+        },
+        "resolversNonOptionalTypename": {
+          "description": "Makes `__typename` of resolver mappings non-optional without affecting the base types.\nDefault value: \"false\"",
+          "anyOf": [{ "$ref": "#/definitions/ResolversNonOptionalTypenameConfig" }, { "type": "boolean" }]
         },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
@@ -2986,10 +2990,6 @@
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
-        "enumSuffix": {
-          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "fieldWrapperValue": {
           "description": "Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.\nDefault value: \"T\"",
           "type": "string"
@@ -3126,10 +3126,6 @@
         "federation": { "description": "Supports Apollo Federation\nDefault value: \"false\"", "type": "boolean" },
         "enumPrefix": {
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "enumSuffix": {
-          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "optionalResolveType": {
@@ -3273,10 +3269,6 @@
         },
         "enumPrefix": {
           "description": "Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "enumSuffix": {
-          "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
         "fieldWrapperValue": {
@@ -3536,23 +3528,6 @@
         }
       }
     },
-    "GqlTagConfig": {
-      "type": "object",
-      "properties": {
-        "augmentedModuleName": {
-          "description": "Instead of generating a `gql` function, this preset can also generate a `d.ts` that will enhance the `gql` function of your framework.\n\nE.g. `graphql-tag` or `@urql/core`.",
-          "type": "string"
-        },
-        "fragmentMasking": {
-          "description": "Fragment masking hides data from components and only allows accessing the data by using a unmasking function.",
-          "anyOf": [{ "$ref": "#/definitions/FragmentMaskingConfig" }, { "type": "boolean" }]
-        },
-        "gqlTagName": {
-          "description": "Specify the name of the \"graphql tag\" function to use\nDefault value: \"\"gql\"\n\nE.g. `graphql` or `gql`.\"",
-          "type": "string"
-        }
-      }
-    },
     "Types.InstanceOrArray": {
       "anyOf": [
         { "$ref": "#/definitions/Types.SchemaWithLoader" },
@@ -3560,6 +3535,7 @@
         { "$ref": "#/definitions/Types.UrlSchemaWithOptions" },
         { "$ref": "#/definitions/Types.LocalSchemaPathWithOptions" },
         { "$ref": "#/definitions/Types.ApolloEngineSchemaOptions" },
+        { "$ref": "#/definitions/Types.GitHubSchemaOptions" },
         { "type": "array", "items": { "$ref": "#/definitions/Types.Schema" } },
         { "type": "string" }
       ]
@@ -3698,11 +3674,16 @@
           "type": "boolean"
         },
         "cwd": { "type": "string" },
-        "ignore": { "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }] }
+        "ignore": { "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }] },
+        "includeSources": { "type": "boolean" }
       }
     },
     "__type": { "type": "object" },
     "Record": { "$ref": "#/definitions/__type" },
+    "Types.GitHubSchemaOptions": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "properties": { "token": { "type": "string" } } }
+    },
     "Types.Schema": {
       "description": "A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).",
       "anyOf": [
@@ -3711,6 +3692,7 @@
         { "$ref": "#/definitions/Types.UrlSchemaWithOptions" },
         { "$ref": "#/definitions/Types.LocalSchemaPathWithOptions" },
         { "$ref": "#/definitions/Types.ApolloEngineSchemaOptions" },
+        { "$ref": "#/definitions/Types.GitHubSchemaOptions" },
         { "type": "string" }
       ]
     },
@@ -3804,6 +3786,7 @@
                 "client",
                 "client-preset",
                 "gql-tag-operations",
+                "gql-tag-operations-preset",
                 "graphql-modules",
                 "graphql-modules-preset",
                 "import-types",
@@ -3841,6 +3824,10 @@
           "description": "DocumentTransform changes documents before executing plugins.",
           "type": "array",
           "items": { "$ref": "#/definitions/Types.OutputDocumentTransform<object>" }
+        },
+        "watchPattern": {
+          "description": ": Additional file pattern to watch when using watch mode",
+          "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": "string" }]
         }
       },
       "allOf": [
@@ -4235,7 +4222,18 @@
     "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_13" },
     "ScalarsMap_1": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
-      "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              { "type": "object", "properties": { "input": { "type": "string" }, "output": { "type": "string" } } },
+              { "type": "string" }
+            ]
+          }
+        },
+        { "type": "string" }
+      ]
     },
     "NamingConvention_1": {
       "anyOf": [
@@ -4343,6 +4341,14 @@
     },
     "DirectiveArgumentAndInputFieldMappings_1": { "$ref": "#/definitions/__type_17" },
     "Array_1": { "type": "array", "items": { "type": "string" } },
+    "ResolversNonOptionalTypenameConfig": {
+      "type": "object",
+      "properties": {
+        "unionMember": { "type": "boolean" },
+        "interfaceImplementingType": { "type": "boolean" },
+        "excludeTypes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
     "ScalarsMap_3": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [{ "type": "object", "additionalProperties": { "type": "string" } }, { "type": "string" }]
@@ -4404,20 +4410,6 @@
     },
     "__type_19": { "type": "object" },
     "FragmentImportFromFn": { "$ref": "#/definitions/__type_19" },
-    "__type_20": {
-      "type": "object",
-      "properties": {
-        "augmentedModuleName": {
-          "description": "The module name from which a augmented module should be imported from.",
-          "type": "string"
-        },
-        "unmaskFunctionName": {
-          "description": "Name of the function that should be used for unmasking a masked fragment property.\nDefault value: \"`'useFragment'`\"",
-          "type": "string"
-        }
-      }
-    },
-    "FragmentMaskingConfig": { "$ref": "#/definitions/__type_20" },
     "GeneratedPluginsMap": {
       "anyOf": [
         {

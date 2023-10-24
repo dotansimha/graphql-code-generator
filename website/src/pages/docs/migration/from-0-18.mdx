@@ -2,7 +2,7 @@
 description: Migrating to 1.0.0. What has changed? How to migrate? What are the new features?
 ---
 
-import { Callout, Tabs, Tab, PackageCmd } from '@theguild/components'
+import { Callout, Tabs } from '@theguild/components'
 
 # Migration to 1.0.0
 
@@ -41,7 +41,7 @@ The `graphql-code-generator` package is now `@graphql-codegen/cli` and all other
 So start by updating your `package.json`:
 
 <Tabs items={['Before', 'After']}>
-<Tab>
+<Tabs.Tab>
 ```json filename="package.json"
 {
   "devDependencies": {
@@ -52,9 +52,9 @@ So start by updating your `package.json`:
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```json filename="package.json"
 {
   "devDependencies": {
@@ -64,13 +64,13 @@ So start by updating your `package.json`:
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 Also, make sure to update your YML config file:
 
 <Tabs items={['Before', 'After']}>
-<Tab>
+<Tabs.Tab>
 ```yaml
 ./my-file.ts:
   schema: schema.json
@@ -78,22 +78,22 @@ Also, make sure to update your YML config file:
     - typescript-common
     - typescript-server
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```yaml
 ./my-file.ts:
   schema: schema.json
   plugins:
     - typescript
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 And for client-side:
 
 <Tabs items={['Before', 'After']}>
-<Tab>
+<Tabs.Tab>
 ```yaml
 ./my-file.ts:
   schema: schema.json
@@ -101,9 +101,9 @@ And for client-side:
     - typescript-common
     - typescript-client
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```yaml
 ./my-file.ts:
   schema: schema.json
@@ -111,7 +111,7 @@ And for client-side:
     - typescript
     - typescript-operations
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 ## Breaking Changes & Semver
@@ -127,7 +127,9 @@ It will generates for you types that are pointing to the new form of types. It s
 
 To use it, start by installing from NPM:
 
-<PackageCmd packages={['-D @graphql-codegen/typescript-compatibility']} />
+```sh npm2yarn
+npm i -D @graphql-codegen/typescript-compatibility
+```
 
 Then, add it to your codegen configuration:
 

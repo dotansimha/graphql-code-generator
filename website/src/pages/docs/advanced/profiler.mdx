@@ -2,15 +2,13 @@
 description: GraphQL Code Generator CLI provides a flag that enables the profiler mode. This allows you to identify performance bottlenecks in your codegen configuration.
 ---
 
-import { PackageCmd } from '@theguild/components'
-
 # GraphQL Code Generator Profiler
 
 GraphQL Code Generator CLI provides a flag that enables the profiler mode, as follows:
 
-<PackageCmd
-  packages={[{ name: 'graphql-code-generator --config graphql-codegen.ts --profile', cmd: 'run', isNpx: true }]}
-/>
+```sh
+npx graphql-code-generator --config graphql-codegen.ts --profile
+```
 
 GraphQL Code Generator operates as usual (generating your files) but also generates a `codegen-[timestamp].json` profile file.
 

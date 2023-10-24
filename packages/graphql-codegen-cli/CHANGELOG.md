@@ -1,5 +1,28 @@
 # @graphql-codegen/cli
 
+## 5.0.0
+
+### Major Changes
+
+- [#9506](https://github.com/dotansimha/graphql-code-generator/pull/9506) [`dd9c7e148`](https://github.com/dotansimha/graphql-code-generator/commit/dd9c7e14872f48592e530ff0d646449a5cb722b4) Thanks [@valkum](https://github.com/valkum)! - Make @parcel/watcher optional
+
+### Patch Changes
+
+- [#9513](https://github.com/dotansimha/graphql-code-generator/pull/9513) [`fdd19d24d`](https://github.com/dotansimha/graphql-code-generator/commit/fdd19d24df21d3257f3e969b79856d18b6f73123) Thanks [@cichelero](https://github.com/cichelero)! - Update yaml dependency to 2.3.1
+
+- Updated dependencies [[`bb1e0e96e`](https://github.com/dotansimha/graphql-code-generator/commit/bb1e0e96ed9d519684630cd7ea53869b48b4632e)]:
+  - @graphql-codegen/plugin-helpers@5.0.1
+
+## 4.0.1
+
+### Patch Changes
+
+- [#9479](https://github.com/dotansimha/graphql-code-generator/pull/9479) [`0aa444b5d`](https://github.com/dotansimha/graphql-code-generator/commit/0aa444b5d092565c321643a55fb05c7301e303bf) Thanks [@gilgardosh](https://github.com/gilgardosh)! - dependencies updates:
+
+  - Updated dependency [`graphql-config@^5.0.2` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.0.2) (from `^5.0.1`, in `dependencies`)
+
+- [#9479](https://github.com/dotansimha/graphql-code-generator/pull/9479) [`0aa444b5d`](https://github.com/dotansimha/graphql-code-generator/commit/0aa444b5d092565c321643a55fb05c7301e303bf) Thanks [@gilgardosh](https://github.com/gilgardosh)! - Update graphql-config to v^5.0.2
+
 ## 4.0.0
 
 ### Major Changes

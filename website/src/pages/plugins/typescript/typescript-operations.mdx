@@ -5,7 +5,7 @@ description: Generate TypeScript operations from GraphQL queries. This plugin is
 
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
-<PluginHeader hasOperationsNote />
+<PluginHeader />
 <PluginApiDocs />

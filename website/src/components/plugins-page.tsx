@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { fetchPackageInfo, MarketplaceSearch, useSSG } from '@theguild/components';
+import { fetchPackageInfo, MarketplaceSearch, useData } from '@theguild/components';
 import { compareDesc } from 'date-fns';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { ALL_TAGS, Icon, icons, PACKAGES } from '@/lib/plugins';
@@ -39,16 +39,14 @@ export const getStaticProps = async () => {
   return {
     props: {
       // We add an `ssg` field to the page props,
-      // which will be provided to the Nextra's `useSSG` hook.
+      // which will be provided to the Nextra's `useData` hook.
       ssg: plugins,
     },
-    // Revalidate at most once every 1 hour
-    revalidate: 60 * 60,
   };
 };
 
 export function PluginsPage() {
-  const plugins = useSSG() as Plugin[];
+  const plugins = useData() as Plugin[];
 
   const marketplaceItems = useMemo(
     () =>
@@ -95,9 +93,9 @@ export function PluginsPage() {
 
   return (
     <MarketplaceSearch
-      title="Explore Plugins"
+      title="Explore Plugins & Presets"
       tagsFilter={ALL_TAGS}
-      placeholder="Find plugins..."
+      placeholder="Search..."
       primaryList={{
         title: 'Trending',
         items: trendingItems,

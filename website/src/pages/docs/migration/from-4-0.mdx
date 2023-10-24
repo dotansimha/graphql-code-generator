@@ -1,0 +1,95 @@
+---
+description: Migrating to 5.0.0. What has changed? How to migrate? What are the new features?
+---
+
+import { Tabs } from '@theguild/components'
+
+# Migration to 5.0.0
+
+## What has changed?
+
+There was an outstanding issue with `@parcel/watcher` which prevented it to be installed in certain environments, or needed an extra amount of dependencies to be built.
+This release focuses on improving the usage of `@graphql-codegen/cli` in those environments by making it an optional peer dependency.
+NPM (or Yarn) will not emit errors when an optional peer dependency is missing.
+
+## How to migrate?
+
+To use `@graphql-codegen/cli`'s watch mode (based on @parcel/watcher) you need to provide it in a package that uses `@graphql-codegen/cli` from now on.
+
+Start by updating your package.json
+
+<Tabs items={['Before', 'After']}>
+<Tabs.Tab>
+```json filename="package.json"
+{
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.0.0",
+    "@graphql-codegen/typescript": "^1.0.0",
+    "@graphql-codegen/typescript-operations": "^1.0.0"
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```json filename="package.json"
+{
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.0.0",
+    "@graphql-codegen/typescript": "^1.0.0",
+    "@graphql-codegen/typescript-operations": "^1.0.0",
+    "@parcel/watcher": "^2.1.0"
+  }
+}
+```
+</Tabs.Tab>
+</Tabs>
+
+If you had issues with `@parcel/watcher` previously, you can make NPM and Yarn silently discard any build errors, by using `optionalDependencies` instead:
+
+<Tabs items={['Before', 'After', 'After (Alternative)']}>
+<Tabs.Tab>
+```json filename="package.json"
+{
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.0.0",
+    "@graphql-codegen/typescript": "^1.0.0",
+    "@graphql-codegen/typescript-operations": "^1.0.0"
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```json filename="package.json"
+{
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.0.0",
+    "@graphql-codegen/typescript": "^1.0.0",
+    "@graphql-codegen/typescript-operations": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "@parcel/watcher": "^2.1.0"
+  }
+}
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```json filename="package.json"
+{
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.0.0",
+    "@graphql-codegen/typescript": "^1.0.0",
+    "@graphql-codegen/typescript-operations": "^1.0.0",
+    "@parcel/watcher": "^2.1.0"
+  },
+  "dependenciesMeta": {
+    "@parcel/watcher": {
+      "optional": true
+    }
+  }
+}
+```
+</Tabs.Tab>
+</Tabs>

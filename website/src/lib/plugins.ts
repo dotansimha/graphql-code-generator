@@ -74,6 +74,8 @@ export const icons: Record<Icon, StaticImageData> = {
 /* eslint-disable */
 
 export const ALL_TAGS = [
+  'preset',
+  'plugin',
   'typescript',
   'csharp',
   'dart',
@@ -96,8 +98,6 @@ export const ALL_TAGS = [
   'relay',
   'jsdoc',
   'resolvers',
-  'plugin',
-  'preset',
   'hasura',
   'validation',
   'yup',
@@ -274,6 +274,12 @@ export const PACKAGES: Record<
   'typescript-document-nodes': {
     title: 'TypeScript Document Nodes',
     npmPackage: '@graphql-codegen/typescript-document-nodes',
+    icon: 'typescript',
+    tags: ['plugin', 'typescript'],
+  },
+  'typescript-fabbrica': {
+    title: 'TypeScript Mock Data Factory',
+    npmPackage: '@mizdra/graphql-codegen-typescript-fabbrica',
     icon: 'typescript',
     tags: ['plugin', 'typescript'],
   },

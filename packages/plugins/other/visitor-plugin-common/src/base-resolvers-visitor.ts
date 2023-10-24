@@ -128,7 +128,9 @@ export interface RawResolversConfig extends RawConfig {
    *  export default config;
    * ```
    *
-   * ## Custom Context Type
+   * ## Custom Context Type by Path
+   *
+   * Note that the path should be relative to the generated file.
    *
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';

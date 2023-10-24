@@ -31,11 +31,11 @@ function generateContentForSchema(schema: TJS.Definition): string {
       return `### \`${propName}\`
 
   type: \`${printType(prop)}\`
-  ${prop.default !== undefined ? `default: \`${prop.default === '' ? '(empty)' : prop.default}\`\n` : ''}
+  ${prop.default === undefined ? '' : `default: \`${prop.default === '' ? '(empty)' : prop.default}\`\n`}
   ${prop.description ? `${prop.description}\n` : ''}
   ${
     (prop as any).exampleMarkdown
-      ? ` \n#### Usage Examples\n\n${(prop as any).exampleMarkdown.replace(/## /g, '##### ')}\n`
+      ? ` \n#### Usage Examples\n\n${(prop as any).exampleMarkdown.replaceAll('## ', '##### ')}\n`
       : ''
   }`;
     })

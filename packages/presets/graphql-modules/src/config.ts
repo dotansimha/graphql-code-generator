@@ -113,7 +113,7 @@ export type ModulesConfig = {
    * @description Generate resolvers of root types (Query, Mutation and Subscription) as non-optional.
    *
    * @example
-   * ```yml
+   * ```yaml
    * generates:
    * src/:
    *  preset: modules

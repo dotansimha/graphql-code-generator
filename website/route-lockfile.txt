@@ -57,6 +57,7 @@
 /docs/integrations/vscode
 /docs/migration/from-0-13
 /docs/migration/from-0-18
+/docs/migration/from-4-0
 /docs/plugins -> /plugins
 /docs/plugins/c-sharp -> /plugins/c-sharp/c-sharp-operations
 /docs/plugins/client-note -> /plugins
