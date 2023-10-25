@@ -877,13 +877,13 @@ describe('TypeScript', () => {
           typesPrefix: 'I',
           namingConvention: { enumValues: 'change-case-all#constantCase' },
           enumValues: {
-            MyEnum: './files#default as MyEnum',
+            MyEnum: './files#default',
           },
         },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
+      expect(result.prepend[0]).toBe(`import IMyEnum from './files';`);
     });
 
     it('#4834 - enum members should be quoted if numeric', async () => {
@@ -932,12 +932,12 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`export type ITest = {
         __typename?: 'Test';
-       t?: Maybe<MyEnum>;
+       t?: Maybe<IMyEnum>;
        test?: Maybe<Scalars['String']['output']>;
      };`);
 
       expect(result.content).toBeSimilarStringTo(`export type ITestTestArgs = {
-      a?: InputMaybe<MyEnum>;
+      a?: InputMaybe<IMyEnum>;
     };`);
     });
 
@@ -969,9 +969,9 @@ describe('TypeScript', () => {
         },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
-      expect(result.prepend).toContain(`import { MyEnum } from './files';`);
+      expect(result.prepend).toContain(`import { MyEnum as GQL_MyEnum } from './files';`);
       expect(result.content).toContain(`enum GQL_OtherEnum {`);
-      expect(result.content).toContain(`a?: Maybe<MyEnum>;`);
+      expect(result.content).toContain(`a?: Maybe<GQL_MyEnum>;`);
       expect(result.content).toContain(`b?: Maybe<GQL_OtherEnum>`);
     });
 
@@ -3578,6 +3578,41 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should build basic enum correctly with typesPrefix and typesSuffix', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = await plugin(schema, [], { typesPrefix: 'Prefix', typesSuffix: 'Suffix' }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export enum PrefixMyEnumSuffix {
+          A = 'A',
+          B = 'B',
+          C = 'C'
+        }
+      `);
+
+      validateTs(result);
+    });
+
+    it('Should build basic enum correctly without typesPrefix and typesSuffix if enumPrefix and typesPrefix are false', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = await plugin(
+        schema,
+        [],
+        { typesPrefix: 'Prefix', typesSuffix: 'Suffix', enumPrefix: false, enumSuffix: false },
+        { outputFile: '' }
+      );
+
+      expect(result.content).toBeSimilarStringTo(`
+        export enum MyEnum {
+          A = 'A',
+          B = 'B',
+          C = 'C'
+        }
+      `);
+
+      validateTs(result);
+    });
+
     it('Should build enum correctly with custom values', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
       const result = (await plugin(
@@ -3608,7 +3643,24 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
+      expect(result.content).toContain(`export { MyEnum }`);
       expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
+
+      validateTs(result);
+    });
+
+    it('Should build enum correctly with custom imported enum using typesPrefix and typesSuffix', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumValues: { MyEnum: './my-file#MyEnum' }, typesPrefix: 'Prefix', typesSuffix: 'Suffix' },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).not.toContain(`export enum PrefixMyEnumSuffix`);
+      expect(result.content).toContain(`export { PrefixMyEnumSuffix }`);
+      expect(result.prepend).toContain(`import { MyEnum as PrefixMyEnumSuffix } from './my-file';`);
 
       validateTs(result);
     });
@@ -3625,6 +3677,23 @@ describe('TypeScript', () => {
       expect(result.content).not.toContain(`export enum MyEnum`);
       expect(result.content).toContain(`export { MyEnum }`);
       expect(result.prepend).toContain(`import MyEnum = NS.ETest;`);
+      expect(result.prepend).toContain(`import { NS } from './my-file';`);
+
+      validateTs(result);
+    });
+
+    it('Should build enum correctly with custom imported enum from namespace with different name using typesPrefix and typesSuffix', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumValues: { MyEnum: './my-file#NS.ETest' }, typesPrefix: 'Prefix', typesSuffix: 'Suffix' },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).not.toContain(`export enum PrefixMyEnumSuffix`);
+      expect(result.content).toContain(`export { PrefixMyEnumSuffix }`);
+      expect(result.prepend).toContain(`import PrefixMyEnumSuffix = NS.ETest;`);
       expect(result.prepend).toContain(`import { NS } from './my-file';`);
 
       validateTs(result);
@@ -3674,41 +3743,10 @@ describe('TypeScript', () => {
 
       expect(result.content).not.toContain(`export enum MyEnum`);
       expect(result.content).not.toContain(`export enum MyEnum2`);
-      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
-      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
-
-      validateTs(result);
-    });
-
-    it('Should re-export external enums', async () => {
-      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
-      const result = (await plugin(
-        schema,
-        [],
-        { enumValues: { MyEnum: './my-file#MyEnum', MyEnum2: './my-file#MyEnum2X' } },
-        { outputFile: '' }
-      )) as Types.ComplexPluginOutput;
-
       expect(result.content).toContain(`export { MyEnum };`);
       expect(result.content).toContain(`export { MyEnum2 };`);
-      expect(result.prepend).toContain(`import { MyEnum2X as MyEnum2 } from './my-file';`);
-
-      validateTs(result);
-    });
-
-    it('Should re-export external enums when single file option used', async () => {
-      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
-      const result = (await plugin(
-        schema,
-        [],
-        { enumValues: './my-file' },
-        { outputFile: '' }
-      )) as Types.ComplexPluginOutput;
-
       expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
       expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
-      expect(result.content).toContain(`export { MyEnum };`);
-      expect(result.content).toContain(`export { MyEnum2 };`);
 
       validateTs(result);
     });

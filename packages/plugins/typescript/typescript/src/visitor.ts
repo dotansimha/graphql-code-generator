@@ -355,7 +355,10 @@ export class TsVisitor<
 
     // In case of mapped external enum string
     if (this.config.enumValues[enumName]?.sourceFile) {
-      return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
+      return `export { ${this.convertName(this.config.enumValues[enumName].typeIdentifier, {
+        useTypesPrefix: this.config.enumPrefix,
+        useTypesSuffix: this.config.enumSuffix,
+      })} };\n`;
     }
 
     const getValueFromConfig = (enumValue: string | number) => {
