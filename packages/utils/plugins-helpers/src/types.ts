@@ -20,6 +20,7 @@ export namespace Types {
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
     documentTransforms?: ConfiguredDocumentTransform[];
+    delayedSchemaGenerators?: ConfiguredDelayedSchemaGenerator[];
   }
 
   export type FileOutput = {
@@ -192,6 +193,22 @@ export namespace Types {
   }
 
   export type SchemaGlobPath = string;
+
+  export type DelayedSchemaGeneratorFunction<T = any> = (options: {
+    documents: Types.DocumentFile[];
+    schema: DocumentNode;
+    schemaAst: GraphQLSchema;
+    config: T;
+    context?: { [key: string]: any };
+  }) => string | DocumentNode | undefined;
+  export type DelayedSchemaGeneratorFunctionFileName = string;
+  export type DelayedSchemaGeneratorOptions = {
+    'delayed-schema-generator': DelayedSchemaGeneratorFunction | DelayedSchemaGeneratorFunctionFileName;
+  };
+  export type ConfiguredDelayedSchemaGenerator<T = any> = {
+    generator: DelayedSchemaGeneratorFunction<T>;
+  };
+
   /**
    * @description A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. You can read more about the supported formats [here](schema-field#available-formats).
    */
@@ -203,7 +220,8 @@ export namespace Types {
     | LocalSchemaPathWithOptions
     | SchemaGlobPath
     | SchemaWithLoader
-    | SchemaFromCodeFile;
+    | SchemaFromCodeFile
+    | DelayedSchemaGeneratorOptions;
 
   /* Document Definitions */
   export type OperationDocumentGlobPath = string;
@@ -359,6 +377,7 @@ export namespace Types {
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
     documentTransforms?: ConfiguredDocumentTransform[];
+    delayedSchemaGenerators?: ConfiguredDelayedSchemaGenerator[];
   };
 
   export type OutputPreset<TPresetConfig = any> = {

@@ -44,6 +44,20 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
   }
 
+  for (const delayedSchemaGenerator of options.delayedSchemaGenerators || []) {
+    const partialSchema = delayedSchemaGenerator.generator({
+      schema: options.schema,
+      schemaAst: options.schemaAst,
+      documents: options.documents,
+      context: options.pluginContext,
+      config: options.config,
+    });
+
+    if (partialSchema) {
+      additionalTypeDefs.push(partialSchema);
+    }
+  }
+
   const federationInConfig: boolean = pickFlag('federation', options.config);
   const isFederation = prioritize(federationInConfig, false);
 

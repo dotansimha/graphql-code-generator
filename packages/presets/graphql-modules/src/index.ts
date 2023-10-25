@@ -70,6 +70,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       },
       schemaAst: options.schemaAst!,
       documentTransforms: options.documentTransforms,
+      delayedSchemaGenerators: options.delayedSchemaGenerators,
     };
 
     const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, '');
@@ -122,6 +123,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         config: options.config,
         schemaAst: options.schemaAst,
         documentTransforms: options.documentTransforms,
+        delayedSchemaGenerators: options.delayedSchemaGenerators,
       };
     });
 
