@@ -4476,10 +4476,10 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.0.tgz#591c1ce3a702c45ee15f47a42ade72c2fd78978a"
   integrity sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==
 
-"@types/shell-quote@1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@types/shell-quote/-/shell-quote-1.7.1.tgz#2d059091214a02c29f003f591032172b2aff77e8"
-  integrity sha512-SWZ2Nom1pkyXCDohRSrkSKvDh8QOG9RfAsrt5/NsPQC4UQJ55eG0qClA40I+Gkez4KTQ0uDUT8ELRXThf3J5jw==
+"@types/shell-quote@1.7.3":
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/@types/shell-quote/-/shell-quote-1.7.3.tgz#12d1c1342b6a8ad926596c2e2a7d660c0b87f45c"
+  integrity sha512-CeYcQaOnluyKPHJTuJmaH9RDJEQSVxGMVf2EZab3chpA8sI65FB19t0x3JlS37NbxL+TUottk9pMypMJQcfhIw==
 
 "@types/sinonjs__fake-timers@8.1.1":
   version "8.1.1"
@@ -4513,15 +4513,15 @@
   resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
   integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
-"@types/unist@*", "@types/unist@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/unist/-/unist-3.0.0.tgz#988ae8af1e5239e89f9fbb1ade4c935f4eeedf9a"
-  integrity sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==
-
-"@types/unist@^2.0.0", "@types/unist@^2.0.2":
+"@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
   integrity sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==
+
+"@types/unist@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/unist/-/unist-3.0.0.tgz#988ae8af1e5239e89f9fbb1ade4c935f4eeedf9a"
+  integrity sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==
 
 "@types/ws@^8.0.0":
   version "8.5.4"
