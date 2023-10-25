@@ -43,6 +43,7 @@
     "@babel/generator": "^7.18.13",
     "@babel/template": "^7.18.10",
     "@babel/types": "^7.18.13",
+    "@graphql-codegen/client-preset": "^4.1.0",
     "@graphql-codegen/core": "^4.0.0",
     "@graphql-codegen/plugin-helpers": "^5.0.1",
     "@graphql-tools/apollo-engine-loader": "^8.0.0",
