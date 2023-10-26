@@ -1305,4 +1305,22 @@ describe('Codegen Executor', () => {
       expect(fileOutput.content).toContain('export type BarQuery');
     });
   });
+
+  it('should not run out of memory when generating very complex types (issue #7720)', async () => {
+    const result = await executeCodegen({
+      schema: ['../../dev-test/gatsby/schema.graphql'],
+      documents: ['../../dev-test/gatsby/fragments.ts'],
+      config: {
+        extractAllFieldsToTypes: true,
+        dedupeOperationSuffix: true,
+      },
+      generates: {
+        'out1.ts': {
+          plugins: ['typescript', 'typescript-operations'],
+        },
+      },
+    });
+    expect(result.length).toBe(1);
+    expect(result[0].content).toContain('export type WpCoreImageBlockForGalleryFragment = ');
+  });
 });
