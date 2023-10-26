@@ -76,7 +76,7 @@ It also allows to colocate the Fragment definitions with their components counte
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -85,8 +85,8 @@ export const FilmFragment = graphql(/* GraphQL */ `
   }
 `)
 
-const Film = (props: { film: FragmentType<typeof FilmFragment> }) => {
-  const film = useFragment(FilmFragment, props.film)
+const Film = (props: { film: FragmentType<typeof FilmItemFragment> }) => {
+  const film = useFragment(FilmItemFragment, props.film)
   return (
     <div>
       <h3>{film.title}</h3>
@@ -107,13 +107,13 @@ For an introduction on how to design your GraphQL Query to leverage Fragment Mas
 
 As explained in [our guide](/docs/guides/react-vue), the top-level GraphQL Query should include the fragment (`...FilmItem`) and pass down the data to child components.
 
-At the component props definition level, the `FragmentType<T>` type ensures that the passed data contains the required fragment (here: `FilmFragment` aka `FilmItem` in GraphQL).
+At the component props definition level, the `FragmentType<T>` type ensures that the passed data contains the required fragment (here: `FilmItemFragment` aka `FilmItem` in GraphQL).
 
 ```tsx filename="src/Film.tsx" {14-15}
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -124,9 +124,9 @@ export const FilmFragment = graphql(/* GraphQL */ `
 
 const Film = (props: {
   /* the passed `film` property contains a valid `FilmItem` fragment 🎉 */
-  film: FragmentType<typeof FilmFragment>
+  film: FragmentType<typeof FilmItemFragment>
 }) => {
-  const film = useFragment(FilmFragment, props.film)
+  const film = useFragment(FilmItemFragment, props.film)
   return (
     <div>
       <h3>{film.title}</h3>
@@ -151,13 +151,13 @@ as described in [the next section](#getting-a-fragments-type).
 
 #### The `useFragment()` helper
 
-The `useFragment()` function helps narrow down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
+The `useFragment()` function helps narrow down the Fragment type from a given data object (ex: `film` object to a `FilmItemFragment` object):
 
 ```tsx filename="src/Film.tsx" {14-15}
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -166,8 +166,8 @@ export const FilmFragment = graphql(/* GraphQL */ `
   }
 `)
 
-const Film = (props: { film: FragmentType<typeof FilmFragment> }) => {
-  const film = useFragment(FilmFragment, props.film)
+const Film = (props: { film: FragmentType<typeof FilmItemFragment> }) => {
+  const film = useFragment(FilmItemFragment, props.film)
   // `film` is of type `FilmItemFragment` 🎉
   return (
     <div>
@@ -236,7 +236,7 @@ Or, if you have access to the Fragment's definition, you can extract the type fr
 ```tsx filename="src/Film.tsx" {1, 3, 12}
 import { ResultOf } from '@graphql-typed-document-node/core'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -245,7 +245,7 @@ export const FilmFragment = graphql(/* GraphQL */ `
   }
 `)
 
-function myFilmHelper(film: ResultOf<typeof FilmFragment>) {
+function myFilmHelper(film: ResultOf<typeof FilmItemFragment>) {
   // ...
 }
 ```
