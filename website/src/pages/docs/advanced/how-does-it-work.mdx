@@ -92,6 +92,7 @@ fragment UserFields on User {
 And with the following `codegen.ts` configuration file:
 
 ```ts filename="codegen.ts"
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {

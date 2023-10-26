@@ -17,6 +17,7 @@ The `schema` field should point to your `GraphQLSchema` - there are multiple way
 You can specify the `schema` field in your root level config, as follows:
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -36,6 +37,7 @@ export default config;
 Or, you can specify it per-output file level. This way you can
 
 ```ts {6,10}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -59,6 +61,7 @@ export default config;
 You can also specify `schema` on both levels: root and output-file, and then GraphQL Code Generator will merge both schemas into one:
 
 ```ts {4,7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -87,6 +90,7 @@ The following can be specified as a single value or an array with mixed values.
 You can specify a URL to load your `GraphQLSchema` from:
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -103,6 +107,7 @@ export default config;
 You can also specify custom HTTP headers to be sent with the request:
 
 ```ts {7-9}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -127,6 +132,7 @@ You can specify a custom fetch function for the HTTP request, using the module n
 
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -147,6 +153,7 @@ export default config;
 You can specify an HTTP method for the introspection query (the default value is `POST`).
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -167,6 +174,7 @@ export default config;
 Handling the response as SDL will allow you to load schema from remote server that doesn't return a JSON introspection. Example use case is when using schema registry like [GraphQL Hive](https://docs.graphql-hive.com/features/high-availability-cdn#graphql-schema-sdl).
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -188,6 +196,7 @@ You can point to a local `.json` file that contains [GraphQL Introspection](http
 
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -203,6 +212,7 @@ export default config;
 You can point to a single `.graphql` file that contains the AST string of your schema:
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -217,6 +227,7 @@ Or, you can point to multiple files using a glob expression (codegen will merge 
 
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -230,6 +241,7 @@ You can also specify multiple patterns:
 
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -243,6 +255,7 @@ export default config;
 And, you can specify files to exclude/ignore, using the `!` sign:
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -264,6 +277,7 @@ If you are using `graphql-import` syntax in your schema definitions, you can tel
 
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -285,6 +299,7 @@ When enabled, converts all deprecated forms of GraphQL comments (marked with `#`
 
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -307,6 +322,7 @@ Set to true to assume the SDL is valid, and skip any SDL syntax validations.
 
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -326,6 +342,7 @@ export default config;
 You can use code files, and the codegen will try to extract the GraphQL schema from it, based on `gql` tag:
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -343,6 +360,7 @@ The codegen will try to load the file as an AST and look for exact GraphQL strin
 You can disable the `require` if it causes errors for you (for example, because of a different module system or missing dependency):
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -363,6 +381,7 @@ You can disable the AST lookup phase and tell codegen to skip and directly try t
 
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -382,6 +401,7 @@ export default config;
 Set this to `true` to tell codegen to skip AST validation.
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -403,6 +423,7 @@ You can also specify a code file that exports your `GraphQLSchema` object as exp
 
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -434,6 +455,7 @@ You can specify your schema directly as an AST string in your config file. It's 
 
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -452,6 +474,7 @@ You can load your schema file from a remote GitHub file using one of the followi
 Provide the GitHub path to your schema and token using the following syntax:
 
 ```ts {4,5,6,7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -474,6 +497,7 @@ yarn graphql-codegen
 Alternatively, you can provide just the GitHub path to your schema:
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -495,6 +519,7 @@ GITHUB_TOKEN=<YOUR GITHUB TOKEN> yarn graphql-codegen
 You can load your schema file from a Git repository using the following syntax:
 
 ```ts {4}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -510,6 +535,7 @@ export default config;
 You can load your schema from Apollo Engine with the following syntax:
 
 ```ts
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -534,6 +560,7 @@ export default config;
 If your schema has a different or complicated way of loading, you can point to a single code file that works for you.
 
 ```ts {7,12}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -609,6 +636,7 @@ export default async () => {
 Add custom loader to your codegen config:
 
 ```ts {7}
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
