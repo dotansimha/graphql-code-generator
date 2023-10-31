@@ -2,13 +2,11 @@
 description: GraphQL Code Generator is a tool that generates code from your GraphQL schema and operations. It can generate TypeScript, Flow, Swift, Kotlin, and more.
 ---
 
-import { Tabs, Tab, Callout, PackageCmd } from '@theguild/components'
+import { Tabs, Callout } from '@theguild/components'
 
 # Guide: React and Vue
 
-GraphQL Code Generator provides an unified way to get TypeScript types from GraphQL operations for [most modern GraphQL clients and frameworks](#appendix-ii-compatibility).
-
-<br />
+GraphQL Code Generator provides a unified way to get TypeScript types from GraphQL operations for [most modern GraphQL clients and frameworks](#appendix-ii-compatibility).
 
 This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index).
 
@@ -51,21 +49,21 @@ For most GraphQL clients and frameworks (React, Vue), install the following pack
 
 ```bash
 yarn add graphql
-yarn add -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
+yarn add -D typescript ts-node @graphql-codegen/cli
 ```
 
 **For npm:**
 
 ```bash
 npm i -S graphql
-npm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
+npm i -D typescript ts-node @graphql-codegen/cli
 ```
 
 **For pnpm:**
 
 ```bash
 pnpm i graphql @graphql-typed-document-node/core
-pnpm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
+pnpm i -D typescript ts-node @graphql-codegen/cli
 ```
 
 <br />
@@ -74,7 +72,7 @@ Then provide the corresponding framework-specific configuration:
 
 <Tabs items={['React project', 'Vue project']}>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="codegen.ts" {5}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -93,9 +91,9 @@ const config: CodegenConfig = {
 export default config
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="codegen.ts" {1, 5, 9-11}
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -117,7 +115,7 @@ const config: CodegenConfig = {
 export default config
 ```
 
-</Tab>
+</Tabs.Tab>
 
 </Tabs>
 
@@ -130,8 +128,9 @@ export default config
 **Usage with `@tanstack/react-query`**
 
 If you are using `@tanstack/react-query`, we recommend using it with `graphql-request@^5.0.0` to get the best developer experience.
-<br/>
-If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I: React Query with a custom fetcher setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query is properly setup.
+
+If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I: React Query with a custom fetcher
+setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query is properly setup.
 
 </Callout>
 
@@ -151,9 +150,9 @@ Now, we can start implementing our first query with the `graphql()` function, ge
 
 <Tabs items={['React Apollo', 'React Query', 'React URQL', 'Vue URQL', 'Vue Apollo']}>
 
-<Tab>
+<Tabs.Tab>
 
-```ts filename="src/App.tsx" {6, 8-18, 22}
+```ts filename="src/App.tsx" {6,8-18,22}
 import React from 'react'
 import { useQuery } from '@apollo/client'
 
@@ -186,9 +185,9 @@ function App() {
 export default App
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="src/App.tsx" {7, 8-18, 23-27}
 import React from 'react'
@@ -229,11 +228,11 @@ function App() {
 export default App
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
-```ts filename="src/App.tsx" {6, 8-18, 22-27}
+```ts filename="src/App.tsx" {6,8-18,22-27}
 import React from 'react'
 import { useQuery } from 'urql'
 
@@ -273,11 +272,11 @@ function App() {
 export default App
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
-```vue filename="src/App.vue" {6, 9-21, 24}
+```vue filename="src/App.vue" {6,9-21,24}
 <script setup lang="ts">
 import { useQuery } from '@urql/vue'
 import { computed } from 'vue'
@@ -311,11 +310,11 @@ const films = computed(() => data.value?.allFilms?.edges?.map(e => e?.node!))
 </template>
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
-```vue filename="src/App.vue" {6, 9-21, 24}
+```vue filename="src/App.vue" {6,9-21,24}
 <script setup lang="ts">
 import { useQuery } from '@vue/apollo-composable'
 import { computed } from 'vue'
@@ -349,7 +348,7 @@ const films = computed(() => result.value?.allFilms?.edges?.map(e => e?.node!))
 </template>
 ```
 
-</Tab>
+</Tabs.Tab>
 
 </Tabs>
 
@@ -371,9 +370,9 @@ Let's look at the implementation of our `Film` UI component in React or Vue:
 
 <Tabs items={['React (Apollo, React Query, URQL)', 'Vue (Apollo, URQL)']}>
 
-<Tab>
+<Tabs.Tab>
 
-```ts filename="src/Film.tsx" {4-11, 15, 17}
+```ts filename="src/Film.tsx" {4-11,15,17}
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
@@ -402,11 +401,11 @@ const Film = (props: {
 export default Film
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
-```vue filename="src/components/FilmItem.vue" {5-12, 14, 17}
+```vue filename="src/components/FilmItem.vue" {5-12,14,17}
 <script setup lang="ts">
 import { graphql } from '.../src/gql'
 import { type FragmentType, useFragment } from '../gql/fragment-masking'
@@ -434,7 +433,7 @@ const filmObj = useFragment(FilmFragment, props.film)
 </template>
 ```
 
-</Tab>
+</Tabs.Tab>
 
 </Tabs>
 
@@ -550,9 +549,9 @@ Then write type-safe code like the following:
 
 ```ts filename="Application Code"
 import { useGraphQL } from './use-graphql.js'
-import { gql } from './generated/graphql.js'
+import { graphql } from './generated/gql.js'
 
-const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {
     allFilms(first: $first) {
       edges {
@@ -634,9 +633,9 @@ Then write type-safe code like the following:
 
 ```ts filename="Application Code"
 import { useGraphQL } from './use-graphql.js'
-import { gql } from './generated/graphql.js'
+import { graphql } from './generated/gql.js'
 
-const allFilmsWithVariablesQueryDocument = gql(/* GraphQL */ `
+const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
   query allFilmsWithVariablesQuery($first: Int!) {
     allFilms(first: $first) {
       edges {

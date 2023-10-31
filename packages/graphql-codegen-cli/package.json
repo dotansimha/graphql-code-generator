@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
@@ -43,8 +43,9 @@
     "@babel/generator": "^7.18.13",
     "@babel/template": "^7.18.10",
     "@babel/types": "^7.18.13",
+    "@graphql-codegen/client-preset": "^4.1.0",
     "@graphql-codegen/core": "^4.0.0",
-    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "@graphql-codegen/plugin-helpers": "^5.0.1",
     "@graphql-tools/apollo-engine-loader": "^8.0.0",
     "@graphql-tools/code-file-loader": "^8.0.0",
     "@graphql-tools/git-loader": "^8.0.0",
@@ -55,7 +56,6 @@
     "@graphql-tools/prisma-loader": "^8.0.0",
     "@graphql-tools/url-loader": "^8.0.0",
     "@graphql-tools/utils": "^10.0.0",
-    "@parcel/watcher": "^2.1.0",
     "@whatwg-node/fetch": "^0.8.0",
     "chalk": "^4.1.0",
     "cosmiconfig": "^8.1.3",
@@ -73,26 +73,33 @@
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^2.2.3",
     "tslib": "^2.4.0",
-    "yaml": "^1.10.0",
+    "yaml": "^2.3.1",
     "yargs": "^17.0.0"
   },
   "devDependencies": {
     "@graphql-tools/merge": "9.0.0",
-    "@types/debounce": "1.2.1",
-    "@types/inquirer": "8.2.6",
-    "@types/is-glob": "4.0.2",
-    "@types/js-yaml": "4.0.5",
+    "@parcel/watcher": "^2.1.0",
+    "@types/debounce": "1.2.3",
+    "@types/inquirer": "8.2.9",
+    "@types/is-glob": "4.0.3",
+    "@types/js-yaml": "4.0.8",
     "@types/micromatch": "^4.0.2",
     "@types/mkdirp": "1.0.2",
-    "@types/shell-quote": "1.7.1",
+    "@types/shell-quote": "1.7.3",
     "bdd-stdin": "0.2.0",
     "change-case-all": "1.0.15",
     "js-yaml": "4.1.0",
-    "make-dir": "3.1.0",
+    "make-dir": "4.0.0",
     "prettier": "2.8.8"
   },
   "peerDependencies": {
+    "@parcel/watcher": "^2.1.0",
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@parcel/watcher": {
+      "optional": true
+    }
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

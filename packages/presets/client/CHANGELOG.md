@@ -1,5 +1,58 @@
 # @graphql-codegen/client-preset
 
+## 4.1.0
+
+### Minor Changes
+
+- [#9562](https://github.com/dotansimha/graphql-code-generator/pull/9562) [`5beee9794`](https://github.com/dotansimha/graphql-code-generator/commit/5beee9794de208fed17e516a259535f56d626c9d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add the `addTypenameSelectionDocumentTransform` for automatically adding `__typename` selections to all objct type selection sets.
+
+  This is useful for GraphQL Clients such as Apollo Client or urql that need typename information for their cache to function.
+
+  **Example Usage**
+
+  ```
+  import { addTypenameSelectionDocumentTransform } from '@graphql-codegen/client-preset';
+  import { CodegenConfig } from "@graphql-codegen/cli";
+
+  const config: CodegenConfig = {
+    schema: "YOUR_GRAPHQL_ENDPOINT",
+    documents: ["./**/*.{ts,tsx}"],
+    ignoreNoDocuments: true,
+    generates: {
+      "./gql/": {
+        preset: "client",
+        plugins: [],
+        presetConfig: {
+          persistedDocuments: true,
+        },
+        documentTransforms: [addTypenameSelectionDocumentTransform],
+      },
+    },
+  };
+
+  export default config;
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`bb1e0e96e`](https://github.com/dotansimha/graphql-code-generator/commit/bb1e0e96ed9d519684630cd7ea53869b48b4632e)]:
+  - @graphql-codegen/plugin-helpers@5.0.1
+
+## 4.0.1
+
+### Patch Changes
+
+- [#9497](https://github.com/dotansimha/graphql-code-generator/pull/9497) [`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a) Thanks [@eddeee888](https://github.com/eddeee888)! - Revert default ID scalar input type to string
+
+  We changed the ID Scalar input type from `string` to `string | number` in the latest major version of `typescript` plugin. This causes issues for server plugins (e.g. typescript-resolvers) that depends on `typescript` plugin. This is because the scalar type needs to be manually inverted on setup which is confusing.
+
+- Updated dependencies [[`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a)]:
+  - @graphql-codegen/visitor-plugin-common@4.0.1
+  - @graphql-codegen/typescript-operations@4.0.1
+  - @graphql-codegen/typescript@4.0.1
+  - @graphql-codegen/gql-tag-operations@4.0.1
+  - @graphql-codegen/typed-document-node@5.0.1
+
 ## 4.0.0
 
 ### Major Changes

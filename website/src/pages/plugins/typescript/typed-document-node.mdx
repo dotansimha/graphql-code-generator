@@ -6,14 +6,14 @@ description: Generate TypedDocumentNode for GraphQL operations. This plugin is a
 import { Callout } from '@theguild/components'
 import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
 <Callout>
-For new projects, we recommend using the [`client-preset`](/plugins/presets/preset-client), which uses `typed-document-node` under the hood.
-
+  This plugin is meant to be used for low-level use cases or as building block for presets.
+  <br /> For building a **GraphQL client application** we recommend using the [`client-preset`](/plugins/presets/preset-client).
 </Callout>
 
-<PluginHeader hasOperationsNote />
+<PluginHeader />
 
 These plugins generate a ready-to-use `TypedDocumentNode` (a combination of pre-compiled `DocumentNode` and the TypeScript signature it represents).
 

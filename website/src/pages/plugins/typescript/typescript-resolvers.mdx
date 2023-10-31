@@ -6,9 +6,14 @@ description: Generate TypeScript resolvers types. Works with graphql-tools and a
 import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
-<PluginHeader hasOperationsNote />
+<Callout>
+  This plugin is meant to be used for low-level use cases or as building block for presets.
+  <br /> For building a **GraphQL server schema** we recommend using the [`server-preset`](/docs/guides/graphql-server-apollo-yoga-with-server-preset).
+</Callout>
+
+<PluginHeader />
 
 <Callout>
   Watch [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator)

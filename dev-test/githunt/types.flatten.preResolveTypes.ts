@@ -7,7 +7,7 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string };
+  ID: { input: string; output: string };
   String: { input: string; output: string };
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
@@ -248,7 +248,7 @@ export type FeedQuery = {
       owner?: { __typename?: 'User'; avatar_url: string } | null;
     };
     vote: { __typename?: 'Vote'; vote_value: number };
-    postedBy: { __typename?: 'User'; html_url: string; login: string };
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
   } | null> | null;
 };
 

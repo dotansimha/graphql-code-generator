@@ -2,7 +2,7 @@
 description: Learn how to configure GraphQL Code Generator to generate code from your GraphQL schema and documents.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # `codegen.ts` file
 
@@ -14,7 +14,9 @@ The CLI automatically detects the defined config file and generates code accordi
 
 In addition, you can also define a path to your config file with the `--config` options, like so:
 
-<PackageCmd packages={[{ name: 'graphql-code-generator --config ./path/to/codegen.ts', cmd: 'run', isNpx: true }]} />
+```sh
+npx graphql-code-generator --config ./path/to/codegen.ts
+```
 
 ## Configuration file format
 

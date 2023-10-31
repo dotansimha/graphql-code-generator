@@ -3,10 +3,9 @@ title: client-preset
 description: The client preset provides typed GraphQL operations (Query, Mutation and Subscription) by perfectly integrating with your favorite GraphQL clients.
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
-import { PluginApiDocs, PluginHeader } from '@/components/plugin'
+import { Callout, FileTree } from '@theguild/components'
+import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-import { Tree, File, Folder } from '../../../components/file-tree'
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
@@ -53,6 +52,7 @@ The `client` preset allows the following `config` options:
 - [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
 - [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
 - [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
+- [`futureProofEnums`](/plugins/typescript/typescript#futureproofenums): Adds a catch-all entry to enum type definitions for values that may be added in the future.
 - [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
 - [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
 - [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
@@ -257,7 +257,7 @@ When dealing with nested Fragments, the `useFragment()` should also be used in a
 
 You can find a complete working example here: [Nested Fragment example on GitHub](https://github.com/charlypoly/codegen-repros/blob/master/client-preset-nested-fragments-interface/src/App.tsx).
 
-### Fragment Masking with @defer directive
+### Fragment Masking with @defer Directive
 
 If you use the `@defer` directive and have a Fragment Masking setup, you can use an `isFragmentReady` helper to check if the deferred fragment data is already resolved.
 The `isFragmentReady` function takes three arguments: the query document, the fragment definition, and the data returned by the
@@ -389,15 +389,17 @@ const config: CodegenConfig = {
 export default config
 ```
 
-## Persisted documents
+## Persisted Documents
 
-Persisted documents (often also referred to as persisted queries or persisted documents) is a technique for reducing client to server upstream traffic by sending a unique identifier instead of the full GraphQL document.
-It is also commonly used to reduce the size of the client bundle as well as to improve security by preventing the client from sending and executing arbitrary GraphQL operations.
+Persisted documents (often also referred to as persisted queries or persisted operations) is a technique for reducing client to server upstream traffic by sending a unique identifier instead of the full GraphQL document.
+It is also commonly used to reduce the size of the client bundle as well as to improve security by preventing the client from sending and executing arbitrary GraphQL operations (and thus reducing attack surface).
 
 <Callout type="info">
   You can find [a functional example using GraphQL Yoga within our Codegen Examples on
   GitHub](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/persisted-documents).
 </Callout>
+
+### Enable Persisted Documents
 
 Persisted documents can be enabled by setting the `persistedDocuments` option to `true`:
 
@@ -420,15 +422,15 @@ const config: CodegenConfig = {
 
 By enabling this option GraphQL Code Generator will generate an additional file `persisted-documents.json` within your artifacts location.
 
-<Tree>
-  <Folder name="gql" defaultOpen>
-    <File name="fragment-masking.ts" />
-    <File name="gql.ts" />
-    <File name="graphql.ts" />
-    <File name="index.ts" />
-    <File name="persisted-documents.json" active />
-  </Folder>
-</Tree>
+<FileTree>
+  <FileTree.Folder name="gql" defaultOpen>
+    <FileTree.File name="fragment-masking.ts" />
+    <FileTree.File name="gql.ts" />
+    <FileTree.File name="graphql.ts" />
+    <FileTree.File name="index.ts" />
+    <FileTree.File name="persisted-documents.json" active />
+  </FileTree.Folder>
+</FileTree>
 
 This file contains a mapping of the document's hash to the document's content.
 
@@ -489,7 +491,55 @@ console.log(response.status)
 console.log(await response.json())
 ```
 
-## Reducing bundle size: Babel plugin
+### Normalized Caches (urql and Apollo Client)
+
+Urql is a popular GraphQL client that utilizes a normalized cache.
+Because the client utilizes the `__typename` fields to normalize the cache, it is important that the `__typename` field is included in the persisted documents.
+The `addTypenameSelectionDocumentTransform` document transform can be used for achieving this.
+
+```ts filename="codegen.ts" {1,15}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+import { addTypenameDocumentTransform } from '@graphql-codegen/client-preset'
+
+const config: CodegenConfig = {
+  schema: './**/*.graphqls',
+  documents: ['./**/*.{ts,tsx}'],
+  ignoreNoDocuments: true,
+  generates: {
+    './gql/': {
+      preset: 'client',
+      plugins: [],
+      presetConfig: {
+        persistedDocuments: true
+      },
+      documentTransforms: [addTypenameDocumentTransform]
+    }
+  }
+}
+
+export default config
+```
+
+Afterwards, you can send the hashes to the server.
+
+```ts filename="Example with urql" {2,8-13}
+import { createClient, cacheExchange } from '@urql/core'
+import { persistedExchange } from '@urql/exchange-persisted'
+
+const client = new createClient({
+  url: 'YOUR_GRAPHQL_ENDPOINT',
+  exchanges: [
+    cacheExchange,
+    persistedExchange({
+      enforcePersistedQueries: true,
+      enableForMutation: true,
+      generateHash: (_, document) => Promise.resolve(document['__meta__']['hash'])
+    })
+  ]
+})
+```
+
+## Reducing Bundle Size
 
 Large scale projects might want to enable code splitting or tree shaking on the `client-preset` generated files.
 This is because instead of using the map which contains all GraphQL operations in the project,
@@ -497,7 +547,7 @@ we can use the specific generated document types.
 
 The `client-preset` comes with a Babel and a swc plugin that enables it.
 
-### Babel plugin
+### Babel Plugin
 
 To configure the Babel plugin, update (or create) your `.babelrc.js` as follow:
 
@@ -510,7 +560,7 @@ module.exports = {
 }
 ```
 
-### SWC plugin
+### SWC Plugin
 
 <Callout type="warning">
   As of 2023/03/11, SWC's custom plugins is still an experimental feature, that means unexpected breaking changes that
@@ -530,7 +580,9 @@ thread '<unnamed>' panicked at 'failed to invoke plugin: failed to invoke plugin
 
 The SWC plugin is not bundled in the `client-preset` package, so you will need to install it separately:
 
-<PackageCmd packages={['-D @graphql-codegen/client-preset-swc-plugin']} />
+```sh npm2yarn
+npm i -D @graphql-codegen/client-preset-swc-plugin
+```
 
 #### General
 

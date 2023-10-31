@@ -6,9 +6,9 @@ description: Generate TypeScript SDK for GraphQL APIs. Supports Apollo Client, R
 import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
-<PluginHeader hasOperationsNote />
+<PluginHeader />
 
 <Callout>Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:</Callout>
 

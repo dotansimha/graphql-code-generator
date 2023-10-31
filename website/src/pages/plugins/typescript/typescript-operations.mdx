@@ -3,9 +3,15 @@ title: typescript-operations
 description: Generate TypeScript operations from GraphQL queries. This plugin is based on the `typescript` plugin, but it generates operations instead of types.
 ---
 
+import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename)
+export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
 
-<PluginHeader hasOperationsNote />
+<Callout>
+  This plugin is meant to be used for low-level use cases or as building block for presets.
+  <br /> For building a **GraphQL client application** we recommend using the [`client-preset`](/plugins/presets/preset-client).
+</Callout>
+
+<PluginHeader />
 <PluginApiDocs />

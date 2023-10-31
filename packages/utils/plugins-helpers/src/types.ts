@@ -543,6 +543,10 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks
      */
     hooks?: Partial<LifecycleHooksDefinition>;
+    /**
+     * @description Alows to raise errors if any matched files are not valid GraphQL. Default: false.
+     */
+    noSilentErrors?: boolean;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };

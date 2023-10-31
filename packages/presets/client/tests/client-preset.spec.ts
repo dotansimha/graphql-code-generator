@@ -347,7 +347,7 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: { input: string | number; output: string; }
+        ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }
@@ -477,7 +477,7 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: { input: string | number; output: string; }
+        ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }
@@ -590,7 +590,7 @@ export * from "./gql";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: { input: string | number; output: string; }
+        ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }
@@ -1256,7 +1256,7 @@ export * from "./gql.js";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: { input: string | number; output: string; }
+        ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }
@@ -1334,7 +1334,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -1415,7 +1415,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -1496,7 +1496,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -1579,7 +1579,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -1658,7 +1658,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -1750,7 +1750,7 @@ export * from "./gql.js";`);
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
-        ID: { input: string | number; output: string; }
+        ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }
@@ -1829,7 +1829,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -1851,18 +1851,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -1914,7 +1914,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -1936,18 +1936,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -1999,7 +1999,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -2021,18 +2021,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2140,7 +2140,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
@@ -2162,18 +2162,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2279,7 +2279,7 @@ export * from "./gql.js";`);
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         /** All built-in and custom scalars, mapped to their actual values */
         export type Scalars = {
-          ID: { input: string | number; output: string; }
+          ID: { input: string; output: string; }
           String: { input: string; output: string; }
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }

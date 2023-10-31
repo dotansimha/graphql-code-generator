@@ -2,7 +2,7 @@
 description: GraphQL Code Generator's server preset, `@eddeee888/gcg-typescript-resolver-files`, helps GraphQL APIs work at any scale by enforcing best practices such as type-safety and schema module conventions.
 ---
 
-import { PackageCmd, Callout, Tabs, Tab } from '@theguild/components'
+import { Callout, Tabs } from '@theguild/components'
 
 # Guide: GraphQL Yoga / Apollo Server with Server Preset
 
@@ -64,7 +64,9 @@ type Book {
 
 #### 2. Install Server Preset
 
-<PackageCmd packages={['-D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files']} />
+```sh npm2yarn
+npm i -D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files
+```
 
 #### 3. Configure Codegen Config
 
@@ -72,7 +74,7 @@ Create or update your Codegen config as follows:
 
 <Tabs items={['codegen.ts','codegen.yml']}>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -87,9 +89,9 @@ const config: CodegenConfig = {
 export default config
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
 ```yaml filename="codegen.yml"
 schema: '**/schema.graphql'
@@ -99,7 +101,7 @@ generates:
     watchPattern: '**/*.mappers.ts'
 ```
 
-</Tab>
+</Tabs.Tab>
 
 </Tabs>
 
@@ -115,7 +117,9 @@ The server preset comes with these plugins built-in with stricter defaults. You 
 
 Now, run codegen:
 
-<PackageCmd packages={[{ name: 'graphql-codegen', cmd: 'run', isNpx: true }]} />
+```sh
+npx graphql-codegen
+```
 
 This results in the following structure:
 
@@ -157,7 +161,7 @@ We can use generated files in GraphQL API implementation:
 
 <Tabs items={['GraphQL Yoga','Apollo Server']}>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="src/server.ts"
 import { createYoga, createSchema } from 'graphql-yoga'
@@ -170,9 +174,9 @@ const server = createServer(yoga)
 server.listen(3000)
 ```
 
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 
 ```ts filename="src/server.ts"
 import { ApolloServer } from 'apollo-server'
@@ -187,7 +191,7 @@ server.listen().then(({ url }) => {
 })
 ```
 
-</Tab>
+</Tabs.Tab>
 
 </Tabs>
 
@@ -273,7 +277,9 @@ The server preset automatically uses scalar implementation from `graphql-scalars
 
 First, install `graphql-scalars`:
 
-<PackageCmd packages={['graphql-scalars']} />
+```sh npm2yarn
+npm i graphql-scalars
+```
 
 Then, add a scalar to your schema:
 

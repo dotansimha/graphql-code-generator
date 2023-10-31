@@ -28,6 +28,7 @@ export interface ParsedConfig {
   typesSuffix: string;
   addTypename: boolean;
   nonOptionalTypename: boolean;
+  extractAllFieldsToTypes: boolean;
   externalFragments: LoadedFragment[];
   fragmentImports: ImportDeclaration<FragmentImport>[];
   immutableTypes: boolean;
@@ -36,6 +37,7 @@ export interface ParsedConfig {
   allowEnumStringTypes: boolean;
   inlineFragmentTypes: InlineFragmentTypeOptions;
   emitLegacyCommonJSImports: boolean;
+  printFieldsOnNewLines: boolean;
 }
 
 export interface RawConfig {
@@ -371,6 +373,23 @@ export interface RawConfig {
    * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
    */
   emitLegacyCommonJSImports?: boolean;
+
+  /**
+   * @default false
+   * @description Extract all field types to their own types, instead of inlining them.
+   * This helps to reduce type duplication, and makes type errors more readable.
+   * It can also significantly reduce the size of the generated code, the generation time,
+   * and the typechecking time.
+   */
+  extractAllFieldsToTypes?: boolean;
+
+  /**
+   * @default false
+   * @description If you prefer to have each field in generated types printed on a new line, set this to true.
+   * This can be useful for improving readability of the resulting types,
+   * without resorting to running tools like Prettier on the output.
+   */
+  printFieldsOnNewLines?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -393,6 +412,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       emitLegacyCommonJSImports:
         rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
+      extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
+      printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
       ...((additionalConfig || {}) as any),
     };
 

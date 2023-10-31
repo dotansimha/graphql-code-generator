@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 5.0.1
+
+### Patch Changes
+
+- [#9523](https://github.com/dotansimha/graphql-code-generator/pull/9523) [`bb1e0e96e`](https://github.com/dotansimha/graphql-code-generator/commit/bb1e0e96ed9d519684630cd7ea53869b48b4632e) Thanks [@tnyo43](https://github.com/tnyo43)! - add noSilentErrors option to the config type
+
 ## 5.0.0
 
 ### Major Changes
