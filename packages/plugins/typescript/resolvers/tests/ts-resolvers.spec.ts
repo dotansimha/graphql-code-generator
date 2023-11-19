@@ -719,7 +719,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       );
 
       expect(mergedOutput).toContain(`import { MyEnum } from './enums'`);
-      expect(mergedOutput).toContain(`export { MyEnum }`);
+      expect(mergedOutput).toContain(`export type { MyEnum }`);
       expect(mergedOutput).toContain(ENUM_RESOLVERS_SIGNATURE);
       expect(mergedOutput).toContain('EnumResolverSignature');
       expect(mergedOutput).toContain(
