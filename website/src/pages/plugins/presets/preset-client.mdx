@@ -490,7 +490,26 @@ const response = await fetch('http://yoga/graphql', {
 console.log(response.status)
 console.log(await response.json())
 ```
+To override the default hash algorithm of sha1 set `persistedDocuments.hashAlgorithm`
 
+```ts filename="codegen.ts" {10-12}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      presetConfig: {
+        persistedDocuments: {
+          hashAlgorithm: 'sha256',      
+	},
+      }
+    }
+  }
+}
+```
 ### Normalized Caches (urql and Apollo Client)
 
 Urql is a popular GraphQL client that utilizes a normalized cache.
