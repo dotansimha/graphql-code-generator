@@ -168,12 +168,12 @@ export class ApolloFederation {
 
         // Look for @requires and see what the service needs and gets
         const requires = getDirectivesByName('requires', fieldNode).map(this.extractFieldSet);
-        const requiredFields = this.translateFieldSet(merge({}, ...requires), parentTypeSignature);
+        const requiredFields = this.translateFieldSet(merge({}, ...requires), parentType.name);
 
         // @key() @key() - "primary keys" in Federation
         const primaryKeys = keys.map(def => {
           const fields = this.extractFieldSet(def);
-          return this.translateFieldSet(fields, parentTypeSignature);
+          return this.translateFieldSet(fields, parentType.name);
         });
 
         const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
