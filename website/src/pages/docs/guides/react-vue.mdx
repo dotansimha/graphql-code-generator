@@ -488,6 +488,24 @@ To get the best GraphQL development experience, we recommend installing the [Gra
 - snippets
 - go to definition for fragments and input types
 
+An alternative to the VSCode extension is the [GraphQLSP](https://github.com/0no-co/GraphQLSP/tree/main) package, which is a TypeScript LSP plugin for GraphQL.
+To get that working, we need to add the following to your `tsconfig.json` after installing the package (`npm i -D @0no-co/graphqlsp`):
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "./schema.graphql"
+      }
+    ]
+  }
+}
+```
+
+Last but not least you need to ensure that when you're using `VSCode` that the [workspace version of TS is used](https://code.visualstudio.com/docs/typescript/typescript-compiling#_using-the-workspace-version-of-typescript)
+
 Also, make sure to follow GraphQL best practices by using [`graphql-eslint`](https://github.com/B2o5T/graphql-eslint) and the [ESLint VSCode extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) to visualize errors and warnings inlined in your code correctly.
 
 Feel free to continue playing with this demo project, available in all flavors, in our [repository `examples` folder](https://github.com/dotansimha/graphql-code-generator/blob/master/examples).
