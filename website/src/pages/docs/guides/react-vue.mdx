@@ -497,7 +497,10 @@ To get that working, we need to add the following to your `tsconfig.json` after 
     "plugins": [
       {
         "name": "@0no-co/graphqlsp",
-        "schema": "./schema.graphql"
+        "schema": "./schema.graphql",
+        "disableTypegen": true,
+        "templateIsCallExpression": true,
+        "template": "graphql"
       }
     ]
   }
