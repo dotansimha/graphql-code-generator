@@ -77,7 +77,7 @@ query allAccounts {
 }
 ```
 
-We can use the generated code with `useResult` like this:
+We can use the generated code with a watcher like this:
 
 ```vue
 <template>
@@ -91,20 +91,16 @@ We can use the generated code with `useResult` like this:
     </div>
   </div>
 </template>
-
-<script lang="ts">
+ 
+<script setup lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import { useResult } from '@vue/apollo-composable'
 import { useAllAccountsQuery } from '../generated/graphqlOperations'
-
-export default defineComponent({
-  setup() {
-    const { result, loading, error } = useAllAccountsQuery()
-    // Only select the property 'accounts' for use in the template
-    const allAccounts = useResult(result, null, data => data.accounts)
-    return { allAccounts, loading, error }
-  }
-})
+import { ref, watch } from 'vue'
+ 
+const { result, loading, error } = useAllAccountsQuery()
+const allAccounts = ref();
+// Only select the property 'accounts' for use in the template
+watch(result, data => allAccounts.value = data.accounts)
 </script>
 ```
 
