@@ -22,52 +22,51 @@ export function makeFragmentData<
 
 const defaultUnmaskFunctionName = 'useFragment';
 
-const modifyType = (
-  rawType: string,
-  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false; empty?: boolean }
-) => {
-  return `${
-    opts.list === 'only-list'
-      ? `ReadonlyArray<${rawType}>`
-      : opts.list === 'with-list'
-      ? `${rawType} | ReadonlyArray<${rawType}>`
-      : rawType
-  }${opts.nullable ? ' | null | undefined' : ''}`;
-};
-
-const createUnmaskFunctionTypeDefinition = (
-  unmaskFunctionName = defaultUnmaskFunctionName,
-  opts: { nullable: boolean; list: 'with-list' | 'only-list' | false }
-) => {
-  return `export function ${unmaskFunctionName}<TType>(
+const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) =>
+  [
+    `// return non-nullable if \`fragmentType\` is non-nullable
+export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: ${modifyType(`FragmentType<DocumentTypeDecoration<TType, any>>`, opts)}
-): ${modifyType('TType', opts)}`;
-};
+  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
+): TType;`,
 
-const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
-  `// return non-nullable if \`fragmentType\` is non-nullable\n${createUnmaskFunctionTypeDefinition(
-    unmaskFunctionName,
-    { nullable: false, list: false }
-  )}`,
-  `// return nullable if \`fragmentType\` is nullable\n${createUnmaskFunctionTypeDefinition(unmaskFunctionName, {
-    nullable: true,
-    list: false,
-  })}`,
-  `// return array of non-nullable if \`fragmentType\` is array of non-nullable\n${createUnmaskFunctionTypeDefinition(
-    unmaskFunctionName,
-    { nullable: false, list: 'only-list' }
-  )}`,
-  `// return array of nullable if \`fragmentType\` is array of nullable\n${createUnmaskFunctionTypeDefinition(
-    unmaskFunctionName,
-    { nullable: true, list: 'only-list' }
-  )}`,
-];
+    `// return nullable if \`fragmentType\` is nullable
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
+): TType | null | undefined;`,
+
+    `// return array of non-nullable if \`fragmentType\` is array of non-nullable
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>>
+): Array<TType>;`,
+
+    `// return array of nullable if \`fragmentType\` is array of nullable
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+): Array<TType> | null | undefined;`,
+
+    `// return readonly array of non-nullable if \`fragmentType\` is array of non-nullable
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
+): ReadonlyArray<TType>;`,
+
+    `// return readonly array of nullable if \`fragmentType\` is array of nullable
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+): ReadonlyArray<TType> | null | undefined;`,
+  ].join('\n');
 
 const createUnmaskFunction = (unmaskFunctionName = defaultUnmaskFunctionName) => `
-${createUnmaskFunctionTypeDefinitions(unmaskFunctionName)
-  .concat(createUnmaskFunctionTypeDefinition(unmaskFunctionName, { nullable: true, list: 'with-list' }))
-  .join(';\n')} {
+${createUnmaskFunctionTypeDefinitions(unmaskFunctionName)}
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | Array<FragmentType<DocumentTypeDecoration<TType, any>>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+): TType | Array<TType> | ReadonlyArray<TType> | null | undefined {
   return fragmentType as any;
 }
 `;
