@@ -1,5 +1,15 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 4.0.2
+
+### Patch Changes
+
+- [#9640](https://github.com/dotansimha/graphql-code-generator/pull/9640) [`40a29e91e`](https://github.com/dotansimha/graphql-code-generator/commit/40a29e91ea25ed5ad6acb15ccca1767dafbdd7c5) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
+- Updated dependencies [[`40a29e91e`](https://github.com/dotansimha/graphql-code-generator/commit/40a29e91ea25ed5ad6acb15ccca1767dafbdd7c5), [`40a29e91e`](https://github.com/dotansimha/graphql-code-generator/commit/40a29e91ea25ed5ad6acb15ccca1767dafbdd7c5), [`1bed87b20`](https://github.com/dotansimha/graphql-code-generator/commit/1bed87b201b6c0879ef605ec41f5a1acdcbfe1e7), [`43b525d1f`](https://github.com/dotansimha/graphql-code-generator/commit/43b525d1f94a027b01d579d8b2953463f0e4c35a)]:
+  - @graphql-codegen/plugin-helpers@5.0.2
+  - @graphql-codegen/visitor-plugin-common@4.1.0
+
 ## 4.0.1
 
 ### Patch Changes
