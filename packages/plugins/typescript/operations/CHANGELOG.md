@@ -1,5 +1,23 @@
 # @graphql-codegen/typescript-operations
 
+## 4.1.0
+
+### Minor Changes
+
+- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - fix: out-of-memory crash (fixes #7720)
+  perf: implement a caching mechanism that makes sure the type originating at the same location is never generated twice, as long as the combination of selected fields and possible types matches
+  feat: implement `extractAllFieldsToTypes: boolean`
+  feat: implement `printFieldsOnNewLines: boolean`
+
+### Patch Changes
+
+- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
+- Updated dependencies [[`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba)]:
+  - @graphql-codegen/plugin-helpers@5.0.2
+  - @graphql-codegen/typescript@4.0.2
+  - @graphql-codegen/visitor-plugin-common@4.1.0
+
 ## 4.0.1
 
 ### Patch Changes
