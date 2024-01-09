@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@graphql-codegen/cli": "5.0.0"
+    "@graphql-codegen/cli": "5.0.1"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.2.0",

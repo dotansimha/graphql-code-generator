@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typed-document-node",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "GraphQL Code Generator plugin for generating ready-to-use TypedDocumentNode based on GraphQL operations",
   "repository": {
     "type": "git",
@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "change-case-all": "1.0.15",
-    "@graphql-codegen/plugin-helpers": "^5.0.0",
-    "@graphql-codegen/visitor-plugin-common": "4.0.1",
+    "@graphql-codegen/plugin-helpers": "^5.0.2",
+    "@graphql-codegen/visitor-plugin-common": "4.1.0",
     "auto-bind": "~4.0.0",
     "tslib": "~2.6.0"
   },

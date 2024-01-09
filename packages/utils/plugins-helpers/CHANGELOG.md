@@ -1,5 +1,12 @@
 # @graphql-codegen/plugin-helpers
 
+## 5.0.2
+
+### Patch Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
+
 ## 5.0.1
 
 ### Patch Changes

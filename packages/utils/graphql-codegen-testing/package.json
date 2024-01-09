@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "GraphQL Codegen Testing Utils",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -40,7 +40,7 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^5.0.0",
+    "@graphql-codegen/plugin-helpers": "^5.0.2",
     "common-tags": "^1.8.0",
     "lz-string": "^1.4.4",
     "graphql-helix": "1.13.0",
