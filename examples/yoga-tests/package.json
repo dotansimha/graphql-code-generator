@@ -9,7 +9,7 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "jest": "28.1.3",
     "babel-jest": "29.6.4",
-    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/cli": "5.0.1",
     "@babel/core": "7.22.11",
     "@babel/preset-env": "7.22.10",
     "@babel/preset-typescript": "7.22.11"

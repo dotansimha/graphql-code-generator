@@ -19,8 +19,8 @@
     "swr": "^2.0.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/schema-ast": "4.0.0",
+    "@graphql-codegen/cli": "^5.0.1",
+    "@graphql-codegen/schema-ast": "4.0.1",
     "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.17",
