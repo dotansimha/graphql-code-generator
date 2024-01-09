@@ -1,24 +1,5 @@
 # @graphql-codegen/client-preset
 
-## 4.2.0
-
-### Minor Changes
-
-- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - The client preset now allows the use of the `futureProofEnums` config option
-
-### Patch Changes
-
-- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
-  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
-- Updated dependencies [[`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba)]:
-  - @graphql-codegen/add@5.0.1
-  - @graphql-codegen/gql-tag-operations@4.0.2
-  - @graphql-codegen/plugin-helpers@5.0.2
-  - @graphql-codegen/typed-document-node@5.0.2
-  - @graphql-codegen/typescript@4.0.2
-  - @graphql-codegen/typescript-operations@4.1.0
-  - @graphql-codegen/visitor-plugin-common@4.1.0
-
 ## 4.1.0
 
 ### Minor Changes
