@@ -1,26 +1,5 @@
 # @graphql-codegen/cli
 
-## 5.0.1
-
-### Patch Changes
-
-- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
-
-  - Added dependency [`@graphql-codegen/client-preset@^4.1.0` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/4.1.0) (to `dependencies`)
-
-- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - ignore events in `.git` directory
-
-- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - Surface error occurring during import of @parcel/watcher
-
-- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - Include @graphql-codegen/client-preset in @graphql-codegen/cli by default
-
-- [#9809](https://github.com/dotansimha/graphql-code-generator/pull/9809) [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba) Thanks [@saihaj](https://github.com/saihaj)! - fix watcher unable to find highest common directory on Windows
-
-- Updated dependencies [[`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba), [`137ca2c70`](https://github.com/dotansimha/graphql-code-generator/commit/137ca2c706eb86b4069d3d91b7f6990eef3b60ba)]:
-  - @graphql-codegen/client-preset@4.2.0
-  - @graphql-codegen/core@4.0.1
-  - @graphql-codegen/plugin-helpers@5.0.2
-
 ## 5.0.0
 
 ### Major Changes
