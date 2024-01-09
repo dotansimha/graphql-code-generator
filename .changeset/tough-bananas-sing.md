@@ -1,8 +1,8 @@
 ---
-'@graphql-codegen/cli': minor
-'@graphql-codegen/visitor-plugin-common': minor
-'@graphql-codegen/typescript-operations': minor
-'@graphql-codegen/client-preset': minor
+'@graphql-codegen/cli': patch
+'@graphql-codegen/visitor-plugin-common': patch
+'@graphql-codegen/typescript-operations': patch
+'@graphql-codegen/client-preset': patch
 '@graphql-codegen/core': patch
 '@graphql-codegen/add': patch
 '@graphql-codegen/fragment-matcher': patch
