@@ -3002,4 +3002,41 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       };
     `);
   });
+
+  it('#9438 - avoidOptionals should not wrap arguments with partial', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        users(filter: UserFilterInput): [User!]!
+      }
+
+      input UserFilterInput {
+        status: String = "ACTIVE"
+      }
+
+      type User {
+        id: ID!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        avoidOptionals: {
+          defaultValue: true,
+          field: true,
+          inputValue: true,
+          object: true,
+          resolvers: false,
+        },
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(output.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+        users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>;
+      };
+    `);
+  });
 });
