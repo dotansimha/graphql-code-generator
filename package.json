@@ -25,6 +25,7 @@
     "release": "changeset publish",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
+    "toast-repro": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen-repro.ts dotenv_config_path=dev-test/.env",
     "generate:examples": "yarn generate:examples:cjs",
     "watch:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "watch:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",

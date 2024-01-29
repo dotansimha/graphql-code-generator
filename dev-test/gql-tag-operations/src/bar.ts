@@ -2,11 +2,18 @@
 
 import { gql, DocumentType } from '../gql.js';
 
-const BarQuery = gql(/* GraphQL */ `
-  query Bar {
+const FooQuery = gql(/* GraphQL */ `
+  query Foo {
     Tweets {
-      ...Lel
+      id
     }
+  }
+`);
+
+const LelFragment = gql(/* GraphQL */ `
+  fragment Lel on Tweet {
+    id
+    body
   }
 `);
 
