@@ -54,7 +54,7 @@ export type Query = {
   Notifications?: Maybe<Array<Maybe<Notification>>>;
   NotificationsMeta?: Maybe<Meta>;
   Tweet?: Maybe<Tweet>;
-  Tweets?: Maybe<Array<Maybe<Tweet>>>;
+  Tweets?: Maybe<Array<Tweet>>;
   TweetsMeta?: Maybe<Meta>;
   User?: Maybe<User>;
 };
@@ -88,9 +88,9 @@ export type Stat = {
 
 export type Tweet = {
   __typename?: 'Tweet';
-  Author?: Maybe<User>;
   Stats?: Maybe<Stat>;
-  body?: Maybe<Scalars['String']['output']>;
+  author: User;
+  body: Scalars['String']['output'];
   date?: Maybe<Scalars['Date']['output']>;
   id: Scalars['ID']['output'];
 };
@@ -107,21 +107,170 @@ export type User = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
+export type TweetFragmentFragment = ({ __typename?: 'Tweet'; id: string; body: string } & {
+  ' $fragmentRefs'?: { TweetAuthorFragmentFragment: TweetAuthorFragmentFragment };
+}) & { ' $fragmentName'?: 'TweetFragmentFragment' };
+
+export type TweetAuthorFragmentFragment = {
+  __typename?: 'Tweet';
+  id: string;
+  author: { __typename?: 'User'; id: string; username?: string | null };
+} & { ' $fragmentName'?: 'TweetAuthorFragmentFragment' };
+
+export type TweetsFragmentFragment = {
+  __typename?: 'Query';
+  Tweets?: Array<
+    { __typename?: 'Tweet'; id: string } & { ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment } }
+  > | null;
+} & { ' $fragmentName'?: 'TweetsFragmentFragment' };
+
+export type TweetAppQueryQueryVariables = Exact<{ [key: string]: never }>;
+
+export type TweetAppQueryQuery = { __typename?: 'Query' } & {
+  ' $fragmentRefs'?: { TweetsFragmentFragment: TweetsFragmentFragment };
+};
+
 export type FooQueryVariables = Exact<{ [key: string]: never }>;
 
-export type FooQuery = { __typename?: 'Query'; Tweets?: Array<{ __typename?: 'Tweet'; id: string } | null> | null };
+export type FooQuery = { __typename?: 'Query'; Tweets?: Array<{ __typename?: 'Tweet'; id: string }> | null };
 
-export type LelFragment = { __typename?: 'Tweet'; id: string; body?: string | null } & {
-  ' $fragmentName'?: 'LelFragment';
-};
+export type LelFragment = { __typename?: 'Tweet'; id: string; body: string } & { ' $fragmentName'?: 'LelFragment' };
 
 export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
 export type BarQuery = {
   __typename?: 'Query';
-  Tweets?: Array<({ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }) | null> | null;
+  Tweets?: Array<{ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }> | null;
 };
 
+export const TweetAuthorFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetAuthorFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TweetAuthorFragmentFragment, unknown>;
+export const TweetFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'body' } },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetAuthorFragment' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetAuthorFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TweetFragmentFragment, unknown>;
+export const TweetsFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetsFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'Tweets' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetFragment' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetAuthorFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'body' } },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetAuthorFragment' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TweetsFragmentFragment, unknown>;
 export const LelFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -139,6 +288,76 @@ export const LelFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<LelFragment, unknown>;
+export const TweetAppQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'TweetAppQuery' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetsFragment' } }],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetAuthorFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'author' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'body' } },
+          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetAuthorFragment' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TweetsFragment' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'Tweets' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'TweetFragment' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TweetAppQueryQuery, TweetAppQueryQueryVariables>;
 export const FooDocument = {
   kind: 'Document',
   definitions: [

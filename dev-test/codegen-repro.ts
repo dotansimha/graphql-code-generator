@@ -1,12 +1,14 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  ignoreNoDocuments: true,
-  emitLegacyCommonJSImports: false,
   generates: {
     './dev-test/toast-repro/gql/': {
       schema: './dev-test/gql-tag-operations/schema.graphql',
-      documents: ['./dev-test/gql-tag-operations/src/index.ts', './dev-test/gql-tag-operations/src/bar.ts'],
+      documents: [
+        './dev-test/gql-tag-operations/src/index.ts',
+        './dev-test/gql-tag-operations/src/bar.ts',
+        './dev-test/gql-tag-operations-masking/src/**/*.tsx',
+      ],
       preset: 'client',
     },
   },

@@ -3,9 +3,9 @@ scalar Date
 
 type Tweet {
   id: ID!
-  body: String
+  body: String!
   date: Date
-  Author: User
+  author: User!
   Stats: Stat
 }
 
@@ -38,7 +38,7 @@ type Meta {
 
 type Query {
   Tweet(id: ID!): Tweet
-  Tweets(limit: Int, skip: Int, sort_field: String, sort_order: String): [Tweet]
+  Tweets(limit: Int, skip: Int, sort_field: String, sort_order: String): [Tweet!]
   TweetsMeta: Meta
   User(id: ID!): User
   Notifications(limit: Int): [Notification]
