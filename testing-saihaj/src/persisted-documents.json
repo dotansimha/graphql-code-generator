@@ -1,0 +1,5 @@
+{
+  "7e6e06eb8822f196fe359eacb42650678a609316": "fragment TweetAuthorFragment on Tweet { author { id username } id } fragment TweetFragment on Tweet { body id ...TweetAuthorFragment } fragment TweetsFragment on Query { Tweets { id ...TweetFragment } } query TweetAppQuery { ...TweetsFragment }",
+  "65879db49ef2bd345e0b7d7b6748c37d0fb7ed9a": "query Foo { Tweets { id } }",
+  "1fea03c33abcdfac6351235da4e10e92e5fd835f": "fragment Lel on Tweet { body id } query Bar { Tweets { ...Lel } }"
+}
