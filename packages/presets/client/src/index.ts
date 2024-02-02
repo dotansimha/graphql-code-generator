@@ -244,9 +244,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       fragmentMaskingFileGenerateConfig = {
         filename: `${options.baseOutputDir}fragment-masking${fragmentMaskingArtifactFileExtension}`,
         pluginMap: {
+          [`add`]: addPlugin,
           [`fragment-masking`]: fragmentMaskingPlugin,
         },
         plugins: [
+          { [`add`]: { content: `/* eslint-disable */` } },
           {
             [`fragment-masking`]: {},
           },

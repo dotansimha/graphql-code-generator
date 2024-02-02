@@ -754,7 +754,8 @@ export * from "./gql";`);
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
+        "/* eslint-disable */
+        import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
         import { FragmentDefinitionNode } from 'graphql';
         import { Incremental } from './graphql';
 

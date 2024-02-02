@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ResultOf, DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 import { Incremental, TypedDocumentString } from './graphql';
 
