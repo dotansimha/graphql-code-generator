@@ -109,7 +109,7 @@ mockGetUserQuery({ query, variables, operationName, request }) => {})
 
 MSW 2.x introduced a number of breaking changes. The types from `msw` are not compatible between the two versions so to upgrade, you will have to make some changes.
 
-## Updating the resolver function
+### Updating the resolver function
 
 You will need to update callback signatures to use the new resolver argument. In addition, the returned result must be a `Response` object.
 
