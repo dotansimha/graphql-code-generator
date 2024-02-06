@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 4.1.1
+
+### Patch Changes
+
+- [#9673](https://github.com/dotansimha/graphql-code-generator/pull/9673) [`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f) Thanks [@maclockard](https://github.com/maclockard)! - Respect avoidOptionals when all arguments are optional
+
 ## 4.1.0
 
 ### Minor Changes

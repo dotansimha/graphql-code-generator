@@ -1,5 +1,18 @@
 # @graphql-codegen/client-preset
 
+## 4.2.1
+
+### Patch Changes
+
+- [#9557](https://github.com/dotansimha/graphql-code-generator/pull/9557) [`48ddaeae1`](https://github.com/dotansimha/graphql-code-generator/commit/48ddaeae1809cb52e6de5aa14f0d47bedde9d547) Thanks [@konomae](https://github.com/konomae)! - Add eslint-disable comment to fragment-masking.ts
+
+- Updated dependencies [[`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f)]:
+  - @graphql-codegen/visitor-plugin-common@4.1.1
+  - @graphql-codegen/gql-tag-operations@4.0.3
+  - @graphql-codegen/typescript-operations@4.1.1
+  - @graphql-codegen/typed-document-node@5.0.3
+  - @graphql-codegen/typescript@4.0.3
+
 ## 4.2.0
 
 ### Minor Changes
