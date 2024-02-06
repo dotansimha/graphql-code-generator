@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-operations
 
+## 4.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f)]:
+  - @graphql-codegen/visitor-plugin-common@4.1.1
+  - @graphql-codegen/typescript@4.0.3
+
 ## 4.1.0
 
 ### Minor Changes
