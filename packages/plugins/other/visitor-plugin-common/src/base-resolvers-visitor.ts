@@ -1075,10 +1075,15 @@ export class BaseResolversVisitor<
 
   protected createFieldContextTypeMap(): FieldContextTypeMap {
     return this.config.fieldContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const isScoped = fieldContextType.includes('\\#');
+      if (fieldContextType.includes('\\#')) {
+        fieldContextType = fieldContextType.replace('\\#', '');
+      }
       const items = fieldContextType.split('#');
       if (items.length === 3) {
         const [path, source, contextTypeName] = items;
-        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+        const sourceStr = isScoped ? `\\#${source}` : source;
+        return { ...prev, [path]: parseMapper(`${sourceStr}#${contextTypeName}`) };
       }
       const [path, contextType] = items;
       return { ...prev, [path]: parseMapper(contextType) };
@@ -1086,10 +1091,15 @@ export class BaseResolversVisitor<
   }
   protected createDirectivedContextType(): FieldContextTypeMap {
     return this.config.directiveContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const isScoped = fieldContextType.includes('\\#');
+      if (fieldContextType.includes('\\#')) {
+        fieldContextType = fieldContextType.replace('\\#', '');
+      }
       const items = fieldContextType.split('#');
       if (items.length === 3) {
         const [path, source, contextTypeName] = items;
-        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+        const sourceStr = isScoped ? `\\#${source}` : source;
+        return { ...prev, [path]: parseMapper(`${sourceStr}#${contextTypeName}`) };
       }
       const [path, contextType] = items;
       return { ...prev, [path]: parseMapper(contextType) };
