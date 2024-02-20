@@ -33,9 +33,9 @@ interface Helpers {
 }
 
 function prepareLegacy(mapper: string): Helpers {
-  const isScoped = mapper.startsWith('\\#');
-  if (mapper.startsWith('\\#')) {
-    mapper = mapper.slice(2);
+  const isScoped = mapper.includes('\\#');
+  if (mapper.includes('\\#')) {
+    mapper = mapper.replace('\\#', '');
   }
   const items = mapper.split('#');
   const isNamespace = items.length === 3;
@@ -53,9 +53,9 @@ function prepareLegacy(mapper: string): Helpers {
 }
 
 function prepare(mapper: string): Helpers {
-  const isScoped = mapper.startsWith('\\#');
-  if (mapper.startsWith('\\#')) {
-    mapper = mapper.slice(2);
+  const isScoped = mapper.includes('\\#');
+  if (mapper.includes('\\#')) {
+    mapper = mapper.replace('\\#', '');
   }
   let [source, path] = mapper.split('#');
   const isNamespace = path.includes('.');
@@ -72,8 +72,8 @@ function prepare(mapper: string): Helpers {
 }
 
 function isLegacyMode(mapper: string) {
-  if (mapper.startsWith('\\#')) {
-    mapper = mapper.slice(2);
+  if (mapper.includes('\\#')) {
+    mapper = mapper.replace('\\#', '');
   }
   return mapper.split('#').length === 3;
 }
