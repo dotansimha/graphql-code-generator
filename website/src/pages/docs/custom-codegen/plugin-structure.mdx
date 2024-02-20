@@ -26,8 +26,9 @@ Now, let's try to load and use it with the codegen. Specify the path to your `.j
 schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:
-  output.ts:
-    - my-plugin.js
+  plugins:
+    output.ts:
+      - my-plugin.js
 ```
 
 Now, run the `@graphql-codegen/cli` using `graphql-codegen` command, and it will create a file called `output.ts` with `Hi!`
@@ -89,8 +90,9 @@ schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:
   output.ts:
-    - my-plugin.js:
-        myConfig: 'some-value'
+    plugins:
+      - my-plugin.js:
+          myConfig: 'some-value'
 ```
 
 And then, you can use in your plugin:
@@ -117,8 +119,9 @@ Then, publish it to npm using `npm publish` and test it by installing the publis
 schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:
-  output.ts:
-    - my-custom-plugin-package
+  plugins:
+    output.ts:
+      - my-custom-plugin-package
 ```
 
 <Callout>
