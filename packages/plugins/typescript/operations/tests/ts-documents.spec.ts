@@ -383,7 +383,7 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
-    it.only('should add undefined as possible value according to allowUndefinedQueryVariables', async () => {
+    it('should add undefined as possible value according to allowUndefinedQueryVariables', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user: User!
