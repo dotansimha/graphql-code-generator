@@ -1,0 +1,12 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type mutation {
+  createUser(name: String!, email: String!, password: String!): User!
+}
