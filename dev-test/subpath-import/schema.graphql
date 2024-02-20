@@ -7,6 +7,11 @@ type User {
   updatedAt: String!
 }
 
+enum RoleStatus {
+  ADMIN
+  USER
+}
+
 type mutation {
   createUser(name: String!, email: String!, password: String!): User!
 }

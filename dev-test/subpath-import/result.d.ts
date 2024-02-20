@@ -1,3 +1,4 @@
+import { RoleStatus } from '#changeName/server/drizzle/schema';
 import { GraphQLResolveInfo } from 'graphql';
 import { TestContext } from '#test-null-value/context';
 import { FiedContextType } from '#test/root';
@@ -8,6 +9,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -17,6 +19,8 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
 };
+
+export { RoleStatus };
 
 export type User = {
   __typename?: 'User';
@@ -113,6 +117,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  RoleStatus: RoleStatus;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
   mutation: ResolverTypeWrapper<Mutation>;
@@ -126,6 +131,8 @@ export type ResolversParentTypes = {
   User: User;
   mutation: Mutation;
 };
+
+export type RoleStatusResolvers = EnumResolverSignature<{ ADMIN?: any; USER?: any }, ResolversTypes['RoleStatus']>;
 
 export type UserResolvers<
   ContextType = TestContext,
@@ -154,6 +161,7 @@ export type MutationResolvers<
 };
 
 export type Resolvers<ContextType = TestContext> = {
+  RoleStatus?: RoleStatusResolvers;
   User?: UserResolvers<ContextType>;
   mutation?: MutationResolvers<ContextType>;
 };

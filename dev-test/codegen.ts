@@ -238,6 +238,9 @@ const config: CodegenConfig = {
       config: {
         contextType: '\\#test-null-value/context#TestContext',
         fieldContextTypes: ['mutation.createUser#\\#test/root#FiedContextType'],
+        enumValues: {
+          RoleStatus: '\\#changeName/server/drizzle/schema#RoleStatus',
+        },
       },
     },
   },
