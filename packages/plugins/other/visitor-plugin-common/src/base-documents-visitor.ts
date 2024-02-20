@@ -258,7 +258,7 @@ export class BaseDocumentsVisitor<
       .join('\n\n');
   }
 
-  protected applyVariablesWrapper(variablesBlock: string): string {
+  protected applyVariablesWrapper(variablesBlock: string, _operationType?: string): string {
     return variablesBlock;
   }
 
@@ -294,7 +294,7 @@ export class BaseDocumentsVisitor<
 
     const operationVariables = new DeclarationBlock({
       ...this._declarationBlockConfig,
-      blockTransformer: t => this.applyVariablesWrapper(t),
+      blockTransformer: t => this.applyVariablesWrapper(t, operationType),
     })
       .export()
       .asKind('type')
