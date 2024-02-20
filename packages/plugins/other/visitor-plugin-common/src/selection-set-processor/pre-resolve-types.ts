@@ -101,7 +101,12 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
           });
       }
 
-      const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type, undefined, unsetTypes);
+      const name = this.config.formatNamedField(
+        aliasedField.alias,
+        fieldObj.type,
+        aliasedField.isConditional,
+        unsetTypes
+      );
       if (unsetTypes) {
         return {
           type: 'never',

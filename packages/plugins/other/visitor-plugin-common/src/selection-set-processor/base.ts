@@ -2,7 +2,7 @@ import { GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLOutpu
 import { AvoidOptionalsConfig, ConvertNameFn, NormalizedScalarsMap } from '../types.js';
 
 export type PrimitiveField = { isConditional: boolean; fieldName: string };
-export type PrimitiveAliasedFields = { alias: string; fieldName: string };
+export type PrimitiveAliasedFields = { isConditional: boolean; alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
 export type ProcessResult = null | Array<NameAndType | string>;
