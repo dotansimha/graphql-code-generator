@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.0.0
+
+### Major Changes
+
+- [#9845](https://github.com/dotansimha/graphql-code-generator/pull/9845) [`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5) Thanks [@productdevbook](https://github.com/productdevbook)! - path starts with "#"
+
 ## 4.1.2
 
 ### Patch Changes

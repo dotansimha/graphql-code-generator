@@ -1,5 +1,16 @@
 # @graphql-codegen/client-preset
 
+## 4.2.3
+
+### Patch Changes
+
+- Updated dependencies [[`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5)]:
+  - @graphql-codegen/visitor-plugin-common@5.0.0
+  - @graphql-codegen/gql-tag-operations@4.0.5
+  - @graphql-codegen/typescript-operations@4.1.3
+  - @graphql-codegen/typed-document-node@5.0.5
+  - @graphql-codegen/typescript@4.0.5
+
 ## 4.2.2
 
 ### Patch Changes
