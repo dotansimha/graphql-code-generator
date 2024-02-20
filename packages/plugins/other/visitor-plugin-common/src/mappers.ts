@@ -33,7 +33,7 @@ interface Helpers {
 }
 
 function prepareLegacy(mapper: string): Helpers {
-  const isScoped = mapper.startsWith('\\#')
+  const isScoped = mapper.startsWith('\\#');
   if (mapper.startsWith('\\#')) {
     mapper = mapper.slice(2);
   }
@@ -41,8 +41,8 @@ function prepareLegacy(mapper: string): Helpers {
   const isNamespace = items.length === 3;
   const isDefault = items[1].trim() === 'default' || items[1].startsWith('default ');
   const hasAlias = items[1].includes(' as ');
-  const source = isScoped ? `#${items[0]}` : items[0]
-  items[0] = source
+  const source = isScoped ? `#${items[0]}` : items[0];
+  items[0] = source;
 
   return {
     items,
@@ -53,7 +53,7 @@ function prepareLegacy(mapper: string): Helpers {
 }
 
 function prepare(mapper: string): Helpers {
-  const isScoped = mapper.startsWith('\\#')
+  const isScoped = mapper.startsWith('\\#');
   if (mapper.startsWith('\\#')) {
     mapper = mapper.slice(2);
   }
@@ -61,7 +61,7 @@ function prepare(mapper: string): Helpers {
   const isNamespace = path.includes('.');
   const isDefault = path.trim() === 'default' || path.startsWith('default ');
   const hasAlias = path.includes(' as ');
-  source = isScoped ? `#${source}` : source
+  source = isScoped ? `#${source}` : source;
 
   return {
     items: isNamespace ? [source, ...path.split('.')] : [source, path],
@@ -85,8 +85,8 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
     const mapperKind: MapperKind = isNamespace
       ? MapperKind.Namespace
       : isDefault
-        ? MapperKind.Default
-        : MapperKind.Regular;
+      ? MapperKind.Default
+      : MapperKind.Regular;
 
     function handleAlias(isDefault = false) {
       const [importedType, aliasType] = items[1].split(/\s+as\s+/);
