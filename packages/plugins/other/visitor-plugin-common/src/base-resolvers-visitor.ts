@@ -775,9 +775,8 @@ export class BaseResolversVisitor<
   ): string {
     const sourceType = super.convertName(node, options);
 
-    return `${
-      applyNamespacedImport && this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
-    }${sourceType}`;
+    return `${applyNamespacedImport && this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
+      }${sourceType}`;
   }
 
   // Kamil: this one is heeeeavvyyyy
@@ -1075,10 +1074,15 @@ export class BaseResolversVisitor<
 
   protected createFieldContextTypeMap(): FieldContextTypeMap {
     return this.config.fieldContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const isScoped = fieldContextType.includes('\\#')
+      if (fieldContextType.includes('\\#')) {
+        fieldContextType = fieldContextType.replace('\\#', '');
+      }
       const items = fieldContextType.split('#');
       if (items.length === 3) {
         const [path, source, contextTypeName] = items;
-        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+        const sourceStr = isScoped ? `\\#${source}` : source;
+        return { ...prev, [path]: parseMapper(`${sourceStr}#${contextTypeName}`) };
       }
       const [path, contextType] = items;
       return { ...prev, [path]: parseMapper(contextType) };
@@ -1086,10 +1090,15 @@ export class BaseResolversVisitor<
   }
   protected createDirectivedContextType(): FieldContextTypeMap {
     return this.config.directiveContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const isScoped = fieldContextType.includes('\\#')
+      if (fieldContextType.includes('\\#')) {
+        fieldContextType = fieldContextType.replace('\\#', '');
+      }
       const items = fieldContextType.split('#');
       if (items.length === 3) {
         const [path, source, contextTypeName] = items;
-        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+        const sourceStr = isScoped ? `\\#${source}` : source;
+        return { ...prev, [path]: parseMapper(`${sourceStr}#${contextTypeName}`) };
       }
       const [path, contextType] = items;
       return { ...prev, [path]: parseMapper(contextType) };
@@ -1319,9 +1328,8 @@ export class BaseResolversVisitor<
   }
 
   protected _getScalar(name: string): string {
-    return `${
-      this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
-    }Scalars['${name}']['output']`;
+    return `${this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
+      }Scalars['${name}']['output']`;
   }
 
   NamedType(node: NamedTypeNode): string {
@@ -1387,18 +1395,18 @@ export class BaseResolversVisitor<
 
       let argsType = hasArguments
         ? this.convertName(
-            parentName +
-              (this.config.addUnderscoreToArgsType ? '_' : '') +
-              this.convertName(node.name, {
-                useTypesPrefix: false,
-                useTypesSuffix: false,
-              }) +
-              'Args',
-            {
-              useTypesPrefix: true,
-            },
-            true
-          )
+          parentName +
+          (this.config.addUnderscoreToArgsType ? '_' : '') +
+          this.convertName(node.name, {
+            useTypesPrefix: false,
+            useTypesSuffix: false,
+          }) +
+          'Args',
+          {
+            useTypesPrefix: true,
+          },
+          true
+        )
         : null;
 
       const avoidInputsOptionals =
@@ -1513,8 +1521,7 @@ export class BaseResolversVisitor<
     if (!isRootType) {
       fieldsContent.push(
         indent(
-          `${
-            this.config.internalResolversPrefix
+          `${this.config.internalResolversPrefix
           }isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>${this.getPunctuation(declarationKind)}`
         )
       );
@@ -1551,8 +1558,7 @@ export class BaseResolversVisitor<
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(
         indent(
-          `${this.config.internalResolversPrefix}resolveType${
-            this.config.optionalResolveType ? '?' : ''
+          `${this.config.internalResolversPrefix}resolveType${this.config.optionalResolveType ? '?' : ''
           }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
         )
       ).string;
@@ -1701,8 +1707,7 @@ export class BaseResolversVisitor<
       .withBlock(
         [
           indent(
-            `${this.config.internalResolversPrefix}resolveType${
-              this.config.optionalResolveType ? '?' : ''
+            `${this.config.internalResolversPrefix}resolveType${this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
           ...fields.map((f: any) => f(node.name)),
