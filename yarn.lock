@@ -2508,11 +2508,11 @@
     value-or-promise "^1.0.12"
 
 "@graphql-tools/code-file-loader@^8.0.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-8.1.0.tgz#1092594f02f2c54fc1dd8b997921ccb8db642272"
-  integrity sha512-HKWW/B2z15ves8N9+xnVbGmFEVGyHEK80a4ghrjeTa6nwNZaKDVfq5CoYFfF0xpfjtH6gOVUExo2XCOEz4B8mQ==
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/code-file-loader/-/code-file-loader-8.1.1.tgz#517c37d4f8a20b2c6558b10cbe9a6f9bcfe98918"
+  integrity sha512-q4KN25EPSUztc8rA8YUU3ufh721Yk12xXDbtUA+YstczWS7a1RJlghYMFEfR1HsHSYbF7cUqkbnTKSGM3o52bQ==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "8.2.0"
+    "@graphql-tools/graphql-tag-pluck" "8.3.0"
     "@graphql-tools/utils" "^10.0.13"
     globby "^11.0.3"
     tslib "^2.4.0"
@@ -2650,11 +2650,11 @@
     value-or-promise "^1.0.12"
 
 "@graphql-tools/git-loader@^8.0.0":
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-8.0.4.tgz#663a42e28f1705ba29c0e41ac2f89e7436751608"
-  integrity sha512-fBmKtnOVqzMT2N8L6nggM4skPq3y2t0eBITZJXCOuxeIlIRAeCOdjNLPKgyGb0rezIyGsn55DKMua5101VN0Sg==
+  version "8.0.5"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/git-loader/-/git-loader-8.0.5.tgz#77f9c2a35fdb3a403d33660ed11702720d4b016e"
+  integrity sha512-P97/1mhruDiA6D5WUmx3n/aeGPLWj2+4dpzDOxFGGU+z9NcI/JdygMkeFpGZNHeJfw+kHfxgPcMPnxHcyhAoVA==
   dependencies:
-    "@graphql-tools/graphql-tag-pluck" "8.2.0"
+    "@graphql-tools/graphql-tag-pluck" "8.3.0"
     "@graphql-tools/utils" "^10.0.13"
     is-glob "4.0.3"
     micromatch "^4.0.4"
@@ -2696,10 +2696,10 @@
     tslib "^2.4.0"
     unixify "^1.0.0"
 
-"@graphql-tools/graphql-tag-pluck@8.2.0", "@graphql-tools/graphql-tag-pluck@^8.0.0":
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-8.2.0.tgz#958e07d3bdd94c2a7ac958364b7383c17d009ce2"
-  integrity sha512-aGIuHxyrJB+LlUfXrH73NVlQTA6LkFbLKQzHojFuwXZJpf7wPkxceN2yp7VjMedARkLJg589IoXgZeMb1EztGQ==
+"@graphql-tools/graphql-tag-pluck@8.3.0", "@graphql-tools/graphql-tag-pluck@^8.0.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-tag-pluck/-/graphql-tag-pluck-8.3.0.tgz#11bb8c627253137b39b34fb765cd6ebe506388b9"
+  integrity sha512-gNqukC+s7iHC7vQZmx1SEJQmLnOguBq+aqE2zV2+o1hxkExvKqyFli1SY/9gmukFIKpKutCIj+8yLOM+jARutw==
   dependencies:
     "@babel/core" "^7.22.9"
     "@babel/parser" "^7.16.8"
