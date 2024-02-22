@@ -82,7 +82,7 @@
     "@types/debounce": "1.2.4",
     "@types/inquirer": "8.2.9",
     "@types/is-glob": "4.0.3",
-    "@types/js-yaml": "4.0.8",
+    "@types/js-yaml": "4.0.9",
     "@types/micromatch": "^4.0.2",
     "@types/mkdirp": "1.0.2",
     "@types/shell-quote": "1.7.3",
