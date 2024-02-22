@@ -1,5 +1,12 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 4.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53), [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d)]:
+  - @graphql-codegen/visitor-plugin-common@5.1.0
+
 ## 4.0.5
 
 ### Patch Changes
