@@ -1,5 +1,19 @@
 # @graphql-codegen/typescript-operations
 
+## 4.2.0
+
+### Minor Changes
+
+- [#9652](https://github.com/dotansimha/graphql-code-generator/pull/9652) [`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53) Thanks [@gmurphey](https://github.com/gmurphey)! - Added allowUndefinedQueryVariables as config option
+
+### Patch Changes
+
+- [#9842](https://github.com/dotansimha/graphql-code-generator/pull/9842) [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d) Thanks [@henryqdineen](https://github.com/henryqdineen)! - properly handle aliased conditionals
+
+- Updated dependencies [[`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53), [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d)]:
+  - @graphql-codegen/visitor-plugin-common@5.1.0
+  - @graphql-codegen/typescript@4.0.6
+
 ## 4.1.3
 
 ### Patch Changes
