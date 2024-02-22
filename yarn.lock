@@ -4254,10 +4254,10 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/dedent@0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@types/dedent/-/dedent-0.7.1.tgz#05a6af9dbe7d3c927f3f6f54082fc69157a31a69"
-  integrity sha512-NKo033xLkoVCgUobq+FS1S3J6kwWeOcyqEBc2r2oi9J/dKncY11J9VgS0Giv7T4rxVt/MajUVcFppT2TPJA2Cg==
+"@types/dedent@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@types/dedent/-/dedent-0.7.2.tgz#878b5286877ec68e68e89f16b1014411c8e10814"
+  integrity sha512-kRiitIeUg1mPV9yH4VUJ/1uk2XjyANfeL8/7rH1tsjvHeO9PJLBHJIYsFWmAvmGj5u8rj+1TZx7PZzW2qLw3Lw==
 
 "@types/estree-jsx@^1.0.0":
   version "1.0.0"
