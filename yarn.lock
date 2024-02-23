@@ -4455,10 +4455,10 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
 
-"@types/parse-filepath@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/parse-filepath/-/parse-filepath-1.0.1.tgz#074b3765d7299ce5f6d2629c1f08a3fc542bbdac"
-  integrity sha512-54MLXe4Jo3p4Hn24TOLAPggOz81pkxHIwlQdDGs7HYe5CAkzdcnQVsGkoYY/2l9pkbdNawOiahUtTIYaYBecaw==
+"@types/parse-filepath@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/parse-filepath/-/parse-filepath-1.0.2.tgz#417f313bbb10526e7adb06e037e53040fb4d7f93"
+  integrity sha512-CcyaQuvlpejsJR57RWxUR++E7zTKvbDDotZyiKaJsZdlbV8JfHgRYj4aZszEGKVLhiX0pbD8QeAuzEFUol4mRA==
 
 "@types/prettier@^2.1.5":
   version "2.7.2"

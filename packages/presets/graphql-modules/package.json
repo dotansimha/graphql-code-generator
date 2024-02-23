@@ -12,7 +12,7 @@
     "prepack": "bob prepack"
   },
   "devDependencies": {
-    "@types/parse-filepath": "1.0.1"
+    "@types/parse-filepath": "1.0.2"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^5.0.3",
