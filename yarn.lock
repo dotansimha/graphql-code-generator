@@ -4370,10 +4370,10 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/jsonpath@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@types/jsonpath/-/jsonpath-0.2.2.tgz#b8b98ad2f0d912d343ff27d91bc406ccf90028b2"
-  integrity sha512-uo4BNABD0IVcJQjOmOq/atfxHVTniFaQEHrrGSANpWyS96ecej/85YXLvLWNe+tLshUz9/IbMbzImbKNo71WxA==
+"@types/jsonpath@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@types/jsonpath/-/jsonpath-0.2.4.tgz#065be59981c1420832835af656377622271154be"
+  integrity sha512-K3hxB8Blw0qgW6ExKgMbXQv2UPZBoE2GqLpVY+yr7nMD2Pq86lsuIzyAaiQ7eMqFL5B6di6pxSkogLJEyEHoGA==
 
 "@types/katex@^0.16.0":
   version "0.16.3"
