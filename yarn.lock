@@ -4503,10 +4503,10 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.0.tgz#591c1ce3a702c45ee15f47a42ade72c2fd78978a"
   integrity sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==
 
-"@types/shell-quote@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@types/shell-quote/-/shell-quote-1.7.3.tgz#12d1c1342b6a8ad926596c2e2a7d660c0b87f45c"
-  integrity sha512-CeYcQaOnluyKPHJTuJmaH9RDJEQSVxGMVf2EZab3chpA8sI65FB19t0x3JlS37NbxL+TUottk9pMypMJQcfhIw==
+"@types/shell-quote@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@types/shell-quote/-/shell-quote-1.7.5.tgz#6db4704742d307cd6d604e124e3ad6cd5ed943f3"
+  integrity sha512-+UE8GAGRPbJVQDdxi16dgadcBfQ+KG2vgZhV1+3A1XmHbmwcdwhCUwIdy+d3pAGrbvgRoVSjeI9vOWyq376Yzw==
 
 "@types/sinonjs__fake-timers@8.1.1":
   version "8.1.1"
