@@ -52,6 +52,6 @@
   },
   "type": "module",
   "devDependencies": {
-    "@graphql-tools/apollo-engine-loader": "8.0.0"
+    "@graphql-tools/apollo-engine-loader": "8.0.1"
   }
 }
