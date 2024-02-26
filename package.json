@@ -43,9 +43,9 @@
     "examples/**/*"
   ],
   "devDependencies": {
-    "@babel/core": "7.22.11",
-    "@babel/preset-env": "7.22.10",
-    "@babel/preset-typescript": "7.22.11",
+    "@babel/core": "7.23.9",
+    "@babel/preset-env": "7.23.9",
+    "@babel/preset-typescript": "7.23.3",
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.1",
     "@theguild/eslint-config": "0.11.3",
