@@ -4771,9 +4771,9 @@
     react-refresh "^0.14.0"
 
 "@vitejs/plugin-vue@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-4.3.3.tgz#3b2337f64495f95cfea5b1497d2d3f4a0b3382b2"
-  integrity sha512-ssxyhIAZqB0TrpUg6R0cBpCuMk9jTIlO1GNSKKQD6S8VjnXi6JXKfUXjSsxey9IwQiaRGsO1WnW9Rkl1L6AJVw==
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-4.6.2.tgz#057d2ded94c4e71b94e9814f92dcd9306317aa46"
+  integrity sha512-kqf7SGFoG+80aZG6Pf+gsZIVvGSCKE98JbiWqcCV9cThtg91Jav0yvYFC9Zb+jKetNGF6ZKeoaxgZfND21fWKw==
 
 "@volar/language-core@1.10.0", "@volar/language-core@~1.10.0":
   version "1.10.0"
@@ -4782,10 +4782,17 @@
   dependencies:
     "@volar/source-map" "1.10.0"
 
-"@volar/source-map@1.10.0", "@volar/source-map@~1.10.0":
+"@volar/source-map@1.10.0":
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-1.10.0.tgz#2413eb190ce69fc1a382f58524a3f82306668024"
   integrity sha512-/ibWdcOzDGiq/GM1JU2eX8fH1bvAhl66hfe8yEgLEzg9txgr6qb5sQ/DEz5PcDL75tF5H5sCRRwn8Eu8ezi9mw==
+  dependencies:
+    muggle-string "^0.3.1"
+
+"@volar/source-map@~1.10.0":
+  version "1.10.10"
+  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-1.10.10.tgz#ec807fe60b8afe29e19bf6d1c90d2e76502df541"
+  integrity sha512-GVKjLnifV4voJ9F0vhP56p4+F3WGf+gXlRtjFZsv6v3WxBTWU3ZVeaRaEHJmWrcv5LXmoYYpk/SC25BKemPRkg==
   dependencies:
     muggle-string "^0.3.1"
 
