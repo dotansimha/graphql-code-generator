@@ -667,14 +667,19 @@ To implement your own React Query fetcher while preserving the GraphQL document 
 
 ```ts filename="Custom fetcher function and useGraphQL hook implementation"
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { useQuery, type UseQueryResult } from '@tanstack/react-query'
-import { print, type ExecutionResult } from 'graphql'
+import { useQuery } from '@tanstack/react-query'
+import type { DirectiveDefinitionNode } from 'graphql'
+import { print } from 'graphql'
+
+export const getKey = <TData = unknown, TVariables = unknown>(
+  document: TypedDocumentNode<TData, TVariables>,
+) => [(document.definitions[0] as DirectiveDefinitionNode).name.value]
 
 /** Your custom fetcher function */
 async function customFetcher<TResult, TVariables>(
   url: string,
   document: TypedDocumentNode<TResult, TVariables>,
-  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+  variables?: TVariables | undefined,
 ): Promise<TResult> {
   const response = await fetch(url, {
     method: 'POST',
@@ -689,17 +694,18 @@ async function customFetcher<TResult, TVariables>(
   if (response.status !== 200) {
     throw new Error(`Failed to fetch: ${response.statusText}. Body: ${await response.text()}`)
   }
-
-  return await response.json()
+ 
+  return await response.json() as TResult
 }
-
-export function useGraphQL<TResult, TVariables>(
+ 
+export function useGraphQL<TResult = unknown, TVariables = unknown>(
   document: TypedDocumentNode<TResult, TVariables>,
-  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
-): UseQueryResult<ExecutionResult<TResult>> {
-  return useQuery([(document.definitions[0] as any).name.value, variables], () =>
-    customFetcher('https://swapi-graphql.netlify.app/.netlify/functions/index', document, variables)
-  )
+  variables?: TVariables,
+) {
+  return useQuery({
+    queryKey: [getKey(document), variables],
+    queryFn: () => customFetcher('https://swapi-graphql.netlify.app/.netlify/functions/index', document, variables),
+  })
 }
 ```
 
