@@ -694,10 +694,10 @@ async function customFetcher<TResult, TVariables>(
   if (response.status !== 200) {
     throw new Error(`Failed to fetch: ${response.statusText}. Body: ${await response.text()}`)
   }
- 
+
   return await response.json() as TResult
 }
- 
+
 export function useGraphQL<TResult = unknown, TVariables = unknown>(
   document: TypedDocumentNode<TResult, TVariables>,
   variables?: TVariables,
