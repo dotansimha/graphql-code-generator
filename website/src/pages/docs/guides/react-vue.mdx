@@ -554,22 +554,69 @@ The use of `@tanstack/react-query` along with `graphql-request@^5` is highly rec
 Create a file with the following helper function within your project:
 
 ```ts filename="useGraphQL helper function"
-import request from 'graphql-request'
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { useQuery, type UseQueryResult } from '@tanstack/react-query'
+import {
+  useMutation,
+  type UseMutationOptions,
+  useQuery,
+  type UseQueryOptions,
+} from '@tanstack/react-query'
+import type { DirectiveDefinitionNode } from 'graphql'
+import { request, type RequestOptions } from 'graphql-request'
 
-export function useGraphQL<TResult, TVariables>(
-  document: TypedDocumentNode<TResult, TVariables>,
-  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
-): UseQueryResult<TResult> {
-  return useQuery([(document.definitions[0] as any).name.value, variables], async ({ queryKey }) =>
-    request(
-      'https://swapi-graphql.netlify.app/.netlify/functions/index',
-      document,
-      queryKey[1] ? queryKey[1] : undefined
-    )
-  )
+export const getKey = <TData = unknown, TVariables = unknown>(
+  document: TypedDocumentNode<TData, TVariables>,
+) => [(document.definitions[0] as DirectiveDefinitionNode).name.value]
+
+export const useGqlQuery = <
+  TData = unknown,
+  TVariables = unknown,
+  TError = unknown,
+>(
+  document: TypedDocumentNode<TData, TVariables>,
+  variables?: TVariables,
+  options?: UseQueryOptions<TData, TError, TData>,
+  requestHeaders?: RequestOptions['requestHeaders'],
+) => {
+  const url = 'https://swapi-graphql.netlify.app/.netlify/functions/index'
+  return useQuery<TData, TError, TData>({
+    ...options,
+    queryKey: [url, ...getKey(document), variables, requestHeaders],
+    queryFn: () =>
+      request({
+        url,
+        document,
+        ...(variables && { variables }),
+        ...(requestHeaders && { requestHeaders }),
+      }),
+  })
 }
+
+export const useGqlMutation = <
+  TData = unknown,
+  TVariables = unknown,
+  TError = unknown,
+  TContext = unknown,
+>(
+  document: TypedDocumentNode<TData, TVariables>,
+  variables?: TVariables,
+  options?: UseMutationOptions<TData, TError, TVariables, TContext>,
+  requestHeaders?: RequestOptions['requestHeaders'],
+) => {
+  const url = 'https://swapi-graphql.netlify.app/.netlify/functions/index'
+  return useMutation<TData, TError, TVariables, TContext>({
+    ...options,
+    mutationKey: [url, ...getKey(document), variables, requestHeaders],
+    mutationFn: () =>
+      request({
+        url,
+        document,
+        ...(variables && { variables }),
+        ...(requestHeaders && { requestHeaders }),
+      }),
+  })
+}
+
 ```
 
 Then write type-safe code like the following:
@@ -592,7 +639,7 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 
 function App() {
   // `data` is properly typed, inferred from `allFilmsWithVariablesQueryDocument` type
-  const { data } = useGraphQL(
+  const { data } = useGqlQuery(
     allFilmsWithVariablesQueryDocument,
     // variables are also properly type-checked.
     { first: 10 }
