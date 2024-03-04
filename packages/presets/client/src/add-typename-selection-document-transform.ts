@@ -12,10 +12,13 @@ export const addTypenameSelectionDocumentTransform: Types.DocumentTransformObjec
       document: document.document
         ? visit(document.document, {
             SelectionSet(node, _, parent) {
-              const isSubscriptionRoot = typeof((parent as ASTNode)?.kind) === 'string' &&
-                (parent as ASTNode).kind === 'OperationDefinition' && (parent as OperationDefinitionNode).operation === 'subscription';
+              const isSubscriptionRoot =
+                typeof (parent as ASTNode)?.kind === 'string' &&
+                (parent as ASTNode).kind === 'OperationDefinition' &&
+                (parent as OperationDefinitionNode).operation === 'subscription';
               if (
-                !isSubscriptionRoot && !node.selections.find(selection => selection.kind === 'Field' && selection.name.value === '__typename')
+                !isSubscriptionRoot &&
+                !node.selections.find(selection => selection.kind === 'Field' && selection.name.value === '__typename')
               ) {
                 return {
                   ...node,
