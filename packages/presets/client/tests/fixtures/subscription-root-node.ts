@@ -2,7 +2,7 @@
 //@ts-ignore
 import gql from 'gql-tag';
 
-const Subscription = gql(`
+gql(`
   subscription onRegionCreated {
     onRegionCreated{
       regionId
