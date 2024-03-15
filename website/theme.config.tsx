@@ -2,13 +2,9 @@
 /* eslint sort-keys: error */
 import { useRouter } from 'next/router';
 import { defineConfig, Giscus, useTheme } from '@theguild/components';
-import { Search } from './src/components/Search';
 
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
-  search: {
-    component: Search,
-  },
   main({ children }) {
     const { resolvedTheme } = useTheme();
     const { route } = useRouter();
