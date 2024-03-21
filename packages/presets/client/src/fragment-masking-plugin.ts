@@ -1,5 +1,16 @@
 import type { PluginFunction } from '@graphql-codegen/plugin-helpers';
 
+const utilityTypesHelper = `
+type Primitive = string | number | boolean | bigint | symbol | null | undefined;
+type ExcludePrimitive<T> = Exclude<T, Primitive>;
+type ExtractPrimitive<T> = Exclude<T, Exclude<T, Primitive>>;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
+`;
+
 const fragmentTypeHelper = `
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
   infer TType,
@@ -13,11 +24,44 @@ export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>>
   : never;`;
 
 const makeFragmentDataHelper = `
+type UnionToIntersectGroupByTypeName<U, V = U> = [V] extends [
+  { __typename?: infer TypeName }
+]
+  ? TypeName extends any
+    ? UnionToIntersection<U extends { __typename?: TypeName } ? U : never>
+    : never
+  : never;
+
+type UnionFieldToIntersection<T> = [T] extends [never] ? never
+  : [T] extends [Array<unknown>]
+  ? Array<
+      | UnionFieldToIntersection<ExcludePrimitive<T[number]>>
+      | ExtractPrimitive<T[number]>
+    >
+  : UnionToIntersectGroupByTypeName<T> extends infer V
+  ? {
+      [Key in keyof V]:
+        | UnionFieldToIntersection<ExcludePrimitive<V[Key]>>
+        | ExtractPrimitive<V[Key]>;
+    }
+  : never;
+
+type Flatten<F> = [F] extends [never] ? never
+  : F extends Array<unknown>
+  ? Array<Flatten<ExcludePrimitive<F[number]>> | ExtractPrimitive<F[number]>>
+  : {
+      [Key in keyof Omit<F, " $fragmentRefs" | " $fragmentName">]:
+        | Flatten<ExcludePrimitive<F[Key]>>
+        | ExtractPrimitive<F[Key]>;
+    } & (F extends { " $fragmentRefs"?: { [K in string]: infer FRefs }; }
+      ? (FRefs extends any ? Flatten<FRefs> : never) : {}
+    );
+export type UnmaskFragment<F> = UnionFieldToIntersection<Flatten<F>>;
+
 export function makeFragmentData<
   F extends DocumentTypeDecoration<any, any>,
-  FT extends ResultOf<F>
->(data: FT, _fragment: F): FragmentType<F> {
-  return data as FragmentType<F>;
+>(data: UnmaskFragment<FragmentType<F>>, _fragment: F): FragmentType<F> {
+  return data as any;
 }`;
 
 const defaultUnmaskFunctionName = 'useFragment';
@@ -125,7 +169,7 @@ export const plugin: PluginFunction<{
   { useTypeImports, augmentedModuleName, unmaskFunctionName, emitLegacyCommonJSImports, isStringDocumentMode },
   _info
 ) => {
-  const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { ResultOf, DocumentTypeDecoration${
+  const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { DocumentTypeDecoration${
     isStringDocumentMode ? '' : ', TypedDocumentNode'
   } } from '@graphql-typed-document-node/core';\n`;
 
@@ -143,6 +187,8 @@ export const plugin: PluginFunction<{
       fragmentDefinitionNodeImport,
       deferFragmentHelperImports,
       `\n`,
+      utilityTypesHelper,
+      `\n`,
       fragmentTypeHelper,
       `\n`,
       createUnmaskFunction(unmaskFunctionName),
@@ -157,11 +203,13 @@ export const plugin: PluginFunction<{
     documentNodeImport,
     `declare module "${augmentedModuleName}" {`,
     [
+      utilityTypesHelper.split('\n'),
+      `\n`,
       ...fragmentTypeHelper.split(`\n`),
       `\n`,
       ...createUnmaskFunctionTypeDefinitions(unmaskFunctionName).join('\n').split('\n'),
       `\n`,
-      makeFragmentDataHelper,
+      makeFragmentDataHelper.split('\n'),
     ]
       .map(line => (line === `\n` || line === '' ? line : `  ${line}`))
       .join(`\n`),

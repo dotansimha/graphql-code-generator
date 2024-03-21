@@ -1,7 +1,12 @@
 /* eslint-disable */
-import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { FragmentDefinitionNode } from 'graphql';
 import { Incremental } from './graphql.js';
+
+type Primitive = string | number | boolean | bigint | symbol | null | undefined;
+type ExcludePrimitive<T> = Exclude<T, Primitive>;
+type ExtractPrimitive<T> = Exclude<T, Exclude<T, Primitive>>;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> =
   TDocumentType extends DocumentTypeDecoration<infer TType, any>
@@ -43,11 +48,42 @@ export function useFragment<TType>(
   return fragmentType as any;
 }
 
-export function makeFragmentData<F extends DocumentTypeDecoration<any, any>, FT extends ResultOf<F>>(
-  data: FT,
+type UnionToIntersectGroupByTypeName<U, V = U> = [V] extends [{ __typename?: infer TypeName }]
+  ? TypeName extends any
+    ? UnionToIntersection<U extends { __typename?: TypeName } ? U : never>
+    : never
+  : never;
+
+type UnionFieldToIntersection<T> = [T] extends [never]
+  ? never
+  : [T] extends [Array<unknown>]
+  ? Array<UnionFieldToIntersection<ExcludePrimitive<T[number]>> | ExtractPrimitive<T[number]>>
+  : UnionToIntersectGroupByTypeName<T> extends infer V
+  ? {
+      [Key in keyof V]: UnionFieldToIntersection<ExcludePrimitive<V[Key]>> | ExtractPrimitive<V[Key]>;
+    }
+  : never;
+
+type Flatten<F> = [F] extends [never]
+  ? never
+  : F extends Array<unknown>
+  ? Array<Flatten<ExcludePrimitive<F[number]>> | ExtractPrimitive<F[number]>>
+  : {
+      [Key in keyof Omit<F, ' $fragmentRefs' | ' $fragmentName'>]:
+        | Flatten<ExcludePrimitive<F[Key]>>
+        | ExtractPrimitive<F[Key]>;
+    } & (F extends { ' $fragmentRefs'?: { [K in string]: infer FRefs } }
+      ? FRefs extends any
+        ? Flatten<FRefs>
+        : never
+      : {});
+export type UnmaskFragment<F> = UnionFieldToIntersection<Flatten<F>>;
+
+export function makeFragmentData<F extends DocumentTypeDecoration<any, any>>(
+  data: UnmaskFragment<FragmentType<F>>,
   _fragment: F
 ): FragmentType<F> {
-  return data as FragmentType<F>;
+  return data as any;
 }
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: DocumentTypeDecoration<TQuery, any>,
