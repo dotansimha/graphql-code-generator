@@ -58,7 +58,7 @@ export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
 
         const importPath = getRelativeImportPath(state, artifactDirectory);
 
-        const importDeclaration = template(`
+        const importDeclaration = template.smart(`
           import { %%importName%% } from %%importPath%%
         `);
         program.unshiftContainer(
