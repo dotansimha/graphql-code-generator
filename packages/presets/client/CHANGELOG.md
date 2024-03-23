@@ -415,7 +415,8 @@
 
   ```ts
   /** codegen.ts */
-  import { CodegenConfig } from '@graphql-codegen/cli';
+  // @ts-ignore
+import { CodegenConfig } from '@graphql-codegen/cli';
 
   const config: CodegenConfig = {
     schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
@@ -463,7 +464,8 @@
 
   ```ts
   /** codegen.ts */
-  import { CodegenConfig } from '@graphql-codegen/cli';
+  // @ts-ignore
+import { CodegenConfig } from '@graphql-codegen/cli';
 
   const config: CodegenConfig = {
     schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',

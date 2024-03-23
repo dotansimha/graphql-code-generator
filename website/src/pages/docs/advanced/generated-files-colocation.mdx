@@ -17,6 +17,7 @@ For similar results on a back-end project, please refer to [`@graphql-codegen/gr
 Most GraphQL Code Generator configuration examples (in guides or plugins documentation) generate types in a single common file, as follows:
 
 ```ts
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 // Configuration for a React URQL setup
@@ -65,6 +66,7 @@ To use this preset, you need to add 2 outputs to your `codegen.ts` file:
 
 
 ```ts filename="codegen.ts"
+// @ts-ignore
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
