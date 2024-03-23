@@ -445,9 +445,7 @@ export class ClientSideBaseVisitor<
       return `new TypedDocumentString(\`${doc}\`)`;
     }
 
-    const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
-
-    return (gqlImport.propName || 'gql') + '`' + doc + '`';
+    return 'gql`' + doc + '`';
   }
 
   protected _getGraphQLCodegenMetadata(
