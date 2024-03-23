@@ -33,17 +33,21 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  numericEnums: boolean;
   futureProofEnums: boolean;
   futureProofUnions: boolean;
   enumsAsConst: boolean;
-  numericEnums: boolean;
   onlyEnums: boolean;
   onlyOperationTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
   inputMaybeValue: string;
   noExport: boolean;
+  disableDescriptions: boolean;
   useImplementingTypes: boolean;
+  wrapEntireFieldDefinitions: boolean;
+  entireFieldWrapperValue: string;
+  allowEnumStringTypes: boolean;
 }
 
 export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
@@ -58,25 +62,27 @@ export class TsVisitor<
 > extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
-      noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
+      constEnums: getConfigValue(pluginConfig.constEnums, false),
+      enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
+      numericEnums: getConfigValue(pluginConfig.numericEnums, false),
+      futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
+      futureProofUnions: getConfigValue(pluginConfig.futureProofUnions, false),
+      enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
+      onlyEnums: getConfigValue(pluginConfig.onlyEnums, false),
+      onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
+      immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
       inputMaybeValue: getConfigValue(
         pluginConfig.inputMaybeValue,
         getConfigValue(pluginConfig.maybeValue, 'Maybe<T>')
       ),
-      constEnums: getConfigValue(pluginConfig.constEnums, false),
-      enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
-      futureProofEnums: getConfigValue(pluginConfig.futureProofEnums, false),
-      futureProofUnions: getConfigValue(pluginConfig.futureProofUnions, false),
-      enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
-      numericEnums: getConfigValue(pluginConfig.numericEnums, false),
-      onlyEnums: getConfigValue(pluginConfig.onlyEnums, false),
-      onlyOperationTypes: getConfigValue(pluginConfig.onlyOperationTypes, false),
-      immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
+      noExport: getConfigValue(pluginConfig.noExport, false),
+      disableDescriptions: getConfigValue(pluginConfig.disableDescriptions, false),
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
-      entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
+      entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
+      allowEnumStringTypes: getConfigValue(pluginConfig.allowEnumStringTypes, false),
       ...additionalConfig,
     } as TParsedConfig);
 
