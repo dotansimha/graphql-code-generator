@@ -784,17 +784,27 @@ export * from "./gql";`);
         // return array of non-nullable if \`fragmentType\` is array of non-nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>>
+        ): Array<TType>;
+        // return array of nullable if \`fragmentType\` is array of nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+        ): Array<TType> | null | undefined;
+        // return readonly array of non-nullable if \`fragmentType\` is array of non-nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
         ): ReadonlyArray<TType>;
-        // return array of nullable if \`fragmentType\` is array of nullable
+        // return readonly array of nullable if \`fragmentType\` is array of nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): ReadonlyArray<TType> | null | undefined;
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
-          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-        ): TType | ReadonlyArray<TType> | null | undefined {
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | Array<FragmentType<DocumentTypeDecoration<TType, any>>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+        ): TType | Array<TType> | ReadonlyArray<TType> | null | undefined {
           return fragmentType as any;
         }
 
@@ -822,39 +832,6 @@ export * from "./gql";`);
           return fields.length > 0 && fields.every(field => data && field in data);
         }
         "
-      `);
-
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
-      ): TType;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
-      ): TType | null | undefined;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
-      ): ReadonlyArray<TType>;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-      ): ReadonlyArray<TType> | null | undefined;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-      ): TType | ReadonlyArray<TType> | null | undefined {
-        return fragmentType as any;
-      }
       `);
     });
 
@@ -898,6 +875,46 @@ export * from "./gql";`);
     });
 
     it('can accept list in useFragment', async () => {
+      const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo!]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: docPath,
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              fragmentMasking: true,
+            },
+          },
+        },
+      });
+
+      const content = mergeOutputs([
+        ...result,
+        fs.readFileSync(docPath, 'utf8'),
+        `
+        function App(props: { foos: Array<FragmentType<typeof Fragment>> }) {
+          const fragments: Array<FooFragment> = useFragment(Fragment, props.foos);
+          return fragments.map(f => f.value);
+        }
+        `,
+      ]);
+
+      validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    });
+
+    it('useFragment preserves ReadonlyArray<T> type', async () => {
       const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
       const result = await executeCodegen({
         schema: [
