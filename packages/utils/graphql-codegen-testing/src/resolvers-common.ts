@@ -6,6 +6,7 @@ import { buildSchema } from 'graphql';
 export const resolversTestingSchema = buildSchema(/* GraphQL */ `
   type MyType {
     foo: String! @authenticated
+    bar: String! @authenticated(role: "admin")
     otherType: MyOtherType
     withArgs(arg: String, arg2: String!): String
     unionChild: ChildUnion
@@ -71,7 +72,7 @@ export const resolversTestingSchema = buildSchema(/* GraphQL */ `
   scalar MyScalar
 
   directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
-  directive @authenticated on FIELD_DEFINITION
+  directive @authenticated(role: String) on FIELD_DEFINITION
 `);
 
 export const resolversTestingValidate = async (
