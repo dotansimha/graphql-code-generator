@@ -3453,6 +3453,11 @@
         "globalFragments": {
           "description": "Whether to source fragments per-document, or globally. If set, will enforce fragment name uniqueness\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "fragmentsOrder": {
+          "description": "Order sourced fragments per-document, or globally. When set to \"document\", the fragments will be ordered as ther appear in the document\nDefault value: \"global\"",
+          "enum": ["global", "document"],
+          "type": "string"
         }
       }
     },
