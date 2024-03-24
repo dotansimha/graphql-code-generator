@@ -20,8 +20,6 @@ website/src/pages/docs/guides/react.mdx
 website/src/pages/plugins/index.mdx
 website/src/pages/plugins/presets/near-operation-file-preset.mdx
 
-website/algolia-lockfile.json
-
 temp/
 website/out
 website/.next
