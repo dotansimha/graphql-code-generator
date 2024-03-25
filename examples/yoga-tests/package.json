@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "graphql-yoga": "4.0.4"
+    "graphql-yoga": "4.0.5"
   },
   "devDependencies": {
     "@graphql-typed-document-node/core": "3.2.0",
