@@ -8,7 +8,7 @@ export default {
     },
   },
   docs: {
-    title: 'Docs',
+    title: 'Documentation',
     type: 'page',
   },
   plugins: {

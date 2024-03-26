@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint sort-keys: error */
 import { useRouter } from 'next/router';
-import { defineConfig, Giscus, useTheme } from '@theguild/components';
+import { defineConfig, Giscus, PRODUCTS, useTheme } from '@theguild/components';
 
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
@@ -28,5 +28,7 @@ export default defineConfig({
       </>
     );
   },
-  siteName: 'CODEGEN',
+  websiteName: 'GraphQL-Codegen',
+  description: 'Generate anything from GraphQL schema & operations',
+  logo: PRODUCTS.CODEGEN.logo({ className: 'w-8' }),
 });
