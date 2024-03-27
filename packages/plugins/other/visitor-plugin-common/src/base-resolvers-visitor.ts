@@ -1147,7 +1147,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
-      .withName(this.convertName('ResolversUnionTypes'), `<RefType extends Record<string, unknown>>`)
+      .withName(this.convertName('ResolversUnionTypes'), `<RefType extends globalThis.Record<string, unknown>>`)
       .withComment('Mapping of union types')
       .withBlock(
         Object.entries(this._resolversUnionTypes)
@@ -1165,7 +1165,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
-      .withName(this.convertName('ResolversInterfaceTypes'), `<RefType extends Record<string, unknown>>`)
+      .withName(this.convertName('ResolversInterfaceTypes'), `<RefType extends globalThis.Record<string, unknown>>`)
       .withComment('Mapping of interface types')
       .withBlock(
         Object.entries(this._resolversInterfaceTypes)

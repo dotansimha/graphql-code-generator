@@ -165,7 +165,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+export type ResolversUnionTypes<RefType extends globalThis.Record<string, unknown>> = {
   PaymentOption: CreditCard | Paypal;
 };
 
