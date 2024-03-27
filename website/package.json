@@ -17,7 +17,7 @@
     "@types/react": "18.2.60",
     "fast-xml-parser": "4.3.5",
     "jsonpath": "1.1.1",
-    "prettier-plugin-tailwindcss": "0.2.8"
+    "prettier-plugin-tailwindcss": "0.5.13"
   },
   "dependencies": {
     "@graphql-codegen/add": "5.0.2",
