@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 4.2.5
+
+### Patch Changes
+
+- [#9889](https://github.com/dotansimha/graphql-code-generator/pull/9889) [`cd60e14`](https://github.com/dotansimha/graphql-code-generator/commit/cd60e14c4dc5a496a93089dae677fc797c04671e) Thanks [@Sojaner](https://github.com/Sojaner)! - Omit `__typename` from being added on the root node of a subscription when using `addTypenameSelectionDocumentTransform` with documentTransforms since a single root node is expected and the code generator fails because of that (refer to https://spec.graphql.org/draft/#sec-Single-root-field)
+
 ## 4.2.4
 
 ### Patch Changes
