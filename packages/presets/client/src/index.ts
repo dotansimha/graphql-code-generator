@@ -70,29 +70,46 @@ export type ClientPresetConfig = {
   onExecutableDocumentNode?: (documentNode: DocumentNode) => void | Record<string, unknown>;
   /** Persisted operations configuration. */
   persistedDocuments?:
-    | boolean
-    | {
-        /**
-         * @description Behavior for the output file.
-         * @default 'embedHashInDocument'
-         * "embedHashInDocument" will add a property within the `DocumentNode` with the hash of the operation.
-         * "replaceDocumentWithHash" will fully drop the document definition.
-         */
-        mode?: 'embedHashInDocument' | 'replaceDocumentWithHash';
-        /**
-         * @description Name of the property that will be added to the `DocumentNode` with the hash of the operation.
-         */
-        hashPropertyName?: string;
-        /**
-         * @description Algorithm used to generate the hash, could be useful if your server expects something specific (e.g., Apollo Server expects `sha256`).
-         *
-         * The algorithm parameter is typed with known algorithms and as a string rather than a union because it solely depends on Crypto's algorithms supported
-         * by the version of OpenSSL on the platform.
-         *
-         * @default `sha1`
-         */
-        hashAlgorithm?: 'sha1' | 'sha256' | (string & {});
-      };
+  | boolean
+  | {
+    /**
+     * @description Behavior for the output file.
+     * @default 'embedHashInDocument'
+     * "embedHashInDocument" will add a property within the `DocumentNode` with the hash of the operation.
+     * "replaceDocumentWithHash" will fully drop the document definition.
+     */
+    mode?: 'embedHashInDocument' | 'replaceDocumentWithHash';
+    /**
+     * @description Name of the property that will be added to the `DocumentNode` with the hash of the operation.
+     */
+    hashPropertyName?: string;
+    /**
+     * @description Algorithm used to generate the hash, could be useful if your server expects something specific (e.g., Apollo Server expects `sha256`).
+     *
+     * The algorithm parameter is typed with known algorithms and as a string rather than a union because it solely depends on Crypto's algorithms supported
+     * by the version of OpenSSL on the platform.
+     *
+     * @default `sha1`
+     */
+    hashAlgorithm?: 'sha1' | 'sha256' | (string & {});
+    /**
+     * @description Wether to use print from graphql to convert the `DocumentNode` to string or to use the default: @graphql-tools/documents printExecutableGraphQLDocument
+     *
+     * @graphql-tools/documents prints the documents in the same way but does a few things you might not want: sort/order alphabetically and remove whitespaces.
+     *
+     * @default `false`
+     */
+    useGraphqlPrint?: boolean;
+    /**
+     * @description Remove client specific fields from the `DocumentNode`
+     *
+     * This removes all client specific directives/fields from the document that the server does not know about.
+     * Set the false if you want to keep these in the generated persisted-documents.
+     *
+     * @default `true`
+     */
+    removeClientSpecificFields?: boolean;
+  };
 };
 
 const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/');
@@ -148,18 +165,26 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const persistedDocuments = options.presetConfig.persistedDocuments
       ? {
-          hashPropertyName:
-            (typeof options.presetConfig.persistedDocuments === 'object' &&
-              options.presetConfig.persistedDocuments.hashPropertyName) ||
-            'hash',
-          omitDefinitions:
-            (typeof options.presetConfig.persistedDocuments === 'object' &&
-              options.presetConfig.persistedDocuments.mode) === 'replaceDocumentWithHash' || false,
-          hashAlgorithm:
-            (typeof options.presetConfig.persistedDocuments === 'object' &&
-              options.presetConfig.persistedDocuments.hashAlgorithm) ||
-            'sha1',
-        }
+        hashPropertyName:
+          (typeof options.presetConfig.persistedDocuments === 'object' &&
+            options.presetConfig.persistedDocuments.hashPropertyName) ||
+          'hash',
+        omitDefinitions:
+          (typeof options.presetConfig.persistedDocuments === 'object' &&
+            options.presetConfig.persistedDocuments.mode) === 'replaceDocumentWithHash' || false,
+        hashAlgorithm:
+          (typeof options.presetConfig.persistedDocuments === 'object' &&
+            options.presetConfig.persistedDocuments.hashAlgorithm) ||
+          'sha1',
+        useGraphqlPrint:
+          (typeof options.presetConfig.persistedDocuments === 'object' &&
+            typeof options.presetConfig.persistedDocuments.useGraphqlPrint === 'boolean')
+            ? options.presetConfig.persistedDocuments.useGraphqlPrint : false,
+        removeClientSpecificFields:
+          (typeof options.presetConfig.persistedDocuments === 'object' &&
+            typeof options.presetConfig.persistedDocuments.removeClientSpecificFields === 'boolean')
+            ? options.presetConfig.persistedDocuments.removeClientSpecificFields : true,
+      }
       : null;
 
     const sourcesWithOperations = processSources(options.documents, node => {
@@ -195,7 +220,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       const meta = onExecutableDocumentNodeHook?.(documentNode);
 
       if (persistedDocuments) {
-        const documentString = normalizeAndPrintDocumentNode(documentNode);
+        const documentString = normalizeAndPrintDocumentNode(documentNode, persistedDocuments.useGraphqlPrint, persistedDocuments.removeClientSpecificFields);
         const hash = generateDocumentHash(documentString, persistedDocuments.hashAlgorithm);
         persistedDocumentsMap.set(hash, documentString);
         return { ...meta, [persistedDocuments.hashPropertyName]: hash };
@@ -319,29 +344,29 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       },
       ...(isPersistedOperations
         ? [
-            {
-              filename: `${options.baseOutputDir}persisted-documents.json`,
-              plugins: [
-                {
-                  [`persisted-operations`]: {},
-                },
-              ],
-              pluginMap: {
-                [`persisted-operations`]: {
-                  plugin: async () => {
-                    await tdnFinished.promise;
-                    return {
-                      content: JSON.stringify(Object.fromEntries(persistedDocumentsMap.entries()), null, 2),
-                    };
-                  },
+          {
+            filename: `${options.baseOutputDir}persisted-documents.json`,
+            plugins: [
+              {
+                [`persisted-operations`]: {},
+              },
+            ],
+            pluginMap: {
+              [`persisted-operations`]: {
+                plugin: async () => {
+                  await tdnFinished.promise;
+                  return {
+                    content: JSON.stringify(Object.fromEntries(persistedDocumentsMap.entries()), null, 2),
+                  };
                 },
               },
-              schema: options.schema,
-              config: {},
-              documents: sources,
-              documentTransforms: options.documentTransforms,
             },
-          ]
+            schema: options.schema,
+            config: {},
+            documents: sources,
+            documentTransforms: options.documentTransforms,
+          },
+        ]
         : []),
       ...(fragmentMaskingFileGenerateConfig ? [fragmentMaskingFileGenerateConfig] : []),
       ...(indexFileGenerateConfig ? [indexFileGenerateConfig] : []),

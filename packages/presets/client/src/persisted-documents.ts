@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
-import { printExecutableGraphQLDocument } from '@graphql-tools/documents';
-import { type DocumentNode, Kind, visit } from 'graphql';
+import { printExecutableGraphQLDocument, } from '@graphql-tools/documents';
+import { type DocumentNode, Kind, visit, print } from 'graphql';
 
 /**
  * This function generates a hash from a document node.
@@ -14,25 +14,24 @@ export function generateDocumentHash(operation: string, algorithm: 'sha1' | 'sha
 /**
  * Normalizes and prints a document node.
  */
-export function normalizeAndPrintDocumentNode(documentNode: DocumentNode): string {
-  /**
-   * This removes all client specific directives/fields from the document
-   * that the server does not know about.
-   * In a future version this should be more configurable.
-   * If you look at this and want to customize it.
-   * Send a PR :)
-   */
+export function normalizeAndPrintDocumentNode(documentNode: DocumentNode, useGraphqlPrint: boolean, removeClientSpecificFields: boolean): string {
   const sanitizedDocument = visit(documentNode, {
     [Kind.FIELD](field) {
-      if (field.directives?.some(directive => directive.name.value === 'client')) {
+      if (removeClientSpecificFields && field.directives?.some(directive => directive.name.value === 'client')) {
         return null;
       }
     },
     [Kind.DIRECTIVE](directive) {
-      if (directive.name.value === 'connection') {
+      if (removeClientSpecificFields && directive.name.value === 'connection') {
         return null;
       }
     },
   });
-  return printExecutableGraphQLDocument(sanitizedDocument);
+
+  if (useGraphqlPrint) {
+    return print(sanitizedDocument);
+  } else {
+    return printExecutableGraphQLDocument(sanitizedDocument);
+  }
+
 }
