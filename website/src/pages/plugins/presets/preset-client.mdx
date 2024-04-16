@@ -514,6 +514,33 @@ const config: CodegenConfig = {
 }
 ```
 
+### Other options
+
+Next to hashAlgorithm, persisted documents takes more options:
+
+* useGraphqlPrint: boolean (default: false) - Wether to use print from graphql to convert the `DocumentNode` to string or to use the default: @graphql-tools/documents printExecutableGraphQLDocument
+* removeClientSpecificFields: boolean (default: true) - Remove client specific fields from the `DocumentNode`
+
+```ts filename="codegen.ts" {10-12}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      presetConfig: {
+        persistedDocuments: {
+          useGraphqlPrint: true
+          removeClientSpecificFields: true
+        }
+      }
+    }
+  }
+}
+```
+
 ### Normalized Caches (urql and Apollo Client)
 
 Urql is a popular GraphQL client that utilizes a normalized cache.
