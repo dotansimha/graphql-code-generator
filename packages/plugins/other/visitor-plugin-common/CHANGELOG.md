@@ -325,7 +325,7 @@
   The generated types will look like this:
 
   ```ts
-  export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+  export type ResolversInterfaceTypes<RefType extends globalThis.Record<string, unknown>> = {
     CharacterNode: Fighter | Wizard;
   };
 
@@ -369,7 +369,7 @@
   Then, the generated type looks like this:
 
   ```ts
-  export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+  export type ResolversInterfaceTypes<RefType extends globalThis.Record<string, unknown>> = {
     CharacterNode: (Fighter & { __typename: 'Fighter' }) | (Wizard & { __typename: 'Wizard' });
   };
 

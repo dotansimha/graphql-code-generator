@@ -98,7 +98,7 @@ export type AnotherNodeWithAll = AnotherNode & WithChild & WithChildren & {
 };
 
 export type MyUnion = MyType | MyOtherType;
-export type WithIndex<TObject> = TObject & Record<string, any>;
+export type WithIndex<TObject> = TObject & globalThis.Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -167,13 +167,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversUnionTypes<RefType extends globalThis.Record<string, unknown>> = ResolversObject<{
   ChildUnion: ( Child ) | ( MyOtherType );
   MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversInterfaceTypes<RefType extends globalThis.Record<string, unknown>> = ResolversObject<{
   Node: ( SomeNode );
   AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
   WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
@@ -357,7 +357,7 @@ exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work c
 "import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
-export type WithIndex<TObject> = TObject & Record<string, any>;
+export type WithIndex<TObject> = TObject & globalThis.Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -426,13 +426,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversUnionTypes<RefType extends globalThis.Record<string, unknown>> = ResolversObject<{
   ChildUnion: ( Types.Child ) | ( Types.MyOtherType );
   MyUnion: ( Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Types.MyOtherType );
 }>;
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversInterfaceTypes<RefType extends globalThis.Record<string, unknown>> = ResolversObject<{
   Node: ( Types.SomeNode );
   AnotherNode: ( Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
   WithChild: ( Omit<Types.AnotherNodeWithChild, 'unionChild'> & { unionChild?: Types.Maybe<RefType['ChildUnion']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Types.Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
@@ -702,7 +702,7 @@ export type AnotherNodeWithAll = AnotherNode & WithChild & WithChildren & {
 };
 
 export type MyUnion = MyType | MyOtherType;
-export type WithIndex<TObject> = TObject & Record<string, any>;
+export type WithIndex<TObject> = TObject & globalThis.Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -771,13 +771,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversUnionTypes<RefType extends globalThis.Record<string, unknown>> = ResolversObject<{
   ChildUnion: ( Child ) | ( MyOtherType );
   MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( MyOtherType );
 }>;
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = ResolversObject<{
+export type ResolversInterfaceTypes<RefType extends globalThis.Record<string, unknown>> = ResolversObject<{
   Node: ( SomeNode );
   AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
   WithChild: ( Omit<AnotherNodeWithChild, 'unionChild'> & { unionChild?: Maybe<RefType['ChildUnion']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren'> & { unionChild?: Maybe<RefType['ChildUnion']>, unionChildren: Array<RefType['ChildUnion']> } );
