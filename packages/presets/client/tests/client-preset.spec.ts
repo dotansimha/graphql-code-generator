@@ -3,7 +3,7 @@ import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { preset } from '../src/index.js';
+import { addTypenameSelectionDocumentTransform, preset } from '../src/index.js';
 import { print } from 'graphql';
 
 describe('client-preset', () => {
@@ -754,7 +754,8 @@ export * from "./gql";`);
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
+        "/* eslint-disable */
+        import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
         import { FragmentDefinitionNode } from 'graphql';
         import { Incremental } from './graphql';
 
@@ -1851,18 +1852,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -1936,18 +1937,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2021,18 +2022,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2162,18 +2163,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2510,6 +2511,124 @@ export * from "./gql.js";`);
             ...MovieFragment
             ...EpisodeFragment
           }\`) as unknown as TypedDocumentString<VideoQuery, VideoQueryVariables>;
+      `);
+    });
+
+    it('correctly skips the typename addition for the root node for subscriptions', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            schema {
+              query: Query
+              mutation: Mutation
+              subscription: Subscription
+            }
+
+            type Region {
+              regionId: Int!
+              regionDescription: String!
+            }
+
+            type Subscription {
+              onRegionCreated: Region!
+            }
+
+            type Query {
+              regions: [Region]
+            }
+
+            type Mutation {
+              createRegion(regionDescription: String!): Region
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/subscription-root-node.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+            documentTransforms: [addTypenameSelectionDocumentTransform],
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toBeSimilarStringTo(`
+        /* eslint-disable */
+        import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+        
+        export type Mutation = {
+          __typename?: 'Mutation';
+          createRegion?: Maybe<Region>;
+        };
+        
+        
+        export type MutationCreateRegionArgs = {
+          regionDescription: Scalars['String']['input'];
+        };
+        
+        export type Query = {
+          __typename?: 'Query';
+          regions?: Maybe<Array<Maybe<Region>>>;
+        };
+        
+        export type Region = {
+          __typename?: 'Region';
+          regionDescription: Scalars['String']['output'];
+          regionId: Scalars['Int']['output'];
+        };
+        
+        export type Subscription = {
+          __typename?: 'Subscription';
+          onRegionCreated: Region;
+        };
+        
+        export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+        
+        
+        export type OnRegionCreatedSubscription = { __typename?: 'Subscription', onRegionCreated: { __typename: 'Region', regionId: number, regionDescription: string } };
+        
+        export class TypedDocumentString<TResult, TVariables>
+          extends String
+          implements DocumentTypeDecoration<TResult, TVariables>
+        {
+          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+        
+          constructor(private value: string, public __meta__?: Record<string, any>) {
+            super(value);
+          }
+        
+          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+            return this.value;
+          }
+        }
+        
+        export const OnRegionCreatedDocument = new TypedDocumentString(\`
+            subscription onRegionCreated {
+          onRegionCreated {
+            __typename
+            regionId
+            regionDescription
+          }
+        }
+            \`) as unknown as TypedDocumentString<OnRegionCreatedSubscription, OnRegionCreatedSubscriptionVariables>;
       `);
     });
   });

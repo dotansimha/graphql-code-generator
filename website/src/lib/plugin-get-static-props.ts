@@ -2,9 +2,9 @@ import { parse } from 'node:path';
 import { fetchPackageInfo } from '@theguild/components';
 import { defaultRemarkPlugins } from '@theguild/components/next.config';
 import { format } from 'date-fns';
-import { compileMdx } from 'nextra/compile';
 import { PACKAGES } from '@/lib/plugins';
 import { transformDocs } from '@/lib/transform';
+import { buildDynamicMDX } from 'nextra/remote';
 
 // Can't be used in plugin.tsx due incorrect tree shaking:
 // Module not found: Can't resolve 'fs'
@@ -27,19 +27,15 @@ export const pluginGetStaticProps =
     const source = generatedDocs.docs[identifier] || readme.replaceAll('```yml', '```yaml') || '';
     const title = plugin.title ?? '';
 
-    const [mdx, mdxHeader] = await Promise.all([
-      compileMdx(source, {
-        defaultShowCopyCode: true,
-      }),
-      compileMdx(
-        `
+    const mdx = await buildDynamicMDX(
+      `
       # ${title}
 |Package name|Weekly Downloads|Version|License|Updated|
 |-|-|-|-|-|
 |[\`${npmPackage}\`](https://npmjs.com/package/${npmPackage})|![Downloads](https://badgen.net/npm/dw/${npmPackage} "Downloads")|![Version](https://badgen.net/npm/v/${npmPackage} "Version")|![License](https://badgen.net/npm/license/${npmPackage} "License")|${format(
-          new Date(updatedAt),
-          'MMM do, yyyy'
-        )}|
+        new Date(updatedAt),
+        'MMM do, yyyy'
+      )}|
 
 ## Installation
 
@@ -49,31 +45,23 @@ npm i ${isDev ? '-D ' : ''}${npmPackage}
 
 ${
   hasOperationsNote
-    ? `
-<Callout type='warning'>
+    ? `<Callout type='warning'>
 **Usage Requirements**
 In order to use this GraphQL Codegen plugin, please make sure that you have GraphQL operations (\`query\` / \`mutation\` / \`subscription\` and \`fragment\`) set as \`documents: …\` in your \`codegen.yml\`.
 
 Without loading your GraphQL operations (\`query\`, \`mutation\`, \`subscription\` and \`fragment\`), you won't see any change in the generated output.
-</Callout>
-`
+</Callout>`
     : ''
 }
-`,
-        {
-          mdxOptions: {
-            remarkPlugins: defaultRemarkPlugins,
-          },
-        }
-      ),
-    ]);
 
-    return {
-      props: {
-        ssg: {
-          compiledSource: mdx.result,
-          compiledHeader: mdxHeader.result,
+${source}
+`,
+      {
+        defaultShowCopyCode: true,
+        mdxOptions: {
+          remarkPlugins: defaultRemarkPlugins,
         },
-      },
-    };
+      }
+    );
+    return { props: mdx };
   };

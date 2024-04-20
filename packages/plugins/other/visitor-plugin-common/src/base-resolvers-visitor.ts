@@ -1119,10 +1119,15 @@ export class BaseResolversVisitor<
 
   protected createFieldContextTypeMap(): FieldContextTypeMap {
     return this.config.fieldContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const isScoped = fieldContextType.includes('\\#');
+      if (fieldContextType.includes('\\#')) {
+        fieldContextType = fieldContextType.replace('\\#', '');
+      }
       const items = fieldContextType.split('#');
       if (items.length === 3) {
         const [path, source, contextTypeName] = items;
-        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+        const sourceStr = isScoped ? `\\#${source}` : source;
+        return { ...prev, [path]: parseMapper(`${sourceStr}#${contextTypeName}`) };
       }
       const [path, contextType] = items;
       return { ...prev, [path]: parseMapper(contextType) };
@@ -1130,10 +1135,15 @@ export class BaseResolversVisitor<
   }
   protected createDirectivedContextType(): FieldContextTypeMap {
     return this.config.directiveContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const isScoped = fieldContextType.includes('\\#');
+      if (fieldContextType.includes('\\#')) {
+        fieldContextType = fieldContextType.replace('\\#', '');
+      }
       const items = fieldContextType.split('#');
       if (items.length === 3) {
         const [path, source, contextTypeName] = items;
-        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+        const sourceStr = isScoped ? `\\#${source}` : source;
+        return { ...prev, [path]: parseMapper(`${sourceStr}#${contextTypeName}`) };
       }
       const [path, contextType] = items;
       return { ...prev, [path]: parseMapper(contextType) };
@@ -1445,6 +1455,11 @@ export class BaseResolversVisitor<
           )
         : null;
 
+      const avoidInputsOptionals =
+        typeof this.config.avoidOptionals === 'object'
+          ? this.config.avoidOptionals?.inputValue
+          : this.config.avoidOptionals === true;
+
       if (argsType !== null) {
         const argsToForceRequire = original.arguments.filter(
           arg => !!arg.defaultValue || arg.type.kind === 'NonNullType'
@@ -1452,7 +1467,7 @@ export class BaseResolversVisitor<
 
         if (argsToForceRequire.length > 0) {
           argsType = this.applyRequireFields(argsType, argsToForceRequire);
-        } else if (original.arguments.length > 0) {
+        } else if (original.arguments.length > 0 && avoidInputsOptionals !== true) {
           argsType = this.applyOptionalFields(argsType, original.arguments);
         }
       }
@@ -1472,7 +1487,7 @@ export class BaseResolversVisitor<
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 
-      const avoidOptionals =
+      const avoidResolverOptionals =
         typeof this.config.avoidOptionals === 'object'
           ? this.config.avoidOptionals?.resolvers
           : this.config.avoidOptionals === true;
@@ -1483,7 +1498,7 @@ export class BaseResolversVisitor<
         genericTypes: string[];
       } = {
         name: node.name as any,
-        modifier: avoidOptionals ? '' : '?',
+        modifier: avoidResolverOptionals ? '' : '?',
         type: resolverType,
         genericTypes: [mappedTypeKey, parentTypeSignature, contextType, argsType].filter(f => f),
       };

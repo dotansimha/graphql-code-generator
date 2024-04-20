@@ -1,5 +1,12 @@
 # @graphql-codegen/time
 
+## 5.0.1
+
+### Patch Changes
+
+- [#9881](https://github.com/dotansimha/graphql-code-generator/pull/9881) [`68ea5d4`](https://github.com/dotansimha/graphql-code-generator/commit/68ea5d4d18969840c34e42bf4f8237e849af7aab) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`moment@~2.30.0` ↗︎](https://www.npmjs.com/package/moment/v/2.30.0) (from `~2.29.1`, in `dependencies`)
+
 ## 5.0.0
 
 ### Major Changes

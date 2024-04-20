@@ -126,6 +126,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
       enumsAsTypes: options.config.enumsAsTypes,
+      futureProofEnums: options.config.futureProofEnums,
       dedupeFragments: options.config.dedupeFragments,
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
@@ -243,9 +244,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       fragmentMaskingFileGenerateConfig = {
         filename: `${options.baseOutputDir}fragment-masking${fragmentMaskingArtifactFileExtension}`,
         pluginMap: {
+          [`add`]: addPlugin,
           [`fragment-masking`]: fragmentMaskingPlugin,
         },
         plugins: [
+          { [`add`]: { content: `/* eslint-disable */` } },
           {
             [`fragment-masking`]: {},
           },

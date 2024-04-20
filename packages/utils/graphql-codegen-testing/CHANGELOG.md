@@ -1,5 +1,38 @@
 # @graphql-codegen/testing
 
+## 3.0.3
+
+### Patch Changes
+
+- [#9627](https://github.com/dotansimha/graphql-code-generator/pull/9627) [`422e2a7`](https://github.com/dotansimha/graphql-code-generator/commit/422e2a78f4ebe158e5e4a5f3248e0d03e88b69d6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`nock@13.3.6` ↗︎](https://www.npmjs.com/package/nock/v/13.3.6) (from `13.3.1`, in `dependencies`)
+
+- [#9851](https://github.com/dotansimha/graphql-code-generator/pull/9851) [`217ed56`](https://github.com/dotansimha/graphql-code-generator/commit/217ed565a2f722f76ce90a3ce5d14117d3e9993f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`nock@13.5.3` ↗︎](https://www.npmjs.com/package/nock/v/13.5.3) (from `13.3.6`, in `dependencies`)
+
+## 3.0.2
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
+- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+  - @graphql-codegen/plugin-helpers@5.0.3
+
+## 3.0.1
+
+### Patch Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+  - Updated dependency [`jest-diff@^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0` ↗︎](https://www.npmjs.com/package/jest-diff/v/23.0.0) (from `^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0`, in `peerDependencies`)
+- Updated dependencies [[`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975)]:
+  - @graphql-codegen/plugin-helpers@5.0.2
+
 ## 3.0.0
 
 ### Major Changes

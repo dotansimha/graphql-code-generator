@@ -3,7 +3,7 @@ title: Introduction
 description: GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack. From back-end to front-end, GraphQL Code Generator automates the generation of typed Queries, Mutations and, Subscriptions for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 ---
 
-import { Tabs, Tab, Callout } from '@theguild/components'
+import { Tabs, Callout } from '@theguild/components'
 
 # Introduction to GraphQL Code Generator
 
@@ -45,7 +45,7 @@ The following sections showcase why GraphQL Code Generator is a game-changer for
 Most client-side implementations without GraphQL Code Generator would query the API as showcased in the following examples:
 
 <Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
-<Tab>
+<Tabs.Tab>
 ```tsx
 import { useQuery } from 'urql'
 
@@ -81,9 +81,9 @@ const Posts = () => {
   // …
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```tsx
 import { request, gql } from 'graphql-request'
 import { useQuery } from '@tanstack/react-query'
@@ -123,9 +123,9 @@ const Posts = () => {
   // …
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```vue
 <template>
   <div class="apollo">
@@ -165,9 +165,9 @@ export default {
 }
 </script>
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```tsx
 const GET_POSTS = gql`
   query Posts {
@@ -211,9 +211,9 @@ class PostsComponent implements OnInit, OnDestroy {
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```svelte
 <script lang="ts">
   import { query } from 'svelte-apollo'
@@ -239,7 +239,7 @@ class PostsComponent implements OnInit, OnDestroy {
   <!-- UI … -->
 </ul>
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 Manually maintaining the GraphQL operation types or the complete absence of types can lead to many issues:
@@ -260,7 +260,7 @@ After installing 3 packages:
 
 ```sh npm2yarn
 npm i graphql
-npm i -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+npm i -D typescript @graphql-codegen/cli
 ```
 
 and providing a simple configuration:
@@ -283,7 +283,7 @@ export default config
 You will no longer need to maintain TypeScript types:
 
 <Tabs items={['URQL React', 'React Query', 'Vue Apollo', 'Angular Apollo', 'Svelte Apollo']}>
-<Tab>
+<Tabs.Tab>
 ```tsx
 import { useQuery } from 'urql'
 import { graphql } from './gql/gql'
@@ -311,9 +311,9 @@ const Posts = () => {
   // …
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```tsx
 import { request } from 'graphql-request'
 import { useQuery } from '@tanstack/react-query'
@@ -345,9 +345,9 @@ const Posts = () => {
   // …
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```vue
 <script setup lang="ts">
 import { useQuery } from '@vue/apollo-composable';
@@ -380,9 +380,9 @@ const posts = computed(() => result.value?.posts);
   </ul>
 </template>
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```tsx
 import { PostsGQL, PostsQuery } from './graphql'
 // BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
@@ -398,9 +398,9 @@ export class PostsComponent {
   }
 }
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```svelte
 <script lang="ts">
   import { Posts } from '../graphql/generated'
@@ -413,7 +413,7 @@ export class PostsComponent {
   <!-- UI … -->
 </ul>
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 Now, with simple configuration and an npm/yarn script, a front-end developers benefits from:
@@ -449,7 +449,7 @@ For this reason, GraphQL Code Generator provides multiple plugins that help you 
 Here are an example of a GraphQL API leveraging GraphQL Code Generator resolvers typings (based on the `schema.graphql` above):
 
 <Tabs items={['Apollo Server', 'GraphQL Yoga', 'GraphQL Modules']}>
-<Tab>
+<Tabs.Tab>
 ```ts
 import { readFileSync } from 'node:fs'
 import { ApolloServer } from 'apollo-server'
@@ -470,9 +470,9 @@ server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`)
 })
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 ```ts
 import { readFileSync } from 'node:fs'
 import { createServer } from 'node:http'
@@ -495,9 +495,9 @@ server.listen(4000, () => {
   console.log('GraphQL Server is listening on http://localhost:4000/graphql');
 })
 ```
-</Tab>
+</Tabs.Tab>
 
-<Tab>
+<Tabs.Tab>
 Given the following structure:
 
 ```
@@ -522,7 +522,7 @@ export const resolvers: UsersModule.Resolvers = {
   // Here, you can implement only the types and fields defined in your module!
 }
 ```
-</Tab>
+</Tabs.Tab>
 </Tabs>
 
 ## What's next?

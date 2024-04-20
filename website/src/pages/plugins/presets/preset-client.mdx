@@ -52,6 +52,7 @@ The `client` preset allows the following `config` options:
 - [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
 - [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
 - [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
+- [`futureProofEnums`](/plugins/typescript/typescript#futureproofenums): Adds a catch-all entry to enum type definitions for values that may be added in the future.
 - [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
 - [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
 - [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
@@ -76,7 +77,7 @@ It also allows to colocate the Fragment definitions with their components counte
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -85,8 +86,8 @@ export const FilmFragment = graphql(/* GraphQL */ `
   }
 `)
 
-const Film = (props: { film: FragmentType<typeof FilmFragment> }) => {
-  const film = useFragment(FilmFragment, props.film)
+const Film = (props: { film: FragmentType<typeof FilmItemFragment> }) => {
+  const film = useFragment(FilmItemFragment, props.film)
   return (
     <div>
       <h3>{film.title}</h3>
@@ -107,13 +108,13 @@ For an introduction on how to design your GraphQL Query to leverage Fragment Mas
 
 As explained in [our guide](/docs/guides/react-vue), the top-level GraphQL Query should include the fragment (`...FilmItem`) and pass down the data to child components.
 
-At the component props definition level, the `FragmentType<T>` type ensures that the passed data contains the required fragment (here: `FilmFragment` aka `FilmItem` in GraphQL).
+At the component props definition level, the `FragmentType<T>` type ensures that the passed data contains the required fragment (here: `FilmItemFragment` aka `FilmItem` in GraphQL).
 
 ```tsx filename="src/Film.tsx" {14-15}
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -124,9 +125,9 @@ export const FilmFragment = graphql(/* GraphQL */ `
 
 const Film = (props: {
   /* the passed `film` property contains a valid `FilmItem` fragment 🎉 */
-  film: FragmentType<typeof FilmFragment>
+  film: FragmentType<typeof FilmItemFragment>
 }) => {
-  const film = useFragment(FilmFragment, props.film)
+  const film = useFragment(FilmItemFragment, props.film)
   return (
     <div>
       <h3>{film.title}</h3>
@@ -151,13 +152,13 @@ as described in [the next section](#getting-a-fragments-type).
 
 #### The `useFragment()` helper
 
-The `useFragment()` function helps narrow down the Fragment type from a given data object (ex: `film` object to a `FilmFragment` object):
+The `useFragment()` function helps narrow down the Fragment type from a given data object (ex: `film` object to a `FilmItemFragment` object):
 
 ```tsx filename="src/Film.tsx" {14-15}
 import { FragmentType, useFragment } from './gql/fragment-masking'
 import { graphql } from '../src/gql'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -166,8 +167,8 @@ export const FilmFragment = graphql(/* GraphQL */ `
   }
 `)
 
-const Film = (props: { film: FragmentType<typeof FilmFragment> }) => {
-  const film = useFragment(FilmFragment, props.film)
+const Film = (props: { film: FragmentType<typeof FilmItemFragment> }) => {
+  const film = useFragment(FilmItemFragment, props.film)
   // `film` is of type `FilmItemFragment` 🎉
   return (
     <div>
@@ -236,7 +237,7 @@ Or, if you have access to the Fragment's definition, you can extract the type fr
 ```tsx filename="src/Film.tsx" {1, 3, 12}
 import { ResultOf } from '@graphql-typed-document-node/core'
 
-export const FilmFragment = graphql(/* GraphQL */ `
+export const FilmItemFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {
     id
     title
@@ -245,7 +246,7 @@ export const FilmFragment = graphql(/* GraphQL */ `
   }
 `)
 
-function myFilmHelper(film: ResultOf<typeof FilmFragment>) {
+function myFilmHelper(film: ResultOf<typeof FilmItemFragment>) {
   // ...
 }
 ```
@@ -490,6 +491,29 @@ console.log(response.status)
 console.log(await response.json())
 ```
 
+### Hashing algorithm
+
+To override the default hash algorithm of sha1 set `persistedDocuments.hashAlgorithm`
+
+```ts filename="codegen.ts" {10-12}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      presetConfig: {
+        persistedDocuments: {
+          hashAlgorithm: 'sha256'
+        }
+      }
+    }
+  }
+}
+```
+
 ### Normalized Caches (urql and Apollo Client)
 
 Urql is a popular GraphQL client that utilizes a normalized cache.
@@ -498,7 +522,7 @@ The `addTypenameSelectionDocumentTransform` document transform can be used for a
 
 ```ts filename="codegen.ts" {1,15}
 import { type CodegenConfig } from '@graphql-codegen/cli'
-import { addTypenameDocumentTransform } from '@graphql-codegen/client-preset'
+import { addTypenameSelectionDocumentTransform } from '@graphql-codegen/client-preset'
 
 const config: CodegenConfig = {
   schema: './**/*.graphqls',
@@ -511,7 +535,7 @@ const config: CodegenConfig = {
       presetConfig: {
         persistedDocuments: true
       },
-      documentTransforms: [addTypenameDocumentTransform]
+      documentTransforms: [addTypenameSelectionDocumentTransform]
     }
   }
 }

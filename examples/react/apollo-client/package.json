@@ -9,8 +9,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/cli": "^5.0.2",
     "@vitejs/plugin-react": "^3.1.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^18.11.18",
@@ -19,7 +18,7 @@
     "typescript": "5.2.2",
     "serve": "14.2.1",
     "cypress": "12.17.4",
-    "start-server-and-test": "2.0.0",
+    "start-server-and-test": "2.0.3",
     "vite": "^4.1.0"
   },
   "scripts": {

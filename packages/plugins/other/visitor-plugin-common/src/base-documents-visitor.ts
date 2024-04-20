@@ -30,6 +30,7 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   addTypename: boolean;
   preResolveTypes: boolean;
+  extractAllFieldsToTypes: boolean;
   globalNamespace: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
@@ -257,7 +258,7 @@ export class BaseDocumentsVisitor<
       .join('\n\n');
   }
 
-  protected applyVariablesWrapper(variablesBlock: string): string {
+  protected applyVariablesWrapper(variablesBlock: string, _operationType?: string): string {
     return variablesBlock;
   }
 
@@ -275,6 +276,11 @@ export class BaseDocumentsVisitor<
     );
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix = this.getOperationSuffix(name, operationType);
+    const selectionSetObjects = selectionSet.transformSelectionSet(
+      this.convertName(name, {
+        suffix: operationTypeSuffix,
+      })
+    );
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -284,11 +290,11 @@ export class BaseDocumentsVisitor<
           suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
-      .withContent(selectionSet.transformSelectionSet()).string;
+      .withContent(selectionSetObjects.mergedTypeString).string;
 
     const operationVariables = new DeclarationBlock({
       ...this._declarationBlockConfig,
-      blockTransformer: t => this.applyVariablesWrapper(t),
+      blockTransformer: t => this.applyVariablesWrapper(t, operationType),
     })
       .export()
       .asKind('type')
@@ -299,6 +305,23 @@ export class BaseDocumentsVisitor<
       )
       .withBlock(visitedOperationVariables).string;
 
-    return [operationVariables, operationResult].filter(r => r).join('\n\n');
+    const dependentTypesContent = this._parsedConfig.extractAllFieldsToTypes
+      ? selectionSetObjects.dependentTypes.map(
+          i =>
+            new DeclarationBlock(this._declarationBlockConfig)
+              .export()
+              .asKind('type')
+              .withName(i.name)
+              .withContent(i.content).string
+        )
+      : [];
+
+    return [
+      ...(dependentTypesContent.length > 0 ? [dependentTypesContent.join('\n')] : []),
+      operationVariables,
+      operationResult,
+    ]
+      .filter(r => r)
+      .join('\n\n');
   }
 }
