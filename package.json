@@ -48,7 +48,7 @@
     "@babel/preset-typescript": "7.23.3",
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.1",
-    "@theguild/eslint-config": "0.11.3",
+    "@theguild/eslint-config": "0.11.7-rc-20240421131015-c5ed58486f6dd3c9cfc2745f03dc5e8f0adcd587",
     "@theguild/prettier-config": "0.1.1",
     "@types/jest": "28.1.8",
     "babel-jest": "29.6.4",
