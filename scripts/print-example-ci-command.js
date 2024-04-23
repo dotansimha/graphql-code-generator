@@ -4,14 +4,25 @@ const fg = require('fast-glob');
 
 const packageJSON = fg.sync(['examples/**/package.json'], { ignore: ['**/node_modules/**'] });
 
-console.log(
-  packageJSON
-    .reduce((res, packageJSONPath) => {
-      const { name } = fs.readJSONSync(packageJSONPath);
+const ignoredPackages = ['example-react-nextjs-swr'];
 
-      res.push(`yarn workspace ${name} run ${process.argv[2]}`);
+const result = packageJSON.reduce(
+  (res, packageJSONPath) => {
+    const { name } = fs.readJSONSync(packageJSONPath);
 
+    if (ignoredPackages.includes(name)) {
+      res.ignored.push(name);
       return res;
-    }, [])
-    .join(' && ')
+    }
+
+    res.commands.push(`yarn workspace ${name} run ${process.argv[2]}`);
+    return res;
+  },
+  { ignored: [], commands: [] }
 );
+
+if (result.ignored.length > 0) {
+  result.commands.push(`echo "Ignored packages: ${result.ignored.join(',')}"`);
+}
+
+console.log(result.commands.join(' && '));
