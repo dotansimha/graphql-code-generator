@@ -46,6 +46,3 @@ export const getPeople = async (first?: number) => {
   }
   return res?.allPeople?.edges;
 };
-
-getPeople().then(res => console.log(res));
-getPeople(10).then(res => console.log(res));
