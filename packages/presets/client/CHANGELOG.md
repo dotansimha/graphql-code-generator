@@ -421,8 +421,7 @@
 
   ```ts
   /** codegen.ts */
-  // @ts-ignore
-import { CodegenConfig } from '@graphql-codegen/cli';
+  import { CodegenConfig } from '@graphql-codegen/cli';
 
   const config: CodegenConfig = {
     schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
@@ -470,8 +469,7 @@ import { CodegenConfig } from '@graphql-codegen/cli';
 
   ```ts
   /** codegen.ts */
-  // @ts-ignore
-import { CodegenConfig } from '@graphql-codegen/cli';
+  import { CodegenConfig } from '@graphql-codegen/cli';
 
   const config: CodegenConfig = {
     schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
