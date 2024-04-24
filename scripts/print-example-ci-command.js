@@ -4,7 +4,7 @@ const fg = require('fast-glob');
 
 const packageJSON = fg.sync(['examples/**/package.json'], { ignore: ['**/node_modules/**'] });
 
-const ignoredPackages = ['example-react-nextjs-swr'];
+const ignoredPackages = [];
 
 const result = packageJSON.reduce(
   (res, packageJSONPath) => {
