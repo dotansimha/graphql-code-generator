@@ -2897,16 +2897,16 @@
     tslib "^2.5.2"
 
 "@graphql-yoga/plugin-defer-stream@^2.0.0":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-defer-stream/-/plugin-defer-stream-2.0.4.tgz#8deef61691fd0d1f5d0b0825a020c722959bcd28"
-  integrity sha512-VW59oqldg/9lZOEJrS/D4JQL3M5ARZD3TqUXrGKMAJdmvraZpQ11I+A3ZKLvnznT5Wcoqne6NemEjsD/eB0DKA==
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-defer-stream/-/plugin-defer-stream-2.0.5.tgz#1b2a397f6815163c738e59ed5ea82f9789b22cfc"
+  integrity sha512-8Km3jXwaFIYzWHSFS69aIsmUc0oV8SJMPoAofK89dQdHCzf1lRhlr1fRod21l6ouIL8YujXMc2aXP9zDumbtSQ==
   dependencies:
     "@graphql-tools/utils" "^10.0.0"
 
-"@graphql-yoga/plugin-persisted-operations@2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-persisted-operations/-/plugin-persisted-operations-2.0.4.tgz#eec7e3fd772a24a9930ff748784d5bf64bfd1381"
-  integrity sha512-iPMSOpa+SiY88r7Hzt/JTNhMt7PDghFsMBBeEaRWtUaTo4oPbrqUSJyG21cPB6EJP5s+TBIza0ZCfgQZSh7mnw==
+"@graphql-yoga/plugin-persisted-operations@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-persisted-operations/-/plugin-persisted-operations-2.0.5.tgz#a5c98b09c957dc2ee2364e511298a81f77c23e72"
+  integrity sha512-I1TNdt0PFtOLQEQ2IuIkyqKUd1u2s1KOY3L38+7PDuvFJ9G+EiLTMfMbO0FgPVFBgQd63WX4kwzv3+CEccFqmQ==
 
 "@graphql-yoga/subscription@^4.0.0":
   version "4.0.0"
@@ -8634,10 +8634,10 @@ graphql-ws@^5.14.0:
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.15.0.tgz#2db79e1b42468a8363bf5ca6168d076e2f8fdebc"
   integrity sha512-xWGAtm3fig9TIhSaNsg0FaDZ8Pyn/3re3RFlP4rhQcmjRDIPpk1EhRuNB+YSJtLzttyuToaDiNhwT1OMoGnJnw==
 
-graphql-yoga@4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/graphql-yoga/-/graphql-yoga-4.0.4.tgz#00f388b6c38560ad4e5662c66cd2671befb58229"
-  integrity sha512-MvCLhFecYNIKuxAZisPjpIL9lxRYbpgPSNKENDO/8CV3oiFlsLJHZb5dp2sVAeLafXHeZ9TgkijLthUBc1+Jag==
+graphql-yoga@4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/graphql-yoga/-/graphql-yoga-4.0.5.tgz#7545f430d2e83998d22427b63fd511976dba47c4"
+  integrity sha512-vIbJU9QX5RP4PoxbMCHcfOlt/3EsC/0uLdAOlKaiUvlwJDTFCaIHo2X10vL4i/27Gw8g90ECIwm2YbmeLDwcqg==
   dependencies:
     "@envelop/core" "^4.0.0"
     "@graphql-tools/executor" "^1.0.0"

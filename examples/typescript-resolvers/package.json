@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "graphql": "16.8.0",
-    "graphql-yoga": "4.0.4"
+    "graphql-yoga": "4.0.5"
   },
   "scripts": {
     "codegen": "graphql-codegen --config codegen.ts",
