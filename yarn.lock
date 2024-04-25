@@ -3999,10 +3999,10 @@
     npm-to-yarn "^2.1.0"
     unist-util-visit "^5.0.0"
 
-"@theguild/tailwind-config@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@theguild/tailwind-config/-/tailwind-config-0.4.0.tgz#30d348c2ed2b58d10d48985346207a4a06ccbccc"
-  integrity sha512-yBKCWCObEpu8JvB4aPXysDHmwecGJyms6P6Gj3LG3cA+3HiWTj/bqjU4TigotK+n/Dg/bbP4ZllYfhg4Llzypg==
+"@theguild/tailwind-config@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@theguild/tailwind-config/-/tailwind-config-0.4.1.tgz#371a2b98333cf5293dc025f05d10b8e6299046c4"
+  integrity sha512-o04kB4/fzlSPUS6LRMjTCmiozmDzrYPDB4rIRd3g/6ELcPbU45Zv+WcsZHxR5djgh0SuL6tCyFZji8cXdCvH/A==
   dependencies:
     autoprefixer "^10.4.19"
     cssnano "^6.1.2"
