@@ -13,7 +13,7 @@
     "@theguild/tailwind-config": "0.4.0",
     "@types/dedent": "0.7.2",
     "@types/jsonpath": "0.2.4",
-    "@types/node": "18.19.21",
+    "@types/node": "18.19.31",
     "@types/react": "18.2.79",
     "fast-xml-parser": "4.3.6",
     "jsonpath": "1.1.1",
