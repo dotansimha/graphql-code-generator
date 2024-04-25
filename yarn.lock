@@ -4274,9 +4274,9 @@
   integrity sha512-IgHxcT3RC8LzFLhKwP3gbMPeaK7BM9eBH46OdapPA7yvuIUJ8H6zHZV53J8hGZcTSnt95jANt+rTBNUUc22ACQ==
 
 "@types/micromatch@^4.0.2":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@types/micromatch/-/micromatch-4.0.6.tgz#340535c2b90098ace8fc5e7eaec8562deedb4f2f"
-  integrity sha512-2eulCHWqjEpk9/vyic4tBhI8a9qQEl6DaK2n/sF7TweX9YESlypgKyhXMDGt4DAOy/jhLPvVrZc8pTDAMsplJA==
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@types/micromatch/-/micromatch-4.0.7.tgz#6a0bdf162a025e02318886107f27a55dbcd2fff2"
+  integrity sha512-C/FMQ8HJAZhTsDpl4wDKZdMeeW5USjgzOczUwTGbRc1ZopPgOhIEnxY2ZgUrsuyy4DwK1JVOJZKFakv3TbCKiA==
   dependencies:
     "@types/braces" "*"
 
