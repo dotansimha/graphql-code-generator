@@ -53,7 +53,7 @@
     "@types/jest": "28.1.8",
     "babel-jest": "29.6.4",
     "bob-the-bundler": "6.0.0",
-    "eslint": "8.57.0",
+    "eslint": "9.2.0",
     "graphql": "16.8.0",
     "husky": "8.0.3",
     "jest": "28.1.3",
