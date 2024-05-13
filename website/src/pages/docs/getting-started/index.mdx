@@ -49,7 +49,7 @@ Most client-side implementations without GraphQL Code Generator would query the 
 ```tsx
 import { useQuery } from 'urql'
 
-interface PostQuery {
+interface PostsQuery {
   posts: {
     id: string
     title: string
@@ -88,7 +88,7 @@ const Posts = () => {
 import { request, gql } from 'graphql-request'
 import { useQuery } from '@tanstack/react-query'
 
-interface PostQuery {
+interface PostsQuery {
   posts: {
     id: string
     title: string
@@ -115,7 +115,7 @@ const postsQueryDocument = gql`
 `
 
 const Posts = () => {
-  const { data } = useQuery<PostQuery>('posts', async () => {
+  const { data } = useQuery<PostsQuery>('posts', async () => {
     const { posts } = await request(endpoint, postsQueryDocument)
     return posts
   })
@@ -336,7 +336,7 @@ const postsQueryDocument = graphql(/* GraphQL */ `
 
 const Posts = () => {
   // React Query `useQuery()` knows how to work with typed graphql documents
-  const { data } = useQuery<PostQuery>('posts', async () => {
+  const { data } = useQuery<PostsQuery>('posts', async () => {
     const { posts } = await request(endpoint, postsQueryDocument)
     return posts
   })

@@ -10,12 +10,12 @@
     "generate-json-config": "tsx generate-config-json-schema.ts"
   },
   "devDependencies": {
-    "@theguild/tailwind-config": "0.4.0",
+    "@theguild/tailwind-config": "0.4.1",
     "@types/dedent": "0.7.2",
     "@types/jsonpath": "0.2.4",
-    "@types/node": "18.19.21",
-    "@types/react": "18.2.60",
-    "fast-xml-parser": "4.3.5",
+    "@types/node": "18.19.33",
+    "@types/react": "18.3.1",
+    "fast-xml-parser": "4.3.6",
     "jsonpath": "1.1.1",
     "prettier-plugin-tailwindcss": "0.2.8"
   },
@@ -73,7 +73,7 @@
     "dedent": "1.5.1",
     "graphql": "16.8.0",
     "js-yaml": "4.1.0",
-    "next": "14.1.4",
+    "next": "14.2.3",
     "next-mdx-remote": "4.4.1",
     "next-sitemap": "4.2.2",
     "react": "^18.2.0",

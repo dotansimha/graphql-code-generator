@@ -926,10 +926,7 @@ export class BaseTypesVisitor<
         let enumValue: string | number =
           typeof schemaEnumValue === 'undefined' ? (enumOption.name as any) : schemaEnumValue;
 
-        if (
-          this.config.enumValues[typeName]?.mappedValues &&
-          typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined'
-        ) {
+        if (typeof this.config.enumValues[typeName]?.mappedValues?.[enumValue] !== 'undefined') {
           enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
         }
 
