@@ -1778,8 +1778,9 @@ export class BaseResolversVisitor<
         const field = fields[fieldName];
         const baseType = getBaseType(field.type);
         const isUnion = isUnionType(baseType);
+        const isInterface = isInterfaceType(baseType);
 
-        if (!this.config.mappers[baseType.name] && !isUnion && !this._shouldMapType[baseType.name]) {
+        if (!this.config.mappers[baseType.name] && !isUnion && !isInterface && !this._shouldMapType[baseType.name]) {
           return null;
         }
 
