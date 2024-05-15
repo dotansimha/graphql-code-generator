@@ -549,7 +549,12 @@ export namespace Types {
     noSilentErrors?: boolean;
   }
 
-  export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
+  export type ComplexPluginOutput<M = Record<string, unknown>> = {
+    content: string;
+    prepend?: string[];
+    append?: string[];
+    meta?: M;
+  };
   export type PluginOutput = string | ComplexPluginOutput;
   export type HookFunction = (...args: any[]) => void | Promise<void>;
   export type HookAlterFunction = (...args: any[]) => void | string | Promise<void | string>;
