@@ -1,5 +1,20 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.2.0
+
+### Minor Changes
+
+- [#9961](https://github.com/dotansimha/graphql-code-generator/pull/9961) [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e) Thanks [@eddeee888](https://github.com/eddeee888)! - Update typescript-resolvers to report generated resolver types in the run to meta field in the output
+
+### Patch Changes
+
+- [#9944](https://github.com/dotansimha/graphql-code-generator/pull/9944) [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431) Thanks [@eddeee888](https://github.com/eddeee888)! - Add \_ prefix to generated `RefType` in `ResolversInterfaceTypes` and `ResolversUnionTypes` as it is sometimes unused
+
+- [#9962](https://github.com/dotansimha/graphql-code-generator/pull/9962) [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix interface mappers not working in nested/self-referencing scenarios
+
+- Updated dependencies [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e)]:
+  - @graphql-codegen/plugin-helpers@5.0.4
+
 ## 5.1.0
 
 ### Minor Changes
