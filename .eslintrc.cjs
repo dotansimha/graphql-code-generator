@@ -50,11 +50,19 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': 'off',
       },
     },
+    {
+      files: ['packages/**/*.{,c,m}ts{,x}'],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+    },
   ],
   ignorePatterns: [
     'dev-test',
     'website',
-    'examples/**/gql/**',
+    'examples/**',
+    '**/tests/test-files/**',
+    '**/tests/test-documents/**',
     '**/react-app-env.d.ts',
     'packages/presets/swc-plugin/tests/fixtures/simple-uppercase-operation-name.js',
     'packages/presets/swc-plugin/tests/fixtures/simple-uppercase-operation-name.other-dir.js',

@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 4.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e), [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431), [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e), [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e)]:
+  - @graphql-codegen/plugin-helpers@5.0.4
+  - @graphql-codegen/visitor-plugin-common@5.2.0
+  - @graphql-codegen/typescript@4.0.7
+
 ## 4.2.0
 
 ### Minor Changes
