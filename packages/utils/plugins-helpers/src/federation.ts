@@ -36,13 +36,13 @@ export const federationSpec = parse(/* GraphQL */ `
 export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
   return mapSchema(schema, {
     [MapperKind.OBJECT_TYPE]: type => {
-      const federationObjectTypeDetails = checkObjectTypeFederationDetails(type, schema);
+      const objectTypeFederationDetails = checkObjectTypeFederationDetails(type, schema);
 
-      if (!federationObjectTypeDetails) {
+      if (!objectTypeFederationDetails) {
         return type;
       }
 
-      if (federationObjectTypeDetails.resolvableKeyDirectives.length === 0) {
+      if (objectTypeFederationDetails.resolvableKeyDirectives.length === 0) {
         return type;
       }
 
@@ -168,12 +168,12 @@ export class ApolloFederation {
       isObjectType(parentType) &&
       (isTypeExtension(parentType, this.schema) || fieldNode.name.value === resolveReferenceFieldName)
     ) {
-      const federationObjectTypeDetails = checkObjectTypeFederationDetails(parentType, this.schema);
-      if (!federationObjectTypeDetails) {
+      const objectTypeFederationDetails = checkObjectTypeFederationDetails(parentType, this.schema);
+      if (!objectTypeFederationDetails) {
         return parentTypeSignature;
       }
 
-      const { resolvableKeyDirectives } = federationObjectTypeDetails;
+      const { resolvableKeyDirectives } = objectTypeFederationDetails;
 
       if (resolvableKeyDirectives.length) {
         const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
