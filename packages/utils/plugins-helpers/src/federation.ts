@@ -1,5 +1,6 @@
 import { astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
 import {
+  type ConstDirectiveNode,
   DefinitionNode,
   DirectiveNode,
   FieldDefinitionNode,
@@ -35,18 +36,25 @@ export const federationSpec = parse(/* GraphQL */ `
 export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
   return mapSchema(schema, {
     [MapperKind.OBJECT_TYPE]: type => {
-      if (isFederationObjectType(type, schema)) {
-        const typeConfig = type.toConfig();
-        typeConfig.fields = {
-          [resolveReferenceFieldName]: {
-            type,
-          },
-          ...typeConfig.fields,
-        };
+      const federationObjectTypeDetails = checkObjectTypeFederationDetails(type, schema);
 
-        return new GraphQLObjectType(typeConfig);
+      if (!federationObjectTypeDetails) {
+        return type;
       }
-      return type;
+
+      if (federationObjectTypeDetails.resolvableKeyDirectives.length === 0) {
+        return type;
+      }
+
+      const typeConfig = type.toConfig();
+      typeConfig.fields = {
+        [resolveReferenceFieldName]: {
+          type,
+        },
+        ...typeConfig.fields,
+      };
+
+      return new GraphQLObjectType(typeConfig);
     },
   });
 }
@@ -130,7 +138,7 @@ export class ApolloFederation {
    * @param data
    */
   skipField({ fieldNode, parentType }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType }): boolean {
-    if (!this.enabled || !isObjectType(parentType) || !isFederationObjectType(parentType, this.schema)) {
+    if (!this.enabled || !isObjectType(parentType) || !checkObjectTypeFederationDetails(parentType, this.schema)) {
       return false;
     }
 
@@ -158,12 +166,16 @@ export class ApolloFederation {
     if (
       this.enabled &&
       isObjectType(parentType) &&
-      isFederationObjectType(parentType, this.schema) &&
       (isTypeExtension(parentType, this.schema) || fieldNode.name.value === resolveReferenceFieldName)
     ) {
-      const keys = getDirectivesByName('key', parentType);
+      const federationObjectTypeDetails = checkObjectTypeFederationDetails(parentType, this.schema);
+      if (!federationObjectTypeDetails) {
+        return parentTypeSignature;
+      }
 
-      if (keys.length) {
+      const { resolvableKeyDirectives } = federationObjectTypeDetails;
+
+      if (resolvableKeyDirectives.length) {
         const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
 
         // Look for @requires and see what the service needs and gets
@@ -171,7 +183,7 @@ export class ApolloFederation {
         const requiredFields = this.translateFieldSet(merge({}, ...requires), parentTypeSignature);
 
         // @key() @key() - "primary keys" in Federation
-        const primaryKeys = keys.map(def => {
+        const primaryKeys = resolvableKeyDirectives.map(def => {
           const fields = this.extractFieldSet(def);
           return this.translateFieldSet(fields, parentTypeSignature);
         });
@@ -275,7 +287,10 @@ export class ApolloFederation {
  * Checks if Object Type is involved in Federation. Based on `@key` directive
  * @param node Type
  */
-function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType, schema: GraphQLSchema): boolean {
+export function checkObjectTypeFederationDetails(
+  node: ObjectTypeDefinitionNode | GraphQLObjectType,
+  schema: GraphQLSchema
+): { keyDirectives: readonly ConstDirectiveNode[]; resolvableKeyDirectives: readonly ConstDirectiveNode[] } | false {
   const {
     name: { value: name },
     directives,
@@ -284,9 +299,24 @@ function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectTy
   const rootTypeNames = getRootTypeNames(schema);
   const isNotRoot = !rootTypeNames.has(name);
   const isNotIntrospection = !name.startsWith('__');
-  const hasKeyDirective = directives.some(d => d.name.value === 'key');
+  const keyDirectives = directives.filter(d => d.name.value === 'key');
 
-  return isNotRoot && isNotIntrospection && hasKeyDirective;
+  const check = isNotRoot && isNotIntrospection && keyDirectives.length > 0;
+
+  if (!check) {
+    return false;
+  }
+
+  const resolvableKeyDirectives = keyDirectives.filter(d => {
+    for (const arg of d.arguments) {
+      if (arg.name.value === 'resolvable' && arg.value.kind === 'BooleanValue' && arg.value.value === false) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return { keyDirectives, resolvableKeyDirectives };
 }
 
 /**
