@@ -1,5 +1,6 @@
 export default {
   'react-vue': 'React / Vue',
+  'vanilla-typescript': 'Vanilla TypeScript',
   angular: 'Angular',
   svelte: 'Svelte / Kit',
   'flutter-freezed': 'Dart/Flutter',
