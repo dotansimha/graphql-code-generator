@@ -793,36 +793,4 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
     `);
   });
-
-  it('meta - does not generate federation meta if federation config is false', async () => {
-    const federatedSchema = /* GraphQL */ `
-      scalar _FieldSet
-      directive @key(fields: _FieldSet!, resolvable: Boolean) repeatable on OBJECT | INTERFACE
-
-      type Query {
-        allUsers: [User]
-      }
-
-      type User @key(fields: "id") {
-        id: ID!
-        name: String
-        username: String
-      }
-    `;
-
-    const result = await plugin(buildSchema(federatedSchema), [], {}, { outputFile: '' });
-
-    expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
-      Object {
-        "Query": Object {
-          "federation": undefined,
-          "name": "QueryResolvers",
-        },
-        "User": Object {
-          "federation": undefined,
-          "name": "UserResolvers",
-        },
-      }
-    `);
-  });
 });

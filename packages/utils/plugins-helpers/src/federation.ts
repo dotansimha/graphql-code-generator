@@ -38,11 +38,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLS
     [MapperKind.OBJECT_TYPE]: type => {
       const objectTypeFederationDetails = checkObjectTypeFederationDetails(type, schema);
 
-      if (!objectTypeFederationDetails) {
-        return type;
-      }
-
-      if (objectTypeFederationDetails.resolvableKeyDirectives.length === 0) {
+      if (!objectTypeFederationDetails || objectTypeFederationDetails.resolvableKeyDirectives.length === 0) {
         return type;
       }
 
@@ -290,7 +286,7 @@ export class ApolloFederation {
 export function checkObjectTypeFederationDetails(
   node: ObjectTypeDefinitionNode | GraphQLObjectType,
   schema: GraphQLSchema
-): { keyDirectives: readonly ConstDirectiveNode[]; resolvableKeyDirectives: readonly ConstDirectiveNode[] } | false {
+): { resolvableKeyDirectives: readonly ConstDirectiveNode[] } | false {
   const {
     name: { value: name },
     directives,
@@ -316,7 +312,7 @@ export function checkObjectTypeFederationDetails(
     return true;
   });
 
-  return { keyDirectives, resolvableKeyDirectives };
+  return { resolvableKeyDirectives };
 }
 
 /**
