@@ -1,4 +1,9 @@
-[![CodeGen](./logo.svg)](https://the-guild.dev/graphql/codegen)
+<div style="display: flex;">
+    <img src="./logo.svg" width="150px" alt="GraphQL Code Generator logo"/>
+    <a href="https://the-guild.dev">
+    <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The guild" style="width: 100px;align:right;margin: 0 50px 40px 40px;"/> 
+  </a>
+</div>
 
 [![npm version](https://badge.fury.io/js/%40graphql-codegen%2Fcli.svg)](https://badge.fury.io/js/%40graphql-codegen%2Fcli)
 
