@@ -17,6 +17,8 @@ type User {
   full_name: String
   name: String @deprecated
   avatar_url: Url
+  Followers: [User!]!
+  Tweets: [Tweet!]!
 }
 
 type Stat {
@@ -26,10 +28,24 @@ type Stat {
   responses: Int
 }
 
-type Notification {
-  id: ID
+interface Notification {
+  id: ID!
   date: Date
-  type: String
+}
+
+type Message implements Notification {
+  id: ID!
+  date: Date
+  from: User!
+  to: User!
+  body: String!
+}
+
+type Information implements Notification {
+  id: ID!
+  date: Date
+  body: String!
+  priority: Int!
 }
 
 type Meta {
