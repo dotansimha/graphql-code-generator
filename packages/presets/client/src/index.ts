@@ -89,9 +89,20 @@ export type ClientPresetConfig = {
          * The algorithm parameter is typed with known algorithms and as a string rather than a union because it solely depends on Crypto's algorithms supported
          * by the version of OpenSSL on the platform.
          *
+         * Cannot be used in conjunction with `hashFunction`.
+         *
          * @default `sha1`
          */
         hashAlgorithm?: 'sha1' | 'sha256' | (string & {});
+        /**
+         * @description Custom hash function to use.
+         *
+         * Cannot be used in conjunction with `hashAlgorithm`.
+         *
+         * @param operation The operation string to hash.
+         * @returns The hash string.
+         */
+        hashFunction?: (operation: string) => string;
       };
 };
 
@@ -159,6 +170,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
             (typeof options.presetConfig.persistedDocuments === 'object' &&
               options.presetConfig.persistedDocuments.hashAlgorithm) ||
             'sha1',
+          hashFunction:
+            (typeof options.presetConfig.persistedDocuments === 'object' &&
+              !options.presetConfig.persistedDocuments.hashAlgorithm &&
+              options.presetConfig.persistedDocuments.hashFunction) ||
+            undefined,
         }
       : null;
 
@@ -196,7 +212,9 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
       if (persistedDocuments) {
         const documentString = normalizeAndPrintDocumentNode(documentNode);
-        const hash = generateDocumentHash(documentString, persistedDocuments.hashAlgorithm);
+        const hash =
+          persistedDocuments.hashFunction?.(documentString) ??
+          generateDocumentHash(documentString, persistedDocuments.hashAlgorithm);
         persistedDocumentsMap.set(hash, documentString);
         return { ...meta, [persistedDocuments.hashPropertyName]: hash };
       }
