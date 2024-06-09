@@ -1711,7 +1711,7 @@ export * from "./gql.js";`);
             preset,
             presetConfig: {
               persistedDocuments: {
-                hashFunction: (operation: string) => {
+                hashAlgorithm: (operation: string) => {
                   return operation.replace(/\s/g, '');
                 },
               },
@@ -1795,7 +1795,7 @@ export * from "./gql.js";`);
             preset,
             presetConfig: {
               persistedDocuments: {
-                hashFunction: (operation: string) => {
+                hashAlgorithm: (operation: string) => {
                   const shasum = crypto.createHash('sha256');
                   shasum.update(operation);
                   return shasum.digest('hex');
