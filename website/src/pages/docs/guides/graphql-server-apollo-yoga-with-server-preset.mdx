@@ -72,7 +72,7 @@ npm i -D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files
 
 Create or update your Codegen config as follows:
 
-<Tabs items={['codegen.ts','codegen.yml']}>
+<Tabs items={['codegen.ts','codegen.ts (GraphQL Yoga with File Uploads)','codegen.yml']}>
 
 <Tabs.Tab>
 
@@ -84,6 +84,38 @@ const config: CodegenConfig = {
   schema: '**/schema.graphql',
   generates: {
     'src/schema': defineConfig()
+  }
+}
+export default config
+```
+
+</Tabs.Tab>
+
+<Tabs.Tab>
+
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files'
+
+const config: CodegenConfig = {
+  schema: '**/schema.graphql',
+  generates: {
+    'src/schema': defineConfig({
+      // The following config is designed to work with GraphQL Yoga's File uploads feature
+      // https://the-guild.dev/graphql/yoga-server/docs/features/file-uploads
+      scalarsOverrides: {
+        File: { type: 'File' }
+      },
+      resolverGeneration: {
+        query: '*',
+        mutation: '*',
+        subscription: '*',
+        scalar: '!*.File',
+        object: '*',
+        union: '',
+        interface: ''
+      }
+    })
   }
 }
 export default config
@@ -257,7 +289,7 @@ The server preset handles all resolver types and imports. So, you only need to i
 
 This means instead of updating the `codegen.ts` config file, you make changes in each module. This keeps the GraphQL API maintainable at any scale.
 
-Read more about this concept on our blog: [Scalability APIs with GraphQL Server Codegen Preset](https://the-guild.dev/blog/scalable-apis-with-graphql-server-codegen-preset)
+Read more about this concept on our blog: [Scalable APIs with GraphQL Server Codegen Preset](https://the-guild.dev/blog/scalable-apis-with-graphql-server-codegen-preset)
 
 </Callout>
 
@@ -322,12 +354,12 @@ Furthermore, the type is updated to use the recommended type from `graphql-scala
 // ... other generated types
 
 export type Scalars = {
-  ID: string
-  String: string
-  Boolean: boolean
-  Int: number
-  Float: number
-  DateTime: Date | string // Type comes from graphql-scalars
+  ID: { input: string; output: string | number }
+  String: { input: string; output: string }
+  Boolean: { input: boolean; output: boolean }
+  Int: { input: number; output: number }
+  Float: { input: number; output: number }
+  DateTime: { input: Date | string; output: Date | string } // Type comes from graphql-scalars
 }
 
 // ... other generated types
@@ -335,9 +367,11 @@ export type Scalars = {
 
 The type of any custom scalar is `any` by default. Without the server preset, you have to configure the `DateTime` type by manually updating `codegen.ts`.
 
-#### Adding Mappers
+#### Adding Mappers To Chain Resolvers
 
-Mappers allow returning a different object interface in the resolvers. Object type's field resolvers are used to return the final value to clients.
+By default, the generated types make resolvers return objects that match the schema types. However, this means we must handle all field mapping in the root-level resolvers.
+
+This is where we can use [mappers](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers#use-your-model-types-mappers) to enable resolver chaining. When a mapper is used this way, it can be returned in one resolver, and become the `parent` argument in the next resolver in the chain.
 
 With the server preset, you can add mappers by exporting interfaces or types with `Mapper` suffix from `*.mappers.ts` files in appropriate modules:
 
@@ -374,11 +408,11 @@ export type ResolversParentTypes = {
 ```ts filename="src/schema/user/resolvers/User.ts" {3-5,7-10}
 import type { UserResolvers } from './../../types.generated'
 export const User: UserResolvers = {
-  fullName: () => {
+  fullName: async (_parent, _arg, _ctx) => {
     /* User.fullName resolver is required because User.fullName exists but UserMapper.fullName does not */
   },
 
-  isAdmin: ({ isAdmin }) => {
+  isAdmin: ({ isAdmin }, _arg, _ctx) => {
     /* User.isAdmin resolver is required because User.isAdmin and UserMapper.isAdmin are not compatible */
     return isAdmin
   }

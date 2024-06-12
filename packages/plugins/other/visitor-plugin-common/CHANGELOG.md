@@ -1,5 +1,71 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.2.0
+
+### Minor Changes
+
+- [#9961](https://github.com/dotansimha/graphql-code-generator/pull/9961) [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e) Thanks [@eddeee888](https://github.com/eddeee888)! - Update typescript-resolvers to report generated resolver types in the run to meta field in the output
+
+### Patch Changes
+
+- [#9944](https://github.com/dotansimha/graphql-code-generator/pull/9944) [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431) Thanks [@eddeee888](https://github.com/eddeee888)! - Add \_ prefix to generated `RefType` in `ResolversInterfaceTypes` and `ResolversUnionTypes` as it is sometimes unused
+
+- [#9962](https://github.com/dotansimha/graphql-code-generator/pull/9962) [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix interface mappers not working in nested/self-referencing scenarios
+
+- Updated dependencies [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e)]:
+  - @graphql-codegen/plugin-helpers@5.0.4
+
+## 5.1.0
+
+### Minor Changes
+
+- [#9652](https://github.com/dotansimha/graphql-code-generator/pull/9652) [`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53) Thanks [@gmurphey](https://github.com/gmurphey)! - Added allowUndefinedQueryVariables as config option
+
+### Patch Changes
+
+- [#9842](https://github.com/dotansimha/graphql-code-generator/pull/9842) [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d) Thanks [@henryqdineen](https://github.com/henryqdineen)! - properly handle aliased conditionals
+
+## 5.0.0
+
+### Major Changes
+
+- [#9845](https://github.com/dotansimha/graphql-code-generator/pull/9845) [`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5) Thanks [@productdevbook](https://github.com/productdevbook)! - path starts with "#"
+
+## 4.1.2
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
+- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+  - @graphql-codegen/plugin-helpers@5.0.3
+
+## 4.1.1
+
+### Patch Changes
+
+- [#9673](https://github.com/dotansimha/graphql-code-generator/pull/9673) [`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f) Thanks [@maclockard](https://github.com/maclockard)! - Respect avoidOptionals when all arguments are optional
+
+## 4.1.0
+
+### Minor Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - fix: out-of-memory crash (fixes #7720)
+  perf: implement a caching mechanism that makes sure the type originating at the same location is never generated twice, as long as the combination of selected fields and possible types matches
+  feat: implement `extractAllFieldsToTypes: boolean`
+  feat: implement `printFieldsOnNewLines: boolean`
+
+### Patch Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - Avoid reading from null values when selection sets only contain fragments.
+
+- Updated dependencies [[`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975)]:
+  - @graphql-codegen/plugin-helpers@5.0.2
+
 ## 4.0.1
 
 ### Patch Changes

@@ -522,7 +522,7 @@ The `addTypenameSelectionDocumentTransform` document transform can be used for a
 
 ```ts filename="codegen.ts" {1,15}
 import { type CodegenConfig } from '@graphql-codegen/cli'
-import { addTypenameDocumentTransform } from '@graphql-codegen/client-preset'
+import { addTypenameSelectionDocumentTransform } from '@graphql-codegen/client-preset'
 
 const config: CodegenConfig = {
   schema: './**/*.graphqls',
@@ -535,7 +535,7 @@ const config: CodegenConfig = {
       presetConfig: {
         persistedDocuments: true
       },
-      documentTransforms: [addTypenameDocumentTransform]
+      documentTransforms: [addTypenameSelectionDocumentTransform]
     }
   }
 }

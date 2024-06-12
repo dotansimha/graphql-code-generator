@@ -359,10 +359,7 @@ export class TsVisitor<
     }
 
     const getValueFromConfig = (enumValue: string | number) => {
-      if (
-        this.config.enumValues[enumName]?.mappedValues &&
-        typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
-      ) {
+      if (typeof this.config.enumValues[enumName]?.mappedValues?.[enumValue] !== 'undefined') {
         return this.config.enumValues[enumName].mappedValues[enumValue];
       }
       return null;

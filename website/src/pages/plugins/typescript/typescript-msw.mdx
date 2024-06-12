@@ -10,41 +10,165 @@ export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNo
 
 <PluginHeader />
 
-<Callout>Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:</Callout>
+[MSW](https://mswjs.io/) is a powerful tool for mocking HTTP requests in your tests and development environment. This plugin generates typed mock function wrappers for your GraphQL operations.
+
+The generated functions are named with the pattern: `mock<OperationName><OperationType>[LinkName]`. As an example, a query with the name `getUser` would generate a mock function `mockGetUserQuery`. If you have links configured for multiple endpoints, the link name will be appended to the end. A link configured for the Stripe API, for example, would generate a mock name `mockAdminMutationStripe`. See below for more examples.
+
+## Configuration
+
+To use this plugin, you need the `typescript` plugin and `typescript-operations` in your configuration.
+
+If you are using the [`client`](https://the-guild.dev/graphql/codegen/plugins/presets/preset-client) you can simply add the `typescript-msw` plugin to your configuration:
+
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx', 'src/**/*.ts', '!src/gql/**'],
+  generates: {
+    './src/gql/graphql.ts': {
+      preset: 'client',
+      plugins: ['typescript-msw']
+    }
+  }
+}
+export default config
+```
 
 <PluginApiDocs />
 
-### Usage
+## Usage
 
-Input:
+The examples below assume the following GraphQL schema with a `getUser` query and a `setEmail` mutation.
 
-```graphql
+```graphql filename="schema.graphql"
 query GetUser($id: ID!) {
-  getUser(id: $id) {
+  GetUser(id: $id) {
     name
+    email
     id
+  }
+}
+
+mutation SetUsername($id: ID!, $name: String!) {
+  SetUsername(id: $id, name: $name) {
+    id
+    name
   }
 }
 ```
 
-Usage:
+### Mocking a query response
 
-```ts
+```ts filename="mocks.ts"
 import { mockGetUserQuery } from './generated'
+import { HttpResponse } from 'msw'
 
-const worker = setupWorker(
-  mockGetUserQuery((req, res, ctx) => {
-    const { id } = req.variables
+const mockSuccess = mockGetUserQuery(({ variables }) => {
+  const { id } = variables
 
-    return res(
-      ctx.data({
-        getUser: { name: 'John Doe', id }
-      })
-    )
+  return HttpResponse.json({
+    data: {
+      getUser: { name: 'John Doe', id }
+    }
   })
-)
+})
 
-worker.start()
+export mockUserQuerySuccess;
 ```
 
-The generated functions are named `mock<OperationName><OperationType>[LinkName]`. E.g., `mockGetUserQuery`, and `mockAdminMutationStripe`.
+### Mocking an error response
+
+```ts filename="mocks.ts"
+import { mockGetUserQuery } from './generated'
+import { HttpResponse } from 'msw'
+
+const mockUserQueryError = mockGetUserQuery(({ variables }) => {
+  return HttpResponse.json({
+    errors: [
+      {
+        message: 'User not found'
+      }
+    ]
+  })
+})
+
+export mockUserQueryError;
+```
+
+### Accessing other resolver argument properties
+
+The resolver function receives an object with a number of properties. The most up to date documentation is going to be in the [`msw` docs site](https://mswjs.io/docs/api/graphql#resolver-argument).
+
+```ts
+mockGetUserQuery({ query, variables, operationName, request }) => {})
+```
+
+## Migrating from MSW 1.x to 2.x
+
+MSW 2.x introduced a number of breaking changes. The types from `msw` are not compatible between the two versions so to upgrade, you will have to make some changes.
+
+### Updating the resolver function
+
+You will need to update callback signatures to use the new resolver argument. In addition, the returned result must be a `Response` object.
+
+```ts filename="msw-v1.ts"
+mockGetUserQuery((req, res, ctx) => {
+  const { id } = req.variables
+
+  return res(
+    ctx.data({
+      getUser: { name: 'John Doe', id }
+    })
+  )
+})
+```
+
+After:
+
+```ts filename="msw-v2.ts"
+import { HttpResponse } from 'msw'
+mockGetUserQuery(({ variables }) => {
+  const { id } = variables
+
+  return HttpResponse.json({
+    data: {
+      getUser: { name: 'John Doe', id }
+    }
+  })
+})
+```
+
+### Replacing the `res.once` method
+
+In addition to the changes above, since the `res` object does not get passed to the resolver, you will need to adjust. To achieve the same behavior, you can pass a second "options" parameter to the mock function.
+
+```ts filename="msw-v1.ts"
+mockGetUserQuery((req, res, ctx) => {
+  const { id } = req.variables
+
+  return res.once(
+    ctx.data({
+      getUser: { name: 'John Doe', id }
+    })
+  )
+})
+```
+
+```ts filename="msw-v2.ts"
+import { HttpResponse } from 'msw'
+
+mockGetUserQuery(
+  ({ variables }) => {
+    const { id } = variables
+
+    return HttpResponse.json({
+      data: {
+        getUser: { name: 'John Doe', id }
+      }
+    })
+  },
+  { once: true }
+)
+```

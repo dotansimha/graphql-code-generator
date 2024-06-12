@@ -6,6 +6,7 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
 );
 
 export default withGuildDocs({
+  output: 'export',
   experimental: {
     urlImports: [
       'https://graphql-modules.com/assets/subheader-logo.svg',
