@@ -2,4 +2,4 @@
 '@graphql-codegen/add': patch
 ---
 
-Enable import `AddPluginConfig` type
+Export configuration types (e.g. `AddPluginConfig`) from the entry point.
