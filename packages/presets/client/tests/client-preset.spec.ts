@@ -777,7 +777,17 @@ export * from "./gql";`);
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
         ): TType;
+        // return nullable if \`fragmentType\` is undefined
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | undefined
+        ): TType | undefined;
         // return nullable if \`fragmentType\` is nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null
+        ): TType | null;
+        // return nullable if \`fragmentType\` is nullable or undefined
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
