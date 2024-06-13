@@ -1,5 +1,59 @@
 # @graphql-codegen/client-preset
 
+## 4.3.0
+
+### Minor Changes
+
+- [#10001](https://github.com/dotansimha/graphql-code-generator/pull/10001) [`1be6e65`](https://github.com/dotansimha/graphql-code-generator/commit/1be6e65943b85162f3d465189d0a6df4b962df5d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Support discriminating `null` and `undefined` within the `useFragment` function.
+
+  ```ts
+  function MyComponent(props: FragmentType<typeof MyFragment> | null) {
+    const data = useFragment(MyFragment, props);
+    // data is `MyFragment | null`
+  }
+
+  function MyComponent(props: FragmentType<typeof MyFragment> | undefined) {
+    const data = useFragment(MyFragment, props);
+    // data is `MyFragment | undefined`
+  }
+  ```
+
+  Before, the returned type from `useFragment` was always `TType | null | undefined`.
+
+- [#9804](https://github.com/dotansimha/graphql-code-generator/pull/9804) [`5e594ef`](https://github.com/dotansimha/graphql-code-generator/commit/5e594ef8f39b9e1036b6bcaa977f914a66fec03e) Thanks [@rachel-church](https://github.com/rachel-church)! - Preserving `Array<T>` or `ReadonlyArray<T>` in `useFragment()` return type.
+
+### Patch Changes
+
+- [#9996](https://github.com/dotansimha/graphql-code-generator/pull/9996) [`99f449c`](https://github.com/dotansimha/graphql-code-generator/commit/99f449c8dcd645d49eda26e4ddfcb8ad7056ecbf) Thanks [@nahn20](https://github.com/nahn20)! - Added configuration to allow for custom hash functions for persisted documents in the client preset
+
+  ### Example
+
+  ```ts filename="codegen.ts" {10-12}
+  import { type CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'schema.graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        presetConfig: {
+          persistedDocuments: {
+            hashAlgorithm: operation => {
+              const shasum = crypto.createHash('sha512');
+              shasum.update(operation);
+              return shasum.digest('hex');
+            },
+          },
+        },
+      },
+    },
+  };
+  ```
+
+- Updated dependencies [[`5501c62`](https://github.com/dotansimha/graphql-code-generator/commit/5501c621f19eb5ef8e703a21f7367e07e41f199c)]:
+  - @graphql-codegen/add@5.0.3
+
 ## 4.2.6
 
 ### Patch Changes
