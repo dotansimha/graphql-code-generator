@@ -20,11 +20,11 @@
     "prettier-plugin-tailwindcss": "0.2.8"
   },
   "dependencies": {
-    "@graphql-codegen/add": "5.0.2",
+    "@graphql-codegen/add": "5.0.3",
     "@graphql-codegen/c-sharp": "4.3.1",
     "@graphql-codegen/c-sharp-operations": "2.3.1",
     "@graphql-codegen/cli": "5.0.2",
-    "@graphql-codegen/client-preset": "4.2.6",
+    "@graphql-codegen/client-preset": "4.3.0",
     "@graphql-codegen/core": "4.0.2",
     "@graphql-codegen/flow": "2.3.6",
     "@graphql-codegen/flow-operations": "2.3.6",
