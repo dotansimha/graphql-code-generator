@@ -29,7 +29,19 @@ export function ${unmaskFunctionName}<TType>(
   fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
 ): TType;`,
 
+  `// return nullable if \`fragmentType\` is undefined
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | undefined
+): TType | undefined;`,
+
   `// return nullable if \`fragmentType\` is nullable
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null
+): TType | null;`,
+
+  `// return nullable if \`fragmentType\` is nullable or undefined
 export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,
   fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
