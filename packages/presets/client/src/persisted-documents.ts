@@ -1,11 +1,17 @@
-import * as crypto from 'crypto';
 import { printExecutableGraphQLDocument } from '@graphql-tools/documents';
-import { type DocumentNode, Kind, visit } from 'graphql';
+import * as crypto from 'crypto';
+import { Kind, visit, type DocumentNode } from 'graphql';
 
 /**
  * This function generates a hash from a document node.
  */
-export function generateDocumentHash(operation: string, algorithm: 'sha1' | 'sha256' | (string & {})): string {
+export function generateDocumentHash(
+  operation: string,
+  algorithm: 'sha1' | 'sha256' | (string & {}) | ((operation: string) => string)
+): string {
+  if (typeof algorithm === 'function') {
+    return algorithm(operation);
+  }
   const shasum = crypto.createHash(algorithm);
   shasum.update(operation);
   return shasum.digest('hex');

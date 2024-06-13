@@ -1,10 +1,11 @@
-import * as fs from 'fs';
-import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { addTypenameSelectionDocumentTransform, preset } from '../src/index.js';
+import * as crypto from 'crypto';
+import * as fs from 'fs';
 import { print } from 'graphql';
+import path from 'path';
+import { addTypenameSelectionDocumentTransform, preset } from '../src/index.js';
 
 describe('client-preset', () => {
   it('can generate simple examples uppercase names', async () => {
@@ -1707,6 +1708,263 @@ export * from "./gql.js";`);
         export const BDocument = {"__meta__":{"hash":"a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
+
+    // This test serves to demonstrate that the custom hash function can perform arbitrary logic
+    // Removing whitespace has no real-world application but clearly shows the custom hash function is being used
+    it('custom hash remove whitespace', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: {
+                hashAlgorithm: (operation: string) => {
+                  return operation.replace(/\s/g, '');
+                },
+              },
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "queryA{a}": "query A { a }",
+          "queryB{b}": "query B { b }"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__meta__":{"hash":"queryA{a}"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"queryB{b}"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+      `);
+    });
+
+    // Tests that the custom hash function can replicate the logic and behavior by re-implementing the existing hash function (for sha256)
+    it('custom hash sha256', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: {
+                hashAlgorithm: (operation: string) => {
+                  const shasum = crypto.createHash('sha256');
+                  shasum.update(operation);
+                  return shasum.digest('hex');
+                },
+              },
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
+          "a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__meta__":{"hash":"7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+      `);
+    });
+
+    // Custom hash example used in `preset-client.mdx` docs
+    it('custom hash docs sha512', async () => {
+      const result = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: {
+                hashAlgorithm: (operation: string) => {
+                  const shasum = crypto.createHash('sha512');
+                  shasum.update(operation);
+                  return shasum.digest('hex');
+                },
+              },
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "a82d8b22f2bf805563146dc8ad80b2eb054845441539e3a5a69d1f534bb5bc0bd4f9470053b9f61b6aa1966cfc2f67406258102e5ee3a356a5d171506f3ede50": "query A { a }",
+          "bdc3d5b1e0dc35d9d21f8baadf515c472850baf279c8dd266fb21e8b8b29758d2386329f19a93dc101f3a6dd1214f5214835451e7eaf4410408d5c89f2e20a09": "query B { b }"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__meta__":{"hash":"a82d8b22f2bf805563146dc8ad80b2eb054845441539e3a5a69d1f534bb5bc0bd4f9470053b9f61b6aa1966cfc2f67406258102e5ee3a356a5d171506f3ede50"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"bdc3d5b1e0dc35d9d21f8baadf515c472850baf279c8dd266fb21e8b8b29758d2386329f19a93dc101f3a6dd1214f5214835451e7eaf4410408d5c89f2e20a09"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+      `);
+    });
   });
 
   it('correctly handle fragment references', async () => {
@@ -2590,53 +2848,53 @@ export * from "./gql.js";`);
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
         };
-        
+
         export type Mutation = {
           __typename?: 'Mutation';
           createRegion?: Maybe<Region>;
         };
-        
-        
+
+
         export type MutationCreateRegionArgs = {
           regionDescription: Scalars['String']['input'];
         };
-        
+
         export type Query = {
           __typename?: 'Query';
           regions?: Maybe<Array<Maybe<Region>>>;
         };
-        
+
         export type Region = {
           __typename?: 'Region';
           regionDescription: Scalars['String']['output'];
           regionId: Scalars['Int']['output'];
         };
-        
+
         export type Subscription = {
           __typename?: 'Subscription';
           onRegionCreated: Region;
         };
-        
+
         export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
-        
-        
+
+
         export type OnRegionCreatedSubscription = { __typename?: 'Subscription', onRegionCreated: { __typename: 'Region', regionId: number, regionDescription: string } };
-        
+
         export class TypedDocumentString<TResult, TVariables>
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
-        
+
           constructor(private value: string, public __meta__?: Record<string, any>) {
             super(value);
           }
-        
+
           toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
-        
+
         export const OnRegionCreatedDocument = new TypedDocumentString(\`
             subscription onRegionCreated {
           onRegionCreated {
