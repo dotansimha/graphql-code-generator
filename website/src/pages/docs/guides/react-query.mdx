@@ -1,33 +1,17 @@
 ---
-description: Execute GraphQL queries type-safe in vanilla TypeScript with GraphQL Code Generator.
+description: Execute GraphQL queries type-safe in React Query with GraphQL Code Generator.
 ---
 
-# GraphQL Codegen with Vanilla TypeScript
+# GraphQL Codegen with React Query
 
-GraphQL client libraries such as Apollo Client, Relay, and Urql are popular choices that allows
-building powerful features for querying but come with a few drawbacks:
-
-- **Bundle Size**: All GraphQL Client GraphQL clients come with one or more of AST parsers/
-  printers, a normalized cache, network layer abstractions, and other features that can increase the
-  bundle size of your application.
-- **Complexity**: GraphQL clients can be complex to set up and use, especially for beginners.
-  Sometimes you just want to write type-safe GraphQL operations without having to learn about
-  normalized caches and network layers. Maybe this is even the reason you ended up being here.
-
-In this guide, we will learn how to use the GraphQL Code Generator client preset with vanilla
-TypeScript to generate type-safe operations and wire it up to a GraphQL server that supports the
+In this guide, we will learn how to use the GraphQL Code Generator client preset with React Query to generate type-safe operations and wire it up to a GraphQL server that supports the
 GraphQL over HTTP protocol.
-
-This approach is framework/runtime (React, Vue, Svelte, Node.js, Bun) agnostic and the function for
-executing GraphQL operations will be a simple Type-Safe `fetch` wrapper.
 
 ## Prerequisites
 
-For this guide, we assume that you are querying your GraphQL server from within a Browser or
-Node.js/Bun/etc. environment. So you already have your Vite, Next.js, Node.js or any other vanilla
+For this guide, we assume that you are querying your GraphQL server from within a Browser environment.
+So you already have your Vite, Next.js, Node.js or any other vanilla
 project with TypeScript setup.
-
-This guide will work on any JavaScript environment that supports `fetch` API.
 
 We are going to use the public [Star Wars GraphQL API](https://swapi-graphql.netlify.app/) as our
 GraphQL endpoint.
@@ -61,7 +45,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
-  documents: ['src/**/*.ts'],
+  documents: ['src/**/*.tsx'],
   ignoreNoDocuments: true,
   generates: {
     './src/graphql/': {
@@ -230,18 +214,36 @@ fully typed.
 
 ![Fully typed GraphQL execution result](/assets/pages/docs/guides/vanilla-typescript/typescript-typed-result.png)
 
-And that's it! We have successfully set up a type-safe GraphQL operation execution within a Vanilla
-TypeScript project.
+## Executing Query Operations with React Query
+
+We can now leverage the `execute` function to execute our GraphQL operations with React Query.
+
+```tsx filename="Example usage of executing a Query Operation with React Query"
+import { useQuery } from '@tanstack/react-query'
+import { graphql } from './graphql'
+import { execute } from './graphql/execute'
+
+const PeopleCountQuery = graphql(`
+  query PeopleCount {
+    allPeople {
+      totalCount
+    }
+  }
+`)
+
+function App() {
+  const { data } = useQuery({
+    queryKey: ['films'],
+    queryFn: () => execute(PeopleCountQuery)
+  })
+
+  return <div>There are {data?.allPeople.totalCount} people</div>
+}
+```
 
 ## Conclusion
 
-In this article, we learned how to use GraphQL Code Generato with vanilla
-TypeScript.
-
-We set up the GraphQL Code Generator for clients and wrote a simple operation that is fully typed.
-
-You could now integrate the `execute` function into
-[TanStack Query (React Query)](https://tanstack.com/query) or SWR.
+In this article, we learned how to use GraphQL Code Generator preset with React Query.
 
 If you want to learn more about GraphQL Code Generator, check out the
 [client preset documentation](/plugins/presets/preset-client).
