@@ -3106,30 +3106,39 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       Object {
         "generatedResolverTypes": Object {
           "CreateUserError": Object {
+            "federation": undefined,
             "name": "create_user_error_resolvers",
           },
           "CreateUserOk": Object {
+            "federation": undefined,
             "name": "create_user_ok_resolvers",
           },
           "CreateUserPayload": Object {
+            "federation": undefined,
             "name": "create_user_payload_resolvers",
           },
           "ErrorType": Object {
+            "federation": undefined,
             "name": "error_type_resolvers",
           },
           "Mutation": Object {
+            "federation": undefined,
             "name": "mutation_resolvers",
           },
           "Node": Object {
+            "federation": undefined,
             "name": "node_resolvers",
           },
           "Post": Object {
+            "federation": undefined,
             "name": "post_resolvers",
           },
           "Query": Object {
+            "federation": undefined,
             "name": "query_resolvers",
           },
           "User": Object {
+            "federation": undefined,
             "name": "user_resolvers",
           },
         },

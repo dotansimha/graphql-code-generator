@@ -1,4 +1,4 @@
-import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
+import { ApolloFederation, checkObjectTypeFederationDetails, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
 import autoBind from 'auto-bind';
 import {
@@ -634,7 +634,13 @@ export class BaseResolversVisitor<
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
-  protected _collectedResolvers: { [key: string]: { typename: string; baseGeneratedTypename?: string } } = {};
+  protected _collectedResolvers: {
+    [key: string]: {
+      typename: string;
+      baseGeneratedTypename?: string;
+      federation?: { hasResolveReference: boolean };
+    };
+  } = {};
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransformer: OperationVariablesToObject;
   protected _usedMappers: { [key: string]: boolean } = {};
@@ -1269,7 +1275,7 @@ export class BaseResolversVisitor<
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-    const generatedResolverTypes: Record<string, { name: string }> = {};
+    const generatedResolverTypes: Record<string, { name: string; federation?: { hasResolveReference: boolean } }> = {};
     const content = [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
@@ -1281,7 +1287,10 @@ export class BaseResolversVisitor<
               const resolverType = this._collectedResolvers[schemaTypeName];
 
               if (resolverType.baseGeneratedTypename) {
-                generatedResolverTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
+                generatedResolverTypes[schemaTypeName] = {
+                  name: resolverType.baseGeneratedTypename,
+                  federation: resolverType.federation,
+                };
               }
 
               return indent(this.formatRootResolver(schemaTypeName, resolverType.typename, declarationKind));
@@ -1515,7 +1524,7 @@ export class BaseResolversVisitor<
     return `Partial<${argsType}>`;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number, parent: any): string {
     const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
@@ -1550,6 +1559,14 @@ export class BaseResolversVisitor<
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
+
+    if (this.config.federation) {
+      const originalNode = parent[key] as ObjectTypeDefinitionNode;
+      const federationDetails = checkObjectTypeFederationDetails(originalNode, this._schema);
+      this._collectedResolvers[node.name as any].federation = {
+        hasResolveReference: federationDetails ? federationDetails.resolvableKeyDirectives.length > 0 : false,
+      };
+    }
 
     return block.string;
   }
