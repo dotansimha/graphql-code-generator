@@ -3092,6 +3092,18 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       { outputFile: '' }
     );
 
+    expect(result.content).toBeSimilarStringTo(`
+      export type resolvers<ContextType = any> = {
+        Query?: query_resolvers<ContextType>;
+        Mutation?: mutation_resolvers<ContextType>;
+        Node?: node_resolvers<ContextType>;
+        Post?: post_resolvers<ContextType>;
+        User?: user_resolvers<ContextType>;
+        CreateUserOk?: create_user_ok_resolvers<ContextType>;
+        CreateUserError?: create_user_error_resolvers<ContextType>;
+        CreateUserPayload?: create_user_payload_resolvers<ContextType>;
+        ErrorType?: error_type_resolvers;
+      };`);
     expect(result.content).toContain(`export type create_user_error_resolvers`);
     expect(result.content).toContain(`export type create_user_ok_resolvers`);
     expect(result.content).toContain(`export type create_user_payload_resolvers`);
@@ -3105,32 +3117,37 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(result.meta).toMatchInlineSnapshot(`
       Object {
         "generatedResolverTypes": Object {
-          "CreateUserError": Object {
-            "name": "create_user_error_resolvers",
+          "resolversMap": Object {
+            "name": "resolvers",
           },
-          "CreateUserOk": Object {
-            "name": "create_user_ok_resolvers",
-          },
-          "CreateUserPayload": Object {
-            "name": "create_user_payload_resolvers",
-          },
-          "ErrorType": Object {
-            "name": "error_type_resolvers",
-          },
-          "Mutation": Object {
-            "name": "mutation_resolvers",
-          },
-          "Node": Object {
-            "name": "node_resolvers",
-          },
-          "Post": Object {
-            "name": "post_resolvers",
-          },
-          "Query": Object {
-            "name": "query_resolvers",
-          },
-          "User": Object {
-            "name": "user_resolvers",
+          "userDefined": Object {
+            "CreateUserError": Object {
+              "name": "create_user_error_resolvers",
+            },
+            "CreateUserOk": Object {
+              "name": "create_user_ok_resolvers",
+            },
+            "CreateUserPayload": Object {
+              "name": "create_user_payload_resolvers",
+            },
+            "ErrorType": Object {
+              "name": "error_type_resolvers",
+            },
+            "Mutation": Object {
+              "name": "mutation_resolvers",
+            },
+            "Node": Object {
+              "name": "node_resolvers",
+            },
+            "Post": Object {
+              "name": "post_resolvers",
+            },
+            "Query": Object {
+              "name": "query_resolvers",
+            },
+            "User": Object {
+              "name": "user_resolvers",
+            },
           },
         },
       }
