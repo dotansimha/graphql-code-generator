@@ -3,6 +3,8 @@ import { getRootTypeNames } from '@graphql-tools/utils';
 import autoBind from 'auto-bind';
 import {
   ASTNode,
+  ObjectValueNode,
+  ValueNode,
   DirectiveDefinitionNode,
   EnumTypeDefinitionNode,
   FieldDefinitionNode,
@@ -50,6 +52,48 @@ import {
   wrapTypeWithModifiers,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
+
+// converts an ObjectValueNode to the JS object it represents
+const objectNodeToObject = (objectNode: ObjectValueNode) => {
+  const { fields } = objectNode;
+  return fields.reduce((acc, field) => {
+    // for some reason this does not seem to match the type
+    const fieldName = field.name as unknown as string;
+    return {
+      ...acc,
+      [fieldName]: valueNodeToValue(field.value),
+    };
+  }, {});
+};
+
+// converts an ValueNode to the JS value it represents
+const valueNodeToValue = (value: ValueNode): unknown => {
+  if (value.kind === 'StringValue') {
+    return value.value;
+  }
+  if (value.kind === 'ObjectValue') {
+    return objectNodeToObject(value);
+  }
+  if (value.kind === 'ListValue') {
+    return value.values.map(valueNodeToValue);
+  }
+  if (value.kind === 'NullValue') {
+    return null;
+  }
+  if (value.kind === 'BooleanValue') {
+    return value.value;
+  }
+  if (value.kind === 'IntValue') {
+    return parseInt(value.value, 10);
+  }
+  if (value.kind === 'FloatValue') {
+    return parseFloat(value.value);
+  }
+  if (value.kind === 'EnumValue') {
+    return value.value;
+  }
+  return null;
+};
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -1509,7 +1553,15 @@ export class BaseResolversVisitor<
       const name = directive.name as unknown as string;
       const directiveMap = this._directiveContextTypesMap[name];
       if (directiveMap) {
-        contextType = `${directiveMap.type}<${contextType}>`;
+        const args = directive.arguments?.reduce((prev, { name, value }) => {
+          // for some reason this does not seem to match the type
+          const argumentName = name as unknown as string;
+          return {
+            ...prev,
+            [argumentName]: valueNodeToValue(value),
+          };
+        }, {});
+        contextType = `${directiveMap.type}<${contextType}, ${JSON.stringify(args)}>`;
       }
     }
     return contextType;
