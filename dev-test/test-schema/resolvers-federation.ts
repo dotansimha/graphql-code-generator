@@ -194,19 +194,13 @@ export type UserResolvers<
 > = {
   __resolveReference?: ReferenceResolver<
     Maybe<ResolversTypes['User']>,
-    { __typename: 'User' } & (
-      | GraphQLRecursivePick<ParentType, { id: true }>
-      | GraphQLRecursivePick<ParentType, { name: true }>
-    ),
+    { __typename: 'User' } & (GraphQLRecursivePick<User, { id: true }> | GraphQLRecursivePick<User, { name: true }>),
     ContextType
   >;
 
   email?: Resolver<
     ResolversTypes['String'],
-    { __typename: 'User' } & (
-      | GraphQLRecursivePick<ParentType, { id: true }>
-      | GraphQLRecursivePick<ParentType, { name: true }>
-    ) &
+    { __typename: 'User' } & (GraphQLRecursivePick<User, { id: true }> | GraphQLRecursivePick<User, { name: true }>) &
       GraphQLRecursivePick<ParentType, { address: { city: true; lines: { line2: true } } }>,
     ContextType
   >;

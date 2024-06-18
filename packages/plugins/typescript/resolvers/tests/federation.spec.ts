@@ -50,11 +50,11 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // User should have it
     expect(content).toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
     `);
-    // Foo shouldn't because it doesn't have @key
+    // Book shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Book']>, { __typename: 'Book' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Book']>, { __typename: 'Book' } & GraphQLRecursivePick<Book, {"id":true}>, ContextType>;
     `);
   });
 
@@ -84,11 +84,11 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // User should have it
     expect(content).toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
     `);
-    // Foo shouldn't because it doesn't have @key
+    // Book shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Book']>, { __typename: 'Book' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Book']>, { __typename: 'Book' } & GraphQLRecursivePick<Book, {"id":true}>, ContextType>;
     `);
   });
 
@@ -125,18 +125,18 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        name?: Resolver<Maybe<ResolversTypes['Name']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
+        name?: Resolver<Maybe<ResolversTypes['Name']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       }
     `);
 
     expect(content).toBeSimilarStringTo(`
       export type NameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Name']>, { __typename: 'Name' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        first?: Resolver<ResolversTypes['String'], { __typename: 'Name' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        last?: Resolver<ResolversTypes['String'], { __typename: 'Name' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Name']>, { __typename: 'Name' } & GraphQLRecursivePick<Name, {"id":true}>, ContextType>;
+        first?: Resolver<ResolversTypes['String'], { __typename: 'Name' } & GraphQLRecursivePick<Name, {"id":true}>, ContextType>;
+        last?: Resolver<ResolversTypes['String'], { __typename: 'Name' } & GraphQLRecursivePick<Name, {"id":true}>, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       }
     `);
@@ -166,9 +166,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // User should have it
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}> & GraphQLRecursivePick<ParentType, {"name":true,"age":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}> & GraphQLRecursivePick<User, {"name":true,"age":true}>, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -203,8 +203,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}> & GraphQLRecursivePick<ParentType, {"name":true,"age":true,"address":{"street":true}}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}> & GraphQLRecursivePick<User, {"name":true,"age":true,"address":{"street":true}}>, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -236,8 +236,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
-        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"name":{"first":true,"last":true}}>, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"name":{"first":true,"last":true}}>, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -269,7 +269,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"name":{"first":true,"last":true}}>, ContextType>;
         name?: Resolver<ResolversTypes['Name'], ParentType, ContextType>;
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -316,7 +316,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
     export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = {
       __resolveType: TypeResolveFn<'User' | 'Admin', ParentType, ContextType>;
-      age?: Resolver<Maybe<ResolversTypes['Int']>, { __typename: 'User' | 'Admin' } & GraphQLRecursivePick<ParentType, {"name":{"first":true,"last":true}}>, ContextType>;
+      age?: Resolver<Maybe<ResolversTypes['Int']>, { __typename: 'User' | 'Admin' } & GraphQLRecursivePick<Person, {"name":{"first":true,"last":true}}>, ContextType>;
     };
     `);
   });
@@ -348,9 +348,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // UserResolver should not have a resolver function of name field
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-        name?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
+        name?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -475,9 +475,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // User should have it
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"name":true}>), ContextType>;
-        name?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"name":true}>), ContextType>;
-        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"name":true}>), ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & (GraphQLRecursivePick<User, {"id":true}> | GraphQLRecursivePick<User, {"name":true}>), ContextType>;
+        name?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & (GraphQLRecursivePick<User, {"id":true}> | GraphQLRecursivePick<User, {"name":true}>), ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & (GraphQLRecursivePick<User, {"id":true}> | GraphQLRecursivePick<User, {"name":true}>), ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
@@ -561,7 +561,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       expect(content).toBeSimilarStringTo(`type UnwrappedObject<T> = {`);
     });
 
-    it('should add UnwrappedObject around ParentType for __resloveReference', async () => {
+    it('should use the output type directly for __resolveReference', async () => {
       const federatedSchema = /* GraphQL */ `
         type User @key(fields: "id") {
           id: ID!
@@ -578,7 +578,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
       // __resolveReference should be unwrapped
       expect(content).toBeSimilarStringTo(`
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<UnwrappedObject<ParentType>, {"id":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<User, {"id":true}>, ContextType>;
       `);
       // but ID should not
       expect(content).toBeSimilarStringTo(`id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>`);
