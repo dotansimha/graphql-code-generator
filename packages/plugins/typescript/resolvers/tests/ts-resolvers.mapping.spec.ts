@@ -3,7 +3,7 @@ import { resolversTestingSchema, resolversTestingValidate } from '@graphql-codeg
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index.js';
 
-describe('ResolversTypes', () => {
+describe('TypeScript Resolvers Plugin - Mapping', () => {
   it('Should build ResolversTypes object when there are no mappers', async () => {
     const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
