@@ -38,7 +38,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
-        ChildUnion: ( Child & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> } & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
         MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<_RefType['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
       };
     `);
@@ -62,7 +62,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
-        ChildUnion: ( Child & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
+        ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> } & { __typename: 'Child' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
         MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<_RefType['ChildUnion']> } & { __typename: 'MyType' } ) | ( MyOtherType & { __typename: 'MyOtherType' } );
       };
     `);
@@ -119,7 +119,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
-        ChildUnion: ( Partial<Child> & { __typename: 'Child' } ) | ( Partial<MyOtherType> & { __typename: 'MyOtherType' } );
+        ChildUnion: ( Partial<Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> }> & { __typename: 'Child' } ) | ( Partial<MyOtherType> & { __typename: 'MyOtherType' } );
         MyUnion: ( Partial<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<_RefType['ChildUnion']> }> & { __typename: 'MyType' } ) | ( Partial<MyOtherType> & { __typename: 'MyOtherType' } );
       };
     `);

@@ -19,7 +19,7 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
       export type ResolversTypes = {
         MyType: ResolverTypeWrapper<Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversTypes['ChildUnion']> }>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
-        Child: ResolverTypeWrapper<Child>;
+        Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<MyOtherType>;
         ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
         Query: ResolverTypeWrapper<{}>;
@@ -43,7 +43,7 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
       export type ResolversParentTypes = {
         MyType: Omit<MyType, 'unionChild'> & { unionChild?: Maybe<ResolversParentTypes['ChildUnion']> };
         String: Scalars['String']['output'];
-        Child: Child;
+        Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
         Query: {};
@@ -85,7 +85,7 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
       export type I_ResolversTypes_Types = {
         MyType: ResolverTypeWrapper<Omit<I_MyType_Types, 'unionChild'> & { unionChild?: Maybe<I_ResolversTypes_Types['ChildUnion']> }>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
-        Child: ResolverTypeWrapper<I_Child_Types>;
+        Child: ResolverTypeWrapper<Omit<I_Child_Types, 'parent'> & { parent?: Maybe<I_ResolversTypes_Types['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<I_MyOtherType_Types>;
         ChildUnion: ResolverTypeWrapper<I_ResolversUnionTypes_Types<I_ResolversTypes_Types>['ChildUnion']>;
         Query: ResolverTypeWrapper<{}>;
@@ -109,7 +109,7 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
       export type I_ResolversParentTypes_Types = {
         MyType: Omit<I_MyType_Types, 'unionChild'> & { unionChild?: Maybe<I_ResolversParentTypes_Types['ChildUnion']> };
         String: Scalars['String']['output'];
-        Child: I_Child_Types;
+        Child: Omit<I_Child_Types, 'parent'> & { parent?: Maybe<I_ResolversParentTypes_Types['MyType']> };
         MyOtherType: I_MyOtherType_Types;
         ChildUnion: I_ResolversUnionTypes_Types<I_ResolversParentTypes_Types>['ChildUnion'];
         Query: {};
