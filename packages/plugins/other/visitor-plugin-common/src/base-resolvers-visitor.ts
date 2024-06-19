@@ -1788,8 +1788,27 @@ export class BaseResolversVisitor<
         const baseType = getBaseType(field.type);
         const isUnion = isUnionType(baseType);
         const isInterface = isInterfaceType(baseType);
+        const isObject = isObjectType(baseType);
+        let isObjectWithAbstractType = false;
 
-        if (!this.config.mappers[baseType.name] && !isUnion && !isInterface && !this._shouldMapType[baseType.name]) {
+        if (isObject) {
+          const fields = baseType.getFields();
+          for (const field of Object.values(fields)) {
+            const baseType = getBaseType(field.type);
+            if (isInterfaceType(baseType) || isUnionType(baseType)) {
+              isObjectWithAbstractType = true;
+              break;
+            }
+          }
+        }
+
+        if (
+          !this.config.mappers[baseType.name] &&
+          !isUnion &&
+          !isInterface &&
+          !this._shouldMapType[baseType.name] &&
+          !isObjectWithAbstractType
+        ) {
           return null;
         }
 

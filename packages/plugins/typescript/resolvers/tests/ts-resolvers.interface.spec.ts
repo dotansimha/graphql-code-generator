@@ -166,4 +166,89 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
       };
     `);
   });
+
+  it('generates overridden interface types for interfaces wrapped in object types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface I_Node {
+        id: ID!
+      }
+
+      interface I_WithChild {
+        node: I_Node!
+      }
+
+      interface I_WithChildren {
+        nodes: [I_Node!]!
+      }
+
+      type T_NodeWithChild implements I_Node & I_WithChild {
+        id: ID!
+        node: I_Node
+      }
+
+      type T_NodeWithChildren implements I_Node & I_WithChildren {
+        id: ID!
+        nodes: [I_Node!]!
+      }
+
+      type T_Wrapper {
+        i_node: I_Node!
+        i_withChild: I_WithChild!
+        i_withChildren: I_WithChildren!
+        t_nodeWithChild: T_NodeWithChild!
+        t_nodeWithChildren: T_NodeWithChildren!
+        t_nodeWithNoAbstractField: T_WithNoAbstractField!
+      }
+
+      type T_WithNoAbstractField {
+        id: ID!
+      }
+
+      type Query {
+        wrapper: T_Wrapper!
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
+        I_Node: ( Omit<T_NodeWithChild, 'node'> & { node?: Maybe<_RefType['I_Node']> } ) | ( Omit<T_NodeWithChildren, 'nodes'> & { nodes: Array<_RefType['I_Node']> } );
+        I_WithChild: ( Omit<T_NodeWithChild, 'node'> & { node?: Maybe<_RefType['I_Node']> } );
+        I_WithChildren: ( Omit<T_NodeWithChildren, 'nodes'> & { nodes: Array<_RefType['I_Node']> } );
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        I_Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['I_Node']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+        I_WithChild: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['I_WithChild']>;
+        I_WithChildren: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['I_WithChildren']>;
+        T_NodeWithChild: ResolverTypeWrapper<Omit<T_NodeWithChild, 'node'> & { node?: Maybe<ResolversTypes['I_Node']> }>;
+        T_NodeWithChildren: ResolverTypeWrapper<Omit<T_NodeWithChildren, 'nodes'> & { nodes: Array<ResolversTypes['I_Node']> }>;
+        T_Wrapper: ResolverTypeWrapper<Omit<T_Wrapper, 'i_node' | 'i_withChild' | 'i_withChildren' | 't_nodeWithChild' | 't_nodeWithChildren'> & { i_node: ResolversTypes['I_Node'], i_withChild: ResolversTypes['I_WithChild'], i_withChildren: ResolversTypes['I_WithChildren'], t_nodeWithChild: ResolversTypes['T_NodeWithChild'], t_nodeWithChildren: ResolversTypes['T_NodeWithChildren'] }>;
+        T_WithNoAbstractField: ResolverTypeWrapper<T_WithNoAbstractField>;
+        Query: ResolverTypeWrapper<{}>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        I_Node: ResolversInterfaceTypes<ResolversParentTypes>['I_Node'];
+        ID: Scalars['ID']['output'];
+        I_WithChild: ResolversInterfaceTypes<ResolversParentTypes>['I_WithChild'];
+        I_WithChildren: ResolversInterfaceTypes<ResolversParentTypes>['I_WithChildren'];
+        T_NodeWithChild: Omit<T_NodeWithChild, 'node'> & { node?: Maybe<ResolversParentTypes['I_Node']> };
+        T_NodeWithChildren: Omit<T_NodeWithChildren, 'nodes'> & { nodes: Array<ResolversParentTypes['I_Node']> };
+        T_Wrapper: Omit<T_Wrapper, 'i_node' | 'i_withChild' | 'i_withChildren' | 't_nodeWithChild' | 't_nodeWithChildren'> & { i_node: ResolversParentTypes['I_Node'], i_withChild: ResolversParentTypes['I_WithChild'], i_withChildren: ResolversParentTypes['I_WithChildren'], t_nodeWithChild: ResolversParentTypes['T_NodeWithChild'], t_nodeWithChildren: ResolversParentTypes['T_NodeWithChildren'] };
+        T_WithNoAbstractField: T_WithNoAbstractField;
+        Query: {};
+        Boolean: Scalars['Boolean']['output'];
+        String: Scalars['String']['output'];
+      };
+    `);
+  });
 });
