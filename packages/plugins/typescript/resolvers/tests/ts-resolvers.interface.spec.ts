@@ -198,7 +198,26 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         t_nodeWithChild: T_NodeWithChild!
         t_nodeWithChildren: T_NodeWithChildren!
         t_self: T_Level1!
+        t_level2A: T_Level2A!
+        t_level2B: T_Level2B!
         t_nodeWithNoAbstractField: T_WithNoAbstractField!
+      }
+
+      type T_Level2A {
+        t_level1: T_Level1!
+        t_level1Array: [T_Level1!]!
+      }
+
+      type T_Level2B {
+        t_level3: T_Level3
+      }
+
+      type T_Level3 {
+        t_level4Array: [T_Level4!]!
+      }
+
+      type T_Level4 {
+        node: I_Node!
       }
 
       type T_WithNoAbstractField {
@@ -229,6 +248,10 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         T_NodeWithChild: ResolverTypeWrapper<Omit<T_NodeWithChild, 'node'> & { node?: Maybe<ResolversTypes['I_Node']> }>;
         T_NodeWithChildren: ResolverTypeWrapper<Omit<T_NodeWithChildren, 'nodes'> & { nodes: Array<ResolversTypes['I_Node']> }>;
         T_Level1: ResolverTypeWrapper<Omit<T_Level1, 'i_node' | 'i_withChild' | 'i_withChildren' | 't_nodeWithChild' | 't_nodeWithChildren' | 't_self'> & { i_node: ResolversTypes['I_Node'], i_withChild: ResolversTypes['I_WithChild'], i_withChildren: ResolversTypes['I_WithChildren'], t_nodeWithChild: ResolversTypes['T_NodeWithChild'], t_nodeWithChildren: ResolversTypes['T_NodeWithChildren'], t_self: ResolversTypes['T_Level1'] }>;
+        T_Level2A: ResolverTypeWrapper<Omit<T_Level2A, 't_level1' | 't_level1Array'> & { t_level1: ResolversTypes['T_Level1'], t_level1Array: Array<ResolversTypes['T_Level1']> }>;
+        T_Level2B: ResolverTypeWrapper<T_Level2B>;
+        T_Level3: ResolverTypeWrapper<Omit<T_Level3, 't_level4Array'> & { t_level4Array: Array<ResolversTypes['T_Level4']> }>;
+        T_Level4: ResolverTypeWrapper<Omit<T_Level4, 'node'> & { node: ResolversTypes['I_Node'] }>;
         T_WithNoAbstractField: ResolverTypeWrapper<T_WithNoAbstractField>;
         Query: ResolverTypeWrapper<{}>;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -245,6 +268,10 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         T_NodeWithChild: Omit<T_NodeWithChild, 'node'> & { node?: Maybe<ResolversParentTypes['I_Node']> };
         T_NodeWithChildren: Omit<T_NodeWithChildren, 'nodes'> & { nodes: Array<ResolversParentTypes['I_Node']> };
         T_Level1: Omit<T_Level1, 'i_node' | 'i_withChild' | 'i_withChildren' | 't_nodeWithChild' | 't_nodeWithChildren' | 't_self'> & { i_node: ResolversParentTypes['I_Node'], i_withChild: ResolversParentTypes['I_WithChild'], i_withChildren: ResolversParentTypes['I_WithChildren'], t_nodeWithChild: ResolversParentTypes['T_NodeWithChild'], t_nodeWithChildren: ResolversParentTypes['T_NodeWithChildren'], t_self: ResolversParentTypes['T_Level1'] };
+        T_Level2A: Omit<T_Level2A, 't_level1' | 't_level1Array'> & { t_level1: ResolversParentTypes['T_Level1'], t_level1Array: Array<ResolversParentTypes['T_Level1']> };
+        T_Level2B: T_Level2B;
+        T_Level3: Omit<T_Level3, 't_level4Array'> & { t_level4Array: Array<ResolversParentTypes['T_Level4']> };
+        T_Level4: Omit<T_Level4, 'node'> & { node: ResolversParentTypes['I_Node'] };
         T_WithNoAbstractField: T_WithNoAbstractField;
         Query: {};
         Boolean: Scalars['Boolean']['output'];
