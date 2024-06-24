@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-resolvers
 
+## 4.2.0
+
+### Minor Changes
+
+- [#10007](https://github.com/dotansimha/graphql-code-generator/pull/10007) [`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3) Thanks [@eddeee888](https://github.com/eddeee888)! - Add generated resolvers map type name to typescript-resolvers plugin meta
+
+### Patch Changes
+
+- Updated dependencies [[`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3), [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421)]:
+  - @graphql-codegen/visitor-plugin-common@5.3.0
+  - @graphql-codegen/typescript@4.0.8
+
 ## 4.1.0
 
 ### Minor Changes
