@@ -282,4 +282,114 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
       };
     `);
   });
+
+  it('correctly handles circular reference - variant 1', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface I_Node {
+        id: ID!
+      }
+
+      type T_WithNode {
+        node: I_Node!
+      }
+
+      type T_Type1 {
+        id: ID!
+        type2: T_Type2!
+        withNode: T_WithNode! # abstract type is in T_Type1
+      }
+
+      type T_Type2 {
+        id: ID!
+        type1: T_Type1!
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
+        I_Node: never;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        I_Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['I_Node']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+        T_WithNode: ResolverTypeWrapper<Omit<T_WithNode, 'node'> & { node: ResolversTypes['I_Node'] }>;
+        T_Type1: ResolverTypeWrapper<Omit<T_Type1, 'type2' | 'withNode'> & { type2: ResolversTypes['T_Type2'], withNode: ResolversTypes['T_WithNode'] }>;
+        T_Type2: ResolverTypeWrapper<Omit<T_Type2, 'type1'> & { type1: ResolversTypes['T_Type1'] }>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        I_Node: ResolversInterfaceTypes<ResolversParentTypes>['I_Node'];
+        ID: Scalars['ID']['output'];
+        T_WithNode: Omit<T_WithNode, 'node'> & { node: ResolversParentTypes['I_Node'] };
+        T_Type1: Omit<T_Type1, 'type2' | 'withNode'> & { type2: ResolversParentTypes['T_Type2'], withNode: ResolversParentTypes['T_WithNode'] };
+        T_Type2: Omit<T_Type2, 'type1'> & { type1: ResolversParentTypes['T_Type1'] };
+        Boolean: Scalars['Boolean']['output'];
+        String: Scalars['String']['output'];
+      };
+    `);
+  });
+
+  it('correctly handles circular reference - variant 2', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface I_Node {
+        id: ID!
+      }
+
+      type T_WithNode {
+        node: I_Node!
+      }
+
+      type T_Type1 {
+        id: ID!
+        type2: T_Type2!
+      }
+
+      type T_Type2 {
+        id: ID!
+        type1: T_Type1!
+        withNode: T_WithNode! # abstract type is in T_Type2
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
+        I_Node: never;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        I_Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['I_Node']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+        T_WithNode: ResolverTypeWrapper<Omit<T_WithNode, 'node'> & { node: ResolversTypes['I_Node'] }>;
+        T_Type1: ResolverTypeWrapper<Omit<T_Type1, 'type2'> & { type2: ResolversTypes['T_Type2'] }>;
+        T_Type2: ResolverTypeWrapper<Omit<T_Type2, 'type1' | 'withNode'> & { type1: ResolversTypes['T_Type1'], withNode: ResolversTypes['T_WithNode'] }>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        I_Node: ResolversInterfaceTypes<ResolversParentTypes>['I_Node'];
+        ID: Scalars['ID']['output'];
+        T_WithNode: Omit<T_WithNode, 'node'> & { node: ResolversParentTypes['I_Node'] };
+        T_Type1: Omit<T_Type1, 'type2'> & { type2: ResolversParentTypes['T_Type2'] };
+        T_Type2: Omit<T_Type2, 'type1' | 'withNode'> & { type1: ResolversParentTypes['T_Type1'], withNode: ResolversParentTypes['T_WithNode'] };
+        Boolean: Scalars['Boolean']['output'];
+        String: Scalars['String']['output'];
+      };
+    `);
+  });
 });
