@@ -202,7 +202,7 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         t_self: T_Level1!
         t_level2A: T_Level2A!
         t_level2B: T_Level2B!
-        t_nodeWithNoAbstractField: T_WithNoAbstractField!
+        t_nodeWithNoAbstractFieldLevel1: T_WithNoAbstractFieldLevel1!
       }
 
       type T_Level2A {
@@ -222,9 +222,19 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         node: I_Node!
       }
 
-      type T_WithNoAbstractField {
+      type T_WithNoAbstractFieldLevel1 {
         id: ID!
-        t_self: [T_WithNoAbstractField!]!
+        t_self: [T_WithNoAbstractFieldLevel1!]!
+        t_withNoAbstractFieldLevel2: T_WithNoAbstractFieldLevel2!
+      }
+
+      type T_WithNoAbstractFieldLevel2 {
+        id: ID!
+        t_withNoAbstractFieldLevel3: T_WithNoAbstractFieldLevel3
+      }
+
+      type T_WithNoAbstractFieldLevel3 {
+        id: ID!
       }
 
       type Query {
@@ -257,7 +267,9 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         T_Level2B: ResolverTypeWrapper<Omit<T_Level2B, 't_level3'> & { t_level3?: Maybe<ResolversTypes['T_Level3']> }>;
         T_Level3: ResolverTypeWrapper<Omit<T_Level3, 't_level4Array'> & { t_level4Array: Array<ResolversTypes['T_Level4']> }>;
         T_Level4: ResolverTypeWrapper<Omit<T_Level4, 'node'> & { node: ResolversTypes['I_Node'] }>;
-        T_WithNoAbstractField: ResolverTypeWrapper<T_WithNoAbstractField>;
+        T_WithNoAbstractFieldLevel1: ResolverTypeWrapper<T_WithNoAbstractFieldLevel1>;
+        T_WithNoAbstractFieldLevel2: ResolverTypeWrapper<T_WithNoAbstractFieldLevel2>;
+        T_WithNoAbstractFieldLevel3: ResolverTypeWrapper<T_WithNoAbstractFieldLevel3>;
         Query: ResolverTypeWrapper<{}>;
       };
     `);
@@ -277,7 +289,9 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         T_Level2B: Omit<T_Level2B, 't_level3'> & { t_level3?: Maybe<ResolversParentTypes['T_Level3']> };
         T_Level3: Omit<T_Level3, 't_level4Array'> & { t_level4Array: Array<ResolversParentTypes['T_Level4']> };
         T_Level4: Omit<T_Level4, 'node'> & { node: ResolversParentTypes['I_Node'] };
-        T_WithNoAbstractField: T_WithNoAbstractField;
+        T_WithNoAbstractFieldLevel1: T_WithNoAbstractFieldLevel1;
+        T_WithNoAbstractFieldLevel2: T_WithNoAbstractFieldLevel2;
+        T_WithNoAbstractFieldLevel3: T_WithNoAbstractFieldLevel3;
         Query: {};
       };
     `);
