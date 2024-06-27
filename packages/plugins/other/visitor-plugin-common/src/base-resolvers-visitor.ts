@@ -1264,12 +1264,18 @@ export class BaseResolversVisitor<
     return this._hasFederation;
   }
 
-  public getRootResolver(): { content: string; generatedResolverTypes: Record<string, { name: string }> } {
+  public getRootResolver(): {
+    content: string;
+    generatedResolverTypes: {
+      resolversMap: { name: string };
+      userDefined: Record<string, { name: string }>;
+    };
+  } {
     const name = this.convertName(this.config.allResolversTypeName);
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-    const generatedResolverTypes: Record<string, { name: string }> = {};
+    const userDefinedTypes: Record<string, { name: string }> = {};
     const content = [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
@@ -1281,7 +1287,7 @@ export class BaseResolversVisitor<
               const resolverType = this._collectedResolvers[schemaTypeName];
 
               if (resolverType.baseGeneratedTypename) {
-                generatedResolverTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
+                userDefinedTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
               }
 
               return indent(this.formatRootResolver(schemaTypeName, resolverType.typename, declarationKind));
@@ -1292,7 +1298,10 @@ export class BaseResolversVisitor<
 
     return {
       content,
-      generatedResolverTypes,
+      generatedResolverTypes: {
+        resolversMap: { name },
+        userDefined: userDefinedTypes,
+      },
     };
   }
 

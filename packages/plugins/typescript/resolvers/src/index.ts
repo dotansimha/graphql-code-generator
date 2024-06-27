@@ -14,7 +14,12 @@ const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1)
 
 export const plugin: PluginFunction<
   TypeScriptResolversPluginConfig,
-  Types.ComplexPluginOutput<{ generatedResolverTypes: Record<string, { name: string }> }>
+  Types.ComplexPluginOutput<{
+    generatedResolverTypes: {
+      resolversMap: { name: string };
+      userDefined: Record<string, { name: string }>;
+    };
+  }>
 > = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
   const imports = [];
   if (!config.customResolveInfo) {

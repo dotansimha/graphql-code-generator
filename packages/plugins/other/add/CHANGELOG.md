@@ -1,5 +1,15 @@
 # @graphql-codegen/add
 
+## 5.0.3
+
+### Patch Changes
+
+- [#9987](https://github.com/dotansimha/graphql-code-generator/pull/9987) [`5501c62`](https://github.com/dotansimha/graphql-code-generator/commit/5501c621f19eb5ef8e703a21f7367e07e41f199c) Thanks [@taro-28](https://github.com/taro-28)! - Export configuration types (e.g. `AddPluginConfig`) from the entry point.
+
+  ```ts
+  import type { AddPluginConfig } from '@graphql-codegen/add';
+  ```
+
 ## 5.0.2
 
 ### Patch Changes
