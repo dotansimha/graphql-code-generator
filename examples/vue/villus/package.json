@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "graphql": "^16.6.0",
-    "villus": "^2.1.0",
+    "villus": "^3.0.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
