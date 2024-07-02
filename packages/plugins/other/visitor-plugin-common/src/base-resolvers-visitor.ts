@@ -652,10 +652,7 @@ export class BaseResolversVisitor<
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
   protected _directiveContextTypesMap: FieldContextTypeMap;
-  protected _checkedTypesWithNestedAbstractTypes: Record<
-    string,
-    { hasNestedAbstractTypes: 'yes' | 'no' | 'checking' }
-  > = {};
+  protected _checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }> = {};
   private _directiveResolverMappings: Record<string, string>;
   private _shouldMapType: { [typeName: string]: boolean } = {};
 
@@ -1859,18 +1856,18 @@ function checkIfObjectTypeHasAbstractTypesRecursively(
   baseType: GraphQLObjectType,
   result: {
     isObjectWithAbstractType: boolean;
-    checkedTypesWithNestedAbstractTypes: Record<string, { hasNestedAbstractTypes: 'yes' | 'no' | 'checking' }>;
+    checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }>;
   }
 ): boolean {
   if (
     result.checkedTypesWithNestedAbstractTypes[baseType.name] &&
-    (result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes === 'yes' ||
-      result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes === 'no')
+    (result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'yes' ||
+      result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'no')
   ) {
-    return result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes === 'yes';
+    return result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'yes';
   }
 
-  result.checkedTypesWithNestedAbstractTypes[baseType.name] ||= { hasNestedAbstractTypes: 'checking' };
+  result.checkedTypesWithNestedAbstractTypes[baseType.name] ||= { checkStatus: 'checking' };
 
   let atLeastOneFieldWithAbstractType = false;
 
@@ -1886,20 +1883,20 @@ function checkIfObjectTypeHasAbstractTypesRecursively(
     // If the current field has been checked, and it has nested abstract types,
     // mark the parent type as having nested abstract types
     if (result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name]) {
-      if (result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].hasNestedAbstractTypes === 'yes') {
+      if (result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus === 'yes') {
         atLeastOneFieldWithAbstractType = true;
-        result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes = 'yes';
+        result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
       }
       continue;
     } else {
-      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name] = { hasNestedAbstractTypes: 'checking' };
+      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name] = { checkStatus: 'checking' };
     }
 
     // If the field is an abstract type, then both the field type and parent type are abstract types
     if (isInterfaceType(fieldBaseType) || isUnionType(fieldBaseType)) {
       atLeastOneFieldWithAbstractType = true;
-      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].hasNestedAbstractTypes = 'yes';
-      result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes = 'yes';
+      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'yes';
+      result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
       continue;
     }
 
@@ -1908,7 +1905,7 @@ function checkIfObjectTypeHasAbstractTypesRecursively(
     if (isObjectType(fieldBaseType)) {
       // IMPORTANT: we are pointing the parent type to the field type here
       // to make sure when the field type is updated to either 'yes' or 'no', it becomes the parent's type as well
-      if (result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes === 'checking') {
+      if (result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'checking') {
         result.checkedTypesWithNestedAbstractTypes[baseType.name] =
           result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name];
       }
@@ -1916,21 +1913,21 @@ function checkIfObjectTypeHasAbstractTypesRecursively(
       const foundAbstractType = checkIfObjectTypeHasAbstractTypesRecursively(fieldBaseType, result);
       if (foundAbstractType) {
         atLeastOneFieldWithAbstractType = true;
-        result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].hasNestedAbstractTypes = 'yes';
-        result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes = 'yes';
+        result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'yes';
+        result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
       }
       continue;
     }
 
     // Otherwise, the current field type is not abstract type
     // This includes scalar types, enums, input types and objects without abstract types
-    result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].hasNestedAbstractTypes = 'no';
+    result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'no';
   }
 
   if (atLeastOneFieldWithAbstractType) {
     result.isObjectWithAbstractType = true;
   } else {
-    result.checkedTypesWithNestedAbstractTypes[baseType.name].hasNestedAbstractTypes = 'no';
+    result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'no';
   }
 
   return atLeastOneFieldWithAbstractType;
