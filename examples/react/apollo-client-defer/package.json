@@ -19,7 +19,7 @@
     "@vitejs/plugin-react": "^3.1.0",
     "cypress": "12.17.4",
     "serve": "14.2.3",
-    "start-server-and-test": "2.0.3",
+    "start-server-and-test": "2.0.4",
     "typescript": "5.2.2",
     "vite": "^4.1.0"
   },
