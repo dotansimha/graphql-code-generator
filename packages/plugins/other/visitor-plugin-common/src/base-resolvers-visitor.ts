@@ -652,6 +652,7 @@ export class BaseResolversVisitor<
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
   protected _directiveContextTypesMap: FieldContextTypeMap;
+  protected _checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }> = {};
   private _directiveResolverMappings: Record<string, string>;
   private _shouldMapType: { [typeName: string]: boolean } = {};
 
@@ -1264,12 +1265,18 @@ export class BaseResolversVisitor<
     return this._hasFederation;
   }
 
-  public getRootResolver(): { content: string; generatedResolverTypes: Record<string, { name: string }> } {
+  public getRootResolver(): {
+    content: string;
+    generatedResolverTypes: {
+      resolversMap: { name: string };
+      userDefined: Record<string, { name: string }>;
+    };
+  } {
     const name = this.convertName(this.config.allResolversTypeName);
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-    const generatedResolverTypes: Record<string, { name: string }> = {};
+    const userDefinedTypes: Record<string, { name: string }> = {};
     const content = [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
@@ -1281,7 +1288,7 @@ export class BaseResolversVisitor<
               const resolverType = this._collectedResolvers[schemaTypeName];
 
               if (resolverType.baseGeneratedTypename) {
-                generatedResolverTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
+                userDefinedTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
               }
 
               return indent(this.formatRootResolver(schemaTypeName, resolverType.typename, declarationKind));
@@ -1292,7 +1299,10 @@ export class BaseResolversVisitor<
 
     return {
       content,
-      generatedResolverTypes,
+      generatedResolverTypes: {
+        resolversMap: { name },
+        userDefined: userDefinedTypes,
+      },
     };
   }
 
@@ -1779,8 +1789,23 @@ export class BaseResolversVisitor<
         const baseType = getBaseType(field.type);
         const isUnion = isUnionType(baseType);
         const isInterface = isInterfaceType(baseType);
+        const isObject = isObjectType(baseType);
+        let isObjectWithAbstractType = false;
 
-        if (!this.config.mappers[baseType.name] && !isUnion && !isInterface && !this._shouldMapType[baseType.name]) {
+        if (isObject) {
+          isObjectWithAbstractType = checkIfObjectTypeHasAbstractTypesRecursively(baseType, {
+            isObjectWithAbstractType,
+            checkedTypesWithNestedAbstractTypes: this._checkedTypesWithNestedAbstractTypes,
+          });
+        }
+
+        if (
+          !this.config.mappers[baseType.name] &&
+          !isUnion &&
+          !isInterface &&
+          !this._shouldMapType[baseType.name] &&
+          !isObjectWithAbstractType
+        ) {
           return null;
         }
 
@@ -1825,4 +1850,85 @@ function normalizeResolversNonOptionalTypename(
     ...defaultConfig,
     ...input,
   };
+}
+
+function checkIfObjectTypeHasAbstractTypesRecursively(
+  baseType: GraphQLObjectType,
+  result: {
+    isObjectWithAbstractType: boolean;
+    checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }>;
+  }
+): boolean {
+  if (
+    result.checkedTypesWithNestedAbstractTypes[baseType.name] &&
+    (result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'yes' ||
+      result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'no')
+  ) {
+    return result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'yes';
+  }
+
+  result.checkedTypesWithNestedAbstractTypes[baseType.name] ||= { checkStatus: 'checking' };
+
+  let atLeastOneFieldWithAbstractType = false;
+
+  const fields = baseType.getFields();
+  for (const field of Object.values(fields)) {
+    const fieldBaseType = getBaseType(field.type);
+
+    // If the field is self-referencing, skip it. Otherwise, it's an infinite loop
+    if (baseType.name === fieldBaseType.name) {
+      continue;
+    }
+
+    // If the current field has been checked, and it has nested abstract types,
+    // mark the parent type as having nested abstract types
+    if (result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name]) {
+      if (result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus === 'yes') {
+        atLeastOneFieldWithAbstractType = true;
+        result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
+      }
+      continue;
+    } else {
+      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name] = { checkStatus: 'checking' };
+    }
+
+    // If the field is an abstract type, then both the field type and parent type are abstract types
+    if (isInterfaceType(fieldBaseType) || isUnionType(fieldBaseType)) {
+      atLeastOneFieldWithAbstractType = true;
+      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'yes';
+      result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
+      continue;
+    }
+
+    // If the field is an object, check it recursively to see if it has abstract types
+    // If it does, both field type and parent type have abstract types
+    if (isObjectType(fieldBaseType)) {
+      // IMPORTANT: we are pointing the parent type to the field type here
+      // to make sure when the field type is updated to either 'yes' or 'no', it becomes the parent's type as well
+      if (result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'checking') {
+        result.checkedTypesWithNestedAbstractTypes[baseType.name] =
+          result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name];
+      }
+
+      const foundAbstractType = checkIfObjectTypeHasAbstractTypesRecursively(fieldBaseType, result);
+      if (foundAbstractType) {
+        atLeastOneFieldWithAbstractType = true;
+        result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'yes';
+        result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
+      }
+      continue;
+    }
+
+    // Otherwise, the current field type is not abstract type
+    // This includes scalar types, enums, input types and objects without abstract types
+    result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'no';
+  }
+
+  if (atLeastOneFieldWithAbstractType) {
+    result.isObjectWithAbstractType = true;
+  } else {
+    result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'no';
+  }
+
+  return atLeastOneFieldWithAbstractType;
 }
