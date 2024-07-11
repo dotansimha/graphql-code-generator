@@ -67,7 +67,7 @@
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
     "tslib": "2.6.3",
-    "tsx": "4.9.3",
+    "tsx": "4.16.2",
     "typescript": "5.2.2"
   },
   "lint-staged": {
