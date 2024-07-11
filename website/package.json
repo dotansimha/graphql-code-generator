@@ -15,7 +15,7 @@
     "@types/jsonpath": "0.2.4",
     "@types/node": "18.19.39",
     "@types/react": "18.3.3",
-    "fast-xml-parser": "4.3.6",
+    "fast-xml-parser": "4.4.0",
     "jsonpath": "1.1.1",
     "prettier-plugin-tailwindcss": "0.2.8"
   },
