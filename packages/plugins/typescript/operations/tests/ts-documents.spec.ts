@@ -7424,4 +7424,44 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
   });
+
+  describe('combineFragmentNames option', () => {
+    it("'inline' yields correct types ", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          id
+          profile {
+            ...ProfileFragment
+          }
+        }
+        fragment ProfileFragment on Profile {
+          age
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'inline', combineFragmentNames: ['ProfileFragment'] },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string, profile?: (
+              { __typename?: 'Profile' }
+              & ProfileFragmentFragment
+            ) | null } | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string, profile?: (
+            { __typename?: 'Profile' }
+            & ProfileFragmentFragment
+          ) | null };
+
+        export type ProfileFragmentFragment = { __typename?: 'Profile', age?: number | null };
+      `);
+    });
+  });
 });

@@ -36,6 +36,7 @@ export interface ParsedConfig {
   dedupeFragments: boolean;
   allowEnumStringTypes: boolean;
   inlineFragmentTypes: InlineFragmentTypeOptions;
+  combineFragmentNames: string[];
   emitLegacyCommonJSImports: boolean;
   printFieldsOnNewLines: boolean;
 }
@@ -368,6 +369,15 @@ export interface RawConfig {
    */
   inlineFragmentTypes?: InlineFragmentTypeOptions;
   /**
+   * @description List of fragment names that should combined into other operations.
+   * This option is only relevant when `inlineFragmentTypes` is set to `inline`.
+   *
+   * @type array
+   * @items { "type": "string"}
+   * @default []
+   */
+  combineFragmentNames?: string[];
+  /**
    * @default true
    * @description Emit legacy common js imports.
    * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
@@ -410,12 +420,17 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       dedupeFragments: !!rawConfig.dedupeFragments,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
+      combineFragmentNames: rawConfig.combineFragmentNames || [],
       emitLegacyCommonJSImports:
         rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
-      ...((additionalConfig || {}) as any),
+      ...(additionalConfig as any),
     };
+
+    if (this._parsedConfig.inlineFragmentTypes === 'mask' && this._parsedConfig.combineFragmentNames.length > 0) {
+      throw new Error("You can't use `combineFragmentNames` with `inlineFragmentTypes: 'mask'`");
+    }
 
     this.scalars = {};
     for (const key of Object.keys(this.config.scalars || {})) {
