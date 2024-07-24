@@ -59,7 +59,9 @@ export function validateTs(
   const contents: string =
     typeof pluginOutput === 'string'
       ? pluginOutput
-      : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
+      : [...new Set([...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])])].join(
+          '\n'
+        );
 
   const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
   const errors: string[] = [];
@@ -147,7 +149,10 @@ export function validateTs(
   });
 
   if (relevantErrors && relevantErrors.length > 0) {
-    throw new Error(relevantErrors.join('\n'));
+    if (relevantErrors.length === 1) {
+      throw new Error(relevantErrors[0]);
+    }
+    throw new AggregateError(relevantErrors, relevantErrors.join('\n'));
   }
 }
 
