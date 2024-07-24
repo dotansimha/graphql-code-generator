@@ -15,12 +15,12 @@
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "rebuild": "bob build --incremental",
     "test": "jest --forceExit --no-watchman",
-    "lint": "eslint --cache --ignore-path .gitignore .",
+    "lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore .",
     "prettier": "prettier --cache --write --list-different .",
     "prettier:check": "prettier --cache --check .",
     "types:check": "tsc --noEmit",
     "test-and-build": "yarn build && yarn test",
-    "ci:lint": "eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
+    "ci:lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
     "prerelease": "yarn build",
     "release": "changeset publish",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
@@ -53,6 +53,7 @@
     "@types/jest": "28.1.8",
     "babel-jest": "29.6.4",
     "bob-the-bundler": "6.0.0",
+    "cross-env": "7.0.3",
     "eslint": "9.6.0",
     "graphql": "16.8.0",
     "husky": "8.0.3",
@@ -72,7 +73,7 @@
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
-      "eslint --fix"
+      "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --fix"
     ],
     "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
@@ -91,6 +92,7 @@
     "**/@types/graphql-upload/graphql": "^16.0.0",
     "ts-node": "10.9.1",
     "typescript": "5.2.2",
-    "cosmiconfig": "8.1.3"
+    "cosmiconfig": "8.1.3",
+    "eslint-plugin-promise": "6.6.0"
   }
 }
