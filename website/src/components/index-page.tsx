@@ -1,24 +1,22 @@
 import { ReactElement } from 'react';
-import dynamic from 'next/dynamic';
 import { HeroGradient, HeroIllustration, NPMBadge } from '@theguild/components';
 import gqlCodegenCover from '../../public/assets/illustrations/gql-codegen-cover.svg';
 import gqlGenerateCodeIllustration from '../../public/assets/illustrations/gql-generate-code-illustration.svg';
 import gqlWatchForChangesIllustration from '../../public/assets/illustrations/gql-watch-for-changes-illustration.svg';
 
-const LiveDemo = dynamic(() => import('@/components/live-demo/LiveDemo'), { ssr: false });
-
 export function IndexPage(): ReactElement {
   return (
     <>
       <HeroGradient
-        title="Generate code from your GraphQL schema"
-        description="Generate code from your GraphQL schema and operations with a simple CLI"
-        link={{
-          href: '/docs/getting-started/installation',
-          children: 'Try It Now',
-          title: 'Get started with GraphQL Code Generator',
-        }}
-        version={<NPMBadge name="@graphql-codegen/cli" />}
+        title="Generate Type-Safe GraphQL Client and Server Code"
+        description="Supercharge Your GraphQL Development Flow with Fully Typed Code in Seconds."
+        link={[
+          {
+            href: '/docs/getting-started/introduction',
+            children: 'Get Started with Client and Server',
+            title: 'Get started with GraphQL Code Generator',
+          },
+        ]}
         colors={['#1dbbff', '#ee1cd9']}
         image={{
           src: gqlCodegenCover,
@@ -27,8 +25,6 @@ export function IndexPage(): ReactElement {
           alt: 'Illustration',
         }}
       />
-
-      <LiveDemo />
 
       <HeroIllustration
         title="Generate Code Instantly"
