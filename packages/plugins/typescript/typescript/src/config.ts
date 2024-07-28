@@ -512,4 +512,8 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   allowEnumStringTypes?: boolean;
+  /**
+   * @description Only generate types used by typescript operations
+   */
+  onlyTypescriptOperationTypes?: boolean;
 }
