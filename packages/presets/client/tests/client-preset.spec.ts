@@ -49,6 +49,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -136,6 +137,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -215,6 +217,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -295,6 +298,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -425,6 +429,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -548,6 +553,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -661,6 +667,7 @@ export * from "./gql";`);
          * 3. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
+         * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
         const documents = {
             "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -1008,6 +1015,7 @@ export * from "./gql.js";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -2682,6 +2690,7 @@ export * from "./gql.js";`);
          * 3. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
+         * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
         const documents = {
             "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
