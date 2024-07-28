@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 4.3.3
+
+### Patch Changes
+
+- [#9817](https://github.com/dotansimha/graphql-code-generator/pull/9817) [`7ac42a3`](https://github.com/dotansimha/graphql-code-generator/commit/7ac42a33915985b9504bc16f38a22e057bbcd1ab) Thanks [@nikitalocalhost](https://github.com/nikitalocalhost)! - Resolve runtime error when using the babel plugin within an ESM environment.
+
 ## 4.3.2
 
 ### Patch Changes
