@@ -1,5 +1,67 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.3.1
+
+### Patch Changes
+
+- [#10014](https://github.com/dotansimha/graphql-code-generator/pull/10014) [`79fee3c`](https://github.com/dotansimha/graphql-code-generator/commit/79fee3cada20d683d250aad5aa5fef9d6ed9f4d2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix object types with fields being abstract types not pointing to resolver types correctly
+
+## 5.3.0
+
+### Minor Changes
+
+- [#10007](https://github.com/dotansimha/graphql-code-generator/pull/10007) [`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3) Thanks [@eddeee888](https://github.com/eddeee888)! - Add generated resolvers map type name to typescript-resolvers plugin meta
+
+### Patch Changes
+
+- [#10019](https://github.com/dotansimha/graphql-code-generator/pull/10019) [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421) Thanks [@vhfmag](https://github.com/vhfmag)! - Improve code generation performance by computing `ClientSideBaseVisitor`'s `fragmentsGraph` once at instantiation time.
+
+## 5.2.0
+
+### Minor Changes
+
+- [#9961](https://github.com/dotansimha/graphql-code-generator/pull/9961) [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e) Thanks [@eddeee888](https://github.com/eddeee888)! - Update typescript-resolvers to report generated resolver types in the run to meta field in the output
+
+### Patch Changes
+
+- [#9944](https://github.com/dotansimha/graphql-code-generator/pull/9944) [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431) Thanks [@eddeee888](https://github.com/eddeee888)! - Add \_ prefix to generated `RefType` in `ResolversInterfaceTypes` and `ResolversUnionTypes` as it is sometimes unused
+
+- [#9962](https://github.com/dotansimha/graphql-code-generator/pull/9962) [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix interface mappers not working in nested/self-referencing scenarios
+
+- Updated dependencies [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e)]:
+  - @graphql-codegen/plugin-helpers@5.0.4
+
+## 5.1.0
+
+### Minor Changes
+
+- [#9652](https://github.com/dotansimha/graphql-code-generator/pull/9652) [`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53) Thanks [@gmurphey](https://github.com/gmurphey)! - Added allowUndefinedQueryVariables as config option
+
+### Patch Changes
+
+- [#9842](https://github.com/dotansimha/graphql-code-generator/pull/9842) [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d) Thanks [@henryqdineen](https://github.com/henryqdineen)! - properly handle aliased conditionals
+
+## 5.0.0
+
+### Major Changes
+
+- [#9845](https://github.com/dotansimha/graphql-code-generator/pull/9845) [`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5) Thanks [@productdevbook](https://github.com/productdevbook)! - path starts with "#"
+
+## 4.1.2
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
+- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+  - @graphql-codegen/plugin-helpers@5.0.3
+
+## 4.1.1
+
+### Patch Changes
+
+- [#9673](https://github.com/dotansimha/graphql-code-generator/pull/9673) [`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f) Thanks [@maclockard](https://github.com/maclockard)! - Respect avoidOptionals when all arguments are optional
+
 ## 4.1.0
 
 ### Minor Changes

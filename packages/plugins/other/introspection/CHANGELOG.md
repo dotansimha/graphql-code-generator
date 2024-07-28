@@ -1,5 +1,22 @@
 # @graphql-codegen/introspection
 
+## 4.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5)]:
+  - @graphql-codegen/visitor-plugin-common@5.0.0
+
+## 4.0.2
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
+- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+  - @graphql-codegen/visitor-plugin-common@4.1.2
+  - @graphql-codegen/plugin-helpers@5.0.3
+
 ## 4.0.1
 
 ### Patch Changes

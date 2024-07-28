@@ -514,6 +514,31 @@ const config: CodegenConfig = {
 }
 ```
 
+Instead of using a preset algorithm, you can also provide your own hash function.
+
+```ts filename="codegen.ts" {10-12}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      presetConfig: {
+        persistedDocuments: {
+          hashAlgorithm: operation => {
+            const shasum = crypto.createHash('sha512')
+            shasum.update(operation)
+            return shasum.digest('hex')
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 ### Normalized Caches (urql and Apollo Client)
 
 Urql is a popular GraphQL client that utilizes a normalized cache.
@@ -522,7 +547,7 @@ The `addTypenameSelectionDocumentTransform` document transform can be used for a
 
 ```ts filename="codegen.ts" {1,15}
 import { type CodegenConfig } from '@graphql-codegen/cli'
-import { addTypenameDocumentTransform } from '@graphql-codegen/client-preset'
+import { addTypenameSelectionDocumentTransform } from '@graphql-codegen/client-preset'
 
 const config: CodegenConfig = {
   schema: './**/*.graphqls',
@@ -535,7 +560,7 @@ const config: CodegenConfig = {
       presetConfig: {
         persistedDocuments: true
       },
-      documentTransforms: [addTypenameDocumentTransform]
+      documentTransforms: [addTypenameSelectionDocumentTransform]
     }
   }
 }

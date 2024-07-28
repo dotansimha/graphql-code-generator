@@ -70,6 +70,8 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`silent`** - A flag to suppress printing errors when they occur
 
+- **`noSilentErrors`** - A flag to raise errors if any matched files are not valid GraphQL
+
 - **`debug`** - A flag to enable printing debug logs
 
 - **`verbose`** - A flag to enable tasks verbose mode
@@ -179,7 +181,7 @@ For more detailed output, you can also enable the `verbose: true` or `--verbose`
 
 ## Other ways to provide configuration
 
-GraphQL-Codegen is uses [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig) library to manage configuration loading.
+GraphQL-Codegen uses [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig) library to manage configuration loading.
 
 That means you can use `codegen.yml`, `codegen.json`, `codegen.js`, or `codegen.ts` as configuration files. You can also specify the entire configuration under a key called `"codegen"` in your `package.json`.
 For more information, [please refer to `cosmiconfig` documentation](https://github.com/davidtheclark/cosmiconfig#cosmiconfig).

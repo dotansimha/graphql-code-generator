@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/plugin-helpers",
-  "version": "5.0.2",
+  "version": "5.0.4",
   "description": "GraphQL Code Generator common utils and types",
   "repository": {
     "type": "git",
@@ -52,6 +52,6 @@
   },
   "type": "module",
   "devDependencies": {
-    "@graphql-tools/apollo-engine-loader": "8.0.0"
+    "@graphql-tools/apollo-engine-loader": "8.0.1"
   }
 }

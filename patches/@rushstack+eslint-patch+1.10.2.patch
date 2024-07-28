@@ -1,0 +1,30 @@
+diff --git a/node_modules/@rushstack/eslint-patch/lib/_patch-base.js b/node_modules/@rushstack/eslint-patch/lib/_patch-base.js
+index df0b347..a4568b4 100644
+--- a/node_modules/@rushstack/eslint-patch/lib/_patch-base.js
++++ b/node_modules/@rushstack/eslint-patch/lib/_patch-base.js
+@@ -181,10 +181,11 @@ if (isNaN(ESLINT_MAJOR_VERSION)) {
+     throw new Error(`Unable to parse ESLint version "${exports.eslintPackageVersion}" in file "${eslintPackageJsonPath}"`);
+ }
+ if (!(ESLINT_MAJOR_VERSION >= 6 && ESLINT_MAJOR_VERSION <= 8)) {
+-    throw new Error('The ESLint patch script has only been tested with ESLint version 6.x, 7.x, and 8.x.' +
++    console.warn('The ESLint patch script has only been tested with ESLint version 6.x, 7.x, and 8.x.' +
+         ` (Your version: ${exports.eslintPackageVersion})\n` +
+         'Consider reporting a GitHub issue:\n' +
+         'https://github.com/microsoft/rushstack/issues');
++    return;
+ }
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
+ let configArrayFactory;
+diff --git a/node_modules/@rushstack/eslint-patch/lib/modern-module-resolution.js b/node_modules/@rushstack/eslint-patch/lib/modern-module-resolution.js
+index 417a748..6abef9a 100644
+--- a/node_modules/@rushstack/eslint-patch/lib/modern-module-resolution.js
++++ b/node_modules/@rushstack/eslint-patch/lib/modern-module-resolution.js
+@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ const _patch_base_1 = require("./_patch-base");
+ // error: "The argument 'filename' must be a file URL object, file URL string, or absolute path string. Received ''"
+ const isInvalidImporterPath = (ex) => (ex === null || ex === void 0 ? void 0 : ex.code) === 'ERR_INVALID_ARG_VALUE';
+-if (!_patch_base_1.configArrayFactory.__loadPluginPatched) {
++if (_patch_base_1.configArrayFactory && !_patch_base_1.configArrayFactory.__loadPluginPatched) {
+     _patch_base_1.configArrayFactory.__loadPluginPatched = true;
+     // eslint-disable-next-line @typescript-eslint/typedef
+     const originalLoadPlugin = _patch_base_1.configArrayFactory.prototype._loadPlugin;

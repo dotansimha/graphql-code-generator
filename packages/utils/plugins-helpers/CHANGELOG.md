@@ -1,5 +1,17 @@
 # @graphql-codegen/plugin-helpers
 
+## 5.0.4
+
+### Patch Changes
+
+- [#9961](https://github.com/dotansimha/graphql-code-generator/pull/9961) [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e) Thanks [@eddeee888](https://github.com/eddeee888)! - Update plugin output type to allow option `meta` field
+
+## 5.0.3
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
 ## 5.0.2
 
 ### Patch Changes

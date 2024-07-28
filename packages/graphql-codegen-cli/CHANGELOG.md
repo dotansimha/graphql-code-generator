@@ -1,5 +1,16 @@
 # @graphql-codegen/cli
 
+## 5.0.2
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
+- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+  - @graphql-codegen/client-preset@4.2.2
+  - @graphql-codegen/core@4.0.2
+  - @graphql-codegen/plugin-helpers@5.0.3
+
 ## 5.0.1
 
 ### Patch Changes

@@ -251,7 +251,8 @@ export class ClientSideBaseVisitor<
 
   private _onExecutableDocumentNode?: Unstable_OnExecutableDocumentNode;
   private _omitDefinitions?: boolean;
-  private _fragments: Map<string, LoadedFragment>;
+  private readonly _fragments: ReadonlyMap<string, LoadedFragment>;
+  private readonly fragmentsGraph: DepGraph<LoadedFragment>;
 
   constructor(
     protected _schema: GraphQLSchema,
@@ -289,6 +290,7 @@ export class ClientSideBaseVisitor<
     this._onExecutableDocumentNode = (rawConfig as any).unstable_onExecutableDocumentNode;
     this._omitDefinitions = (rawConfig as any).unstable_omitDefinitions;
     this._fragments = new Map(fragments.map(fragment => [fragment.name, fragment]));
+    this.fragmentsGraph = this._getFragmentsGraph();
     autoBind(this);
   }
 
@@ -519,7 +521,7 @@ export class ClientSideBaseVisitor<
     )};`;
   }
 
-  private get fragmentsGraph(): DepGraph<LoadedFragment> {
+  private _getFragmentsGraph(): DepGraph<LoadedFragment> {
     const graph = new DepGraph<LoadedFragment>({ circular: true });
 
     for (const fragment of this._fragments.values()) {
