@@ -2,4 +2,4 @@
 '@graphql-codegen/client-preset': minor
 ---
 
-Fix Babel + ESM
+Resolve runtime error when using the babel plugin within an ESM environment.
