@@ -44,7 +44,6 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   inputMaybeValue: string;
   noExport: boolean;
   useImplementingTypes: boolean;
-  onlyTypescriptOperationTypes: boolean;
 }
 
 export const EXACT_SIGNATURE = `type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };`;
@@ -78,7 +77,6 @@ export class TsVisitor<
       useImplementingTypes: getConfigValue(pluginConfig.useImplementingTypes, false),
       entireFieldWrapperValue: getConfigValue(pluginConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(pluginConfig.wrapEntireFieldDefinitions, false),
-      onlyTypescriptOperationTypes: getConfigValue(pluginConfig.onlyTypescriptOperationTypes, false),
       ...additionalConfig,
     } as TParsedConfig);
 
@@ -245,7 +243,6 @@ export class TsVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    if (this.config.onlyTypescriptOperationTypes) return '';
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
 
     let withFutureAddedValue: string[] = [];

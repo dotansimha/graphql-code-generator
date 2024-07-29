@@ -60,7 +60,6 @@ export interface ParsedTypesConfig extends ParsedConfig {
   wrapEntireDefinitions: boolean;
   ignoreEnumValuesFromSchema: boolean;
   directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings;
-  onlyTypescriptOperationTypes: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -705,7 +704,6 @@ export class BaseTypesVisitor<
   }
 
   FieldDefinition(node: FieldDefinitionNode): string {
-    if (this.config.onlyTypescriptOperationTypes) return '';
     if (this.config.onlyEnums) return '';
 
     const typeString = node.type as any as string;
@@ -716,7 +714,6 @@ export class BaseTypesVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    if (this.config.onlyTypescriptOperationTypes) return '';
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
@@ -786,7 +783,6 @@ export class BaseTypesVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    if (this.config.onlyTypescriptOperationTypes) return '';
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
@@ -809,7 +805,6 @@ export class BaseTypesVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    if (this.config.onlyTypescriptOperationTypes) return '';
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 

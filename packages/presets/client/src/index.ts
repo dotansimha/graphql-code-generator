@@ -215,7 +215,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       { [`add`]: { content: `/* eslint-disable */` } },
       {
         [`typescript`]: {
-          onlyTypescriptOperationTypes: true,
+          onlyEnumTypes: true,
+          onlyOperationTypes: true,
         },
       },
       { [`typescript-operations`]: {} },
