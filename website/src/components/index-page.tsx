@@ -12,7 +12,7 @@ export function IndexPage(): ReactElement {
         description="Supercharge Your GraphQL Development Flow with Fully Typed Code in Seconds."
         link={[
           {
-            href: '/docs/getting-started/introduction',
+            href: '/docs/getting-started',
             children: 'Get Started with Client and Server',
             title: 'Get started with GraphQL Code Generator',
           },
