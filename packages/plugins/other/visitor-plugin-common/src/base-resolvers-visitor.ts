@@ -33,6 +33,7 @@ import {
   ConvertOptions,
   DeclarationKind,
   EnumValuesMap,
+  NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
   ResolversNonOptionalTypenameConfig,
@@ -50,6 +51,7 @@ import {
   wrapTypeWithModifiers,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
+import { normalizeAvoidOptionals } from './avoid-optionals.js';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -60,7 +62,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
     [typeName: string]: ParsedMapper;
   };
   defaultMapper: ParsedMapper | null;
-  avoidOptionals: AvoidOptionalsConfig | boolean;
+  avoidOptionals: NormalizedAvoidOptionalsConfig;
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
@@ -682,7 +684,7 @@ export class BaseResolversVisitor<
       allResolversTypeName: getConfigValue(rawConfig.allResolversTypeName, 'Resolvers'),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, ''),
-      avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
+      avoidOptionals: normalizeAvoidOptionals(rawConfig.avoidOptionals),
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
@@ -1307,7 +1309,7 @@ export class BaseResolversVisitor<
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(
+    return `${schemaTypeName}${this.config.avoidOptionals.resolvers ? '' : '?'}: ${resolverType}${this.getPunctuation(
       declarationKind
     )}`;
   }
@@ -1431,10 +1433,7 @@ export class BaseResolversVisitor<
           )
         : null;
 
-      const avoidInputsOptionals =
-        typeof this.config.avoidOptionals === 'object'
-          ? this.config.avoidOptionals?.inputValue
-          : this.config.avoidOptionals === true;
+      const avoidInputsOptionals = this.config.avoidOptionals.inputValue;
 
       if (argsType !== null) {
         const argsToForceRequire = original.arguments.filter(
@@ -1463,10 +1462,7 @@ export class BaseResolversVisitor<
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 
-      const avoidResolverOptionals =
-        typeof this.config.avoidOptionals === 'object'
-          ? this.config.avoidOptionals?.resolvers
-          : this.config.avoidOptionals === true;
+      const avoidResolverOptionals = this.config.avoidOptionals.resolvers;
       const signature: {
         name: string;
         modifier: string;
@@ -1809,7 +1805,7 @@ export class BaseResolversVisitor<
           return null;
         }
 
-        const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
+        const addOptionalSign = !this.config.avoidOptionals.resolvers && !isNonNullType(field.type);
 
         return {
           addOptionalSign,
