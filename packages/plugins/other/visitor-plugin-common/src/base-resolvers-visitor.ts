@@ -433,6 +433,9 @@ export interface RawResolversConfig extends RawConfig {
    *            inputValue: true,
    *            object: true,
    *            defaultValue: true,
+   *            query: true,
+   *            mutation: true,
+   *            subscription: true,
    *          }
    *        },
    *      },
