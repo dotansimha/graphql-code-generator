@@ -80,6 +80,8 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
 }
 
+type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
+
 export interface RawResolversConfig extends RawConfig {
   /**
    * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
@@ -1396,11 +1398,11 @@ export class BaseResolversVisitor<
     return `ParentType extends ${parentType} = ${parentType}`;
   }
 
-  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): (parentName: string) => string | null {
+  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): FieldDefinitionPrintFn {
     const hasArguments = node.arguments && node.arguments.length > 0;
     const declarationKind = 'type';
 
-    return (parentName: string) => {
+    return (parentName, avoidResolverOptionals) => {
       const original: FieldDefinitionNode = parent[key];
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
@@ -1462,7 +1464,6 @@ export class BaseResolversVisitor<
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 
-      const avoidResolverOptionals = this.config.avoidOptionals.resolvers;
       const signature: {
         name: string;
         modifier: string;
@@ -1528,15 +1529,31 @@ export class BaseResolversVisitor<
     });
     const typeName = node.name as any as string;
     const parentType = this.getParentTypeToUse(typeName);
-    const isRootType = [
-      this.schema.getQueryType()?.name,
-      this.schema.getMutationType()?.name,
-      this.schema.getSubscriptionType()?.name,
-    ].includes(typeName);
 
-    const fieldsContent = node.fields.map((f: any) => f(node.name));
+    const rootType = ((): false | 'query' | 'mutation' | 'subscription' => {
+      if (this.schema.getQueryType()?.name === typeName) {
+        return 'query';
+      }
+      if (this.schema.getMutationType()?.name === typeName) {
+        return 'mutation';
+      }
+      if (this.schema.getSubscriptionType()?.name === typeName) {
+        return 'subscription';
+      }
+      return false;
+    })();
 
-    if (!isRootType) {
+    const fieldsContent = (node.fields as unknown as FieldDefinitionPrintFn[]).map(f => {
+      return f(
+        typeName,
+        (rootType === 'query' && this.config.avoidOptionals.query) ||
+          (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
+          (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
+          (rootType === false && this.config.avoidOptionals.resolvers)
+      );
+    });
+
+    if (!rootType) {
       fieldsContent.push(
         indent(
           `${
@@ -1716,7 +1733,9 @@ export class BaseResolversVisitor<
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
 
-    this._collectedResolvers[node.name as any] = {
+    const typeName = node.name as any as string;
+
+    this._collectedResolvers[typeName] = {
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
@@ -1724,13 +1743,13 @@ export class BaseResolversVisitor<
     for (const graphqlType of Object.values(allTypesMap)) {
       if (graphqlType instanceof GraphQLObjectType) {
         const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === (node.name as any as string))) {
+        if (allInterfaces.find(int => int.name === typeName)) {
           implementingTypes.push(graphqlType.name);
         }
       }
     }
 
-    const parentType = this.getParentTypeToUse(node.name as any as string);
+    const parentType = this.getParentTypeToUse(typeName);
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
     const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
@@ -1745,7 +1764,9 @@ export class BaseResolversVisitor<
               this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
-          ...fields.map((f: any) => f(node.name)),
+          ...(fields as unknown as FieldDefinitionPrintFn[]).map(f =>
+            f(typeName, this.config.avoidOptionals.resolvers)
+          ),
         ].join('\n')
       ).string;
   }
