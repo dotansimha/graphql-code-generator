@@ -113,9 +113,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types'
       );
     }
-
-    // eslint-disable-next-line no-constant-binary-expression
-    const isPersistedOperations = !!options.presetConfig?.persistedDocuments ?? false;
+    const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
 
     const reexports: Array<string> = [];
 
