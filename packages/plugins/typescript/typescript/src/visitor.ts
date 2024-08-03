@@ -1,5 +1,4 @@
 import {
-  AvoidOptionalsConfig,
   BaseTypesVisitor,
   DeclarationBlock,
   DeclarationKind,
@@ -7,6 +6,7 @@ import {
   indent,
   isOneOfInputObjectType,
   normalizeAvoidOptionals,
+  NormalizedAvoidOptionalsConfig,
   ParsedTypesConfig,
   transformComment,
   wrapWithSingleQuotes,
@@ -30,7 +30,7 @@ import { TypeScriptPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object.js';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
-  avoidOptionals: AvoidOptionalsConfig;
+  avoidOptionals: NormalizedAvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
   futureProofEnums: boolean;
