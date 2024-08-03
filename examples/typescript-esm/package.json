@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.2.0",
-    "graphql": "16.8.0"
+    "graphql": "16.9.0"
   },
   "scripts": {
     "codegen": "graphql-codegen-esm --config codegen.cjs",
