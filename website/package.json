@@ -65,7 +65,7 @@
     "@graphql-codegen/typescript-vue-apollo-smart-ops": "2.3.6",
     "@graphql-codegen/typescript-vue-urql": "2.3.6",
     "@graphql-codegen/urql-introspection": "2.2.1",
-    "@mizdra/graphql-codegen-typescript-fabbrica": "^0.3.0",
+    "@mizdra/graphql-codegen-typescript-fabbrica": "^0.6.0",
     "@monaco-editor/react": "4.5.2",
     "@theguild/components": "6.6.3",
     "classnames": "2.3.2",
