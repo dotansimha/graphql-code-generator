@@ -1,5 +1,12 @@
 # @graphql-codegen/typescript-document-nodes
 
+## 4.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+
 ## 4.0.9
 
 ### Patch Changes

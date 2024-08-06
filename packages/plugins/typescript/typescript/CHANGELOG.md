@@ -1,5 +1,19 @@
 # @graphql-codegen/typescript
 
+## 4.1.0
+
+### Minor Changes
+
+- [#10077](https://github.com/dotansimha/graphql-code-generator/pull/10077) [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4) Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `config.avoidOptions` to support query, mutation and subscription
+
+  Previously, `config.avoidOptions.resolvers` was being used to make query, mutation and subscription fields non-optional.
+  Now, `config.avoidOptions.query`, `config.avoidOptions.mutation` and `config.avoidOptions.subscription` can be used to target the respective types.
+
+### Patch Changes
+
+- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+
 ## 4.0.9
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # @graphql-codegen/client-preset
 
+## 4.4.0
+
+### Minor Changes
+
+- [#10073](https://github.com/dotansimha/graphql-code-generator/pull/10073) [`8471a18`](https://github.com/dotansimha/graphql-code-generator/commit/8471a180cd61dc03dedace87876c5973b09b35f8) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Reduce noise of generated code by only generating code relevant to GraphQL operations.
+
+### Patch Changes
+
+- [#10075](https://github.com/dotansimha/graphql-code-generator/pull/10075) [`67e7556`](https://github.com/dotansimha/graphql-code-generator/commit/67e75561a3e862f26cfbb40e8ec5a08f821f9ddf) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add note about enabling bundle size reduction for the generated `graphql` tag file.
+
+- Updated dependencies [[`67e7556`](https://github.com/dotansimha/graphql-code-generator/commit/67e75561a3e862f26cfbb40e8ec5a08f821f9ddf), [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/gql-tag-operations@4.0.10
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+  - @graphql-codegen/typescript-operations@4.3.0
+  - @graphql-codegen/typescript@4.1.0
+  - @graphql-codegen/typed-document-node@5.0.10
+
 ## 4.3.3
 
 ### Patch Changes

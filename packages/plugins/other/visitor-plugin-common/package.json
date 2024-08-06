@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "5.3.1",
+  "version": "5.4.0",
   "license": "MIT",
   "repository": {
     "type": "git",
