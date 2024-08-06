@@ -598,7 +598,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
-      if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
+      if (
+        this._config.inlineFragmentTypes === 'combine' ||
+        this._config.inlineFragmentTypes === 'mask' ||
+        this._config.combineFragmentNames.includes(selectionNode.fragmentName)
+      ) {
         fragmentsSpreadUsages.push(selectionNode.typeName);
         continue;
       }
@@ -703,7 +707,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const fields = [...allStrings, mergedObjectsAsString].filter(Boolean);
 
     if (fragmentsSpreadUsages.length) {
-      if (this._config.inlineFragmentTypes === 'combine') {
+      if (this._config.inlineFragmentTypes === 'combine' || this._config.combineFragmentNames.length > 0) {
         fields.push(...fragmentsSpreadUsages);
       } else if (this._config.inlineFragmentTypes === 'mask') {
         fields.push(
