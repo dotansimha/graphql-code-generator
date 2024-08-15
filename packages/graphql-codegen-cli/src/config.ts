@@ -346,7 +346,7 @@ export class CodegenContext {
   private _pluginContext: { [key: string]: any } = {};
 
   cwd: string;
-  filepath: string;
+  filepath?: string;
   profiler: Profiler;
   profilerOutput?: string;
   checkModeStaleFiles = [];

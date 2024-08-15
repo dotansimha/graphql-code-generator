@@ -119,7 +119,7 @@ export const makeGlobalPatternSet = (initialContext: CodegenContext) => {
   return {
     watch: sortPatterns([
       ...(typeof config.watch === 'boolean' ? [] : normalizeInstanceOrArray<string>(config.watch ?? [])),
-      relative(process.cwd(), initialContext.filepath),
+      ...(initialContext.filepath ? [relative(process.cwd(), initialContext.filepath)] : []),
     ]),
     schemas: sortPatterns(makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(config.schema))),
     documents: sortPatterns(
