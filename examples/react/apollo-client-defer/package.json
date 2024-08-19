@@ -21,7 +21,7 @@
     "serve": "14.2.3",
     "start-server-and-test": "2.0.5",
     "typescript": "5.5.4",
-    "vite": "^4.1.0"
+    "vite": "^5.0.0"
   },
   "scripts": {
     "dev": "vite",
