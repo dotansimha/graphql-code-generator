@@ -1,4 +1,11 @@
-[![CodeGen](./logo.svg)](https://the-guild.dev/graphql/codegen)
+[![GraphQLConf 2024 Banner: September 10-12, San Francisco. Hosted by the GraphQL Foundation](https://github.com/user-attachments/assets/bdb8cd5d-5186-4ece-b06b-b00a499b7868)](https://graphql.org/conf/2024/?utm_source=github&utm_medium=graphql_codegen&utm_campaign=readme)
+
+<div>
+    <img src="./logo.svg" width="150px" alt="GraphQL Code Generator logo"/>
+    <a href="https://the-guild.dev">
+        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/>
+    </a>
+</div>
 
 [![npm version](https://badge.fury.io/js/%40graphql-codegen%2Fcli.svg)](https://badge.fury.io/js/%40graphql-codegen%2Fcli)
 

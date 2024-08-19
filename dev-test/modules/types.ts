@@ -165,16 +165,18 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   PaymentOption: CreditCard | Paypal;
 };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Article: ResolverTypeWrapper<Article>;
+  Article: ResolverTypeWrapper<Omit<Article, 'author'> & { author: ResolversTypes['User'] }>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreditCard: ResolverTypeWrapper<CreditCard>;
-  Donation: ResolverTypeWrapper<Donation>;
+  Donation: ResolverTypeWrapper<
+    Omit<Donation, 'recipient' | 'sender'> & { recipient: ResolversTypes['User']; sender: ResolversTypes['User'] }
+  >;
   DonationInput: DonationInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -191,10 +193,13 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Article: Article;
+  Article: Omit<Article, 'author'> & { author: ResolversParentTypes['User'] };
   Boolean: Scalars['Boolean']['output'];
   CreditCard: CreditCard;
-  Donation: Donation;
+  Donation: Omit<Donation, 'recipient' | 'sender'> & {
+    recipient: ResolversParentTypes['User'];
+    sender: ResolversParentTypes['User'];
+  };
   DonationInput: DonationInput;
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];

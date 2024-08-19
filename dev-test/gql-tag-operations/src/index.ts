@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { gql, DocumentType } from '../gql.js';
+import { graphql, DocumentType } from '../gql/gql.js';
 
-const FooQuery = gql(/* GraphQL */ `
+const FooQuery = graphql(/* GraphQL */ `
   query Foo {
     Tweets {
       id
@@ -10,14 +10,14 @@ const FooQuery = gql(/* GraphQL */ `
   }
 `);
 
-const LelFragment = gql(/* GraphQL */ `
+const LelFragment = graphql(/* GraphQL */ `
   fragment Lel on Tweet {
     id
     body
   }
 `);
 
-const BarQuery = gql(/* GraphQL */ `
+const BarQuery = graphql(/* GraphQL */ `
   query Bar {
     Tweets {
       ...Lel

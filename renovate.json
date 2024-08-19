@@ -7,5 +7,27 @@
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
-  }
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "excludePackagePatterns": [
+        "@changesets/*",
+        "typescript",
+        "^@theguild/",
+        "next",
+        "tailwindcss",
+        "@whatwg-node/*",
+        "graphql-jit",
+        "husky"
+      ],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
+    }
+  ]
 }

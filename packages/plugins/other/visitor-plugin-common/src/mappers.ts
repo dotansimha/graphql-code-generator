@@ -1,4 +1,3 @@
-/* eslint-disable no-inner-declarations */
 import { ParsedResolversConfig, RawResolversConfig } from './base-resolvers-visitor.js';
 import { DirectiveArgumentAndInputFieldMappings, ParsedDirectiveArgumentAndInputFieldMappings } from './types.js';
 
@@ -33,10 +32,16 @@ interface Helpers {
 }
 
 function prepareLegacy(mapper: string): Helpers {
+  const isScoped = mapper.includes('\\#');
+  if (mapper.includes('\\#')) {
+    mapper = mapper.replace('\\#', '');
+  }
   const items = mapper.split('#');
   const isNamespace = items.length === 3;
   const isDefault = items[1].trim() === 'default' || items[1].startsWith('default ');
   const hasAlias = items[1].includes(' as ');
+  const source = isScoped ? `#${items[0]}` : items[0];
+  items[0] = source;
 
   return {
     items,
@@ -47,10 +52,15 @@ function prepareLegacy(mapper: string): Helpers {
 }
 
 function prepare(mapper: string): Helpers {
-  const [source, path] = mapper.split('#');
+  const isScoped = mapper.includes('\\#');
+  if (mapper.includes('\\#')) {
+    mapper = mapper.replace('\\#', '');
+  }
+  let [source, path] = mapper.split('#');
   const isNamespace = path.includes('.');
   const isDefault = path.trim() === 'default' || path.startsWith('default ');
   const hasAlias = path.includes(' as ');
+  source = isScoped ? `#${source}` : source;
 
   return {
     items: isNamespace ? [source, ...path.split('.')] : [source, path],
@@ -61,6 +71,9 @@ function prepare(mapper: string): Helpers {
 }
 
 function isLegacyMode(mapper: string) {
+  if (mapper.includes('\\#')) {
+    mapper = mapper.replace('\\#', '');
+  }
   return mapper.split('#').length === 3;
 }
 

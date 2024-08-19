@@ -1,5 +1,174 @@
 # @graphql-codegen/client-preset
 
+## 4.3.3
+
+### Patch Changes
+
+- [#9817](https://github.com/dotansimha/graphql-code-generator/pull/9817) [`7ac42a3`](https://github.com/dotansimha/graphql-code-generator/commit/7ac42a33915985b9504bc16f38a22e057bbcd1ab) Thanks [@nikitalocalhost](https://github.com/nikitalocalhost)! - Resolve runtime error when using the babel plugin within an ESM environment.
+
+## 4.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`79fee3c`](https://github.com/dotansimha/graphql-code-generator/commit/79fee3cada20d683d250aad5aa5fef9d6ed9f4d2)]:
+  - @graphql-codegen/visitor-plugin-common@5.3.1
+  - @graphql-codegen/gql-tag-operations@4.0.9
+  - @graphql-codegen/typescript-operations@4.2.3
+  - @graphql-codegen/typed-document-node@5.0.9
+  - @graphql-codegen/typescript@4.0.9
+
+## 4.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3), [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421)]:
+  - @graphql-codegen/visitor-plugin-common@5.3.0
+  - @graphql-codegen/gql-tag-operations@4.0.8
+  - @graphql-codegen/typescript-operations@4.2.2
+  - @graphql-codegen/typed-document-node@5.0.8
+  - @graphql-codegen/typescript@4.0.8
+
+## 4.3.0
+
+### Minor Changes
+
+- [#10001](https://github.com/dotansimha/graphql-code-generator/pull/10001) [`1be6e65`](https://github.com/dotansimha/graphql-code-generator/commit/1be6e65943b85162f3d465189d0a6df4b962df5d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Support discriminating `null` and `undefined` within the `useFragment` function.
+
+  ```ts
+  function MyComponent(props: FragmentType<typeof MyFragment> | null) {
+    const data = useFragment(MyFragment, props);
+    // data is `MyFragment | null`
+  }
+
+  function MyComponent(props: FragmentType<typeof MyFragment> | undefined) {
+    const data = useFragment(MyFragment, props);
+    // data is `MyFragment | undefined`
+  }
+  ```
+
+  Before, the returned type from `useFragment` was always `TType | null | undefined`.
+
+- [#9804](https://github.com/dotansimha/graphql-code-generator/pull/9804) [`5e594ef`](https://github.com/dotansimha/graphql-code-generator/commit/5e594ef8f39b9e1036b6bcaa977f914a66fec03e) Thanks [@rachel-church](https://github.com/rachel-church)! - Preserving `Array<T>` or `ReadonlyArray<T>` in `useFragment()` return type.
+
+### Patch Changes
+
+- [#9996](https://github.com/dotansimha/graphql-code-generator/pull/9996) [`99f449c`](https://github.com/dotansimha/graphql-code-generator/commit/99f449c8dcd645d49eda26e4ddfcb8ad7056ecbf) Thanks [@nahn20](https://github.com/nahn20)! - Added configuration to allow for custom hash functions for persisted documents in the client preset
+
+  ### Example
+
+  ```ts filename="codegen.ts" {10-12}
+  import { type CodegenConfig } from '@graphql-codegen/cli';
+
+  const config: CodegenConfig = {
+    schema: 'schema.graphql',
+    documents: ['src/**/*.tsx'],
+    generates: {
+      './src/gql/': {
+        preset: 'client',
+        presetConfig: {
+          persistedDocuments: {
+            hashAlgorithm: operation => {
+              const shasum = crypto.createHash('sha512');
+              shasum.update(operation);
+              return shasum.digest('hex');
+            },
+          },
+        },
+      },
+    },
+  };
+  ```
+
+- Updated dependencies [[`5501c62`](https://github.com/dotansimha/graphql-code-generator/commit/5501c621f19eb5ef8e703a21f7367e07e41f199c)]:
+  - @graphql-codegen/add@5.0.3
+
+## 4.2.6
+
+### Patch Changes
+
+- Updated dependencies [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e), [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431), [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e), [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e)]:
+  - @graphql-codegen/plugin-helpers@5.0.4
+  - @graphql-codegen/visitor-plugin-common@5.2.0
+  - @graphql-codegen/gql-tag-operations@4.0.7
+  - @graphql-codegen/typescript-operations@4.2.1
+  - @graphql-codegen/typed-document-node@5.0.7
+  - @graphql-codegen/typescript@4.0.7
+
+## 4.2.5
+
+### Patch Changes
+
+- [#9889](https://github.com/dotansimha/graphql-code-generator/pull/9889) [`cd60e14`](https://github.com/dotansimha/graphql-code-generator/commit/cd60e14c4dc5a496a93089dae677fc797c04671e) Thanks [@Sojaner](https://github.com/Sojaner)! - Omit `__typename` from being added on the root node of a subscription when using `addTypenameSelectionDocumentTransform` with documentTransforms since a single root node is expected and the code generator fails because of that (refer to https://spec.graphql.org/draft/#sec-Single-root-field)
+
+## 4.2.4
+
+### Patch Changes
+
+- Updated dependencies [[`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53), [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d)]:
+  - @graphql-codegen/visitor-plugin-common@5.1.0
+  - @graphql-codegen/typescript-operations@4.2.0
+  - @graphql-codegen/gql-tag-operations@4.0.6
+  - @graphql-codegen/typed-document-node@5.0.6
+  - @graphql-codegen/typescript@4.0.6
+
+## 4.2.3
+
+### Patch Changes
+
+- Updated dependencies [[`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5)]:
+  - @graphql-codegen/visitor-plugin-common@5.0.0
+  - @graphql-codegen/gql-tag-operations@4.0.5
+  - @graphql-codegen/typescript-operations@4.1.3
+  - @graphql-codegen/typed-document-node@5.0.5
+  - @graphql-codegen/typescript@4.0.5
+
+## 4.2.2
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
+- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+  - @graphql-codegen/visitor-plugin-common@4.1.2
+  - @graphql-codegen/typescript-operations@4.1.2
+  - @graphql-codegen/add@5.0.2
+  - @graphql-codegen/gql-tag-operations@4.0.4
+  - @graphql-codegen/typed-document-node@5.0.4
+  - @graphql-codegen/typescript@4.0.4
+  - @graphql-codegen/plugin-helpers@5.0.3
+
+## 4.2.1
+
+### Patch Changes
+
+- [#9557](https://github.com/dotansimha/graphql-code-generator/pull/9557) [`48ddaeae1`](https://github.com/dotansimha/graphql-code-generator/commit/48ddaeae1809cb52e6de5aa14f0d47bedde9d547) Thanks [@konomae](https://github.com/konomae)! - Add eslint-disable comment to fragment-masking.ts
+
+- Updated dependencies [[`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f)]:
+  - @graphql-codegen/visitor-plugin-common@4.1.1
+  - @graphql-codegen/gql-tag-operations@4.0.3
+  - @graphql-codegen/typescript-operations@4.1.1
+  - @graphql-codegen/typed-document-node@5.0.3
+  - @graphql-codegen/typescript@4.0.3
+
+## 4.2.0
+
+### Minor Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - The client preset now allows the use of the `futureProofEnums` config option
+
+### Patch Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
+- Updated dependencies [[`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975)]:
+  - @graphql-codegen/add@5.0.1
+  - @graphql-codegen/gql-tag-operations@4.0.2
+  - @graphql-codegen/plugin-helpers@5.0.2
+  - @graphql-codegen/typed-document-node@5.0.2
+  - @graphql-codegen/typescript@4.0.2
+  - @graphql-codegen/typescript-operations@4.1.0
+  - @graphql-codegen/visitor-plugin-common@4.1.0
+
 ## 4.1.0
 
 ### Minor Changes

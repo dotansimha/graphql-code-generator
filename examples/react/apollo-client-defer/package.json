@@ -4,22 +4,22 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.10",
-    "@graphql-yoga/plugin-defer-stream": "^2.0.0",
+    "@graphql-yoga/plugin-defer-stream": "^3.0.0",
     "graphql": "^16.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "graphql-yoga": "4.0.4"
+    "graphql-yoga": "5.6.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/cli": "^5.0.2",
     "@types/jest": "^27.5.2",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
-    "cypress": "12.17.4",
-    "serve": "14.2.1",
-    "start-server-and-test": "2.0.0",
+    "cypress": "13.13.0",
+    "serve": "14.2.3",
+    "start-server-and-test": "2.0.4",
     "typescript": "5.2.2",
     "vite": "^4.1.0"
   },

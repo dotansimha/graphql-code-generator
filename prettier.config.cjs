@@ -10,5 +10,5 @@ module.exports = {
     // Sort classes in website
     require('prettier-plugin-tailwindcss'),
   ],
-  tailwindConfig: './website/tailwind.config.cjs',
+  tailwindConfig: './website/tailwind.config.ts',
 };

@@ -130,7 +130,7 @@ export const validate: PluginValidateFn<any> = async (
 ) => {
   const singlePlugin = allPlugins.length === 1;
 
-  const allowedExtensions = ['.graphql', '.gql'];
+  const allowedExtensions = ['.graphql', '.gql', '.graphqls'];
   const isAllowedExtension = allowedExtensions.includes(extname(outputFile));
 
   if (singlePlugin && !isAllowedExtension) {
