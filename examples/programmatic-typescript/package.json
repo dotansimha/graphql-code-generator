@@ -18,13 +18,13 @@
     "@graphql-codegen/typescript-resolvers": "4.2.1",
     "@graphql-tools/graphql-file-loader": "8.0.1",
     "@graphql-tools/load": "8.0.2",
-    "@graphql-tools/schema": "10.0.4",
-    "graphql": "16.8.0",
+    "@graphql-tools/schema": "10.0.6",
+    "graphql": "16.9.0",
     "graphql-tag": "2.12.6",
     "prettier": "2.8.8"
   },
   "devDependencies": {
-    "@types/node": "18.19.39",
-    "tsup": "8.1.0"
+    "@types/node": "20.16.1",
+    "tsup": "8.2.4"
   }
 }

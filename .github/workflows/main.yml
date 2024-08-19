@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -42,7 +42,7 @@ jobs:
           - 'esm'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -122,7 +122,7 @@ jobs:
             graphql_version: 16
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -132,7 +132,7 @@ jobs:
       - name: Install Dependencies
         run: yarn
       - name: Cache Jest
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .cache/jest
           key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{hashFiles('yarn.lock')}}
@@ -148,7 +148,7 @@ jobs:
     name: Build and Unit Test SWC Plugin
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: 1.65.0
