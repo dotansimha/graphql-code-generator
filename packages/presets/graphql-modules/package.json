@@ -52,5 +52,8 @@
     "directory": "dist",
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  }
 }
