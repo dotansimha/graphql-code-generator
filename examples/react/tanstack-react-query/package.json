@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@tanstack/react-query": "4.33.0",
+    "@tanstack/react-query": "4.36.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -16,8 +16,8 @@
     "@types/react-dom": "^18.0.10",
     "typescript": "5.2.2",
     "serve": "14.2.3",
-    "cypress": "13.13.0",
-    "start-server-and-test": "2.0.4",
+    "cypress": "13.13.3",
+    "start-server-and-test": "2.0.5",
     "vite": "^4.1.0"
   },
   "scripts": {
