@@ -52,7 +52,7 @@
     "@theguild/prettier-config": "0.1.1",
     "@types/jest": "28.1.8",
     "babel-jest": "29.7.0",
-    "bob-the-bundler": "6.0.0",
+    "bob-the-bundler": "7.0.1",
     "cross-env": "7.0.3",
     "eslint": "9.9.0",
     "graphql": "16.9.0",
