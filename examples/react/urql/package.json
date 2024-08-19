@@ -12,7 +12,7 @@
     "@types/react-dom": "^18.0.10",
     "@graphql-codegen/cli": "^5.0.2",
     "@vitejs/plugin-react": "^3.1.0",
-    "typescript": "5.2.2",
+    "typescript": "5.5.4",
     "serve": "14.2.3",
     "cypress": "13.13.3",
     "start-server-and-test": "2.0.5",
