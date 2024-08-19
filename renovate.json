@@ -22,7 +22,8 @@
         "tailwindcss",
         "@whatwg-node/*",
         "graphql-jit",
-        "husky"
+        "husky",
+        "@types/lz-string"
       ],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
