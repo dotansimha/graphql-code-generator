@@ -23,7 +23,8 @@
         "@whatwg-node/*",
         "graphql-jit",
         "husky",
-        "@types/lz-string"
+        "@types/lz-string",
+        "swc*"
       ],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
