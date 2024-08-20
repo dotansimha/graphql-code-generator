@@ -62,7 +62,7 @@
     "debounce": "^1.2.0",
     "detect-indent": "^6.0.0",
     "graphql-config": "^5.1.1",
-    "inquirer": "^8.0.0",
+    "inquirer": "^10.0.0",
     "is-glob": "^4.0.1",
     "jiti": "^1.17.1",
     "json-to-pretty-yaml": "^1.2.2",
