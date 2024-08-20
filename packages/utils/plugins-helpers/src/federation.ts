@@ -1,8 +1,7 @@
 import { astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
 import {
-  type ConstDirectiveNode,
+  type DirectiveNode,
   DefinitionNode,
-  DirectiveNode,
   FieldDefinitionNode,
   GraphQLNamedType,
   GraphQLObjectType,
@@ -286,7 +285,7 @@ export class ApolloFederation {
 export function checkObjectTypeFederationDetails(
   node: ObjectTypeDefinitionNode | GraphQLObjectType,
   schema: GraphQLSchema
-): { resolvableKeyDirectives: readonly ConstDirectiveNode[] } | false {
+): { resolvableKeyDirectives: readonly DirectiveNode[] } | false {
   const {
     name: { value: name },
     directives,
