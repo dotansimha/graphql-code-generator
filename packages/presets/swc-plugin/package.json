@@ -9,7 +9,7 @@
     "graphql-codegen",
     "preset-client"
   ],
-  "main": "dist/cjs/index.js",
+  "main": "swc_plugin.wasm",
   "scripts": {
     "build-wasm": "cargo build --target wasm32-wasi --release && cp target/wasm32-wasi/release/swc_plugin.wasm ./",
     "debug": "cargo build --target wasm32-wasi && cp target/wasm32-wasi/debug/swc_plugin.wasm ./"
@@ -27,32 +27,6 @@
     "swc_plugin.wasm"
   ],
   "type": "module",
-  "module": "dist/esm/index.js",
-  "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
-  "exports": {
-    ".": {
-      "require": {
-        "types": "./dist/typings/index.d.cts",
-        "default": "./dist/cjs/index.js"
-      },
-      "import": {
-        "types": "./dist/typings/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "default": {
-        "types": "./dist/typings/index.d.ts",
-        "default": "./dist/esm/index.js"
-      }
-    },
-    "./package.json": "./package.json"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
-  },
   "engines": {
     "node": ">=16"
   }
