@@ -1,5 +1,21 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.3.1
+
+### Patch Changes
+
+- [#10014](https://github.com/dotansimha/graphql-code-generator/pull/10014) [`79fee3c`](https://github.com/dotansimha/graphql-code-generator/commit/79fee3cada20d683d250aad5aa5fef9d6ed9f4d2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix object types with fields being abstract types not pointing to resolver types correctly
+
+## 5.3.0
+
+### Minor Changes
+
+- [#10007](https://github.com/dotansimha/graphql-code-generator/pull/10007) [`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3) Thanks [@eddeee888](https://github.com/eddeee888)! - Add generated resolvers map type name to typescript-resolvers plugin meta
+
+### Patch Changes
+
+- [#10019](https://github.com/dotansimha/graphql-code-generator/pull/10019) [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421) Thanks [@vhfmag](https://github.com/vhfmag)! - Improve code generation performance by computing `ClientSideBaseVisitor`'s `fragmentsGraph` once at instantiation time.
+
 ## 5.2.0
 
 ### Minor Changes

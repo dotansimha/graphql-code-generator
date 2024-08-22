@@ -113,8 +113,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types'
       );
     }
-
-    const isPersistedOperations = !!options.presetConfig?.persistedDocuments ?? false;
+    const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
 
     const reexports: Array<string> = [];
 
@@ -213,7 +212,12 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
+      {
+        [`typescript`]: {
+          onlyEnumTypes: true,
+          onlyOperationTypes: true,
+        },
+      },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {

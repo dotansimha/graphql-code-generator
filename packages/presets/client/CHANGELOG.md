@@ -1,5 +1,33 @@
 # @graphql-codegen/client-preset
 
+## 4.3.3
+
+### Patch Changes
+
+- [#9817](https://github.com/dotansimha/graphql-code-generator/pull/9817) [`7ac42a3`](https://github.com/dotansimha/graphql-code-generator/commit/7ac42a33915985b9504bc16f38a22e057bbcd1ab) Thanks [@nikitalocalhost](https://github.com/nikitalocalhost)! - Resolve runtime error when using the babel plugin within an ESM environment.
+
+## 4.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`79fee3c`](https://github.com/dotansimha/graphql-code-generator/commit/79fee3cada20d683d250aad5aa5fef9d6ed9f4d2)]:
+  - @graphql-codegen/visitor-plugin-common@5.3.1
+  - @graphql-codegen/gql-tag-operations@4.0.9
+  - @graphql-codegen/typescript-operations@4.2.3
+  - @graphql-codegen/typed-document-node@5.0.9
+  - @graphql-codegen/typescript@4.0.9
+
+## 4.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3), [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421)]:
+  - @graphql-codegen/visitor-plugin-common@5.3.0
+  - @graphql-codegen/gql-tag-operations@4.0.8
+  - @graphql-codegen/typescript-operations@4.2.2
+  - @graphql-codegen/typed-document-node@5.0.8
+  - @graphql-codegen/typescript@4.0.8
+
 ## 4.3.0
 
 ### Minor Changes
