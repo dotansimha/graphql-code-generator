@@ -734,61 +734,64 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
       Object {
-        "MultipleNonResolvable": Object {
-          "federation": Object {
-            "hasResolveReference": false,
+        "resolversMap": Object {
+          "name": "Resolvers",
+        },
+        "userDefined": Object {
+          "MultipleNonResolvable": Object {
+            "federation": Object {
+              "hasResolveReference": false,
+            },
+            "name": "MultipleNonResolvableResolvers",
           },
-          "name": "MultipleNonResolvableResolvers",
-        },
-        "MultipleResolvable": Object {
-          "federation": Object {
-            "hasResolveReference": true,
+          "MultipleResolvable": Object {
+            "federation": Object {
+              "hasResolveReference": true,
+            },
+            "name": "MultipleResolvableResolvers",
           },
-          "name": "MultipleResolvableResolvers",
-        },
-        "Node": Object {
-          "federation": undefined,
-          "name": "NodeResolvers",
-        },
-        "NotResolvable": Object {
-          "federation": Object {
-            "hasResolveReference": false,
+          "Node": Object {
+            "name": "NodeResolvers",
           },
-          "name": "NotResolvableResolvers",
-        },
-        "Query": Object {
-          "federation": Object {
-            "hasResolveReference": false,
+          "NotResolvable": Object {
+            "federation": Object {
+              "hasResolveReference": false,
+            },
+            "name": "NotResolvableResolvers",
           },
-          "name": "QueryResolvers",
-        },
-        "Resolvable": Object {
-          "federation": Object {
-            "hasResolveReference": true,
+          "Query": Object {
+            "federation": Object {
+              "hasResolveReference": false,
+            },
+            "name": "QueryResolvers",
           },
-          "name": "ResolvableResolvers",
-        },
-        "User": Object {
-          "federation": Object {
-            "hasResolveReference": true,
+          "Resolvable": Object {
+            "federation": Object {
+              "hasResolveReference": true,
+            },
+            "name": "ResolvableResolvers",
           },
-          "name": "UserResolvers",
-        },
-        "UserError": Object {
-          "federation": Object {
-            "hasResolveReference": false,
+          "User": Object {
+            "federation": Object {
+              "hasResolveReference": true,
+            },
+            "name": "UserResolvers",
           },
-          "name": "UserErrorResolvers",
-        },
-        "UserOk": Object {
-          "federation": Object {
-            "hasResolveReference": false,
+          "UserError": Object {
+            "federation": Object {
+              "hasResolveReference": false,
+            },
+            "name": "UserErrorResolvers",
           },
-          "name": "UserOkResolvers",
-        },
-        "UserPayload": Object {
-          "federation": undefined,
-          "name": "UserPayloadResolvers",
+          "UserOk": Object {
+            "federation": Object {
+              "hasResolveReference": false,
+            },
+            "name": "UserOkResolvers",
+          },
+          "UserPayload": Object {
+            "name": "UserPayloadResolvers",
+          },
         },
       }
     `);

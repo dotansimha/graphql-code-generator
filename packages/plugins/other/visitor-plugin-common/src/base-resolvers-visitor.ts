@@ -1304,8 +1304,10 @@ export class BaseResolversVisitor<
               if (resolverType.baseGeneratedTypename) {
                 userDefinedTypes[schemaTypeName] = {
                   name: resolverType.baseGeneratedTypename,
-                  federation: resolverType.federation,
                 };
+                if (resolverType.federation) {
+                  userDefinedTypes[schemaTypeName].federation = resolverType.federation;
+                }
               }
 
               return indent(this.formatRootResolver(schemaTypeName, resolverType.typename, declarationKind));
