@@ -81,7 +81,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
 }
 
 type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
-interface RootResolverResult {
+export interface RootResolver {
   content: string;
   generatedResolverTypes: {
     resolversMap: { name: string };
@@ -1285,12 +1285,12 @@ export class BaseResolversVisitor<
     return this._hasFederation;
   }
 
-  public getRootResolver(): RootResolverResult {
+  public getRootResolver(): RootResolver {
     const name = this.convertName(this.config.allResolversTypeName);
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-    const userDefinedTypes: RootResolverResult['generatedResolverTypes']['userDefined'] = {};
+    const userDefinedTypes: RootResolver['generatedResolverTypes']['userDefined'] = {};
     const content = [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
