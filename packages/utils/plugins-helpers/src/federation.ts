@@ -1,7 +1,7 @@
 import { astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
 import {
-  type DirectiveNode,
   DefinitionNode,
+  DirectiveNode,
   FieldDefinitionNode,
   GraphQLNamedType,
   GraphQLObjectType,
@@ -35,21 +35,18 @@ export const federationSpec = parse(/* GraphQL */ `
 export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
   return mapSchema(schema, {
     [MapperKind.OBJECT_TYPE]: type => {
-      const objectTypeFederationDetails = checkObjectTypeFederationDetails(type, schema);
+      if (checkObjectTypeFederationDetails(type, schema)) {
+        const typeConfig = type.toConfig();
+        typeConfig.fields = {
+          [resolveReferenceFieldName]: {
+            type,
+          },
+          ...typeConfig.fields,
+        };
 
-      if (!objectTypeFederationDetails || objectTypeFederationDetails.resolvableKeyDirectives.length === 0) {
-        return type;
+        return new GraphQLObjectType(typeConfig);
       }
-
-      const typeConfig = type.toConfig();
-      typeConfig.fields = {
-        [resolveReferenceFieldName]: {
-          type,
-        },
-        ...typeConfig.fields,
-      };
-
-      return new GraphQLObjectType(typeConfig);
+      return type;
     },
   });
 }
@@ -85,10 +82,15 @@ export function removeFederation(schema: GraphQLSchema): GraphQLSchema {
 
 const resolveReferenceFieldName = '__resolveReference';
 
+interface TypeMeta {
+  hasResolveReference: boolean;
+}
+
 export class ApolloFederation {
   private enabled = false;
   private schema: GraphQLSchema;
   private providesMap: Record<string, string[]>;
+  protected meta: { [typename: string]: TypeMeta } = {};
 
   constructor({ enabled, schema }: { enabled: boolean; schema: GraphQLSchema }) {
     this.enabled = enabled;
@@ -197,6 +199,13 @@ export class ApolloFederation {
     }
 
     return parentTypeSignature;
+  }
+
+  setMeta(typename: string, update: Partial<TypeMeta>): void {
+    this.meta[typename] = { ...(this.meta[typename] || { hasResolveReference: false }), ...update };
+  }
+  getMeta() {
+    return this.meta;
   }
 
   private isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType): boolean {

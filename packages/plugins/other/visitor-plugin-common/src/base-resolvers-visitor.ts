@@ -33,6 +33,8 @@ import {
   ConvertOptions,
   DeclarationKind,
   EnumValuesMap,
+  type NormalizedGenerateInternalResolversIfNeededConfig,
+  type GenerateInternalResolversIfNeededConfig,
   NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
@@ -75,6 +77,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeSuffix: string;
   allResolversTypeName: string;
   internalResolversPrefix: string;
+  generateInternalResolversIfNeeded: NormalizedGenerateInternalResolversIfNeededConfig;
   onlyResolveTypeForInterfaces: boolean;
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
@@ -578,6 +581,16 @@ export interface RawResolversConfig extends RawConfig {
    */
   internalResolversPrefix?: string;
   /**
+   * @type object
+   * @default { __resolveReference: false }
+   * @description If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.
+   * Enabling this allows a more correct type generation for the resolvers.
+   * For example:
+   * - `__isTypeOf` is generated for implementing types and union members
+   * - `__resolveReference` is generated for federation types that have at least one resolvable `@key` directive
+   */
+  generateInternalResolversIfNeeded?: GenerateInternalResolversIfNeededConfig;
+  /**
    * @type boolean
    * @default false
    * @description Turning this flag to `true` will generate resolver signature that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
@@ -652,7 +665,6 @@ export class BaseResolversVisitor<
     [key: string]: {
       typename: string;
       baseGeneratedTypename?: string;
-      federation?: { hasResolveReference: boolean };
     };
   } = {};
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
@@ -669,7 +681,6 @@ export class BaseResolversVisitor<
   protected _globalDeclarations = new Set<string>();
   protected _federation: ApolloFederation;
   protected _hasScalars = false;
-  protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
   protected _directiveContextTypesMap: FieldContextTypeMap;
   protected _checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }> = {};
@@ -709,6 +720,9 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
+      generateInternalResolversIfNeeded: {
+        __resolveReference: rawConfig.generateInternalResolversIfNeeded?.__resolveReference ?? false,
+      },
       resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
       ),
@@ -1282,7 +1296,7 @@ export class BaseResolversVisitor<
   }
 
   public hasFederation(): boolean {
-    return this._hasFederation;
+    return Object.keys(this._federation.getMeta()).length > 0;
   }
 
   public getRootResolver(): RootResolver {
@@ -1305,8 +1319,10 @@ export class BaseResolversVisitor<
                 userDefinedTypes[schemaTypeName] = {
                   name: resolverType.baseGeneratedTypename,
                 };
-                if (resolverType.federation) {
-                  userDefinedTypes[schemaTypeName].federation = resolverType.federation;
+
+                const federationMeta = this._federation.getMeta()[schemaTypeName];
+                if (federationMeta) {
+                  userDefinedTypes[schemaTypeName].federation = federationMeta;
                 }
               }
 
@@ -1492,9 +1508,20 @@ export class BaseResolversVisitor<
       };
 
       if (this._federation.isResolveReferenceField(node)) {
-        this._hasFederation = true;
-        signature.type = 'ReferenceResolver';
+        if (this.config.generateInternalResolversIfNeeded.__resolveReference) {
+          const federationDetails = checkObjectTypeFederationDetails(
+            parentType.astNode as ObjectTypeDefinitionNode,
+            this._schema
+          );
 
+          if (!federationDetails || federationDetails.resolvableKeyDirectives.length === 0) {
+            return '';
+          }
+          signature.modifier = ''; // if a federation type has resolvable @key, then it should be required
+        }
+
+        this._federation.setMeta(parentType.name, { hasResolveReference: true });
+        signature.type = 'ReferenceResolver';
         if (signature.genericTypes.length >= 3) {
           signature.genericTypes = signature.genericTypes.slice(0, 3);
         }
@@ -1537,7 +1564,7 @@ export class BaseResolversVisitor<
     return `Partial<${argsType}>`;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number, parent: any): string {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
     const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
@@ -1588,14 +1615,6 @@ export class BaseResolversVisitor<
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
-
-    if (this.config.federation) {
-      const originalNode = parent[key] as ObjectTypeDefinitionNode;
-      const federationDetails = checkObjectTypeFederationDetails(originalNode, this._schema);
-      this._collectedResolvers[node.name as any].federation = {
-        hasResolveReference: federationDetails ? federationDetails.resolvableKeyDirectives.length > 0 : false,
-      };
-    }
 
     return block.string;
   }
