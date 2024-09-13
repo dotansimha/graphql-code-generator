@@ -1,5 +1,12 @@
 # @graphql-codegen/typed-document-node
 
+## 5.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+
 ## 5.0.9
 
 ### Patch Changes
@@ -86,7 +93,7 @@
 
   ```jsx
   // src/index.tsx
-  import { graphql } from './gql';
+  import { graphql } from './gql'
   const OrdersFragment = graphql(`
     fragment OrdersFragment on User {
       orders {
@@ -94,7 +101,7 @@
         total
       }
     }
-  `);
+  `)
   const GetUserQuery = graphql(`
     query GetUser($id: ID!) {
       user(id: $id) {
@@ -103,7 +110,7 @@
         ...OrdersFragment @defer
       }
     }
-  `);
+  `)
   ```
 
   The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
@@ -111,10 +118,10 @@
   ```tsx
   // gql/graphql.ts
   export type GetUserQuery = { __typename?: 'Query'; id: string; name: string } & ({
-    __typename?: 'Query';
+    __typename?: 'Query'
   } & {
-    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> };
-  });
+    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> }
+  })
   ```
 
   Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred

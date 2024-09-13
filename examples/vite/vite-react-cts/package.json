@@ -21,7 +21,7 @@
     "vite": "^5.0.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/cli": "5.0.3",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "cypress": "13.13.3",
