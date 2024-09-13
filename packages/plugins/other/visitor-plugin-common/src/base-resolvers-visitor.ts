@@ -33,6 +33,7 @@ import {
   ConvertOptions,
   DeclarationKind,
   EnumValuesMap,
+  NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
   ResolversNonOptionalTypenameConfig,
@@ -50,6 +51,7 @@ import {
   wrapTypeWithModifiers,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
+import { normalizeAvoidOptionals } from './avoid-optionals.js';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -60,7 +62,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
     [typeName: string]: ParsedMapper;
   };
   defaultMapper: ParsedMapper | null;
-  avoidOptionals: AvoidOptionalsConfig | boolean;
+  avoidOptionals: NormalizedAvoidOptionalsConfig;
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
@@ -77,6 +79,8 @@ export interface ParsedResolversConfig extends ParsedConfig {
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
 }
+
+type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
 
 export interface RawResolversConfig extends RawConfig {
   /**
@@ -429,6 +433,9 @@ export interface RawResolversConfig extends RawConfig {
    *            inputValue: true,
    *            object: true,
    *            defaultValue: true,
+   *            query: true,
+   *            mutation: true,
+   *            subscription: true,
    *          }
    *        },
    *      },
@@ -652,6 +659,7 @@ export class BaseResolversVisitor<
   protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
   protected _directiveContextTypesMap: FieldContextTypeMap;
+  protected _checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }> = {};
   private _directiveResolverMappings: Record<string, string>;
   private _shouldMapType: { [typeName: string]: boolean } = {};
 
@@ -681,7 +689,7 @@ export class BaseResolversVisitor<
       allResolversTypeName: getConfigValue(rawConfig.allResolversTypeName, 'Resolvers'),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, ''),
-      avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
+      avoidOptionals: normalizeAvoidOptionals(rawConfig.avoidOptionals),
       defaultMapper: rawConfig.defaultMapper
         ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType')
         : null,
@@ -1264,12 +1272,18 @@ export class BaseResolversVisitor<
     return this._hasFederation;
   }
 
-  public getRootResolver(): { content: string; generatedResolverTypes: Record<string, { name: string }> } {
+  public getRootResolver(): {
+    content: string;
+    generatedResolverTypes: {
+      resolversMap: { name: string };
+      userDefined: Record<string, { name: string }>;
+    };
+  } {
     const name = this.convertName(this.config.allResolversTypeName);
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-    const generatedResolverTypes: Record<string, { name: string }> = {};
+    const userDefinedTypes: Record<string, { name: string }> = {};
     const content = [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
@@ -1281,7 +1295,7 @@ export class BaseResolversVisitor<
               const resolverType = this._collectedResolvers[schemaTypeName];
 
               if (resolverType.baseGeneratedTypename) {
-                generatedResolverTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
+                userDefinedTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
               }
 
               return indent(this.formatRootResolver(schemaTypeName, resolverType.typename, declarationKind));
@@ -1292,12 +1306,15 @@ export class BaseResolversVisitor<
 
     return {
       content,
-      generatedResolverTypes,
+      generatedResolverTypes: {
+        resolversMap: { name },
+        userDefined: userDefinedTypes,
+      },
     };
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(
+    return `${schemaTypeName}${this.config.avoidOptionals.resolvers ? '' : '?'}: ${resolverType}${this.getPunctuation(
       declarationKind
     )}`;
   }
@@ -1384,11 +1401,11 @@ export class BaseResolversVisitor<
     return `ParentType extends ${parentType} = ${parentType}`;
   }
 
-  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): (parentName: string) => string | null {
+  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): FieldDefinitionPrintFn {
     const hasArguments = node.arguments && node.arguments.length > 0;
     const declarationKind = 'type';
 
-    return (parentName: string) => {
+    return (parentName, avoidResolverOptionals) => {
       const original: FieldDefinitionNode = parent[key];
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
@@ -1421,10 +1438,7 @@ export class BaseResolversVisitor<
           )
         : null;
 
-      const avoidInputsOptionals =
-        typeof this.config.avoidOptionals === 'object'
-          ? this.config.avoidOptionals?.inputValue
-          : this.config.avoidOptionals === true;
+      const avoidInputsOptionals = this.config.avoidOptionals.inputValue;
 
       if (argsType !== null) {
         const argsToForceRequire = original.arguments.filter(
@@ -1453,10 +1467,6 @@ export class BaseResolversVisitor<
 
       const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
 
-      const avoidResolverOptionals =
-        typeof this.config.avoidOptionals === 'object'
-          ? this.config.avoidOptionals?.resolvers
-          : this.config.avoidOptionals === true;
       const signature: {
         name: string;
         modifier: string;
@@ -1522,15 +1532,31 @@ export class BaseResolversVisitor<
     });
     const typeName = node.name as any as string;
     const parentType = this.getParentTypeToUse(typeName);
-    const isRootType = [
-      this.schema.getQueryType()?.name,
-      this.schema.getMutationType()?.name,
-      this.schema.getSubscriptionType()?.name,
-    ].includes(typeName);
 
-    const fieldsContent = node.fields.map((f: any) => f(node.name));
+    const rootType = ((): false | 'query' | 'mutation' | 'subscription' => {
+      if (this.schema.getQueryType()?.name === typeName) {
+        return 'query';
+      }
+      if (this.schema.getMutationType()?.name === typeName) {
+        return 'mutation';
+      }
+      if (this.schema.getSubscriptionType()?.name === typeName) {
+        return 'subscription';
+      }
+      return false;
+    })();
 
-    if (!isRootType) {
+    const fieldsContent = (node.fields as unknown as FieldDefinitionPrintFn[]).map(f => {
+      return f(
+        typeName,
+        (rootType === 'query' && this.config.avoidOptionals.query) ||
+          (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
+          (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
+          (rootType === false && this.config.avoidOptionals.resolvers)
+      );
+    });
+
+    if (!rootType) {
       fieldsContent.push(
         indent(
           `${
@@ -1710,7 +1736,9 @@ export class BaseResolversVisitor<
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
 
-    this._collectedResolvers[node.name as any] = {
+    const typeName = node.name as any as string;
+
+    this._collectedResolvers[typeName] = {
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
@@ -1718,13 +1746,13 @@ export class BaseResolversVisitor<
     for (const graphqlType of Object.values(allTypesMap)) {
       if (graphqlType instanceof GraphQLObjectType) {
         const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === (node.name as any as string))) {
+        if (allInterfaces.find(int => int.name === typeName)) {
           implementingTypes.push(graphqlType.name);
         }
       }
     }
 
-    const parentType = this.getParentTypeToUse(node.name as any as string);
+    const parentType = this.getParentTypeToUse(typeName);
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
     const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
@@ -1739,7 +1767,9 @@ export class BaseResolversVisitor<
               this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
-          ...fields.map((f: any) => f(node.name)),
+          ...(fields as unknown as FieldDefinitionPrintFn[]).map(f =>
+            f(typeName, this.config.avoidOptionals.resolvers)
+          ),
         ].join('\n')
       ).string;
   }
@@ -1779,12 +1809,27 @@ export class BaseResolversVisitor<
         const baseType = getBaseType(field.type);
         const isUnion = isUnionType(baseType);
         const isInterface = isInterfaceType(baseType);
+        const isObject = isObjectType(baseType);
+        let isObjectWithAbstractType = false;
 
-        if (!this.config.mappers[baseType.name] && !isUnion && !isInterface && !this._shouldMapType[baseType.name]) {
+        if (isObject) {
+          isObjectWithAbstractType = checkIfObjectTypeHasAbstractTypesRecursively(baseType, {
+            isObjectWithAbstractType,
+            checkedTypesWithNestedAbstractTypes: this._checkedTypesWithNestedAbstractTypes,
+          });
+        }
+
+        if (
+          !this.config.mappers[baseType.name] &&
+          !isUnion &&
+          !isInterface &&
+          !this._shouldMapType[baseType.name] &&
+          !isObjectWithAbstractType
+        ) {
           return null;
         }
 
-        const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
+        const addOptionalSign = !this.config.avoidOptionals.resolvers && !isNonNullType(field.type);
 
         return {
           addOptionalSign,
@@ -1825,4 +1870,85 @@ function normalizeResolversNonOptionalTypename(
     ...defaultConfig,
     ...input,
   };
+}
+
+function checkIfObjectTypeHasAbstractTypesRecursively(
+  baseType: GraphQLObjectType,
+  result: {
+    isObjectWithAbstractType: boolean;
+    checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }>;
+  }
+): boolean {
+  if (
+    result.checkedTypesWithNestedAbstractTypes[baseType.name] &&
+    (result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'yes' ||
+      result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'no')
+  ) {
+    return result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'yes';
+  }
+
+  result.checkedTypesWithNestedAbstractTypes[baseType.name] ||= { checkStatus: 'checking' };
+
+  let atLeastOneFieldWithAbstractType = false;
+
+  const fields = baseType.getFields();
+  for (const field of Object.values(fields)) {
+    const fieldBaseType = getBaseType(field.type);
+
+    // If the field is self-referencing, skip it. Otherwise, it's an infinite loop
+    if (baseType.name === fieldBaseType.name) {
+      continue;
+    }
+
+    // If the current field has been checked, and it has nested abstract types,
+    // mark the parent type as having nested abstract types
+    if (result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name]) {
+      if (result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus === 'yes') {
+        atLeastOneFieldWithAbstractType = true;
+        result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
+      }
+      continue;
+    } else {
+      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name] = { checkStatus: 'checking' };
+    }
+
+    // If the field is an abstract type, then both the field type and parent type are abstract types
+    if (isInterfaceType(fieldBaseType) || isUnionType(fieldBaseType)) {
+      atLeastOneFieldWithAbstractType = true;
+      result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'yes';
+      result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
+      continue;
+    }
+
+    // If the field is an object, check it recursively to see if it has abstract types
+    // If it does, both field type and parent type have abstract types
+    if (isObjectType(fieldBaseType)) {
+      // IMPORTANT: we are pointing the parent type to the field type here
+      // to make sure when the field type is updated to either 'yes' or 'no', it becomes the parent's type as well
+      if (result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus === 'checking') {
+        result.checkedTypesWithNestedAbstractTypes[baseType.name] =
+          result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name];
+      }
+
+      const foundAbstractType = checkIfObjectTypeHasAbstractTypesRecursively(fieldBaseType, result);
+      if (foundAbstractType) {
+        atLeastOneFieldWithAbstractType = true;
+        result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'yes';
+        result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'yes';
+      }
+      continue;
+    }
+
+    // Otherwise, the current field type is not abstract type
+    // This includes scalar types, enums, input types and objects without abstract types
+    result.checkedTypesWithNestedAbstractTypes[fieldBaseType.name].checkStatus = 'no';
+  }
+
+  if (atLeastOneFieldWithAbstractType) {
+    result.isObjectWithAbstractType = true;
+  } else {
+    result.checkedTypesWithNestedAbstractTypes[baseType.name].checkStatus = 'no';
+  }
+
+  return atLeastOneFieldWithAbstractType;
 }

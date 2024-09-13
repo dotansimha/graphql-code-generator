@@ -53,5 +53,8 @@
   "type": "module",
   "devDependencies": {
     "@graphql-tools/apollo-engine-loader": "8.0.1"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }

@@ -106,7 +106,12 @@ export interface AvoidOptionalsConfig {
   inputValue?: boolean;
   defaultValue?: boolean;
   resolvers?: boolean;
+  query?: boolean;
+  mutation?: boolean;
+  subscription?: boolean;
 }
+
+export type NormalizedAvoidOptionalsConfig = Required<AvoidOptionalsConfig>;
 
 export interface ParsedImport {
   moduleName: string | null;

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/schema-ast",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "GraphQL Code Generator plugin for generating a .graphql file from a given schema",
   "repository": {
     "type": "git",
@@ -47,5 +47,8 @@
     "directory": "dist",
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  }
 }

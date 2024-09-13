@@ -25,5 +25,9 @@
   },
   "files": [
     "swc_plugin.wasm"
-  ]
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  }
 }
