@@ -23,8 +23,10 @@ function log(msg: string) {
   getLogger().info(`  ${msg}`);
 }
 
-function emitWatching(watchDir: string) {
-  log(`${logSymbols.info} Watching for changes in ${watchDir}...`);
+function emitWatching(watchDir: string, config: Types.Config) {
+  if (!config.silent) {
+    log(`${logSymbols.info} Watching for changes in ${watchDir}...`);    
+  }
 }
 
 export const createWatcher = (
@@ -65,7 +67,7 @@ export const createWatcher = (
     try {
       parcelWatcher = await import('@parcel/watcher');
     } catch (err) {
-      log(
+      if (!config.silent) log(
         `Failed to import @parcel/watcher due to the following error (to use watch mode, install https://www.npmjs.com/package/@parcel/watcher):\n${err}`
       );
       return;
@@ -79,10 +81,10 @@ export const createWatcher = (
       if (!isShutdown) {
         executeCodegen(initialContext)
           .then(onNext, () => Promise.resolve())
-          .then(() => emitWatching(watchDirectory));
+          .then(() => emitWatching(watchDirectory, config));
       }
     }, 100);
-    emitWatching(watchDirectory);
+    emitWatching(watchDirectory, config);
 
     const ignored: string[] = ['**/.git/**'];
     for (const entry of Object.keys(config.generates).map(filename => ({
@@ -122,7 +124,7 @@ export const createWatcher = (
             } catch (err) {}
 
             if (eventName === 'update' && config.configFilePath && path === config.configFilePath) {
-              log(`${logSymbols.info} Config file has changed, reloading...`);
+              if (!config.silent) log(`${logSymbols.info} Config file has changed, reloading...`);
               const context = await loadContext(config.configFilePath);
 
               const newParsedConfig: Types.Config & { configFilePath?: string } = context.getConfig();
@@ -149,7 +151,7 @@ export const createWatcher = (
     ) => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
-      log(`Shutting down watch...`);
+      if (!config.silent) log(`Shutting down watch...`);
 
       const pendingUnsubscribe = watcherSubscription.unsubscribe();
       const pendingBeforeDoneHook = lifecycleHooks(config.hooks).beforeDone();
