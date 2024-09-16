@@ -78,6 +78,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   onlyResolveTypeForInterfaces: boolean;
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
+  avoidCheckingAbstractTypesRecursively: boolean;
 }
 
 type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
@@ -625,6 +626,13 @@ export interface RawResolversConfig extends RawConfig {
    */
   resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
   /**
+   * @type boolean
+   * @default false
+   * @description If true, recursively goes through all object type's fields, checks if they have abstract types and generates expected types correctly.
+   * This may not work for cases where provided default mapper types are also nested e.g. `defaultMapper: DeepPartial<{T}>` or `defaultMapper: Partial<{T}>`.
+   */
+  avoidCheckingAbstractTypesRecursively?: boolean;
+  /**
    * @ignore
    */
   directiveResolverMappings?: Record<string, string>;
@@ -699,6 +707,7 @@ export class BaseResolversVisitor<
       resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
       ),
+      avoidCheckingAbstractTypesRecursively: getConfigValue(rawConfig.avoidCheckingAbstractTypesRecursively, false),
       ...additionalConfig,
     } as TPluginConfig);
 
@@ -1812,7 +1821,7 @@ export class BaseResolversVisitor<
         const isObject = isObjectType(baseType);
         let isObjectWithAbstractType = false;
 
-        if (isObject) {
+        if (isObject && !this.config.avoidCheckingAbstractTypesRecursively) {
           isObjectWithAbstractType = checkIfObjectTypeHasAbstractTypesRecursively(baseType, {
             isObjectWithAbstractType,
             checkedTypesWithNestedAbstractTypes: this._checkedTypesWithNestedAbstractTypes,
