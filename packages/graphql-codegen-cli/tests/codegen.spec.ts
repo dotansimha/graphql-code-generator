@@ -970,7 +970,7 @@ describe('Codegen Executor', () => {
   it('should load schema with custom fetch function', async () => {
     let fetchCalledFor = null;
 
-    async function myCustomFetch(url: string, options?: RequestInit): Promise<Response> {
+    async function myCustomFetch(url: string, _options?: RequestInit): Promise<Response> {
       fetchCalledFor = url;
       return Promise.resolve(new Response());
     }
