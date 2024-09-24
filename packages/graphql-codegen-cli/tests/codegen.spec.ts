@@ -967,6 +967,31 @@ describe('Codegen Executor', () => {
     expect((global as any).CUSTOM_FETCH_FN_CALLED).toBeTruthy();
   });
 
+  it('should load schema with custom fetch function', async () => {
+    let fetchCalledFor = null;
+
+    async function myCustomFetch(url: string, options?: RequestInit): Promise<Response> {
+      fetchCalledFor = url;
+      return Promise.resolve(new Response());
+    }
+
+    try {
+      await executeCodegen({
+        schema: ['http://www.dummyschema.com/graphql'],
+        customFetch: myCustomFetch,
+        documents: ['./tests/test-documents/valid.graphql'],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
+    } catch (error) {
+      expect(error.message).toContain('Failed to load schema from http://www.dummyschema.com/graphql');
+    }
+    expect(fetchCalledFor).toBe('http://www.dummyschema.com/graphql');
+  });
+
   it('should evaluate glob expressions correctly', async () => {
     try {
       await executeCodegen({
