@@ -582,10 +582,9 @@ export interface RawResolversConfig extends RawConfig {
   internalResolversPrefix?: string;
   /**
    * @type object
-   * @default { __resolveReference: false }
+   * @default { __resolveReference: false, __isTypeOf: false }
    * @description If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.
-   * Enabling this allows a more correct type generation for the resolvers.
-   * For example:
+   * Enabling this allows a more correct type generation for the resolvers:
    * - `__isTypeOf` is generated for implementing types and union members
    * - `__resolveReference` is generated for federation types that have at least one resolvable `@key` directive
    */
@@ -675,8 +674,8 @@ export class BaseResolversVisitor<
   protected _hasReferencedResolversUnionTypes = false;
   protected _hasReferencedResolversInterfaceTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
-  protected _resolversUnionParentTypes: Record<string, string> = {};
   protected _resolversInterfaceTypes: Record<string, string> = {};
+  protected _objectTypesWithIsTypeOf: Record<string, true> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
   protected _federation: ApolloFederation;
@@ -722,6 +721,7 @@ export class BaseResolversVisitor<
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
       generateInternalResolversIfNeeded: {
         __resolveReference: rawConfig.generateInternalResolversIfNeeded?.__resolveReference ?? false,
+        __isTypeOf: rawConfig.generateInternalResolversIfNeeded?.__isTypeOf ?? false,
       },
       resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
@@ -993,9 +993,16 @@ export class BaseResolversVisitor<
 
       if (isUnionType(schemaType)) {
         const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
+
+        const memberTypes = schemaType.getTypes();
+
+        for (const type of memberTypes) {
+          this._objectTypesWithIsTypeOf[type.name] = true;
+        }
+
         res[typeName] = this.getAbstractMembersType({
           typeName,
-          memberTypes: schemaType.getTypes(),
+          memberTypes,
           isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
         });
       }
@@ -1031,6 +1038,10 @@ export class BaseResolversVisitor<
         }
 
         const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
+
+        for (const type of implementingTypes) {
+          this._objectTypesWithIsTypeOf[type.name] = true;
+        }
 
         res[typeName] = this.getAbstractMembersType({
           typeName,
@@ -1595,7 +1606,11 @@ export class BaseResolversVisitor<
       );
     });
 
-    if (!rootType) {
+    if (
+      !rootType &&
+      (!this.config.generateInternalResolversIfNeeded.__isTypeOf ||
+        (this.config.generateInternalResolversIfNeeded.__isTypeOf && this._objectTypesWithIsTypeOf[typeName]))
+    ) {
       fieldsContent.push(
         indent(
           `${

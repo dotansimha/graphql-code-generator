@@ -130,5 +130,6 @@ export interface ResolversNonOptionalTypenameConfig {
 
 export interface GenerateInternalResolversIfNeededConfig {
   __resolveReference?: boolean;
+  __isTypeOf?: boolean;
 }
 export type NormalizedGenerateInternalResolversIfNeededConfig = Required<GenerateInternalResolversIfNeededConfig>;
