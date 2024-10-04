@@ -31,14 +31,6 @@ export enum Episode {
   Newhope = 'NEWHOPE',
 }
 
-/** Units of height */
-export enum LengthUnit {
-  /** Primarily used in the United States */
-  Foot = 'FOOT',
-  /** The standard unit around the world */
-  Meter = 'METER',
-}
-
 /** The input object sent when someone is creating a new review */
 export type ReviewInput = {
   /** Comment about the movie, optional */

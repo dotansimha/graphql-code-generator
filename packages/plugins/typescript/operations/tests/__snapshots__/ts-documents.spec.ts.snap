@@ -157,6 +157,31 @@ export type SnakeQueryQuery = { __typename: 'Query', snake: { __typename: 'Snake
 "
 `;
 
+exports[`TypeScript Operations Plugin Operation Definition should only emit used enums when onlyOperationTypes=true 1`] = `
+"/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+};
+
+export type InfoInput = {
+  type: InputEnum;
+};
+
+export enum InputEnum {
+  Name = 'NAME',
+  Address = 'ADDRESS'
+}
+
+export enum OutputEnum {
+  Keep = 'KEEP'
+}
+"
+`;
+
 exports[`TypeScript Operations Plugin Selection Set Should generate the correct __typename when using both inline fragment and spread over type 1`] = `
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 

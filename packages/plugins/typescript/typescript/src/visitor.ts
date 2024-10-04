@@ -351,6 +351,15 @@ export class TsVisitor<
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    if (
+      this.config.onlyOperationTypes &&
+      !this.config.usedTypes?.has(
+        // types are wrong; string at runtime?
+        node.name as unknown as string
+      ) &&
+      !this.config.onlyEnums
+    )
+      return '';
     const enumName = node.name as any as string;
 
     // In case of mapped external enum string

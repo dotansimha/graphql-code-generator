@@ -224,7 +224,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   onlyEnums?: boolean;
   /**
-   * @description This will cause the generator to emit types for operations only (basically only enums and scalars).
+   * @description This will cause the generator to only emit types used by one or more operations (basically only enums, inputs, and scalars).
    * Interacts well with `preResolveTypes: true`
    * @default false
    *

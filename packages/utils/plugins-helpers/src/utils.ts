@@ -1,4 +1,12 @@
-import { GraphQLList, GraphQLNamedType, GraphQLNonNull, GraphQLOutputType, isListType, isNonNullType } from 'graphql';
+import {
+  GraphQLInputType,
+  GraphQLList,
+  GraphQLNamedType,
+  GraphQLNonNull,
+  GraphQLOutputType,
+  isListType,
+  isNonNullType,
+} from 'graphql';
 import { Types } from './types.js';
 
 export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOutput>): string {
@@ -19,11 +27,11 @@ export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOut
   return [...result.prepend, result.content, ...result.append].join('\n');
 }
 
-export function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
+export function isWrapperType(t: GraphQLInputType | GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
   return isListType(t) || isNonNullType(t);
 }
 
-export function getBaseType(type: GraphQLOutputType): GraphQLNamedType {
+export function getBaseType(type: GraphQLInputType | GraphQLOutputType): GraphQLNamedType {
   if (isWrapperType(type)) {
     return getBaseType(type.ofType);
   }
