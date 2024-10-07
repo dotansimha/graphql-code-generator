@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-operations
 
+## 4.3.0
+
+### Minor Changes
+
+- [#10077](https://github.com/dotansimha/graphql-code-generator/pull/10077) [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4) Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `config.avoidOptions` to support query, mutation and subscription
+
+  Previously, `config.avoidOptions.resolvers` was being used to make query, mutation and subscription fields non-optional.
+  Now, `config.avoidOptions.query`, `config.avoidOptions.mutation` and `config.avoidOptions.subscription` can be used to target the respective types.
+
+### Patch Changes
+
+- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+  - @graphql-codegen/typescript@4.1.0
+
 ## 4.2.3
 
 ### Patch Changes
@@ -113,21 +128,21 @@
 
   ```ts
   export type Scalars = {
-    ID: string;
-  };
+    ID: string
+  }
   ```
 
   Then, this is used in both input and output type e.g.
 
   ```ts
   export type Book = {
-    __typename?: 'Book';
-    id: Scalars['ID']; // Output's ID can be `string` 👍
-  };
+    __typename?: 'Book'
+    id: Scalars['ID'] // Output's ID can be `string` 👍
+  }
 
   export type QueryBookArgs = {
-    id: Scalars['ID']; // Input's ID can be `string` or `number`. However, the type is only `string` here 👎
-  };
+    id: Scalars['ID'] // Input's ID can be `string` or `number`. However, the type is only `string` here 👎
+  }
   ```
 
   This PR extends each Scalar to have input and output:
@@ -135,23 +150,23 @@
   ```ts
   export type Scalars = {
     ID: {
-      input: string | number;
-      output: string;
-    };
-  };
+      input: string | number
+      output: string
+    }
+  }
   ```
 
   Then, each input/output GraphQL type can correctly refer to the correct input/output scalar type:
 
   ```ts
   export type Book = {
-    __typename?: 'Book';
-    id: Scalars['ID']['output']; // Output's ID can be `string` 👍
-  };
+    __typename?: 'Book'
+    id: Scalars['ID']['output'] // Output's ID can be `string` 👍
+  }
 
   export type QueryBookArgs = {
-    id: Scalars['ID']['input']; // Input's ID can be `string` or `number` 👍
-  };
+    id: Scalars['ID']['input'] // Input's ID can be `string` or `number` 👍
+  }
   ```
 
   Note that for `typescript-resolvers`, the type of ID needs to be inverted. However, the referenced types in GraphQL input/output types should still work correctly:
@@ -204,7 +219,7 @@
   ```ts
   config: {
     scalars: {
-      ID: 'string'; // This means `string` will be used for both ID's input and output types
+      ID: 'string' // This means `string` will be used for both ID's input and output types
     }
   }
   ```
@@ -214,7 +229,7 @@
   ```ts
   config: {
     scalars: {
-      ID: './path/to/scalar-module';
+      ID: './path/to/scalar-module'
     }
   }
   ```
@@ -223,11 +238,11 @@
 
   ```ts
   // Previously, imported `ID` type can be a primitive type, now it must be an object with input/output fields
-  import { ID } from './path/to/scalar-module';
+  import { ID } from './path/to/scalar-module'
 
   export type Scalars = {
-    ID: { input: ID['input']; output: ID['output'] };
-  };
+    ID: { input: ID['input']; output: ID['output'] }
+  }
   ```
 
   ***
@@ -246,7 +261,7 @@
 
   ```jsx
   // src/index.tsx
-  import { graphql } from './gql';
+  import { graphql } from './gql'
   const OrdersFragment = graphql(`
     fragment OrdersFragment on User {
       orders {
@@ -254,7 +269,7 @@
         total
       }
     }
-  `);
+  `)
   const GetUserQuery = graphql(`
     query GetUser($id: ID!) {
       user(id: $id) {
@@ -263,7 +278,7 @@
         ...OrdersFragment @defer
       }
     }
-  `);
+  `)
   ```
 
   The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
@@ -271,10 +286,10 @@
   ```tsx
   // gql/graphql.ts
   export type GetUserQuery = { __typename?: 'Query'; id: string; name: string } & ({
-    __typename?: 'Query';
+    __typename?: 'Query'
   } & {
-    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> };
-  });
+    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> }
+  })
   ```
 
   Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred
