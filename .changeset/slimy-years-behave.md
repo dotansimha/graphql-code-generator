@@ -1,5 +1,5 @@
 ---
-'@graphql-codegen/client-preset': patch
+'@graphql-codegen/client-preset': minor
 ---
 
 foward skipTypeNameForRoot to client-preset
