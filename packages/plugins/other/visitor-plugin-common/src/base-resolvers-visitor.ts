@@ -1429,6 +1429,10 @@ export class BaseResolversVisitor<
     return `ParentType extends ${parentType} = ${parentType}`;
   }
 
+  protected tranceformSemanticNonNull(type: string): string {
+    return type;
+  }
+
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): FieldDefinitionPrintFn {
     const hasArguments = node.arguments && node.arguments.length > 0;
     const declarationKind = 'type';
@@ -1485,7 +1489,13 @@ export class BaseResolversVisitor<
         parentType,
         parentTypeSignature: this.getParentTypeForSignature(node),
       });
-      const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
+
+      const isSemanticNonNull = node.directives.find(directive => (directive.name as any) === 'semanticNonNull');
+      const mappedTypeKey = isSubscriptionType
+        ? `${mappedType}, "${node.name}"`
+        : isSemanticNonNull
+        ? this.tranceformSemanticNonNull(mappedType)
+        : mappedType;
 
       const directiveMappings =
         node.directives
