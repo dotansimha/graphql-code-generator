@@ -2,4 +2,4 @@
 '@graphql-codegen/typed-document-node': patch
 ---
 
-Improve compatibility with tsc --isolatedDeclarations
+Allow explicit `undefined` in additional to optional arguments
