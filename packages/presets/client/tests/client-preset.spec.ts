@@ -2209,7 +2209,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2338,7 +2338,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2463,7 +2463,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2727,7 +2727,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
