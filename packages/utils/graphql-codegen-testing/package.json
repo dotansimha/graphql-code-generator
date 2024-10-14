@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "GraphQL Codegen Testing Utils",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
