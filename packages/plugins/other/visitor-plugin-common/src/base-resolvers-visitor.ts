@@ -394,7 +394,6 @@ export interface RawResolversConfig extends RawConfig {
    *        plugins: ['typescript', 'typescript-resolver', { add: { content: "import { DeepPartial } from 'utility-types';" } }],
    *        config: {
    *          defaultMapper: 'DeepPartial<{T}>',
-   *          avoidCheckingAbstractTypesRecursively: true // required if you have complex nested abstract types
    *        },
    *      },
    *    },
