@@ -25,6 +25,7 @@ export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   wrapFieldDefinitions: boolean;
   allowParentTypeOverride: boolean;
   optionalInfoArgument: boolean;
+  allowSemanticNonNull: boolean;
 }
 
 export class TypeScriptResolversVisitor extends BaseResolversVisitor<
@@ -40,6 +41,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
         allowParentTypeOverride: getConfigValue(pluginConfig.allowParentTypeOverride, false),
         optionalInfoArgument: getConfigValue(pluginConfig.optionalInfoArgument, false),
+        allowSemanticNonNull: getConfigValue(pluginConfig.allowSemanticNonNull, false),
       } as ParsedTypeScriptResolversConfig,
       schema
     );
@@ -73,6 +75,13 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     }
 
     return `ParentType extends ${parentType} = ${parentType}`;
+  }
+
+  protected tranceformSemanticNonNull(type: string): string {
+    if (this.config.allowSemanticNonNull) {
+      return this.clearOptional(super.tranceformSemanticNonNull(type));
+    }
+    return super.tranceformSemanticNonNull(type);
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
