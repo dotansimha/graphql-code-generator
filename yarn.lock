@@ -4662,10 +4662,10 @@
     path-browserify "^1.0.1"
     vscode-uri "^3.0.8"
 
-"@vue/apollo-composable@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.1.0.tgz#5751fe7bb190bbbe5368a2c1cd6e042f14007786"
-  integrity sha512-qnRTq/QuYzasVp0h+5tOMZLEchnHZB3+bedGAKqKGwWT43oKtVBK+2JRzAEMgVJOhD7M5/Tx908r7TC4gxoegA==
+"@vue/apollo-composable@4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.2.0.tgz#eef39b8ecf006f444be68e1876d638aadf783e92"
+  integrity sha512-FvELy3N0L1R+Hvs6v4/OSjV5YDK1smYI4k9r0Zfzezo2uQYi1AYRzkgTYrG43MhDVs9/L85NEszfdMISacO/Iw==
   dependencies:
     throttle-debounce "^5.0.0"
     ts-essentials "^9.4.0"
@@ -8480,9 +8480,9 @@ graphql-config@^4.1.0:
     tslib "^2.4.0"
 
 graphql-config@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-5.1.1.tgz#d840f20228da5c1386695838d6eb03cb7f7cf138"
-  integrity sha512-5FZUkX6A+q/gDSTDMeUbODwPnR+8nRNlI5z/ohtEmaD+XFeAalkB0KrWZ6cI7rcYUG05g43dPe+BRNZccQ5rKQ==
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-5.1.2.tgz#ecd7b59de27b706e4714720f550dbeb0caa1bc10"
+  integrity sha512-kVwUuFz1h9u7B0nDPtnLFWN+x018niaH3zi1ChFCNfbunhDVJ911Z3YcglK5EfDfySeeH+zCa1aGxd1wMgNd7g==
   dependencies:
     "@graphql-tools/graphql-file-loader" "^8.0.0"
     "@graphql-tools/json-file-loader" "^8.0.0"
@@ -8492,7 +8492,7 @@ graphql-config@^5.1.1:
     "@graphql-tools/utils" "^10.0.0"
     cosmiconfig "^9.0.0"
     jiti "^1.18.2"
-    minimatch "^10.0.0"
+    minimatch "^9.0.5"
     string-env-interpolation "^1.0.1"
     tslib "^2.4.0"
 
@@ -11875,10 +11875,10 @@ minimatch@^10.0.0:
   dependencies:
     brace-expansion "^2.0.1"
 
-minimatch@^9.0.0, minimatch@^9.0.3, minimatch@^9.0.4:
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.4.tgz#8e49c731d1749cbec05050ee5145147b32496a51"
-  integrity sha512-KqWh+VchfxcMNRAJjj2tnsSJdNbHsVgnkBhTNrW7AjVo6OvLtxw8zfT9oLw1JSohlFzJ8jCoTgaoXvJ+kHt6fw==
+minimatch@^9.0.0, minimatch@^9.0.3, minimatch@^9.0.4, minimatch@^9.0.5:
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.5.tgz#d74f9dd6b57d83d8e98cfb82133b03978bc929e5"
+  integrity sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==
   dependencies:
     brace-expansion "^2.0.1"
 
@@ -12118,10 +12118,10 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-nock@13.5.4:
-  version "13.5.4"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-13.5.4.tgz#8918f0addc70a63736170fef7106a9721e0dc479"
-  integrity sha512-yAyTfdeNJGGBFxWdzSKCBYxs5FxLbCg5X5Q4ets974hcQzG1+qCxvIyOo4j2Ry6MUlhWVMX4OoYDefAIIwupjw==
+nock@13.5.5:
+  version "13.5.5"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-13.5.5.tgz#cd1caaca281d42be17d51946367a3d53a6af3e78"
+  integrity sha512-XKYnqUrCwXC8DGG1xX4YH5yNIrlh9c065uaMZZHUoeUUINTOyt+x/G+ezYk0Ft6ExSREVIs+qBJDK503viTfFA==
   dependencies:
     debug "^4.1.0"
     json-stringify-safe "^5.0.1"
