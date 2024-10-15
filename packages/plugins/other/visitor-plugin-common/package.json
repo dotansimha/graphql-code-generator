@@ -17,7 +17,7 @@
     "@graphql-tools/relay-operation-optimizer": "^7.0.0",
     "@graphql-tools/utils": "^10.0.0",
     "auto-bind": "~4.0.0",
-    "dependency-graph": "^0.11.0",
+    "dependency-graph": "^1.0.0",
     "graphql-tag": "^2.11.0",
     "parse-filepath": "^1.0.2",
     "change-case-all": "1.0.15",
