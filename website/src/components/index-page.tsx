@@ -9,7 +9,8 @@ import gqlCodegenCover from '../../public/assets/illustrations/gql-codegen-cover
 import gqlGenerateCodeIllustration from '../../public/assets/illustrations/gql-generate-code-illustration.svg';
 import gqlWatchForChangesIllustration from '../../public/assets/illustrations/gql-watch-for-changes-illustration.svg';
 
-import { FrequentlyAskedQuestions } from './frequently-asked-questions';
+// TODO:
+// import { FrequentlyAskedQuestions } from './frequently-asked-questions';
 
 export function IndexPage(): ReactElement {
   return (
@@ -76,7 +77,7 @@ export function IndexPage(): ReactElement {
       />
 
       <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
-      <FrequentlyAskedQuestions className="mx-4 md:mx-6" />
+      {/* <FrequentlyAskedQuestions className="mx-4 md:mx-6" /> */}
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </>
   );
