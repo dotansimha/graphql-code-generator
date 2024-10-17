@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useLayoutEffect } from 'react';
 import {
   HeroGradient,
   HeroIllustration,
@@ -9,12 +9,26 @@ import gqlCodegenCover from '../../public/assets/illustrations/gql-codegen-cover
 import gqlGenerateCodeIllustration from '../../public/assets/illustrations/gql-generate-code-illustration.svg';
 import gqlWatchForChangesIllustration from '../../public/assets/illustrations/gql-watch-for-changes-illustration.svg';
 
+import { DevExCards } from './dev-ex-cards';
+import { Page } from './page';
 // TODO:
 // import { FrequentlyAskedQuestions } from './frequently-asked-questions';
 
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
 export function IndexPage(): ReactElement {
+  useIsomorphicLayoutEffect(() => {
+    // We add .light class to body to style the Headless UI
+    // portal containing search results.
+    document.body.classList.add('light');
+
+    return () => {
+      document.body.classList.remove('light');
+    };
+  }, []);
+
   return (
-    <>
+    <Page className="light mx-auto max-w-[90rem] overflow-hidden text-green-1000">
       <style global jsx>
         {`
           html {
@@ -76,9 +90,10 @@ export function IndexPage(): ReactElement {
         className="[&>div]:max-w-6xl"
       />
 
+      <DevExCards className="mx-4 md:mx-6" />
       <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
       {/* <FrequentlyAskedQuestions className="mx-4 md:mx-6" /> */}
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
-    </>
+    </Page>
   );
 }
