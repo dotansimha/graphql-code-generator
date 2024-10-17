@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint sort-keys: error */
 import { useRouter } from 'next/router';
-import { defineConfig, Giscus, PRODUCTS, useTheme } from '@theguild/components';
+import { defineConfig, Giscus, PRODUCTS, useTheme, HiveFooter, cn } from '@theguild/components';
+import { NavigationMenu } from './src/components/navigation-menu';
 
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
@@ -31,4 +32,38 @@ export default defineConfig({
   websiteName: 'GraphQL-Codegen',
   description: 'Generate anything from GraphQL schema & operations',
   logo: PRODUCTS.CODEGEN.logo({ className: 'w-8' }),
+  color: {
+    hue: {
+      dark: 67.1,
+      light: 173,
+    },
+    saturation: {
+      dark: 100,
+      light: 40,
+    },
+  },
+  navbar: { component: NavigationMenu },
+  footer: {
+    component: _props => {
+      const { route } = useRouter();
+
+      return (
+        <HiveFooter
+          className={cn(route === '/' ? 'light' : '[&>:first-child]:mx-0 [&>:first-child]:max-w-[90rem]', 'pt-[72px]')}
+          resources={[
+            {
+              children: 'Privacy Policy',
+              href: 'https://the-guild.dev/graphql/hive/privacy-policy.pdf',
+              title: 'Privacy Policy',
+            },
+            {
+              children: 'Terms of Use',
+              href: 'https://the-guild.dev/graphql/hive/terms-of-use.pdf',
+              title: 'Terms of Use',
+            },
+          ]}
+        />
+      );
+    },
+  },
 });
