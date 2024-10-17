@@ -1852,7 +1852,7 @@
   resolved "https://registry.yarnpkg.com/@eslint/object-schema/-/object-schema-2.1.4.tgz#9e69f8bb4031e11df79e03db09f9dbbae1740843"
   integrity sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==
 
-"@floating-ui/core@^1.2.1", "@floating-ui/core@^1.6.0":
+"@floating-ui/core@^1.6.0":
   version "1.6.8"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.6.8.tgz#aa43561be075815879305965020f492cdb43da12"
   integrity sha512-7XJ9cPU+yI2QeLS+FCSlqNFZJq8arvswefkZrYI1yQBbftw6FyrZOxYSh+9S7z7TpeWlRt9zJ5IhM1WIL334jA==
@@ -4264,10 +4264,10 @@
   resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.10.8.tgz#975446a667755222f62884c19e5c3c66d959b8b4"
   integrity sha512-PBu00mtt95jbKFi6Llk9aik8bnR3tR/oQP1o3TSi+iG//+Q2RTIzCEgKkHG8BB86kxMNW6O8wku+Lmi+QFR6jA==
 
-"@theguild/components@7.0.1":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.0.1.tgz#5df861bcdb1ff18bdba1379f38c9bc9fdfd1bba0"
-  integrity sha512-zpFrXXBGs6RwdXTmoJD9bpEfEloeUVXD3+DB6hki0pZ1X8kE7+x9SUg47vEK9GcQh+dcrGKywMSfiIotxxs38A==
+"@theguild/components@7.0.1-alpha-20241017134733-de1c4f62b5322380d48ac37cef6b8411968c3488":
+  version "7.0.1-alpha-20241017134733-de1c4f62b5322380d48ac37cef6b8411968c3488"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.0.1-alpha-20241017134733-de1c4f62b5322380d48ac37cef6b8411968c3488.tgz#efa10fd86040805a11fceeb84d88dfc6e155d461"
+  integrity sha512-gZCBJagOM/4bSDOS35R0rz9LJmQ9lpxnmUKZuxdrf4BBg0Y6wG4u8szkR1q2EHnIrpPbrarvOFSTFSJz2Nldeg==
   dependencies:
     "@giscus/react" "3.0.0"
     "@next/bundle-analyzer" "14.2.15"

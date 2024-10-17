@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { HeroGradient, HeroIllustration, NPMBadge } from '@theguild/components';
+import { HeroGradient, HeroIllustration } from '@theguild/components';
 import gqlCodegenCover from '../../public/assets/illustrations/gql-codegen-cover.svg';
 import gqlGenerateCodeIllustration from '../../public/assets/illustrations/gql-generate-code-illustration.svg';
 import gqlWatchForChangesIllustration from '../../public/assets/illustrations/gql-watch-for-changes-illustration.svg';
@@ -7,6 +7,21 @@ import gqlWatchForChangesIllustration from '../../public/assets/illustrations/gq
 export function IndexPage(): ReactElement {
   return (
     <>
+      <style global jsx>
+        {`
+          html {
+            scroll-behavior: smooth;
+          }
+          body {
+            background: #fff;
+          }
+          #__next {
+            --nextra-primary-hue: 191deg;
+            --nextra-primary-saturation: 40%;
+            --nextra-bg: 255, 255, 255;
+          }
+        `}
+      </style>
       <HeroGradient
         title="Generate Type-Safe GraphQL Client and Server Code"
         description="Supercharge Your GraphQL Development Flow with Fully Typed Code in Seconds."
