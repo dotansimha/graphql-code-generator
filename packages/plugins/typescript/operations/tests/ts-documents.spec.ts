@@ -3305,6 +3305,50 @@ describe('TypeScript Operations Plugin', () => {
         }>;
       `);
     });
+
+    it('should only emit used enums when onlyOperationTypes=true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          info(input: InfoInput, unusedEnum: UnusedEnum = null, unusedType: UnusedType = null): InfoOutput
+        }
+
+        input InfoInput {
+          type: InputEnum!
+        }
+
+        enum InputEnum {
+          NAME
+          ADDRESS
+        }
+
+        type InfoOutput {
+          type: OutputEnum!
+        }
+
+        enum OutputEnum {
+          KEEP
+        }
+
+        input UnusedType {
+          type: UnusedEnum!
+        }
+
+        enum UnusedEnum {
+          UNUSED
+        }
+      `);
+
+      const document = parse(/* GraphQL */ `
+        query InfoQuery($input: InfoInput) {
+          info(input: $input, unusedEnum: UNUSED) {
+            type
+          }
+        }
+      `);
+
+      const { content } = await tsPlugin(testSchema, [{ location: '', document }], { onlyOperationTypes: true }, {});
+      expect(content).toMatchSnapshot();
+    });
   });
 
   describe('Union & Interfaces', () => {
