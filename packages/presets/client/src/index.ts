@@ -135,6 +135,13 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       skipTypeNameForRoot: options.config.skipTypeNameForRoot,
     };
 
+    if (options.config.onlyEnumTypes === false || options.config.onlyOperationTypes === false) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[@graphql-codegen/client-preset] WARN: config.onlyEnumTypes and config.onlyOperationTypes are deprecated and wil be removed in the next major version. Please generate a separate file using @graphql-codegen/typescript plugin for non client preset usages.`
+      );
+    }
+
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
     let fragmentMaskingConfig: FragmentMaskingConfig | null = null;
 
@@ -214,8 +221,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       { [`add`]: { content: `/* eslint-disable */` } },
       {
         [`typescript`]: {
-          onlyEnumTypes: true,
-          onlyOperationTypes: true,
+          onlyEnumTypes: options.config.onlyEnumTypes === false ? options.config.onlyEnumTypes : true,
+          onlyOperationTypes: options.config.onlyOperationTypes === false ? options.config.onlyOperationTypes : true,
         },
       },
       { [`typescript-operations`]: {} },
