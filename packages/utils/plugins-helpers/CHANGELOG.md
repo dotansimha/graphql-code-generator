@@ -1,5 +1,15 @@
 # @graphql-codegen/plugin-helpers
 
+## 5.1.0
+
+### Minor Changes
+
+- [#9989](https://github.com/dotansimha/graphql-code-generator/pull/9989) [`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc) Thanks [@eddeee888](https://github.com/eddeee888)! - Add `generateInternalResolversIfNeeded` option
+
+  This option can be used to generate more correct types for internal resolvers. For example, only generate `__resolveReference` if the federation object has a resolvable `@key`.
+
+  In the future, this option can be extended to support other internal resolvers e.g. `__isTypeOf` is only generated for implementing types and union members.
+
 ## 5.0.4
 
 ### Patch Changes
@@ -99,7 +109,7 @@
   To use this feature, you can write `documentTransforms` as follows:
 
   ```ts
-  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -111,21 +121,21 @@
           {
             transform: ({ documents }) => {
               // Make some changes to the documents
-              return documents;
-            },
-          },
-        ],
-      },
-    },
-  };
-  export default config;
+              return documents
+            }
+          }
+        ]
+      }
+    }
+  }
+  export default config
   ```
 
   For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the following code:
 
   ```js
-  import type { CodegenConfig } from '@graphql-codegen/cli';
-  import { visit } from 'graphql';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
+  import { visit } from 'graphql'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -140,19 +150,19 @@
                 documentFile.document = visit(documentFile.document, {
                   Directive: {
                     leave(node) {
-                      if (node.name.value === 'localOnlyDirective') return null;
-                    },
-                  },
-                });
-                return documentFile;
-              });
-            },
-          },
-        ],
-      },
-    },
-  };
-  export default config;
+                      if (node.name.value === 'localOnlyDirective') return null
+                    }
+                  }
+                })
+                return documentFile
+              })
+            }
+          }
+        ]
+      }
+    }
+  }
+  export default config
   ```
 
   DocumentTransform can also be specified by file name. You can create a custom file for a specific transformation and pass it to `documentTransforms`.
@@ -163,15 +173,15 @@
   module.exports = {
     transform: ({ documents }) => {
       // Make some changes to the documents
-      return documents;
-    },
-  };
+      return documents
+    }
+  }
   ```
 
   Then, you can specify the file name as follows:
 
   ```ts
-  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -179,11 +189,11 @@
     generates: {
       './src/gql/': {
         preset: 'client',
-        documentTransforms: ['./my-document-transform.js'],
-      },
-    },
-  };
-  export default config;
+        documentTransforms: ['./my-document-transform.js']
+      }
+    }
+  }
+  export default config
   ```
 
 ### Patch Changes
