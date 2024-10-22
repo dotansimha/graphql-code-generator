@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import { defineConfig, Giscus, PRODUCTS, useTheme, HiveFooter, cn } from '@theguild/components';
 import { NavigationMenu } from './src/components/navigation-menu';
 
+import favicon from './public/favicon.svg';
+
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
   main({ children }) {
@@ -65,5 +67,12 @@ export default defineConfig({
         />
       );
     },
+  },
+  head: () => {
+    return (
+      <>
+        <link rel="icon" href={favicon.src} />
+      </>
+    );
   },
 });
