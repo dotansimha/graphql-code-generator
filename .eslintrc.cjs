@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['@theguild'],
+  extends: ['@theguild', 'plugin:tailwindcss/recommended'],
   rules: {
     'no-empty': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',

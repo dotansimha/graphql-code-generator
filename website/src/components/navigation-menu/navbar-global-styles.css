@@ -1,0 +1,16 @@
+#__next {
+  --nextra-navbar-height: 90px;
+}
+
+@media (min-width: 768px) {
+  .nextra-sidebar-container.nextra-sidebar-container,
+  .nextra-toc > .nextra-scrollbar {
+    top: var(--nextra-navbar-height);
+  }
+}
+
+@media (max-width: 767px) {
+  #__next {
+    --nextra-navbar-height: 64px;
+  }
+}
