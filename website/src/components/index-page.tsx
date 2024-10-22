@@ -79,7 +79,7 @@ export function IndexPage(): ReactElement {
       </Hero>
 
       <DevExCards className="mx-4 md:mx-6" />
-      <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
+      <ToolsAndLibrariesCards className="mx-4 md:mx-6" />
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
   );

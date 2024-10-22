@@ -6,7 +6,7 @@ import speedometerSvg from './icons/speedometer.svg';
 
 export function DevExCards(props: { className?: string }) {
   return (
-    <section className={cn('px-4 py-6 sm:py-12 md:px-6 xl:px-[120px]', props.className)}>
+    <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-24 xl:px-[120px]', props.className)}>
       <Heading as="h3" size="md" className="text-balance text-center">
         Developer experience? Improved.
       </Heading>
