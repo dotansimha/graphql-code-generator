@@ -503,6 +503,54 @@ export * from "./gql";`);
     expect(graphqlFile.content).toContain("__typename: 'Query',");
   });
 
+  it("follows 'onlyEnumTypes: true' and 'onlyOperationTypes: true' options", async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            a: String
+            b: String
+            c: String
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      generates: { 'out1/': { preset } },
+      config: {
+        onlyEnumTypes: true,
+        onlyOperationTypes: true,
+      },
+    });
+
+    expect(result.length).toBe(4);
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).not.toBeSimilarStringTo('export type Query');
+  });
+
+  it("follows 'onlyEnumTypes: false' and 'onlyOperationTypes: false' options", async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            a: String
+            b: String
+            c: String
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      generates: { 'out1/': { preset } },
+      config: {
+        onlyEnumTypes: false,
+        onlyOperationTypes: false,
+      },
+    });
+
+    expect(result.length).toBe(4);
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toBeSimilarStringTo('export type Query');
+  });
+
   it('prevent duplicate operations', async () => {
     const result = await executeCodegen({
       schema: [
