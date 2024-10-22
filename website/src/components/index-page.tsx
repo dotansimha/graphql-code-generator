@@ -1,18 +1,18 @@
 import { ReactElement, useEffect, useLayoutEffect } from 'react';
 import {
-  HeroGradient,
-  HeroIllustration,
   GetYourAPIGameRightSection,
   ToolsAndLibrariesCards,
+  Heading,
+  CheckIcon,
+  CallToAction,
+  GitHubIcon,
+  Stud,
+  CodegenIcon,
 } from '@theguild/components';
-import gqlCodegenCover from '../../public/assets/illustrations/gql-codegen-cover.svg';
-import gqlGenerateCodeIllustration from '../../public/assets/illustrations/gql-generate-code-illustration.svg';
-import gqlWatchForChangesIllustration from '../../public/assets/illustrations/gql-watch-for-changes-illustration.svg';
 
 import { DevExCards } from './dev-ex-cards';
 import { Page } from './page';
-// TODO:
-// import { FrequentlyAskedQuestions } from './frequently-asked-questions';
+import { Hero, HeroFeatures, HeroLinks } from './hero';
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
@@ -44,55 +44,42 @@ export function IndexPage(): ReactElement {
           }
         `}
       </style>
-      <HeroGradient
-        title="Generate Type-Safe GraphQL Client and Server Code"
-        description="Supercharge Your GraphQL Development Flow with Fully Typed Code in Seconds."
-        link={[
-          {
-            href: '/docs/getting-started',
-            children: 'Get Started with Client and Server',
-            title: 'Get started with GraphQL Code Generator',
-          },
-        ]}
-        colors={['#1dbbff', '#ee1cd9']}
-        image={{
-          src: gqlCodegenCover,
-          loading: 'eager',
-          placeholder: 'empty',
-          alt: 'Illustration',
-        }}
-      />
 
-      <HeroIllustration
-        title="Generate Code Instantly"
-        description="Generate code from your GraphQL schema and GraphQL operations with a single function call regardless of your environment or code format."
-        image={{
-          src: gqlGenerateCodeIllustration,
-          loading: 'eager',
-          placeholder: 'empty',
-          alt: 'Illustration',
-          className: 'max-h-[16rem]',
-        }}
-        className="[&>div]:max-w-6xl"
-        flipped
-      />
-
-      <HeroIllustration
-        title="Customize Easily"
-        description="Generate code from your GraphQL schema and GraphQL operations with a single function call regardless of your environment or code format"
-        image={{
-          src: gqlWatchForChangesIllustration,
-          loading: 'eager',
-          placeholder: 'empty',
-          alt: 'Customize Easily',
-          className: 'max-h-[16rem]',
-        }}
-        className="[&>div]:max-w-6xl"
-      />
+      <Hero className="mx-4 max-sm:mt-2 md:mx-6">
+        <Heading as="h1" size="xl" className="mx-auto max-w-3xl text-balance text-center">
+          GraphQL Codegen
+        </Heading>
+        <p className="mx-auto w-[512px] max-w-[80%] text-balance text-center leading-6 text-green-800">
+          Effortlessly generate comprehensive code from GraphQL schemas and operations, streamlining development across
+          your tech stack.
+        </p>
+        <HeroFeatures>
+          <li>
+            <CheckIcon />
+            End-to-end type safety
+          </li>
+          <li>
+            <CheckIcon />
+            Customizable
+          </li>
+          <li>
+            <CheckIcon />
+            Rich plugins ecosystem
+          </li>
+        </HeroFeatures>
+        <HeroLinks>
+          <CallToAction variant="primary-inverted" href="/docs/getting-started">
+            Get started
+          </CallToAction>
+          <CallToAction variant="secondary-inverted" href="https://github.com/dotansimha/graphql-code-generator">
+            <GitHubIcon className="size-6" />
+            GitHub
+          </CallToAction>
+        </HeroLinks>
+      </Hero>
 
       <DevExCards className="mx-4 md:mx-6" />
       <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
-      {/* <FrequentlyAskedQuestions className="mx-4 md:mx-6" /> */}
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
   );
