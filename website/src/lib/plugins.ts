@@ -47,6 +47,7 @@ const ALL_ICONS = [
 
 export type Icon = (typeof ALL_ICONS)[number];
 
+// TODO: These icons need to be swapped.
 /* eslint sort-keys: error */
 export const icons: Record<Icon, StaticImageData> = {
   angular: angularIcon,
