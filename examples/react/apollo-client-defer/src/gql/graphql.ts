@@ -16,6 +16,22 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
+export type Query = {
+  __typename?: 'Query';
+  alphabet: Array<Scalars['String']['output']>;
+  /** A field that resolves fast. */
+  fastField: Scalars['String']['output'];
+  /**
+   * A field that resolves slowly.
+   * Maybe you want to @defer this field ;)
+   */
+  slowField: Scalars['String']['output'];
+};
+
+export type QuerySlowFieldArgs = {
+  waitFor?: Scalars['Int']['input'];
+};
+
 export type SlowFieldFragmentFragment = { __typename?: 'Query'; slowField: string } & {
   ' $fragmentName'?: 'SlowFieldFragmentFragment';
 };
