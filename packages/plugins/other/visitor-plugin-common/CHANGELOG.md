@@ -1,5 +1,24 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.5.0
+
+### Minor Changes
+
+- [#9989](https://github.com/dotansimha/graphql-code-generator/pull/9989) [`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc) Thanks [@eddeee888](https://github.com/eddeee888)! - Add `generateInternalResolversIfNeeded` option
+
+  This option can be used to generate more correct types for internal resolvers. For example, only generate `__resolveReference` if the federation object has a resolvable `@key`.
+
+  In the future, this option can be extended to support other internal resolvers e.g. `__isTypeOf` is only generated for implementing types and union members.
+
+- [#10141](https://github.com/dotansimha/graphql-code-generator/pull/10141) [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03) Thanks [@eddeee888](https://github.com/eddeee888)! - Add avoidCheckingAbstractTypesRecursively to avoid checking and generating abstract types recursively
+
+  For users that already sets recursive default mappers e.g. `Partial<{T}>` or `DeepPartial<{T}>`, having both options on will cause a nested loop which eventually crashes Codegen. In such case, setting `avoidCheckingAbstractTypesRecursively: true` allows users to continue to use recursive default mappers as before.
+
+### Patch Changes
+
+- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc)]:
+  - @graphql-codegen/plugin-helpers@5.1.0
+
 ## 5.4.0
 
 ### Minor Changes
