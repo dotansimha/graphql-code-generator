@@ -1,5 +1,23 @@
 # @graphql-codegen/client-preset
 
+## 4.5.0
+
+### Minor Changes
+
+- [#10136](https://github.com/dotansimha/graphql-code-generator/pull/10136) [`3fd4486`](https://github.com/dotansimha/graphql-code-generator/commit/3fd4486a548c27099377c7bd696a22d1638227f4) Thanks [@wxt2005](https://github.com/wxt2005)! - foward skipTypeNameForRoot to client-preset
+
+### Patch Changes
+
+- [#10182](https://github.com/dotansimha/graphql-code-generator/pull/10182) [`effd875`](https://github.com/dotansimha/graphql-code-generator/commit/effd875b205fa9c5a99ce5e7fcdeb86cea7723fc) Thanks [@eddeee888](https://github.com/eddeee888)! - Revert slimmer client preset output
+
+- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc), [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03), [`c7af639`](https://github.com/dotansimha/graphql-code-generator/commit/c7af63964089938150402db69d49f11f93bb5175)]:
+  - @graphql-codegen/visitor-plugin-common@5.5.0
+  - @graphql-codegen/plugin-helpers@5.1.0
+  - @graphql-codegen/typed-document-node@5.0.11
+  - @graphql-codegen/gql-tag-operations@4.0.11
+  - @graphql-codegen/typescript-operations@4.3.1
+  - @graphql-codegen/typescript@4.1.1
+
 ## 4.4.0
 
 ### Minor Changes
