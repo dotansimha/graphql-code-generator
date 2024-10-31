@@ -86,7 +86,7 @@ export function IndexPage(): ReactElement {
       </Hero>
       <DevExCards className="mx-4 md:mx-6" />
       <TypeSafeCards className="mx-4 md:mx-6" />
-      <PluginsMarketplaceSearch plugins={plugins} className="mx-4 md:mx-6" />
+      <PluginsMarketplaceSearch plugins={plugins} className="sm:mx-4 md:mx-6" />
       <ToolsAndLibrariesCards className="mx-4 md:mx-6" />
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
