@@ -6,20 +6,24 @@ import {
   CheckIcon,
   CallToAction,
   GitHubIcon,
-  Stud,
-  CodegenIcon,
   cn,
   InfoCard,
   Anchor,
+  useData,
 } from '@theguild/components';
 
 import { DevExCards } from './dev-ex-cards';
 import { Page } from './page';
 import { Hero, HeroFeatures, HeroLinks } from './hero';
+import { PluginsMarketplaceSearch, Plugin, getPluginsStaticProps } from './plugins-marketplace-search';
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
+export { getPluginsStaticProps as getStaticProps };
+
 export function IndexPage(): ReactElement {
+  const plugins = useData() as Plugin[];
+
   useIsomorphicLayoutEffect(() => {
     // We add .light class to body to style the Headless UI
     // portal containing search results.
@@ -81,8 +85,8 @@ export function IndexPage(): ReactElement {
         </HeroLinks>
       </Hero>
       <DevExCards className="mx-4 md:mx-6" />
-      {/* todo: flip these two when we have plugins and "best used cards" */}
       <TypeSafeCards className="mx-4 md:mx-6" />
+      <PluginsMarketplaceSearch plugins={plugins} className="mx-4 md:mx-6" />
       <ToolsAndLibrariesCards className="mx-4 md:mx-6" />
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
