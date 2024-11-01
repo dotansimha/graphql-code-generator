@@ -10,6 +10,7 @@ import {
   InfoCard,
   Anchor,
   useData,
+  ExploreMainProductCards,
 } from '@theguild/components';
 
 import { DevExCards } from './dev-ex-cards';
@@ -84,8 +85,9 @@ export function IndexPage(): ReactElement {
           </CallToAction>
         </HeroLinks>
       </Hero>
-      <DevExCards className="mx-4 md:mx-6" />
+      <ExploreMainProductCards />
       <TypeSafeCards className="mx-4 md:mx-6" />
+      <DevExCards className="mx-4 md:mx-6" />
       <PluginsMarketplaceSearch plugins={plugins} className="sm:mx-4 md:mx-6" />
       <ToolsAndLibrariesCards className="mx-4 md:mx-6" />
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />

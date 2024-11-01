@@ -8,7 +8,7 @@ export function DevExCards(props: { className?: string }) {
   return (
     <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-24 xl:px-[120px]', props.className)}>
       <Heading as="h3" size="md" className="text-balance text-center">
-        Developer experience? Improved.
+        Your chance to fully use GraphQL.
       </Heading>
       <p className="mx-auto mt-4 max-w-[700px] text-center text-green-800">
         Codegen enhances your GraphQL development with fully typed client and server code, generating robust,
