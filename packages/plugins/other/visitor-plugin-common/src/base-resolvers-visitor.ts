@@ -873,9 +873,17 @@ export class BaseResolversVisitor<
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
-        prev[typeName] =
-          this.config.enumValues[typeName].sourceIdentifier ||
-          this.convertName(this.config.enumValues[typeName].typeIdentifier);
+        const { sourceIdentifier, typeIdentifier, importIdentifier } = this.config.enumValues[typeName];
+
+        // In `packages/plugins/other/visitor-plugin-common/src/base-types-visitor.ts:847`
+        // (https://github.com/dotansimha/graphql-code-generator/blob/077f7bff8d5fd723b87204b47c8bf096aa72ade5/packages/plugins/other/visitor-plugin-common/src/base-types-visitor.ts#L847)
+        // the import statement is generated as an 'import as' statement given
+        // this condition. In this case the `sourceIdentifier` is renamed to the
+        // `typeIdentifier` in the import statement, and therefore no longer
+        // usable as a identifier. We should instead use the `typeIdentifier`.
+        const isAsImport = importIdentifier === sourceIdentifier && sourceIdentifier !== typeIdentifier;
+
+        prev[typeName] = isAsImport ? typeIdentifier : sourceIdentifier || this.convertName(typeIdentifier);
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
       } else if (isScalar) {
