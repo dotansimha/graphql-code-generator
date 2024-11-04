@@ -16,6 +16,20 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  echo: Scalars['String']['output'];
+};
+
+export type MutationEchoArgs = {
+  message: Scalars['String']['input'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  hello: Scalars['String']['output'];
+};
+
 export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
@@ -26,7 +40,7 @@ export class TypedDocumentString<TResult, TVariables>
 {
   __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-  constructor(private value: string, public __meta__?: Record<string, any>) {
+  constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
     super(value);
   }
 

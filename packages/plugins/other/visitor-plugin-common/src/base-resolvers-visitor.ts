@@ -1,4 +1,4 @@
-import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
+import { ApolloFederation, checkObjectTypeFederationDetails, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
 import autoBind from 'auto-bind';
 import {
@@ -33,6 +33,8 @@ import {
   ConvertOptions,
   DeclarationKind,
   EnumValuesMap,
+  type NormalizedGenerateInternalResolversIfNeededConfig,
+  type GenerateInternalResolversIfNeededConfig,
   NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
@@ -75,12 +77,21 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeSuffix: string;
   allResolversTypeName: string;
   internalResolversPrefix: string;
+  generateInternalResolversIfNeeded: NormalizedGenerateInternalResolversIfNeededConfig;
   onlyResolveTypeForInterfaces: boolean;
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
+  avoidCheckingAbstractTypesRecursively: boolean;
 }
 
 type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
+export interface RootResolver {
+  content: string;
+  generatedResolverTypes: {
+    resolversMap: { name: string };
+    userDefined: Record<string, { name: string; federation?: { hasResolveReference: boolean } }>;
+  };
+}
 
 export interface RawResolversConfig extends RawConfig {
   /**
@@ -384,6 +395,7 @@ export interface RawResolversConfig extends RawConfig {
    *        plugins: ['typescript', 'typescript-resolver', { add: { content: "import { DeepPartial } from 'utility-types';" } }],
    *        config: {
    *          defaultMapper: 'DeepPartial<{T}>',
+   *          avoidCheckingAbstractTypesRecursively: true // required if you have complex nested abstract types
    *        },
    *      },
    *    },
@@ -571,6 +583,16 @@ export interface RawResolversConfig extends RawConfig {
    */
   internalResolversPrefix?: string;
   /**
+   * @type object
+   * @default { __resolveReference: false }
+   * @description If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.
+   * Enabling this allows a more correct type generation for the resolvers.
+   * For example:
+   * - `__isTypeOf` is generated for implementing types and union members
+   * - `__resolveReference` is generated for federation types that have at least one resolvable `@key` directive
+   */
+  generateInternalResolversIfNeeded?: GenerateInternalResolversIfNeededConfig;
+  /**
    * @type boolean
    * @default false
    * @description Turning this flag to `true` will generate resolver signature that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
@@ -625,6 +647,13 @@ export interface RawResolversConfig extends RawConfig {
    */
   resolversNonOptionalTypename?: boolean | ResolversNonOptionalTypenameConfig;
   /**
+   * @type boolean
+   * @default false
+   * @description If true, recursively goes through all object type's fields, checks if they have abstract types and generates expected types correctly.
+   * This may not work for cases where provided default mapper types are also nested e.g. `defaultMapper: DeepPartial<{T}>` or `defaultMapper: Partial<{T}>`.
+   */
+  avoidCheckingAbstractTypesRecursively?: boolean;
+  /**
    * @ignore
    */
   directiveResolverMappings?: Record<string, string>;
@@ -641,7 +670,12 @@ export class BaseResolversVisitor<
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
-  protected _collectedResolvers: { [key: string]: { typename: string; baseGeneratedTypename?: string } } = {};
+  protected _collectedResolvers: {
+    [key: string]: {
+      typename: string;
+      baseGeneratedTypename?: string;
+    };
+  } = {};
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransformer: OperationVariablesToObject;
   protected _usedMappers: { [key: string]: boolean } = {};
@@ -656,7 +690,6 @@ export class BaseResolversVisitor<
   protected _globalDeclarations = new Set<string>();
   protected _federation: ApolloFederation;
   protected _hasScalars = false;
-  protected _hasFederation = false;
   protected _fieldContextTypeMap: FieldContextTypeMap;
   protected _directiveContextTypesMap: FieldContextTypeMap;
   protected _checkedTypesWithNestedAbstractTypes: Record<string, { checkStatus: 'yes' | 'no' | 'checking' }> = {};
@@ -696,9 +729,13 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
+      generateInternalResolversIfNeeded: {
+        __resolveReference: rawConfig.generateInternalResolversIfNeeded?.__resolveReference ?? false,
+      },
       resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
       ),
+      avoidCheckingAbstractTypesRecursively: getConfigValue(rawConfig.avoidCheckingAbstractTypesRecursively, false),
       ...additionalConfig,
     } as TPluginConfig);
 
@@ -1269,21 +1306,15 @@ export class BaseResolversVisitor<
   }
 
   public hasFederation(): boolean {
-    return this._hasFederation;
+    return Object.keys(this._federation.getMeta()).length > 0;
   }
 
-  public getRootResolver(): {
-    content: string;
-    generatedResolverTypes: {
-      resolversMap: { name: string };
-      userDefined: Record<string, { name: string }>;
-    };
-  } {
+  public getRootResolver(): RootResolver {
     const name = this.convertName(this.config.allResolversTypeName);
     const declarationKind = 'type';
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
-    const userDefinedTypes: Record<string, { name: string }> = {};
+    const userDefinedTypes: RootResolver['generatedResolverTypes']['userDefined'] = {};
     const content = [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
@@ -1295,7 +1326,14 @@ export class BaseResolversVisitor<
               const resolverType = this._collectedResolvers[schemaTypeName];
 
               if (resolverType.baseGeneratedTypename) {
-                userDefinedTypes[schemaTypeName] = { name: resolverType.baseGeneratedTypename };
+                userDefinedTypes[schemaTypeName] = {
+                  name: resolverType.baseGeneratedTypename,
+                };
+
+                const federationMeta = this._federation.getMeta()[schemaTypeName];
+                if (federationMeta) {
+                  userDefinedTypes[schemaTypeName].federation = federationMeta;
+                }
               }
 
               return indent(this.formatRootResolver(schemaTypeName, resolverType.typename, declarationKind));
@@ -1480,9 +1518,20 @@ export class BaseResolversVisitor<
       };
 
       if (this._federation.isResolveReferenceField(node)) {
-        this._hasFederation = true;
-        signature.type = 'ReferenceResolver';
+        if (this.config.generateInternalResolversIfNeeded.__resolveReference) {
+          const federationDetails = checkObjectTypeFederationDetails(
+            parentType.astNode as ObjectTypeDefinitionNode,
+            this._schema
+          );
 
+          if (!federationDetails || federationDetails.resolvableKeyDirectives.length === 0) {
+            return '';
+          }
+          signature.modifier = ''; // if a federation type has resolvable @key, then it should be required
+        }
+
+        this._federation.setMeta(parentType.name, { hasResolveReference: true });
+        signature.type = 'ReferenceResolver';
         if (signature.genericTypes.length >= 3) {
           signature.genericTypes = signature.genericTypes.slice(0, 3);
         }
@@ -1812,7 +1861,7 @@ export class BaseResolversVisitor<
         const isObject = isObjectType(baseType);
         let isObjectWithAbstractType = false;
 
-        if (isObject) {
+        if (isObject && !this.config.avoidCheckingAbstractTypesRecursively) {
           isObjectWithAbstractType = checkIfObjectTypeHasAbstractTypesRecursively(baseType, {
             isObjectWithAbstractType,
             checkedTypesWithNestedAbstractTypes: this._checkedTypesWithNestedAbstractTypes,
