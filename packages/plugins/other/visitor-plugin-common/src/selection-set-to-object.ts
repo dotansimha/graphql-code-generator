@@ -601,7 +601,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
         fragmentsSpreadUsages.push(selectionNode.typeName);
 
-        if (!selectionNode.fragmentDirectives?.some(d => d.name.value === 'unmask')) {
+        const isApolloUnmaskEnabled = this._config.customDirectives.apolloUnmask;
+
+        if (
+          !isApolloUnmaskEnabled ||
+          (isApolloUnmaskEnabled && !selectionNode.fragmentDirectives?.some(d => d.name.value === 'unmask'))
+        ) {
           continue;
         }
       }

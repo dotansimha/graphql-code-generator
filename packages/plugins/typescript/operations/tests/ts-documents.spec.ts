@@ -7424,7 +7424,37 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it("'mask' with @unmask yields correct types", async () => {
+    it("'mask' with @unmask configured with apolloUnmask yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment @unmask
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+            { __typename?: 'User', id: string }
+            & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
+          ) | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      `);
+    });
+
+    it("'mask' with @unmask without apolloUnmask yields correct types", async () => {
       const ast = parse(/* GraphQL */ `
         query {
           me {
@@ -7446,7 +7476,37 @@ function test(q: GetEntityBrandDataQuery): void {
 
 
         export type Unnamed_1_Query = { __typename?: 'Query', me?: (
-            { __typename?: 'User', id: string }
+            { __typename?: 'User' }
+            & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
+          ) | null };
+
+        export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      `);
+    });
+
+    it("'mask' with @unmask with apolloUnmask explicitly disabled yields correct types", async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          me {
+            ...UserFragment @unmask
+          }
+        }
+        fragment UserFragment on User {
+          id
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: false } },
+        { outputFile: '' }
+      );
+      expect(result.content).toBeSimilarStringTo(`
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+            { __typename?: 'User' }
             & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
           ) | null };
 
@@ -7473,7 +7533,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const result = await plugin(
         schema,
         [{ location: 'test-file.ts', document: ast }],
-        { inlineFragmentTypes: 'mask' },
+        { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
         { outputFile: '' }
       );
       expect(result.content).toBeSimilarStringTo(`
@@ -7510,7 +7570,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const result = await plugin(
         schema,
         [{ location: 'test-file.ts', document: ast }],
-        { inlineFragmentTypes: 'mask' },
+        { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
         { outputFile: '' }
       );
       expect(result.content).toBeSimilarStringTo(`

@@ -11,7 +11,7 @@ import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor.js';
 import { BaseVisitor } from './base-visitor.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import { SelectionSetToObject } from './selection-set-to-object.js';
-import { NormalizedScalarsMap } from './types.js';
+import { NormalizedScalarsMap, CustomDirectivesConfig } from './types.js';
 import { buildScalarsFromConfig, DeclarationBlock, DeclarationBlockConfig, getConfigValue } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 
@@ -40,6 +40,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   skipTypeNameForRoot: boolean;
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
+  customDirectives: CustomDirectivesConfig;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -149,6 +150,30 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @ignore
    */
   namespacedImportName?: string;
+
+  /**
+   * @description Configures behavior for use with custom directives from
+   * various GraphQL libraries.
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript'],
+   *        config: {
+   *          customDirectives: {
+   *            apolloUnmask: true
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   */
+  customDirectives?: CustomDirectivesConfig;
 }
 
 export class BaseDocumentsVisitor<
@@ -180,6 +205,7 @@ export class BaseDocumentsVisitor<
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
+      customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
       ...((additionalConfig || {}) as any),
     });
 
