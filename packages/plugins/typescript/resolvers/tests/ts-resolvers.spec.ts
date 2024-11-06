@@ -590,6 +590,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {
         a: A
+        c: C
       }
 
       enum A {
@@ -606,11 +607,17 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       type B {
         a: String
       }
+
+      enum C {
+        Y
+        Z
+      }
     `);
 
     const config = {
       enumValues: {
         A: 'MyA',
+        C: '../enums.js#MyC',
       },
       typesPrefix: 'GQL_',
     };
@@ -622,9 +629,13 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 
     expect(mergedOutputs).not.toContain(`A: A;`);
     expect(mergedOutputs).not.toContain(`A: GQL_A;`);
+    expect(mergedOutputs).not.toContain(`C: GQL_MyC;`);
     expect(mergedOutputs).toContain(`NotMapped: GQL_NotMapped;`);
     expect(mergedOutputs).not.toContain(`NotMapped: NotMapped;`);
+    expect(mergedOutputs).toContain(`A: MyA;`);
     expect(mergedOutputs).toContain(`B: GQL_B;`);
+    expect(mergedOutputs).toContain(`C: C;`);
+    expect(mergedOutputs).toContain(`import { MyC as C } from '../enums.js';`);
   });
 
   it('Should allow to generate optional __resolveType', async () => {
@@ -2260,7 +2271,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
           ProjectRoleDetail: '../entities#ProjectRole',
         },
         enumValues: {
-          ProjectRole: '../entities#ProjectRole',
+          ProjectRole: '../entities#AnotherProjectRole',
         },
       };
 
@@ -2272,8 +2283,11 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       expect(output.prepend.filter(t => t.includes('import')).length).toBe(2);
       expect(output.prepend.filter(t => t.includes('ProjectRole')).length).toBe(0);
       expect(tsContent.prepend.filter(t => t.includes('ProjectRole')).length).toBe(1);
-      expect(tsContent.prepend.includes(`import { ProjectRole } from '../entities';`)).toBeTruthy();
-      expect(output.prepend.includes(`import { ProjectRole } from '../entities';`)).toBeFalsy();
+      expect(output.content.includes('AnotherProjectRole')).toBeFalsy();
+      expect(
+        tsContent.prepend.includes(`import { AnotherProjectRole as ProjectRole } from '../entities';`)
+      ).toBeTruthy();
+      expect(output.prepend.includes(`import { AnotherProjectRole as ProjectRole } from '../entities';`)).toBeFalsy();
     });
 
     it('#3264 - enumValues is not being applied to directive resolver', async () => {
