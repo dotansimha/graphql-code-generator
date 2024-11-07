@@ -873,13 +873,9 @@ export class BaseResolversVisitor<
         this.markMapperAsUsed(typeName);
         prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
       } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
-        const isExternalFile = !!this.config.enumValues[typeName].sourceFile;
-        prev[typeName] = isExternalFile
-          ? this.convertName(this.config.enumValues[typeName].typeIdentifier, {
-              useTypesPrefix: false,
-              useTypesSuffix: false,
-            })
-          : this.config.enumValues[typeName].sourceIdentifier;
+        prev[typeName] =
+          this.config.enumValues[typeName].sourceIdentifier ||
+          this.convertName(this.config.enumValues[typeName].typeIdentifier);
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
       } else if (isScalar) {
