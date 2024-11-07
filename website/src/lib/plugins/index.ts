@@ -18,8 +18,8 @@ import typescriptIcon from './icons/typescript.svg';
 import urqlIcon from './icons/urql.svg';
 import vueIcon from './icons/vue.svg';
 import graphqlModulesIcon from './icons/graphql-modules.svg';
+import mswIcon from './icons/msw.svg';
 import reasonClientIcon from 'https://pbs.twimg.com/profile_images/1004185780313395200/ImZxrDWf_400x400.jpg';
-import mswIcon from 'https://raw.githubusercontent.com/mswjs/msw/HEAD/media/msw-logo.svg';
 
 const ALL_ICONS = [
   'graphql',
