@@ -1,8 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint sort-keys: error */
 import { useRouter } from 'next/router';
-import { defineConfig, Giscus, PRODUCTS, useTheme, HiveFooter, cn } from '@theguild/components';
-import { NavigationMenu } from './src/components/navigation-menu';
+import {
+  defineConfig,
+  Giscus,
+  PRODUCTS,
+  useTheme,
+  HiveFooter,
+  cn,
+  HiveNavigation,
+  Anchor,
+  CodegenIcon,
+} from '@theguild/components';
 
 import favicon from './public/favicon.svg';
 
@@ -44,7 +53,25 @@ export default defineConfig({
       light: 40,
     },
   },
-  navbar: { component: NavigationMenu },
+  navbar: {
+    component: function NavigationMenu() {
+      const { route } = useRouter();
+
+      return (
+        <HiveNavigation
+          className={route === '/' ? 'light max-w-[1392px]' : 'max-w-[90rem]'}
+          productName={PRODUCTS.CODEGEN.name}
+          navLinks={[{ href: '/plugins', children: 'Plugins' }]}
+          logo={
+            <Anchor href="/" className="hive-focus -m-2 flex items-center gap-3 rounded-md p-2">
+              <CodegenIcon className="size-8" />
+              <span className="text-2xl font-medium tracking-[-0.16px]">Codegen</span>
+            </Anchor>
+          }
+        />
+      );
+    },
+  },
   footer: {
     component: _props => {
       const { route } = useRouter();
@@ -64,6 +91,15 @@ export default defineConfig({
               title: 'Terms of Use',
             },
           ]}
+          logo={{
+            href: '/',
+            children: (
+              <div className="flex gap-3 text-green-1000">
+                <CodegenIcon className="size-8" />
+                <span className="text-2xl font-medium tracking-[-0.16px]">Codegen</span>
+              </div>
+            ),
+          }}
         />
       );
     },

@@ -1,6 +1,7 @@
 {
   "name": "graphql-code-generator",
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">= 16.0.0"
   },

@@ -98,7 +98,7 @@ export function IndexPage(): ReactElement {
 function TypeSafeCards({ className }: { className?: string }) {
   return (
     <section className={cn('rounded-3xl bg-beige-100 p-4 pt-6 sm:py-24 md:px-6 md:py-[120px]', className)}>
-      <div className="flex flex-row flex-wrap justify-center md:px-6 xl:px-16">
+      <div className="flex flex-wrap justify-center md:px-6 xl:px-16">
         <div className="w-full sm:mb-12 sm:px-8 xl:mb-0 xl:w-[400px] xl:px-0">
           <Heading as="h3" size="sm" className="text-balance">
             Generate Type-Safe GraphQL Client and Server Code
