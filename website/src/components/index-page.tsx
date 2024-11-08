@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useLayoutEffect } from 'react';
 import {
-  GetYourAPIGameRightSection,
   ToolsAndLibrariesCards,
   Heading,
   CheckIcon,
@@ -90,7 +89,6 @@ export function IndexPage(): ReactElement {
       <DevExCards className="mx-4 md:mx-6" />
       <PluginsMarketplaceSearch plugins={plugins} className="sm:mx-4 md:mx-6" />
       <ToolsAndLibrariesCards className="mx-4 md:mx-6" />
-      <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
   );
 }

@@ -4308,10 +4308,10 @@
   resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.10.8.tgz#975446a667755222f62884c19e5c3c66d959b8b4"
   integrity sha512-PBu00mtt95jbKFi6Llk9aik8bnR3tR/oQP1o3TSi+iG//+Q2RTIzCEgKkHG8BB86kxMNW6O8wku+Lmi+QFR6jA==
 
-"@theguild/components@7.2.2-alpha-20241108153043-49ed6df5b655f5a2f624d84ebd191b00c5bce471":
-  version "7.2.2-alpha-20241108153043-49ed6df5b655f5a2f624d84ebd191b00c5bce471"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.2.2-alpha-20241108153043-49ed6df5b655f5a2f624d84ebd191b00c5bce471.tgz#0bb712331f4679654b88b829c998a05c0683e7e9"
-  integrity sha512-FcJuoL0owHm6Zg2Ogmn55PuaCDPfgYEQKt0/MVX0wxFLSp+fh5o/UdPeOhyvke4EKvPyPCj5V7NaTb2UL/Y7Sw==
+"@theguild/components@7.2.2-alpha-20241108170536-491ca77c985970e21ee146c142e5ac305cbc941f":
+  version "7.2.2-alpha-20241108170536-491ca77c985970e21ee146c142e5ac305cbc941f"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.2.2-alpha-20241108170536-491ca77c985970e21ee146c142e5ac305cbc941f.tgz#e2d380920b60cf24c6e2a1669836abadf2ddca01"
+  integrity sha512-yqF/mE934PSwxrQcwCSC4c78DPF7T0wtJJMnBinOP9nEDvKcRsUHxWo5i1IcehpRaQb7wWTgkIg1ishdcNuzUA==
   dependencies:
     "@giscus/react" "3.0.0"
     "@next/bundle-analyzer" "15.0.3"
