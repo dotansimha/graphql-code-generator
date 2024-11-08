@@ -91,6 +91,7 @@ export default defineConfig({
               title: 'Terms of Use',
             },
           ]}
+          description="End-to-end type safety"
           logo={{
             href: '/',
             children: (

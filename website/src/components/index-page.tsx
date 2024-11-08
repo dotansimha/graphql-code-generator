@@ -49,6 +49,9 @@ export function IndexPage(): ReactElement {
             --nextra-primary-saturation: 40%;
             --nextra-bg: 255, 255, 255;
           }
+          .nextra-sidebar-footer {
+            display: none;
+          }
         `}
       </style>
 
@@ -84,7 +87,7 @@ export function IndexPage(): ReactElement {
           </CallToAction>
         </HeroLinks>
       </Hero>
-      <ExploreMainProductCards />
+      <ExploreMainProductCards className="max-lg:mx-4 max-lg:my-8" />
       <TypeSafeCards className="mx-4 md:mx-6" />
       <DevExCards className="mx-4 md:mx-6" />
       <PluginsMarketplaceSearch plugins={plugins} className="sm:mx-4 md:mx-6" />
