@@ -14,7 +14,7 @@ export function Hero(props: { children: ReactNode; className?: string }) {
     >
       <DecorationIsolation className="-z-10">
         <CodegenIcon className="absolute left-[-180px] top-[calc(50%-180px)] size-[360px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] md:hidden lg:left-[-649px] lg:top-[-58px] lg:size-[1047px] xl:block" />
-        <CodegenIcon className="absolute right-[-350px] top-2 hidden size-[672px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] md:block" />
+        <CodegenIcon className="absolute right-[-350px] top-2 max-md:hidden size-[672px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px]" />
         <svg>
           <defs>
             <linearGradient id="codegen-hero-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
