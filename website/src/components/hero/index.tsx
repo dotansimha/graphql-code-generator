@@ -38,7 +38,7 @@ export function HeroLinks(props: { children: ReactNode }) {
 
 export function HeroFeatures(props: { children: ReactNode }) {
   return (
-    <ul className="mx-auto flex list-none flex-col gap-x-6 gap-y-2 text-sm font-medium md:flex-row [&>li]:flex [&>li]:items-center [&>li]:gap-2">
+    <ul className="mx-auto flex list-none max-md:flex-col gap-x-6 gap-y-2 text-sm font-medium [&>li]:flex [&>li]:items-center [&>li]:gap-2">
       {props.children}
     </ul>
   );
