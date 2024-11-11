@@ -32,7 +32,6 @@ const config: Config = {
       },
     },
   },
-  darkMode: ['variant', '&:not(.light *)'],
 };
 
 export default config;
