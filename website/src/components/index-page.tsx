@@ -43,8 +43,6 @@ export function IndexPage(): ReactElement {
           }
           body {
             background: #fff;
-          }
-          #__next {
             --nextra-primary-hue: 191deg;
             --nextra-primary-saturation: 40%;
             --nextra-bg: 255, 255, 255;
