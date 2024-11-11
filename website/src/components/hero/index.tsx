@@ -14,7 +14,7 @@ export function Hero(props: { children: ReactNode; className?: string }) {
     >
       <DecorationIsolation className="-z-10">
         <CodegenIcon className="absolute left-[-180px] top-[calc(50%-180px)] size-[360px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] md:hidden lg:left-[-649px] lg:top-[-58px] lg:size-[1047px] xl:block" />
-        <CodegenIcon className="absolute right-[-350px] top-2 max-md:hidden size-[672px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px]" />
+        <CodegenIcon className="absolute right-[-350px] top-2 size-[672px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] max-md:hidden" />
         <svg>
           <defs>
             <linearGradient id="codegen-hero-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -32,7 +32,7 @@ export function Hero(props: { children: ReactNode; className?: string }) {
 
 export function HeroLinks(props: { children: ReactNode }) {
   return (
-    <div className="relative z-10 flex max-sm:flex-col justify-center gap-2 px-0.5 sm:gap-4">{props.children}</div>
+    <div className="relative z-10 flex justify-center gap-2 px-0.5 max-sm:flex-col sm:gap-4">{props.children}</div>
   );
 }
 
@@ -56,9 +56,7 @@ export function TrustedBy({ className, children, ...rest }: React.HTMLAttributes
   return (
     <div className={cn('max-w-[80%] text-center', className)} {...rest}>
       <p className="text-base text-blue-800">Trusted by global enterprises and fast-moving startups</p>
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 text-blue-1000">
-        {children}
-      </div>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 text-blue-1000">{children}</div>
     </div>
   );
 }
