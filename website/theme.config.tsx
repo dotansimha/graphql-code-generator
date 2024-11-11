@@ -11,6 +11,9 @@ import {
   HiveNavigation,
   Anchor,
   CodegenIcon,
+  GitHubIcon,
+  PaperIcon,
+  PencilIcon,
 } from '@theguild/components';
 
 import favicon from './public/favicon.svg';
@@ -62,6 +65,23 @@ export default defineConfig({
           className={route === '/' ? 'light max-w-[1392px]' : 'max-w-[90rem]'}
           productName={PRODUCTS.CODEGEN.name}
           navLinks={[{ href: '/plugins', children: 'Plugins' }]}
+          developerMenu={[
+            {
+              href: '/docs',
+              icon: PaperIcon,
+              children: 'Documentation',
+            },
+            {
+              href: 'https://the-guild.dev/blog',
+              icon: PencilIcon,
+              children: 'Blog',
+            },
+            {
+              href: 'https://github.com/dotansimha/graphql-code-generator',
+              icon: GitHubIcon,
+              children: 'GitHub',
+            },
+          ]}
           logo={
             <Anchor href="/" className="hive-focus -m-2 flex items-center gap-3 rounded-md p-2">
               <CodegenIcon className="size-8" />
