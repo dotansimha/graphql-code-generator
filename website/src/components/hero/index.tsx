@@ -32,7 +32,7 @@ export function Hero(props: { children: ReactNode; className?: string }) {
 
 export function HeroLinks(props: { children: ReactNode }) {
   return (
-    <div className="relative z-10 flex flex-col justify-center gap-2 px-0.5 sm:flex-row sm:gap-4">{props.children}</div>
+    <div className="relative z-10 flex max-sm:flex-col justify-center gap-2 px-0.5 sm:gap-4">{props.children}</div>
   );
 }
 
