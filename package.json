@@ -70,7 +70,8 @@
     "ts-node": "10.9.2",
     "tslib": "2.6.3",
     "tsx": "4.17.0",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
