@@ -362,6 +362,7 @@ export interface RawConfig {
    * @description Whether fragment types should be inlined into other operations.
    * "inline" is the default behavior and will perform deep inlining fragment types within operation type definitions.
    * "combine" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).
+   * "mask" transforms the types for use with fragment masking. Useful when masked types are needed when not using the "client" preset e.g. such as combining it with Apollo Client's data masking feature.
    *
    * @type string
    * @default inline
