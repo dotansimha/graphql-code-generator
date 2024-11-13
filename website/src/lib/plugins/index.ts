@@ -1,25 +1,25 @@
 import { StaticImageData } from 'next/image';
-import angularIcon from '../../public/assets/img/icons/angular.svg';
-import apolloIcon from '../../public/assets/img/icons/apollo.svg';
-import codegenIcon from '../../public/assets/img/icons/codegen.svg';
-import csharpIcon from '../../public/assets/img/icons/csharp.svg';
-import dartIcon from '../../public/assets/img/icons/dart.svg';
-import flowIcon from '../../public/assets/img/icons/flow.svg';
-import graphqlIcon from '../../public/assets/img/icons/graphql.svg';
-import hasuraIcon from '../../public/assets/img/icons/hasura.svg';
-import javaIcon from '../../public/assets/img/icons/java.svg';
-import mongodbIcon from '../../public/assets/img/icons/mongodb.png';
-import nhostIcon from '../../public/assets/img/icons/nhost.svg';
-import nodeJsIcon from '../../public/assets/img/icons/nodejs.svg';
-import reactIcon from '../../public/assets/img/icons/react.svg';
-import reactQueryIcon from '../../public/assets/img/icons/react-query.svg';
-import typeGraphqlIcon from '../../public/assets/img/icons/type-graphql.png';
-import typescriptIcon from '../../public/assets/img/icons/typescript.svg';
-import urqlIcon from '../../public/assets/img/icons/urql.svg';
-import vueIcon from '../../public/assets/img/icons/vue.svg';
-import graphqlModulesIcon from 'https://graphql-modules.com/assets/subheader-logo.svg';
+import angularIcon from './icons/angular.svg';
+import apolloIcon from './icons/apollo.svg';
+import codegenIcon from './icons/codegen.svg';
+import csharpIcon from './icons/csharp.svg';
+import dartIcon from './icons/dart.svg';
+import flowIcon from './icons/flow.svg';
+import graphqlIcon from './icons/graphql.svg';
+import hasuraIcon from './icons/hasura.svg';
+import javaIcon from './icons/java.svg';
+import mongodbIcon from './icons/mongodb.png';
+import nhostIcon from './icons/nhost.svg';
+import nodeJsIcon from './icons/nodejs.svg';
+import reactIcon from './icons/react.svg';
+import reactQueryIcon from './icons/react-query.svg';
+import typeGraphqlIcon from './icons/type-graphql.png';
+import typescriptIcon from './icons/typescript.svg';
+import urqlIcon from './icons/urql.svg';
+import vueIcon from './icons/vue.svg';
+import graphqlModulesIcon from './icons/graphql-modules.svg';
+import mswIcon from './icons/msw.svg';
 import reasonClientIcon from 'https://pbs.twimg.com/profile_images/1004185780313395200/ImZxrDWf_400x400.jpg';
-import mswIcon from 'https://raw.githubusercontent.com/mswjs/msw/HEAD/media/msw-logo.svg';
 
 const ALL_ICONS = [
   'graphql',
@@ -47,6 +47,7 @@ const ALL_ICONS = [
 
 export type Icon = (typeof ALL_ICONS)[number];
 
+// TODO: These icons need to be swapped.
 /* eslint sort-keys: error */
 export const icons: Record<Icon, StaticImageData> = {
   angular: angularIcon,

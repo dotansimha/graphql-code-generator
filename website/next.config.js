@@ -6,6 +6,9 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
 );
 
 export default withGuildDocs({
+  nextraConfig: {
+    autoImportThemeStyle: false,
+  },
   output: 'export',
   experimental: {
     urlImports: [
