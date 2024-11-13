@@ -4446,10 +4446,10 @@
   resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.10.8.tgz#975446a667755222f62884c19e5c3c66d959b8b4"
   integrity sha512-PBu00mtt95jbKFi6Llk9aik8bnR3tR/oQP1o3TSi+iG//+Q2RTIzCEgKkHG8BB86kxMNW6O8wku+Lmi+QFR6jA==
 
-"@theguild/components@7.2.5":
-  version "7.2.5"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.2.5.tgz#e60b13227648684515bebca7da769aea2bae17a1"
-  integrity sha512-GSJ5h5/IUEzZd1UYMG3b9AYD4CF64eeNWqqmVVPfwO7ClmY3VHZ/TNq1RiNJ+PzWzVYUAbsUt4ht4kjdUK514g==
+"@theguild/components@7.2.6-alpha-20241113150056-4fde1eeb45f35f58300f9d846528945f771121df":
+  version "7.2.6-alpha-20241113150056-4fde1eeb45f35f58300f9d846528945f771121df"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.2.6-alpha-20241113150056-4fde1eeb45f35f58300f9d846528945f771121df.tgz#7548af4ffb3a6c4b7a336be2136513525359f528"
+  integrity sha512-e0CdsURzBBgg2uh1+w5g4LtwBTIgTb9YGjDtwrrqDaQwmELHQ2Piq6ZSTL5vwmOz/Gc1lVGRaCVsoiBmSBsY3g==
   dependencies:
     "@giscus/react" "3.0.0"
     "@next/bundle-analyzer" "15.0.3"
