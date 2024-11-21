@@ -87,6 +87,7 @@ Next, we adjust our `tsconfig.json` to load `@0no-co/graphqlsp`.
 ```json filename="tsconfig.json"
 {
   "compilerOptions": {
+    "target": "ES6", // Requires ES6 and above
     "plugins": [
       {
         "name": "@0no-co/graphqlsp",
