@@ -359,13 +359,6 @@ export * from "./gql";`);
         Float: { input: number; output: number; }
       };
 
-      export type Query = {
-        __typename?: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
-        b?: Maybe<Scalars['String']['output']>;
-        c?: Maybe<Scalars['String']['output']>;
-      };
-
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -490,13 +483,6 @@ export * from "./gql";`);
         Float: { input: number; output: number; }
       };
 
-      export type Query = {
-        __typename: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
-        b?: Maybe<Scalars['String']['output']>;
-        c?: Maybe<Scalars['String']['output']>;
-      };
-
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -514,7 +500,7 @@ export * from "./gql";`);
       export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
 
-    expect(graphqlFile.content).toContain("__typename: 'Query';");
+    expect(graphqlFile.content).toContain("__typename: 'Query',");
   });
 
   it('prevent duplicate operations', async () => {
@@ -602,11 +588,6 @@ export * from "./gql";`);
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }
         Float: { input: number; output: number; }
-      };
-
-      export type Query = {
-        __typename?: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1300,13 +1281,6 @@ export * from "./gql.js";`);
         Float: { input: number; output: number; }
       };
 
-      export type Query = {
-        __typename?: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
-        b?: Maybe<Scalars['String']['output']>;
-        c?: Maybe<Scalars['String']['output']>;
-      };
-
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1376,13 +1350,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1459,13 +1426,6 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1538,13 +1498,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1623,13 +1576,6 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1700,13 +1646,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1785,13 +1724,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1873,13 +1805,6 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1957,13 +1882,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2051,17 +1969,6 @@ export * from "./gql.js";`);
         Float: { input: number; output: number; }
       };
 
-      export type A = {
-        __typename?: 'A';
-        a: A;
-        b: Scalars['String']['output'];
-      };
-
-      export type Query = {
-        __typename?: 'Query';
-        a: A;
-      };
-
       export type AbFragment = (
         { __typename?: 'A', b: string }
         & { ' $fragmentRefs'?: { 'AcFragment': AcFragment;'AaFragment': AaFragment } }
@@ -2128,18 +2035,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
         };
 
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2215,18 +2110,6 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
-        };
-
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2298,18 +2181,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
         };
 
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2441,18 +2312,6 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
-        };
-
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2578,17 +2437,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
         };
 
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2866,32 +2714,6 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-        };
-
-        export type Mutation = {
-          __typename?: 'Mutation';
-          createRegion?: Maybe<Region>;
-        };
-
-
-        export type MutationCreateRegionArgs = {
-          regionDescription: Scalars['String']['input'];
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          regions?: Maybe<Array<Maybe<Region>>>;
-        };
-
-        export type Region = {
-          __typename?: 'Region';
-          regionDescription: Scalars['String']['output'];
-          regionId: Scalars['Int']['output'];
-        };
-
-        export type Subscription = {
-          __typename?: 'Subscription';
-          onRegionCreated: Region;
         };
 
         export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
