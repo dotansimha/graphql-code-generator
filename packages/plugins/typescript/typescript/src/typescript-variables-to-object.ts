@@ -19,7 +19,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _enumPrefix = true,
     _enumSuffix = true,
     _enumValues: ParsedEnumValuesMap = {},
-    _applyCoercion: Boolean = false,
+    _applyCoercion: boolean = false,
     _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {},
     private _maybeType = 'Maybe'
   ) {

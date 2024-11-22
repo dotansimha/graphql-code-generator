@@ -57,7 +57,7 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
 
   try {
     return config.getDefault().hasExtension('codegen');
-  } catch (e) {}
+  } catch {}
 
   try {
     for (const projectName in config.projects) {
@@ -69,7 +69,7 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
         }
       }
     }
-  } catch (e) {}
+  } catch {}
 
   return false;
 }

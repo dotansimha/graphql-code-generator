@@ -119,7 +119,7 @@ export const createWatcher = (
             // In ESM require is not defined
             try {
               delete require.cache[path];
-            } catch (err) {}
+            } catch {}
 
             if (eventName === 'update' && config.configFilePath && path === config.configFilePath) {
               log(`${logSymbols.info} Config file has changed, reloading...`);
