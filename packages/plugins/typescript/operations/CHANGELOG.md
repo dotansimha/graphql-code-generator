@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-operations
 
+## 4.4.0
+
+### Minor Changes
+
+- [#10163](https://github.com/dotansimha/graphql-code-generator/pull/10163) [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba) Thanks [@jerelmiller](https://github.com/jerelmiller)! - Add support for Apollo Client `@unmask` directive with fragment masking.
+
+### Patch Changes
+
+- Updated dependencies [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a), [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.0
+  - @graphql-codegen/typescript@4.1.2
+
 ## 4.3.1
 
 ### Patch Changes

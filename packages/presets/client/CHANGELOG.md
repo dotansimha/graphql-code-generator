@@ -1,5 +1,18 @@
 # @graphql-codegen/client-preset
 
+## 4.5.1
+
+### Patch Changes
+
+- [#9981](https://github.com/dotansimha/graphql-code-generator/pull/9981) [`05aa6b4`](https://github.com/dotansimha/graphql-code-generator/commit/05aa6b4cee6214674b25c9d20df27ce5e0e3927c) Thanks [@azu](https://github.com/azu)! - The client preset now allows the use of the `enumsAsConst` config option
+
+- Updated dependencies [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a), [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.0
+  - @graphql-codegen/typescript-operations@4.4.0
+  - @graphql-codegen/gql-tag-operations@4.0.12
+  - @graphql-codegen/typed-document-node@5.0.12
+  - @graphql-codegen/typescript@4.1.2
+
 ## 4.5.0
 
 ### Minor Changes

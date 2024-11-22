@@ -1,5 +1,15 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.6.0
+
+### Minor Changes
+
+- [#10163](https://github.com/dotansimha/graphql-code-generator/pull/10163) [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba) Thanks [@jerelmiller](https://github.com/jerelmiller)! - Add support for Apollo Client `@unmask` directive with fragment masking.
+
+### Patch Changes
+
+- [#10187](https://github.com/dotansimha/graphql-code-generator/pull/10187) [`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a) Thanks [@gilgardosh](https://github.com/gilgardosh)! - Fix: type naming for imported enums
+
 ## 5.5.0
 
 ### Minor Changes
