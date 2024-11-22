@@ -2794,29 +2794,18 @@ export * from "./gql.js";`);
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
         };
-        
+
         export const Color = {
           Blue: 'BLUE',
           Red: 'RED'
         } as const;
-        
+
         export type Color = typeof Color[keyof typeof Color];
-        export type Query = {
-          __typename?: 'Query';
-          thing?: Maybe<Thing>;
-        };
-        
-        export type Thing = {
-          __typename?: 'Thing';
-          color: Color;
-        };
-        
+
         export type FavoriteColorQueryVariables = Exact<{ [key: string]: never; }>;
-        
-        
+
         export type FavoriteColorQuery = { __typename?: 'Query', thing?: { __typename?: 'Thing', color: Color } | null };
-        
-        
+
         export const FavoriteColorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FavoriteColor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<FavoriteColorQuery, FavoriteColorQueryVariables>;
     `);
   });
