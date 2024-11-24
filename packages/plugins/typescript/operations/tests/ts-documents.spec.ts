@@ -5,6 +5,7 @@ import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
 
   const schema = buildSchema(/* GraphQL */ `

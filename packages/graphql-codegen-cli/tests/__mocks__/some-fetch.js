@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const {
   promises: { readFile },
 } = require('fs');

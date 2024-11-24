@@ -39,7 +39,7 @@ describe('Schema AST', () => {
 
       try {
         await validate(null, null, null, fileName, plugins);
-      } catch (e) {
+      } catch {
         expect(true).toBeFalsy();
       }
     });
@@ -54,7 +54,7 @@ describe('Schema AST', () => {
 
       try {
         await validate(null, null, null, fileName, plugins);
-      } catch (e) {
+      } catch {
         expect(true).toBeFalsy();
       }
     });
@@ -69,7 +69,7 @@ describe('Schema AST', () => {
 
       try {
         await validate(null, null, null, fileName, plugins);
-      } catch (e) {
+      } catch {
         expect(true).toBeFalsy();
       }
     });
@@ -84,7 +84,7 @@ describe('Schema AST', () => {
 
       try {
         await validate(null, null, null, fileName, plugins);
-      } catch (e) {
+      } catch {
         expect(true).toBeFalsy();
       }
     });

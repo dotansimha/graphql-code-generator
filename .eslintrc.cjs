@@ -56,6 +56,12 @@ module.exports = {
         project: ['./tsconfig.json'],
       },
     },
+    {
+      files: ['scripts/*.{ts,js}', 'prettier.config.cjs', 'jest.config.js', 'jest.project.js'],
+      rules: {
+        '@typescript-eslint/no-require-imports': 'off',
+      },
+    },
   ],
   ignorePatterns: [
     'dev-test',
