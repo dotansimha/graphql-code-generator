@@ -45,25 +45,9 @@ All the below code examples are available in our [repository `examples` folder](
 
 For most GraphQL clients and frameworks (React, Vue), install the following packages:
 
-**For Yarn:**
-
-```bash
-yarn add graphql
-yarn add -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset @parcel/watcher
-```
-
-**For npm:**
-
-```bash
-npm i -S graphql
-npm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset @parcel/watcher
-```
-
-**For pnpm:**
-
-```bash
-pnpm i graphql @graphql-typed-document-node/core
-pnpm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset @parcel/watcher
+```sh npm2yarn
+npm install graphql
+npm install --dev typescript @graphql-codegen/cli @parcel/watcher
 ```
 
 <br />
@@ -75,7 +59,7 @@ Then provide the corresponding framework-specific configuration:
 <Tabs.Tab>
 
 ```ts filename="codegen.ts" {5}
-import { CodegenConfig } from '@graphql-codegen/cli'
+import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
@@ -119,20 +103,7 @@ export default config
 
 </Tabs>
 
-> Each framework-specific lines are highlighted
-
-<br />
-
-<Callout type="info">
-
-**Usage with `@tanstack/react-query`**
-
-If you are using `@tanstack/react-query`, we recommend using it with `graphql-request@^5.0.0` to get the best developer experience.
-
-If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I: React Query with a custom fetcher
-setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query is properly setup.
-
-</Callout>
+> **Note**: For React Query, please refer to our [dedicated guide](/docs/guides/react-query).
 
 <br />
 
@@ -140,8 +111,8 @@ setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the gu
 
 First, start GraphQL Code Generator in watch mode:
 
-```
-yarn graphql-codegen --watch
+```sh npm2yarn
+npm run graphql-codegen --watch
 ```
 
 _Using GraphQL Code Generator will type your GraphQL Query and Mutations as you write them ⚡️_
@@ -537,6 +508,7 @@ The `client` preset allows the following `config` options:
 - [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
 - [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
 - [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
+- [`enumsAsConst`](/plugins/typescript/typescript#enumsasconst): Generates enum as TypeScript const assertions instead of enum. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
 - [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
 - [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
 - [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { fetchPackageInfo, MarketplaceSearch, useData } from '@theguild/components';
+import { fetchPackageInfo, IMarketplaceSearchProps, MarketplaceSearch } from '@theguild/components';
 import { compareDesc } from 'date-fns';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { ALL_TAGS, Icon, icons, PACKAGES } from '@/lib/plugins';
 
-type Plugin = {
+export type Plugin = {
   title: string;
   readme: string;
   createdAt: string;
@@ -16,7 +16,7 @@ type Plugin = {
   tags: string[];
 };
 
-export const getStaticProps = async () => {
+export const getPluginsStaticProps = async () => {
   const categoryEntries = Object.entries(CategoryToPackages);
   const plugins: Plugin[] = await Promise.all(
     Object.entries(PACKAGES).map(async ([identifier, { npmPackage, title, icon, tags }]) => {
@@ -45,9 +45,15 @@ export const getStaticProps = async () => {
   };
 };
 
-export function PluginsPage() {
-  const plugins = useData() as Plugin[];
-
+export function PluginsMarketplaceSearch({
+  className,
+  plugins,
+  colorScheme,
+}: {
+  plugins: Plugin[];
+  className?: string;
+  colorScheme?: IMarketplaceSearchProps['colorScheme'];
+}) {
   const marketplaceItems = useMemo(
     () =>
       plugins.map(plugin => {
@@ -62,7 +68,7 @@ export function PluginsPage() {
           },
           update: plugin.updatedAt,
           image: {
-            ...(icon || { src: plugin.icon }),
+            src: icon || plugin.icon,
             placeholder: 'empty' as const,
             loading: 'eager' as const,
             alt: plugin.title,
@@ -114,6 +120,8 @@ export function PluginsPage() {
         placeholder: 'No results for {query}',
         pagination: 10,
       }}
+      className={className}
+      colorScheme={colorScheme}
     />
   );
 }

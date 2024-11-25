@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
 import { codegen } from '@graphql-codegen/core';
-import { parse } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import { TypeScriptResolversPluginConfig } from '../src/config.js';
 import { plugin } from '../src/index.js';
 
@@ -24,7 +24,7 @@ function generate({ schema, config }: { schema: string; config: TypeScriptResolv
 }
 
 describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
-  it('should add __resolveReference to objects that have @key', async () => {
+  describe('adds __resolveReference', () => {
     const federatedSchema = /* GraphQL */ `
       type Query {
         allUsers: [User]
@@ -39,23 +39,244 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Book {
         id: ID!
       }
+
+      type SingleResolvable @key(fields: "id", resolvable: true) {
+        id: ID!
+      }
+
+      type SingleNonResolvable @key(fields: "id", resolvable: false) {
+        id: ID!
+      }
+
+      type AtLeastOneResolvable
+        @key(fields: "id", resolvable: false)
+        @key(fields: "id2", resolvable: true)
+        @key(fields: "id3", resolvable: false) {
+        id: ID!
+        id2: ID!
+        id3: ID!
+      }
+
+      type MixedResolvable
+        @key(fields: "id")
+        @key(fields: "id2", resolvable: true)
+        @key(fields: "id3", resolvable: false) {
+        id: ID!
+        id2: ID!
+        id3: ID!
+      }
+
+      type MultipleNonResolvable
+        @key(fields: "id", resolvable: false)
+        @key(fields: "id2", resolvable: false)
+        @key(fields: "id3", resolvable: false) {
+        id: ID!
+        id2: ID!
+        id3: ID!
+      }
     `;
 
-    const content = await generate({
-      schema: federatedSchema,
-      config: {
-        federation: true,
-      },
+    it('when generateInternalResolversIfNeeded.__resolveReference = false, generates optional __resolveReference for object types with @key', async () => {
+      const content = await generate({
+        schema: federatedSchema,
+        config: {
+          federation: true,
+        },
+      });
+
+      expect(content).toBeSimilarStringTo(`
+    export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+      username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      expect(content).toBeSimilarStringTo(`
+    export type SingleResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingleResolvable'] = ResolversParentTypes['SingleResolvable']> = {
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['SingleResolvable']>, { __typename: 'SingleResolvable' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      expect(content).toBeSimilarStringTo(`
+    export type SingleNonResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingleNonResolvable'] = ResolversParentTypes['SingleNonResolvable']> = {
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['SingleNonResolvable']>, ParentType, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      expect(content).toBeSimilarStringTo(`
+    export type AtLeastOneResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtLeastOneResolvable'] = ResolversParentTypes['AtLeastOneResolvable']> = {
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['AtLeastOneResolvable']>, { __typename: 'AtLeastOneResolvable' } & GraphQLRecursivePick<ParentType, {"id2":true}>, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      expect(content).toBeSimilarStringTo(`
+    export type MixedResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MixedResolvable'] = ResolversParentTypes['MixedResolvable']> = {
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['MixedResolvable']>, { __typename: 'MixedResolvable' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"id2":true}>), ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      expect(content).toBeSimilarStringTo(`
+    export type MultipleNonResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MultipleNonResolvable'] = ResolversParentTypes['MultipleNonResolvable']> = {
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['MultipleNonResolvable']>, ParentType, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      // Book does NOT have __resolveReference because it doesn't have @key
+      expect(content).toBeSimilarStringTo(`
+    export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
     });
 
-    // User should have it
-    expect(content).toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-    `);
-    // Foo shouldn't because it doesn't have @key
-    expect(content).not.toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Book']>, { __typename: 'Book' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-    `);
+    it('when generateInternalResolversIfNeeded.__resolveReference = true, generates required __resolveReference for object types with resolvable @key', async () => {
+      const federatedSchema = /* GraphQL */ `
+        type Query {
+          allUsers: [User]
+        }
+
+        type User @key(fields: "id") {
+          id: ID!
+          name: String
+          username: String
+        }
+
+        type Book {
+          id: ID!
+        }
+
+        type SingleResolvable @key(fields: "id", resolvable: true) {
+          id: ID!
+        }
+
+        type SingleNonResolvable @key(fields: "id", resolvable: false) {
+          id: ID!
+        }
+
+        type AtLeastOneResolvable
+          @key(fields: "id", resolvable: false)
+          @key(fields: "id2", resolvable: true)
+          @key(fields: "id3", resolvable: false) {
+          id: ID!
+          id2: ID!
+          id3: ID!
+        }
+
+        type MixedResolvable
+          @key(fields: "id")
+          @key(fields: "id2", resolvable: true)
+          @key(fields: "id3", resolvable: false) {
+          id: ID!
+          id2: ID!
+          id3: ID!
+        }
+
+        type MultipleNonResolvable
+          @key(fields: "id", resolvable: false)
+          @key(fields: "id2", resolvable: false)
+          @key(fields: "id3", resolvable: false) {
+          id: ID!
+          id2: ID!
+          id3: ID!
+        }
+      `;
+
+      const content = await generate({
+        schema: federatedSchema,
+        config: {
+          federation: true,
+          generateInternalResolversIfNeeded: { __resolveReference: true },
+        },
+      });
+
+      // User should have __resolveReference because it has resolvable @key (by default)
+      expect(content).toBeSimilarStringTo(`
+    export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+      username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      // SingleResolvable has __resolveReference because it has resolvable: true
+      expect(content).toBeSimilarStringTo(`
+    export type SingleResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingleResolvable'] = ResolversParentTypes['SingleResolvable']> = {
+      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['SingleResolvable']>, { __typename: 'SingleResolvable' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      // SingleNonResolvable does NOT have __resolveReference because it has resolvable: false
+      expect(content).toBeSimilarStringTo(`
+    export type SingleNonResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingleNonResolvable'] = ResolversParentTypes['SingleNonResolvable']> = {
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      // AtLeastOneResolvable has __resolveReference because it at least one resolvable
+      expect(content).toBeSimilarStringTo(`
+    export type AtLeastOneResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtLeastOneResolvable'] = ResolversParentTypes['AtLeastOneResolvable']> = {
+      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['AtLeastOneResolvable']>, { __typename: 'AtLeastOneResolvable' } & GraphQLRecursivePick<ParentType, {"id2":true}>, ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      // MixedResolvable has __resolveReference and references for resolvable keys
+      expect(content).toBeSimilarStringTo(`
+    export type MixedResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MixedResolvable'] = ResolversParentTypes['MixedResolvable']> = {
+      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['MixedResolvable']>, { __typename: 'MixedResolvable' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"id2":true}>), ContextType>;
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      // MultipleNonResolvableResolvers does NOT have __resolveReference because all keys are non-resolvable
+      expect(content).toBeSimilarStringTo(`
+    export type MultipleNonResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MultipleNonResolvable'] = ResolversParentTypes['MultipleNonResolvable']> = {
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+
+      // Book does NOT have __resolveReference because it doesn't have @key
+      expect(content).toBeSimilarStringTo(`
+    export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
+      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+    };
+  `);
+    });
   });
 
   it('should support extend keyword', async () => {
@@ -582,6 +803,184 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       `);
       // but ID should not
       expect(content).toBeSimilarStringTo(`id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>`);
+    });
+  });
+
+  describe('meta - generates federation meta correctly', () => {
+    const federatedSchema = /* GraphQL */ `
+      scalar _FieldSet
+      directive @key(fields: _FieldSet!, resolvable: Boolean) repeatable on OBJECT | INTERFACE
+
+      type Query {
+        user: UserPayload!
+        allUsers: [User]
+      }
+
+      type User @key(fields: "id") {
+        id: ID!
+        name: String
+        username: String
+      }
+
+      interface Node {
+        id: ID!
+      }
+
+      type UserOk {
+        id: ID!
+      }
+      type UserError {
+        message: String!
+      }
+      union UserPayload = UserOk | UserError
+
+      enum Country {
+        FR
+        US
+      }
+
+      type NotResolvable @key(fields: "id", resolvable: false) {
+        id: ID!
+      }
+
+      type Resolvable @key(fields: "id", resolvable: true) {
+        id: ID!
+      }
+
+      type MultipleResolvable
+        @key(fields: "id")
+        @key(fields: "id2", resolvable: true)
+        @key(fields: "id3", resolvable: false) {
+        id: ID!
+        id2: ID!
+        id3: ID!
+      }
+
+      type MultipleNonResolvable
+        @key(fields: "id", resolvable: false)
+        @key(fields: "id2", resolvable: false)
+        @key(fields: "id3", resolvable: false) {
+        id: ID!
+        id2: ID!
+        id3: ID!
+      }
+    `;
+
+    it('when generateInternalResolversIfNeeded.__resolveReference = false', async () => {
+      const result = await plugin(buildSchema(federatedSchema), [], { federation: true }, { outputFile: '' });
+
+      expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
+        Object {
+          "resolversMap": Object {
+            "name": "Resolvers",
+          },
+          "userDefined": Object {
+            "MultipleNonResolvable": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "MultipleNonResolvableResolvers",
+            },
+            "MultipleResolvable": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "MultipleResolvableResolvers",
+            },
+            "Node": Object {
+              "name": "NodeResolvers",
+            },
+            "NotResolvable": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "NotResolvableResolvers",
+            },
+            "Query": Object {
+              "name": "QueryResolvers",
+            },
+            "Resolvable": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "ResolvableResolvers",
+            },
+            "User": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "UserResolvers",
+            },
+            "UserError": Object {
+              "name": "UserErrorResolvers",
+            },
+            "UserOk": Object {
+              "name": "UserOkResolvers",
+            },
+            "UserPayload": Object {
+              "name": "UserPayloadResolvers",
+            },
+          },
+        }
+      `);
+    });
+
+    it('when generateInternalResolversIfNeeded.__resolveReference = true', async () => {
+      const result = await plugin(
+        buildSchema(federatedSchema),
+        [],
+        { federation: true, generateInternalResolversIfNeeded: { __resolveReference: true } },
+        { outputFile: '' }
+      );
+
+      expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
+        Object {
+          "resolversMap": Object {
+            "name": "Resolvers",
+          },
+          "userDefined": Object {
+            "MultipleNonResolvable": Object {
+              "name": "MultipleNonResolvableResolvers",
+            },
+            "MultipleResolvable": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "MultipleResolvableResolvers",
+            },
+            "Node": Object {
+              "name": "NodeResolvers",
+            },
+            "NotResolvable": Object {
+              "name": "NotResolvableResolvers",
+            },
+            "Query": Object {
+              "name": "QueryResolvers",
+            },
+            "Resolvable": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "ResolvableResolvers",
+            },
+            "User": Object {
+              "federation": Object {
+                "hasResolveReference": true,
+              },
+              "name": "UserResolvers",
+            },
+            "UserError": Object {
+              "name": "UserErrorResolvers",
+            },
+            "UserOk": Object {
+              "name": "UserOkResolvers",
+            },
+            "UserPayload": Object {
+              "name": "UserPayloadResolvers",
+            },
+          },
+        }
+      `);
     });
   });
 });

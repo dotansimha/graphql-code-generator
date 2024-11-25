@@ -3,6 +3,7 @@ import {
   BaseResolversVisitor,
   DeclarationKind,
   getConfigValue,
+  normalizeAvoidOptionals,
   ParsedResolversConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
@@ -34,7 +35,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     super(
       pluginConfig,
       {
-        avoidOptionals: getConfigValue(pluginConfig.avoidOptionals, false),
+        avoidOptionals: normalizeAvoidOptionals(pluginConfig.avoidOptionals),
         useIndexSignature: getConfigValue(pluginConfig.useIndexSignature, false),
         wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
         allowParentTypeOverride: getConfigValue(pluginConfig.allowParentTypeOverride, false),
@@ -75,10 +76,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string, declarationKind: DeclarationKind): string {
-    const avoidOptionals =
-      typeof this.config.avoidOptionals === 'object'
-        ? this.config.avoidOptionals?.resolvers
-        : !!this.config.avoidOptionals === true;
+    const avoidOptionals = this.config.avoidOptionals.resolvers;
     return `${schemaTypeName}${avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(declarationKind)}`;
   }
 
@@ -121,7 +119,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
     const valuesMap = `{ ${(node.values || [])
-      .map(v => `${v.name as any as string}${this.config.avoidOptionals ? '' : '?'}: any`)
+      .map(v => `${v.name as any as string}${this.config.avoidOptionals.resolvers ? '' : '?'}: any`)
       .join(', ')} }`;
 
     this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);

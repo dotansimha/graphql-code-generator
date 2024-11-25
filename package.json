@@ -4,7 +4,7 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "postinstall": "patch-package && husky install",
     "fix-bins": "node scripts/fix-bin.js",
@@ -15,12 +15,12 @@
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "rebuild": "bob build --incremental",
     "test": "jest --forceExit --no-watchman",
-    "lint": "eslint --cache --ignore-path .gitignore .",
+    "lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore .",
     "prettier": "prettier --cache --write --list-different .",
     "prettier:check": "prettier --cache --check .",
     "types:check": "tsc --noEmit",
     "test-and-build": "yarn build && yarn test",
-    "ci:lint": "eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
+    "ci:lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
     "prerelease": "yarn build",
     "release": "changeset publish",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
@@ -43,36 +43,38 @@
     "examples/**/*"
   ],
   "devDependencies": {
-    "@babel/core": "7.24.7",
-    "@babel/preset-env": "7.24.7",
+    "@babel/core": "7.25.2",
+    "@babel/preset-env": "7.25.3",
     "@babel/preset-typescript": "7.24.7",
     "@changesets/changelog-github": "0.5.0",
-    "@changesets/cli": "2.27.1",
-    "@theguild/eslint-config": "0.11.10",
+    "@changesets/cli": "2.27.7",
+    "@theguild/eslint-config": "0.13.0",
     "@theguild/prettier-config": "0.1.1",
     "@types/jest": "28.1.8",
-    "babel-jest": "29.6.4",
-    "bob-the-bundler": "6.0.0",
-    "eslint": "9.6.0",
-    "graphql": "16.8.0",
+    "babel-jest": "29.7.0",
+    "bob-the-bundler": "7.0.1",
+    "cross-env": "7.0.3",
+    "eslint": "9.9.0",
+    "graphql": "16.9.0",
     "husky": "8.0.3",
     "jest": "28.1.3",
-    "jest-docblock": "29.6.3",
+    "jest-docblock": "29.7.0",
     "jest-junit": "16.0.0",
-    "lint-staged": "13.2.2",
+    "lint-staged": "15.2.9",
     "patch-package": "8.0.0",
     "prettier": "2.8.8",
     "prettier-plugin-svelte": "2.10.1",
-    "rimraf": "5.0.5",
+    "rimraf": "6.0.1",
     "ts-jest": "28.0.8",
-    "ts-node": "10.9.1",
-    "tslib": "2.6.2",
-    "tsx": "4.9.3",
-    "typescript": "5.2.2"
+    "ts-node": "10.9.2",
+    "tslib": "2.6.3",
+    "tsx": "4.17.0",
+    "typescript": "5.5.4",
+    "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
-      "eslint --fix"
+      "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --fix"
     ],
     "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
@@ -83,14 +85,15 @@
   },
   "resolutions": {
     "prettier": "2.8.8",
-    "babel-jest": "29.6.4",
+    "babel-jest": "29.7.0",
     "jest-runner": "28.1.3",
-    "graphql": "16.8.0",
+    "graphql": "16.9.0",
     "graphql-language-service-interface": "2.10.2",
     "**/apollo-language-server/graphql": "^16.0.0",
     "**/@types/graphql-upload/graphql": "^16.0.0",
-    "ts-node": "10.9.1",
-    "typescript": "5.2.2",
-    "cosmiconfig": "8.1.3"
+    "ts-node": "10.9.2",
+    "typescript": "5.5.4",
+    "cosmiconfig": "8.3.6",
+    "eslint-plugin-promise": "7.1.0"
   }
 }

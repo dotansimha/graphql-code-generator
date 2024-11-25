@@ -1,7 +1,6 @@
 import {
-  AvoidOptionalsConfig,
   ConvertNameFn,
-  normalizeAvoidOptionals,
+  NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   OperationVariablesToObject,
   ParsedDirectiveArgumentAndInputFieldMappings,
@@ -13,14 +12,14 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   constructor(
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
-    private _avoidOptionals: boolean | AvoidOptionalsConfig,
+    private _avoidOptionals: NormalizedAvoidOptionalsConfig,
     private _immutableTypes: boolean,
     _namespacedImportName: string | null = null,
     _enumNames: string[] = [],
     _enumPrefix = true,
     _enumSuffix = true,
     _enumValues: ParsedEnumValuesMap = {},
-    _applyCoercion: Boolean = false,
+    _applyCoercion: boolean = false,
     _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {},
     private _maybeType = 'Maybe'
   ) {
@@ -83,7 +82,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean) {
-    const options = normalizeAvoidOptionals(this._avoidOptionals);
+    const options = this._avoidOptionals;
     return ((options.object || !options.defaultValue) && hasDefaultValue) || (!options.object && !isNonNullType);
   }
 

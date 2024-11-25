@@ -1,11 +1,11 @@
 import {
-  AvoidOptionalsConfig,
   BaseDocumentsVisitor,
   DeclarationKind,
   generateFragmentImportStatement,
   getConfigValue,
   LoadedFragment,
   normalizeAvoidOptionals,
+  NormalizedAvoidOptionalsConfig,
   ParsedDocumentsConfig,
   PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
@@ -20,7 +20,7 @@ import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;
-  avoidOptionals: AvoidOptionalsConfig;
+  avoidOptionals: NormalizedAvoidOptionalsConfig;
   immutableTypes: boolean;
   noExport: boolean;
   maybeValue: string;
@@ -108,7 +108,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName.bind(this),
-        this.config.avoidOptionals.object,
+        this.config.avoidOptionals,
         this.config.immutableTypes,
         this.config.namespacedImportName,
         enumsNames,

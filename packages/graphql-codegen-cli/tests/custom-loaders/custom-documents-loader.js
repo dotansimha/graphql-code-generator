@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { parse } = require('graphql');
 const { readFileSync } = require('fs');
 const { join } = require('path');

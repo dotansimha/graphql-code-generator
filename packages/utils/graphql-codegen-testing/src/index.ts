@@ -65,7 +65,7 @@ function findProjectDir(dirname: string): string | never {
       }
 
       dirname = resolve(dirname, '..');
-    } catch (e) {
+    } catch {
       // ignore
     }
   }

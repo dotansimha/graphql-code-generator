@@ -31,7 +31,7 @@ export async function runCli(cmd: string): Promise<number> {
 export async function ensureGraphQlPackage() {
   try {
     await import('graphql');
-  } catch (e) {
+  } catch {
     throw new Error(
       `Unable to load "graphql" package. Please make sure to install "graphql" as a dependency! \n
        To install "graphql", run:

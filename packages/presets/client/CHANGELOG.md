@@ -1,5 +1,59 @@
 # @graphql-codegen/client-preset
 
+## 4.5.1
+
+### Patch Changes
+
+- [#9981](https://github.com/dotansimha/graphql-code-generator/pull/9981) [`05aa6b4`](https://github.com/dotansimha/graphql-code-generator/commit/05aa6b4cee6214674b25c9d20df27ce5e0e3927c) Thanks [@azu](https://github.com/azu)! - The client preset now allows the use of the `enumsAsConst` config option
+
+- Updated dependencies [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a), [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.0
+  - @graphql-codegen/typescript-operations@4.4.0
+  - @graphql-codegen/gql-tag-operations@4.0.12
+  - @graphql-codegen/typed-document-node@5.0.12
+  - @graphql-codegen/typescript@4.1.2
+
+## 4.5.0
+
+### Minor Changes
+
+- [#10136](https://github.com/dotansimha/graphql-code-generator/pull/10136) [`3fd4486`](https://github.com/dotansimha/graphql-code-generator/commit/3fd4486a548c27099377c7bd696a22d1638227f4) Thanks [@wxt2005](https://github.com/wxt2005)! - foward skipTypeNameForRoot to client-preset
+
+### Patch Changes
+
+- [#10182](https://github.com/dotansimha/graphql-code-generator/pull/10182) [`effd875`](https://github.com/dotansimha/graphql-code-generator/commit/effd875b205fa9c5a99ce5e7fcdeb86cea7723fc) Thanks [@eddeee888](https://github.com/eddeee888)! - Revert slimmer client preset output
+
+- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc), [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03), [`c7af639`](https://github.com/dotansimha/graphql-code-generator/commit/c7af63964089938150402db69d49f11f93bb5175)]:
+  - @graphql-codegen/visitor-plugin-common@5.5.0
+  - @graphql-codegen/plugin-helpers@5.1.0
+  - @graphql-codegen/typed-document-node@5.0.11
+  - @graphql-codegen/gql-tag-operations@4.0.11
+  - @graphql-codegen/typescript-operations@4.3.1
+  - @graphql-codegen/typescript@4.1.1
+
+## 4.4.0
+
+### Minor Changes
+
+- [#10073](https://github.com/dotansimha/graphql-code-generator/pull/10073) [`8471a18`](https://github.com/dotansimha/graphql-code-generator/commit/8471a180cd61dc03dedace87876c5973b09b35f8) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Reduce noise of generated code by only generating code relevant to GraphQL operations.
+
+### Patch Changes
+
+- [#10075](https://github.com/dotansimha/graphql-code-generator/pull/10075) [`67e7556`](https://github.com/dotansimha/graphql-code-generator/commit/67e75561a3e862f26cfbb40e8ec5a08f821f9ddf) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add note about enabling bundle size reduction for the generated `graphql` tag file.
+
+- Updated dependencies [[`67e7556`](https://github.com/dotansimha/graphql-code-generator/commit/67e75561a3e862f26cfbb40e8ec5a08f821f9ddf), [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/gql-tag-operations@4.0.10
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+  - @graphql-codegen/typescript-operations@4.3.0
+  - @graphql-codegen/typescript@4.1.0
+  - @graphql-codegen/typed-document-node@5.0.10
+
+## 4.3.3
+
+### Patch Changes
+
+- [#9817](https://github.com/dotansimha/graphql-code-generator/pull/9817) [`7ac42a3`](https://github.com/dotansimha/graphql-code-generator/commit/7ac42a33915985b9504bc16f38a22e057bbcd1ab) Thanks [@nikitalocalhost](https://github.com/nikitalocalhost)! - Resolve runtime error when using the babel plugin within an ESM environment.
+
 ## 4.3.2
 
 ### Patch Changes
@@ -30,12 +84,12 @@
 
   ```ts
   function MyComponent(props: FragmentType<typeof MyFragment> | null) {
-    const data = useFragment(MyFragment, props);
+    const data = useFragment(MyFragment, props)
     // data is `MyFragment | null`
   }
 
   function MyComponent(props: FragmentType<typeof MyFragment> | undefined) {
-    const data = useFragment(MyFragment, props);
+    const data = useFragment(MyFragment, props)
     // data is `MyFragment | undefined`
   }
   ```
@@ -51,7 +105,7 @@
   ### Example
 
   ```ts filename="codegen.ts" {10-12}
-  import { type CodegenConfig } from '@graphql-codegen/cli';
+  import { type CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'schema.graphql',
@@ -62,15 +116,15 @@
         presetConfig: {
           persistedDocuments: {
             hashAlgorithm: operation => {
-              const shasum = crypto.createHash('sha512');
-              shasum.update(operation);
-              return shasum.digest('hex');
-            },
-          },
-        },
-      },
-    },
-  };
+              const shasum = crypto.createHash('sha512')
+              shasum.update(operation)
+              return shasum.digest('hex')
+            }
+          }
+        }
+      }
+    }
+  }
   ```
 
 - Updated dependencies [[`5501c62`](https://github.com/dotansimha/graphql-code-generator/commit/5501c621f19eb5ef8e703a21f7367e07e41f199c)]:
@@ -232,7 +286,7 @@
 
   ```jsx
   // src/index.tsx
-  import { graphql } from './gql';
+  import { graphql } from './gql'
   const OrdersFragment = graphql(`
     fragment OrdersFragment on User {
       orders {
@@ -240,7 +294,7 @@
         total
       }
     }
-  `);
+  `)
   const GetUserQuery = graphql(`
     query GetUser($id: ID!) {
       user(id: $id) {
@@ -249,7 +303,7 @@
         ...OrdersFragment @defer
       }
     }
-  `);
+  `)
   ```
 
   The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
@@ -257,10 +311,10 @@
   ```tsx
   // gql/graphql.ts
   export type GetUserQuery = { __typename?: 'Query'; id: string; name: string } & ({
-    __typename?: 'Query';
+    __typename?: 'Query'
   } & {
-    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> };
-  });
+    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> }
+  })
   ```
 
   Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred
@@ -369,7 +423,7 @@
   To use this feature, you can write `documentTransforms` as follows:
 
   ```ts
-  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -381,21 +435,21 @@
           {
             transform: ({ documents }) => {
               // Make some changes to the documents
-              return documents;
-            },
-          },
-        ],
-      },
-    },
-  };
-  export default config;
+              return documents
+            }
+          }
+        ]
+      }
+    }
+  }
+  export default config
   ```
 
   For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the following code:
 
   ```js
-  import type { CodegenConfig } from '@graphql-codegen/cli';
-  import { visit } from 'graphql';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
+  import { visit } from 'graphql'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -410,19 +464,19 @@
                 documentFile.document = visit(documentFile.document, {
                   Directive: {
                     leave(node) {
-                      if (node.name.value === 'localOnlyDirective') return null;
-                    },
-                  },
-                });
-                return documentFile;
-              });
-            },
-          },
-        ],
-      },
-    },
-  };
-  export default config;
+                      if (node.name.value === 'localOnlyDirective') return null
+                    }
+                  }
+                })
+                return documentFile
+              })
+            }
+          }
+        ]
+      }
+    }
+  }
+  export default config
   ```
 
   DocumentTransform can also be specified by file name. You can create a custom file for a specific transformation and pass it to `documentTransforms`.
@@ -433,15 +487,15 @@
   module.exports = {
     transform: ({ documents }) => {
       // Make some changes to the documents
-      return documents;
-    },
-  };
+      return documents
+    }
+  }
   ```
 
   Then, you can specify the file name as follows:
 
   ```ts
-  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -449,11 +503,11 @@
     generates: {
       './src/gql/': {
         preset: 'client',
-        documentTransforms: ['./my-document-transform.js'],
-      },
-    },
-  };
-  export default config;
+        documentTransforms: ['./my-document-transform.js']
+      }
+    }
+  }
+  export default config
   ```
 
 ### Patch Changes
@@ -509,7 +563,7 @@
 
   ```ts
   /** codegen.ts */
-  import { CodegenConfig } from '@graphql-codegen/cli';
+  import { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
@@ -520,13 +574,13 @@
         preset: 'client',
         plugins: [],
         presetConfig: {
-          persistedDocuments: true,
-        },
-      },
-    },
-  };
+          persistedDocuments: true
+        }
+      }
+    }
+  }
 
-  export default config;
+  export default config
   ```
 
   This will generate `./src/gql/persisted-documents.json` (dictionary of hashes with their operation string).
@@ -534,7 +588,7 @@
   In addition to that each generated document node will have a `__meta__.hash` property.
 
   ```ts
-  import { gql } from './gql.js';
+  import { gql } from './gql.js'
 
   const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
     query allFilmsWithVariablesQuery($first: Int!) {
@@ -546,9 +600,9 @@
         }
       }
     }
-  `);
+  `)
 
-  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__']['hash']);
+  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__']['hash'])
   ```
 
 - [#8757](https://github.com/dotansimha/graphql-code-generator/pull/8757) [`4f290aa72`](https://github.com/dotansimha/graphql-code-generator/commit/4f290aa7279a05ffa40920c1c9e5e5b37c164335) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add support for embedding metadata in the document AST.
@@ -557,7 +611,7 @@
 
   ```ts
   /** codegen.ts */
-  import { CodegenConfig } from '@graphql-codegen/cli';
+  import { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
@@ -571,21 +625,21 @@
           onExecutableDocumentNode(documentNode) {
             return {
               operation: documentNode.definitions[0].operation,
-              name: documentNode.definitions[0].name.value,
-            };
-          },
-        },
-      },
-    },
-  };
+              name: documentNode.definitions[0].name.value
+            }
+          }
+        }
+      }
+    }
+  }
 
-  export default config;
+  export default config
   ```
 
   You can then access the metadata via the `__meta__` property on the document node.
 
   ```ts
-  import { gql } from './gql.js';
+  import { gql } from './gql.js'
 
   const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
     query allFilmsWithVariablesQuery($first: Int!) {
@@ -597,9 +651,9 @@
         }
       }
     }
-  `);
+  `)
 
-  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__']);
+  console.log((allFilmsWithVariablesQueryDocument as any)['__meta__'])
   ```
 
 ### Patch Changes

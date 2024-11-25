@@ -49,6 +49,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -136,6 +137,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -215,6 +217,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -295,6 +298,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -425,6 +429,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -548,6 +553,7 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -661,6 +667,7 @@ export * from "./gql";`);
          * 3. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
+         * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
         const documents = {
             "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -1008,6 +1015,7 @@ export * from "./gql.js";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       const documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -2330,7 +2338,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2471,7 +2479,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2607,7 +2615,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2682,6 +2690,7 @@ export * from "./gql.js";`);
          * 3. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
+         * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
         const documents = {
             "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
@@ -2896,7 +2905,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2916,5 +2925,77 @@ export * from "./gql.js";`);
             \`) as unknown as TypedDocumentString<OnRegionCreatedSubscription, OnRegionCreatedSubscriptionVariables>;
       `);
     });
+  });
+
+  it('support enumsAsConst option', async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            thing: Thing
+          }
+          type Thing {
+            color: Color!
+          }
+          enum Color {
+            RED
+            BLUE
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/enum.ts'),
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            enumsAsConst: true,
+          },
+        },
+      },
+    });
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toBeSimilarStringTo(`
+        /* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+        
+        export const Color = {
+          Blue: 'BLUE',
+          Red: 'RED'
+        } as const;
+        
+        export type Color = typeof Color[keyof typeof Color];
+        export type Query = {
+          __typename?: 'Query';
+          thing?: Maybe<Thing>;
+        };
+        
+        export type Thing = {
+          __typename?: 'Thing';
+          color: Color;
+        };
+        
+        export type FavoriteColorQueryVariables = Exact<{ [key: string]: never; }>;
+        
+        
+        export type FavoriteColorQuery = { __typename?: 'Query', thing?: { __typename?: 'Thing', color: Color } | null };
+        
+        
+        export const FavoriteColorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FavoriteColor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<FavoriteColorQuery, FavoriteColorQueryVariables>;
+    `);
   });
 });

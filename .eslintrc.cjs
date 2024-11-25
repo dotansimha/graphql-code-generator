@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['@theguild'],
+  extends: ['@theguild', 'plugin:tailwindcss/recommended'],
   rules: {
     'no-empty': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -54,6 +54,12 @@ module.exports = {
       files: ['packages/**/*.{,c,m}ts{,x}'],
       parserOptions: {
         project: ['./tsconfig.json'],
+      },
+    },
+    {
+      files: ['scripts/*.{ts,js}', 'prettier.config.cjs', 'jest.config.js', 'jest.project.js'],
+      rules: {
+        '@typescript-eslint/no-require-imports': 'off',
       },
     },
   ],

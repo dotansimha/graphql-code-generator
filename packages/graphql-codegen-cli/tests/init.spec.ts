@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { resolve } from 'path';
 import bddStdin from 'bdd-stdin';
 import { bold } from '../src/init/helpers.js';
