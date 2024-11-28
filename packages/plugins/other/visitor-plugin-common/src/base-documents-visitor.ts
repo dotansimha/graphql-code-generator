@@ -172,6 +172,7 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    *    },
    *  };
    *  export default config;
+   * ```
    */
   customDirectives?: CustomDirectivesConfig;
 }
