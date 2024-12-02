@@ -126,6 +126,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       useTypeImports: options.config.useTypeImports,
       skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
+      enumsAsConst: options.config.enumsAsConst,
       enumsAsTypes: options.config.enumsAsTypes,
       enumsAsConst: options.config.enumsAsConst,
       futureProofEnums: options.config.futureProofEnums,
