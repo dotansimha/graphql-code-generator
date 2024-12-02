@@ -134,6 +134,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
       skipTypeNameForRoot: options.config.skipTypeNameForRoot,
+      extractAllFieldsToTypes: options.config.extractAllFieldsToTypes,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);

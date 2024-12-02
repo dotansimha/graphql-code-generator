@@ -517,6 +517,164 @@ export * from "./gql";`);
     expect(graphqlFile.content).toContain("__typename: 'Query';");
   });
 
+  it("follows 'extractAllFieldsToTypes: true'", async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          scalar DateTime
+
+          type Query {
+            me: User
+          }
+
+          type User {
+            id: ID!
+            name: String!
+            dob: DateTime!
+            email: String!
+            phone: String!
+          }
+        `,
+      ],
+      documents: /* GraphQL */ `
+        query Me {
+          me {
+            id
+            ...UserDetails_1
+            ...UserDetails_2
+            ...UserContact
+          }
+        }
+
+        fragment UserDetails_1 on User {
+          name
+          dob
+        }
+        fragment UserDetails_2 on User {
+          name
+          dob
+        }
+        fragment UserContact on User {
+          email
+          phone
+        }
+      `,
+      generates: {
+        'out1/': { preset },
+      },
+      config: {
+        extractAllFieldsToTypes: true,
+      },
+    });
+
+    expect(result.length).toBe(4);
+    const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+    expect(gqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import * as types from './graphql';
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
+       */
+      const documents = {
+          "query Me {\\n  me {\\n    id\\n    ...UserDetails_1\\n    ...UserDetails_2\\n    ...UserContact\\n  }\\n}\\n\\nfragment UserDetails_1 on User {\\n  name\\n  dob\\n}\\n\\nfragment UserDetails_2 on User {\\n  name\\n  dob\\n}\\n\\nfragment UserContact on User {\\n  email\\n  phone\\n}": types.MeDocument,
+      };
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "query Me {\\n  me {\\n    id\\n    ...UserDetails_1\\n    ...UserDetails_2\\n    ...UserContact\\n  }\\n}\\n\\nfragment UserDetails_1 on User {\\n  name\\n  dob\\n}\\n\\nfragment UserDetails_2 on User {\\n  name\\n  dob\\n}\\n\\nfragment UserContact on User {\\n  email\\n  phone\\n}"): (typeof documents)["query Me {\\n  me {\\n    id\\n    ...UserDetails_1\\n    ...UserDetails_2\\n    ...UserContact\\n  }\\n}\\n\\nfragment UserDetails_1 on User {\\n  name\\n  dob\\n}\\n\\nfragment UserDetails_2 on User {\\n  name\\n  dob\\n}\\n\\nfragment UserContact on User {\\n  email\\n  phone\\n}"];
+
+      export function graphql(source: string) {
+        return (documents as any)[source] ?? {};
+      }
+
+      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    `);
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = Maybe<T>;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+        DateTime: { input: any; output: any; }
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        me?: Maybe<User>;
+      };
+
+      export type User = {
+        __typename?: 'User';
+        dob: Scalars['DateTime']['output'];
+        email: Scalars['String']['output'];
+        id: Scalars['ID']['output'];
+        name: Scalars['String']['output'];
+        phone: Scalars['String']['output'];
+      };
+
+      export type MeQuery_me_User = (
+        { __typename?: 'User', id: string }
+        & { ' $fragmentRefs'?: { 'UserDetails_1Fragment': UserDetails_1Fragment;'UserDetails_2Fragment': UserDetails_2Fragment;'UserContactFragment': UserContactFragment } }
+      );
+
+      export type MeQuery_Query = { __typename?: 'Query', me?: MeQuery_me_User | null };
+
+
+      export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type MeQuery = MeQuery_Query;
+
+      export type UserDetails_1Fragment = { __typename?: 'User', name: string, dob: any } & { ' $fragmentName'?: 'UserDetails_1Fragment' };
+
+      export type UserDetails_2Fragment = { __typename?: 'User', name: string, dob: any } & { ' $fragmentName'?: 'UserDetails_2Fragment' };
+
+      export type UserContactFragment = { __typename?: 'User', email: string, phone: string } & { ' $fragmentName'?: 'UserContactFragment' };
+
+      export const UserDetails_1FragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserDetails_1"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}}]}}]} as unknown as DocumentNode<UserDetails_1Fragment, unknown>;
+      export const UserDetails_2FragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserDetails_2"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}}]}}]} as unknown as DocumentNode<UserDetails_2Fragment, unknown>;
+      export const UserContactFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserContact"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<UserContactFragment, unknown>;
+      export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserDetails_1"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserDetails_2"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserContact"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserDetails_1"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserDetails_2"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserContact"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;"
+    `);
+  });
+
   it('prevent duplicate operations', async () => {
     const result = await executeCodegen({
       schema: [
