@@ -224,6 +224,30 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 
       await resolversTestingValidate(result);
     });
+
+    it('allowSemanticNonNull - should build strict type if annotated by @semanticNonNull directive', async () => {
+      const testingSchema = buildSchema(/* GraphQL */ `
+        directive @semanticNonNull(levels: [Int] = [0]) on FIELD_DEFINITION
+        type TestingType {
+          nullableField: String
+          nullableList: [String]
+          semanticNonNullField: String @semanticNonNull
+          semanticNonNullList: [String] @semanticNonNull
+        }
+      `);
+
+      const result = await plugin(testingSchema, [], { allowSemanticNonNull: true }, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type TestingTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestingType'] = ResolversParentTypes['TestingType']> = {
+          nullableField?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+          nullableList?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+          semanticNonNullField?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+          semanticNonNullList?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+          __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+        };
+      `);
+    });
   });
 
   it('directiveResolverMappings - should generate correct types (import definition)', async () => {
