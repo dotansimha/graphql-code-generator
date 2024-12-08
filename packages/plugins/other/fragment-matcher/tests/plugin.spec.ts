@@ -444,4 +444,72 @@ describe('Fragment Matcher Plugin', () => {
 
     expect(content).toEqual(introspection);
   });
+  it('should create the result deterministically when configured to', async () => {
+    const complexSchema = buildASTSchema(gql`
+      type Droid {
+        model: String
+      }
+
+      type Character {
+        name: String
+      }
+
+      type Jedi {
+        side: String
+      }
+
+      union People = Jedi | Droid | Character
+      union People2 = Droid | Jedi | Character
+
+      type Query {
+        allPeople: [People]
+      }
+    `);
+
+    const reorderedComplexSchema = buildASTSchema(gql`
+      type Droid {
+        model: String
+      }
+
+      type Character {
+        name: String
+      }
+
+      type Jedi {
+        side: String
+      }
+
+      union People2 = Droid | Jedi | Character
+      union People = Jedi | Droid | Character
+
+      type Query {
+        allPeople: [People]
+      }
+    `);
+
+    const contentA = await plugin(
+      complexSchema,
+      [],
+      {
+        apolloClientVersion: 2,
+        deterministic: true,
+      },
+      {
+        outputFile: 'foo.json',
+      }
+    );
+    const contentB = await plugin(
+      reorderedComplexSchema,
+      [],
+      {
+        apolloClientVersion: 2,
+        deterministic: true,
+      },
+      {
+        outputFile: 'foo.json',
+      }
+    );
+
+    expect(contentA).toEqual(contentB);
+  });
 });
