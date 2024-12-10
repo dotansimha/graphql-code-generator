@@ -244,6 +244,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
+  const federationTypes = visitor.buildFederationTypes();
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const resolversUnionTypesMapping = visitor.buildResolversUnionTypes();
@@ -287,6 +288,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     prepend,
     content: [
       header,
+      federationTypes,
       resolversUnionTypesMapping,
       resolversInterfaceTypesMapping,
       resolversTypeMapping,

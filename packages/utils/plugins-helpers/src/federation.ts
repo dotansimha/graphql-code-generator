@@ -155,10 +155,12 @@ export class ApolloFederation {
     fieldNode,
     parentType,
     parentTypeSignature,
+    federationTypeSignature,
   }: {
     fieldNode: FieldDefinitionNode;
     parentType: GraphQLNamedType;
     parentTypeSignature: string;
+    federationTypeSignature: string;
   }) {
     if (
       this.enabled &&
@@ -177,12 +179,12 @@ export class ApolloFederation {
 
         // Look for @requires and see what the service needs and gets
         const requires = getDirectivesByName('requires', fieldNode).map(this.extractFieldSet);
-        const requiredFields = this.translateFieldSet(merge({}, ...requires), parentTypeSignature);
+        const requiredFields = this.translateFieldSet(merge({}, ...requires), federationTypeSignature);
 
         // @key() @key() - "primary keys" in Federation
         const primaryKeys = resolvableKeyDirectives.map(def => {
           const fields = this.extractFieldSet(def);
-          return this.translateFieldSet(fields, parentTypeSignature);
+          return this.translateFieldSet(fields, federationTypeSignature);
         });
 
         const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
