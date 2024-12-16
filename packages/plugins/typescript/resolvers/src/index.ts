@@ -106,13 +106,6 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
   if (visitor.hasFederation()) {
-    if (visitor.config.wrapFieldDefinitions) {
-      defsToInclude.push(`export type UnwrappedObject<T> = {
-        [P in keyof T]: T[P] extends infer R | Promise<infer R> | (() => infer R2 | Promise<infer R2>)
-          ? R & R2 : T[P]
-      };`);
-    }
-
     defsToInclude.push(
       `export type ReferenceResolver<TResult, TReference, TContext> = (
       reference: TReference,

@@ -174,30 +174,32 @@ export class ApolloFederation {
 
       const { resolvableKeyDirectives } = objectTypeFederationDetails;
 
-      if (resolvableKeyDirectives.length) {
-        const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
-
-        // Look for @requires and see what the service needs and gets
-        const requires = getDirectivesByName('requires', fieldNode).map(this.extractFieldSet);
-        const requiredFields = this.translateFieldSet(merge({}, ...requires), federationTypeSignature);
-
-        // @key() @key() - "primary keys" in Federation
-        const primaryKeys = resolvableKeyDirectives.map(def => {
-          const fields = this.extractFieldSet(def);
-          return this.translateFieldSet(fields, federationTypeSignature);
-        });
-
-        const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
-
-        outputs.push([open, primaryKeys.join(' | '), close].join(''));
-
-        // include required fields
-        if (requires.length) {
-          outputs.push(`& ${requiredFields}`);
-        }
-
-        return outputs.join(' ');
+      if (resolvableKeyDirectives.length === 0) {
+        return federationTypeSignature;
       }
+
+      const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
+
+      // Look for @requires and see what the service needs and gets
+      const requires = getDirectivesByName('requires', fieldNode).map(this.extractFieldSet);
+      const requiredFields = this.translateFieldSet(merge({}, ...requires), federationTypeSignature);
+
+      // @key() @key() - "primary keys" in Federation
+      const primaryKeys = resolvableKeyDirectives.map(def => {
+        const fields = this.extractFieldSet(def);
+        return this.translateFieldSet(fields, federationTypeSignature);
+      });
+
+      const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
+
+      outputs.push([open, primaryKeys.join(' | '), close].join(''));
+
+      // include required fields
+      if (requires.length) {
+        outputs.push(`& ${requiredFields}`);
+      }
+
+      return outputs.join(' ');
     }
 
     return parentTypeSignature;
