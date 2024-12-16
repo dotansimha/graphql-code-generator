@@ -1261,6 +1261,28 @@ export class BaseResolversVisitor<
       ).string;
   }
 
+  public buildFederationTypes(): string {
+    const federationMeta = this._federation.getMeta();
+
+    if (Object.keys(federationMeta).length === 0) {
+      return '';
+    }
+
+    const declarationKind = 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName('FederationTypes'))
+      .withComment('Mapping of federation types')
+      .withBlock(
+        Object.keys(federationMeta)
+          .map(typeName => {
+            return indent(`${typeName}: ${this.convertName(typeName)}${this.getPunctuation(declarationKind)}`);
+          })
+          .join('\n')
+      ).string;
+  }
+
   public get schema(): GraphQLSchema {
     return this._schema;
   }
@@ -1529,6 +1551,7 @@ export class BaseResolversVisitor<
         fieldNode: original,
         parentType,
         parentTypeSignature: this.getParentTypeForSignature(node),
+        federationTypeSignature: 'FederationType',
       });
 
       const { mappedTypeKey, resolverType } = ((): { mappedTypeKey: string; resolverType: string } => {
@@ -1675,10 +1698,19 @@ export class BaseResolversVisitor<
       );
     }
 
+    const genericTypes: string[] = [
+      `ContextType = ${this.config.contextType.type}`,
+      this.transformParentGenericType(parentType),
+    ];
+    if (this._federation.getMeta()[typeName]) {
+      const typeRef = `${this.convertName('FederationTypes')}['${typeName}']`;
+      genericTypes.push(`FederationType extends ${typeRef} = ${typeRef}`);
+    }
+
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
+      .withName(name, `<${genericTypes.join(', ')}>`)
       .withBlock(fieldsContent.join('\n'));
 
     this._collectedResolvers[node.name as any] = {
