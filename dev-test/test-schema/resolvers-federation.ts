@@ -128,6 +128,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of federation types */
+export type FederationTypes = {
+  User: User;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Address: ResolverTypeWrapper<Address>;
@@ -190,13 +195,14 @@ export type QueryResolvers<
 
 export type UserResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
+  FederationType extends FederationTypes['User'] = FederationTypes['User']
 > = {
   __resolveReference?: ReferenceResolver<
     Maybe<ResolversTypes['User']>,
     { __typename: 'User' } & (
-      | GraphQLRecursivePick<ParentType, { id: true }>
-      | GraphQLRecursivePick<ParentType, { name: true }>
+      | GraphQLRecursivePick<FederationType, { id: true }>
+      | GraphQLRecursivePick<FederationType, { name: true }>
     ),
     ContextType
   >;
@@ -204,10 +210,10 @@ export type UserResolvers<
   email?: Resolver<
     ResolversTypes['String'],
     { __typename: 'User' } & (
-      | GraphQLRecursivePick<ParentType, { id: true }>
-      | GraphQLRecursivePick<ParentType, { name: true }>
+      | GraphQLRecursivePick<FederationType, { id: true }>
+      | GraphQLRecursivePick<FederationType, { name: true }>
     ) &
-      GraphQLRecursivePick<ParentType, { address: { city: true; lines: { line2: true } } }>,
+      GraphQLRecursivePick<FederationType, { address: { city: true; lines: { line2: true } } }>,
     ContextType
   >;
 
