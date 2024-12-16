@@ -7,14 +7,7 @@ import {
   ParsedResolversConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import {
-  EnumTypeDefinitionNode,
-  FieldDefinitionNode,
-  GraphQLSchema,
-  ListTypeNode,
-  NamedTypeNode,
-  NonNullTypeNode,
-} from 'graphql';
+import { EnumTypeDefinitionNode, GraphQLSchema, ListTypeNode, NamedTypeNode, NonNullTypeNode } from 'graphql';
 import { TypeScriptResolversPluginConfig } from './config.js';
 
 export const ENUM_RESOLVERS_SIGNATURE =
@@ -94,13 +87,6 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected wrapWithListType(str: string): string {
     return `${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${str}>`;
-  }
-
-  protected getParentTypeForSignature(node: FieldDefinitionNode) {
-    if (this._federation.isResolveReferenceField(node) && this.config.wrapFieldDefinitions) {
-      return 'UnwrappedObject<ParentType>';
-    }
-    return 'ParentType';
   }
 
   NamedType(node: NamedTypeNode): string {
