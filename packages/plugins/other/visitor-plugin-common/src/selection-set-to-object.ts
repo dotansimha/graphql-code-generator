@@ -970,7 +970,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 function formatUnion(config: ParsedDocumentsConfig, members: string[]): string {
   if (config.printFieldsOnNewLines && members.length > 1) {
     return `\n  | ${members.join('\n  | ')}`;
-  } 
-    return members.join(' | ');
-  
+  }
+  return members.join(' | ');
 }
