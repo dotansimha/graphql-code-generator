@@ -95,7 +95,9 @@ describe('extractAllFieldsToTypes: true', () => {
         joinDate: any
       };
 
-      export type UserFragment = UserFragment_DummyUser | UserFragment_ActiveUser;
+      export type UserFragment =
+        | UserFragment_DummyUser
+        | UserFragment_ActiveUser;
 
       export type MeFragment_ActiveUser_parentUser_DummyUser = {
         __typename: 'DummyUser',
@@ -128,7 +130,9 @@ describe('extractAllFieldsToTypes: true', () => {
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
-      export type MeFragment = Me_DummyUser_Fragment | Me_ActiveUser_Fragment;
+      export type MeFragment =
+        | Me_DummyUser_Fragment
+        | Me_ActiveUser_Fragment;
 
       export type OverlappingFieldsMergingTestQuery_me_DummyUser = {
         __typename: 'DummyUser',
@@ -1389,7 +1393,10 @@ describe('extractAllFieldsToTypes: true', () => {
         & { originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom }
       );
 
-      export type ConversationConversationEventFragment = ConversationConversationEvent_BrokenConversationEvent_Fragment | ConversationConversationEvent_BotSolution_Fragment | ConversationConversationEvent_TalkPublicCallSummary_Fragment;
+      export type ConversationConversationEventFragment =
+        | ConversationConversationEvent_BrokenConversationEvent_Fragment
+        | ConversationConversationEvent_BotSolution_Fragment
+        | ConversationConversationEvent_TalkPublicCallSummary_Fragment;
 
       type MessageEnvelopeData_EmailInteraction_Fragment = (
         { __typename: 'EmailInteraction' }
@@ -1408,7 +1415,14 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type MessageEnvelopeDataFragment = MessageEnvelopeData_EmailInteraction_Fragment | MessageEnvelopeData_CustomChannelInteraction_Fragment | MessageEnvelopeData_TalkInteraction_Fragment | MessageEnvelopeData_NativeMessagingInteraction_Fragment | MessageEnvelopeData_WhatsAppInteraction_Fragment | MessageEnvelopeData_WeChatInteraction_Fragment | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment;
+      export type MessageEnvelopeDataFragment =
+        | MessageEnvelopeData_EmailInteraction_Fragment
+        | MessageEnvelopeData_CustomChannelInteraction_Fragment
+        | MessageEnvelopeData_TalkInteraction_Fragment
+        | MessageEnvelopeData_NativeMessagingInteraction_Fragment
+        | MessageEnvelopeData_WhatsAppInteraction_Fragment
+        | MessageEnvelopeData_WeChatInteraction_Fragment
+        | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment;
 
       export type AnyChannelOriginatedFromFragment = (
         { __typename: 'CustomChannelInteraction' }
@@ -1444,7 +1458,14 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationOriginatedFromFragment = ConversationOriginatedFrom_EmailInteraction_Fragment | ConversationOriginatedFrom_CustomChannelInteraction_Fragment | ConversationOriginatedFrom_TalkInteraction_Fragment | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment | ConversationOriginatedFrom_WhatsAppInteraction_Fragment | ConversationOriginatedFrom_WeChatInteraction_Fragment | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment;
+      export type ConversationOriginatedFromFragment =
+        | ConversationOriginatedFrom_EmailInteraction_Fragment
+        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
+        | ConversationOriginatedFrom_TalkInteraction_Fragment
+        | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment
+        | ConversationOriginatedFrom_WhatsAppInteraction_Fragment
+        | ConversationOriginatedFrom_WeChatInteraction_Fragment
+        | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment;
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = (
         { __typename: 'EmailInteraction' }
