@@ -844,10 +844,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       this.getEmptyObjectTypeString(mustAddEmptyObject),
     ].filter(Boolean);
 
-    const content =
-      this._config.printFieldsOnNewLines && typeParts.length > 1
-        ? `\n  | ${typeParts.join('\n  | ')}\n`
-        : typeParts.join(' | ');
+    const content = formatUnion(this._config, typeParts);
 
     if (typeParts.length > 1 && this._config.extractAllFieldsToTypes) {
       return {

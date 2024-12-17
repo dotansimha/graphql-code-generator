@@ -113,8 +113,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type MeFragment_ActiveUser_parentUser =
         | MeFragment_ActiveUser_parentUser_DummyUser
-        | MeFragment_ActiveUser_parentUser_ActiveUser
-      ;
+        | MeFragment_ActiveUser_parentUser_ActiveUser;
 
       type Me_DummyUser_Fragment = {
         __typename: 'DummyUser',
@@ -150,8 +149,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type OverlappingFieldsMergingTestQuery_me =
         | OverlappingFieldsMergingTestQuery_me_DummyUser
-        | OverlappingFieldsMergingTestQuery_me_ActiveUser
-      ;
+        | OverlappingFieldsMergingTestQuery_me_ActiveUser;
 
       export type OverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
@@ -180,8 +178,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type NestedOverlappingFieldsMergingTestQuery_me =
         | NestedOverlappingFieldsMergingTestQuery_me_DummyUser
-        | NestedOverlappingFieldsMergingTestQuery_me_ActiveUser
-      ;
+        | NestedOverlappingFieldsMergingTestQuery_me_ActiveUser;
 
       export type NestedOverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
@@ -1314,8 +1311,7 @@ describe('extractAllFieldsToTypes: true', () => {
         | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction
         | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction
         | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom
-      ;
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom;
 
       export type ConversationBotSolutionFragment = (
         { __typename: 'BotSolution' }
@@ -1372,8 +1368,7 @@ describe('extractAllFieldsToTypes: true', () => {
         | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction
         | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction
         | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction
-        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom
-      ;
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom;
 
       type ConversationConversationEvent_BrokenConversationEvent_Fragment = (
         { __typename: 'BrokenConversationEvent' }
@@ -1506,8 +1501,7 @@ describe('extractAllFieldsToTypes: true', () => {
         | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction
         | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction
         | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
-      ;
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom;
 
       export type ConversationTalkPublicCallSummaryFragment = (
         { __typename: 'TalkPublicCallSummary' }
