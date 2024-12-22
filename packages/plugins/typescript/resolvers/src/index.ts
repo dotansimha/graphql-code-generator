@@ -75,8 +75,14 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
     }
   }
 
-  const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
-  const visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
+  const { transformedSchema, federationMeta } = config.federation
+    ? addFederationReferencesToSchema(schema)
+    : { transformedSchema: schema, federationMeta: {} };
+  const visitor = new TypeScriptResolversVisitor(
+    { ...config, directiveResolverMappings },
+    transformedSchema,
+    federationMeta
+  );
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
