@@ -44,6 +44,18 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
   transformedSchema: GraphQLSchema;
   federationMeta: FederationMeta;
 } {
+  const setFederationMeta = ({
+    meta,
+    typeName,
+    update,
+  }: {
+    meta: FederationMeta;
+    typeName: string;
+    update: Partial<TypeMeta>;
+  }): void => {
+    meta[typeName] = { ...(meta[typeName] || { hasResolveReference: false }), ...update };
+  };
+
   const federationMeta: FederationMeta = {};
 
   const transformedSchema = mapSchema(schema, {
@@ -97,18 +109,6 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
     federationMeta,
   };
 }
-
-const setFederationMeta = ({
-  meta,
-  typeName,
-  update,
-}: {
-  meta: FederationMeta;
-  typeName: string;
-  update: Partial<TypeMeta>;
-}): void => {
-  meta[typeName] = { ...(meta[typeName] || { hasResolveReference: false }), ...update };
-};
 
 /**
  * Removes Federation Spec from GraphQL Schema
