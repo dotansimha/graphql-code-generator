@@ -78,7 +78,6 @@ export interface ParsedResolversConfig extends ParsedConfig {
   allResolversTypeName: string;
   internalResolversPrefix: string;
   generateInternalResolversIfNeeded: NormalizedGenerateInternalResolversIfNeededConfig;
-  onlyResolveTypeForInterfaces: boolean;
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
   avoidCheckingAbstractTypesRecursively: boolean;
@@ -592,12 +591,6 @@ export interface RawResolversConfig extends RawConfig {
    */
   generateInternalResolversIfNeeded?: GenerateInternalResolversIfNeededConfig;
   /**
-   * @type boolean
-   * @default false
-   * @description Turning this flag to `true` will generate resolver signature that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
-   */
-  onlyResolveTypeForInterfaces?: boolean;
-  /**
    * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
    * @default false
    *
@@ -714,7 +707,6 @@ export class BaseResolversVisitor<
         mapOrStr: rawConfig.enumValues,
       }),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-      onlyResolveTypeForInterfaces: getConfigValue(rawConfig.onlyResolveTypeForInterfaces, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
       directiveContextTypes: getConfigValue(rawConfig.directiveContextTypes, []),
@@ -1844,7 +1836,6 @@ export class BaseResolversVisitor<
     });
 
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
-    const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1857,7 +1848,7 @@ export class BaseResolversVisitor<
               this.config.optionalResolveType ? '?' : ''
             }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
           ),
-          ...(fields as unknown as FieldDefinitionPrintFn[]).map(f =>
+          ...(node.fields as unknown as FieldDefinitionPrintFn[]).map(f =>
             f(typeName, this.config.avoidOptionals.resolvers)
           ),
         ].join('\n')
