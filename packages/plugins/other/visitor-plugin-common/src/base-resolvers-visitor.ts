@@ -1,4 +1,4 @@
-import { ApolloFederation, checkObjectTypeFederationDetails, getBaseType } from '@graphql-codegen/plugin-helpers';
+import { ApolloFederation, type FederationMeta, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
 import autoBind from 'auto-bind';
 import {
@@ -584,12 +584,11 @@ export interface RawResolversConfig extends RawConfig {
   internalResolversPrefix?: string;
   /**
    * @type object
-   * @default { __resolveReference: false }
+   * @default {}
    * @description If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.
    * Enabling this allows a more correct type generation for the resolvers.
    * For example:
    * - `__isTypeOf` is generated for implementing types and union members
-   * - `__resolveReference` is generated for federation types that have at least one resolvable `@key` directive
    */
   generateInternalResolversIfNeeded?: GenerateInternalResolversIfNeededConfig;
   /**
@@ -700,7 +699,8 @@ export class BaseResolversVisitor<
     rawConfig: TRawConfig,
     additionalConfig: TPluginConfig,
     private _schema: GraphQLSchema,
-    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS,
+    federationMeta: FederationMeta = {}
   ) {
     super(rawConfig, {
       immutableTypes: getConfigValue(rawConfig.immutableTypes, false),
@@ -729,9 +729,7 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
-      generateInternalResolversIfNeeded: {
-        __resolveReference: rawConfig.generateInternalResolversIfNeeded?.__resolveReference ?? false,
-      },
+      generateInternalResolversIfNeeded: {},
       resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
       ),
@@ -740,7 +738,11 @@ export class BaseResolversVisitor<
     } as TPluginConfig);
 
     autoBind(this);
-    this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
+    this._federation = new ApolloFederation({
+      enabled: this.config.federation,
+      schema: this.schema,
+      meta: federationMeta,
+    });
     this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransformer = new OperationVariablesToObject(
       this.scalars,
@@ -1545,19 +1547,10 @@ export class BaseResolversVisitor<
       };
 
       if (this._federation.isResolveReferenceField(node)) {
-        if (this.config.generateInternalResolversIfNeeded.__resolveReference) {
-          const federationDetails = checkObjectTypeFederationDetails(
-            parentType.astNode as ObjectTypeDefinitionNode,
-            this._schema
-          );
-
-          if (!federationDetails || federationDetails.resolvableKeyDirectives.length === 0) {
-            return '';
-          }
-          signature.modifier = ''; // if a federation type has resolvable @key, then it should be required
+        if (!this._federation.getMeta()[parentType.name].hasResolveReference) {
+          return '';
         }
 
-        this._federation.setMeta(parentType.name, { hasResolveReference: true });
         signature.type = 'ReferenceResolver';
         if (signature.genericTypes.length >= 3) {
           signature.genericTypes = signature.genericTypes.slice(0, 3);
@@ -1646,10 +1639,11 @@ export class BaseResolversVisitor<
       `ContextType = ${this.config.contextType.type}`,
       this.transformParentGenericType(parentType),
     ];
-    if (this._federation.getMeta()[typeName]) {
-      const typeRef = `${this.convertName('FederationTypes')}['${typeName}']`;
-      genericTypes.push(`FederationType extends ${typeRef} = ${typeRef}`);
-    }
+    this._federation.addFederationTypeGenericIfApplicable({
+      genericTypes,
+      federationTypesType: this.convertName('FederationTypes'),
+      typeName,
+    });
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1838,13 +1832,24 @@ export class BaseResolversVisitor<
     }
 
     const parentType = this.getParentTypeToUse(typeName);
+
+    const genericTypes: string[] = [
+      `ContextType = ${this.config.contextType.type}`,
+      this.transformParentGenericType(parentType),
+    ];
+    this._federation.addFederationTypeGenericIfApplicable({
+      genericTypes,
+      federationTypesType: this.convertName('FederationTypes'),
+      typeName,
+    });
+
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
     const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
+      .withName(name, `<${genericTypes.join(', ')}>`)
       .withBlock(
         [
           indent(
