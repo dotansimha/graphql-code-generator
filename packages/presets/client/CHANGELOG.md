@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 4.6.0
+
+### Minor Changes
+
+- [#10155](https://github.com/dotansimha/graphql-code-generator/pull/10155) [`ed71811`](https://github.com/dotansimha/graphql-code-generator/commit/ed71811ace083be61c575609e361c629ed7c1740) Thanks [@nebbles](https://github.com/nebbles)! - client-preset generated output is configurable with onlyOperationTypes and onlyEnumTypes
+
 ## 4.5.1
 
 ### Patch Changes
