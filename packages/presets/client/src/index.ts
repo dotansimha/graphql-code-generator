@@ -128,6 +128,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       arrayInputCoercion: options.config.arrayInputCoercion,
       enumsAsTypes: options.config.enumsAsTypes,
       enumsAsConst: options.config.enumsAsConst,
+      mergeFragmentTypes: options.config.mergeFragmentTypes,
       futureProofEnums: options.config.futureProofEnums,
       dedupeFragments: options.config.dedupeFragments,
       nonOptionalTypename: options.config.nonOptionalTypename,
