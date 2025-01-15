@@ -44,7 +44,7 @@ contents:
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: 'https://swapi-graphql.netlify.app/graphql',
   documents: ['src/**/*.tsx'],
   ignoreNoDocuments: true,
   generates: {
@@ -170,7 +170,7 @@ export async function execute<TResult, TVariables>(
   query: TypedDocumentString<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ) {
-  const response = await fetch('https://swapi-graphql.netlify.app/.netlify/functions/index', {
+  const response = await fetch('https://swapi-graphql.netlify.app/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ export type ClientPresetConfig = {
    * @exampleMarkdown
    * ```tsx
    * const config = {
-   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    schema: 'https://swapi-graphql.netlify.app/graphql',
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {
@@ -49,7 +49,7 @@ export type ClientPresetConfig = {
    * @exampleMarkdown
    * ```tsx
    * const config = {
-   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    schema: 'https://swapi-graphql.netlify.app/graphql',
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {

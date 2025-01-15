@@ -33,7 +33,7 @@ const AllPeopleWithVariablesQueryDocument = graphql(/* GraphQL */ `
   }
 `);
 
-const apiUrl = 'https://swapi-graphql.netlify.app/.netlify/functions/index';
+const apiUrl = 'https://swapi-graphql.netlify.app/graphql';
 
 const client = new GraphQLClient(apiUrl);
 

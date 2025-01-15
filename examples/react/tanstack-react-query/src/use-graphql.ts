@@ -14,7 +14,7 @@ export function useGraphQL<TResult, TVariables>(
       variables,
     ] as const,
     async ({ queryKey }) => {
-      return fetch('https://swapi-graphql.netlify.app/.netlify/functions/index', {
+      return fetch('https://swapi-graphql.netlify.app/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

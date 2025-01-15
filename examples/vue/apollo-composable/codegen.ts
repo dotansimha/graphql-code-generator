@@ -1,7 +1,7 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: 'https://swapi-graphql.netlify.app/graphql',
   documents: ['src/**/*.vue', '!src/gql/**/*'],
   generates: {
     './src/gql/': {

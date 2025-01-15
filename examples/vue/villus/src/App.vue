@@ -5,7 +5,7 @@ import FilmItem from './components/FilmItem.vue';
 import { computed } from 'vue';
 
 useClient({
-  url: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  url: 'https://swapi-graphql.netlify.app/graphql',
 });
 
 const { data } = useQuery({
