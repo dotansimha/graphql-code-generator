@@ -2,7 +2,7 @@
 import { type CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/graphql',
+  schema: 'https://graphql.org/graphql/',
   documents: ['src/**/*.tsx', '!src/gql/**/*'],
   generates: {
     './src/gql/': {

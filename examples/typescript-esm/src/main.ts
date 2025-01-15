@@ -32,7 +32,7 @@ const AllPeopleWithVariablesQueryDocument = graphql(/* GraphQL */ `
   }
 `);
 
-const apiUrl = 'https://swapi-graphql.netlify.app/graphql';
+const apiUrl = 'https://graphql.org/graphql/';
 
 executeOperation(apiUrl, AllPeopleQueryDocument).then(res => {
   if (res.errors) {
