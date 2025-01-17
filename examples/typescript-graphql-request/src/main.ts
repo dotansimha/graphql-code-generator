@@ -1,3 +1,4 @@
+import { GraphQLClient } from 'graphql-request';
 import { graphql } from './gql';
 import { AllPeopleQueryQuery } from './gql/graphql';
 
@@ -33,17 +34,14 @@ const AllPeopleWithVariablesQueryDocument = graphql(/* GraphQL */ `
 
 const apiUrl = 'https://graphql.org/graphql/';
 
+const client = new GraphQLClient(apiUrl);
+
 export const getPeople = async (first?: number) => {
-  const request = first
-    ? { query: AllPeopleWithVariablesQueryDocument.toString(), variables: { first } }
-    : { query: AllPeopleQueryDocument.toString() };
-
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  });
-
-  const res: AllPeopleQueryQuery = (await response.json()).data;
-  return res.allPeople?.edges;
+  let res: AllPeopleQueryQuery;
+  if (first) {
+    res = await client.request(AllPeopleWithVariablesQueryDocument.toString(), { first });
+  } else {
+    res = await client.request(AllPeopleQueryDocument.toString());
+  }
+  return res?.allPeople?.edges;
 };
