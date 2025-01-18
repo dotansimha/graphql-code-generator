@@ -135,8 +135,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // MultipleNonResolvableResolvers does NOT have __resolveReference because all keys are non-resolvable
     expect(content).toBeSimilarStringTo(`
-    export type MultipleNonResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MultipleNonResolvable'] = ResolversParentTypes['MultipleNonResolvable'], FederationType extends FederationTypes['MultipleNonResolvable'] = FederationTypes['MultipleNonResolvable']> = {
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['MultipleNonResolvable']>, FederationType, ContextType>;
+    export type MultipleNonResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MultipleNonResolvable'] = ResolversParentTypes['MultipleNonResolvable']> = {
       id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
