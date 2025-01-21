@@ -8848,12 +8848,10 @@ graphql-request@^6.0.0:
     "@graphql-typed-document-node/core" "^3.2.0"
     cross-fetch "^3.1.5"
 
-graphql-subscriptions@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-2.0.0.tgz#11ec181d475852d8aec879183e8e1eb94f2eb79a"
-  integrity sha512-s6k2b8mmt9gF9pEfkxsaO1lTxaySfKoEJzEfmwguBbQ//Oq23hIXCfR1hm4kdh5hnR20RdwB+s3BCb+0duHSZA==
-  dependencies:
-    iterall "^1.3.0"
+graphql-subscriptions@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-3.0.0.tgz#820c846ef271414c08f64827b5c9a192801e1b6f"
+  integrity sha512-kZCdevgmzDjGAOqH7GlDmQXYAkuHoKpMlJrqF40HMPhUhM5ZWSFSxCwD/nSi6AkaijmMfsFhoJRGJ27UseCvRA==
 
 graphql-tag@2.12.6, graphql-tag@^2.11.0, graphql-tag@^2.12.6:
   version "2.12.6"
@@ -9880,11 +9878,6 @@ istanbul-reports@^3.1.3:
   dependencies:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
-
-iterall@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.3.0.tgz#afcb08492e2915cbd8a0884eb93a8c94d0d72fea"
-  integrity sha512-QZ9qOMdF+QLHxy1QIpUHUU1D5pS2CG2P69LF6L6CPjPYA/XMOmKV3PZpawHoAjHNyB0swdVTRxdYT4tbBbxqwg==
 
 iterator.prototype@^1.1.3:
   version "1.1.3"
