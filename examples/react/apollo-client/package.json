@@ -19,7 +19,7 @@
     "serve": "14.2.3",
     "cypress": "14.0.0",
     "start-server-and-test": "2.0.5",
-    "vite": "^5.0.0"
+    "vite": "^6.0.0"
   },
   "scripts": {
     "dev": "vite",
