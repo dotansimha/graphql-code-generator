@@ -16,7 +16,7 @@
     "@types/react-dom": "^18.0.10",
     "typescript": "5.5.4",
     "serve": "14.2.3",
-    "cypress": "13.13.3",
+    "cypress": "14.0.0",
     "start-server-and-test": "2.0.5",
     "vite": "^5.0.0"
   },
