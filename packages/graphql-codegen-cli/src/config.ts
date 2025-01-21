@@ -249,6 +249,10 @@ export function buildOptions() {
       type: 'boolean' as const,
       default: false,
     },
+    check: {
+      describe: 'Enable dry-run mode to check if some new changes are detected',
+      type: 'boolean' as const,
+    },
     d: {
       alias: 'debug',
       describe: 'Print debug logs to stdout',
