@@ -16,15 +16,15 @@
     "@graphql-codegen/typescript": "4.1.2",
     "@graphql-codegen/typescript-operations": "4.4.0",
     "@graphql-codegen/typescript-resolvers": "4.4.1",
-    "@graphql-tools/graphql-file-loader": "8.0.1",
-    "@graphql-tools/load": "8.0.2",
-    "@graphql-tools/schema": "10.0.6",
-    "graphql": "16.9.0",
+    "@graphql-tools/graphql-file-loader": "8.0.12",
+    "@graphql-tools/load": "8.0.12",
+    "@graphql-tools/schema": "10.0.16",
+    "graphql": "16.10.0",
     "graphql-tag": "2.12.6",
     "prettier": "2.8.8"
   },
   "devDependencies": {
-    "@types/node": "20.16.1",
-    "tsup": "8.2.4"
+    "@types/node": "20.17.14",
+    "tsup": "8.3.5"
   }
 }
