@@ -72,6 +72,28 @@ export const MyComponent: React.FC = () => {
 }
 ```
 
+### Generate Fragment Hook
+
+Codegen also supports generating [fragment hooks](https://www.apollographql.com/docs/react/data/fragments#usefragment) (supported from `@apollo/client` v3.8.0), you can turn it on this way:
+
+```ts filename="codegen.ts" {10}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'YOUR_SCHEMA_HERE',
+  documents: './src/**/*.graphql',
+  generates: {
+    './generated-types.ts': {
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        withFragmentHooks: true
+      }
+    }
+  }
+}
+export default config
+```
+
 ### Generate Data Component
 
 Codegen also supports generating data Components (deprecated in `@apollo/client` v3), you can turn it on this way:
