@@ -84,7 +84,7 @@
     "postcss-nesting": "^13.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-markdown": "8.0.7",
+    "react-markdown": "9.0.3",
     "react-select": "5.8.0",
     "typescript-json-schema": "0.56.0"
   },
