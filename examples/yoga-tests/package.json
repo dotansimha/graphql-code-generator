@@ -12,7 +12,7 @@
     "@graphql-codegen/cli": "5.0.3",
     "@babel/core": "7.25.2",
     "@babel/preset-env": "7.25.3",
-    "@babel/preset-typescript": "7.24.7"
+    "@babel/preset-typescript": "7.26.0"
   },
   "scripts": {
     "test": "jest",
