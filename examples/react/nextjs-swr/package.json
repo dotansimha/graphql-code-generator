@@ -22,7 +22,7 @@
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/schema-ast": "4.1.0",
     "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.10",
     "eslint": "^9.0.0",
