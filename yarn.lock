@@ -3518,9 +3518,9 @@
     langium "3.0.0"
 
 "@mizdra/graphql-codegen-typescript-fabbrica@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@mizdra/graphql-codegen-typescript-fabbrica/-/graphql-codegen-typescript-fabbrica-0.6.0.tgz#3c3961677b4e280f7656a4a35267e2795a82bb86"
-  integrity sha512-Jkimjs2kYH6VYsveeVYAfZ4Lch4zqUIuW6FxBpfOSSrKeu/n7mVbfU2zQMejlBeeND5brtVjhA1Ozi/CHfnpvw==
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@mizdra/graphql-codegen-typescript-fabbrica/-/graphql-codegen-typescript-fabbrica-0.6.1.tgz#a72ddbac9117892a8e7fa6fe0242f8201af3b045"
+  integrity sha512-Sa50LZAY0j1FL1MS6ebialT/lW7yigTiID4keVu0oi3sh/JgTE4sPeYEAlTHAUtI2c0r6EHMZNREhRCMgVRYIg==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^5.0.1"
     "@graphql-codegen/visitor-plugin-common" "^4.0.1"
