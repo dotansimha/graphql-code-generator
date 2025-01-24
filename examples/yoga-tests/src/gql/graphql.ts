@@ -16,20 +16,6 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
-export type Mutation = {
-  __typename?: 'Mutation';
-  echo: Scalars['String']['output'];
-};
-
-export type MutationEchoArgs = {
-  message: Scalars['String']['input'];
-};
-
-export type Query = {
-  __typename?: 'Query';
-  hello: Scalars['String']['output'];
-};
-
 export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
