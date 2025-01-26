@@ -57,6 +57,10 @@ jobs:
           git diff --exit-code -- dev-test/
   dev-tests:
     name: Examples
+    strategy:
+      matrix:
+        run_group: [1, 2, 3, 4]
+        run_group_total: [4]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -78,16 +82,16 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Generate and Diff Codegen Artifacts
+      - name: Generate and Diff Codegen Artifacts ${{ matrix.run_group }}/${{ matrix.run_group_total }}
         run: |
-          yarn examples:codegen
+          RUN_GROUP=${{ matrix.run_group }} RUN_GROUP_TOTAL=${{ matrix.run_group_total }} yarn examples:codegen
           git diff --exit-code -- examples/
-      - name: Build Examples
+      - name: Build Examples ${{ matrix.run_group }}/${{ matrix.run_group_total }}
         run: |
-          yarn examples:build
-      - name: End2End Test Examples
+          RUN_GROUP=${{ matrix.run_group }} RUN_GROUP_TOTAL=${{ matrix.run_group_total }} yarn examples:build
+      - name: End2End Test Examples ${{ matrix.run_group }}/${{ matrix.run_group_total }}
         run: |
-          yarn examples:test:end2end
+          RUN_GROUP=${{ matrix.run_group }} RUN_GROUP_TOTAL=${{ matrix.run_group_total }} yarn examples:test:end2end
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest
