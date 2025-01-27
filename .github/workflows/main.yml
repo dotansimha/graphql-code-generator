@@ -69,15 +69,6 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 18
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.65.0
-          target: wasm32-wasi
-          override: true
-      - name: Build SWC plugin
-        working-directory: ./packages/presets/swc-plugin
-        run: |
-          npm run build-wasm
       - name: Build
         run: yarn build
         env:
@@ -92,6 +83,39 @@ jobs:
       - name: End2End Test Examples ${{ matrix.run_group }}/${{ matrix.run_group_total }}
         run: |
           RUN_GROUP=${{ matrix.run_group }} RUN_GROUP_TOTAL=${{ matrix.run_group_total }} yarn examples:test:end2end
+  dev-tests-swc:
+    name: Examples - SWC
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
+        with:
+          nodeVersion: 18
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.65.0
+          target: wasm32-wasi
+          override: true
+      - name: Build SWC plugin
+        working-directory: ./packages/presets/swc-plugin
+        run: |
+          npm run build-wasm
+      - name: Build
+        run: yarn build
+        env:
+          CI: true
+      - name: Generate and Diff Codegen Artifacts
+        run: |
+          SWC_PLUGIN_TEST=1 yarn examples:codegen
+          git diff --exit-code -- examples/
+      - name: Build Examples
+        run: |
+          SWC_PLUGIN_TEST=1 yarn examples:build
+      - name: End2End Test Examples
+        run: |
+          SWC_PLUGIN_TEST=1 yarn examples:test:end2end
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest

@@ -7,14 +7,23 @@ const packageJSON = fg.sync(['examples/**/package.json'], { ignore: ['**/node_mo
 const ignoredPackages = [];
 
 const command = process.argv[2];
+const isSwcPluginTest = !!(process.env.SWC_PLUGIN_TEST || false); // TODO: this is a hacky way to target the examples with swc plugins, but a quick way indeed.
 const currentGroup = process.env.RUN_GROUP || 1;
 const totalGroups = process.env.RUN_GROUP_TOTAL | 1;
 
 const result = packageJSON.reduce(
   (res, packageJSONPath) => {
-    const { name } = fs.readJSONSync(packageJSONPath);
+    const { name, devDependencies } = fs.readJSONSync(packageJSONPath);
 
     if (ignoredPackages.includes(name)) {
+      res.ignored.push(name);
+      return res;
+    }
+
+    if (
+      (isSwcPluginTest && !devDependencies['@graphql-codegen/client-preset-swc-plugin']) ||
+      (!isSwcPluginTest && devDependencies['@graphql-codegen/client-preset-swc-plugin'])
+    ) {
       res.ignored.push(name);
       return res;
     }
