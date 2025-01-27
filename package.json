@@ -31,7 +31,7 @@
     "watch:examples": "yarn watch:examples:cjs",
     "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
     "examples:build": "set -o xtrace && eval $(node scripts/print-example-ci-command.js build)",
-    "examples:test:end2end": "set -o xtrace && eval $(node scripts/print-example-ci-command.js test:end2end) "
+    "examples:test:end2end": "set -o xtrace && eval $(node scripts/print-example-ci-command.js test:end2end)"
   },
   "workspaces": [
     "packages/*",
