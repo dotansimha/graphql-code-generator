@@ -517,6 +517,98 @@ export * from "./gql";`);
     expect(graphqlFile.content).toContain("__typename: 'Query';");
   });
 
+  it('supports Apollo fragment masking', async () => {
+    const result = await executeCodegen({
+      schema: /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+          age: Int!
+        }
+      `,
+      documents: /* GraphQL */ `
+        query Me {
+          unmasked: me {
+            id
+            ...User_Me @unmask
+          }
+          masked: me {
+            id
+            ...User_Me
+          }
+        }
+
+        fragment User_Me on User {
+          name
+          age
+        }
+      `,
+      generates: {
+        'out1/': {
+          preset,
+          presetConfig: { fragmentMasking: false },
+          config: {
+            inlineFragmentTypes: 'mask',
+            customDirectives: { apolloUnmask: true },
+          },
+        },
+      },
+    });
+
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = Maybe<T>;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        me?: Maybe<User>;
+      };
+
+      export type User = {
+        __typename?: 'User';
+        age: Scalars['Int']['output'];
+        id: Scalars['ID']['output'];
+        name: Scalars['String']['output'];
+      };
+
+      export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type MeQuery = { __typename?: 'Query', unmasked?: (
+          { __typename?: 'User', id: string, name: string, age: number }
+          & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
+        ) | null, masked?: (
+          { __typename?: 'User', id: string }
+          & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
+        ) | null };
+
+      export type User_MeFragment = { __typename?: 'User', name: string, age: number } & { ' $fragmentName'?: 'User_MeFragment' };
+
+      export const User_MeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<User_MeFragment, unknown>;
+      export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"unmasked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"unmask"}}]}]}},{"kind":"Field","alias":{"kind":"Name","value":"masked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;"
+    `);
+  });
+
   it('prevent duplicate operations', async () => {
     const result = await executeCodegen({
       schema: [
@@ -2972,29 +3064,29 @@ export * from "./gql.js";`);
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
         };
-        
+
         export const Color = {
           Blue: 'BLUE',
           Red: 'RED'
         } as const;
-        
+
         export type Color = typeof Color[keyof typeof Color];
         export type Query = {
           __typename?: 'Query';
           thing?: Maybe<Thing>;
         };
-        
+
         export type Thing = {
           __typename?: 'Thing';
           color: Color;
         };
-        
+
         export type FavoriteColorQueryVariables = Exact<{ [key: string]: never; }>;
-        
-        
+
+
         export type FavoriteColorQuery = { __typename?: 'Query', thing?: { __typename?: 'Thing', color: Color } | null };
-        
-        
+
+
         export const FavoriteColorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FavoriteColor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<FavoriteColorQuery, FavoriteColorQueryVariables>;
     `);
   });
