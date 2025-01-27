@@ -56,7 +56,7 @@ jobs:
           yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
   dev-tests:
-    name: Examples
+    name: Examples - Normal
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -71,14 +71,14 @@ jobs:
           CI: true
       - name: Generate and Diff Codegen Artifacts
         run: |
-          yarn examples:codegen
+          EXAMPLE_TYPE=normal yarn examples:codegen
           git diff --exit-code -- examples/
       - name: Build Examples
         run: |
-          yarn examples:build
+          EXAMPLE_TYPE=normal yarn examples:build
       - name: End2End Test Examples
         run: |
-          yarn examples:test:end2end
+          EXAMPLE_TYPE=normal yarn examples:test:end2end
   dev-tests-swc:
     name: Examples - SWC
     runs-on: ubuntu-latest
@@ -104,14 +104,14 @@ jobs:
           CI: true
       - name: Generate and Diff Codegen Artifacts
         run: |
-          SWC_PLUGIN_TEST=1 yarn examples:codegen
+          EXAMPLE_TYPE=swc yarn examples:codegen
           git diff --exit-code -- examples/
       - name: Build Examples
         run: |
-          SWC_PLUGIN_TEST=1 yarn examples:build
+          EXAMPLE_TYPE=swc yarn examples:build
       - name: End2End Test Examples
         run: |
-          SWC_PLUGIN_TEST=1 yarn examples:test:end2end
+          EXAMPLE_TYPE=swc yarn examples:test:end2end
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest
