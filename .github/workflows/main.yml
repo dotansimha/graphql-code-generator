@@ -57,10 +57,6 @@ jobs:
           git diff --exit-code -- dev-test/
   dev-tests:
     name: Examples
-    strategy:
-      matrix:
-        run_group: [1, 2, 3, 4]
-        run_group_total: [4]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -73,16 +69,16 @@ jobs:
         run: yarn build
         env:
           CI: true
-      - name: Generate and Diff Codegen Artifacts ${{ matrix.run_group }}/${{ matrix.run_group_total }}
+      - name: Generate and Diff Codegen Artifacts
         run: |
-          RUN_GROUP=${{ matrix.run_group }} RUN_GROUP_TOTAL=${{ matrix.run_group_total }} yarn examples:codegen
+          yarn examples:codegen
           git diff --exit-code -- examples/
-      - name: Build Examples ${{ matrix.run_group }}/${{ matrix.run_group_total }}
+      - name: Build Examples
         run: |
-          RUN_GROUP=${{ matrix.run_group }} RUN_GROUP_TOTAL=${{ matrix.run_group_total }} yarn examples:build
-      - name: End2End Test Examples ${{ matrix.run_group }}/${{ matrix.run_group_total }}
+          yarn examples:build
+      - name: End2End Test Examples
         run: |
-          RUN_GROUP=${{ matrix.run_group }} RUN_GROUP_TOTAL=${{ matrix.run_group_total }} yarn examples:test:end2end
+          yarn examples:test:end2end
   dev-tests-swc:
     name: Examples - SWC
     runs-on: ubuntu-latest
