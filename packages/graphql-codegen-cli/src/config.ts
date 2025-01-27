@@ -422,7 +422,7 @@ export class CodegenContext {
     return this._pluginContext;
   }
 
-  async loadSchema(pointer: Types.Schema): Promise<GraphQLSchema> {
+  async loadSchema(pointer: Types.Schema | Types.Schema[]): Promise<GraphQLSchema> {
     const config = this.getConfig(defaultSchemaLoadOptions);
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
