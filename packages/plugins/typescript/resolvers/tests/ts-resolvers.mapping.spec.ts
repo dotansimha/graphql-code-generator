@@ -1265,7 +1265,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1348,7 +1347,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1429,7 +1427,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1499,7 +1496,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1569,7 +1565,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 

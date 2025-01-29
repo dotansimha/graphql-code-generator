@@ -85,19 +85,6 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   describe('Config', () => {
-    it('onlyResolveTypeForInterfaces - should allow to have only resolveType for interfaces', async () => {
-      const config = {
-        onlyResolveTypeForInterfaces: true,
-      };
-      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
-      const content = await resolversTestingValidate(result, config, resolversTestingSchema);
-
-      expect(content).toBeSimilarStringTo(`
-      export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-      };`);
-    });
-
     it('optionalInfoArgument - should allow to have optional info argument', async () => {
       const config = {
         noSchemaStitching: true,
@@ -703,7 +690,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType?: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
   });
@@ -753,7 +739,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -826,7 +811,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -917,7 +901,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -992,7 +975,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1066,7 +1048,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1141,7 +1122,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -2408,7 +2388,6 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 

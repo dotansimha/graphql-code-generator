@@ -139,7 +139,5 @@ export interface CustomDirectivesConfig {
   apolloUnmask?: boolean;
 }
 
-export interface GenerateInternalResolversIfNeededConfig {
-  __resolveReference?: boolean;
-}
+export interface GenerateInternalResolversIfNeededConfig {}
 export type NormalizedGenerateInternalResolversIfNeededConfig = Required<GenerateInternalResolversIfNeededConfig>;
