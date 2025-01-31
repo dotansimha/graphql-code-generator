@@ -1,5 +1,11 @@
 # @graphql-codegen/gql-tag-operations
 
+## 4.0.14
+
+### Patch Changes
+
+- [#10192](https://github.com/dotansimha/graphql-code-generator/pull/10192) [`ec07018`](https://github.com/dotansimha/graphql-code-generator/commit/ec070189a1a3c4d41f2457b56a68b506c81f28ba) Thanks [@brianhuang822](https://github.com/brianhuang822)! - Have gql-tag-operations generate the type for document registry
+
 ## 4.0.13
 
 ### Patch Changes

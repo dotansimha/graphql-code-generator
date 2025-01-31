@@ -1,5 +1,12 @@
 # @graphql-codegen/client-preset
 
+## 4.6.1
+
+### Patch Changes
+
+- Updated dependencies [[`ec07018`](https://github.com/dotansimha/graphql-code-generator/commit/ec070189a1a3c4d41f2457b56a68b506c81f28ba)]:
+  - @graphql-codegen/gql-tag-operations@4.0.14
+
 ## 4.6.0
 
 ### Minor Changes
