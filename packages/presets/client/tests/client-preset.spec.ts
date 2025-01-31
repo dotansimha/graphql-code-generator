@@ -52,9 +52,9 @@ export * from "./gql";`);
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       type Documents = {
-          "\n  query A {\n    a\n  }\n": typeof types.ADocument,
-          "\n  query B {\n    b\n  }\n": typeof types.BDocument,
-          "\n  fragment C on Query {\n    c\n  }\n": typeof types.CFragmentDoc,
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
       };
       const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -144,12 +144,12 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-        type Documents = {
-            "\n  query a {\n    a\n  }\n": typeof types.ADocument,
-            "\n  query b {\n    b\n  }\n": typeof types.BDocument,
-            "\n  fragment C on Query {\n    c\n  }\n": typeof types.CFragmentDoc,
-        };
-        const documents: Documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -229,12 +229,12 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-        type Documents = {
-            "\n  query a {\n    a\n  }\n": typeof types.ADocument,
-            "\n  query b {\n    b\n  }\n": typeof types.BDocument,
-            "\n  fragment C on Query {\n    c\n  }\n": typeof types.CFragmentDoc,
-        };
-        const documents: Documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -316,9 +316,9 @@ export * from "./gql";`);
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       type Documents = {
-          "\n  query A {\n    a\n  }\n": typeof types.ADocument,
-          "\n  query B {\n    b\n  }\n": typeof types.BDocument,
-          "\n  fragment C on Query {\n    c\n  }\n": typeof types.CFragmentDoc,
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
       };
       const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -452,9 +452,9 @@ export * from "./gql";`);
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       type Documents = {
-          "\n  query A {\n    a\n  }\n": typeof types.ADocument,
-          "\n  query B {\n    b\n  }\n": typeof types.BDocument,
-          "\n  fragment C on Query {\n    c\n  }\n": typeof types.CFragmentDoc,
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
       };
       const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -673,7 +673,7 @@ export * from "./gql";`);
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       type Documents = {
-          "\n  query a {\n    a\n  }\n": typeof types.ADocument,
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
       };
       const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
@@ -790,9 +790,9 @@ export * from "./gql";`);
          * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
         type Documents = {
-            "\n  query A {\n    a\n  }\n": typeof types.ADocument,
-            "\n  query B {\n    b\n  }\n": typeof types.BDocument,
-            "\n  fragment C on Query {\n    c\n  }\n": typeof types.CFragmentDoc,
+            "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+            "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+            "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
         };
         const documents: Documents = {
             "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -1143,9 +1143,9 @@ export * from "./gql.js";`);
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
       type Documents = {
-          "\n  query A {\n    a\n  }\n": typeof types.ADocument,
-          "\n  query B {\n    b\n  }\n": typeof types.BDocument,
-          "\n  fragment C on Query {\n    c\n  }\n": typeof types.CFragmentDoc,
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
       };
       const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
@@ -2823,9 +2823,9 @@ export * from "./gql.js";`);
          * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
         type Documents = {
-            "\n  query Foo {\n    foo {\n      ...Foo\n    }\n  }\n": typeof types.FooDocument,
-            "\n  query Foos {\n    foos {\n      ...Foo\n    }\n  }\n": typeof types.FoosDocument,
-            "\n  fragment Foo on Foo {\n    value\n  }\n": typeof types.FooFragmentDoc,
+            "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": typeof types.FooDocument,
+            "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": typeof types.FoosDocument,
+            "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": typeof types.FooFragmentDoc,
         };
         const documents: Documents = {
             "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
