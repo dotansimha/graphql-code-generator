@@ -1531,7 +1531,6 @@ export class BaseResolversVisitor<
           if (!federationDetails || federationDetails.resolvableKeyDirectives.length === 0) {
             return '';
           }
-          signature.modifier = ''; // if a federation type has resolvable @key, then it should be required
         }
 
         this._federation.setMeta(parentType.name, { hasResolveReference: true });

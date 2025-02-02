@@ -13,7 +13,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n      query HelloQuery {\n        hello\n      }\n    ': typeof types.HelloQueryDocument;
+  '\n      mutation EchoMutation($message: String!) {\n        echo(message: $message)\n      }\n    ': typeof types.EchoMutationDocument;
+};
+const documents: Documents = {
   '\n      query HelloQuery {\n        hello\n      }\n    ': types.HelloQueryDocument,
   '\n      mutation EchoMutation($message: String!) {\n        echo(message: $message)\n      }\n    ':
     types.EchoMutationDocument,

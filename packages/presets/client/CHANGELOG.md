@@ -1,5 +1,29 @@
 # @graphql-codegen/client-preset
 
+## 4.6.1
+
+### Patch Changes
+
+- Updated dependencies [[`ec07018`](https://github.com/dotansimha/graphql-code-generator/commit/ec070189a1a3c4d41f2457b56a68b506c81f28ba)]:
+  - @graphql-codegen/gql-tag-operations@4.0.14
+
+## 4.6.0
+
+### Minor Changes
+
+- [#10268](https://github.com/dotansimha/graphql-code-generator/pull/10268) [`8737dd8`](https://github.com/dotansimha/graphql-code-generator/commit/8737dd86b4ce3d14234a515fa494736bf7ec35dd) Thanks [@eddeee888](https://github.com/eddeee888)! - Forward customDirectives to support Apollo unmask
+
+- [#10155](https://github.com/dotansimha/graphql-code-generator/pull/10155) [`ed71811`](https://github.com/dotansimha/graphql-code-generator/commit/ed71811ace083be61c575609e361c629ed7c1740) Thanks [@nebbles](https://github.com/nebbles)! - client-preset generated output is configurable with onlyOperationTypes and onlyEnumTypes
+
+### Patch Changes
+
+- Updated dependencies [[`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.1
+  - @graphql-codegen/gql-tag-operations@4.0.13
+  - @graphql-codegen/typescript-operations@4.4.1
+  - @graphql-codegen/typed-document-node@5.0.13
+  - @graphql-codegen/typescript@4.1.3
+
 ## 4.5.1
 
 ### Patch Changes
@@ -566,7 +590,7 @@
   import { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
-    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+    schema: 'https://graphql.org/graphql/',
     documents: ['src/**/*.tsx'],
     ignoreNoDocuments: true, // for better experience with the watcher
     generates: {
@@ -614,7 +638,7 @@
   import { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
-    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+    schema: 'https://graphql.org/graphql/',
     documents: ['src/**/*.tsx'],
     ignoreNoDocuments: true, // for better experience with the watcher
     generates: {

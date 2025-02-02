@@ -13,7 +13,13 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n  fragment TweetFragment on Tweet {\n    id\n    body\n    ...TweetAuthorFragment\n  }\n': typeof types.TweetFragmentFragmentDoc;
+  '\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n': typeof types.TweetAuthorFragmentFragmentDoc;
+  '\n  fragment TweetsFragment on Query {\n    Tweets {\n      id\n      ...TweetFragment\n    }\n  }\n': typeof types.TweetsFragmentFragmentDoc;
+  '\n  query TweetAppQuery {\n    ...TweetsFragment\n  }\n': typeof types.TweetAppQueryDocument;
+};
+const documents: Documents = {
   '\n  fragment TweetFragment on Tweet {\n    id\n    body\n    ...TweetAuthorFragment\n  }\n':
     types.TweetFragmentFragmentDoc,
   '\n  fragment TweetAuthorFragment on Tweet {\n    id\n    author {\n      id\n      username\n    }\n  }\n':

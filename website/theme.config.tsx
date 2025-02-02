@@ -46,6 +46,7 @@ export default defineConfig({
   websiteName: 'GraphQL-Codegen',
   description: 'Generate anything from GraphQL schema & operations',
   logo: PRODUCTS.CODEGEN.logo({ className: 'w-8' }),
+  themeVersion: 'hive-rebranding',
   color: {
     hue: {
       dark: 67.1,
