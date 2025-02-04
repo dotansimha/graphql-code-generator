@@ -212,7 +212,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       // User should have __resolveReference because it has resolvable @key (by default)
       expect(content).toBeSimilarStringTo(`
     export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
       id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -223,7 +223,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       // SingleResolvable has __resolveReference because it has resolvable: true
       expect(content).toBeSimilarStringTo(`
     export type SingleResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingleResolvable'] = ResolversParentTypes['SingleResolvable']> = {
-      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['SingleResolvable']>, { __typename: 'SingleResolvable' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['SingleResolvable']>, { __typename: 'SingleResolvable' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
       id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     };
@@ -240,7 +240,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       // AtLeastOneResolvable has __resolveReference because it at least one resolvable
       expect(content).toBeSimilarStringTo(`
     export type AtLeastOneResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtLeastOneResolvable'] = ResolversParentTypes['AtLeastOneResolvable']> = {
-      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['AtLeastOneResolvable']>, { __typename: 'AtLeastOneResolvable' } & GraphQLRecursivePick<ParentType, {"id2":true}>, ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['AtLeastOneResolvable']>, { __typename: 'AtLeastOneResolvable' } & GraphQLRecursivePick<ParentType, {"id2":true}>, ContextType>;
       id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -251,7 +251,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       // MixedResolvable has __resolveReference and references for resolvable keys
       expect(content).toBeSimilarStringTo(`
     export type MixedResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MixedResolvable'] = ResolversParentTypes['MixedResolvable']> = {
-      __resolveReference: ReferenceResolver<Maybe<ResolversTypes['MixedResolvable']>, { __typename: 'MixedResolvable' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"id2":true}>), ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['MixedResolvable']>, { __typename: 'MixedResolvable' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"id2":true}>), ContextType>;
       id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

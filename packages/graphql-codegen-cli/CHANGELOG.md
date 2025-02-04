@@ -1,5 +1,18 @@
 # @graphql-codegen/cli
 
+## 5.0.4
+
+### Patch Changes
+
+- [#10248](https://github.com/dotansimha/graphql-code-generator/pull/10248) [`72eb86f`](https://github.com/dotansimha/graphql-code-generator/commit/72eb86f49bd86da6308d80f9401bcc09478ca886) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.10.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.10.0) (from `^0.9.20`, in `dependencies`)
+
+- [#10227](https://github.com/dotansimha/graphql-code-generator/pull/10227) [`6f1741a`](https://github.com/dotansimha/graphql-code-generator/commit/6f1741af03689f8146178637ecabec18347e9331) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix schema pointers type to allow an array of pointers
+
+- Updated dependencies [[`8737dd8`](https://github.com/dotansimha/graphql-code-generator/commit/8737dd86b4ce3d14234a515fa494736bf7ec35dd), [`ed71811`](https://github.com/dotansimha/graphql-code-generator/commit/ed71811ace083be61c575609e361c629ed7c1740)]:
+  - @graphql-codegen/client-preset@4.6.0
+
 ## 5.0.3
 
 ### Patch Changes

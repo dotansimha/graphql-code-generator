@@ -28,7 +28,7 @@ export const defaultDocumentsLoadOptions = {
 };
 
 export async function loadSchema(
-  schemaPointers: UnnormalizedTypeDefPointer,
+  schemaPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
   config: Types.Config
 ): Promise<GraphQLSchema> {
   try {

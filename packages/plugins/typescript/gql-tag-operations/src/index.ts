@@ -139,27 +139,39 @@ export const plugin: PluginFunction<{
 };
 
 function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperations> = []) {
-  const lines = new Set<string>();
-  lines.add(
-    `/**\n * Map of all GraphQL operations in the project.\n *\n * This map has several performance disadvantages:\n`
+  const lines = new Array<string>();
+  // It's possible for there to be duplicate sourceOperations, this set will ensure we have unique records for our document registry
+  const linesDupCheck = new Set<string>();
+  lines.push(
+    `/**\n * Map of all GraphQL operations in the project.\n *\n * This map has several performance disadvantages:\n`,
+    ` * 1. It is not tree-shakeable, so it will include all operations in the project.\n`,
+    ` * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.\n`,
+    ` * 3. It does not support dead code elimination, so it will add unused operations.\n *\n`,
+    ` * Therefore it is highly recommended to use the babel or swc plugin for production.\n`,
+    ` * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size\n */\n`,
+    `type Documents = {\n`
   );
-  lines.add(` * 1. It is not tree-shakeable, so it will include all operations in the project.\n`);
-  lines.add(` * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.\n`);
-  lines.add(` * 3. It does not support dead code elimination, so it will add unused operations.\n *\n`);
-  lines.add(` * Therefore it is highly recommended to use the babel or swc plugin for production.\n`);
-  lines.add(
-    ` * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size\n */\n`
-  );
-  lines.add(`const documents = {\n`);
-
+  for (const { operations, ...rest } of sourcesWithOperations) {
+    const originalString = rest.source.rawSDL;
+    const operation = operations[0];
+    const aboutToPushLine = `    ${JSON.stringify(originalString)}: typeof types.${operation.initialName},\n`;
+    if (!linesDupCheck.has(aboutToPushLine)) {
+      lines.push(aboutToPushLine);
+      linesDupCheck.add(aboutToPushLine);
+    }
+  }
+  lines.push(`};\n`, `const documents: Documents = {\n`);
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
     const operation = operations[0];
-
-    lines.add(`    ${JSON.stringify(originalString)}: types.${operation.initialName},\n`);
+    const aboutToPushLine = `    ${JSON.stringify(originalString)}: types.${operation.initialName},\n`;
+    if (!linesDupCheck.has(aboutToPushLine)) {
+      lines.push(aboutToPushLine);
+      linesDupCheck.add(aboutToPushLine);
+    }
   }
 
-  lines.add(`};\n`);
+  lines.push(`};\n`);
 
   return lines;
 }

@@ -8,7 +8,7 @@ import { Tabs, Callout } from '@theguild/components'
 
 GraphQL Code Generator provides a unified way to get TypeScript types from GraphQL operations for [most modern GraphQL clients and frameworks](#appendix-ii-compatibility).
 
-This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index).
+This guide is built using the [Star wars films demo API](https://graphql.org/graphql/).
 
 We will build a simple GraphQL front-end app using the following Query to fetch the list of Star Wars films:
 
@@ -62,7 +62,7 @@ Then provide the corresponding framework-specific configuration:
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: 'https://graphql.org/graphql/',
   documents: ['src/**/*.tsx'],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
@@ -83,7 +83,7 @@ export default config
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: 'https://graphql.org/graphql/',
   documents: ['src/**/*.vue'],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
@@ -184,7 +184,7 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 function App() {
   // `data` is typed!
   const { data } = useQuery(['films'], async () =>
-    request('https://swapi-graphql.netlify.app/.netlify/functions/index', allFilmsWithVariablesQueryDocument, {
+    request('https://graphql.org/graphql/', allFilmsWithVariablesQueryDocument, {
       first: 10 // variables are typed too!
     })
   )
@@ -535,11 +535,7 @@ export function useGraphQL<TResult, TVariables>(
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ): UseQueryResult<TResult> {
   return useQuery([(document.definitions[0] as any).name.value, variables], async ({ queryKey }) =>
-    request(
-      'https://swapi-graphql.netlify.app/.netlify/functions/index',
-      document,
-      queryKey[1] ? queryKey[1] : undefined
-    )
+    request('https://graphql.org/graphql/', document, queryKey[1] ? queryKey[1] : undefined)
   )
 }
 ```
@@ -623,7 +619,7 @@ export function useGraphQL<TResult, TVariables>(
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ): UseQueryResult<ExecutionResult<TResult>> {
   return useQuery([(document.definitions[0] as any).name.value, variables], () =>
-    customFetcher('https://swapi-graphql.netlify.app/.netlify/functions/index', document, variables)
+    customFetcher('https://graphql.org/graphql/', document, variables)
   )
 }
 ```

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { GraphQLClient } from 'graphql-request';
 import { graphql } from './gql';
 import { AllPeopleQueryQuery } from './gql/graphql';
@@ -33,7 +32,7 @@ const AllPeopleWithVariablesQueryDocument = graphql(/* GraphQL */ `
   }
 `);
 
-const apiUrl = 'https://swapi-graphql.netlify.app/.netlify/functions/index';
+const apiUrl = 'https://graphql.org/graphql/';
 
 const client = new GraphQLClient(apiUrl);
 

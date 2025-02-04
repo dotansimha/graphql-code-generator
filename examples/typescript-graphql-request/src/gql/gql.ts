@@ -12,7 +12,11 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n  query AllPeopleQuery {\n    allPeople(first: 5) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n': typeof types.AllPeopleQueryDocument;
+  '\n  query AllPeopleWithVariablesQuery($first: Int!) {\n    allPeople(first: $first) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n': typeof types.AllPeopleWithVariablesQueryDocument;
+};
+const documents: Documents = {
   '\n  query AllPeopleQuery {\n    allPeople(first: 5) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n':
     types.AllPeopleQueryDocument,
   '\n  query AllPeopleWithVariablesQuery($first: Int!) {\n    allPeople(first: $first) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n':

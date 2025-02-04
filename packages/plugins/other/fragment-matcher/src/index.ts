@@ -109,6 +109,11 @@ export interface FragmentMatcherConfig {
    */
   useExplicitTyping?: boolean;
   federation?: boolean;
+  /**
+   * @description When enabled sorts the fragment types lexicographically. This is useful for deterministic output.
+   * @default false
+   */
+  deterministic?: boolean;
 }
 
 const extensions = {
@@ -128,6 +133,7 @@ export const plugin: PluginFunction = async (
     federation: false,
     apolloClientVersion: 3,
     useExplicitTyping: false,
+    deterministic: false,
     ...pluginConfig,
   };
 
@@ -157,9 +163,22 @@ export const plugin: PluginFunction = async (
     throw new Error(`Plugin "fragment-matcher" couldn't introspect the schema`);
   }
 
-  const filterUnionAndInterfaceTypes = type => type.kind === 'UNION' || type.kind === 'INTERFACE';
+  const sortStringsLexicographically = (a: string, b: string) => {
+    if (!config.deterministic) {
+      return 0;
+    }
+    return a.localeCompare(b);
+  };
+
+  const unionAndInterfaceTypes = introspection.data.__schema.types
+    .filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE')
+    .sort((a, b) => sortStringsLexicographically(a.name, b.name));
+
   const createPossibleTypesCollection = (acc, type) => {
-    return { ...acc, [type.name]: type.possibleTypes.map(possibleType => possibleType.name) };
+    return {
+      ...acc,
+      [type.name]: type.possibleTypes.map(possibleType => possibleType.name).sort(sortStringsLexicographically),
+    };
   };
 
   const filteredData: IntrospectionResultData | PossibleTypesResultData =
@@ -167,13 +186,11 @@ export const plugin: PluginFunction = async (
       ? {
           __schema: {
             ...introspection.data.__schema,
-            types: introspection.data.__schema.types.filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE'),
+            types: unionAndInterfaceTypes,
           },
         }
       : {
-          possibleTypes: introspection.data.__schema.types
-            .filter(filterUnionAndInterfaceTypes)
-            .reduce(createPossibleTypesCollection, {}),
+          possibleTypes: unionAndInterfaceTypes.reduce(createPossibleTypesCollection, {}),
         };
 
   const content = JSON.stringify(filteredData, null, 2);
