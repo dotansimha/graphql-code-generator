@@ -35,8 +35,6 @@ import {
   ConvertOptions,
   DeclarationKind,
   EnumValuesMap,
-  type NormalizedGenerateInternalResolversIfNeededConfig,
-  type GenerateInternalResolversIfNeededConfig,
   NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
@@ -79,7 +77,6 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeSuffix: string;
   allResolversTypeName: string;
   internalResolversPrefix: string;
-  generateInternalResolversIfNeeded: NormalizedGenerateInternalResolversIfNeededConfig;
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
   avoidCheckingAbstractTypesRecursively: boolean;
@@ -587,15 +584,6 @@ export interface RawResolversConfig extends RawConfig {
    */
   internalResolversPrefix?: string;
   /**
-   * @type object
-   * @default {}
-   * @description If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.
-   * Enabling this allows a more correct type generation for the resolvers.
-   * For example:
-   * - `__isTypeOf` is generated for implementing types and union members
-   */
-  generateInternalResolversIfNeeded?: GenerateInternalResolversIfNeededConfig;
-  /**
    * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
    * @default false
    *
@@ -706,7 +694,6 @@ export class BaseResolversVisitor<
   protected _hasReferencedResolversUnionTypes = false;
   protected _hasReferencedResolversInterfaceTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
-  protected _resolversUnionParentTypes: Record<string, string> = {};
   protected _resolversInterfaceTypes: Record<string, string> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
