@@ -256,12 +256,7 @@ describe('TypeScript Resolvers Plugin - Union', () => {
       }
     `);
 
-    const result = await plugin(
-      schema,
-      [],
-      { generateInternalResolversIfNeeded: { __isTypeOf: true } },
-      { outputFile: '' }
-    );
+    const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result.content).toBeSimilarStringTo(`
       export type MemberOneResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberOne'] = ResolversParentTypes['MemberOne']> = {
