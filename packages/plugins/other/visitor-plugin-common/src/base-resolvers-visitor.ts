@@ -1015,22 +1015,20 @@ export class BaseResolversVisitor<
       return {};
     }
 
-    const allSchemaTypes = this._schema.getTypeMap();
-    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
-
-    const unionTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
-      const schemaType = allSchemaTypes[typeName];
-
-      if (isUnionType(schemaType)) {
-        const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
-        res[typeName] = this.getAbstractMembersType({
-          typeName,
-          memberTypes: Object.values(this._parsedSchemaMeta.types.union[schemaType.name].unionMembers),
-          isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
-        });
-      }
-      return res;
-    }, {});
+    const unionTypes = Object.entries(this._parsedSchemaMeta.types.union).reduce<Record<string, string>>(
+      (res, [typeName, { type: schemaType, unionMembers }]) => {
+        if (isUnionType(schemaType)) {
+          const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
+          res[typeName] = this.getAbstractMembersType({
+            typeName,
+            memberTypes: Object.values(unionMembers),
+            isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
+          });
+        }
+        return res;
+      },
+      {}
+    );
 
     return unionTypes;
   }
@@ -1040,24 +1038,22 @@ export class BaseResolversVisitor<
       return {};
     }
 
-    const allSchemaTypes = this._schema.getTypeMap();
-    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
+    const interfaceTypes = Object.entries(this._parsedSchemaMeta.types.interface).reduce<Record<string, string>>(
+      (res, [typeName, { type: schemaType, implementingTypes }]) => {
+        if (isInterfaceType(schemaType)) {
+          const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
 
-    const interfaceTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
-      const schemaType = allSchemaTypes[typeName];
+          res[typeName] = this.getAbstractMembersType({
+            typeName,
+            memberTypes: Object.values(implementingTypes),
+            isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
+          });
+        }
 
-      if (isInterfaceType(schemaType)) {
-        const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
-
-        res[typeName] = this.getAbstractMembersType({
-          typeName,
-          memberTypes: Object.values(this._parsedSchemaMeta.types.interface[schemaType.name].implementingTypes),
-          isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
-        });
-      }
-
-      return res;
-    }, {});
+        return res;
+      },
+      {}
+    );
 
     return interfaceTypes;
   }
@@ -1857,24 +1853,13 @@ export class BaseResolversVisitor<
       suffix: this.config.resolverTypeSuffix,
     });
     const declarationKind = 'type';
-    const allTypesMap = this._schema.getTypeMap();
-    const implementingTypes: string[] = [];
-
     const typeName = node.name as any as string;
+    const implementingTypes = Object.keys(this._parsedSchemaMeta.types.interface[typeName].implementingTypes);
 
     this._collectedResolvers[typeName] = {
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
-
-    for (const graphqlType of Object.values(allTypesMap)) {
-      if (graphqlType instanceof GraphQLObjectType) {
-        const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === typeName)) {
-          implementingTypes.push(graphqlType.name);
-        }
-      }
-    }
 
     const parentType = this.getParentTypeToUse(typeName);
 
