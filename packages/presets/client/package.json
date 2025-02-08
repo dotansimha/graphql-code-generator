@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/client-preset",
-  "version": "4.6.1",
+  "version": "4.6.2",
   "description": "GraphQL Code Generator preset for client.",
   "repository": {
     "type": "git",

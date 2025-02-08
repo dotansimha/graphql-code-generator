@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 4.6.2
+
+### Patch Changes
+
+- [#10280](https://github.com/dotansimha/graphql-code-generator/pull/10280) [`6da52a3`](https://github.com/dotansimha/graphql-code-generator/commit/6da52a3248c0ac9ef32140d130ac3da6fcaa1445) Thanks [@konomae](https://github.com/konomae)! - fix `onlyEnums` passthrough in client-preset
+
 ## 4.6.1
 
 ### Patch Changes
