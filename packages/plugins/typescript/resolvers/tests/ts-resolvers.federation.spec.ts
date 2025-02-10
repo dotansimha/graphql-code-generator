@@ -358,7 +358,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
   });
 
-  it('should skip to generate resolvers of fields with @external directive', async () => {
+  it('should skip to generate resolvers of fields or object types with @external directive', async () => {
     const federatedSchema = /* GraphQL */ `
       type Query {
         users: [User]
@@ -373,6 +373,22 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         name: String @external
         username: String @external
       }
+
+      type Address {
+        street: String! @external
+        zip: String!
+      }
+
+      type DateOfBirth {
+        day: Int! @external
+        month: Int! @external
+        year: Int! @external
+      }
+
+      type PlaceOfBirth @external {
+        city: String!
+        country: String!
+      }
     `;
 
     const content = await generate({
@@ -382,7 +398,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
-    // UserResolver should not have a resolver function of name field
+    // UserResolvers should not have a resolver function of name field
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<FederationType, {"id":true}>, ContextType>;
@@ -390,6 +406,19 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         name?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<FederationType, {"id":true}>, ContextType>;
       };
     `);
+
+    // AddressResolvers should only have fields not marked with @external
+    expect(content).toBeSimilarStringTo(`
+      export type AddressResolvers<ContextType = any, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = {
+        zip?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+      };
+    `);
+
+    // DateOfBirthResolvers should not be generated because there is no field not marked with @external
+    expect(content).not.toBeSimilarStringTo('export type DateOfBirthResolvers');
+
+    // PlaceOfBirthResolvers should not be generated because the type is marked with @external
+    expect(content).not.toBeSimilarStringTo('export type PlaceOfBirthResolvers');
   });
 
   it('should not include _FieldSet scalar', async () => {
