@@ -265,16 +265,20 @@ export class ApolloFederation {
     return this.enabled && name === '_FieldSet';
   }
 
+  skipObjectType({ node }: { node: ObjectTypeDefinitionNode }): boolean {
+    if (!this.enabled) {
+      return false;
+    }
+
+    return this.isExternal(node);
+  }
+
   /**
    * Decides if field should not be generated
    * @param data
    */
   skipField({ fieldNode, parentType }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType }): boolean {
-    if (
-      !this.enabled ||
-      !(isObjectType(parentType) && !isInterfaceType(parentType)) ||
-      !checkTypeFederationDetails(parentType, this.schema)
-    ) {
+    if (!this.enabled || !(isObjectType(parentType) && !isInterfaceType(parentType))) {
       return false;
     }
 
@@ -349,7 +353,7 @@ export class ApolloFederation {
     return this.isExternal(fieldNode) && !this.hasProvides(objectType, fieldNode);
   }
 
-  private isExternal(node: FieldDefinitionNode): boolean {
+  private isExternal(node: FieldDefinitionNode | ObjectTypeDefinitionNode): boolean {
     return getDirectivesByName('external', node).length > 0;
   }
 
@@ -481,7 +485,14 @@ function getDirectivesByName(
     astNode = node;
   }
 
-  return astNode?.directives?.filter(d => d.name.value === name) || [];
+  return (
+    astNode?.directives?.filter(d => {
+      // A ObjectTypeDefinitionNode's directive looks like `{ kind: 'Directive', name: 'external', arguments: [] }`
+      // However, other directives looks like `{ kind: 'Directive', name: { kind: 'Name', value: 'external' }, arguments: [] }`
+      // Therefore, we need to check for both `d.name.value` and d.name
+      return d.name.value === name || (d.name as unknown as string) === name;
+    }) || []
+  );
 }
 
 function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {

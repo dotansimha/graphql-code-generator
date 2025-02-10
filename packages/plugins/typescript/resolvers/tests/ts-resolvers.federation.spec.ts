@@ -496,7 +496,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
   });
 
-  it('should skip to generate resolvers of fields with @external directive', async () => {
+  it('should skip to generate resolvers of fields or object types with @external directive', async () => {
     const federatedSchema = /* GraphQL */ `
       type Query {
         users: [User]
@@ -504,12 +504,38 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
       type Book {
         author: User @provides(fields: "name")
+        editor: User @provides(fields: "company { taxCode }")
       }
 
       type User @key(fields: "id") {
         id: ID!
         name: String @external
         username: String @external
+        address: Address
+        dateOfBirth: DateOfBirth
+        placeOfBirth: PlaceOfBirth
+        company: Company
+      }
+
+      type Address {
+        street: String! @external
+        zip: String!
+      }
+
+      type DateOfBirth {
+        day: Int! @external
+        month: Int! @external
+        year: Int! @external
+      }
+
+      type PlaceOfBirth @external {
+        city: String!
+        country: String!
+      }
+
+      type Company @external {
+        name: String!
+        taxCode: String!
       }
     `;
 
@@ -520,7 +546,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
-    // UserResolver should not have a resolver function of name field
+    // UserResolvers should not have `username` resolver because it is marked with `@external`
+    // UserResolvers should have `name` resolver because whilst it is marked with `@external`, it is provided by `Book.author`
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
@@ -530,6 +557,26 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       };
     `);
+
+    // AddressResolvers should only have fields not marked with @external
+    expect(content).toBeSimilarStringTo(`
+      export type AddressResolvers<ContextType = any, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = {
+        zip?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+      };
+    `);
+
+    // CompanyResolvers should only have taxCode resolver because it is part of the `@provides` directive in `Book.editor`
+    expect(content).toBeSimilarStringTo(`
+      export type CompanyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Company'] = ResolversParentTypes['Company']> = {
+        taxCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+      };
+    `);
+
+    // DateOfBirthResolvers should not be generated because there is no field not marked with @external
+    expect(content).not.toBeSimilarStringTo('export type DateOfBirthResolvers');
+
+    // PlaceOfBirthResolvers should not be generated because the type is marked with @external
+    expect(content).not.toBeSimilarStringTo('export type PlaceOfBirthResolvers');
   });
 
   it('should not include _FieldSet scalar', async () => {

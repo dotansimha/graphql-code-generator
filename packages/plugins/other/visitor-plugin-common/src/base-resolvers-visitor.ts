@@ -1707,7 +1707,11 @@ export class BaseResolversVisitor<
     return `Partial<${argsType}>`;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string | null {
+    if (this._federation.skipObjectType({ node })) {
+      return null;
+    }
+
     const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
@@ -1728,15 +1732,17 @@ export class BaseResolversVisitor<
       return false;
     })();
 
-    const fieldsContent = (node.fields as unknown as FieldDefinitionPrintFn[]).map(f => {
-      return f(
-        typeName,
-        (rootType === 'query' && this.config.avoidOptionals.query) ||
-          (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
-          (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
-          (rootType === false && this.config.avoidOptionals.resolvers)
-      ).value;
-    });
+    const fieldsContent = (node.fields as unknown as FieldDefinitionPrintFn[])
+      .map(f => {
+        return f(
+          typeName,
+          (rootType === 'query' && this.config.avoidOptionals.query) ||
+            (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
+            (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
+            (rootType === false && this.config.avoidOptionals.resolvers)
+        ).value;
+      })
+      .filter(v => v);
 
     if (!rootType && this._parsedSchemaMeta.typesWithIsTypeOf[typeName]) {
       fieldsContent.push(
@@ -1746,6 +1752,10 @@ export class BaseResolversVisitor<
           }isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>${this.getPunctuation(declarationKind)}`
         )
       );
+    }
+
+    if (fieldsContent.length === 0) {
+      return null;
     }
 
     const genericTypes: string[] = [
