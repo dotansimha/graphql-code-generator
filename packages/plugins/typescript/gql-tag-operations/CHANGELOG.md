@@ -1,5 +1,42 @@
 # @graphql-codegen/gql-tag-operations
 
+## 4.0.14
+
+### Patch Changes
+
+- [#10192](https://github.com/dotansimha/graphql-code-generator/pull/10192) [`ec07018`](https://github.com/dotansimha/graphql-code-generator/commit/ec070189a1a3c4d41f2457b56a68b506c81f28ba) Thanks [@brianhuang822](https://github.com/brianhuang822)! - Have gql-tag-operations generate the type for document registry
+
+## 4.0.13
+
+### Patch Changes
+
+- Updated dependencies [[`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.1
+
+## 4.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a), [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.0
+
+## 4.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc), [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03)]:
+  - @graphql-codegen/visitor-plugin-common@5.5.0
+  - @graphql-codegen/plugin-helpers@5.1.0
+
+## 4.0.10
+
+### Patch Changes
+
+- [#10075](https://github.com/dotansimha/graphql-code-generator/pull/10075) [`67e7556`](https://github.com/dotansimha/graphql-code-generator/commit/67e75561a3e862f26cfbb40e8ec5a08f821f9ddf) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add note about enabling bundle size reduction for the generated `graphql` tag file.
+
+- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+
 ## 4.0.9
 
 ### Patch Changes
@@ -520,18 +557,18 @@
 - 0c0c8a92b: export new utility type `DocumentType`, for accessing the document node type.
 
   ```tsx
-  import { gql, DocumentType } from '../gql';
+  import { gql, DocumentType } from '../gql'
 
   const TweetFragment = gql(/* GraphQL */ `
     fragment TweetFragment on Tweet {
       id
       body
     }
-  `);
+  `)
 
   const Tweet = (props: { tweet: DocumentType<typeof TweetFragment> }) => {
-    return <div data-id={props.id}>{props.body}</div>;
-  };
+    return <div data-id={props.id}>{props.body}</div>
+  }
   ```
 
 - 440172cfe: support ESM

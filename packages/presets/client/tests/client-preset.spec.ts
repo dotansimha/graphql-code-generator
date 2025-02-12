@@ -51,7 +51,12 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -139,7 +144,12 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -219,7 +229,12 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -300,7 +315,12 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -357,6 +377,13 @@ export * from "./gql";`);
         Boolean: { input: boolean; output: boolean; }
         Int: { input: number; output: number; }
         Float: { input: number; output: number; }
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
       };
 
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -424,7 +451,12 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -483,6 +515,13 @@ export * from "./gql";`);
         Float: { input: number; output: number; }
       };
 
+      export type Query = {
+        __typename: 'Query';
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
+      };
+
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -500,7 +539,99 @@ export * from "./gql";`);
       export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
 
-    expect(graphqlFile.content).toContain("__typename: 'Query',");
+    expect(graphqlFile.content).toContain("__typename: 'Query';");
+  });
+
+  it('supports Apollo fragment masking', async () => {
+    const result = await executeCodegen({
+      schema: /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+          age: Int!
+        }
+      `,
+      documents: /* GraphQL */ `
+        query Me {
+          unmasked: me {
+            id
+            ...User_Me @unmask
+          }
+          masked: me {
+            id
+            ...User_Me
+          }
+        }
+
+        fragment User_Me on User {
+          name
+          age
+        }
+      `,
+      generates: {
+        'out1/': {
+          preset,
+          presetConfig: { fragmentMasking: false },
+          config: {
+            inlineFragmentTypes: 'mask',
+            customDirectives: { apolloUnmask: true },
+          },
+        },
+      },
+    });
+
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = Maybe<T>;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        me?: Maybe<User>;
+      };
+
+      export type User = {
+        __typename?: 'User';
+        age: Scalars['Int']['output'];
+        id: Scalars['ID']['output'];
+        name: Scalars['String']['output'];
+      };
+
+      export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type MeQuery = { __typename?: 'Query', unmasked?: (
+          { __typename?: 'User', id: string, name: string, age: number }
+          & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
+        ) | null, masked?: (
+          { __typename?: 'User', id: string }
+          & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
+        ) | null };
+
+      export type User_MeFragment = { __typename?: 'User', name: string, age: number } & { ' $fragmentName'?: 'User_MeFragment' };
+
+      export const User_MeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<User_MeFragment, unknown>;
+      export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"unmasked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"unmask"}}]}]}},{"kind":"Field","alias":{"kind":"Name","value":"masked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;"
+    `);
   });
 
   it('prevent duplicate operations', async () => {
@@ -541,7 +672,10 @@ export * from "./gql";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
       };
 
@@ -590,6 +724,11 @@ export * from "./gql";`);
         Float: { input: number; output: number; }
       };
 
+      export type Query = {
+        __typename?: 'Query';
+        a?: Maybe<Scalars['String']['output']>;
+      };
+
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -599,7 +738,7 @@ export * from "./gql";`);
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
     `);
 
-    expect(gqlFile.content.match(/query a {/g).length).toBe(3);
+    expect(gqlFile.content.match(/query a {/g).length).toBe(4);
   });
 
   describe('fragment masking', () => {
@@ -650,7 +789,12 @@ export * from "./gql";`);
          * Therefore it is highly recommended to use the babel or swc plugin for production.
          * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
-        const documents = {
+        type Documents = {
+            "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+            "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+            "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+        };
+        const documents: Documents = {
             "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
             "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
             "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -998,7 +1142,12 @@ export * from "./gql.js";`);
        * Therefore it is highly recommended to use the babel or swc plugin for production.
        * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -1281,6 +1430,13 @@ export * from "./gql.js";`);
         Float: { input: number; output: number; }
       };
 
+      export type Query = {
+        __typename?: 'Query';
+        a?: Maybe<Scalars['String']['output']>;
+        b?: Maybe<Scalars['String']['output']>;
+        c?: Maybe<Scalars['String']['output']>;
+      };
+
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1350,6 +1506,13 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1426,6 +1589,13 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1498,6 +1668,13 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1576,6 +1753,13 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1646,6 +1830,13 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1724,6 +1915,13 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1805,6 +2003,13 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1882,6 +2087,13 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
         };
 
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1969,6 +2181,17 @@ export * from "./gql.js";`);
         Float: { input: number; output: number; }
       };
 
+      export type A = {
+        __typename?: 'A';
+        a: A;
+        b: Scalars['String']['output'];
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        a: A;
+      };
+
       export type AbFragment = (
         { __typename?: 'A', b: string }
         & { ' $fragmentRefs'?: { 'AcFragment': AcFragment;'AaFragment': AaFragment } }
@@ -2035,6 +2258,18 @@ export * from "./gql.js";`);
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
+        };
+
+        export type Foo = {
+          __typename?: 'Foo';
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
         };
 
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2110,6 +2345,18 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Foo = {
+          __typename?: 'Foo';
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2183,6 +2430,18 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Foo = {
+          __typename?: 'Foo';
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2209,7 +2468,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2312,6 +2571,18 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Foo = {
+          __typename?: 'Foo';
+          id?: Maybe<Scalars['String']['output']>;
+          value?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2338,7 +2609,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2439,6 +2710,17 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Foo = {
+          __typename?: 'Foo';
+          value?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          foo?: Maybe<Foo>;
+          foos?: Maybe<Array<Maybe<Foo>>>;
+        };
+
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2463,7 +2745,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2540,7 +2822,12 @@ export * from "./gql.js";`);
          * Therefore it is highly recommended to use the babel or swc plugin for production.
          * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
-        const documents = {
+        type Documents = {
+            "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": typeof types.FooDocument,
+            "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": typeof types.FoosDocument,
+            "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": typeof types.FooFragmentDoc,
+        };
+        const documents: Documents = {
             "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
             "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": types.FoosDocument,
             "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": types.FooFragmentDoc,
@@ -2716,6 +3003,32 @@ export * from "./gql.js";`);
           Float: { input: number; output: number; }
         };
 
+        export type Mutation = {
+          __typename?: 'Mutation';
+          createRegion?: Maybe<Region>;
+        };
+
+
+        export type MutationCreateRegionArgs = {
+          regionDescription: Scalars['String']['input'];
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          regions?: Maybe<Array<Maybe<Region>>>;
+        };
+
+        export type Region = {
+          __typename?: 'Region';
+          regionDescription: Scalars['String']['output'];
+          regionId: Scalars['Int']['output'];
+        };
+
+        export type Subscription = {
+          __typename?: 'Subscription';
+          onRegionCreated: Region;
+        };
+
         export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2727,7 +3040,7 @@ export * from "./gql.js";`);
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
             super(value);
           }
 
@@ -2747,5 +3060,77 @@ export * from "./gql.js";`);
             \`) as unknown as TypedDocumentString<OnRegionCreatedSubscription, OnRegionCreatedSubscriptionVariables>;
       `);
     });
+  });
+
+  it('support enumsAsConst option', async () => {
+    const result = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            thing: Thing
+          }
+          type Thing {
+            color: Color!
+          }
+          enum Color {
+            RED
+            BLUE
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/enum.ts'),
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            enumsAsConst: true,
+          },
+        },
+      },
+    });
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toBeSimilarStringTo(`
+        /* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export const Color = {
+          Blue: 'BLUE',
+          Red: 'RED'
+        } as const;
+
+        export type Color = typeof Color[keyof typeof Color];
+        export type Query = {
+          __typename?: 'Query';
+          thing?: Maybe<Thing>;
+        };
+
+        export type Thing = {
+          __typename?: 'Thing';
+          color: Color;
+        };
+
+        export type FavoriteColorQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FavoriteColorQuery = { __typename?: 'Query', thing?: { __typename?: 'Thing', color: Color } | null };
+
+
+        export const FavoriteColorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FavoriteColor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<FavoriteColorQuery, FavoriteColorQueryVariables>;
+    `);
   });
 });

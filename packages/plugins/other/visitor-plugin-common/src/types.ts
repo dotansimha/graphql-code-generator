@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { ASTNode, FragmentDefinitionNode, DirectiveNode } from 'graphql';
 import { ParsedMapper } from './mappers.js';
 
@@ -127,3 +128,18 @@ export interface ResolversNonOptionalTypenameConfig {
   interfaceImplementingType?: boolean;
   excludeTypes?: string[];
 }
+
+export interface CustomDirectivesConfig {
+  /**
+   * @description Adds integration with Apollo Client's `@unmask` directive
+   * when using Apollo Client's data masking feature. `@unmask` ensures fields
+   * marked by `@unmask` are available in the type definition.
+   * @default false
+   */
+  apolloUnmask?: boolean;
+}
+
+export interface GenerateInternalResolversIfNeededConfig {
+  __resolveReference?: boolean;
+}
+export type NormalizedGenerateInternalResolversIfNeededConfig = Required<GenerateInternalResolversIfNeededConfig>;

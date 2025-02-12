@@ -1,5 +1,34 @@
 # @graphql-codegen/typescript-document-nodes
 
+## 4.0.13
+
+### Patch Changes
+
+- Updated dependencies [[`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.1
+
+## 4.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a), [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.0
+
+## 4.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc), [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03)]:
+  - @graphql-codegen/visitor-plugin-common@5.5.0
+  - @graphql-codegen/plugin-helpers@5.1.0
+
+## 4.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+
 ## 4.0.9
 
 ### Patch Changes

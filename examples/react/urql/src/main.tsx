@@ -6,7 +6,7 @@ import './main.css';
 import App from './App';
 
 const client = createClient({
-  url: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  url: 'https://graphql.org/graphql/',
 });
 
 const root = ReactDOM.createRoot(document.getElementById('app') as HTMLElement);

@@ -25,7 +25,7 @@ export type ClientPresetConfig = {
    * @exampleMarkdown
    * ```tsx
    * const config = {
-   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    schema: 'https://graphql.org/graphql/',
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {
@@ -49,7 +49,7 @@ export type ClientPresetConfig = {
    * @exampleMarkdown
    * ```tsx
    * const config = {
-   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    schema: 'https://graphql.org/graphql/',
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {
@@ -134,6 +134,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
+      skipTypeNameForRoot: options.config.skipTypeNameForRoot,
+      onlyOperationTypes: options.config.onlyOperationTypes,
+      onlyEnums: options.config.onlyEnums,
+      customDirectives: options.config.customDirectives,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
@@ -213,12 +217,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
-      {
-        [`typescript`]: {
-          onlyEnumTypes: true,
-          onlyOperationTypes: true,
-        },
-      },
+      { [`typescript`]: {} },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {

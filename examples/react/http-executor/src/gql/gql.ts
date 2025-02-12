@@ -13,7 +13,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n': typeof types.AllFilmsWithVariablesQueryDocument;
+  '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n': typeof types.FilmItemFragmentDoc;
+};
+const documents: Documents = {
   '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n':
     types.AllFilmsWithVariablesQueryDocument,
   '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n':
