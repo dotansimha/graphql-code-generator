@@ -147,8 +147,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - Interface', () => {
         Query: {};
         Person: ResolversInterfaceTypes<ResolversParentTypes>['Person'];
         ID: Scalars['ID']['output'];
-        User: User;
-        Admin: Admin;
+        User: User | ( { __typename: 'User' } & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+        Admin: Admin | ( { __typename: 'Admin' } & GraphQLRecursivePick<FederationTypes['Admin'], {"id":true}> );
         Boolean: Scalars['Boolean']['output'];
         PersonName: PersonName;
         String: Scalars['String']['output'];

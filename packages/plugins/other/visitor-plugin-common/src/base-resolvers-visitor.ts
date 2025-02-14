@@ -769,6 +769,7 @@ export class BaseResolversVisitor<
       clearWrapper: type => this.clearResolverTypeWrapper(type),
       getTypeToUse: name => this.getTypeToUse(name),
       currentType: 'ResolversTypes',
+      onNotMappedObjectType: ({ initialType }) => initialType,
     });
     this._resolversParentTypes = this.createResolversFields({
       applyWrapper: type => type,
@@ -776,6 +777,17 @@ export class BaseResolversVisitor<
       getTypeToUse: name => this.getParentTypeToUse(name),
       currentType: 'ResolversParentTypes',
       shouldInclude: namedType => !isEnumType(namedType),
+      onNotMappedObjectType: ({ typeName, initialType }) => {
+        let result = initialType;
+        const federationReferenceTypes = this._federation.printReferenceSelectionSets({
+          convertName: this.convertName,
+          typeName,
+        });
+        if (federationReferenceTypes) {
+          result += ` | ${federationReferenceTypes}`;
+        }
+        return result;
+      },
     });
     this._resolversUnionTypes = this.createResolversUnionTypes();
     this._resolversInterfaceTypes = this.createResolversInterfaceTypes();
@@ -848,12 +860,14 @@ export class BaseResolversVisitor<
     getTypeToUse,
     currentType,
     shouldInclude,
+    onNotMappedObjectType,
   }: {
     applyWrapper: (str: string) => string;
     clearWrapper: (str: string) => string;
     getTypeToUse: (str: string) => string;
     currentType: 'ResolversTypes' | 'ResolversParentTypes';
     shouldInclude?: (type: GraphQLNamedType) => boolean;
+    onNotMappedObjectType: (params: { initialType: string; typeName: string }) => string;
   }): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
@@ -942,6 +956,11 @@ export class BaseResolversVisitor<
             if (this.config.mappers[typeName].type && hasPlaceholder(this.config.mappers[typeName].type)) {
               internalType = replacePlaceholder(this.config.mappers[typeName].type, internalType);
             }
+          } else {
+            internalType = onNotMappedObjectType({
+              typeName,
+              initialType: internalType,
+            });
           }
 
           prev[typeName] = applyWrapper(internalType);

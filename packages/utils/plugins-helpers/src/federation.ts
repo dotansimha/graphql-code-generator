@@ -30,9 +30,31 @@ export const federationSpec = parse(/* GraphQL */ `
   directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
 `);
 
+/**
+ * ReferenceSelectionSet
+ * @description Each is a collection of fields that are available in a reference payload (originated from the Router)
+ * @example
+ * - resolvable fields marked with `@key`
+ * - fields declared in `@provides`
+ */
+interface ReferenceSelectionSet {
+  name: string;
+  selection: boolean | ReferenceSelectionSet[];
+}
+
 interface TypeMeta {
   hasResolveReference: boolean;
   resolvableKeyDirectives: readonly DirectiveNode[];
+  /**
+   * referenceSelectionSets
+   * @description Each element can be `ReferenceSelectionSet[]`.
+   * Elements at the root level are combined with `&` and nested elements are combined with `|`.
+   *
+   * @example:
+   * - [[A, B], [C], [D]]      -> (A | B) & C & D
+   * - [[A, B], [C, D], [E]] -> (A | B) & (C | D) & E
+   */
+  referenceSelectionSets: ReferenceSelectionSet[][];
 }
 
 export type FederationMeta = { [typeName: string]: TypeMeta };
@@ -57,7 +79,15 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
     typeName: string;
     update: TypeMeta;
   }): void => {
-    meta[typeName] = { ...(meta[typeName] || { hasResolveReference: false, resolvableKeyDirectives: [] }), ...update };
+    meta[typeName] = {
+      ...(meta[typeName] ||
+        ({
+          hasResolveReference: false,
+          resolvableKeyDirectives: [],
+          referenceSelectionSets: [],
+        } satisfies TypeMeta)),
+      ...update,
+    };
   };
 
   const federationMeta: FederationMeta = {};
@@ -80,6 +110,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
           update: {
             hasResolveReference: true,
             resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+            referenceSelectionSets: [],
           },
         });
 
@@ -92,6 +123,23 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
       const federationDetails = checkTypeFederationDetails(type, schema);
       if (federationDetails && federationDetails.resolvableKeyDirectives.length > 0) {
         const typeConfig = type.toConfig();
+
+        const referenceSelectionSets: TypeMeta['referenceSelectionSets'] = [];
+
+        // @key() @key() - "primary keys" in Federation
+        // A reference may receive one primary key combination at a time, so they will be combined with `|`
+        const primaryKeys = federationDetails.resolvableKeyDirectives.map(extractReferenceSelectionSet);
+        referenceSelectionSets.push([...primaryKeys]);
+
+        for (const fieldNode of Object.values(typeConfig.fields)) {
+          // Look for @requires and see what the service needs and gets
+          const directives = getDirectivesByName('requires', fieldNode.astNode);
+          for (const directive of directives) {
+            const requires = extractReferenceSelectionSet(directive);
+            referenceSelectionSets.push([requires]);
+          }
+        }
+
         typeConfig.fields = {
           [resolveReferenceFieldName]: {
             type,
@@ -105,6 +153,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
           update: {
             hasResolveReference: true,
             resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+            referenceSelectionSets,
           },
         });
 
@@ -219,7 +268,6 @@ export class ApolloFederation {
 
   /**
    * Transforms a field's ParentType signature in ObjectTypes or InterfaceTypes involved in Federation
-   * @param data
    */
   transformFieldParentType({
     fieldNode,
@@ -231,7 +279,7 @@ export class ApolloFederation {
     parentType: GraphQLNamedType;
     parentTypeSignature: string;
     federationTypeSignature: string;
-  }) {
+  }): string {
     if (!this.enabled) {
       return parentTypeSignature;
     }
@@ -255,13 +303,19 @@ export class ApolloFederation {
     const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
 
     // Look for @requires and see what the service needs and gets
-    const requires = getDirectivesByName('requires', fieldNode).map(this.extractFieldSet);
-    const requiredFields = this.translateFieldSet(merge({}, ...requires), federationTypeSignature);
+    const requires = getDirectivesByName('requires', fieldNode).map(extractReferenceSelectionSet);
+    const requiredFields = this.printReferenceSelectionSet({
+      referenceSelectionSet: merge({}, ...requires),
+      typeName: federationTypeSignature,
+    });
 
     // @key() @key() - "primary keys" in Federation
     const primaryKeys = parentTypeMeta.resolvableKeyDirectives.map(def => {
-      const fields = this.extractFieldSet(def);
-      return this.translateFieldSet(fields, federationTypeSignature);
+      const fields = extractReferenceSelectionSet(def);
+      return this.printReferenceSelectionSet({
+        referenceSelectionSet: fields,
+        typeName: federationTypeSignature,
+      });
     });
 
     const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
@@ -315,41 +369,41 @@ export class ApolloFederation {
     return false;
   }
 
-  private translateFieldSet(fields: any, parentTypeRef: string): string {
-    return `GraphQLRecursivePick<${parentTypeRef}, ${JSON.stringify(fields)}>`;
+  printReferenceSelectionSet({
+    typeName,
+    referenceSelectionSet,
+  }: {
+    typeName: string;
+    referenceSelectionSet: ReferenceSelectionSet;
+  }): string {
+    return `GraphQLRecursivePick<${typeName}, ${JSON.stringify(referenceSelectionSet)}>`;
   }
 
-  private extractFieldSet(directive: DirectiveNode): any {
-    const arg = directive.arguments.find(arg => arg.name.value === 'fields');
-    const { value } = arg.value as StringValueNode;
+  printReferenceSelectionSets({
+    typeName,
+    convertName,
+  }: {
+    typeName: string;
+    convertName: (name: string) => string;
+  }): string | false {
+    const federationMeta = this.getMeta()[typeName];
 
-    type SelectionSetField = {
-      name: string;
-      selection: boolean | SelectionSetField[];
-    };
+    if (!federationMeta?.hasResolveReference) {
+      return false;
+    }
 
-    return oldVisit(parse(`{${value}}`), {
-      leave: {
-        SelectionSet(node) {
-          return (node.selections as any as SelectionSetField[]).reduce((accum, field) => {
-            accum[field.name] = field.selection;
-            return accum;
-          }, {});
-        },
-        Field(node) {
-          return {
-            name: node.name.value,
-            selection: node.selectionSet || true,
-          } as SelectionSetField;
-        },
-        Document(node) {
-          return node.definitions.find(
-            (def: DefinitionNode): def is OperationDefinitionNode =>
-              def.kind === 'OperationDefinition' && def.operation === 'query'
-          ).selectionSet;
-        },
-      },
-    });
+    return `( { __typename: '${typeName}' } & ${federationMeta.referenceSelectionSets
+      .map(referenceSelectionSetArray => {
+        const result = referenceSelectionSetArray.map(referenceSelectionSet => {
+          return this.printReferenceSelectionSet({
+            referenceSelectionSet,
+            typeName: `${convertName('FederationTypes')}['${typeName}']`,
+          });
+        });
+
+        return result.length > 1 ? `( ${result.join(' | ')} )` : result.join(' | ');
+      })
+      .join(' & ')} )`;
   }
 
   private createMapOfProvides() {
@@ -361,7 +415,7 @@ export class ApolloFederation {
       if (isObjectType(objectType)) {
         for (const field of Object.values(objectType.getFields())) {
           const provides = getDirectivesByName('provides', field.astNode)
-            .map(this.extractFieldSet)
+            .map(extractReferenceSelectionSet)
             .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []);
           const ofType = getBaseType(field.type);
 
@@ -444,4 +498,32 @@ function getDirectivesByName(
 function nodeHasTypeExtension(node: ObjectTypeDefinitionNode | GraphQLObjectType, schema: GraphQLSchema): boolean {
   const definition = isObjectType(node) ? node.astNode || astFromObjectType(node, schema) : node;
   return definition.fields?.some(field => getDirectivesByName('external', field).length);
+}
+
+function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {
+  const arg = directive.arguments.find(arg => arg.name.value === 'fields');
+  const { value } = arg.value as StringValueNode;
+
+  return oldVisit(parse(`{${value}}`), {
+    leave: {
+      SelectionSet(node) {
+        return (node.selections as any as ReferenceSelectionSet[]).reduce((accum, field) => {
+          accum[field.name] = field.selection;
+          return accum;
+        }, {});
+      },
+      Field(node) {
+        return {
+          name: node.name.value,
+          selection: node.selectionSet || true,
+        } satisfies ReferenceSelectionSet;
+      },
+      Document(node) {
+        return node.definitions.find(
+          (def: DefinitionNode): def is OperationDefinitionNode =>
+            def.kind === 'OperationDefinition' && def.operation === 'query'
+        ).selectionSet;
+      },
+    },
+  });
 }
