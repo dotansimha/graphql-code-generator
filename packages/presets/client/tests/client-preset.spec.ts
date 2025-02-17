@@ -934,6 +934,16 @@ export * from "./gql";`);
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): Array<TType> | null | undefined;
+        // return nullable array of non-nullable if \`fragmentType\` is nullable array of nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>> | null> | undefined
+        ): Array<TType | null> | undefined;
+        // return nullable array of nullable if \`fragmentType\` is nullable array of nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>> | null> | null | undefined
+        ): Array<TType | null> | null | undefined;
         // return readonly array of non-nullable if \`fragmentType\` is array of non-nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
@@ -944,10 +954,20 @@ export * from "./gql";`);
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): ReadonlyArray<TType> | null | undefined;
+        // return nullable readonly array of non-nullable if \`fragmentType\` is nullable array of nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
-          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | Array<FragmentType<DocumentTypeDecoration<TType, any>>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-        ): TType | Array<TType> | ReadonlyArray<TType> | null | undefined {
+          fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>> | null> | undefined
+        ): ReadonlyArray<TType | null> | undefined;
+        // return nullable readonly array of nullable if \`fragmentType\` is nullable array of nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>> | null> | null | undefined
+        ): ReadonlyArray<TType | null> | null | undefined;
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | Array<FragmentType<DocumentTypeDecoration<TType, any>> | null> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>> | null> | null | undefined
+        ): TType | Array<TType | null> | ReadonlyArray<TType | null> | null | undefined {
           return fragmentType as any;
         }
 
