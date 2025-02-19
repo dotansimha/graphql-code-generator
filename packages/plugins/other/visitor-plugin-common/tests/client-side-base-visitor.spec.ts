@@ -274,3 +274,59 @@ describe('getImports', () => {
     });
   });
 });
+
+describe('includeExternalFragments', () => {
+  const schema = buildSchema(/* GraphQL */ `
+    type Query {
+      a: A
+    }
+
+    type A {
+      foo: String
+      bar: String
+    }
+  `);
+
+  const document = parse(`
+    query fooBarQuery {
+      a {
+        ...ExternalA
+      }
+    }
+    `);
+
+  const externalFragments = parse(`
+    fragment ExternalA on A {
+      foo
+      bar
+    }
+    `)
+    .definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION)
+    .map(fragmentDef => ({
+      node: fragmentDef,
+      name: fragmentDef.name.value,
+      onType: fragmentDef.typeCondition.name.value,
+      isExternal: true,
+    }));
+
+  it('should not include external fragments', () => {
+    const visitor = new ClientSideBaseVisitor(schema, externalFragments, {}, {});
+
+    visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
+
+    expect(visitor.fragments).toBe('');
+  });
+
+  it('should include external fragments', () => {
+    const visitor = new ClientSideBaseVisitor(
+      schema,
+      externalFragments,
+      {
+        includeExternalFragments: true,
+      },
+      {}
+    );
+
+    expect(visitor.fragments).toContain('ExternalAFragment');
+  });
+});
