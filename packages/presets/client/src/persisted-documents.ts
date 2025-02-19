@@ -34,6 +34,16 @@ export function normalizeAndPrintDocumentNode(documentNode: DocumentNode): strin
         return null;
       }
     },
+    [Kind.FRAGMENT_SPREAD](spread) {
+      if (spread.directives?.some(directive => directive.name.value === 'client')) {
+        return null;
+      }
+    },
+    [Kind.INLINE_FRAGMENT](fragment) {
+      if (fragment.directives?.some(directive => directive.name.value === 'client')) {
+        return null;
+      }
+    },
     [Kind.DIRECTIVE](directive) {
       if (directive.name.value === 'connection') {
         return null;
