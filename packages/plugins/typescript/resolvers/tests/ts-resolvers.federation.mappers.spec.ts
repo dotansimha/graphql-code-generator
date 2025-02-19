@@ -147,13 +147,11 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<FederationType, {"id":true}>, ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
 
       export type UserProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserProfile'] = ResolversParentTypes['UserProfile']> = {
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
 
       export type Resolvers<ContextType = any> = {
