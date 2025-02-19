@@ -166,7 +166,6 @@ export type AddressResolvers<
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lines?: Resolver<ResolversTypes['Lines'], ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type BookResolvers<
@@ -174,7 +173,6 @@ export type BookResolvers<
   ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type LinesResolvers<
@@ -183,7 +181,6 @@ export type LinesResolvers<
 > = {
   line1?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   line2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -216,8 +213,6 @@ export type UserResolvers<
       GraphQLRecursivePick<FederationType, { address: { city: true; lines: { line2: true } } }>,
     ContextType
   >;
-
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {

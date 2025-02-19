@@ -460,4 +460,48 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
       };
     `);
   });
+
+  it('generates __isTypeOf for only implementing object types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface Node {
+        id: ID!
+      }
+      type Cat implements Node {
+        id: ID!
+        name: String!
+      }
+      type Dog implements Node {
+        id: ID!
+        isGoodBoy: Boolean!
+      }
+      type Human {
+        _id: ID!
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type CatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Cat'] = ResolversParentTypes['Cat']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      }
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type DogResolvers<ContextType = any, ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        isGoodBoy?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+
+    // Human does not implement Node, so it does not have __isTypeOf
+    expect(result.content).toBeSimilarStringTo(`
+      export type HumanResolvers<ContextType = any, ParentType extends ResolversParentTypes['Human'] = ResolversParentTypes['Human']> = {
+        _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      };
+    `);
+  });
 });
