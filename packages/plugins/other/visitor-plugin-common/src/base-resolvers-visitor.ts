@@ -6,9 +6,11 @@ import {
   DirectiveDefinitionNode,
   EnumTypeDefinitionNode,
   FieldDefinitionNode,
+  GraphQLInterfaceType,
   GraphQLNamedType,
   GraphQLObjectType,
   GraphQLSchema,
+  GraphQLUnionType,
   InputValueDefinitionNode,
   InterfaceTypeDefinitionNode,
   isEnumType,
@@ -33,8 +35,6 @@ import {
   ConvertOptions,
   DeclarationKind,
   EnumValuesMap,
-  type NormalizedGenerateInternalResolversIfNeededConfig,
-  type GenerateInternalResolversIfNeededConfig,
   NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
@@ -77,7 +77,6 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeSuffix: string;
   allResolversTypeName: string;
   internalResolversPrefix: string;
-  generateInternalResolversIfNeeded: NormalizedGenerateInternalResolversIfNeededConfig;
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
   avoidCheckingAbstractTypesRecursively: boolean;
@@ -619,15 +618,6 @@ export interface RawResolversConfig extends RawConfig {
    */
   internalResolversPrefix?: string;
   /**
-   * @type object
-   * @default {}
-   * @description If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.
-   * Enabling this allows a more correct type generation for the resolvers.
-   * For example:
-   * - `__isTypeOf` is generated for implementing types and union members
-   */
-  generateInternalResolversIfNeeded?: GenerateInternalResolversIfNeededConfig;
-  /**
    * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
    * @default false
    *
@@ -705,6 +695,31 @@ export class BaseResolversVisitor<
       baseGeneratedTypename?: string;
     };
   } = {};
+  protected _parsedSchemaMeta: {
+    types: {
+      interface: Record<
+        string,
+        {
+          type: GraphQLInterfaceType;
+          implementingTypes: Record<string, GraphQLObjectType>;
+        }
+      >;
+      union: Record<
+        string,
+        {
+          type: GraphQLUnionType;
+          unionMembers: Record<string, GraphQLObjectType>;
+        }
+      >;
+    };
+    typesWithIsTypeOf: Record<string, true>;
+  } = {
+    types: {
+      interface: {},
+      union: {},
+    },
+    typesWithIsTypeOf: {},
+  };
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransformer: OperationVariablesToObject;
   protected _usedMappers: { [key: string]: boolean } = {};
@@ -713,7 +728,6 @@ export class BaseResolversVisitor<
   protected _hasReferencedResolversUnionTypes = false;
   protected _hasReferencedResolversInterfaceTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
-  protected _resolversUnionParentTypes: Record<string, string> = {};
   protected _resolversInterfaceTypes: Record<string, string> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
@@ -779,6 +793,11 @@ export class BaseResolversVisitor<
       this.config.namespacedImportName
     );
 
+    // 1. Parse schema meta at the start once,
+    // so we can use it in subsequent generate functions
+    this.parseSchemaMeta();
+
+    // 2. Generate types for resolvers
     this._resolversTypes = this.createResolversFields({
       applyWrapper: type => this.applyResolverTypeWrapper(type),
       clearWrapper: type => this.clearResolverTypeWrapper(type),
@@ -1030,22 +1049,20 @@ export class BaseResolversVisitor<
       return {};
     }
 
-    const allSchemaTypes = this._schema.getTypeMap();
-    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
-
-    const unionTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
-      const schemaType = allSchemaTypes[typeName];
-
-      if (isUnionType(schemaType)) {
-        const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
-        res[typeName] = this.getAbstractMembersType({
-          typeName,
-          memberTypes: schemaType.getTypes(),
-          isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
-        });
-      }
-      return res;
-    }, {});
+    const unionTypes = Object.entries(this._parsedSchemaMeta.types.union).reduce<Record<string, string>>(
+      (res, [typeName, { type: schemaType, unionMembers }]) => {
+        if (isUnionType(schemaType)) {
+          const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
+          res[typeName] = this.getAbstractMembersType({
+            typeName,
+            memberTypes: Object.values(unionMembers),
+            isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
+          });
+        }
+        return res;
+      },
+      {}
+    );
 
     return unionTypes;
   }
@@ -1055,37 +1072,22 @@ export class BaseResolversVisitor<
       return {};
     }
 
-    const allSchemaTypes = this._schema.getTypeMap();
-    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
+    const interfaceTypes = Object.entries(this._parsedSchemaMeta.types.interface).reduce<Record<string, string>>(
+      (res, [typeName, { type: schemaType, implementingTypes }]) => {
+        if (isInterfaceType(schemaType)) {
+          const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
 
-    const interfaceTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
-      const schemaType = allSchemaTypes[typeName];
-
-      if (isInterfaceType(schemaType)) {
-        const allTypesMap = this._schema.getTypeMap();
-        const implementingTypes: GraphQLObjectType[] = [];
-
-        for (const graphqlType of Object.values(allTypesMap)) {
-          if (graphqlType instanceof GraphQLObjectType) {
-            const allInterfaces = graphqlType.getInterfaces();
-
-            if (allInterfaces.some(int => int.name === schemaType.name)) {
-              implementingTypes.push(graphqlType);
-            }
-          }
+          res[typeName] = this.getAbstractMembersType({
+            typeName,
+            memberTypes: Object.values(implementingTypes),
+            isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
+          });
         }
 
-        const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
-
-        res[typeName] = this.getAbstractMembersType({
-          typeName,
-          memberTypes: implementingTypes,
-          isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
-        });
-      }
-
-      return res;
-    }, {});
+        return res;
+      },
+      {}
+    );
 
     return interfaceTypes;
   }
@@ -1637,6 +1639,46 @@ export class BaseResolversVisitor<
     return contextType;
   }
 
+  private parseSchemaMeta(): void {
+    const allSchemaTypes = this._schema.getTypeMap();
+    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
+
+    for (const typeName of typeNames) {
+      const schemaType = allSchemaTypes[typeName];
+
+      if (isUnionType(schemaType)) {
+        this._parsedSchemaMeta.types.union[schemaType.name] = {
+          type: schemaType,
+          unionMembers: {},
+        };
+
+        const unionMemberTypes = schemaType.getTypes();
+        for (const type of unionMemberTypes) {
+          this._parsedSchemaMeta.types.union[schemaType.name].unionMembers[type.name] = type;
+          this._parsedSchemaMeta.typesWithIsTypeOf[type.name] = true;
+        }
+      }
+
+      if (isInterfaceType(schemaType)) {
+        this._parsedSchemaMeta.types.interface[schemaType.name] = {
+          type: schemaType,
+          implementingTypes: {},
+        };
+
+        for (const graphqlType of Object.values(allSchemaTypes)) {
+          if (graphqlType instanceof GraphQLObjectType) {
+            const allInterfaces = graphqlType.getInterfaces();
+
+            if (allInterfaces.some(int => int.name === schemaType.name)) {
+              this._parsedSchemaMeta.types.interface[schemaType.name].implementingTypes[graphqlType.name] = graphqlType;
+              this._parsedSchemaMeta.typesWithIsTypeOf[graphqlType.name] = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
     this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
     return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(' | ')}>`;
@@ -1677,7 +1719,7 @@ export class BaseResolversVisitor<
       ).value;
     });
 
-    if (!rootType) {
+    if (!rootType && this._parsedSchemaMeta.typesWithIsTypeOf[typeName]) {
       fieldsContent.push(
         indent(
           `${
@@ -1864,24 +1906,13 @@ export class BaseResolversVisitor<
       suffix: this.config.resolverTypeSuffix,
     });
     const declarationKind = 'type';
-    const allTypesMap = this._schema.getTypeMap();
-    const implementingTypes: string[] = [];
-
     const typeName = node.name as any as string;
+    const implementingTypes = Object.keys(this._parsedSchemaMeta.types.interface[typeName].implementingTypes);
 
     this._collectedResolvers[typeName] = {
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
-
-    for (const graphqlType of Object.values(allTypesMap)) {
-      if (graphqlType instanceof GraphQLObjectType) {
-        const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === typeName)) {
-          implementingTypes.push(graphqlType.name);
-        }
-      }
-    }
 
     const parentType = this.getParentTypeToUse(typeName);
 
