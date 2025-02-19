@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-operations
 
+## 4.5.0
+
+### Minor Changes
+
+- [#10270](https://github.com/dotansimha/graphql-code-generator/pull/10270) [`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c) Thanks [@adapap](https://github.com/adapap)! - feat: implement `includeExternalFragments: boolean` option
+
+### Patch Changes
+
+- Updated dependencies [[`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c)]:
+  - @graphql-codegen/visitor-plugin-common@5.7.0
+  - @graphql-codegen/typescript@4.1.4
+
 ## 4.4.1
 
 ### Patch Changes

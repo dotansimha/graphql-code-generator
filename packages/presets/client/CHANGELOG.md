@@ -1,5 +1,18 @@
 # @graphql-codegen/client-preset
 
+## 4.6.3
+
+### Patch Changes
+
+- [#10298](https://github.com/dotansimha/graphql-code-generator/pull/10298) [`3efc472`](https://github.com/dotansimha/graphql-code-generator/commit/3efc472b970754b05b1e1f9fe7d33cfa5ec65455) Thanks [@dotansimha](https://github.com/dotansimha)! - Fix a bug where fragment spreads with `@client` directives is not being removed from the generated persisted documents
+
+- Updated dependencies [[`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c)]:
+  - @graphql-codegen/visitor-plugin-common@5.7.0
+  - @graphql-codegen/typescript-operations@4.5.0
+  - @graphql-codegen/gql-tag-operations@4.0.15
+  - @graphql-codegen/typed-document-node@5.0.14
+  - @graphql-codegen/typescript@4.1.4
+
 ## 4.6.2
 
 ### Patch Changes
