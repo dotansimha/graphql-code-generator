@@ -181,7 +181,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - Interface', () => {
       export type PersonNameResolvers<ContextType = any, ParentType extends ResolversParentTypes['PersonName'] = ResolversParentTypes['PersonName']> = {
         first?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         last?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
 
       export type Resolvers<ContextType = any> = {
