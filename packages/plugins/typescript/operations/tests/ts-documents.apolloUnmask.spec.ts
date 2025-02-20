@@ -1,5 +1,4 @@
 import { parse } from 'graphql';
-import '@graphql-codegen/testing';
 import { schema } from './shared/schema.js';
 import { plugin } from '../src/index.js';
 
@@ -22,8 +21,8 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { outputFile: '' }
     );
 
-    expect(result.content).toBeSimilarStringTo(`
-      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+    expect(result.content).toMatchInlineSnapshot(`
+      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { __typename?: 'Query', me?: (
@@ -32,6 +31,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
         ) | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      "
     `);
   });
 
@@ -52,8 +52,8 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { inlineFragmentTypes: 'mask' },
       { outputFile: '' }
     );
-    expect(result.content).toBeSimilarStringTo(`
-      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+    expect(result.content).toMatchInlineSnapshot(`
+      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { __typename?: 'Query', me?: (
@@ -62,6 +62,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
         ) | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      "
     `);
   });
 
@@ -82,8 +83,8 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: false } },
       { outputFile: '' }
     );
-    expect(result.content).toBeSimilarStringTo(`
-      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+    expect(result.content).toMatchInlineSnapshot(`
+      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { __typename?: 'Query', me?: (
@@ -92,6 +93,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
         ) | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      "
     `);
   });
 
@@ -117,8 +119,8 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
       { outputFile: '' }
     );
-    expect(result.content).toBeSimilarStringTo(`
-      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+    expect(result.content).toMatchInlineSnapshot(`
+      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { __typename?: 'Query', me?: (
@@ -127,7 +129,9 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
         ) | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+
       export type UserFragment2Fragment = { __typename?: 'User', email: string } & { ' $fragmentName'?: 'UserFragment2Fragment' };
+      "
     `);
   });
 
@@ -154,8 +158,8 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
       { outputFile: '' }
     );
-    expect(result.content).toBeSimilarStringTo(`
-      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+    expect(result.content).toMatchInlineSnapshot(`
+      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { __typename?: 'Query', me?: (
@@ -164,7 +168,9 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
         ) | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string, email: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+
       export type UserFragment2Fragment = { __typename?: 'User', email: string } & { ' $fragmentName'?: 'UserFragment2Fragment' };
+      "
     `);
   });
 });
