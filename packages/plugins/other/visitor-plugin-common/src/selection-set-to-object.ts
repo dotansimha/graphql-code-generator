@@ -599,9 +599,14 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
-      // 2. Handle Fragment selection nodes
-      // 2a. If `inlineFragmentTypes` is 'combine' or 'mask', the fragment is masked i.e. do not generate inline types
-      // In some cases like Apollo `@unmask`, the fragment would be generated inline.
+      // 2. Handle Fragment Spread nodes
+      // A Fragment Spread can be:
+      // - masked: the fields declared in the Fragment do not appear in the operation types
+      // - inline: the fields declared in the Fragment appear in the operation types
+
+      // 2a. If `inlineFragmentTypes` is 'combine' or 'mask', the Fragment Spread is masked by default
+      // In some cases, a masked node could be unmasked (i.e. treated as inline):
+      // - Fragment spread node is marked with Apollo `@unmask`, e.g. `...User @unmask`
       if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
         let isMasked = true;
 
@@ -618,7 +623,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         }
       }
 
-      // 2b. If the Fragment is not masked, handle Fragment Spreads by generating inline types.
+      // 2b. If the Fragment Spread is not masked, generate inline types.
       const fragmentType = this._schema.getType(selectionNode.onType);
 
       if (fragmentType == null) {
