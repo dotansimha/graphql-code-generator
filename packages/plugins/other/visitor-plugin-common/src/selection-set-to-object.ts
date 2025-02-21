@@ -548,6 +548,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     selectionNodes = [...selectionNodes];
     let inlineFragmentConditional = false;
     for (const selectionNode of selectionNodes) {
+      // 1. Handle Field or Directtives selection nodes
       if ('kind' in selectionNode) {
         if (selectionNode.kind === 'Field') {
           if (selectionNode.selectionSet) {
@@ -598,21 +599,26 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
+      // 2. Handle Fragment selection nodes
+      // 2a. If `inlineFragmentTypes` is 'combine' or 'mask', the fragment is masked i.e. do not generate inline types
+      // In some cases like Apollo `@unmask`, the fragment would be generated inline.
       if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
-        fragmentsSpreadUsages.push(selectionNode.typeName);
-
-        const isApolloUnmaskEnabled = this._config.customDirectives.apolloUnmask;
+        let isMasked = true;
 
         if (
-          !isApolloUnmaskEnabled ||
-          (isApolloUnmaskEnabled && !selectionNode.fragmentDirectives?.some(d => d.name.value === 'unmask'))
+          this._config.customDirectives.apolloUnmask &&
+          selectionNode.fragmentDirectives.some(d => d.name.value === 'unmask')
         ) {
+          isMasked = false;
+        }
+
+        if (isMasked) {
+          fragmentsSpreadUsages.push(selectionNode.typeName);
           continue;
         }
       }
 
-      // Handle Fragment Spreads by generating inline types.
-
+      // 2b. If the Fragment is not masked, handle Fragment Spreads by generating inline types.
       const fragmentType = this._schema.getType(selectionNode.onType);
 
       if (fragmentType == null) {
