@@ -25,10 +25,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
-          { __typename?: 'User', id: string }
-          & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
-        ) | null };
+      export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
       "
@@ -125,7 +122,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
 
       export type Unnamed_1_Query = { __typename?: 'Query', me?: (
           { __typename?: 'User', id: string }
-          & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment;'UserFragment2Fragment': UserFragment2Fragment } }
+          & { ' $fragmentRefs'?: { 'UserFragment2Fragment': UserFragment2Fragment } }
         ) | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
@@ -164,7 +161,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
 
       export type Unnamed_1_Query = { __typename?: 'Query', me?: (
           { __typename?: 'User', id: string, email: string }
-          & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment;'UserFragment2Fragment': UserFragment2Fragment } }
+          & { ' $fragmentRefs'?: { 'UserFragment2Fragment': UserFragment2Fragment } }
         ) | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string, email: string } & { ' $fragmentName'?: 'UserFragmentFragment' };

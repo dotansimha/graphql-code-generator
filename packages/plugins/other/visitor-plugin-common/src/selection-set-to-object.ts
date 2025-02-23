@@ -548,6 +548,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     selectionNodes = [...selectionNodes];
     let inlineFragmentConditional = false;
     for (const selectionNode of selectionNodes) {
+      // 1. Handle Field or Directtives selection nodes
       if ('kind' in selectionNode) {
         if (selectionNode.kind === 'Field') {
           if (selectionNode.selectionSet) {
@@ -598,21 +599,31 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
-      if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
-        fragmentsSpreadUsages.push(selectionNode.typeName);
+      // 2. Handle Fragment Spread nodes
+      // A Fragment Spread can be:
+      // - masked: the fields declared in the Fragment do not appear in the operation types
+      // - inline: the fields declared in the Fragment appear in the operation types
 
-        const isApolloUnmaskEnabled = this._config.customDirectives.apolloUnmask;
+      // 2a. If `inlineFragmentTypes` is 'combine' or 'mask', the Fragment Spread is masked by default
+      // In some cases, a masked node could be unmasked (i.e. treated as inline):
+      // - Fragment spread node is marked with Apollo `@unmask`, e.g. `...User @unmask`
+      if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
+        let isMasked = true;
 
         if (
-          !isApolloUnmaskEnabled ||
-          (isApolloUnmaskEnabled && !selectionNode.fragmentDirectives?.some(d => d.name.value === 'unmask'))
+          this._config.customDirectives.apolloUnmask &&
+          selectionNode.fragmentDirectives.some(d => d.name.value === 'unmask')
         ) {
+          isMasked = false;
+        }
+
+        if (isMasked) {
+          fragmentsSpreadUsages.push(selectionNode.typeName);
           continue;
         }
       }
 
-      // Handle Fragment Spreads by generating inline types.
-
+      // 2b. If the Fragment Spread is not masked, generate inline types.
       const fragmentType = this._schema.getType(selectionNode.onType);
 
       if (fragmentType == null) {
