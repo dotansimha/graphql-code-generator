@@ -1,5 +1,18 @@
 # @graphql-codegen/client-preset
 
+## 4.6.4
+
+### Patch Changes
+
+- [#10302](https://github.com/dotansimha/graphql-code-generator/pull/10302) [`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix Apollo unmask directive incorrectly generating fragmentRefs
+
+- Updated dependencies [[`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a)]:
+  - @graphql-codegen/visitor-plugin-common@5.7.1
+  - @graphql-codegen/typescript-operations@4.5.1
+  - @graphql-codegen/gql-tag-operations@4.0.16
+  - @graphql-codegen/typed-document-node@5.0.15
+  - @graphql-codegen/typescript@4.1.5
+
 ## 4.6.3
 
 ### Patch Changes
