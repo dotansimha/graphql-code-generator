@@ -1,5 +1,17 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 5.7.1
+
+### Patch Changes
+
+- [#10302](https://github.com/dotansimha/graphql-code-generator/pull/10302) [`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix Apollo unmask directive incorrectly generating fragmentRefs
+
+## 5.7.0
+
+### Minor Changes
+
+- [#10270](https://github.com/dotansimha/graphql-code-generator/pull/10270) [`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c) Thanks [@adapap](https://github.com/adapap)! - feat: implement `includeExternalFragments: boolean` option
+
 ## 5.6.1
 
 ### Patch Changes

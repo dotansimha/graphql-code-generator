@@ -619,10 +619,7 @@ export * from "./gql";`);
       export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type MeQuery = { __typename?: 'Query', unmasked?: (
-          { __typename?: 'User', id: string, name: string, age: number }
-          & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
-        ) | null, masked?: (
+      export type MeQuery = { __typename?: 'Query', unmasked?: { __typename?: 'User', id: string, name: string, age: number } | null, masked?: (
           { __typename?: 'User', id: string }
           & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
         ) | null };

@@ -34,6 +34,23 @@ describe('Watch targets', () => {
     await stopWatching();
   });
 
+  test('ignores schema URLs when detecting common prefix directory', async () => {
+    const { stopWatching, watchDirectory } = await setupMockWatcher({
+      filepath: './foo/some-config.ts',
+      config: {
+        schema: 'http://localhost/graphql',
+        generates: {
+          ['./foo/some-output.ts']: {
+            documents: ['./foo/bar/*.graphql'],
+          },
+        },
+      },
+    });
+
+    expect(watchDirectory).toBe(join(process.cwd(), 'foo'));
+    await stopWatching();
+  });
+
   test('watches process.cwd() when longest common prefix directory is not accessible', async () => {
     setupMockFilesystem({
       access: async path => {
