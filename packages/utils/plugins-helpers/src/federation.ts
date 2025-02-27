@@ -3,6 +3,7 @@ import {
   DefinitionNode,
   DirectiveNode,
   FieldDefinitionNode,
+  GraphQLFieldConfigMap,
   GraphQLInterfaceType,
   GraphQLNamedType,
   GraphQLObjectType,
@@ -14,7 +15,6 @@ import {
   parse,
   StringValueNode,
 } from 'graphql';
-import merge from 'lodash/merge.js';
 import { oldVisit } from './index.js';
 import { getBaseType } from './utils.js';
 
@@ -90,6 +90,32 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
     };
   };
 
+  const getReferenceSelectionSets = ({
+    resolvableKeyDirectives,
+    fields,
+  }: {
+    resolvableKeyDirectives: readonly DirectiveNode[];
+    fields: GraphQLFieldConfigMap<any, any>;
+  }): TypeMeta['referenceSelectionSets'] => {
+    const referenceSelectionSets: ReferenceSelectionSet[][] = [];
+
+    // @key() @key() - "primary keys" in Federation
+    // A reference may receive one primary key combination at a time, so they will be combined with `|`
+    const primaryKeys = resolvableKeyDirectives.map(extractReferenceSelectionSet);
+    referenceSelectionSets.push([...primaryKeys]);
+
+    for (const fieldNode of Object.values(fields)) {
+      // Look for @requires and see what the service needs and gets
+      const directives = getDirectivesByName('requires', fieldNode.astNode);
+      for (const directive of directives) {
+        const requires = extractReferenceSelectionSet(directive);
+        referenceSelectionSets.push([requires]);
+      }
+    }
+
+    return referenceSelectionSets;
+  };
+
   const federationMeta: FederationMeta = {};
 
   const transformedSchema = mapSchema(schema, {
@@ -104,13 +130,18 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
           ...typeConfig.fields,
         };
 
+        const referenceSelectionSets = getReferenceSelectionSets({
+          resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+          fields: typeConfig.fields,
+        });
+
         setFederationMeta({
           meta: federationMeta,
           typeName: type.name,
           update: {
             hasResolveReference: true,
             resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
-            referenceSelectionSets: [],
+            referenceSelectionSets,
           },
         });
 
@@ -124,21 +155,10 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
       if (federationDetails && federationDetails.resolvableKeyDirectives.length > 0) {
         const typeConfig = type.toConfig();
 
-        const referenceSelectionSets: TypeMeta['referenceSelectionSets'] = [];
-
-        // @key() @key() - "primary keys" in Federation
-        // A reference may receive one primary key combination at a time, so they will be combined with `|`
-        const primaryKeys = federationDetails.resolvableKeyDirectives.map(extractReferenceSelectionSet);
-        referenceSelectionSets.push([...primaryKeys]);
-
-        for (const fieldNode of Object.values(typeConfig.fields)) {
-          // Look for @requires and see what the service needs and gets
-          const directives = getDirectivesByName('requires', fieldNode.astNode);
-          for (const directive of directives) {
-            const requires = extractReferenceSelectionSet(directive);
-            referenceSelectionSets.push([requires]);
-          }
-        }
+        const referenceSelectionSets = getReferenceSelectionSets({
+          resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+          fields: typeConfig.fields,
+        });
 
         typeConfig.fields = {
           [resolveReferenceFieldName]: {
@@ -284,50 +304,24 @@ export class ApolloFederation {
       return parentTypeSignature;
     }
 
-    const parentTypeMeta = this.getMeta()[parentType.name];
-    if (!parentTypeMeta?.hasResolveReference) {
+    const result = this.printReferenceSelectionSets({
+      typeName: parentType.name,
+      baseFederationType: federationTypeSignature,
+    });
+
+    // When `!result`, it means this is not a Federation entity, so we just return the parentTypeSignature
+    if (!result) {
       return parentTypeSignature;
     }
 
-    const isObjectFieldWithFederationRef =
-      isObjectType(parentType) &&
-      (nodeHasTypeExtension(parentType, this.schema) || fieldNode.name.value === resolveReferenceFieldName);
+    const isEntityResolveReferenceField =
+      (isObjectType(parentType) || isInterfaceType(parentType)) && fieldNode.name.value === resolveReferenceFieldName;
 
-    const isInterfaceFieldWithFederationRef =
-      isInterfaceType(parentType) && fieldNode.name.value === resolveReferenceFieldName;
-
-    if (!isObjectFieldWithFederationRef && !isInterfaceFieldWithFederationRef) {
+    if (!isEntityResolveReferenceField) {
       return parentTypeSignature;
     }
 
-    const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
-
-    // Look for @requires and see what the service needs and gets
-    const requires = getDirectivesByName('requires', fieldNode).map(extractReferenceSelectionSet);
-    const requiredFields = this.printReferenceSelectionSet({
-      referenceSelectionSet: merge({}, ...requires),
-      typeName: federationTypeSignature,
-    });
-
-    // @key() @key() - "primary keys" in Federation
-    const primaryKeys = parentTypeMeta.resolvableKeyDirectives.map(def => {
-      const fields = extractReferenceSelectionSet(def);
-      return this.printReferenceSelectionSet({
-        referenceSelectionSet: fields,
-        typeName: federationTypeSignature,
-      });
-    });
-
-    const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
-
-    outputs.push([open, primaryKeys.join(' | '), close].join(''));
-
-    // include required fields
-    if (requires.length) {
-      outputs.push(`& ${requiredFields}`);
-    }
-
-    return outputs.join(' ');
+    return result;
   }
 
   addFederationTypeGenericIfApplicable({
@@ -381,10 +375,10 @@ export class ApolloFederation {
 
   printReferenceSelectionSets({
     typeName,
-    convertName,
+    baseFederationType,
   }: {
     typeName: string;
-    convertName: (name: string) => string;
+    baseFederationType: string;
   }): string | false {
     const federationMeta = this.getMeta()[typeName];
 
@@ -392,18 +386,18 @@ export class ApolloFederation {
       return false;
     }
 
-    return `( { __typename: '${typeName}' } & ${federationMeta.referenceSelectionSets
+    return `\n    ( { __typename: '${typeName}' }\n    & ${federationMeta.referenceSelectionSets
       .map(referenceSelectionSetArray => {
         const result = referenceSelectionSetArray.map(referenceSelectionSet => {
           return this.printReferenceSelectionSet({
             referenceSelectionSet,
-            typeName: `${convertName('FederationTypes')}['${typeName}']`,
+            typeName: baseFederationType,
           });
         });
 
         return result.length > 1 ? `( ${result.join(' | ')} )` : result.join(' | ');
       })
-      .join(' & ')} )`;
+      .join('\n    & ')} )`;
   }
 
   private createMapOfProvides() {

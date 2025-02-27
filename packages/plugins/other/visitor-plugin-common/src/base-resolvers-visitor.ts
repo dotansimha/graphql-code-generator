@@ -780,8 +780,8 @@ export class BaseResolversVisitor<
       onNotMappedObjectType: ({ typeName, initialType }) => {
         let result = initialType;
         const federationReferenceTypes = this._federation.printReferenceSelectionSets({
-          convertName: this.convertName,
           typeName,
+          baseFederationType: `${this.convertName('FederationTypes')}['${typeName}']`,
         });
         if (federationReferenceTypes) {
           result += ` | ${federationReferenceTypes}`;
