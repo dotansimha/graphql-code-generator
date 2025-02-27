@@ -147,8 +147,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - Interface', () => {
         Query: {};
         Person: ResolversInterfaceTypes<ResolversParentTypes>['Person'];
         ID: Scalars['ID']['output'];
-        User: User | ( { __typename: 'User' } & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
-        Admin: Admin | ( { __typename: 'Admin' } & GraphQLRecursivePick<FederationTypes['Admin'], {"id":true}> );
+        User: User |
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+        Admin: Admin |
+          ( { __typename: 'Admin' }
+          & GraphQLRecursivePick<FederationTypes['Admin'], {"id":true}> );
         Boolean: Scalars['Boolean']['output'];
         PersonName: PersonName;
         String: Scalars['String']['output'];
@@ -160,18 +164,24 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - Interface', () => {
 
       export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person'], FederationType extends FederationTypes['Person'] = FederationTypes['Person']> = {
         __resolveType: TypeResolveFn<'User' | 'Admin', ParentType, ContextType>;
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Person']>, { __typename: 'Person' } & GraphQLRecursivePick<FederationType, {"id":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Person']>,
+          ( { __typename: 'Person' }
+          & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
       };
 
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<FederationType, {"id":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         name?: Resolver<ResolversTypes['PersonName'], ParentType, ContextType>;
         __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
 
       export type AdminResolvers<ContextType = any, ParentType extends ResolversParentTypes['Admin'] = ResolversParentTypes['Admin'], FederationType extends FederationTypes['Admin'] = FederationTypes['Admin']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Admin']>, { __typename: 'Admin' } & GraphQLRecursivePick<FederationType, {"id":true}>, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Admin']>,
+          ( { __typename: 'Admin' }
+          & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         name?: Resolver<ResolversTypes['PersonName'], ParentType, ContextType>;
         canImpersonate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
