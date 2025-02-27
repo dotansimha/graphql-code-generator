@@ -490,16 +490,6 @@ function getDirectivesByName(
   return astNode?.directives?.filter(d => d.name.value === name) || [];
 }
 
-/**
- * Checks if the Object Type extends a federated type from a remote schema.
- * Based on if any of its fields contain the `@external` directive
- * @param node Type
- */
-function nodeHasTypeExtension(node: ObjectTypeDefinitionNode | GraphQLObjectType, schema: GraphQLSchema): boolean {
-  const definition = isObjectType(node) ? node.astNode || astFromObjectType(node, schema) : node;
-  return definition.fields?.some(field => getDirectivesByName('external', field).length);
-}
-
 function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {
   const arg = directive.arguments.find(arg => arg.name.value === 'fields');
   const { value } = arg.value as StringValueNode;
@@ -516,7 +506,7 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
         return {
           name: node.name.value,
           selection: node.selectionSet || true,
-        } satisfies ReferenceSelectionSet;
+        } as ReferenceSelectionSet;
       },
       Document(node) {
         return node.definitions.find(
