@@ -154,7 +154,13 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Lines: Lines;
   Query: {};
-  User: User;
+  User:
+    | User
+    | ({ __typename: 'User' } & (
+        | GraphQLRecursivePick<FederationTypes['User'], { id: true }>
+        | GraphQLRecursivePick<FederationTypes['User'], { name: true }>
+      ) &
+        GraphQLRecursivePick<FederationTypes['User'], { address: { city: true; lines: { line2: true } } }>);
   Int: Scalars['Int']['output'];
   Boolean: Scalars['Boolean']['output'];
 };
@@ -200,19 +206,12 @@ export type UserResolvers<
     { __typename: 'User' } & (
       | GraphQLRecursivePick<FederationType, { id: true }>
       | GraphQLRecursivePick<FederationType, { name: true }>
-    ),
-    ContextType
-  >;
-
-  email?: Resolver<
-    ResolversTypes['String'],
-    { __typename: 'User' } & (
-      | GraphQLRecursivePick<FederationType, { id: true }>
-      | GraphQLRecursivePick<FederationType, { name: true }>
     ) &
       GraphQLRecursivePick<FederationType, { address: { city: true; lines: { line2: true } } }>,
     ContextType
   >;
+
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
