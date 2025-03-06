@@ -1,5 +1,16 @@
 # @graphql-codegen/client-preset
 
+## 4.7.0
+
+### Minor Changes
+
+- [#10307](https://github.com/dotansimha/graphql-code-generator/pull/10307) [`bfe3c75`](https://github.com/dotansimha/graphql-code-generator/commit/bfe3c7575e0b5f3a252fe9d72416f7829e44c885) Thanks [@mvantellingen](https://github.com/mvantellingen)! - Update generated code to be compatible with TypeScript 5.8 `erasableSyntaxOnly` flag
+
+### Patch Changes
+
+- Updated dependencies [[`bfe3c75`](https://github.com/dotansimha/graphql-code-generator/commit/bfe3c7575e0b5f3a252fe9d72416f7829e44c885)]:
+  - @graphql-codegen/typed-document-node@5.1.0
+
 ## 4.6.4
 
 ### Patch Changes
