@@ -2464,9 +2464,13 @@ export * from "./gql.js";`);
           implements DocumentTypeDecoration<TResult, TVariables>
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
 
-          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
             super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
           }
 
           toString(): string & DocumentTypeDecoration<TResult, TVariables> {
@@ -2605,9 +2609,13 @@ export * from "./gql.js";`);
           implements DocumentTypeDecoration<TResult, TVariables>
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
 
-          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
             super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
           }
 
           toString(): string & DocumentTypeDecoration<TResult, TVariables> {
@@ -2741,9 +2749,13 @@ export * from "./gql.js";`);
           implements DocumentTypeDecoration<TResult, TVariables>
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
 
-          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
             super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
           }
 
           toString(): string & DocumentTypeDecoration<TResult, TVariables> {
@@ -3036,9 +3048,13 @@ export * from "./gql.js";`);
           implements DocumentTypeDecoration<TResult, TVariables>
         {
           __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
 
-          constructor(private value: string, public __meta__?: Record<string, any> | undefined) {
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
             super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
           }
 
           toString(): string & DocumentTypeDecoration<TResult, TVariables> {
