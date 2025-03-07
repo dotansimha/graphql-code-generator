@@ -1389,6 +1389,46 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should add `%future added value` to enum usage when futureProofEnums is set and enumsAsConst is set', async () => {
+      const schema = buildSchema(`
+        enum MyEnum {
+          A
+          B
+        }
+
+        type MyType {
+          required: MyEnum!
+          optional: MyEnum
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { futureProofEnums: true, enumsAsConst: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export const MyEnum = {
+          A: 'A',
+          B: 'B'
+        } as const;
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyEnum = typeof MyEnum[keyof typeof MyEnum] | '%future added value';
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType';
+          required: MyEnum | '%future added value';
+          optional?: Maybe<MyEnum | '%future added value'>;
+        }
+      `);
+      validateTs(result);
+    });
+
     it('Should use custom namingConvention for enums (keep)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum Foo {
