@@ -250,4 +250,26 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   makeResolverTypeCallable?: boolean;
+  /**
+   * @description If set to `true`, field resolvers annotated by `@semanticNonNull` directive get prohibited to return nullish value
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-resolvers'],
+   *        config: {
+   *          allowSemanticNonNull: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  allowSemanticNonNull?: boolean;
 }
