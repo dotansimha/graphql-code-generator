@@ -76,6 +76,12 @@ export namespace Types {
   }
 
   /**
+   * @description A function to use for fetching the schema.
+   * @see fetch
+   */
+  export type CustomSchemaFetcher = (url: string, options?: RequestInit) => Promise<Response>;
+
+  /**
    * @additionalProperties false
    * @description Loads a schema from remote endpoint, with custom http options.
    */
@@ -85,9 +91,9 @@ export namespace Types {
      */
     headers?: { [headerName: string]: string };
     /**
-     * @description Specify a Node module name, or a custom file, to be used instead of standard `fetch`
+     * @description Specify a Node module name, a custom file, or a function, to be used instead of a standard `fetch`.
      */
-    customFetch?: string;
+    customFetch?: string | CustomSchemaFetcher;
     /**
      * @description HTTP Method to use, either POST (default) or GET.
      */
@@ -407,10 +413,9 @@ export namespace Types {
      */
     require?: RequireExtension;
     /**
-     * @description Name for a library that implements `fetch`.
-     * Use this to tell codegen to use that to fetch schemas in a custom way.
+     * @description Specify a Node module name, a custom file, or a function, to be used instead of a standard `fetch`.
      */
-    customFetch?: string;
+    customFetch?: string | CustomSchemaFetcher;
     /**
      * @description A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.
      * You can use one of the following:
