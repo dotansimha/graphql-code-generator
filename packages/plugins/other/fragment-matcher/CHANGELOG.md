@@ -1,5 +1,11 @@
 # @graphql-codegen/fragment-matcher
 
+## 5.1.0
+
+### Minor Changes
+
+- [#10214](https://github.com/dotansimha/graphql-code-generator/pull/10214) [`81b20f5`](https://github.com/dotansimha/graphql-code-generator/commit/81b20f5ab35bf73e7797580ba22c910aecdeddbd) Thanks [@tgandrews](https://github.com/tgandrews)! - Add new flag to make the fragment matcher results deterministic
+
 ## 5.0.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/fragment-matcher",
-  "version": "5.0.2",
+  "version": "5.1.0",
   "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": {
     "type": "git",

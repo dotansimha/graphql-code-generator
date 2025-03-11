@@ -135,7 +135,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       documentMode: options.config.documentMode,
       skipTypeNameForRoot: options.config.skipTypeNameForRoot,
       onlyOperationTypes: options.config.onlyOperationTypes,
-      onlyEnumTypes: options.config.onlyEnumTypes,
+      onlyEnums: options.config.onlyEnums,
       customDirectives: options.config.customDirectives,
     };
 

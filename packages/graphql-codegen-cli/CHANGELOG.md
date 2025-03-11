@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 5.0.5
+
+### Patch Changes
+
+- [#10282](https://github.com/dotansimha/graphql-code-generator/pull/10282) [`7d7760d`](https://github.com/dotansimha/graphql-code-generator/commit/7d7760d55c21a99417c38ce5e77a6de22b5effcc) Thanks [@oprypkhantc](https://github.com/oprypkhantc)! - Fix watcher watching project root when schema URL is used
+
 ## 5.0.4
 
 ### Patch Changes

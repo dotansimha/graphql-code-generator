@@ -38,6 +38,7 @@ export interface ParsedConfig {
   inlineFragmentTypes: InlineFragmentTypeOptions;
   emitLegacyCommonJSImports: boolean;
   printFieldsOnNewLines: boolean;
+  includeExternalFragments: boolean;
 }
 
 export interface RawConfig {
@@ -391,6 +392,13 @@ export interface RawConfig {
    * without resorting to running tools like Prettier on the output.
    */
   printFieldsOnNewLines?: boolean;
+
+  /**
+   * @default false
+   * @description Whether to include external fragments in the generated code. External fragments are not defined
+   * in the same location as the operation definition.
+   */
+  includeExternalFragments?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -415,6 +423,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
         rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
+      includeExternalFragments: rawConfig.includeExternalFragments ?? false,
       ...((additionalConfig || {}) as any),
     };
 

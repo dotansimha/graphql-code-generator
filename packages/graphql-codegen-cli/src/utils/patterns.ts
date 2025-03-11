@@ -4,6 +4,7 @@ import { normalizeInstanceOrArray, Types } from '@graphql-codegen/plugin-helpers
 import isGlob from 'is-glob';
 import mm from 'micromatch';
 import { CodegenContext } from '../config.js';
+import { isURL } from './helpers.js';
 
 type NegatedPattern = `!${string}`;
 
@@ -175,7 +176,7 @@ const makePatternsFromSchemas = (schemas: Types.Schema[]): string[] => {
 
   for (const s of schemas) {
     const schema = s as string;
-    if (isGlob(schema) || isValidPath(schema)) {
+    if (!isURL(schema) && (isGlob(schema) || isValidPath(schema))) {
       patterns.push(schema);
     }
   }
