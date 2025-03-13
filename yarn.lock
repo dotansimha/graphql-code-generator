@@ -5030,17 +5030,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@urql/core@^3.2.0":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-3.2.2.tgz#2a44015b536d72981822f715c96393d8e0ddc576"
-  integrity sha512-i046Cz8cZ4xIzGMTyHZrbdgzcFMcKD7+yhCAH5FwWBRjcKrc+RjEOuR9X5AMuBvr8c6IAaE92xAqa4wmlGfWTQ==
-  dependencies:
-    wonka "^6.1.2"
-
-"@urql/core@^5.0.0":
-  version "5.0.6"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-5.0.6.tgz#0d6624e30084f9137f78dc6c5bb8a599cba7f9dc"
-  integrity sha512-38rgSDqVNihFDauw1Pm9V7XLWIKuK8V9CKgrUF7/xEKinze8ENKP1ZeBhkG+dxWzJan7CHK+SLl46kAdvZwIlA==
+"@urql/core@^5.0.0", "@urql/core@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-5.1.1.tgz#d83c405451806a5936dabbd3f10a22967199e2f5"
+  integrity sha512-aGh024z5v2oINGD/In6rAtVKTm4VmQ2TxKQBAtk2ZSME5dunZFcjltw4p5ENQg+5CBhZ3FHMzl0Oa+rwqiWqlg==
   dependencies:
     "@0no-co/graphql.web" "^1.0.5"
     wonka "^6.3.2"
@@ -15829,13 +15822,13 @@ urlpattern-polyfill@^8.0.0:
   resolved "https://registry.yarnpkg.com/urlpattern-polyfill/-/urlpattern-polyfill-8.0.2.tgz#99f096e35eff8bf4b5a2aa7d58a1523d6ebc7ce5"
   integrity sha512-Qp95D4TPJl1kC9SKigDcqgyM2VDVO4RiJc2d4qe5GrYm+zbIQCWWKAFaJNQ4BhdFeDGwBmAxqJBwWSJDb9T3BQ==
 
-urql@^3.0.0:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-3.0.4.tgz#f73dbd2e5b134b7328c14d5b8ab1f93f93db8990"
-  integrity sha512-okmQKQ9pF4t8O8iCC5gH9acqfFji5lkhW3nLBjx8WKDd2zZG7PXoUpUK19VQEMK87L6VFBOO/XZ52MMKFEI0AA==
+urql@^4.0.0:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-4.2.2.tgz#e0852fe3bea377edaa616e6175dd39be2d4bf1da"
+  integrity sha512-3GgqNa6iF7bC4hY/ImJKN4REQILcSU9VKcKL8gfELZM8mM5BnLH1BsCc8kBdnVGD1LIFOs4W3O2idNHhON1r0w==
   dependencies:
-    "@urql/core" "^3.2.0"
-    wonka "^6.0.0"
+    "@urql/core" "^5.1.1"
+    wonka "^6.3.2"
 
 use-isomorphic-layout-effect@^1.1.2:
   version "1.1.2"
@@ -16250,7 +16243,7 @@ widest-line@^4.0.1:
   dependencies:
     string-width "^5.0.1"
 
-wonka@^6.0.0, wonka@^6.1.2, wonka@^6.3.2:
+wonka@^6.3.2:
   version "6.3.2"
   resolved "https://registry.yarnpkg.com/wonka/-/wonka-6.3.2.tgz#6f32992b332251d7b696b038990f4dc284b3b33d"
   integrity sha512-2xXbQ1LnwNS7egVm1HPhW2FyKrekolzhpM3mCwXdQr55gO+tAiY76rhb32OL9kKsW8taj++iP7C6hxlVzbnvrw==
