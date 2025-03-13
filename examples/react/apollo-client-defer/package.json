@@ -8,7 +8,7 @@
     "graphql": "^16.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "graphql-yoga": "5.7.0"
+    "graphql-yoga": "5.13.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.5",
@@ -17,9 +17,9 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^4.0.0",
-    "cypress": "14.0.0",
-    "serve": "14.2.3",
-    "start-server-and-test": "2.0.5",
+    "cypress": "14.2.0",
+    "serve": "14.2.4",
+    "start-server-and-test": "2.0.11",
     "typescript": "5.5.4",
     "vite": "^6.0.0"
   },
