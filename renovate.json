@@ -8,10 +8,7 @@
     "enabled": true,
     "automerge": true
   },
-  "lockFileMaintenance": {
-    "enabled": true,
-    "automerge": true
-  },
+  "ignorePaths": ["Cargo.lock"],
   "packageRules": [
     {
       "excludePackagePatterns": [
