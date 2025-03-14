@@ -64,7 +64,7 @@
     "graphql-config": "^5.1.1",
     "inquirer": "^8.0.0",
     "is-glob": "^4.0.1",
-    "jiti": "^1.17.1",
+    "jiti": "^2.0.0",
     "json-to-pretty-yaml": "^1.2.2",
     "listr2": "^4.0.5",
     "log-symbols": "^4.0.0",
