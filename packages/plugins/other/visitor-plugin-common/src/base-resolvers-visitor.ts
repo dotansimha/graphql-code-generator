@@ -1,4 +1,4 @@
-import { ApolloFederation, checkObjectTypeFederationDetails, getBaseType } from '@graphql-codegen/plugin-helpers';
+import { ApolloFederation, type FederationMeta, getBaseType } from '@graphql-codegen/plugin-helpers';
 import { getRootTypeNames } from '@graphql-tools/utils';
 import autoBind from 'auto-bind';
 import {
@@ -6,9 +6,11 @@ import {
   DirectiveDefinitionNode,
   EnumTypeDefinitionNode,
   FieldDefinitionNode,
+  GraphQLInterfaceType,
   GraphQLNamedType,
   GraphQLObjectType,
   GraphQLSchema,
+  GraphQLUnionType,
   InputValueDefinitionNode,
   InterfaceTypeDefinitionNode,
   isEnumType,
@@ -33,8 +35,6 @@ import {
   ConvertOptions,
   DeclarationKind,
   EnumValuesMap,
-  type NormalizedGenerateInternalResolversIfNeededConfig,
-  type GenerateInternalResolversIfNeededConfig,
   NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
@@ -77,14 +77,15 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeSuffix: string;
   allResolversTypeName: string;
   internalResolversPrefix: string;
-  generateInternalResolversIfNeeded: NormalizedGenerateInternalResolversIfNeededConfig;
-  onlyResolveTypeForInterfaces: boolean;
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
   avoidCheckingAbstractTypesRecursively: boolean;
 }
 
-type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
+type FieldDefinitionPrintFn = (
+  parentName: string,
+  avoidResolverOptionals: boolean
+) => { value: string | null; meta: { federation?: { isResolveReference: boolean } } };
 export interface RootResolver {
   content: string;
   generatedResolverTypes: {
@@ -583,22 +584,6 @@ export interface RawResolversConfig extends RawConfig {
    */
   internalResolversPrefix?: string;
   /**
-   * @type object
-   * @default { __resolveReference: false }
-   * @description If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.
-   * Enabling this allows a more correct type generation for the resolvers.
-   * For example:
-   * - `__isTypeOf` is generated for implementing types and union members
-   * - `__resolveReference` is generated for federation types that have at least one resolvable `@key` directive
-   */
-  generateInternalResolversIfNeeded?: GenerateInternalResolversIfNeededConfig;
-  /**
-   * @type boolean
-   * @default false
-   * @description Turning this flag to `true` will generate resolver signature that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.
-   */
-  onlyResolveTypeForInterfaces?: boolean;
-  /**
    * @description Makes `__typename` of resolver mappings non-optional without affecting the base types.
    * @default false
    *
@@ -676,6 +661,31 @@ export class BaseResolversVisitor<
       baseGeneratedTypename?: string;
     };
   } = {};
+  protected _parsedSchemaMeta: {
+    types: {
+      interface: Record<
+        string,
+        {
+          type: GraphQLInterfaceType;
+          implementingTypes: Record<string, GraphQLObjectType>;
+        }
+      >;
+      union: Record<
+        string,
+        {
+          type: GraphQLUnionType;
+          unionMembers: Record<string, GraphQLObjectType>;
+        }
+      >;
+    };
+    typesWithIsTypeOf: Record<string, true>;
+  } = {
+    types: {
+      interface: {},
+      union: {},
+    },
+    typesWithIsTypeOf: {},
+  };
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransformer: OperationVariablesToObject;
   protected _usedMappers: { [key: string]: boolean } = {};
@@ -684,7 +694,6 @@ export class BaseResolversVisitor<
   protected _hasReferencedResolversUnionTypes = false;
   protected _hasReferencedResolversInterfaceTypes = false;
   protected _resolversUnionTypes: Record<string, string> = {};
-  protected _resolversUnionParentTypes: Record<string, string> = {};
   protected _resolversInterfaceTypes: Record<string, string> = {};
   protected _rootTypeNames = new Set<string>();
   protected _globalDeclarations = new Set<string>();
@@ -700,7 +709,8 @@ export class BaseResolversVisitor<
     rawConfig: TRawConfig,
     additionalConfig: TPluginConfig,
     private _schema: GraphQLSchema,
-    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS,
+    federationMeta: FederationMeta = {}
   ) {
     super(rawConfig, {
       immutableTypes: getConfigValue(rawConfig.immutableTypes, false),
@@ -714,7 +724,6 @@ export class BaseResolversVisitor<
         mapOrStr: rawConfig.enumValues,
       }),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-      onlyResolveTypeForInterfaces: getConfigValue(rawConfig.onlyResolveTypeForInterfaces, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
       fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
       directiveContextTypes: getConfigValue(rawConfig.directiveContextTypes, []),
@@ -729,9 +738,7 @@ export class BaseResolversVisitor<
       mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       internalResolversPrefix: getConfigValue(rawConfig.internalResolversPrefix, '__'),
-      generateInternalResolversIfNeeded: {
-        __resolveReference: rawConfig.generateInternalResolversIfNeeded?.__resolveReference ?? false,
-      },
+      generateInternalResolversIfNeeded: {},
       resolversNonOptionalTypename: normalizeResolversNonOptionalTypename(
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
       ),
@@ -740,7 +747,11 @@ export class BaseResolversVisitor<
     } as TPluginConfig);
 
     autoBind(this);
-    this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
+    this._federation = new ApolloFederation({
+      enabled: this.config.federation,
+      schema: this.schema,
+      meta: federationMeta,
+    });
     this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransformer = new OperationVariablesToObject(
       this.scalars,
@@ -748,11 +759,17 @@ export class BaseResolversVisitor<
       this.config.namespacedImportName
     );
 
+    // 1. Parse schema meta at the start once,
+    // so we can use it in subsequent generate functions
+    this.parseSchemaMeta();
+
+    // 2. Generate types for resolvers
     this._resolversTypes = this.createResolversFields({
       applyWrapper: type => this.applyResolverTypeWrapper(type),
       clearWrapper: type => this.clearResolverTypeWrapper(type),
       getTypeToUse: name => this.getTypeToUse(name),
       currentType: 'ResolversTypes',
+      onNotMappedObjectType: ({ initialType }) => initialType,
     });
     this._resolversParentTypes = this.createResolversFields({
       applyWrapper: type => type,
@@ -760,6 +777,17 @@ export class BaseResolversVisitor<
       getTypeToUse: name => this.getParentTypeToUse(name),
       currentType: 'ResolversParentTypes',
       shouldInclude: namedType => !isEnumType(namedType),
+      onNotMappedObjectType: ({ typeName, initialType }) => {
+        let result = initialType;
+        const federationReferenceTypes = this._federation.printReferenceSelectionSets({
+          typeName,
+          baseFederationType: `${this.convertName('FederationTypes')}['${typeName}']`,
+        });
+        if (federationReferenceTypes) {
+          result += ` | ${federationReferenceTypes}`;
+        }
+        return result;
+      },
     });
     this._resolversUnionTypes = this.createResolversUnionTypes();
     this._resolversInterfaceTypes = this.createResolversInterfaceTypes();
@@ -832,12 +860,14 @@ export class BaseResolversVisitor<
     getTypeToUse,
     currentType,
     shouldInclude,
+    onNotMappedObjectType,
   }: {
     applyWrapper: (str: string) => string;
     clearWrapper: (str: string) => string;
     getTypeToUse: (str: string) => string;
     currentType: 'ResolversTypes' | 'ResolversParentTypes';
     shouldInclude?: (type: GraphQLNamedType) => boolean;
+    onNotMappedObjectType: (params: { initialType: string; typeName: string }) => string;
   }): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
@@ -926,6 +956,11 @@ export class BaseResolversVisitor<
             if (this.config.mappers[typeName].type && hasPlaceholder(this.config.mappers[typeName].type)) {
               internalType = replacePlaceholder(this.config.mappers[typeName].type, internalType);
             }
+          } else {
+            internalType = onNotMappedObjectType({
+              typeName,
+              initialType: internalType,
+            });
           }
 
           prev[typeName] = applyWrapper(internalType);
@@ -999,22 +1034,20 @@ export class BaseResolversVisitor<
       return {};
     }
 
-    const allSchemaTypes = this._schema.getTypeMap();
-    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
-
-    const unionTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
-      const schemaType = allSchemaTypes[typeName];
-
-      if (isUnionType(schemaType)) {
-        const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
-        res[typeName] = this.getAbstractMembersType({
-          typeName,
-          memberTypes: schemaType.getTypes(),
-          isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
-        });
-      }
-      return res;
-    }, {});
+    const unionTypes = Object.entries(this._parsedSchemaMeta.types.union).reduce<Record<string, string>>(
+      (res, [typeName, { type: schemaType, unionMembers }]) => {
+        if (isUnionType(schemaType)) {
+          const { unionMember, excludeTypes } = this.config.resolversNonOptionalTypename;
+          res[typeName] = this.getAbstractMembersType({
+            typeName,
+            memberTypes: Object.values(unionMembers),
+            isTypenameNonOptional: unionMember && !excludeTypes?.includes(typeName),
+          });
+        }
+        return res;
+      },
+      {}
+    );
 
     return unionTypes;
   }
@@ -1024,37 +1057,22 @@ export class BaseResolversVisitor<
       return {};
     }
 
-    const allSchemaTypes = this._schema.getTypeMap();
-    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
+    const interfaceTypes = Object.entries(this._parsedSchemaMeta.types.interface).reduce<Record<string, string>>(
+      (res, [typeName, { type: schemaType, implementingTypes }]) => {
+        if (isInterfaceType(schemaType)) {
+          const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
 
-    const interfaceTypes = typeNames.reduce<Record<string, string>>((res, typeName) => {
-      const schemaType = allSchemaTypes[typeName];
-
-      if (isInterfaceType(schemaType)) {
-        const allTypesMap = this._schema.getTypeMap();
-        const implementingTypes: GraphQLObjectType[] = [];
-
-        for (const graphqlType of Object.values(allTypesMap)) {
-          if (graphqlType instanceof GraphQLObjectType) {
-            const allInterfaces = graphqlType.getInterfaces();
-
-            if (allInterfaces.some(int => int.name === schemaType.name)) {
-              implementingTypes.push(graphqlType);
-            }
-          }
+          res[typeName] = this.getAbstractMembersType({
+            typeName,
+            memberTypes: Object.values(implementingTypes),
+            isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
+          });
         }
 
-        const { interfaceImplementingType, excludeTypes } = this.config.resolversNonOptionalTypename;
-
-        res[typeName] = this.getAbstractMembersType({
-          typeName,
-          memberTypes: implementingTypes,
-          isTypenameNonOptional: interfaceImplementingType && !excludeTypes?.includes(typeName),
-        });
-      }
-
-      return res;
-    }, {});
+        return res;
+      },
+      {}
+    );
 
     return interfaceTypes;
   }
@@ -1223,6 +1241,28 @@ export class BaseResolversVisitor<
       ).string;
   }
 
+  public buildFederationTypes(): string {
+    const federationMeta = this._federation.getMeta();
+
+    if (Object.keys(federationMeta).length === 0) {
+      return '';
+    }
+
+    const declarationKind = 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName('FederationTypes'))
+      .withComment('Mapping of federation types')
+      .withBlock(
+        Object.keys(federationMeta)
+          .map(typeName => {
+            return indent(`${typeName}: ${this.convertName(typeName)}${this.getPunctuation(declarationKind)}`);
+          })
+          .join('\n')
+      ).string;
+  }
+
   public get schema(): GraphQLSchema {
     return this._schema;
   }
@@ -1336,7 +1376,9 @@ export class BaseResolversVisitor<
 
                 const federationMeta = this._federation.getMeta()[schemaTypeName];
                 if (federationMeta) {
-                  userDefinedTypes[schemaTypeName].federation = federationMeta;
+                  userDefinedTypes[schemaTypeName].federation = {
+                    hasResolveReference: federationMeta.hasResolveReference,
+                  };
                 }
               }
 
@@ -1452,9 +1494,10 @@ export class BaseResolversVisitor<
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
+      const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
 
       if (this._federation.skipField({ fieldNode: original, parentType })) {
-        return null;
+        return { value: null, meta };
       }
 
       const contextType = this.getContextType(parentName, node);
@@ -1494,10 +1537,11 @@ export class BaseResolversVisitor<
         }
       }
 
-      const parentTypeSignature = this._federation.transformParentType({
+      const parentTypeSignature = this._federation.transformFieldParentType({
         fieldNode: original,
         parentType,
         parentTypeSignature: this.getParentTypeForSignature(node),
+        federationTypeSignature: 'FederationType',
       });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
@@ -1522,29 +1566,22 @@ export class BaseResolversVisitor<
       };
 
       if (this._federation.isResolveReferenceField(node)) {
-        if (this.config.generateInternalResolversIfNeeded.__resolveReference) {
-          const federationDetails = checkObjectTypeFederationDetails(
-            parentType.astNode as ObjectTypeDefinitionNode,
-            this._schema
-          );
-
-          if (!federationDetails || federationDetails.resolvableKeyDirectives.length === 0) {
-            return '';
-          }
+        if (!this._federation.getMeta()[parentType.name].hasResolveReference) {
+          return { value: '', meta };
         }
-
-        this._federation.setMeta(parentType.name, { hasResolveReference: true });
         signature.type = 'ReferenceResolver';
-        if (signature.genericTypes.length >= 3) {
-          signature.genericTypes = signature.genericTypes.slice(0, 3);
-        }
+        signature.genericTypes = [mappedTypeKey, parentTypeSignature, contextType];
+        meta.federation = { isResolveReference: true };
       }
 
-      return indent(
-        `${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(
-          ', '
-        )}>${this.getPunctuation(declarationKind)}`
-      );
+      return {
+        value: indent(
+          `${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(
+            ', '
+          )}>${this.getPunctuation(declarationKind)}`
+        ),
+        meta,
+      };
     };
   }
 
@@ -1566,6 +1603,46 @@ export class BaseResolversVisitor<
       }
     }
     return contextType;
+  }
+
+  private parseSchemaMeta(): void {
+    const allSchemaTypes = this._schema.getTypeMap();
+    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
+
+    for (const typeName of typeNames) {
+      const schemaType = allSchemaTypes[typeName];
+
+      if (isUnionType(schemaType)) {
+        this._parsedSchemaMeta.types.union[schemaType.name] = {
+          type: schemaType,
+          unionMembers: {},
+        };
+
+        const unionMemberTypes = schemaType.getTypes();
+        for (const type of unionMemberTypes) {
+          this._parsedSchemaMeta.types.union[schemaType.name].unionMembers[type.name] = type;
+          this._parsedSchemaMeta.typesWithIsTypeOf[type.name] = true;
+        }
+      }
+
+      if (isInterfaceType(schemaType)) {
+        this._parsedSchemaMeta.types.interface[schemaType.name] = {
+          type: schemaType,
+          implementingTypes: {},
+        };
+
+        for (const graphqlType of Object.values(allSchemaTypes)) {
+          if (graphqlType instanceof GraphQLObjectType) {
+            const allInterfaces = graphqlType.getInterfaces();
+
+            if (allInterfaces.some(int => int.name === schemaType.name)) {
+              this._parsedSchemaMeta.types.interface[schemaType.name].implementingTypes[graphqlType.name] = graphqlType;
+              this._parsedSchemaMeta.typesWithIsTypeOf[graphqlType.name] = true;
+            }
+          }
+        }
+      }
+    }
   }
 
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
@@ -1605,10 +1682,10 @@ export class BaseResolversVisitor<
           (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
           (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
           (rootType === false && this.config.avoidOptionals.resolvers)
-      );
+      ).value;
     });
 
-    if (!rootType) {
+    if (!rootType && this._parsedSchemaMeta.typesWithIsTypeOf[typeName]) {
       fieldsContent.push(
         indent(
           `${
@@ -1618,10 +1695,20 @@ export class BaseResolversVisitor<
       );
     }
 
+    const genericTypes: string[] = [
+      `ContextType = ${this.config.contextType.type}`,
+      this.transformParentGenericType(parentType),
+    ];
+    this._federation.addFederationTypeGenericIfApplicable({
+      genericTypes,
+      federationTypesType: this.convertName('FederationTypes'),
+      typeName,
+    });
+
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
+      .withName(name, `<${genericTypes.join(', ')}>`)
       .withBlock(fieldsContent.join('\n'));
 
     this._collectedResolvers[node.name as any] = {
@@ -1785,45 +1872,53 @@ export class BaseResolversVisitor<
       suffix: this.config.resolverTypeSuffix,
     });
     const declarationKind = 'type';
-    const allTypesMap = this._schema.getTypeMap();
-    const implementingTypes: string[] = [];
-
     const typeName = node.name as any as string;
+    const implementingTypes = Object.keys(this._parsedSchemaMeta.types.interface[typeName].implementingTypes);
 
     this._collectedResolvers[typeName] = {
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
 
-    for (const graphqlType of Object.values(allTypesMap)) {
-      if (graphqlType instanceof GraphQLObjectType) {
-        const allInterfaces = graphqlType.getInterfaces();
-        if (allInterfaces.find(int => int.name === typeName)) {
-          implementingTypes.push(graphqlType.name);
-        }
+    const parentType = this.getParentTypeToUse(typeName);
+
+    const genericTypes: string[] = [
+      `ContextType = ${this.config.contextType.type}`,
+      this.transformParentGenericType(parentType),
+    ];
+    this._federation.addFederationTypeGenericIfApplicable({
+      genericTypes,
+      federationTypesType: this.convertName('FederationTypes'),
+      typeName,
+    });
+
+    const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
+
+    // An Interface has __resolveType resolver, and no other fields.
+    const blockFields: string[] = [
+      indent(
+        `${this.config.internalResolversPrefix}resolveType${
+          this.config.optionalResolveType ? '?' : ''
+        }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
+      ),
+    ];
+
+    // An Interface in Federation may have the additional __resolveReference resolver, if resolvable.
+    // So, we filter out the normal fields declared on the Interface and add the __resolveReference resolver.
+    const fields = (node.fields as unknown as FieldDefinitionPrintFn[]).map(f =>
+      f(typeName, this.config.avoidOptionals.resolvers)
+    );
+    for (const field of fields) {
+      if (field.meta.federation?.isResolveReference) {
+        blockFields.push(field.value);
       }
     }
-
-    const parentType = this.getParentTypeToUse(typeName);
-    const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
-    const fields = this.config.onlyResolveTypeForInterfaces ? [] : node.fields || [];
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
-      .withBlock(
-        [
-          indent(
-            `${this.config.internalResolversPrefix}resolveType${
-              this.config.optionalResolveType ? '?' : ''
-            }: TypeResolveFn<${possibleTypes}, ParentType, ContextType>${this.getPunctuation(declarationKind)}`
-          ),
-          ...(fields as unknown as FieldDefinitionPrintFn[]).map(f =>
-            f(typeName, this.config.avoidOptionals.resolvers)
-          ),
-        ].join('\n')
-      ).string;
+      .withName(name, `<${genericTypes.join(', ')}>`)
+      .withBlock(blockFields.join('\n')).string;
   }
 
   SchemaDefinition() {
