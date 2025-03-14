@@ -2,6 +2,10 @@ name: Rust plugin
 on:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   publish-rust-swc-plugin:
     runs-on: ubuntu-latest

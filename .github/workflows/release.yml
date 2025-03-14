@@ -4,6 +4,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   stable:
     uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
