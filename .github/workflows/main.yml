@@ -12,6 +12,10 @@ env:
   NODE_OPTIONS: '--max_old_space_size=4096'
   CARGO_TERM_COLOR: always
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: Linting Check
