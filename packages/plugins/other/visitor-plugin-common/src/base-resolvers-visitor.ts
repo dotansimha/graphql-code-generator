@@ -1628,7 +1628,7 @@ export class BaseResolversVisitor<
   }
 
   /**
-   * Function that takes in a TypeScript type and apply extra transformation to it based on config options
+   * Function to apply extra transformation to a FieldDefinitionNode's TypeScript type based on config options
    * e.g. takes `Maybe<ResolversTypes['String']>`, and returns the type without the `Maybe<>` wrapper.
    */
   protected modifyFieldDefinitionNodeTransformedType({
