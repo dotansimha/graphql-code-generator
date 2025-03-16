@@ -82,6 +82,9 @@ export interface ParsedResolversConfig extends ParsedConfig {
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
   avoidCheckingAbstractTypesRecursively: boolean;
+  customDirectives: {
+    semanticNonNull: boolean;
+  };
 }
 
 type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
@@ -550,6 +553,31 @@ export interface RawResolversConfig extends RawConfig {
    */
   enumSuffix?: boolean;
   /**
+   * @description Configures behavior for custom directives from various GraphQL libraries.
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-resolvers'],
+   *        config: {
+   *          customDirectives: {
+   *            semanticNonNull: true
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  customDirectives?: {
+    semanticNonNull?: boolean;
+  };
+  /**
    * @default false
    * @description Sets the `__resolveType` field as optional field.
    */
@@ -736,6 +764,9 @@ export class BaseResolversVisitor<
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
       ),
       avoidCheckingAbstractTypesRecursively: getConfigValue(rawConfig.avoidCheckingAbstractTypesRecursively, false),
+      customDirectives: {
+        semanticNonNull: rawConfig.customDirectives?.semanticNonNull ?? false,
+      },
       ...additionalConfig,
     } as TPluginConfig);
 
@@ -1497,6 +1528,13 @@ export class BaseResolversVisitor<
         const baseType = getBaseTypeNode(original.type);
         const realType = baseType.name.value;
         const typeToUse = this.getTypeToUse(realType);
+        /**
+         * Turns GraphQL type to TypeScript types (`mappedType`) e.g.
+         * - String!  -> ResolversTypes['String']>
+         * - String   -> Maybe<ResolversTypes['String']>
+         * - [String] -> Maybe<Array<Maybe<ResolversTypes['String']>>>
+         * - [String!]! -> Array<ResolversTypes['String']>
+         */
         const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
 
         const subscriptionType = this._schema.getSubscriptionType();
@@ -1516,7 +1554,7 @@ export class BaseResolversVisitor<
             .reverse() ?? [];
 
         return {
-          mappedTypeKey: mappedType,
+          mappedTypeKey: this.modifyFieldDefinitionNodeTransformedType({ node: original, originalType: mappedType }),
           resolverType: directiveMappings[0] ?? 'Resolver',
         };
       })();
@@ -1587,6 +1625,35 @@ export class BaseResolversVisitor<
 
   protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
     return `Partial<${argsType}>`;
+  }
+
+  /**
+   * Function that takes in a TypeScript type and apply extra transformation to it based on config options
+   * e.g. takes `Maybe<ResolversTypes['String']>`, and returns the type without the `Maybe<>` wrapper.
+   */
+  protected modifyFieldDefinitionNodeTransformedType({
+    node,
+    originalType,
+  }: {
+    node: FieldDefinitionNode;
+    originalType: string;
+  }): string {
+    let result = originalType;
+    if (this.config.customDirectives.semanticNonNull) {
+      const fieldHasSemanticNonNull = node.directives.some(d => d.name.value === 'semanticNonNull');
+      if (fieldHasSemanticNonNull) {
+        result = this.clearOptional(result);
+      }
+    }
+    return result;
+  }
+
+  protected clearOptional(str: string): string {
+    if (str.startsWith('Maybe')) {
+      return str.replace(/Maybe<(.*?)>$/, '$1');
+    }
+
+    return str;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {

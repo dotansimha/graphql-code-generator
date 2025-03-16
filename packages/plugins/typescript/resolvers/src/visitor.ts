@@ -80,14 +80,6 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     return `${schemaTypeName}${avoidOptionals ? '' : '?'}: ${resolverType}${this.getPunctuation(declarationKind)}`;
   }
 
-  private clearOptional(str: string): string {
-    if (str.startsWith('Maybe')) {
-      return str.replace(/Maybe<(.*?)>$/, '$1');
-    }
-
-    return str;
-  }
-
   ListType(node: ListTypeNode): string {
     return `Maybe<${super.ListType(node)}>`;
   }
