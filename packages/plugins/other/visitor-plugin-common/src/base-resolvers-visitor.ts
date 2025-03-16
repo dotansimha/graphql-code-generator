@@ -1449,8 +1449,6 @@ export class BaseResolversVisitor<
 
     return (parentName, avoidResolverOptionals) => {
       const original: FieldDefinitionNode = parent[key];
-      const baseType = getBaseTypeNode(original.type);
-      const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
 
       if (this._federation.skipField({ fieldNode: original, parentType })) {
@@ -1458,11 +1456,6 @@ export class BaseResolversVisitor<
       }
 
       const contextType = this.getContextType(parentName, node);
-
-      const typeToUse = this.getTypeToUse(realType);
-      const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
-      const subscriptionType = this._schema.getSubscriptionType();
-      const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
       let argsType = hasArguments
         ? this.convertName(
@@ -1499,15 +1492,34 @@ export class BaseResolversVisitor<
         parentType,
         parentTypeSignature: this.getParentTypeForSignature(node),
       });
-      const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      const directiveMappings =
-        node.directives
-          ?.map(directive => this._directiveResolverMappings[directive.name as any])
-          .filter(Boolean)
-          .reverse() ?? [];
+      const { mappedTypeKey, resolverType } = ((): { mappedTypeKey: string; resolverType: string } => {
+        const baseType = getBaseTypeNode(original.type);
+        const realType = baseType.name.value;
+        const typeToUse = this.getTypeToUse(realType);
+        const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
 
-      const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
+        const subscriptionType = this._schema.getSubscriptionType();
+        const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
+
+        if (isSubscriptionType) {
+          return {
+            mappedTypeKey: `${mappedType}, "${node.name}"`,
+            resolverType: 'SubscriptionResolver',
+          };
+        }
+
+        const directiveMappings =
+          node.directives
+            ?.map(directive => this._directiveResolverMappings[directive.name as any])
+            .filter(Boolean)
+            .reverse() ?? [];
+
+        return {
+          mappedTypeKey: mappedType,
+          resolverType: directiveMappings[0] ?? 'Resolver',
+        };
+      })();
 
       const signature: {
         name: string;
