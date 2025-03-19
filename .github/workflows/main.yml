@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -42,7 +42,7 @@ jobs:
           - 'esm'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -84,12 +84,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 18
-      - uses: actions-rs/toolchain@v1
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
         with:
           toolchain: 1.65.0
           target: wasm32-wasi
@@ -117,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -146,7 +146,7 @@ jobs:
             graphql_version: 16
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -156,7 +156,7 @@ jobs:
       - name: Install Dependencies
         run: yarn
       - name: Cache Jest
-        uses: actions/cache@v4
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
         with:
           path: .cache/jest
           key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{hashFiles('yarn.lock')}}
@@ -172,8 +172,8 @@ jobs:
     name: Build and Unit Test SWC Plugin
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
         with:
           toolchain: 1.65.0
           target: wasm32-wasi
