@@ -552,6 +552,14 @@ export interface RawResolversConfig extends RawConfig {
   /**
    * @description Configures behavior for custom directives from various GraphQL libraries.
    * @exampleMarkdown
+   * First, install `graphql-sock` peer dependency:
+   *
+   * ```
+   * npm install --save-dev graphql-sock
+   * ```
+   *
+   * Now, you can turn on support for `@semanticNonNull` directive:
+   *
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';
    *

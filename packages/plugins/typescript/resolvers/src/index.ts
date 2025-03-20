@@ -76,7 +76,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   }
 
   let transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
-  transformedSchema = config.customDirectives.semanticNonNull
+  transformedSchema = config.customDirectives?.semanticNonNull
     ? await semanticToStrict(transformedSchema)
     : transformedSchema;
 
