@@ -82,9 +82,6 @@ export interface ParsedResolversConfig extends ParsedConfig {
   directiveResolverMappings: Record<string, string>;
   resolversNonOptionalTypename: ResolversNonOptionalTypenameConfig;
   avoidCheckingAbstractTypesRecursively: boolean;
-  customDirectives: {
-    semanticNonNull: boolean;
-  };
 }
 
 type FieldDefinitionPrintFn = (parentName: string, avoidResolverOptionals: boolean) => string | null;
@@ -764,9 +761,6 @@ export class BaseResolversVisitor<
         getConfigValue(rawConfig.resolversNonOptionalTypename, false)
       ),
       avoidCheckingAbstractTypesRecursively: getConfigValue(rawConfig.avoidCheckingAbstractTypesRecursively, false),
-      customDirectives: {
-        semanticNonNull: rawConfig.customDirectives?.semanticNonNull ?? false,
-      },
       ...additionalConfig,
     } as TPluginConfig);
 
@@ -1625,14 +1619,6 @@ export class BaseResolversVisitor<
 
   protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
     return `Partial<${argsType}>`;
-  }
-
-  protected clearOptional(str: string): string {
-    if (str.startsWith('Maybe')) {
-      return str.replace(/Maybe<(.*?)>$/, '$1');
-    }
-
-    return str;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
