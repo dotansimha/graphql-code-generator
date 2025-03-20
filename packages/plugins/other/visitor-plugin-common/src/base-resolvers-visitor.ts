@@ -1554,7 +1554,7 @@ export class BaseResolversVisitor<
             .reverse() ?? [];
 
         return {
-          mappedTypeKey: this.modifyFieldDefinitionNodeTransformedType({ node: original, originalType: mappedType }),
+          mappedTypeKey: mappedType,
           resolverType: directiveMappings[0] ?? 'Resolver',
         };
       })();
@@ -1625,27 +1625,6 @@ export class BaseResolversVisitor<
 
   protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
     return `Partial<${argsType}>`;
-  }
-
-  /**
-   * Function to apply extra transformation to a FieldDefinitionNode's TypeScript type based on config options
-   * e.g. takes `Maybe<ResolversTypes['String']>`, and returns the type without the `Maybe<>` wrapper.
-   */
-  protected modifyFieldDefinitionNodeTransformedType({
-    node,
-    originalType,
-  }: {
-    node: FieldDefinitionNode;
-    originalType: string;
-  }): string {
-    let result = originalType;
-    if (this.config.customDirectives.semanticNonNull) {
-      const fieldHasSemanticNonNull = node.directives.some(d => d.name.value === 'semanticNonNull');
-      if (fieldHasSemanticNonNull) {
-        result = this.clearOptional(result);
-      }
-    }
-    return result;
   }
 
   protected clearOptional(str: string): string {
