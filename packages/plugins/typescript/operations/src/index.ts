@@ -6,13 +6,15 @@ import { TypeScriptDocumentsVisitor } from './visitor.js';
 
 export { TypeScriptDocumentsPluginConfig } from './config.js';
 
-export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = (
+export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = async (
   schema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
+  const transformedSchema = config.semanticNonNull?.errorHandlingClient ? await semanticToStrict(schema) : schema;
+
   const documents = config.flattenGeneratedTypes
-    ? optimizeOperations(schema, rawDocuments, {
+    ? optimizeOperations(transformedSchema, rawDocuments, {
         includeFragments: config.flattenGeneratedTypesIncludeFragments,
       })
     : rawDocuments;
@@ -30,7 +32,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
+  const visitor = new TypeScriptDocumentsVisitor(transformedSchema, config, allFragments);
 
   const visitorResult = oldVisit(allAst, {
     leave: visitor,
@@ -64,3 +66,14 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 };
 
 export { TypeScriptDocumentsVisitor };
+
+const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
+  try {
+    const sock = await import('graphql-sock');
+    return sock.semanticToStrict(schema);
+  } catch {
+    throw new Error(
+      "To use the `customDirective.semanticNonNull` option, you must install the 'graphql-sock' package."
+    );
+  }
+};
