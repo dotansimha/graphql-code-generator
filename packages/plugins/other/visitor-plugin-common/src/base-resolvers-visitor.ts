@@ -550,6 +550,40 @@ export interface RawResolversConfig extends RawConfig {
    */
   enumSuffix?: boolean;
   /**
+   * @description Configures behavior for custom directives from various GraphQL libraries.
+   * @exampleMarkdown
+   * ## `@semanticNonNull`
+   * First, install `graphql-sock` peer dependency:
+   *
+   * ```sh npm2yarn
+   * npm install -D graphql-sock
+   * ```
+   *
+   * Now, you can enable support for `@semanticNonNull` directive:
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-resolvers'],
+   *        config: {
+   *          customDirectives: {
+   *            semanticNonNull: true
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  customDirectives?: {
+    semanticNonNull?: boolean;
+  };
+  /**
    * @default false
    * @description Sets the `__resolveType` field as optional field.
    */
@@ -1449,8 +1483,6 @@ export class BaseResolversVisitor<
 
     return (parentName, avoidResolverOptionals) => {
       const original: FieldDefinitionNode = parent[key];
-      const baseType = getBaseTypeNode(original.type);
-      const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
 
       if (this._federation.skipField({ fieldNode: original, parentType })) {
@@ -1458,11 +1490,6 @@ export class BaseResolversVisitor<
       }
 
       const contextType = this.getContextType(parentName, node);
-
-      const typeToUse = this.getTypeToUse(realType);
-      const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
-      const subscriptionType = this._schema.getSubscriptionType();
-      const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
       let argsType = hasArguments
         ? this.convertName(
@@ -1499,15 +1526,41 @@ export class BaseResolversVisitor<
         parentType,
         parentTypeSignature: this.getParentTypeForSignature(node),
       });
-      const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      const directiveMappings =
-        node.directives
-          ?.map(directive => this._directiveResolverMappings[directive.name as any])
-          .filter(Boolean)
-          .reverse() ?? [];
+      const { mappedTypeKey, resolverType } = ((): { mappedTypeKey: string; resolverType: string } => {
+        const baseType = getBaseTypeNode(original.type);
+        const realType = baseType.name.value;
+        const typeToUse = this.getTypeToUse(realType);
+        /**
+         * Turns GraphQL type to TypeScript types (`mappedType`) e.g.
+         * - String!  -> ResolversTypes['String']>
+         * - String   -> Maybe<ResolversTypes['String']>
+         * - [String] -> Maybe<Array<Maybe<ResolversTypes['String']>>>
+         * - [String!]! -> Array<ResolversTypes['String']>
+         */
+        const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
 
-      const resolverType = isSubscriptionType ? 'SubscriptionResolver' : directiveMappings[0] ?? 'Resolver';
+        const subscriptionType = this._schema.getSubscriptionType();
+        const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
+
+        if (isSubscriptionType) {
+          return {
+            mappedTypeKey: `${mappedType}, "${node.name}"`,
+            resolverType: 'SubscriptionResolver',
+          };
+        }
+
+        const directiveMappings =
+          node.directives
+            ?.map(directive => this._directiveResolverMappings[directive.name as any])
+            .filter(Boolean)
+            .reverse() ?? [];
+
+        return {
+          mappedTypeKey: mappedType,
+          resolverType: directiveMappings[0] ?? 'Resolver',
+        };
+      })();
 
       const signature: {
         name: string;

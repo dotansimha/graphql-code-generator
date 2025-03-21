@@ -9094,6 +9094,11 @@ graphql-request@^6.0.0:
     "@graphql-typed-document-node/core" "^3.2.0"
     cross-fetch "^3.1.5"
 
+graphql-sock@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-sock/-/graphql-sock-1.0.0.tgz#efdfb991cbd8a37da91d7e2e81c2955945c6df37"
+  integrity sha512-pvODB7YaQ/K80pBOG7AnQC65R0UgE4hZv67VtwVjyQ0u2N+KMKVy8HEcAnYTK27BfVyTQCunSfX114u0xHOBMQ==
+
 graphql-subscriptions@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-3.0.0.tgz#820c846ef271414c08f64827b5c9a192801e1b6f"

@@ -17,7 +17,7 @@ export const plugin: PluginFunction<
   Types.ComplexPluginOutput<{
     generatedResolverTypes: RootResolver['generatedResolverTypes'];
   }>
-> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
+> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
   const imports = [];
   if (!config.customResolveInfo) {
     imports.push('GraphQLResolveInfo');
@@ -75,7 +75,11 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
     }
   }
 
-  const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
+  let transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
+  transformedSchema = config.customDirectives?.semanticNonNull
+    ? await semanticToStrict(transformedSchema)
+    : transformedSchema;
+
   const visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
@@ -302,3 +306,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 };
 
 export { TypeScriptResolversPluginConfig, TypeScriptResolversVisitor };
+
+const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
+  try {
+    const sock = await import('graphql-sock');
+    return sock.semanticToStrict(schema);
+  } catch {
+    throw new Error(
+      "To use the `customDirective.semanticNonNull` option, you must install the 'graphql-sock' package."
+    );
+  }
+};
