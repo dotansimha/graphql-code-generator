@@ -68,7 +68,7 @@ describe('TypeScript Operations Plugin - semanticNonNull', () => {
       },
     });
 
-    const formattedContent = prettier.format(result.content);
+    const formattedContent = prettier.format(result.content, { parser: 'typescript' });
     expect(formattedContent).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
@@ -109,7 +109,7 @@ describe('TypeScript Operations Plugin - semanticNonNull', () => {
       },
     });
 
-    const formattedContent = prettier.format(result.content);
+    const formattedContent = prettier.format(result.content, { parser: 'typescript' });
     expect(formattedContent).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
