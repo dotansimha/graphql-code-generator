@@ -7,14 +7,14 @@ import { TypeScriptDocumentsVisitor } from './visitor.js';
 export { TypeScriptDocumentsPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = async (
-  schema: GraphQLSchema,
+  inputSchema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
-  const transformedSchema = config.semanticNonNull?.errorHandlingClient ? await semanticToStrict(schema) : schema;
+  const schema = config.nullability?.errorHandlingClient ? await semanticToStrict(inputSchema) : inputSchema;
 
   const documents = config.flattenGeneratedTypes
-    ? optimizeOperations(transformedSchema, rawDocuments, {
+    ? optimizeOperations(schema, rawDocuments, {
         includeFragments: config.flattenGeneratedTypesIncludeFragments,
       })
     : rawDocuments;
@@ -32,7 +32,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new TypeScriptDocumentsVisitor(transformedSchema, config, allFragments);
+  const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
 
   const visitorResult = oldVisit(allAst, {
     leave: visitor,
@@ -73,7 +73,7 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
     return sock.semanticToStrict(schema);
   } catch {
     throw new Error(
-      "To use the `customDirective.semanticNonNull` option, you must install the 'graphql-sock' package."
+      "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package."
     );
   }
 };

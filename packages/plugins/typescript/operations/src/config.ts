@@ -294,7 +294,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   allowUndefinedQueryVariables?: boolean;
 
   /**
-   * @description Options related to `@semanticNonNull` directive
+   * @description Options related to handling nullability
    * @exampleMarkdown
    * ## `errorHandlingClient`
    * When using error handling clients, a semantic non-nullable field can never be `null`.
@@ -317,7 +317,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *     'path/to/file.ts': {
    *       plugins: ['typescript', 'typescript-operations'],
    *       config: {
-   *         semanticNonNull: {
+   *         nullability: {
    *           errorHandlingClient: true
    *         }
    *       },
@@ -327,7 +327,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * export default config;
    * ```
    */
-  semanticNonNull?: {
+  nullability?: {
     errorHandlingClient: boolean;
   };
 }

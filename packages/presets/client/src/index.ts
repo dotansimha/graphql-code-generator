@@ -5,7 +5,7 @@ import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import type { DocumentNode, GraphQLSchema } from 'graphql';
+import { parse, printSchema, type DocumentNode, type GraphQLSchema } from 'graphql';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
@@ -114,9 +114,9 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       );
     }
     const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
-    if (options.config.semanticNonNull?.errorHandlingClient) {
+    if (options.config.nullability?.errorHandlingClient) {
       options.schemaAst = await semanticToStrict(options.schemaAst!);
-      options.schema = options.schemaAst as any; // FIXME: `schemaAst` _seems_ to be able to used as `schema`, but not sure if it has any side effects?
+      options.schema = parse(printSchema(options.schemaAst));
     }
 
     const reexports: Array<string> = [];
@@ -380,7 +380,7 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
     return sock.semanticToStrict(schema);
   } catch {
     throw new Error(
-      "To use the `customDirective.semanticNonNull` option, you must install the 'graphql-sock' package."
+      "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package."
     );
   }
 };

@@ -1,8 +1,9 @@
-import { buildSchema, parse } from 'graphql';
+import '@graphql-codegen/testing';
+import { executeCodegen } from '@graphql-codegen/cli';
 import * as prettier from 'prettier';
-import { plugin } from '../src/index.js';
+import { preset } from '../src/index.js';
 
-const schema = buildSchema(/* GraphQL */ `
+const schema = /* GraphQL */ `
   directive @semanticNonNull(levels: [Int] = [0]) on FIELD_DEFINITION
 
   type Query {
@@ -31,10 +32,10 @@ const schema = buildSchema(/* GraphQL */ `
     nonNullableListWithNonNullableItemLevel1: [String!]! @semanticNonNull(levels: [1])
     nonNullableListWithNonNullableItemBothLevels: [String!]! @semanticNonNull(levels: [0, 1])
   }
-`);
+`;
 
-const document = parse(/* GraphQL */ `
-  query {
+const document = /* GraphQL */ `
+  query Test {
     me {
       field
       fieldLevel0
@@ -58,21 +59,30 @@ const document = parse(/* GraphQL */ `
       nonNullableListWithNonNullableItemBothLevels
     }
   }
-`);
+`;
 
-describe('TypeScript Operations Plugin - semanticNonNull', () => {
-  it('converts semanticNonNull to nonNull when semanticNonNull.errorHandlingClient=true', async () => {
-    const result = await plugin(schema, [{ document }], {
-      semanticNonNull: {
-        errorHandlingClient: true,
+describe('TypeScript Operations Plugin - nullability', () => {
+  it('converts semanticNonNull to non-null when nullability.errorHandlingClient=true', async () => {
+    const result = await executeCodegen({
+      schema,
+      documents: [document],
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            nullability: {
+              errorHandlingClient: true,
+            },
+          },
+        },
       },
     });
 
-    const formattedContent = prettier.format(result.content, { parser: 'typescript' });
-    expect(formattedContent).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
+    const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
+    const formattedContent = prettier.format(graphqlFile.content, { parser: 'typescript' });
 
-      export type Unnamed_1_Query = {
+    expect(formattedContent).toBeSimilarStringTo(`
+      export type TestQuery = {
         __typename?: "Query";
         me?: {
           __typename?: "User";
@@ -98,22 +108,30 @@ describe('TypeScript Operations Plugin - semanticNonNull', () => {
           nonNullableListWithNonNullableItemBothLevels: Array<string>;
         } | null;
       };
-      "
     `);
   });
 
-  it('does not convert semanticNonNull to nonNull when semanticNonNull.errorHandlingClient=false', async () => {
-    const result = await plugin(schema, [{ document }], {
-      semanticNonNull: {
-        errorHandlingClient: false,
+  it('leave semanticNonNull as null when nullability.errorHandlingClient=false', async () => {
+    const result = await executeCodegen({
+      schema,
+      documents: [document],
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            nullability: {
+              errorHandlingClient: false,
+            },
+          },
+        },
       },
     });
 
-    const formattedContent = prettier.format(result.content, { parser: 'typescript' });
-    expect(formattedContent).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
+    const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
+    const formattedContent = prettier.format(graphqlFile.content, { parser: 'typescript' });
 
-      export type Unnamed_1_Query = {
+    expect(formattedContent).toBeSimilarStringTo(`
+      export type TestQuery = {
         __typename?: "Query";
         me?: {
           __typename?: "User";
@@ -139,7 +157,6 @@ describe('TypeScript Operations Plugin - semanticNonNull', () => {
           nonNullableListWithNonNullableItemBothLevels: Array<string>;
         } | null;
       };
-      "
     `);
   });
 });
