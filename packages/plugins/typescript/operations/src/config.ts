@@ -298,7 +298,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * @exampleMarkdown
    * ## `errorHandlingClient`
    * An error handling client is a client which prevents the user from reading a `null` used as a placeholder for an error in a GraphQL response.
-   * The client may do so by throwing when an errored field is accessed (as is the case for `graphql-toe`),
+   * The client may do so by throwing when an errored field is accessed (as is the case for [`graphql-toe`](https://github.com/graphile/graphql-toe)),
    * or when a fragment containing an error is read (as is the case for Relay's `@throwOnFieldError` directive),
    * or by preventing any data from being read if an error occurred (as with Apollo Client's `errorPolicy: "none"`).
    *
