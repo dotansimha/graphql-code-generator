@@ -292,4 +292,42 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    */
 
   allowUndefinedQueryVariables?: boolean;
+
+  /**
+   * @description Options related to handling nullability
+   * @exampleMarkdown
+   * ## `errorHandlingClient`
+   * When using error handling clients, a semantic non-nullable field can never be `null`.
+   * If a field is read and its value is `null`, there must be a respective error. The error handling client will throw in this case, so the `null` value is never read.
+   *
+   * To enable this option, install `graphql-sock` peer dependency:
+   *
+   * ```sh npm2yarn
+   * npm install -D graphql-sock
+   * ```
+   *
+   * Now, you can enable support for error handling clients:
+   *
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript', 'typescript-operations'],
+   *       config: {
+   *         nullability: {
+   *           errorHandlingClient: true
+   *         }
+   *       },
+   *     },
+   *   },
+   * };
+   * export default config;
+   * ```
+   */
+  nullability?: {
+    errorHandlingClient: boolean;
+  };
 }
