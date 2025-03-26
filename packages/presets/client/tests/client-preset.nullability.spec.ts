@@ -61,7 +61,7 @@ const document = /* GraphQL */ `
   }
 `;
 
-describe('TypeScript Operations Plugin - nullability', () => {
+describe('client-preset - nullability', () => {
   it('converts semanticNonNull to non-null when nullability.errorHandlingClient=true', async () => {
     const result = await executeCodegen({
       schema,
