@@ -1,5 +1,20 @@
 # @graphql-codegen/client-preset
 
+## 4.8.0
+
+### Minor Changes
+
+- [#10323](https://github.com/dotansimha/graphql-code-generator/pull/10323) [`f3cf4df`](https://github.com/dotansimha/graphql-code-generator/commit/f3cf4df358a896c5df0a7d8909c2fbf192e10c01) Thanks [@eddeee888](https://github.com/eddeee888)! - Add support for `nullability.errorHandlingClient`. This allows clients to get stronger types with [semantic nullability](https://github.com/graphql/graphql-wg/blob/main/rfcs/SemanticNullability.md)-enabled schemas.
+
+### Patch Changes
+
+- Updated dependencies [[`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc), [`f3cf4df`](https://github.com/dotansimha/graphql-code-generator/commit/f3cf4df358a896c5df0a7d8909c2fbf192e10c01)]:
+  - @graphql-codegen/visitor-plugin-common@5.8.0
+  - @graphql-codegen/typescript-operations@4.6.0
+  - @graphql-codegen/gql-tag-operations@4.0.17
+  - @graphql-codegen/typed-document-node@5.1.1
+  - @graphql-codegen/typescript@4.1.6
+
 ## 4.7.0
 
 ### Minor Changes

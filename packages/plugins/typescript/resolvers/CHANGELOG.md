@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-resolvers
 
+## 4.5.0
+
+### Minor Changes
+
+- [#10315](https://github.com/dotansimha/graphql-code-generator/pull/10315) [`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc) Thanks [@eddeee888](https://github.com/eddeee888)! - Implement semanticNonNull custom directive
+
+### Patch Changes
+
+- Updated dependencies [[`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc)]:
+  - @graphql-codegen/visitor-plugin-common@5.8.0
+  - @graphql-codegen/typescript@4.1.6
+
 ## 4.4.4
 
 ### Patch Changes
