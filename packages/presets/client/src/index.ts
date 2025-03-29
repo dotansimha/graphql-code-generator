@@ -5,7 +5,7 @@ import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { DocumentNode } from 'graphql';
+import { parse, printSchema, type DocumentNode, type GraphQLSchema } from 'graphql';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
@@ -101,7 +101,7 @@ const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/'
 
 export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
-  buildGeneratesSection: options => {
+  buildGeneratesSection: async options => {
     if (!isOutputFolderLike(options.baseOutputDir)) {
       throw new Error(
         '[client-preset] target output should be a directory, ex: "src/gql/". Make sure you add "/" at the end of the directory path'
@@ -114,6 +114,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       );
     }
     const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
+    if (options.config.nullability?.errorHandlingClient) {
+      options.schemaAst = await semanticToStrict(options.schemaAst!);
+      options.schema = parse(printSchema(options.schemaAst));
+    }
 
     const reexports: Array<string> = [];
 
@@ -139,7 +143,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       customDirectives: options.config.customDirectives,
     };
 
-    const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
+    const visitor = new ClientSideBaseVisitor(options.schemaAst, [], options.config, options.config);
     let fragmentMaskingConfig: FragmentMaskingConfig | null = null;
 
     if (typeof options?.presetConfig?.fragmentMasking === 'object') {
@@ -369,5 +373,16 @@ function createDeferred<T = void>(): Deferred<T> {
   });
   return d;
 }
+
+const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
+  try {
+    const sock = await import('graphql-sock');
+    return sock.semanticToStrict(schema);
+  } catch {
+    throw new Error(
+      "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package."
+    );
+  }
+};
 
 export { addTypenameSelectionDocumentTransform } from './add-typename-selection-document-transform.js';
