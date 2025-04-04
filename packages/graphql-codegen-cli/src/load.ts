@@ -13,7 +13,7 @@ import {
 } from '@graphql-tools/load';
 import { PrismaLoader } from '@graphql-tools/prisma-loader';
 import { UrlLoader } from '@graphql-tools/url-loader';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLError, GraphQLSchema } from 'graphql';
 
 export const defaultSchemaLoadOptions = {
   assumeValidSDL: true,
@@ -52,22 +52,17 @@ export async function loadSchema(
     return schema;
   } catch (e) {
     throw new Error(
-      `
-        Failed to load schema from ${Object.keys(schemaPointers).join(',')}:
-
-        ${e.message || e}
-        ${e.stack || ''}
-
-        GraphQL Code Generator supports:
-          - ES Modules and CommonJS exports (export as default or named export "schema")
-          - Introspection JSON File
-          - URL of GraphQL endpoint
-          - Multiple files with type definitions (glob expression)
-          - String in config file
-
-        Try to use one of above options and run codegen again.
-
-      `
+      [
+        `Failed to load schema from ${Object.keys(schemaPointers).join(',')}:`,
+        printError(e),
+        '\nGraphQL Code Generator supports:',
+        '\n- ES Modules and CommonJS exports (export as default or named export "schema")',
+        '- Introspection JSON File',
+        '- URL of GraphQL endpoint',
+        '- Multiple files with type definitions (glob expression)',
+        '- String in config file',
+        '\nTry to use one of above options and run codegen again.\n',
+      ].join('\n')
     );
   }
 }
@@ -107,6 +102,15 @@ export async function loadDocuments(
     return loadedFromToolkit;
   } catch (error) {
     if (config.ignoreNoDocuments) return [];
-    throw error;
+    throw new Error(
+      [`Failed to load documents from ${Object.keys(documentPointers).join(',')}:`, printError(error)].join('\n')
+    );
   }
 }
+
+const printError = (error: any) => {
+  if (error instanceof GraphQLError) {
+    return String(error);
+  }
+  return [String(error.message || error), String(error.stack)].join('\n');
+};

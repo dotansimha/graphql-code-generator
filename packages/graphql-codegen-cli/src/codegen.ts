@@ -412,6 +412,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       rendererOptions: {
         clearOutput: false,
         collapse: true,
+        formatOutput: 'wrap',
+        removeEmptyLines: false,
       },
       renderer: config.verbose ? 'verbose' : 'default',
       ctx: { errors: [] },
