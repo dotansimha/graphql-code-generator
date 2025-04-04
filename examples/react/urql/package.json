@@ -10,7 +10,7 @@
   "devDependencies": {
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.10",
-    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/cli": "^5.0.6",
     "@vitejs/plugin-react": "^4.0.0",
     "typescript": "5.5.4",
     "serve": "14.2.3",

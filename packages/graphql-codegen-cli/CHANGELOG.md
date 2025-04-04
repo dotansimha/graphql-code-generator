@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 5.0.6
+
+### Patch Changes
+
+- [#10333](https://github.com/dotansimha/graphql-code-generator/pull/10333) [`10ab58d`](https://github.com/dotansimha/graphql-code-generator/commit/10ab58dbc183dff460c410ffc7cc759186f91d4c) Thanks [@eddeee888](https://github.com/eddeee888)! - Improve syntax error messages whilst loading schema/document
+
 ## 5.0.5
 
 ### Patch Changes
