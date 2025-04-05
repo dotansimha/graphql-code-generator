@@ -198,4 +198,19 @@ describe('Integration', () => {
       };
     `);
   });
+
+  test('import paths for ESM should have correct extension', async () => {
+    const emitLegacyCommonJSImports = {
+      emitLegacyCommonJSImports: false,
+      ...options,
+    };
+    const output = await executeCodegen(emitLegacyCommonJSImports);
+    const esmImportStatement = `import * as Types from "../global-types.js";`;
+
+    expect(output.length).toBe(5);
+    expect(output[1].content).toMatch(esmImportStatement);
+    expect(output[2].content).toMatch(esmImportStatement);
+    expect(output[3].content).toMatch(esmImportStatement);
+    expect(output[4].content).toMatch(esmImportStatement);
+  });
 });
