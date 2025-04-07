@@ -11,6 +11,7 @@ import {
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
+import { NoTypeDefinitionsFound } from '@graphql-tools/load';
 import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
 import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
@@ -279,7 +280,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                 documents,
                               };
                             } catch (error) {
-                              if (config.ignoreNoDocuments) {
+                              if (error instanceof NoTypeDefinitionsFound && config.ignoreNoDocuments) {
                                 return {
                                   documents: [],
                                 };
