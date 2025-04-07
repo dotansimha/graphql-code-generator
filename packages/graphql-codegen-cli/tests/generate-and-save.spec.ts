@@ -280,6 +280,7 @@ describe('generate-and-save', () => {
     });
 
     test('Schema syntax error - should print native GraphQLError for', async () => {
+      expect.assertions(4);
       try {
         await generate(
           {
@@ -324,6 +325,7 @@ describe('generate-and-save', () => {
     });
 
     test('Document syntax error - should print native GraphQLError', async () => {
+      expect.assertions(4);
       try {
         await generate(
           {
