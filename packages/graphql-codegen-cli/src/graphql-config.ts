@@ -56,10 +56,6 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
   }
 
   try {
-    return config.getDefault().hasExtension('codegen');
-  } catch {}
-
-  try {
     for (const projectName in config.projects) {
       if (Object.prototype.hasOwnProperty.call(config.projects, projectName)) {
         const project = config.projects[projectName];
@@ -69,6 +65,10 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
         }
       }
     }
+  } catch {}
+
+  try {
+    return config.getDefault().hasExtension('codegen');
   } catch {}
 
   return false;
