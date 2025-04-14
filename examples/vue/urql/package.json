@@ -16,7 +16,7 @@
     "vue": "^3.2.45"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/cli": "^5.0.6",
     "@vitejs/plugin-vue": "^5.0.0",
     "typescript": "^5.0.0",
     "vite": "^6.0.0",

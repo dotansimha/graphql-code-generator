@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-resolvers
 
+## 4.5.1
+
+### Patch Changes
+
+- [#10330](https://github.com/dotansimha/graphql-code-generator/pull/10330) [`c5efba3`](https://github.com/dotansimha/graphql-code-generator/commit/c5efba34a7b422720be9ce32937dd19fb0784bae) Thanks [@jnoordsij](https://github.com/jnoordsij)! - Make graphql-sock optional peerDep
+
 ## 4.5.0
 
 ### Minor Changes

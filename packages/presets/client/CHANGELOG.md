@@ -1,5 +1,14 @@
 # @graphql-codegen/client-preset
 
+## 4.8.1
+
+### Patch Changes
+
+- [#10330](https://github.com/dotansimha/graphql-code-generator/pull/10330) [`c5efba3`](https://github.com/dotansimha/graphql-code-generator/commit/c5efba34a7b422720be9ce32937dd19fb0784bae) Thanks [@jnoordsij](https://github.com/jnoordsij)! - Make graphql-sock optional peerDep
+
+- Updated dependencies [[`c5efba3`](https://github.com/dotansimha/graphql-code-generator/commit/c5efba34a7b422720be9ce32937dd19fb0784bae)]:
+  - @graphql-codegen/typescript-operations@4.6.1
+
 ## 4.8.0
 
 ### Minor Changes
