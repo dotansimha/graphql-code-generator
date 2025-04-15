@@ -1,7 +1,7 @@
 <div>
     <img src="./logo.svg" width="150px" alt="GraphQL Code Generator logo"/>
     <a href="https://the-guild.dev">
-        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/>
+        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/> 
     </a>
 </div>
 
