@@ -60,6 +60,8 @@ export interface ParsedTypesConfig extends ParsedConfig {
   wrapEntireDefinitions: boolean;
   ignoreEnumValuesFromSchema: boolean;
   directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings;
+  /** When non-null, contains a subset of input types & enums that should be generated. See `onlyOperationTypes` */
+  usedTypes?: Set<string>;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -331,7 +333,7 @@ export interface RawTypesConfig extends RawConfig {
    */
   onlyEnums?: boolean;
   /**
-   * @description This will cause the generator to emit types for operations only (basically only enums and scalars)
+   * @description This will cause the generator to only emit types used by one or more operations (basically only enums, inputs, and scalars).
    * @default false
    *
    * @exampleMarkdown
@@ -675,7 +677,15 @@ export class BaseTypesVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    if (this.config.onlyEnums) return '';
+    if (
+      (this.config.onlyOperationTypes &&
+        !this.config.usedTypes?.has(
+          // types are wrong; string at runtime?
+          node.name as unknown as string
+        )) ||
+      this.config.onlyEnums
+    )
+      return '';
 
     // Why the heck is node.name a string and not { value: string } at runtime ?!
     if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
