@@ -1,18 +1,20 @@
-import { astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
+import { astFromInterfaceType, astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
 import {
   DefinitionNode,
   DirectiveNode,
   FieldDefinitionNode,
+  GraphQLFieldConfigMap,
+  GraphQLInterfaceType,
   GraphQLNamedType,
   GraphQLObjectType,
   GraphQLSchema,
+  isInterfaceType,
   isObjectType,
   ObjectTypeDefinitionNode,
   OperationDefinitionNode,
   parse,
   StringValueNode,
 } from 'graphql';
-import merge from 'lodash/merge.js';
 import { oldVisit } from './index.js';
 import { getBaseType } from './utils.js';
 
@@ -29,13 +31,97 @@ export const federationSpec = parse(/* GraphQL */ `
 `);
 
 /**
- * Adds `__resolveReference` in each ObjectType involved in Federation.
+ * ReferenceSelectionSet
+ * @description Each is a collection of fields that are available in a reference payload (originated from the Router)
+ * @example
+ * - resolvable fields marked with `@key`
+ * - fields declared in `@provides`
+ */
+interface ReferenceSelectionSet {
+  name: string;
+  selection: boolean | ReferenceSelectionSet[];
+}
+
+interface TypeMeta {
+  hasResolveReference: boolean;
+  resolvableKeyDirectives: readonly DirectiveNode[];
+  /**
+   * referenceSelectionSets
+   * @description Each element can be `ReferenceSelectionSet[]`.
+   * Elements at the root level are combined with `&` and nested elements are combined with `|`.
+   *
+   * @example:
+   * - [[A, B], [C], [D]]      -> (A | B) & C & D
+   * - [[A, B], [C, D], [E]] -> (A | B) & (C | D) & E
+   */
+  referenceSelectionSets: ReferenceSelectionSet[][];
+}
+
+export type FederationMeta = { [typeName: string]: TypeMeta };
+
+/**
+ * Adds `__resolveReference` in each ObjectType and InterfaceType involved in Federation.
+ * We do this to utilise the existing FieldDefinition logic of the plugin, which includes many logic:
+ * - mapper
+ * - return type
  * @param schema
  */
-export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
-  return mapSchema(schema, {
-    [MapperKind.OBJECT_TYPE]: type => {
-      if (checkObjectTypeFederationDetails(type, schema)) {
+export function addFederationReferencesToSchema(schema: GraphQLSchema): {
+  transformedSchema: GraphQLSchema;
+  federationMeta: FederationMeta;
+} {
+  const setFederationMeta = ({
+    meta,
+    typeName,
+    update,
+  }: {
+    meta: FederationMeta;
+    typeName: string;
+    update: TypeMeta;
+  }): void => {
+    meta[typeName] = {
+      ...(meta[typeName] ||
+        ({
+          hasResolveReference: false,
+          resolvableKeyDirectives: [],
+          referenceSelectionSets: [],
+        } satisfies TypeMeta)),
+      ...update,
+    };
+  };
+
+  const getReferenceSelectionSets = ({
+    resolvableKeyDirectives,
+    fields,
+  }: {
+    resolvableKeyDirectives: readonly DirectiveNode[];
+    fields: GraphQLFieldConfigMap<any, any>;
+  }): TypeMeta['referenceSelectionSets'] => {
+    const referenceSelectionSets: ReferenceSelectionSet[][] = [];
+
+    // @key() @key() - "primary keys" in Federation
+    // A reference may receive one primary key combination at a time, so they will be combined with `|`
+    const primaryKeys = resolvableKeyDirectives.map(extractReferenceSelectionSet);
+    referenceSelectionSets.push([...primaryKeys]);
+
+    for (const fieldNode of Object.values(fields)) {
+      // Look for @requires and see what the service needs and gets
+      const directives = getDirectivesByName('requires', fieldNode.astNode);
+      for (const directive of directives) {
+        const requires = extractReferenceSelectionSet(directive);
+        referenceSelectionSets.push([requires]);
+      }
+    }
+
+    return referenceSelectionSets;
+  };
+
+  const federationMeta: FederationMeta = {};
+
+  const transformedSchema = mapSchema(schema, {
+    [MapperKind.INTERFACE_TYPE]: type => {
+      const federationDetails = checkTypeFederationDetails(type, schema);
+      if (federationDetails && federationDetails.resolvableKeyDirectives.length > 0) {
         const typeConfig = type.toConfig();
         typeConfig.fields = {
           [resolveReferenceFieldName]: {
@@ -44,11 +130,63 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLS
           ...typeConfig.fields,
         };
 
+        const referenceSelectionSets = getReferenceSelectionSets({
+          resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+          fields: typeConfig.fields,
+        });
+
+        setFederationMeta({
+          meta: federationMeta,
+          typeName: type.name,
+          update: {
+            hasResolveReference: true,
+            resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+            referenceSelectionSets,
+          },
+        });
+
+        return new GraphQLInterfaceType(typeConfig);
+      }
+
+      return type;
+    },
+    [MapperKind.OBJECT_TYPE]: type => {
+      const federationDetails = checkTypeFederationDetails(type, schema);
+      if (federationDetails && federationDetails.resolvableKeyDirectives.length > 0) {
+        const typeConfig = type.toConfig();
+
+        const referenceSelectionSets = getReferenceSelectionSets({
+          resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+          fields: typeConfig.fields,
+        });
+
+        typeConfig.fields = {
+          [resolveReferenceFieldName]: {
+            type,
+          },
+          ...typeConfig.fields,
+        };
+
+        setFederationMeta({
+          meta: federationMeta,
+          typeName: type.name,
+          update: {
+            hasResolveReference: true,
+            resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
+            referenceSelectionSets,
+          },
+        });
+
         return new GraphQLObjectType(typeConfig);
       }
       return type;
     },
   });
+
+  return {
+    transformedSchema,
+    federationMeta,
+  };
 }
 
 /**
@@ -82,20 +220,17 @@ export function removeFederation(schema: GraphQLSchema): GraphQLSchema {
 
 const resolveReferenceFieldName = '__resolveReference';
 
-interface TypeMeta {
-  hasResolveReference: boolean;
-}
-
 export class ApolloFederation {
   private enabled = false;
   private schema: GraphQLSchema;
   private providesMap: Record<string, string[]>;
-  protected meta: { [typename: string]: TypeMeta } = {};
+  protected meta: FederationMeta = {};
 
-  constructor({ enabled, schema }: { enabled: boolean; schema: GraphQLSchema }) {
+  constructor({ enabled, schema, meta }: { enabled: boolean; schema: GraphQLSchema; meta: FederationMeta }) {
     this.enabled = enabled;
     this.schema = schema;
     this.providesMap = this.createMapOfProvides();
+    this.meta = meta;
   }
 
   /**
@@ -135,7 +270,11 @@ export class ApolloFederation {
    * @param data
    */
   skipField({ fieldNode, parentType }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType }): boolean {
-    if (!this.enabled || !isObjectType(parentType) || !checkObjectTypeFederationDetails(parentType, this.schema)) {
+    if (
+      !this.enabled ||
+      !(isObjectType(parentType) && !isInterfaceType(parentType)) ||
+      !checkTypeFederationDetails(parentType, this.schema)
+    ) {
       return false;
     }
 
@@ -148,62 +287,60 @@ export class ApolloFederation {
   }
 
   /**
-   * Transforms ParentType signature in ObjectTypes involved in Federation
-   * @param data
+   * Transforms a field's ParentType signature in ObjectTypes or InterfaceTypes involved in Federation
    */
-  transformParentType({
+  transformFieldParentType({
     fieldNode,
     parentType,
     parentTypeSignature,
+    federationTypeSignature,
   }: {
     fieldNode: FieldDefinitionNode;
     parentType: GraphQLNamedType;
     parentTypeSignature: string;
-  }) {
-    if (
-      this.enabled &&
-      isObjectType(parentType) &&
-      (isTypeExtension(parentType, this.schema) || fieldNode.name.value === resolveReferenceFieldName)
-    ) {
-      const objectTypeFederationDetails = checkObjectTypeFederationDetails(parentType, this.schema);
-      if (!objectTypeFederationDetails) {
-        return parentTypeSignature;
-      }
-
-      const { resolvableKeyDirectives } = objectTypeFederationDetails;
-
-      if (resolvableKeyDirectives.length) {
-        const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
-
-        // Look for @requires and see what the service needs and gets
-        const requires = getDirectivesByName('requires', fieldNode).map(this.extractFieldSet);
-        const requiredFields = this.translateFieldSet(merge({}, ...requires), parentTypeSignature);
-
-        // @key() @key() - "primary keys" in Federation
-        const primaryKeys = resolvableKeyDirectives.map(def => {
-          const fields = this.extractFieldSet(def);
-          return this.translateFieldSet(fields, parentTypeSignature);
-        });
-
-        const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
-
-        outputs.push([open, primaryKeys.join(' | '), close].join(''));
-
-        // include required fields
-        if (requires.length) {
-          outputs.push(`& ${requiredFields}`);
-        }
-
-        return outputs.join(' ');
-      }
+    federationTypeSignature: string;
+  }): string {
+    if (!this.enabled) {
+      return parentTypeSignature;
     }
 
-    return parentTypeSignature;
+    const result = this.printReferenceSelectionSets({
+      typeName: parentType.name,
+      baseFederationType: federationTypeSignature,
+    });
+
+    // When `!result`, it means this is not a Federation entity, so we just return the parentTypeSignature
+    if (!result) {
+      return parentTypeSignature;
+    }
+
+    const isEntityResolveReferenceField =
+      (isObjectType(parentType) || isInterfaceType(parentType)) && fieldNode.name.value === resolveReferenceFieldName;
+
+    if (!isEntityResolveReferenceField) {
+      return parentTypeSignature;
+    }
+
+    return result;
   }
 
-  setMeta(typename: string, update: Partial<TypeMeta>): void {
-    this.meta[typename] = { ...(this.meta[typename] || { hasResolveReference: false }), ...update };
+  addFederationTypeGenericIfApplicable({
+    genericTypes,
+    typeName,
+    federationTypesType,
+  }: {
+    genericTypes: string[];
+    typeName: string;
+    federationTypesType: string;
+  }): void {
+    if (!this.getMeta()[typeName]) {
+      return;
+    }
+
+    const typeRef = `${federationTypesType}['${typeName}']`;
+    genericTypes.push(`FederationType extends ${typeRef} = ${typeRef}`);
   }
+
   getMeta() {
     return this.meta;
   }
@@ -226,41 +363,41 @@ export class ApolloFederation {
     return false;
   }
 
-  private translateFieldSet(fields: any, parentTypeRef: string): string {
-    return `GraphQLRecursivePick<${parentTypeRef}, ${JSON.stringify(fields)}>`;
+  printReferenceSelectionSet({
+    typeName,
+    referenceSelectionSet,
+  }: {
+    typeName: string;
+    referenceSelectionSet: ReferenceSelectionSet;
+  }): string {
+    return `GraphQLRecursivePick<${typeName}, ${JSON.stringify(referenceSelectionSet)}>`;
   }
 
-  private extractFieldSet(directive: DirectiveNode): any {
-    const arg = directive.arguments.find(arg => arg.name.value === 'fields');
-    const { value } = arg.value as StringValueNode;
+  printReferenceSelectionSets({
+    typeName,
+    baseFederationType,
+  }: {
+    typeName: string;
+    baseFederationType: string;
+  }): string | false {
+    const federationMeta = this.getMeta()[typeName];
 
-    type SelectionSetField = {
-      name: string;
-      selection: boolean | SelectionSetField[];
-    };
+    if (!federationMeta?.hasResolveReference) {
+      return false;
+    }
 
-    return oldVisit(parse(`{${value}}`), {
-      leave: {
-        SelectionSet(node) {
-          return (node.selections as any as SelectionSetField[]).reduce((accum, field) => {
-            accum[field.name] = field.selection;
-            return accum;
-          }, {});
-        },
-        Field(node) {
-          return {
-            name: node.name.value,
-            selection: node.selectionSet || true,
-          } as SelectionSetField;
-        },
-        Document(node) {
-          return node.definitions.find(
-            (def: DefinitionNode): def is OperationDefinitionNode =>
-              def.kind === 'OperationDefinition' && def.operation === 'query'
-          ).selectionSet;
-        },
-      },
-    });
+    return `\n    ( { __typename: '${typeName}' }\n    & ${federationMeta.referenceSelectionSets
+      .map(referenceSelectionSetArray => {
+        const result = referenceSelectionSetArray.map(referenceSelectionSet => {
+          return this.printReferenceSelectionSet({
+            referenceSelectionSet,
+            typeName: baseFederationType,
+          });
+        });
+
+        return result.length > 1 ? `( ${result.join(' | ')} )` : result.join(' | ');
+      })
+      .join('\n    & ')} )`;
   }
 
   private createMapOfProvides() {
@@ -272,7 +409,7 @@ export class ApolloFederation {
       if (isObjectType(objectType)) {
         for (const field of Object.values(objectType.getFields())) {
           const provides = getDirectivesByName('provides', field.astNode)
-            .map(this.extractFieldSet)
+            .map(extractReferenceSelectionSet)
             .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []);
           const ofType = getBaseType(field.type);
 
@@ -291,14 +428,18 @@ export class ApolloFederation {
  * Checks if Object Type is involved in Federation. Based on `@key` directive
  * @param node Type
  */
-export function checkObjectTypeFederationDetails(
-  node: ObjectTypeDefinitionNode | GraphQLObjectType,
+function checkTypeFederationDetails(
+  node: ObjectTypeDefinitionNode | GraphQLObjectType | GraphQLInterfaceType,
   schema: GraphQLSchema
 ): { resolvableKeyDirectives: readonly DirectiveNode[] } | false {
   const {
     name: { value: name },
     directives,
-  } = isObjectType(node) ? astFromObjectType(node, schema) : node;
+  } = isObjectType(node)
+    ? astFromObjectType(node, schema)
+    : isInterfaceType(node)
+    ? astFromInterfaceType(node, schema)
+    : node;
 
   const rootTypeNames = getRootTypeNames(schema);
   const isNotRoot = !rootTypeNames.has(name);
@@ -343,12 +484,30 @@ function getDirectivesByName(
   return astNode?.directives?.filter(d => d.name.value === name) || [];
 }
 
-/**
- * Checks if the Object Type extends a federated type from a remote schema.
- * Based on if any of its fields contain the `@external` directive
- * @param node Type
- */
-function isTypeExtension(node: ObjectTypeDefinitionNode | GraphQLObjectType, schema: GraphQLSchema): boolean {
-  const definition = isObjectType(node) ? node.astNode || astFromObjectType(node, schema) : node;
-  return definition.fields?.some(field => getDirectivesByName('external', field).length);
+function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {
+  const arg = directive.arguments.find(arg => arg.name.value === 'fields');
+  const { value } = arg.value as StringValueNode;
+
+  return oldVisit(parse(`{${value}}`), {
+    leave: {
+      SelectionSet(node) {
+        return (node.selections as any as ReferenceSelectionSet[]).reduce((accum, field) => {
+          accum[field.name] = field.selection;
+          return accum;
+        }, {});
+      },
+      Field(node) {
+        return {
+          name: node.name.value,
+          selection: node.selectionSet || true,
+        } as ReferenceSelectionSet;
+      },
+      Document(node) {
+        return node.definitions.find(
+          (def: DefinitionNode): def is OperationDefinitionNode =>
+            def.kind === 'OperationDefinition' && def.operation === 'query'
+        ).selectionSet;
+      },
+    },
+  });
 }
