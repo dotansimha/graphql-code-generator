@@ -265,6 +265,9 @@ export class ApolloFederation {
     return this.enabled && name === '_FieldSet';
   }
 
+  /**
+   * Decides if an object type should be skipped or not
+   */
   skipObjectType({ node }: { node: ObjectTypeDefinitionNode }): boolean {
     if (!this.enabled) {
       return false;

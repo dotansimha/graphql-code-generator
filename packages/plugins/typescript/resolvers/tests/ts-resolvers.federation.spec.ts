@@ -555,6 +555,10 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
           & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+        address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
+        dateOfBirth?: Resolver<Maybe<ResolversTypes['DateOfBirth']>, ParentType, ContextType>;
+        placeOfBirth?: Resolver<Maybe<ResolversTypes['PlaceOfBirth']>, ParentType, ContextType>;
+        company?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType>;
       };
     `);
 
@@ -572,7 +576,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       };
     `);
 
-    // DateOfBirthResolvers should not be generated because there is no field not marked with @external
+    // DateOfBirthResolvers should not be generated because every field is marked with @external
     expect(content).not.toBeSimilarStringTo('export type DateOfBirthResolvers');
 
     // PlaceOfBirthResolvers should not be generated because the type is marked with @external
