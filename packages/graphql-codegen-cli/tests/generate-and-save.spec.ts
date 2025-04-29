@@ -406,6 +406,7 @@ describe('generate-and-save', () => {
         `);
       }
     });
+
     test('No documents found - GraphQL Config - should not fail if ignoreNoDocuments=true', async () => {
       jest.spyOn(fs, 'writeFile').mockImplementation();
       const config = await createContext({
