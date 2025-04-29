@@ -6791,7 +6791,7 @@ cose-base@^2.2.0:
   dependencies:
     layout-base "^2.0.0"
 
-cosmiconfig@8.0.0, cosmiconfig@8.3.6, cosmiconfig@^7.0.0, cosmiconfig@^8.1.3, cosmiconfig@^9.0.0:
+cosmiconfig@8.0.0, cosmiconfig@8.3.6, cosmiconfig@^7.0.0, cosmiconfig@^8.1.0, cosmiconfig@^8.1.3:
   version "8.3.6"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-8.3.6.tgz#060a2b871d66dba6c8538ea1118ba1ac16f5fae3"
   integrity sha512-kcZ6+W5QzcJ3P1Mt+83OUv/oHFqZHIx8DuxG6eZ5RGMERoLqp4BuGjhHLYGK+Kf5XVkQvqBSmAy/nGWN3qDgEA==
@@ -9048,10 +9048,10 @@ graphql-config@^4.1.0:
     string-env-interpolation "1.0.1"
     tslib "^2.4.0"
 
-graphql-config@^5.1.4:
-  version "5.1.4"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-5.1.4.tgz#12bc808648cd14ce83b509592db842a294018189"
-  integrity sha512-ObdBeL3ycddHrNbFvhGZ12pK8jUzWvvyN2A+6ij3XrtLH/KrkXt+BboEAEgXmeUrTcD5RjJnz8IZu3Cgc/oX/w==
+graphql-config@^5.1.5:
+  version "5.1.5"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-5.1.5.tgz#34e0bfba88e74b6eefd889716a9378086f595f7f"
+  integrity sha512-mG2LL1HccpU8qg5ajLROgdsBzx/o2M6kgI3uAmoaXiSH9PCUbtIyLomLqUtCFaAeG2YCFsl0M5cfQ9rKmDoMVA==
   dependencies:
     "@graphql-tools/graphql-file-loader" "^8.0.0"
     "@graphql-tools/json-file-loader" "^8.0.0"
@@ -9059,9 +9059,9 @@ graphql-config@^5.1.4:
     "@graphql-tools/merge" "^9.0.0"
     "@graphql-tools/url-loader" "^8.0.0"
     "@graphql-tools/utils" "^10.0.0"
-    cosmiconfig "^9.0.0"
+    cosmiconfig "^8.1.0"
     jiti "^2.0.0"
-    minimatch "^10.0.0"
+    minimatch "^9.0.5"
     string-env-interpolation "^1.0.1"
     tslib "^2.4.0"
 
