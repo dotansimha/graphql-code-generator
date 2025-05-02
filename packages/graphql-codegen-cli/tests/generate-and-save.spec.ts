@@ -2,6 +2,7 @@ import { dirname, join } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { useMonorepo } from '@graphql-codegen/testing';
 import makeDir from 'make-dir';
+import { createContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as fs from '../src/utils/file-system.js';
 
@@ -378,6 +379,49 @@ describe('generate-and-save', () => {
         },
         false
       );
+      expect(consoleErrorMock).not.toHaveBeenCalled();
+    });
+
+    test('No documents found - GraphQL Config - should throw error by default', async () => {
+      expect.assertions(1);
+      try {
+        const config = await createContext({
+          config: './tests/test-files/graphql.config.no-doc.js',
+          project: undefined,
+          errorsOnly: true,
+          overwrite: true,
+          profile: true,
+          require: [],
+          silent: false,
+          watch: false,
+        });
+
+        await generate(config, false);
+      } catch {
+        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(`
+          [FAILED]
+          [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
+          [FAILED]
+          [FAILED]         - ../test-documents/empty.graphql
+        `);
+      }
+    });
+
+    test('No documents found - GraphQL Config - should not fail if ignoreNoDocuments=true', async () => {
+      jest.spyOn(fs, 'writeFile').mockImplementation();
+      const config = await createContext({
+        config: './tests/test-files/graphql.config.no-doc-ignored.js',
+        project: undefined,
+        errorsOnly: true,
+        overwrite: true,
+        profile: true,
+        require: [],
+        silent: false,
+        watch: false,
+      });
+
+      await generate(config, false);
+
       expect(consoleErrorMock).not.toHaveBeenCalled();
     });
   });

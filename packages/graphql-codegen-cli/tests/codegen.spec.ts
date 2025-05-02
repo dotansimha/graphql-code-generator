@@ -1096,8 +1096,7 @@ describe('Codegen Executor', () => {
     }
   });
 
-  // FIXME: Node 16 and graphql-config integration does not work
-  it.skip('Should generate documents output even if prj1/documents and prj1/extensions/codegen/generate/xxx/documents are both definded with the same glob files', async () => {
+  it('Should generate documents output even if prj1/documents and prj1/extensions/codegen/generate/xxx/documents are both definded with the same glob files', async () => {
     const prj1 = await createContext({
       config: './tests/test-files/graphql.config.js',
       project: 'prj1',
