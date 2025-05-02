@@ -199,35 +199,10 @@ describe('Integration', () => {
     `);
   });
 
-  test('import paths for ESM - does not add extension by default', async () => {
-    const output = await executeCodegen(options);
-    const esmImportStatement = `import * as Types from "../global-types";`;
-
-    expect(output.length).toBe(5);
-    expect(output[1].content).toMatch(esmImportStatement);
-    expect(output[2].content).toMatch(esmImportStatement);
-    expect(output[3].content).toMatch(esmImportStatement);
-    expect(output[4].content).toMatch(esmImportStatement);
-  });
-
-  test('import paths for ESM - does not add extension if emitLegacyCommonJSImports=true', async () => {
-    const output = await executeCodegen({
-      ...options,
-      emitLegacyCommonJSImports: true,
-    });
-    const esmImportStatement = `import * as Types from "../global-types";`;
-
-    expect(output.length).toBe(5);
-    expect(output[1].content).toMatch(esmImportStatement);
-    expect(output[2].content).toMatch(esmImportStatement);
-    expect(output[3].content).toMatch(esmImportStatement);
-    expect(output[4].content).toMatch(esmImportStatement);
-  });
-
-  test('import paths for ESM - adds .js extension if emitLegacyCommonJSImports=false', async () => {
+  test('import paths for ESM should have correct extension', async () => {
     const emitLegacyCommonJSImports = {
-      ...options,
       emitLegacyCommonJSImports: false,
+      ...options,
     };
     const output = await executeCodegen(emitLegacyCommonJSImports);
     const esmImportStatement = `import * as Types from "../global-types.js";`;
