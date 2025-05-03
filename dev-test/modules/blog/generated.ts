@@ -1,4 +1,4 @@
-import * as Types from '../types';
+import * as Types from '../types.js';
 import * as gm from 'graphql-modules';
 export namespace BlogModule {
   interface DefinedFields {

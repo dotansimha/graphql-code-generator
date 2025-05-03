@@ -201,8 +201,8 @@ describe('Integration', () => {
 
   test('import paths for ESM should have correct extension', async () => {
     const emitLegacyCommonJSImports = {
-      emitLegacyCommonJSImports: false,
       ...options,
+      emitLegacyCommonJSImports: false,
     };
     const output = await executeCodegen(emitLegacyCommonJSImports);
     const esmImportStatement = `import * as Types from "../global-types.js";`;
