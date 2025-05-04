@@ -9,6 +9,7 @@ import { JsonFileLoader } from '@graphql-tools/json-file-loader';
 import {
   loadDocuments as loadDocumentsToolkit,
   loadSchema as loadSchemaToolkit,
+  NoTypeDefinitionsFound,
   UnnormalizedTypeDefPointer,
 } from '@graphql-tools/load';
 import { PrismaLoader } from '@graphql-tools/prisma-loader';
@@ -101,7 +102,12 @@ export async function loadDocuments(
     });
     return loadedFromToolkit;
   } catch (error) {
-    if (config.ignoreNoDocuments) return [];
+    // NoTypeDefinitionsFound from `@graphql-tools/load` already has a message with pointer, so we can just rethrow the error
+    if (error instanceof NoTypeDefinitionsFound) {
+      throw error;
+    }
+
+    // For other errors, we need to add an error message with documentPointers, so it's better for DevX
     throw new Error(
       [`Failed to load documents from ${Object.keys(documentPointers).join(',')}:`, printError(error)].join('\n')
     );

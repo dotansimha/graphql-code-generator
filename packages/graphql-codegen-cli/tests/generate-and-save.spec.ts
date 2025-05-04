@@ -2,8 +2,8 @@ import { dirname, join } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { useMonorepo } from '@graphql-codegen/testing';
 import makeDir from 'make-dir';
-import { generate } from '../src/generate-and-save.js';
 import { createContext } from '../src/config.js';
+import { generate } from '../src/generate-and-save.js';
 import * as fs from '../src/utils/file-system.js';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -75,22 +75,6 @@ describe('generate-and-save', () => {
     expect(fileReadSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
     expect(writeSpy).not.toHaveBeenCalled();
-  });
-
-  test('should not error when ignoreNoDocuments config option is present', async () => {
-    jest.spyOn(fs, 'writeFile').mockImplementation();
-    const config = await createContext({
-      config: './tests/test-files/graphql.config.json',
-      project: undefined,
-      errorsOnly: true,
-      overwrite: true,
-      profile: true,
-      require: [],
-      silent: false,
-      watch: false,
-    });
-
-    await generate(config, false);
   });
 
   test('should use global overwrite option and write a file', async () => {
@@ -255,11 +239,11 @@ describe('generate-and-save', () => {
     expect(writeSpy).toHaveBeenCalled();
   });
 
-  describe('Syntax errors when loading pointers', () => {
+  describe('Errors when loading pointers', () => {
     const originalConsole = { ...console };
     const originalNodeEnv = process.env.NODE_ENV;
 
-    let consoleErrorMock;
+    let consoleErrorMock: jest.Mock;
 
     beforeEach(() => {
       // Mock common console functions to avoid noise in the terminal
@@ -279,7 +263,8 @@ describe('generate-and-save', () => {
       process.env.NODE_ENV = originalNodeEnv;
     });
 
-    test('Schema syntax error - should print native GraphQLError for', async () => {
+    test('Schema syntax error - should print native GraphQLError', async () => {
+      expect.assertions(4);
       try {
         await generate(
           {
@@ -324,6 +309,7 @@ describe('generate-and-save', () => {
     });
 
     test('Document syntax error - should print native GraphQLError', async () => {
+      expect.assertions(4);
       try {
         await generate(
           {
@@ -351,6 +337,92 @@ describe('generate-and-save', () => {
           [FAILED]   | ^
         `);
       }
+    });
+
+    test('No documents found - should throw error by default', async () => {
+      expect.assertions(1);
+      try {
+        await generate(
+          {
+            verbose: true,
+            schema: './tests/test-files/schema-dir/schema.ts',
+            documents: './tests/test-files/document-file-does-not-exist.graphql',
+            generates: {
+              'src/test.ts': {
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(`
+          [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
+          [FAILED]
+          [FAILED]         - ./tests/test-files/document-file-does-not-exist.graphql
+        `);
+      }
+    });
+
+    test('No documents found - should not fail if ignoreNoDocuments=true', async () => {
+      await generate(
+        {
+          verbose: true,
+          ignoreNoDocuments: true,
+          schema: './tests/test-files/schema-dir/schema.ts',
+          documents: './tests/test-files/document-file-does-not-exist.graphql',
+          generates: {
+            'src/test.ts': {
+              plugins: ['typescript'],
+            },
+          },
+        },
+        false
+      );
+      expect(consoleErrorMock).not.toHaveBeenCalled();
+    });
+
+    test('No documents found - GraphQL Config - should throw error by default', async () => {
+      expect.assertions(1);
+      try {
+        const config = await createContext({
+          config: './tests/test-files/graphql.config.no-doc.js',
+          project: undefined,
+          errorsOnly: true,
+          overwrite: true,
+          profile: true,
+          require: [],
+          silent: false,
+          watch: false,
+        });
+
+        await generate(config, false);
+      } catch {
+        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(`
+          [FAILED]
+          [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
+          [FAILED]
+          [FAILED]         - ../test-documents/empty.graphql
+        `);
+      }
+    });
+
+    test('No documents found - GraphQL Config - should not fail if ignoreNoDocuments=true', async () => {
+      jest.spyOn(fs, 'writeFile').mockImplementation();
+      const config = await createContext({
+        config: './tests/test-files/graphql.config.no-doc-ignored.js',
+        project: undefined,
+        errorsOnly: true,
+        overwrite: true,
+        profile: true,
+        require: [],
+        silent: false,
+        watch: false,
+      });
+
+      await generate(config, false);
+
+      expect(consoleErrorMock).not.toHaveBeenCalled();
     });
   });
 });
