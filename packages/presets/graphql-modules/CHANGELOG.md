@@ -1,5 +1,11 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 4.0.17
+
+### Patch Changes
+
+- [#10314](https://github.com/dotansimha/graphql-code-generator/pull/10314) [`d94ae3d`](https://github.com/dotansimha/graphql-code-generator/commit/d94ae3dc71f84ab2b1ce8733cf42342bb27fa951) Thanks [@acharkov](https://github.com/acharkov)! - Fix generated imports for graphql-modules-preset: .js extension is used.
+
 ## 4.0.16
 
 ### Patch Changes
