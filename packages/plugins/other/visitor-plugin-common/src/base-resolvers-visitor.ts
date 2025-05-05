@@ -1434,7 +1434,7 @@ export class BaseResolversVisitor<
   protected _getScalar(name: string): string {
     return `${
       this.config.namespacedImportName ? this.config.namespacedImportName + '.' : ''
-    }Scalars['${name}']['output']`;
+    }Scalars['${name}']`;
   }
 
   NamedType(node: NamedTypeNode): string {
