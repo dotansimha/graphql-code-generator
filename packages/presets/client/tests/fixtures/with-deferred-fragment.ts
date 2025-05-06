@@ -34,3 +34,11 @@ const NestedFragment = gql(/* GraphQL */ `
     }
   }
 `);
+
+//@ts-ignore
+const NestedFragmentWithFragment = gql(/* GraphQL */ `
+  fragment fooNested on Foo {
+    id
+    ...foo @defer
+  }
+`);
