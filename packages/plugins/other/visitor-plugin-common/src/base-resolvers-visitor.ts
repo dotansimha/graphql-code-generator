@@ -1533,7 +1533,7 @@ export class BaseResolversVisitor<
         const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
         const typeName = node.name as unknown as string;
 
-        const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type: parentType });
+        const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type: parentType }); // FIXME: for every field in a object, we are looping through every field of said object. This could be a bottleneck
         const shouldGenerateField =
           fieldsToGenerate.some(field => field.name.value === typeName) ||
           this._federation.isResolveReferenceField(node);

@@ -306,7 +306,7 @@ export class ApolloFederation {
         return acc;
       }
 
-      if (this.isExternal(fieldNode) && this.hasProvides(type, fieldNode.name as unknown as string)) {
+      if (this.isExternal(fieldNode) && this.hasProvides(type, fieldNode.name.value)) {
         acc.push(fieldNode);
         return acc;
       }
