@@ -83,10 +83,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
 }
 
 type FieldDefinitionPrintFn = (
-  parent: {
-    node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
-    typeName: string;
-  },
+  parentName: string,
   avoidResolverOptionals: boolean
 ) => { value: string | null; meta: { federation?: { isResolveReference: boolean } } };
 export type FieldDefinitionResult = [{ node: FieldDefinitionNode }, FieldDefinitionPrintFn];
@@ -1530,15 +1527,17 @@ export class BaseResolversVisitor<
 
     return [
       { node },
-      (parentNode, avoidResolverOptionals) => {
-        const parentName = parentNode.typeName;
-
+      (parentName, avoidResolverOptionals) => {
         const original: FieldDefinitionNode = parent[key];
         const parentType = this.schema.getType(parentName);
         const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
+        const typeName = node.name as unknown as string;
 
-        const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ node: parentNode.node });
-        const shouldGenerateField = fieldsToGenerate.some(field => field.name === node.name);
+        const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type: parentType });
+        const shouldGenerateField =
+          fieldsToGenerate.some(field => field.name.value === typeName) ||
+          this._federation.isResolveReferenceField(node);
+
         if (!shouldGenerateField) {
           return { value: null, meta };
         }
@@ -1549,7 +1548,7 @@ export class BaseResolversVisitor<
           ? this.convertName(
               parentName +
                 (this.config.addUnderscoreToArgsType ? '_' : '') +
-                this.convertName(node.name, {
+                this.convertName(typeName, {
                   useTypesPrefix: false,
                   useTypesSuffix: false,
                 }) +
@@ -1600,7 +1599,7 @@ export class BaseResolversVisitor<
 
           if (isSubscriptionType) {
             return {
-              mappedTypeKey: `${mappedType}, "${node.name}"`,
+              mappedTypeKey: `${mappedType}, "${typeName}"`,
               resolverType: 'SubscriptionResolver',
             };
           }
@@ -1623,7 +1622,7 @@ export class BaseResolversVisitor<
           type: string;
           genericTypes: string[];
         } = {
-          name: node.name as any,
+          name: typeName,
           modifier: avoidResolverOptionals ? '' : '?',
           type: resolverType,
           genericTypes: [mappedTypeKey, parentTypeSignature, contextType, argsType].filter(f => f),
@@ -1720,7 +1719,10 @@ export class BaseResolversVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string | null {
-    const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ node });
+    const typeName = node.name as unknown as string;
+    const type = this.schema.getType(typeName);
+
+    const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type });
     if (fieldsToGenerate.length === 0) {
       return null;
     }
@@ -1729,7 +1731,6 @@ export class BaseResolversVisitor<
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });
-    const typeName = node.name as any as string;
     const parentType = this.getParentTypeToUse(typeName);
 
     const rootType = ((): false | 'query' | 'mutation' | 'subscription' => {
@@ -1748,7 +1749,7 @@ export class BaseResolversVisitor<
     const fieldsContent = (node.fields as unknown as FieldDefinitionResult[])
       .map(([_, f]) => {
         return f(
-          { node, typeName },
+          typeName,
           (rootType === 'query' && this.config.avoidOptionals.query) ||
             (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
             (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
@@ -1982,7 +1983,7 @@ export class BaseResolversVisitor<
     // An Interface in Federation may have the additional __resolveReference resolver, if resolvable.
     // So, we filter out the normal fields declared on the Interface and add the __resolveReference resolver.
     const fields = (node.fields as unknown as FieldDefinitionResult[]).map(([_, f]) =>
-      f({ node, typeName }, this.config.avoidOptionals.resolvers)
+      f(typeName, this.config.avoidOptionals.resolvers)
     );
     for (const field of fields) {
       if (field.meta.federation?.isResolveReference) {

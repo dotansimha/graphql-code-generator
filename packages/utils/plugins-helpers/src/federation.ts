@@ -1,5 +1,4 @@
 import { astFromInterfaceType, astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
-import type { FieldDefinitionResult } from '@graphql-codegen/visitor-plugin-common';
 import {
   DefinitionNode,
   DirectiveNode,
@@ -275,27 +274,23 @@ export class ApolloFederation {
    * - The field is marked as `@external` and there is no `@provides` path to the field
    * - The parent object is marked as `@external` and there is no `@provides` path to the field
    */
-  findFieldNodesToGenerate({
-    node,
-  }: {
-    node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
-  }): readonly FieldDefinitionNode[] {
-    if (!this.enabled) {
-      return node.fields || [];
-    }
-
-    const parentType = this.schema.getType(node.name as any as string);
-    if (!(isObjectType(parentType) && !isInterfaceType(parentType))) {
+  findFieldNodesToGenerate({ type }: { type: GraphQLNamedType }): readonly FieldDefinitionNode[] {
+    if (!(isObjectType(type) && !isInterfaceType(type))) {
       return [];
     }
 
-    const fieldNodes = node.fields as unknown as FieldDefinitionResult[];
+    const node = type.astNode;
+    const fieldNodes = node.fields || [];
+
+    if (!this.enabled) {
+      return fieldNodes;
+    }
 
     // If the object is marked with @external, fields to generate are those with `@provides`
     if (this.isExternal(node)) {
-      const fieldNodesWithProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, [fieldDef]) => {
-        if (this.hasProvides(parentType, fieldDef.node.name as any as string)) {
-          acc.push(fieldDef.node);
+      const fieldNodesWithProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
+        if (this.hasProvides(type, fieldNode.name as unknown as string)) {
+          acc.push(fieldNode);
         }
         return acc;
       }, []);
@@ -305,14 +300,14 @@ export class ApolloFederation {
     // If the object is not marked with @external, fields to generate are:
     // - the fields without `@external`
     // - the `@external` fields with `@provides`
-    const fieldNodesWithoutExternalOrHasProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, [fieldDef]) => {
-      if (!this.isExternal(fieldDef.node)) {
-        acc.push(fieldDef.node);
+    const fieldNodesWithoutExternalOrHasProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
+      if (!this.isExternal(fieldNode)) {
+        acc.push(fieldNode);
         return acc;
       }
 
-      if (this.isExternal(fieldDef.node) && this.hasProvides(parentType, fieldDef.node.name as any as string)) {
-        acc.push(fieldDef.node);
+      if (this.isExternal(fieldNode) && this.hasProvides(type, fieldNode.name as unknown as string)) {
+        acc.push(fieldNode);
         return acc;
       }
 
