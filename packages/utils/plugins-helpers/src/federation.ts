@@ -291,6 +291,7 @@ export class ApolloFederation {
       const fieldNodesWithProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
         if (this.hasProvides(type, fieldNode.name as unknown as string)) {
           acc.push(fieldNode);
+          return acc;
         }
         return acc;
       }, []);

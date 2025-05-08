@@ -86,8 +86,6 @@ type FieldDefinitionPrintFn = (
   parentName: string,
   avoidResolverOptionals: boolean
 ) => { value: string | null; meta: { federation?: { isResolveReference: boolean } } };
-export type FieldDefinitionResult = [{ node: FieldDefinitionNode }, FieldDefinitionPrintFn];
-
 export interface RootResolver {
   content: string;
   generatedResolverTypes: {
@@ -1521,132 +1519,128 @@ export class BaseResolversVisitor<
     return `ParentType extends ${parentType} = ${parentType}`;
   }
 
-  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): FieldDefinitionResult {
+  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any): FieldDefinitionPrintFn {
     const hasArguments = node.arguments && node.arguments.length > 0;
     const declarationKind = 'type';
 
-    return [
-      { node },
-      (parentName, avoidResolverOptionals) => {
-        const original: FieldDefinitionNode = parent[key];
-        const parentType = this.schema.getType(parentName);
-        const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
-        const typeName = node.name as unknown as string;
+    return (parentName, avoidResolverOptionals) => {
+      const original: FieldDefinitionNode = parent[key];
+      const parentType = this.schema.getType(parentName);
+      const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
+      const typeName = node.name as unknown as string;
 
-        const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type: parentType }); // FIXME: for every field in a object, we are looping through every field of said object. This could be a bottleneck
-        const shouldGenerateField =
-          fieldsToGenerate.some(field => field.name.value === typeName) ||
-          this._federation.isResolveReferenceField(node);
+      const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type: parentType }); // FIXME: for every field in a object, we are looping through every field of said object. This could be a bottleneck
+      const shouldGenerateField =
+        fieldsToGenerate.some(field => field.name.value === typeName) || this._federation.isResolveReferenceField(node);
 
-        if (!shouldGenerateField) {
-          return { value: null, meta };
+      if (!shouldGenerateField) {
+        return { value: null, meta };
+      }
+
+      const contextType = this.getContextType(parentName, node);
+
+      let argsType = hasArguments
+        ? this.convertName(
+            parentName +
+              (this.config.addUnderscoreToArgsType ? '_' : '') +
+              this.convertName(typeName, {
+                useTypesPrefix: false,
+                useTypesSuffix: false,
+              }) +
+              'Args',
+            {
+              useTypesPrefix: true,
+            },
+            true
+          )
+        : null;
+
+      const avoidInputsOptionals = this.config.avoidOptionals.inputValue;
+
+      if (argsType !== null) {
+        const argsToForceRequire = original.arguments.filter(
+          arg => !!arg.defaultValue || arg.type.kind === 'NonNullType'
+        );
+
+        if (argsToForceRequire.length > 0) {
+          argsType = this.applyRequireFields(argsType, argsToForceRequire);
+        } else if (original.arguments.length > 0 && avoidInputsOptionals !== true) {
+          argsType = this.applyOptionalFields(argsType, original.arguments);
         }
+      }
 
-        const contextType = this.getContextType(parentName, node);
+      const parentTypeSignature = this._federation.transformFieldParentType({
+        fieldNode: original,
+        parentType,
+        parentTypeSignature: this.getParentTypeForSignature(node),
+        federationTypeSignature: 'FederationType',
+      });
 
-        let argsType = hasArguments
-          ? this.convertName(
-              parentName +
-                (this.config.addUnderscoreToArgsType ? '_' : '') +
-                this.convertName(typeName, {
-                  useTypesPrefix: false,
-                  useTypesSuffix: false,
-                }) +
-                'Args',
-              {
-                useTypesPrefix: true,
-              },
-              true
-            )
-          : null;
+      const { mappedTypeKey, resolverType } = ((): { mappedTypeKey: string; resolverType: string } => {
+        const baseType = getBaseTypeNode(original.type);
+        const realType = baseType.name.value;
+        const typeToUse = this.getTypeToUse(realType);
+        /**
+         * Turns GraphQL type to TypeScript types (`mappedType`) e.g.
+         * - String!  -> ResolversTypes['String']>
+         * - String   -> Maybe<ResolversTypes['String']>
+         * - [String] -> Maybe<Array<Maybe<ResolversTypes['String']>>>
+         * - [String!]! -> Array<ResolversTypes['String']>
+         */
+        const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
 
-        const avoidInputsOptionals = this.config.avoidOptionals.inputValue;
+        const subscriptionType = this._schema.getSubscriptionType();
+        const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
-        if (argsType !== null) {
-          const argsToForceRequire = original.arguments.filter(
-            arg => !!arg.defaultValue || arg.type.kind === 'NonNullType'
-          );
-
-          if (argsToForceRequire.length > 0) {
-            argsType = this.applyRequireFields(argsType, argsToForceRequire);
-          } else if (original.arguments.length > 0 && avoidInputsOptionals !== true) {
-            argsType = this.applyOptionalFields(argsType, original.arguments);
-          }
-        }
-
-        const parentTypeSignature = this._federation.transformFieldParentType({
-          fieldNode: original,
-          parentType,
-          parentTypeSignature: this.getParentTypeForSignature(node),
-          federationTypeSignature: 'FederationType',
-        });
-
-        const { mappedTypeKey, resolverType } = ((): { mappedTypeKey: string; resolverType: string } => {
-          const baseType = getBaseTypeNode(original.type);
-          const realType = baseType.name.value;
-          const typeToUse = this.getTypeToUse(realType);
-          /**
-           * Turns GraphQL type to TypeScript types (`mappedType`) e.g.
-           * - String!  -> ResolversTypes['String']>
-           * - String   -> Maybe<ResolversTypes['String']>
-           * - [String] -> Maybe<Array<Maybe<ResolversTypes['String']>>>
-           * - [String!]! -> Array<ResolversTypes['String']>
-           */
-          const mappedType = this._variablesTransformer.wrapAstTypeWithModifiers(typeToUse, original.type);
-
-          const subscriptionType = this._schema.getSubscriptionType();
-          const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
-
-          if (isSubscriptionType) {
-            return {
-              mappedTypeKey: `${mappedType}, "${typeName}"`,
-              resolverType: 'SubscriptionResolver',
-            };
-          }
-
-          const directiveMappings =
-            node.directives
-              ?.map(directive => this._directiveResolverMappings[directive.name as any])
-              .filter(Boolean)
-              .reverse() ?? [];
-
+        if (isSubscriptionType) {
           return {
-            mappedTypeKey: mappedType,
-            resolverType: directiveMappings[0] ?? 'Resolver',
+            mappedTypeKey: `${mappedType}, "${typeName}"`,
+            resolverType: 'SubscriptionResolver',
           };
-        })();
-
-        const signature: {
-          name: string;
-          modifier: string;
-          type: string;
-          genericTypes: string[];
-        } = {
-          name: typeName,
-          modifier: avoidResolverOptionals ? '' : '?',
-          type: resolverType,
-          genericTypes: [mappedTypeKey, parentTypeSignature, contextType, argsType].filter(f => f),
-        };
-
-        if (this._federation.isResolveReferenceField(node)) {
-          if (!this._federation.getMeta()[parentType.name].hasResolveReference) {
-            return { value: '', meta };
-          }
-          signature.type = 'ReferenceResolver';
-          signature.genericTypes = [mappedTypeKey, parentTypeSignature, contextType];
-          meta.federation = { isResolveReference: true };
         }
+
+        const directiveMappings =
+          node.directives
+            ?.map(directive => this._directiveResolverMappings[directive.name as any])
+            .filter(Boolean)
+            .reverse() ?? [];
 
         return {
-          value: indent(
-            `${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(
-              ', '
-            )}>${this.getPunctuation(declarationKind)}`
-          ),
-          meta,
+          mappedTypeKey: mappedType,
+          resolverType: directiveMappings[0] ?? 'Resolver',
         };
-      },
-    ];
+      })();
+
+      const signature: {
+        name: string;
+        modifier: string;
+        type: string;
+        genericTypes: string[];
+      } = {
+        name: typeName,
+        modifier: avoidResolverOptionals ? '' : '?',
+        type: resolverType,
+        genericTypes: [mappedTypeKey, parentTypeSignature, contextType, argsType].filter(f => f),
+      };
+
+      if (this._federation.isResolveReferenceField(node)) {
+        if (!this._federation.getMeta()[parentType.name].hasResolveReference) {
+          return { value: '', meta };
+        }
+        signature.type = 'ReferenceResolver';
+        signature.genericTypes = [mappedTypeKey, parentTypeSignature, contextType];
+        meta.federation = { isResolveReference: true };
+      }
+
+      return {
+        value: indent(
+          `${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(
+            ', '
+          )}>${this.getPunctuation(declarationKind)}`
+        ),
+        meta,
+      };
+    };
   }
 
   private getFieldContextType(parentName: string, node: FieldDefinitionNode): string {
@@ -1746,8 +1740,8 @@ export class BaseResolversVisitor<
       return false;
     })();
 
-    const fieldsContent = (node.fields as unknown as FieldDefinitionResult[])
-      .map(([_, f]) => {
+    const fieldsContent = (node.fields as unknown as FieldDefinitionPrintFn[])
+      .map(f => {
         return f(
           typeName,
           (rootType === 'query' && this.config.avoidOptionals.query) ||
@@ -1982,7 +1976,7 @@ export class BaseResolversVisitor<
 
     // An Interface in Federation may have the additional __resolveReference resolver, if resolvable.
     // So, we filter out the normal fields declared on the Interface and add the __resolveReference resolver.
-    const fields = (node.fields as unknown as FieldDefinitionResult[]).map(([_, f]) =>
+    const fields = (node.fields as unknown as FieldDefinitionPrintFn[]).map(f =>
       f(typeName, this.config.avoidOptionals.resolvers)
     );
     for (const field of fields) {
