@@ -546,8 +546,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
-    // UserResolvers should not have `username` resolver because it is marked with `@external`
-    // UserResolvers should have `name` resolver because whilst it is marked with `@external`, it is provided by `Book.author`
+    // `UserResolvers` should not have `username` resolver because it is marked with `@external`
+    // `UserResolvers` should have `name` resolver because whilst it is marked with `@external`, it is provided by `Book.author`
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
@@ -562,25 +562,25 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       };
     `);
 
-    // AddressResolvers should only have fields not marked with @external
+    // `AddressResolvers` should only have fields not marked with @external
     expect(content).toBeSimilarStringTo(`
       export type AddressResolvers<ContextType = any, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = {
         zip?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
       };
     `);
 
-    // FIXME: CompanyResolvers should only have taxCode resolver because it is part of the `@provides` directive in `Book.editor`
+    // `DateOfBirthResolvers` should not be generated because every field is marked with @external
+    expect(content).not.toBeSimilarStringTo('export type DateOfBirthResolvers');
+
+    // `PlaceOfBirthResolvers` should not be generated because the type is marked with @external, even if `User.placeOfBirth` is not marked with @external
+    expect(content).not.toBeSimilarStringTo('export type PlaceOfBirthResolvers');
+
+    // FIXME: `CompanyResolvers` should only have taxCode resolver because it is part of the `@provides` directive in `Book.editor`, even if the whole `Company` type is marked with @external
     // expect(content).toBeSimilarStringTo(`
     //   export type CompanyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Company'] = ResolversParentTypes['Company']> = {
     //     taxCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     //   };
     // `);
-
-    // DateOfBirthResolvers should not be generated because every field is marked with @external
-    expect(content).not.toBeSimilarStringTo('export type DateOfBirthResolvers');
-
-    // PlaceOfBirthResolvers should not be generated because the type is marked with @external
-    expect(content).not.toBeSimilarStringTo('export type PlaceOfBirthResolvers');
   });
 
   it('should not include _FieldSet scalar', async () => {
