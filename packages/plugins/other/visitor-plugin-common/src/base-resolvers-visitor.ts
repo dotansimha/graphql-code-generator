@@ -1527,8 +1527,13 @@ export class BaseResolversVisitor<
       const original: FieldDefinitionNode = parent[key];
       const parentType = this.schema.getType(parentName);
       const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
+      const typeName = node.name as unknown as string;
 
-      if (this._federation.skipField({ fieldNode: original, parentType })) {
+      const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type: parentType }); // FIXME: for every field in a object, we are looping through every field of said object. This could be a bottleneck
+      const shouldGenerateField =
+        fieldsToGenerate.some(field => field.name.value === typeName) || this._federation.isResolveReferenceField(node);
+
+      if (!shouldGenerateField) {
         return { value: null, meta };
       }
 
@@ -1538,7 +1543,7 @@ export class BaseResolversVisitor<
         ? this.convertName(
             parentName +
               (this.config.addUnderscoreToArgsType ? '_' : '') +
-              this.convertName(node.name, {
+              this.convertName(typeName, {
                 useTypesPrefix: false,
                 useTypesSuffix: false,
               }) +
@@ -1589,7 +1594,7 @@ export class BaseResolversVisitor<
 
         if (isSubscriptionType) {
           return {
-            mappedTypeKey: `${mappedType}, "${node.name}"`,
+            mappedTypeKey: `${mappedType}, "${typeName}"`,
             resolverType: 'SubscriptionResolver',
           };
         }
@@ -1612,7 +1617,7 @@ export class BaseResolversVisitor<
         type: string;
         genericTypes: string[];
       } = {
-        name: node.name as any,
+        name: typeName,
         modifier: avoidResolverOptionals ? '' : '?',
         type: resolverType,
         genericTypes: [mappedTypeKey, parentTypeSignature, contextType, argsType].filter(f => f),
@@ -1707,12 +1712,19 @@ export class BaseResolversVisitor<
     return `Partial<${argsType}>`;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string | null {
+    const typeName = node.name as unknown as string;
+    const type = this.schema.getType(typeName);
+
+    const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ type });
+    if (fieldsToGenerate.length === 0) {
+      return null;
+    }
+
     const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });
-    const typeName = node.name as any as string;
     const parentType = this.getParentTypeToUse(typeName);
 
     const rootType = ((): false | 'query' | 'mutation' | 'subscription' => {
@@ -1728,15 +1740,17 @@ export class BaseResolversVisitor<
       return false;
     })();
 
-    const fieldsContent = (node.fields as unknown as FieldDefinitionPrintFn[]).map(f => {
-      return f(
-        typeName,
-        (rootType === 'query' && this.config.avoidOptionals.query) ||
-          (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
-          (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
-          (rootType === false && this.config.avoidOptionals.resolvers)
-      ).value;
-    });
+    const fieldsContent = (node.fields as unknown as FieldDefinitionPrintFn[])
+      .map(f => {
+        return f(
+          typeName,
+          (rootType === 'query' && this.config.avoidOptionals.query) ||
+            (rootType === 'mutation' && this.config.avoidOptionals.mutation) ||
+            (rootType === 'subscription' && this.config.avoidOptionals.subscription) ||
+            (rootType === false && this.config.avoidOptionals.resolvers)
+        ).value;
+      })
+      .filter(v => v);
 
     if (!rootType && this._parsedSchemaMeta.typesWithIsTypeOf[typeName]) {
       fieldsContent.push(
@@ -1746,6 +1760,10 @@ export class BaseResolversVisitor<
           }isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>${this.getPunctuation(declarationKind)}`
         )
       );
+    }
+
+    if (fieldsContent.length === 0) {
+      return null;
     }
 
     const genericTypes: string[] = [

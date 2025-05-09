@@ -8,6 +8,7 @@ import {
   GraphQLNamedType,
   GraphQLObjectType,
   GraphQLSchema,
+  InterfaceTypeDefinitionNode,
   isInterfaceType,
   isObjectType,
   ObjectTypeDefinitionNode,
@@ -266,19 +267,55 @@ export class ApolloFederation {
   }
 
   /**
-   * Decides if field should not be generated
-   * @param data
+   * findFieldNodesToGenerate
+   * @description Function to find field nodes to generate.
+   * In a normal setup, all fields must be generated.
+   * However, in a Federatin setup, a field should not be generated if:
+   * - The field is marked as `@external` and there is no `@provides` path to the field
+   * - The parent object is marked as `@external` and there is no `@provides` path to the field
    */
-  skipField({ fieldNode, parentType }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType }): boolean {
-    if (
-      !this.enabled ||
-      !(isObjectType(parentType) && !isInterfaceType(parentType)) ||
-      !checkTypeFederationDetails(parentType, this.schema)
-    ) {
-      return false;
+  findFieldNodesToGenerate({ type }: { type: GraphQLNamedType }): readonly FieldDefinitionNode[] {
+    if (!(isObjectType(type) && !isInterfaceType(type))) {
+      return [];
     }
 
-    return this.isExternalAndNotProvided(fieldNode, parentType);
+    const node = type.astNode;
+    const fieldNodes = node.fields || [];
+
+    if (!this.enabled) {
+      return fieldNodes;
+    }
+
+    // If the object is marked with @external, fields to generate are those with `@provides`
+    if (this.isExternal(node)) {
+      const fieldNodesWithProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
+        if (this.hasProvides(type, fieldNode.name as unknown as string)) {
+          acc.push(fieldNode);
+          return acc;
+        }
+        return acc;
+      }, []);
+      return fieldNodesWithProvides;
+    }
+
+    // If the object is not marked with @external, fields to generate are:
+    // - the fields without `@external`
+    // - the `@external` fields with `@provides`
+    const fieldNodesWithoutExternalOrHasProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
+      if (!this.isExternal(fieldNode)) {
+        acc.push(fieldNode);
+        return acc;
+      }
+
+      if (this.isExternal(fieldNode) && this.hasProvides(type, fieldNode.name.value)) {
+        acc.push(fieldNode);
+        return acc;
+      }
+
+      return acc;
+    }, []);
+
+    return fieldNodesWithoutExternalOrHasProvides;
   }
 
   isResolveReferenceField(fieldNode: FieldDefinitionNode): boolean {
@@ -345,19 +382,15 @@ export class ApolloFederation {
     return this.meta;
   }
 
-  private isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType): boolean {
-    return this.isExternal(fieldNode) && !this.hasProvides(objectType, fieldNode);
-  }
-
-  private isExternal(node: FieldDefinitionNode): boolean {
+  private isExternal(node: FieldDefinitionNode | ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode): boolean {
     return getDirectivesByName('external', node).length > 0;
   }
 
-  private hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, node: FieldDefinitionNode): boolean {
+  private hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, fieldName: string): boolean {
     const fields = this.providesMap[isObjectType(objectType) ? objectType.name : objectType.name.value];
 
     if (fields?.length) {
-      return fields.includes(node.name.value);
+      return fields.includes(fieldName);
     }
 
     return false;
@@ -410,7 +443,7 @@ export class ApolloFederation {
         for (const field of Object.values(objectType.getFields())) {
           const provides = getDirectivesByName('provides', field.astNode)
             .map(extractReferenceSelectionSet)
-            .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []);
+            .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []); // FIXME: this is not taking into account nested selection sets e.g. `company { taxCode }`
           const ofType = getBaseType(field.type);
 
           providesMap[ofType.name] ||= [];
@@ -471,17 +504,24 @@ function checkTypeFederationDetails(
  */
 function getDirectivesByName(
   name: string,
-  node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode
+  node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode | InterfaceTypeDefinitionNode
 ): readonly DirectiveNode[] {
-  let astNode: ObjectTypeDefinitionNode | FieldDefinitionNode;
+  let astNode: ObjectTypeDefinitionNode | FieldDefinitionNode | InterfaceTypeDefinitionNode;
 
-  if (isObjectType(node)) {
+  if (isObjectType(node) || isInterfaceType(node)) {
     astNode = node.astNode;
   } else {
     astNode = node;
   }
 
-  return astNode?.directives?.filter(d => d.name.value === name) || [];
+  return (
+    astNode?.directives?.filter(d => {
+      // A ObjectTypeDefinitionNode's directive looks like `{ kind: 'Directive', name: 'external', arguments: [] }`
+      // However, other directives looks like `{ kind: 'Directive', name: { kind: 'Name', value: 'external' }, arguments: [] }`
+      // Therefore, we need to check for both `d.name.value` and d.name
+      return d.name.value === name || (d.name as unknown as string) === name;
+    }) || []
+  );
 }
 
 function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {
