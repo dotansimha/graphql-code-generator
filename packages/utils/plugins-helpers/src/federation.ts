@@ -1,4 +1,5 @@
 import { astFromInterfaceType, astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
+import type { FieldDefinitionResult } from '@graphql-codegen/visitor-plugin-common';
 import {
   DefinitionNode,
   DirectiveNode,
@@ -274,22 +275,21 @@ export class ApolloFederation {
    * - The field is marked as `@external` and there is no `@provides` path to the field
    * - The parent object is marked as `@external` and there is no `@provides` path to the field
    */
-  findFieldNodesToGenerate({ type }: { type: GraphQLNamedType }): readonly FieldDefinitionNode[] {
-    if (!(isObjectType(type) && !isInterfaceType(type))) {
-      return [];
-    }
-
-    const node = type.astNode;
-    const fieldNodes = node.fields || [];
+  findFieldNodesToGenerate({
+    node,
+  }: {
+    node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
+  }): readonly FieldDefinitionNode[] {
+    const fieldNodes = ((node.fields || []) as unknown as FieldDefinitionResult[]).map(field => field.node);
 
     if (!this.enabled) {
       return fieldNodes;
     }
 
-    // If the object is marked with @external, fields to generate are those with `@provides`
+    // If the object is marked with `@external`, fields to generate are those with `@provides`
     if (this.isExternal(node)) {
       const fieldNodesWithProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
-        if (this.hasProvides(type, fieldNode.name as unknown as string)) {
+        if (this.hasProvides(node, fieldNode.name.value)) {
           acc.push(fieldNode);
           return acc;
         }
@@ -298,7 +298,7 @@ export class ApolloFederation {
       return fieldNodesWithProvides;
     }
 
-    // If the object is not marked with @external, fields to generate are:
+    // If the object is not marked with `@external`, fields to generate are:
     // - the fields without `@external`
     // - the `@external` fields with `@provides`
     const fieldNodesWithoutExternalOrHasProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
@@ -307,7 +307,7 @@ export class ApolloFederation {
         return acc;
       }
 
-      if (this.isExternal(fieldNode) && this.hasProvides(type, fieldNode.name.value)) {
+      if (this.isExternal(fieldNode) && this.hasProvides(node, fieldNode.name.value)) {
         acc.push(fieldNode);
         return acc;
       }
@@ -386,8 +386,8 @@ export class ApolloFederation {
     return getDirectivesByName('external', node).length > 0;
   }
 
-  private hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, fieldName: string): boolean {
-    const fields = this.providesMap[isObjectType(objectType) ? objectType.name : objectType.name.value];
+  private hasProvides(node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode, fieldName: string): boolean {
+    const fields = this.providesMap[node.name as unknown as string];
 
     if (fields?.length) {
       return fields.includes(fieldName);
@@ -462,22 +462,22 @@ export class ApolloFederation {
  * @param node Type
  */
 function checkTypeFederationDetails(
-  node: ObjectTypeDefinitionNode | GraphQLObjectType | GraphQLInterfaceType,
+  typeOrNode: ObjectTypeDefinitionNode | GraphQLObjectType | InterfaceTypeDefinitionNode | GraphQLInterfaceType,
   schema: GraphQLSchema
 ): { resolvableKeyDirectives: readonly DirectiveNode[] } | false {
-  const {
-    name: { value: name },
-    directives,
-  } = isObjectType(node)
-    ? astFromObjectType(node, schema)
-    : isInterfaceType(node)
-    ? astFromInterfaceType(node, schema)
-    : node;
+  const node = isObjectType(typeOrNode)
+    ? astFromObjectType(typeOrNode, schema)
+    : isInterfaceType(typeOrNode)
+    ? astFromInterfaceType(typeOrNode, schema)
+    : typeOrNode;
+
+  const name = node.name.value || (typeOrNode.name as unknown as string);
+  const directives = node.directives;
 
   const rootTypeNames = getRootTypeNames(schema);
   const isNotRoot = !rootTypeNames.has(name);
   const isNotIntrospection = !name.startsWith('__');
-  const keyDirectives = directives.filter(d => d.name.value === 'key');
+  const keyDirectives = directives.filter(d => d.name.value === 'key' || (d.name as unknown as string) === 'key');
 
   const check = isNotRoot && isNotIntrospection && keyDirectives.length > 0;
 
