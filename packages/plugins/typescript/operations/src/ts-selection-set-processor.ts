@@ -26,7 +26,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 
     if (unsetTypes) {
       const escapedFieldNames = fields.map(field => `'${field.fieldName}'`);
-      return [formattedUnionTransform(this.config, 'MakeEmpty', parentName, escapedFieldNames)];
+      return [formattedUnionTransform('MakeEmpty', parentName, escapedFieldNames)];
     }
 
     let hasConditionals = false;
@@ -38,7 +38,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       }
       return `'${field.fieldName}'`;
     });
-    let resString = formattedUnionTransform(this.config, 'Pick', parentName, escapedFieldNames);
+    let resString = formattedUnionTransform('Pick', parentName, escapedFieldNames);
 
     if (hasConditionals) {
       const avoidOptional =
@@ -52,7 +52,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       const transform = avoidOptional ? 'MakeMaybe' : 'MakeOptional';
       resString = `${
         this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''
-      }${formattedUnionTransform(this.config, transform, resString, escapedConditionalsList)}`;
+      }${formattedUnionTransform(transform, resString, escapedConditionalsList)}`;
     }
     return [resString];
   }
@@ -81,7 +81,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 
       return `${aliasedField.alias}: ${value}`;
     });
-    return [formatSelections(this.config, selections)];
+    return [formatSelections(selections)];
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {
@@ -91,26 +91,25 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 
     const selections = fields.map(field => `${field.alias || field.name}: ${field.selectionSet}`);
 
-    return [formatSelections(this.config, selections)];
+    return [formatSelections(selections)];
   }
 }
 
 /** Equivalent to `${transformName}<${target}, ${unionElements.join(' | ')}>`, but with line feeds if necessary */
 function formattedUnionTransform(
-  config: SelectionSetProcessorConfig,
   transformName: string,
   target: string,
   unionElements: string[]
 ): string {
-  if (config.printFieldsOnNewLines && unionElements.length > 3) {
+  if (unionElements.length > 3) {
     return `${transformName}<\n    ${target},\n    | ${unionElements.join('\n    | ')}\n  >`;
   }
   return `${transformName}<${target}, ${unionElements.join(' | ')}>`;
 }
 
 /** Equivalent to `{ ${selections.join(', ')} }`, but with line feeds if necessary */
-function formatSelections(config: SelectionSetProcessorConfig, selections: string[]): string {
-  if (config.printFieldsOnNewLines && selections.length > 1) {
+function formatSelections(selections: string[]): string {
+  if (selections.length > 1) {
     return `{\n    ${selections.join(',\n    ')},\n  }`;
   }
   return `{ ${selections.join(', ')} }`;

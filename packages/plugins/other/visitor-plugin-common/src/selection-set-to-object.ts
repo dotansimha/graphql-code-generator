@@ -844,7 +844,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       this.getEmptyObjectTypeString(mustAddEmptyObject),
     ].filter(Boolean);
 
-    const content = formatUnion(this._config, typeParts);
+    const content = formatUnion(typeParts);
 
     if (typeParts.length > 1 && this._config.extractAllFieldsToTypes) {
       return {
@@ -946,7 +946,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         .withName(mergedTypeString)
         .withContent(
           formatUnion(
-            this._config,
             subTypes.map(t => t.name)
           )
         ).string,
@@ -967,8 +966,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 }
 
-function formatUnion(config: ParsedDocumentsConfig, members: string[]): string {
-  if (config.printFieldsOnNewLines && members.length > 1) {
+function formatUnion(members: string[]): string {
+  if (members.length > 1) {
     return `\n  | ${members.join('\n  | ')}`;
   }
   return members.join(' | ');

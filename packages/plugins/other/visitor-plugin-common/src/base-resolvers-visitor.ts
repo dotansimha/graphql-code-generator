@@ -1154,7 +1154,7 @@ export class BaseResolversVisitor<
     const result =
       members.length === 0
         ? 'never'
-        : this.config.printFieldsOnNewLines && members.length > 1
+        : members.length > 1
         ? `\n    | ${members.join('\n    | ')}`
         : members.join(' | ');
     return result;
