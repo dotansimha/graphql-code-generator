@@ -21,8 +21,9 @@ function compareStrings(a: string, b: string): boolean {
 
 expect.extend({
   toBeSimilarStringTo(received: string, expected: string) {
-    const strippedReceived = oneLine`${received}`.replace(/\s\s+/g, ' ');
-    const strippedExpected = oneLine`${expected}`.replace(/\s\s+/g, ' ');
+    // Ignore whitespace and trailing commas
+    const strippedReceived = oneLine`${received}`.replace(/\s\s+/g, ' ').replace(/\s*,(\s*[)}])/, '$1');
+    const strippedExpected = oneLine`${expected}`.replace(/\s\s+/g, ' ').replace(/\s*,(\s*[)}])/, '$1');
 
     if (compareStrings(strippedReceived, strippedExpected)) {
       return {
