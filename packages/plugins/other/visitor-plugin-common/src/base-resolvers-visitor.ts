@@ -1155,7 +1155,7 @@ export class BaseResolversVisitor<
       members.length === 0
         ? 'never'
         : members.length > 1
-        ? `\n    | ${members.join('\n    | ')}`
+        ? `\n    | ${members.map(m => m.replace(/\n/g, '\n  ')).join('\n    | ')}\n  `
         : members.join(' | ');
     return result;
   }

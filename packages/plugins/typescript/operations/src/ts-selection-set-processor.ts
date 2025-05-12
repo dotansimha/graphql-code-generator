@@ -96,11 +96,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 }
 
 /** Equivalent to `${transformName}<${target}, ${unionElements.join(' | ')}>`, but with line feeds if necessary */
-function formattedUnionTransform(
-  transformName: string,
-  target: string,
-  unionElements: string[]
-): string {
+function formattedUnionTransform(transformName: string, target: string, unionElements: string[]): string {
   if (unionElements.length > 3) {
     return `${transformName}<\n    ${target},\n    | ${unionElements.join('\n    | ')}\n  >`;
   }
@@ -110,7 +106,7 @@ function formattedUnionTransform(
 /** Equivalent to `{ ${selections.join(', ')} }`, but with line feeds if necessary */
 function formatSelections(selections: string[]): string {
   if (selections.length > 1) {
-    return `{\n    ${selections.join(',\n    ')},\n  }`;
+    return `{\n    ${selections.map(s => s.replace(/\n/g, '\n  ')).join(',\n    ')},\n  }`;
   }
   return `{ ${selections.join(', ')} }`;
 }

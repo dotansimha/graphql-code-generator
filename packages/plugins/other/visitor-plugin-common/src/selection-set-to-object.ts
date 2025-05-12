@@ -944,11 +944,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         .export()
         .asKind('type')
         .withName(mergedTypeString)
-        .withContent(
-          formatUnion(
-            subTypes.map(t => t.name)
-          )
-        ).string,
+        .withContent(formatUnion(subTypes.map(t => t.name))).string,
     ].join('\n');
   }
 
@@ -968,7 +964,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
 function formatUnion(members: string[]): string {
   if (members.length > 1) {
-    return `\n  | ${members.join('\n  | ')}`;
+    return `\n  | ${members.map(m => m.replace(/\n/g, '\n  ')).join('\n  | ')}\n`;
   }
   return members.join(' | ');
 }
