@@ -7,7 +7,7 @@ use swc_core::{
     ecma::{
         ast::*,
         utils::quote_ident,
-        visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
+        visit::{visit_mut_pass, VisitMut, VisitMutWith},
     },
     plugin::{
         errors::HANDLER, metadata::TransformPluginMetadataContextKind, plugin_transform,
@@ -161,7 +161,7 @@ impl VisitMut for GraphQLVisitor {
                         .push(capetalize(&operation_name));
 
                     // now change the call expression to a Identifier
-                    let new_expr = Expr::Ident(quote_ident!(capetalize(&operation_name)));
+                    let new_expr = Expr::Ident(quote_ident!(capetalize(&operation_name)).into());
 
                     *init = Box::new(new_expr);
                 }
@@ -186,13 +186,14 @@ impl VisitMut for GraphQLVisitor {
                     span: Default::default(),
                     specifiers: vec![ImportSpecifier::Named(ImportNamedSpecifier {
                         span: Default::default(),
-                        local: quote_ident!(operation_or_fragment_name.to_string()),
+                        local: quote_ident!(operation_or_fragment_name.to_string()).into(),
                         imported: None,
                         is_type_only: false,
                     })],
                     src: Box::new(Str::from(platform_specific_path.to_string())),
                     type_only: false,
-                    asserts: None,
+                    with: None,
+                    phase: ImportPhase::Evaluation,
                 })),
             )
         }
@@ -239,5 +240,5 @@ pub fn process_transform(program: Program, metadata: TransformPluginProgramMetad
         gql_tag_name: plugin_config.gqlTagName,
     });
 
-    program.fold_with(&mut as_folder(visitor))
+    program.apply(&mut visit_mut_pass(visitor))
 }

@@ -1,9 +1,9 @@
 use std::path::PathBuf;
 use swc_core::{
     ecma::{
-        parser::{Syntax, TsConfig},
+        parser::{Syntax, TsSyntax},
         transforms::testing::{test, test_fixture},
-        visit::as_folder,
+        visit::visit_mut_pass,
     },
     testing,
 };
@@ -28,12 +28,12 @@ fn import_files_from_same_directory(input_path: PathBuf) {
     let output_path = input_path.with_extension("js");
 
     test_fixture(
-        Syntax::Typescript(TsConfig {
+        Syntax::Typescript(TsSyntax {
             tsx: input_path.to_string_lossy().ends_with(".tsx"),
             ..Default::default()
         }),
         &|_metadata| {
-            as_folder(GraphQLVisitor::new(GraphQLCodegenOptions {
+            visit_mut_pass(GraphQLVisitor::new(GraphQLCodegenOptions {
                 filename: relative_file_path.to_string_lossy().to_string(),
                 cwd: cwd.to_string_lossy().to_string(),
                 artifact_directory: "./tests/fixtures".to_string(),
@@ -57,12 +57,12 @@ fn import_files_from_other_directory(input_path: PathBuf) {
     let output_path = input_path.with_extension("other-dir.js");
 
     test_fixture(
-        Syntax::Typescript(TsConfig {
+        Syntax::Typescript(TsSyntax {
             tsx: input_path.to_string_lossy().ends_with(".tsx"),
             ..Default::default()
         }),
         &|_metadata| {
-            as_folder(GraphQLVisitor::new(GraphQLCodegenOptions {
+            visit_mut_pass(GraphQLVisitor::new(GraphQLCodegenOptions {
                 filename: relative_file_path.to_string_lossy().to_string(),
                 cwd: cwd.to_string_lossy().to_string(),
                 artifact_directory: cwd.to_string_lossy().to_string(),
@@ -77,13 +77,37 @@ fn import_files_from_other_directory(input_path: PathBuf) {
 
 test!(
     Default::default(),
-    |_| as_folder(get_test_code_visitor()),
+    |_| visit_mut_pass(get_test_code_visitor()),
     expect_normal_declarations_to_not_panic_and_to_be_ignored,
     // Example from Next.js' server.js
     r#"const emitter = (0, _mitt).default();
     const looseToArray = (input)=>[].slice.call(input);
-    const targetTag = document.querySelector(`style[data-n-href="${href}"]`);"#,
-    r#"const emitter = (0, _mitt).default();
-    const looseToArray = (input)=>[].slice.call(input);
     const targetTag = document.querySelector(`style[data-n-href="${href}"]`);"#
 );
+
+#[testing::fixture("tests/fixtures/use-client.ts")]
+fn use_client(input_path: PathBuf) {
+    let cwd = std::env::current_dir().unwrap();
+
+    let relative_file_path = diff_paths(&input_path, &cwd).unwrap();
+
+    let output_path = input_path.with_extension("js");
+
+    test_fixture(
+        Syntax::Typescript(TsSyntax {
+            tsx: input_path.to_string_lossy().ends_with(".tsx"),
+            ..Default::default()
+        }),
+        &|_metadata| {
+            visit_mut_pass(GraphQLVisitor::new(GraphQLCodegenOptions {
+                filename: relative_file_path.to_string_lossy().to_string(),
+                cwd: cwd.to_string_lossy().to_string(),
+                artifact_directory: "./tests/fixtures".to_string(),
+                gql_tag_name: "gql".to_string(),
+            }))
+        },
+        &input_path,
+        &output_path,
+        Default::default(),
+    );
+}
