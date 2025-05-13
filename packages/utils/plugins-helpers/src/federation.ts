@@ -226,12 +226,18 @@ export class ApolloFederation {
   private enabled = false;
   private schema: GraphQLSchema;
   private providesMap: Record<string, string[]>;
+  /**
+   * `fieldsToGenerate` is a meta object where the keys are object type names
+   * and the values are fields that must be generated for that object.
+   */
+  private fieldsToGenerate: Record<string, FieldDefinitionNode[]>;
   protected meta: FederationMeta = {};
 
   constructor({ enabled, schema, meta }: { enabled: boolean; schema: GraphQLSchema; meta: FederationMeta }) {
     this.enabled = enabled;
     this.schema = schema;
     this.providesMap = this.createMapOfProvides();
+    this.fieldsToGenerate = {};
     this.meta = meta;
   }
 
@@ -280,6 +286,11 @@ export class ApolloFederation {
   }: {
     node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
   }): readonly FieldDefinitionNode[] {
+    const nodeName = node.name as unknown as string;
+    if (this.fieldsToGenerate[nodeName]) {
+      return this.fieldsToGenerate[nodeName];
+    }
+
     const fieldNodes = ((node.fields || []) as unknown as FieldDefinitionResult[]).map(field => field.node);
 
     if (!this.enabled) {
@@ -295,6 +306,9 @@ export class ApolloFederation {
         }
         return acc;
       }, []);
+
+      this.fieldsToGenerate[nodeName] = fieldNodesWithProvides;
+
       return fieldNodesWithProvides;
     }
 
@@ -314,6 +328,8 @@ export class ApolloFederation {
 
       return acc;
     }, []);
+
+    this.fieldsToGenerate[nodeName] = fieldNodesWithoutExternalOrHasProvides;
 
     return fieldNodesWithoutExternalOrHasProvides;
   }
