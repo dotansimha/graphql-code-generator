@@ -210,7 +210,6 @@ export type UserResolvers<
       GraphQLRecursivePick<FederationType, { address: { city: true; lines: { line2: true } } }>,
     ContextType
   >;
-
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
