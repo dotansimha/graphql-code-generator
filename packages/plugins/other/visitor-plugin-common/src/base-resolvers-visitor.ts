@@ -1468,6 +1468,9 @@ export class BaseResolversVisitor<
     return '';
   }
 
+  // FIXME: this Name method causes a lot of type inconsistencies
+  // because the type of nodes no longer matches the `graphql-js` types
+  // So, we should update this and remove any relevant `as any as string` or `as unknown as string`
   Name(node: NameNode): string {
     return node.value;
   }
