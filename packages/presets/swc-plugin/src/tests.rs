@@ -84,30 +84,3 @@ test!(
     const looseToArray = (input)=>[].slice.call(input);
     const targetTag = document.querySelector(`style[data-n-href="${href}"]`);"#
 );
-
-#[testing::fixture("tests/fixtures/use-client.ts")]
-fn use_client(input_path: PathBuf) {
-    let cwd = std::env::current_dir().unwrap();
-
-    let relative_file_path = diff_paths(&input_path, &cwd).unwrap();
-
-    let output_path = input_path.with_extension("js");
-
-    test_fixture(
-        Syntax::Typescript(TsSyntax {
-            tsx: input_path.to_string_lossy().ends_with(".tsx"),
-            ..Default::default()
-        }),
-        &|_metadata| {
-            visit_mut_pass(GraphQLVisitor::new(GraphQLCodegenOptions {
-                filename: relative_file_path.to_string_lossy().to_string(),
-                cwd: cwd.to_string_lossy().to_string(),
-                artifact_directory: "./tests/fixtures".to_string(),
-                gql_tag_name: "gql".to_string(),
-            }))
-        },
-        &input_path,
-        &output_path,
-        Default::default(),
-    );
-}

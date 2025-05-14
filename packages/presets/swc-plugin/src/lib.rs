@@ -3,6 +3,7 @@ use pathdiff::diff_paths;
 use serde::Deserialize;
 use std::path::{Path, PathBuf};
 use swc_core::{
+    atoms::Atom,
     common::Span,
     ecma::{
         ast::*,
@@ -15,7 +16,7 @@ use swc_core::{
     },
 };
 
-fn capetalize(s: &str) -> String {
+fn capitalize(s: &str) -> String {
     format!("{}{}", (&s[..1].to_string()).to_uppercase(), &s[1..])
 }
 
@@ -31,7 +32,7 @@ pub struct GraphQLCodegenOptions {
 
 pub struct GraphQLVisitor {
     options: GraphQLCodegenOptions,
-    graphql_operations_or_fragments_to_import: Vec<String>,
+    graphql_operations_or_fragments_to_import: Vec<GraphQLModuleItem>,
 }
 
 impl GraphQLVisitor {
@@ -157,11 +158,14 @@ impl VisitMut for GraphQLVisitor {
                         },
                     };
 
+                    let capitalized_operation_name: Atom = capitalize(&operation_name).into();
                     self.graphql_operations_or_fragments_to_import
-                        .push(capetalize(&operation_name));
+                        .push(GraphQLModuleItem {
+                            operation_or_fragment_name: capitalized_operation_name.clone(),
+                        });
 
                     // now change the call expression to a Identifier
-                    let new_expr = Expr::Ident(quote_ident!(capetalize(&operation_name)).into());
+                    let new_expr = Expr::Ident(quote_ident!(capitalized_operation_name).into());
 
                     *init = Box::new(new_expr);
                 }
@@ -177,26 +181,36 @@ impl VisitMut for GraphQLVisitor {
             return;
         }
 
-        let platform_specific_path = self.get_relative_import_path("graphql");
+        let platform_specific_path: Atom = self.get_relative_import_path("graphql").into();
 
-        for operation_or_fragment_name in &self.graphql_operations_or_fragments_to_import {
+        for module_item in &self.graphql_operations_or_fragments_to_import {
             module.body.insert(
                 0,
-                ModuleItem::ModuleDecl(ModuleDecl::Import(ImportDecl {
-                    span: Default::default(),
-                    specifiers: vec![ImportSpecifier::Named(ImportNamedSpecifier {
-                        span: Default::default(),
-                        local: quote_ident!(operation_or_fragment_name.to_string()).into(),
-                        imported: None,
-                        is_type_only: false,
-                    })],
-                    src: Box::new(Str::from(platform_specific_path.to_string())),
-                    type_only: false,
-                    with: None,
-                    phase: ImportPhase::Evaluation,
-                })),
-            )
+                module_item.as_module_item(platform_specific_path.clone()),
+            );
         }
+    }
+}
+
+struct GraphQLModuleItem {
+    operation_or_fragment_name: Atom,
+}
+
+impl GraphQLModuleItem {
+    fn as_module_item(&self, platform_specific_path: Atom) -> ModuleItem {
+        ModuleItem::ModuleDecl(ModuleDecl::Import(ImportDecl {
+            span: Default::default(),
+            specifiers: vec![ImportSpecifier::Named(ImportNamedSpecifier {
+                span: Default::default(),
+                local: quote_ident!(self.operation_or_fragment_name.clone()).into(),
+                imported: None,
+                is_type_only: false,
+            })],
+            src: Box::new(platform_specific_path.clone().into()),
+            type_only: false,
+            with: None,
+            phase: ImportPhase::default(),
+        }))
     }
 }
 
