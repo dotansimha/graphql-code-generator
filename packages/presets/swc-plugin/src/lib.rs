@@ -4,10 +4,10 @@ use serde::Deserialize;
 use std::path::{Path, PathBuf};
 use swc_core::{
     atoms::Atom,
-    common::Span,
+    common::{util::take::Take, Span},
     ecma::{
         ast::*,
-        utils::quote_ident,
+        utils::{prepend_stmts, quote_ident},
         visit::{visit_mut_pass, VisitMut, VisitMutWith},
     },
     plugin::{
@@ -183,12 +183,14 @@ impl VisitMut for GraphQLVisitor {
 
         let platform_specific_path: Atom = self.get_relative_import_path("graphql").into();
 
-        for module_item in &self.graphql_operations_or_fragments_to_import {
-            module.body.insert(
-                0,
-                module_item.as_module_item(platform_specific_path.clone()),
-            );
-        }
+        let mut items = module.body.take();
+        prepend_stmts(
+            &mut items,
+            self.graphql_operations_or_fragments_to_import
+                .iter()
+                .map(|module_item| module_item.as_module_item(platform_specific_path.clone())),
+        );
+        module.body = items;
     }
 }
 

@@ -84,3 +84,20 @@ test!(
     const looseToArray = (input)=>[].slice.call(input);
     const targetTag = document.querySelector(`style[data-n-href="${href}"]`);"#
 );
+
+test!(
+    Default::default(),
+    |_| visit_mut_pass(get_test_code_visitor()),
+    top_level_directives_are_preserved,
+    r#""use client";
+    //@ts-ignore
+    import gql from "gql-tag";
+
+    //@ts-ignore
+    const A = gql(/* GraphQL */ `
+    query A {
+        a
+    }
+    `);
+"#
+);
