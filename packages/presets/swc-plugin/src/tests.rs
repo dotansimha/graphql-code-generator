@@ -3,15 +3,14 @@ use swc_core::{
     ecma::{
         parser::{Syntax, TsSyntax},
         transforms::testing::{test, test_fixture},
-        visit::visit_mut_pass,
     },
     testing,
 };
 
 use super::*;
 
-fn get_test_code_visitor() -> GraphQLVisitor {
-    GraphQLVisitor::new(GraphQLCodegenOptions {
+fn get_test_code_visitor() -> GraphQLCodegen {
+    GraphQLCodegen::new(GraphQLCodegenOptions {
         filename: "test.ts".to_string(),
         cwd: "/home/faketestproject".to_string(),
         artifact_directory: "./src/gql".to_string(),
@@ -33,7 +32,7 @@ fn import_files_from_same_directory(input_path: PathBuf) {
             ..Default::default()
         }),
         &|_metadata| {
-            visit_mut_pass(GraphQLVisitor::new(GraphQLCodegenOptions {
+            fold_pass(GraphQLCodegen::new(GraphQLCodegenOptions {
                 filename: relative_file_path.to_string_lossy().to_string(),
                 cwd: cwd.to_string_lossy().to_string(),
                 artifact_directory: "./tests/fixtures".to_string(),
@@ -62,7 +61,7 @@ fn import_files_from_other_directory(input_path: PathBuf) {
             ..Default::default()
         }),
         &|_metadata| {
-            visit_mut_pass(GraphQLVisitor::new(GraphQLCodegenOptions {
+            fold_pass(GraphQLCodegen::new(GraphQLCodegenOptions {
                 filename: relative_file_path.to_string_lossy().to_string(),
                 cwd: cwd.to_string_lossy().to_string(),
                 artifact_directory: cwd.to_string_lossy().to_string(),
@@ -77,7 +76,7 @@ fn import_files_from_other_directory(input_path: PathBuf) {
 
 test!(
     Default::default(),
-    |_| visit_mut_pass(get_test_code_visitor()),
+    |_| fold_pass(get_test_code_visitor()),
     expect_normal_declarations_to_not_panic_and_to_be_ignored,
     // Example from Next.js' server.js
     r#"const emitter = (0, _mitt).default();
@@ -87,7 +86,7 @@ test!(
 
 test!(
     Default::default(),
-    |_| visit_mut_pass(get_test_code_visitor()),
+    |_| fold_pass(get_test_code_visitor()),
     top_level_directives_are_preserved,
     r#""use client";
     //@ts-ignore
