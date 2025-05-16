@@ -11,8 +11,8 @@
   ],
   "main": "swc_plugin.wasm",
   "scripts": {
-    "build-wasm": "cargo build --target wasm32-wasi --release && cp target/wasm32-wasi/release/swc_plugin.wasm ./",
-    "debug": "cargo build --target wasm32-wasi && cp target/wasm32-wasi/debug/swc_plugin.wasm ./"
+    "build-wasm": "cargo build --target wasm32-wasip1 --release && cp target/wasm32-wasip1/release/swc_plugin.wasm ./",
+    "debug": "cargo build --target wasm32-wasip1 && cp target/wasm32-wasip1/debug/swc_plugin.wasm ./"
   },
   "homepage": "https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
   "repository": {

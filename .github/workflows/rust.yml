@@ -14,8 +14,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
         with:
-          toolchain: 1.65.0
-          target: wasm32-wasi
+          toolchain: 1.87.0
+          target: wasm32-wasip1
           override: true
       - name: Build SWC plugin
         working-directory: ./packages/presets/swc-plugin

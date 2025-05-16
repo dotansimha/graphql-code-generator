@@ -91,8 +91,8 @@ jobs:
           nodeVersion: 18
       - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
         with:
-          toolchain: 1.65.0
-          target: wasm32-wasi
+          toolchain: 1.87.0
+          target: wasm32-wasip1
           override: true
       - name: Build SWC plugin
         working-directory: ./packages/presets/swc-plugin
@@ -175,8 +175,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
         with:
-          toolchain: 1.65.0
-          target: wasm32-wasi
+          toolchain: 1.87.0
+          target: wasm32-wasip1
           override: true
       - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
         with:
