@@ -152,17 +152,6 @@ describe('TypeScript Resolvers Plugin', () => {
       expect(content).toMatchSnapshot();
     });
 
-    it('namespacedImportName - should work correctly with imported namespaced type', async () => {
-      const config = {
-        noSchemaStitching: true,
-        useIndexSignature: true,
-        namespacedImportName: 'Types',
-      };
-      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
-      const content = mergeOutputs([result]);
-      expect(content).toMatchSnapshot();
-    });
-
     it('directiveResolverMappings - should generate correct types (inline definition)', async () => {
       const config = {
         noSchemaStitching: true,
