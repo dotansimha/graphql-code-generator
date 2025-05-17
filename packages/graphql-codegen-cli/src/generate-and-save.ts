@@ -167,7 +167,9 @@ function isConfiguredOutput(output: any): output is Types.ConfiguredOutput {
 
 async function hashFile(filePath: string): Promise<string | null> {
   try {
-    return hash(await readFile(filePath));
+    const fileContent = await readFile(filePath);
+    fileContent.replace(/\r\n/g, '\n');
+    return hash(fileContent);
   } catch (err) {
     if (err && err.code === 'ENOENT') {
       // return null if file does not exist
