@@ -365,7 +365,7 @@ export type DirectiveResolvers<ContextType = any> = ResolversObject<{
       "
 `;
 
-exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work correctly with imported namespaced type (printFieldsOnNewLines: true) 1`] = `
+exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work correctly with imported namespaced type 1`] = `
 "import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
@@ -628,7 +628,7 @@ export type DirectiveResolvers<ContextType = any> = ResolversObject<{
 "
 `;
 
-exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work correctly with imported namespaced type 1`] = `
+exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work correctly with imported namespaced type 2`] = `
 "import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };

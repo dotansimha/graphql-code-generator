@@ -1463,7 +1463,7 @@ describe('extractAllFieldsToTypes: true', () => {
     await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
   });
 
-  it('should extract types from multiple fragments (preResolveTypes: false, printFieldsOnNewlines: true)', async () => {
+  it('should extract types from multiple fragments (preResolveTypes: false)', async () => {
     const config: TypeScriptDocumentsPluginConfig = {
       preResolveTypes: false,
       extractAllFieldsToTypes: true,

@@ -152,7 +152,7 @@ describe('TypeScript Resolvers Plugin', () => {
       expect(content).toMatchSnapshot();
     });
 
-    it('namespacedImportName - should work correctly with imported namespaced type (printFieldsOnNewLines: true)', async () => {
+    it('namespacedImportName - should work correctly with imported namespaced type', async () => {
       const config = {
         noSchemaStitching: true,
         useIndexSignature: true,
