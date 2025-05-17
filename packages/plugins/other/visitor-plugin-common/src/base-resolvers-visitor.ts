@@ -1105,54 +1105,58 @@ export class BaseResolversVisitor<
     memberTypes: readonly GraphQLObjectType[] | GraphQLObjectType[];
     isTypenameNonOptional: boolean;
   }): string {
+    const members = memberTypes
+      .map(type => {
+        const isTypeMapped = this.config.mappers[type.name];
+        // 1. If mapped without placehoder, just use it without doing extra checks
+        if (isTypeMapped && !hasPlaceholder(isTypeMapped.type)) {
+          return { typename: type.name, typeValue: isTypeMapped.type };
+        }
+
+        // 2. Work out value for type
+        // 2a. By default, use the typescript type
+        let typeValue = this.convertName(type.name, {}, true);
+
+        // 2b. Find fields to Omit if needed.
+        //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
+        //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
+        const fieldsToOmit = this.getRelevantFieldsToOmit({
+          schemaType: type,
+          getTypeToUse: baseType => `_RefType['${baseType}']`,
+        });
+        if (fieldsToOmit.length > 0) {
+          typeValue = this.replaceFieldsInType(typeValue, fieldsToOmit);
+        }
+
+        // 2c. If type is mapped with placeholder, use the "type with maybe Omit" as {T}
+        if (isTypeMapped && hasPlaceholder(isTypeMapped.type)) {
+          return { typename: type.name, typeValue: replacePlaceholder(isTypeMapped.type, typeValue) };
+        }
+
+        // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
+        const hasDefaultMapper = !!this.config.defaultMapper?.type;
+        const isScalar = this.config.scalars[typeName];
+        if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+          const finalTypename = isScalar ? this._getScalar(typeName) : typeValue;
+          return {
+            typename: type.name,
+            typeValue: replacePlaceholder(this.config.defaultMapper.type, finalTypename),
+          };
+        }
+
+        return { typename: type.name, typeValue };
+      })
+      .map(({ typename, typeValue }) => {
+        const nonOptionalTypenameModifier = isTypenameNonOptional ? ` & { __typename: '${typename}' }` : '';
+
+        return `( ${typeValue}${nonOptionalTypenameModifier} )`; // Must wrap every type in explicit "( )" to separate them
+      });
     const result =
-      memberTypes
-        .map(type => {
-          const isTypeMapped = this.config.mappers[type.name];
-          // 1. If mapped without placehoder, just use it without doing extra checks
-          if (isTypeMapped && !hasPlaceholder(isTypeMapped.type)) {
-            return { typename: type.name, typeValue: isTypeMapped.type };
-          }
-
-          // 2. Work out value for type
-          // 2a. By default, use the typescript type
-          let typeValue = this.convertName(type.name, {}, true);
-
-          // 2b. Find fields to Omit if needed.
-          //  - If no field to Omit, "type with maybe Omit" is typescript type i.e. no Omit
-          //  - If there are fields to Omit, keep track of these "type with maybe Omit" to replace in original unionMemberValue
-          const fieldsToOmit = this.getRelevantFieldsToOmit({
-            schemaType: type,
-            getTypeToUse: baseType => `_RefType['${baseType}']`,
-          });
-          if (fieldsToOmit.length > 0) {
-            typeValue = this.replaceFieldsInType(typeValue, fieldsToOmit);
-          }
-
-          // 2c. If type is mapped with placeholder, use the "type with maybe Omit" as {T}
-          if (isTypeMapped && hasPlaceholder(isTypeMapped.type)) {
-            return { typename: type.name, typeValue: replacePlaceholder(isTypeMapped.type, typeValue) };
-          }
-
-          // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
-          const hasDefaultMapper = !!this.config.defaultMapper?.type;
-          const isScalar = this.config.scalars[typeName];
-          if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-            const finalTypename = isScalar ? this._getScalar(typeName) : typeValue;
-            return {
-              typename: type.name,
-              typeValue: replacePlaceholder(this.config.defaultMapper.type, finalTypename),
-            };
-          }
-
-          return { typename: type.name, typeValue };
-        })
-        .map(({ typename, typeValue }) => {
-          const nonOptionalTypenameModifier = isTypenameNonOptional ? ` & { __typename: '${typename}' }` : '';
-
-          return `( ${typeValue}${nonOptionalTypenameModifier} )`; // Must wrap every type in explicit "( )" to separate them
-        })
-        .join(' | ') || 'never';
+      members.length === 0
+        ? 'never'
+        : members.length > 1
+        ? `\n    | ${members.map(m => m.replace(/\n/g, '\n  ')).join('\n    | ')}\n  `
+        : members.join(' | ');
     return result;
   }
 

@@ -19,10 +19,25 @@ function compareStrings(a: string, b: string): boolean {
   return a.includes(b);
 }
 
+/** Ignore whitespace, trailing commas, and leading pipes */
+function similarize(str: string): string {
+  return (
+    oneLine`${str}`
+      // Trim trailing commas
+      .replace(/\s*,(\s*[)}])/g, '$1')
+      // Remove leading pipes
+      .replace(/([<:,=(])\s*(?:\|\s*)?/g, '$1')
+      // Remove spaces around brackets and semicolons
+      .replace(/\s*([[\](){}<>;])\s*/g, '$1')
+      // Replace multiple spaces with a single space
+      .replace(/\s\s+/g, ' ')
+  );
+}
+
 expect.extend({
   toBeSimilarStringTo(received: string, expected: string) {
-    const strippedReceived = oneLine`${received}`.replace(/\s\s+/g, ' ');
-    const strippedExpected = oneLine`${expected}`.replace(/\s\s+/g, ' ');
+    const strippedReceived = similarize(received);
+    const strippedExpected = similarize(expected);
 
     if (compareStrings(strippedReceived, strippedExpected)) {
       return {
