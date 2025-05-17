@@ -1469,7 +1469,6 @@ describe('extractAllFieldsToTypes: true', () => {
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
-      printFieldsOnNewLines: true,
     };
     const { content } = await plugin(
       complexTestSchemaWithUnionsAndInterfaces,

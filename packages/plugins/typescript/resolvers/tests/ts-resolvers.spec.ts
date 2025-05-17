@@ -157,7 +157,6 @@ describe('TypeScript Resolvers Plugin', () => {
         noSchemaStitching: true,
         useIndexSignature: true,
         namespacedImportName: 'Types',
-        printFieldsOnNewLines: true,
       };
       const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
       const content = mergeOutputs([result]);
