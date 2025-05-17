@@ -1,6 +1,7 @@
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
+import { getUsedTypeNames } from '@graphql-codegen/typescript';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema, parse } from 'graphql';
+import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema, parse, validate } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript', () => {
@@ -4022,5 +4023,154 @@ describe('TypeScript', () => {
         nested: NestedType1 | NestedType2;
       };
     `);
+  });
+});
+
+describe('getUsedTypes', () => {
+  const schema = buildSchema(/* GraphQL */ `
+    type Author {
+      id: ID!
+      name: String
+      books(sort: Sort = null): [Book!]!
+    }
+
+    enum Sort {
+      Trending
+      Popular
+      Recent
+    }
+
+    type Book {
+      id: ID!
+      title: String
+      category: Category
+    }
+
+    enum Category {
+      Fiction
+      NonFiction
+    }
+
+    union SearchResult = Author | Book
+
+    type Query {
+      search(text: String): [SearchResult!]!
+      searchBooks(title: String!, category: Category = null, sort: Sort = null): [Book!]!
+      searchAuthors(name: String!): [Author!]!
+    }
+
+    input AuthorInput {
+      name: String
+      books: [BookInput!]
+    }
+
+    input BookInput {
+      title: String
+      category: Category
+    }
+
+    type Mutation {
+      createAuthor(author: AuthorInput!): [Author!]!
+    }
+  `);
+
+  it('Should expand fragment', () => {
+    const document = parse(/* GraphQL */ `
+      fragment SearchResult on SearchResult {
+        ... on Book {
+          title
+          category
+        }
+        ... on Author {
+          name
+        }
+      }
+
+      query Search($text: String!) {
+        search(text: $text) {
+          ...SearchResult
+        }
+      }
+    `);
+
+    const errors = validate(schema, document);
+    if (errors.length) throw errors;
+
+    const result = getUsedTypeNames(schema, [{ location: 'test-file.ts', document }]);
+    expect(result).toEqual(new Set(['Category']));
+  });
+
+  it('Should expand inline selection set', () => {
+    const document = parse(/* GraphQL */ `
+      query Search($text: String!) {
+        search(text: $text) {
+          ... on Book {
+            title
+            category
+          }
+          ... on Author {
+            name
+          }
+        }
+      }
+    `);
+
+    const errors = validate(schema, document);
+    if (errors.length) throw errors;
+
+    const result = getUsedTypeNames(schema, [{ location: 'test-file.ts', document }]);
+    expect(result).toEqual(new Set(['Category']));
+  });
+
+  it('Should expand nested inline selection sets', () => {
+    const document = parse(/* GraphQL */ `
+      query Search($name: String!) {
+        searchAuthors(name: $name) {
+          name
+          books {
+            title
+            category
+          }
+        }
+      }
+    `);
+
+    const errors = validate(schema, document);
+    if (errors.length) throw errors;
+
+    const result = getUsedTypeNames(schema, [{ location: 'test-file.ts', document }]);
+    expect(result).toEqual(new Set(['Category']));
+  });
+
+  it('Should expand nested input types', () => {
+    const document = parse(/* GraphQL */ `
+      mutation CreateAuthor($author: AuthorInput!) {
+        createAuthor(author: $author) {
+          id
+        }
+      }
+    `);
+
+    const errors = validate(schema, document);
+    if (errors.length) throw errors;
+
+    const result = getUsedTypeNames(schema, [{ location: 'test-file.ts', document }]);
+    expect(result).toEqual(new Set(['AuthorInput', 'BookInput', 'Category']));
+  });
+
+  it('Should ignore unused arguments', () => {
+    const document = parse(/* GraphQL */ `
+      query SearchPopularBooks($title: String!) {
+        searchBooks(title: $title, sort: Popular) {
+          id
+        }
+      }
+    `);
+
+    const errors = validate(schema, document);
+    if (errors.length) throw errors;
+
+    const result = getUsedTypeNames(schema, [{ location: 'test-file.ts', document }]);
+    expect(result).toEqual(new Set([]));
   });
 });
