@@ -1,4 +1,5 @@
 import { astFromInterfaceType, astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
+import type { FieldDefinitionResult } from '@graphql-codegen/visitor-plugin-common';
 import {
   DefinitionNode,
   DirectiveNode,
@@ -8,6 +9,7 @@ import {
   GraphQLNamedType,
   GraphQLObjectType,
   GraphQLSchema,
+  InterfaceTypeDefinitionNode,
   isInterfaceType,
   isObjectType,
   ObjectTypeDefinitionNode,
@@ -224,12 +226,18 @@ export class ApolloFederation {
   private enabled = false;
   private schema: GraphQLSchema;
   private providesMap: Record<string, string[]>;
+  /**
+   * `fieldsToGenerate` is a meta object where the keys are object type names
+   * and the values are fields that must be generated for that object.
+   */
+  private fieldsToGenerate: Record<string, FieldDefinitionNode[]>;
   protected meta: FederationMeta = {};
 
   constructor({ enabled, schema, meta }: { enabled: boolean; schema: GraphQLSchema; meta: FederationMeta }) {
     this.enabled = enabled;
     this.schema = schema;
     this.providesMap = this.createMapOfProvides();
+    this.fieldsToGenerate = {};
     this.meta = meta;
   }
 
@@ -266,19 +274,64 @@ export class ApolloFederation {
   }
 
   /**
-   * Decides if field should not be generated
-   * @param data
+   * findFieldNodesToGenerate
+   * @description Function to find field nodes to generate.
+   * In a normal setup, all fields must be generated.
+   * However, in a Federatin setup, a field should not be generated if:
+   * - The field is marked as `@external` and there is no `@provides` path to the field
+   * - The parent object is marked as `@external` and there is no `@provides` path to the field
    */
-  skipField({ fieldNode, parentType }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType }): boolean {
-    if (
-      !this.enabled ||
-      !(isObjectType(parentType) && !isInterfaceType(parentType)) ||
-      !checkTypeFederationDetails(parentType, this.schema)
-    ) {
-      return false;
+  findFieldNodesToGenerate({
+    node,
+  }: {
+    node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
+  }): readonly FieldDefinitionNode[] {
+    const nodeName = node.name as unknown as string;
+    if (this.fieldsToGenerate[nodeName]) {
+      return this.fieldsToGenerate[nodeName];
     }
 
-    return this.isExternalAndNotProvided(fieldNode, parentType);
+    const fieldNodes = ((node.fields || []) as unknown as FieldDefinitionResult[]).map(field => field.node);
+
+    if (!this.enabled) {
+      return fieldNodes;
+    }
+
+    // If the object is marked with `@external`, fields to generate are those with `@provides`
+    if (this.isExternal(node)) {
+      const fieldNodesWithProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
+        if (this.hasProvides(node, fieldNode.name.value)) {
+          acc.push(fieldNode);
+          return acc;
+        }
+        return acc;
+      }, []);
+
+      this.fieldsToGenerate[nodeName] = fieldNodesWithProvides;
+
+      return fieldNodesWithProvides;
+    }
+
+    // If the object is not marked with `@external`, fields to generate are:
+    // - the fields without `@external`
+    // - the `@external` fields with `@provides`
+    const fieldNodesWithoutExternalOrHasProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
+      if (!this.isExternal(fieldNode)) {
+        acc.push(fieldNode);
+        return acc;
+      }
+
+      if (this.isExternal(fieldNode) && this.hasProvides(node, fieldNode.name.value)) {
+        acc.push(fieldNode);
+        return acc;
+      }
+
+      return acc;
+    }, []);
+
+    this.fieldsToGenerate[nodeName] = fieldNodesWithoutExternalOrHasProvides;
+
+    return fieldNodesWithoutExternalOrHasProvides;
   }
 
   isResolveReferenceField(fieldNode: FieldDefinitionNode): boolean {
@@ -345,19 +398,15 @@ export class ApolloFederation {
     return this.meta;
   }
 
-  private isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType): boolean {
-    return this.isExternal(fieldNode) && !this.hasProvides(objectType, fieldNode);
-  }
-
-  private isExternal(node: FieldDefinitionNode): boolean {
+  private isExternal(node: FieldDefinitionNode | ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode): boolean {
     return getDirectivesByName('external', node).length > 0;
   }
 
-  private hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, node: FieldDefinitionNode): boolean {
-    const fields = this.providesMap[isObjectType(objectType) ? objectType.name : objectType.name.value];
+  private hasProvides(node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode, fieldName: string): boolean {
+    const fields = this.providesMap[node.name as unknown as string];
 
     if (fields?.length) {
-      return fields.includes(node.name.value);
+      return fields.includes(fieldName);
     }
 
     return false;
@@ -410,7 +459,7 @@ export class ApolloFederation {
         for (const field of Object.values(objectType.getFields())) {
           const provides = getDirectivesByName('provides', field.astNode)
             .map(extractReferenceSelectionSet)
-            .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []);
+            .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []); // FIXME: this is not taking into account nested selection sets e.g. `company { taxCode }`
           const ofType = getBaseType(field.type);
 
           providesMap[ofType.name] ||= [];
@@ -429,22 +478,22 @@ export class ApolloFederation {
  * @param node Type
  */
 function checkTypeFederationDetails(
-  node: ObjectTypeDefinitionNode | GraphQLObjectType | GraphQLInterfaceType,
+  typeOrNode: ObjectTypeDefinitionNode | GraphQLObjectType | InterfaceTypeDefinitionNode | GraphQLInterfaceType,
   schema: GraphQLSchema
 ): { resolvableKeyDirectives: readonly DirectiveNode[] } | false {
-  const {
-    name: { value: name },
-    directives,
-  } = isObjectType(node)
-    ? astFromObjectType(node, schema)
-    : isInterfaceType(node)
-    ? astFromInterfaceType(node, schema)
-    : node;
+  const node = isObjectType(typeOrNode)
+    ? astFromObjectType(typeOrNode, schema)
+    : isInterfaceType(typeOrNode)
+    ? astFromInterfaceType(typeOrNode, schema)
+    : typeOrNode;
+
+  const name = node.name.value || (typeOrNode.name as unknown as string);
+  const directives = node.directives;
 
   const rootTypeNames = getRootTypeNames(schema);
   const isNotRoot = !rootTypeNames.has(name);
   const isNotIntrospection = !name.startsWith('__');
-  const keyDirectives = directives.filter(d => d.name.value === 'key');
+  const keyDirectives = directives.filter(d => d.name.value === 'key' || (d.name as unknown as string) === 'key');
 
   const check = isNotRoot && isNotIntrospection && keyDirectives.length > 0;
 
@@ -471,17 +520,24 @@ function checkTypeFederationDetails(
  */
 function getDirectivesByName(
   name: string,
-  node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode
+  node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode | InterfaceTypeDefinitionNode
 ): readonly DirectiveNode[] {
-  let astNode: ObjectTypeDefinitionNode | FieldDefinitionNode;
+  let astNode: ObjectTypeDefinitionNode | FieldDefinitionNode | InterfaceTypeDefinitionNode;
 
-  if (isObjectType(node)) {
+  if (isObjectType(node) || isInterfaceType(node)) {
     astNode = node.astNode;
   } else {
     astNode = node;
   }
 
-  return astNode?.directives?.filter(d => d.name.value === name) || [];
+  return (
+    astNode?.directives?.filter(d => {
+      // A ObjectTypeDefinitionNode's directive looks like `{ kind: 'Directive', name: 'external', arguments: [] }`
+      // However, other directives looks like `{ kind: 'Directive', name: { kind: 'Name', value: 'external' }, arguments: [] }`
+      // Therefore, we need to check for both `d.name.value` and d.name
+      return d.name.value === name || (d.name as unknown as string) === name;
+    }) || []
+  );
 }
 
 function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {
