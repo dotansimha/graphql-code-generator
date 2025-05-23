@@ -1,6 +1,7 @@
-import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { getBaseType, oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import {
+  buildASTSchema,
   DocumentNode,
   getNamedType,
   GraphQLNamedType,
@@ -12,10 +13,14 @@ import {
   TypeInfo,
   visit,
   visitWithTypeInfo,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
 } from 'graphql';
 import { TypeScriptPluginConfig } from './config.js';
 import { TsIntrospectionVisitor } from './introspection-visitor.js';
 import { TsVisitor } from './visitor.js';
+import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
+import { getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 
 export * from './config.js';
 export * from './introspection-visitor.js';
@@ -29,7 +34,12 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
 ) => {
   const { schema: _schema, ast } = transformSchemaAST(schema, config);
 
-  const visitor = new TsVisitor(_schema, config);
+  let usedTypes = undefined;
+  if (config.onlyOperationTypes) {
+    usedTypes = getUsedTypeNames(schema, documents);
+  }
+
+  const visitor = new TsVisitor(_schema, config, { usedTypes });
 
   const visitorResult = oldVisit(ast, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
@@ -62,7 +72,7 @@ export function includeIntrospectionTypesDefinitions(
   const typeInfo = new TypeInfo(schema);
   const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {
-    Field() {
+    Field(node) {
       const type = getNamedType(typeInfo.getType());
 
       if (type && isIntrospectionType(type) && !usedTypes.includes(type)) {
@@ -105,4 +115,64 @@ export function includeIntrospectionTypesDefinitions(
   }
 
   return result.definitions as any[];
+}
+
+export function getUsedTypeNames(schema: GraphQLSchema, documents: Types.DocumentFile[]): Set<string> {
+  if (!schema.astNode) {
+    const ast = getCachedDocumentNodeFromSchema(schema);
+    schema = buildASTSchema(ast);
+  }
+
+  const typeInfo = new TypeInfo(schema);
+
+  const visited = new Set<string>();
+  const queue: GraphQLNamedType[] = [];
+
+  function enqueue(type: GraphQLNamedType) {
+    if (
+      type.astNode && // skip scalars
+      !visited.has(type.name)
+    ) {
+      visited.add(type.name);
+      queue.push(type);
+    }
+  }
+
+  const visitor = visitWithTypeInfo(typeInfo, {
+    VariableDefinition() {
+      const field = typeInfo.getInputType();
+      const type = getBaseType(field);
+      enqueue(type);
+    },
+    Field() {
+      const field = typeInfo.getFieldDef();
+      const type = getBaseType(field.type);
+      if (type instanceof GraphQLEnumType || type instanceof GraphQLInputObjectType) {
+        enqueue(type);
+      }
+    },
+    InputObjectTypeDefinition(node) {
+      for (const field of node.fields ?? []) {
+        const baseType = getBaseTypeNode(field.type);
+        const expanded = schema.getType(baseType.name.value);
+        if (expanded.name) {
+          enqueue(expanded);
+        }
+      }
+    },
+  });
+
+  for (const doc of documents) {
+    visit(doc.document, visitor);
+  }
+
+  const typeNames = new Set<string>();
+  while (true) {
+    const type = queue.pop();
+    if (!type) break;
+    typeNames.add(type.name);
+    visit(type.astNode, visitor);
+  }
+
+  return typeNames;
 }
