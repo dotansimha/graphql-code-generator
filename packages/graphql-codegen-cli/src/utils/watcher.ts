@@ -23,11 +23,6 @@ function log(msg: string) {
   getLogger().info(`  ${msg}`);
 }
 
-function warn(msg: string) {
-  // double spaces to inline the message with Listr
-  getLogger().warn(`  ${msg}`);
-}
-
 function emitWatching(watchDir: string) {
   log(`${logSymbols.info} Watching for changes in ${watchDir}...`);
 }
@@ -70,8 +65,8 @@ export const createWatcher = (
     try {
       parcelWatcher = await import('@parcel/watcher');
     } catch {
-      warn(
-        'Failed to import @parcel/watcher due to the following error (to use watch mode, install https://www.npmjs.com/package/@parcel/watcher)'
+      log(
+        'Failed to import @parcel/watcher.\n  To use watch mode, install https://www.npmjs.com/package/@parcel/watcher.'
       );
       return;
     }
