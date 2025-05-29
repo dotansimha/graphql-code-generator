@@ -984,10 +984,18 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toContain(
-        `export type Q1Query = { search: Array<{ __typename: 'Movie', id: string, title: string } | { __typename: 'Person', id: string, name: string }> };`
+        `\
+export type Q1Query = { search: Array<
+    | { __typename: 'Movie', id: string, title: string }
+    | { __typename: 'Person', id: string, name: string }
+  > };`
       );
       expect(content).toContain(
-        `export type Q2Query = { search: Array<{ __typename: 'Movie', id: string, title: string } | { __typename: 'Person', id: string, name: string }> };`
+        `\
+export type Q2Query = { search: Array<
+    | { __typename: 'Movie', id: string, title: string }
+    | { __typename: 'Person', id: string, name: string }
+  > };`
       );
       await validate(content, config, testSchema);
     });
@@ -5332,12 +5340,21 @@ function test(q: GetEntityBrandDataQuery): void {
 
         type CatFragment_Wolf_Fragment = {};
 
-        export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+        export type CatFragmentFragment =
+          | CatFragment_Duck_Fragment
+          | CatFragment_Lion_Fragment
+          | CatFragment_Puma_Fragment
+          | CatFragment_Wolf_Fragment
+        ;
 
         export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type KittyQuery = { animals: Array<{ id: string } | { id: string } | {}> };
+        export type KittyQuery = { animals: Array<
+            | { id: string }
+            | { id: string }
+            | {}
+          > };
         "
       `);
     });
@@ -5402,12 +5419,22 @@ function test(q: GetEntityBrandDataQuery): void {
 
         type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
 
-        export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+        export type CatFragmentFragment =
+          | CatFragment_Duck_Fragment
+          | CatFragment_Lion_Fragment
+          | CatFragment_Puma_Fragment
+          | CatFragment_Wolf_Fragment
+        ;
 
         export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: 'Duck' } | { __typename?: 'Lion', id: string } | { __typename?: 'Puma', id: string } | { __typename?: 'Wolf' }> };
+        export type KittyQuery = { __typename?: 'Query', animals: Array<
+            | { __typename?: 'Duck' }
+            | { __typename?: 'Lion', id: string }
+            | { __typename?: 'Puma', id: string }
+            | { __typename?: 'Wolf' }
+          > };
         "
       `);
     });
@@ -5884,16 +5911,20 @@ function test(q: GetEntityBrandDataQuery): void {
         "export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type GetPeopleQuery = { __typename?: 'Query', people: (
-            { __typename?: 'Character' }
-            & { ' $fragmentRefs'?: { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
-          ) | (
-            { __typename?: 'Jedi' }
-            & { ' $fragmentRefs'?: { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
-          ) | (
-            { __typename?: 'Droid' }
-            & { ' $fragmentRefs'?: { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
-          ) };
+        export type GetPeopleQuery = { __typename?: 'Query', people:
+            | (
+              { __typename?: 'Character' }
+              & { ' $fragmentRefs'?: { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
+            )
+            | (
+              { __typename?: 'Jedi' }
+              & { ' $fragmentRefs'?: { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
+            )
+            | (
+              { __typename?: 'Droid' }
+              & { ' $fragmentRefs'?: { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
+            )
+           };
 
         type PeopleInfo_Character_Fragment = { __typename?: 'Character', name?: string | null } & { ' $fragmentName'?: 'PeopleInfo_Character_Fragment' };
 
@@ -5901,7 +5932,11 @@ function test(q: GetEntityBrandDataQuery): void {
 
         type PeopleInfo_Droid_Fragment = { __typename?: 'Droid', model?: string | null } & { ' $fragmentName'?: 'PeopleInfo_Droid_Fragment' };
 
-        export type PeopleInfoFragment = PeopleInfo_Character_Fragment | PeopleInfo_Jedi_Fragment | PeopleInfo_Droid_Fragment;
+        export type PeopleInfoFragment =
+          | PeopleInfo_Character_Fragment
+          | PeopleInfo_Jedi_Fragment
+          | PeopleInfo_Droid_Fragment
+        ;
         "
       `);
     });
