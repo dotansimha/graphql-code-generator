@@ -127,7 +127,10 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - Interface', () => {
 
       /** Mapping of interface types */
       export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-        Person: ( User ) | ( Admin );
+        Person:
+          | ( User )
+          | ( Admin )
+        ;
       };
 
       /** Mapping between all available schema types and the resolvers types */
