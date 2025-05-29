@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 5.0.7
+
+### Patch Changes
+
+- [#10358](https://github.com/dotansimha/graphql-code-generator/pull/10358) [`157c823`](https://github.com/dotansimha/graphql-code-generator/commit/157c8236320f00b06c470e2289315179119d4504) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove extraneous error stacktrace if fails to load `@parcel/watcher`
+
 ## 5.0.6
 
 ### Patch Changes
