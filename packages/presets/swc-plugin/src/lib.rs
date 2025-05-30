@@ -3,11 +3,12 @@ use pathdiff::diff_paths;
 use serde::Deserialize;
 use std::path::{Path, PathBuf};
 use swc_core::{
+    atoms::Atom,
     common::Span,
     ecma::{
         ast::*,
-        utils::quote_ident,
-        visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
+        utils::{prepend_stmts, quote_ident},
+        visit::{fold_pass, Fold, FoldWith},
     },
     plugin::{
         errors::HANDLER, metadata::TransformPluginMetadataContextKind, plugin_transform,
@@ -15,7 +16,7 @@ use swc_core::{
     },
 };
 
-fn capetalize(s: &str) -> String {
+fn capitalize(s: &str) -> String {
     format!("{}{}", (&s[..1].to_string()).to_uppercase(), &s[1..])
 }
 
@@ -29,16 +30,16 @@ pub struct GraphQLCodegenOptions {
     pub gql_tag_name: String,
 }
 
-pub struct GraphQLVisitor {
+pub struct GraphQLCodegen {
     options: GraphQLCodegenOptions,
-    graphql_operations_or_fragments_to_import: Vec<String>,
+    imports: Vec<GraphQLModuleItem>,
 }
 
-impl GraphQLVisitor {
+impl GraphQLCodegen {
     pub fn new(options: GraphQLCodegenOptions) -> Self {
-        GraphQLVisitor {
+        GraphQLCodegen {
             options,
-            graphql_operations_or_fragments_to_import: Vec::new(),
+            imports: Vec::new(),
         }
     }
 
@@ -76,126 +77,125 @@ impl GraphQLVisitor {
         let platform_specific_path = start_of_path.to_string() + relative.to_str().unwrap();
         platform_specific_path.replace('\\', "/")
     }
-}
 
-pub fn create_graphql_codegen_visitor(options: GraphQLCodegenOptions) -> impl VisitMut {
-    GraphQLVisitor::new(options)
-}
+    fn build_call_expr_from_call(&mut self, call: &CallExpr) -> Option<Expr> {
+        let ident = call.callee.as_expr()?.as_ident()?;
+        if &*ident.sym != self.options.gql_tag_name.as_str() {
+            return None;
+        }
 
-impl VisitMut for GraphQLVisitor {
-    fn visit_mut_var_decl(&mut self, e: &mut VarDecl) {
-        e.visit_mut_children_with(self);
+        if call.args.is_empty() {
+            self.handle_error("missing GraphQL query", call.span);
+            return None;
+        }
 
-        for decl in e.decls.iter_mut() {
-            if let Some(init) = &mut decl.init {
-                if let Expr::Call(CallExpr { callee, args, .. }) = &mut **init {
-                    if args.is_empty() {
-                        return;
-                    }
-
-                    match callee.as_expr() {
-                        Some(expr_box) => match &**expr_box {
-                            Expr::Ident(ident) => {
-                                if &ident.sym != self.options.gql_tag_name.as_str() {
-                                    return;
-                                }
-                            }
-                            _ => return,
-                        },
-                        _ => return,
-                    }
-
-                    let quasis = match &*args[0].expr {
-                        Expr::Tpl(tpl) => &tpl.quasis,
-                        _ => return,
-                    };
-
-                    let raw = match &quasis[0].cooked {
-                        Some(cooked) => cooked,
-                        None => return,
-                    };
-
-                    let graphql_ast = match parse_query::<&str>(raw) {
-                        Ok(ast) => ast,
-                        Err(e) => {
-                            // Currently the parser outputs a string like: "query parse error", so we add "GraphQL" to the beginning
-                            let error = format!("GraphQL {}", e);
-                            self.handle_error(error.as_str(), quasis[0].span);
-                            return;
-                        }
-                    };
-
-                    let first_definition = match graphql_ast.definitions.get(0) {
-                        Some(definition) => definition,
-                        None => return,
-                    };
-
-                    let operation_name = match first_definition {
-                        graphql_parser::query::Definition::Fragment(fragment) => {
-                            fragment.name.to_string() + "FragmentDoc"
-                        }
-                        graphql_parser::query::Definition::Operation(op) => match op {
-                            graphql_parser::query::OperationDefinition::Query(query) => {
-                                match query.name {
-                                    Some(name) => name.to_string() + "Document",
-                                    None => return,
-                                }
-                            }
-                            graphql_parser::query::OperationDefinition::Mutation(mutation) => {
-                                match mutation.name {
-                                    Some(name) => name.to_string() + "Document",
-                                    None => return,
-                                }
-                            }
-                            graphql_parser::query::OperationDefinition::Subscription(
-                                subscription,
-                            ) => match subscription.name {
-                                Some(name) => name.to_string() + "Document",
-                                None => return,
-                            },
-                            _ => return,
-                        },
-                    };
-
-                    self.graphql_operations_or_fragments_to_import
-                        .push(capetalize(&operation_name));
-
-                    // now change the call expression to a Identifier
-                    let new_expr = Expr::Ident(quote_ident!(capetalize(&operation_name)));
-
-                    *init = Box::new(new_expr);
+        let tpl = &dbg!(&call.args[0].expr).as_tpl()?;
+        let graphql_ast = tpl.quasis.iter().find_map(|quasis| {
+            match parse_query::<&str>(dbg!(quasis.cooked.as_ref()?)) {
+                Ok(ast) => Some(ast),
+                Err(e) => {
+                    // Currently the parser outputs a string like: "query parse error", so we add "GraphQL" to the beginning
+                    let error = format!("GraphQL {}", e);
+                    self.handle_error(error.as_str(), quasis.span);
+                    return None;
                 }
             }
+        })?;
+
+        let first_definition = match graphql_ast.definitions.get(0) {
+            Some(definition) => definition,
+            None => return None,
+        };
+
+        let operation_name = match first_definition {
+            graphql_parser::query::Definition::Fragment(fragment) => {
+                fragment.name.to_string() + "FragmentDoc"
+            }
+            graphql_parser::query::Definition::Operation(op) => match op {
+                graphql_parser::query::OperationDefinition::Query(query) => match query.name {
+                    Some(name) => name.to_string() + "Document",
+                    None => return None,
+                },
+                graphql_parser::query::OperationDefinition::Mutation(mutation) => {
+                    match mutation.name {
+                        Some(name) => name.to_string() + "Document",
+                        None => return None,
+                    }
+                }
+                graphql_parser::query::OperationDefinition::Subscription(subscription) => {
+                    match subscription.name {
+                        Some(name) => name.to_string() + "Document",
+                        None => return None,
+                    }
+                }
+                _ => return None,
+            },
+        };
+
+        let capitalized_operation_name: Atom = capitalize(&operation_name).into();
+        self.imports.push(GraphQLModuleItem {
+            operation_or_fragment_name: capitalized_operation_name.clone(),
+        });
+
+        // now change the call expression to a Identifier
+        Some(Expr::Ident(quote_ident!(capitalized_operation_name).into()))
+    }
+}
+
+impl Fold for GraphQLCodegen {
+    fn fold_expr(&mut self, expr: Expr) -> Expr {
+        let expr = expr.fold_children_with(self);
+        match &expr {
+            Expr::Call(call) => {
+                if let Some(built_expr) = dbg!(self.build_call_expr_from_call(call)) {
+                    built_expr
+                } else {
+                    expr
+                }
+            }
+            _ => expr,
         }
     }
 
-    fn visit_mut_module(&mut self, module: &mut Module) {
-        // First visit all its children, collect the GraphQL document names, and then add the necessary imports
-        module.visit_mut_children_with(self);
+    fn fold_module_items(&mut self, items: Vec<ModuleItem>) -> Vec<ModuleItem> {
+        // First fold all its children, collect the GraphQL document names, and then add the necessary imports
+        let mut items = items
+            .into_iter()
+            .map(|item| item.fold_children_with(self))
+            .collect::<Vec<_>>();
 
-        if self.graphql_operations_or_fragments_to_import.is_empty() {
-            return;
-        }
+        let platform_specific_path: Atom = self.get_relative_import_path("graphql").into();
 
-        let platform_specific_path = self.get_relative_import_path("graphql");
+        prepend_stmts(
+            &mut items,
+            self.imports
+                .iter()
+                .map(|module_item| module_item.as_module_item(platform_specific_path.clone())),
+        );
 
-        for operation_or_fragment_name in &self.graphql_operations_or_fragments_to_import {
-            module.body.insert(
-                0,
-                ModuleItem::ModuleDecl(ModuleDecl::Import(ImportDecl {
-                    span: Default::default(),
-                    specifiers: vec![ImportSpecifier::Named(ImportNamedSpecifier {
-                        span: Default::default(),
-                        local: quote_ident!(operation_or_fragment_name.to_string()),
-                        imported: None,
-                        is_type_only: false,
-                    })],
-                    src: Box::new(Str::from(platform_specific_path.to_string())),
-                    type_only: false,
-                    asserts: None,
-                })),
-            )
-        }
+        items
+    }
+}
+
+struct GraphQLModuleItem {
+    operation_or_fragment_name: Atom,
+}
+
+impl GraphQLModuleItem {
+    fn as_module_item(&self, platform_specific_path: Atom) -> ModuleItem {
+        ModuleItem::ModuleDecl(ModuleDecl::Import(ImportDecl {
+            span: Default::default(),
+            specifiers: vec![ImportSpecifier::Named(ImportNamedSpecifier {
+                span: Default::default(),
+                local: quote_ident!(self.operation_or_fragment_name.clone()).into(),
+                imported: None,
+                is_type_only: false,
+            })],
+            src: Box::new(platform_specific_path.clone().into()),
+            type_only: false,
+            with: None,
+            phase: ImportPhase::default(),
+        }))
     }
 }
 
@@ -232,12 +232,11 @@ pub fn process_transform(program: Program, metadata: TransformPluginProgramMetad
         panic!("artifactDirectory is not present in the config for @graphql-codegen/client-preset-swc-plugin");
     }
 
-    let visitor = create_graphql_codegen_visitor(GraphQLCodegenOptions {
+    let pass = fold_pass(GraphQLCodegen::new(GraphQLCodegenOptions {
         filename,
         cwd,
         artifact_directory,
         gql_tag_name: plugin_config.gqlTagName,
-    });
-
-    program.fold_with(&mut as_folder(visitor))
+    }));
+    program.apply(pass)
 }
