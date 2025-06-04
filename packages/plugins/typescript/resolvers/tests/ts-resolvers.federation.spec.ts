@@ -270,9 +270,17 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
       type User @key(fields: "id") {
         id: ID!
+
         name: String @external
         age: Int! @external
         username: String @requires(fields: "name age")
+
+        publicName: String! @requires(fields: "name")
+
+        birthDay: String! @external
+        birthMonth: String! @external
+        birthYear: String! @external
+        birthDate: String! @requires(fields: "birthDay birthMonth birthYear")
       }
     `;
 
@@ -286,7 +294,16 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         Query: {};
-        User: User | ( { __typename: 'User' } & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> & GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true}> );
+        User: User |
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
+          & ( {}
+              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"name":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"birthDay":true,"birthMonth":true,"birthYear":true}> ) );
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
         Int: Scalars['Int']['output'];
@@ -300,9 +317,17 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationType, {"id":true}>
-          & GraphQLRecursivePick<FederationType, {"name":true,"age":true}> ), ContextType>;
+          & ( {}
+              | GraphQLRecursivePick<FederationType, {"name":true,"age":true}>
+              | GraphQLRecursivePick<FederationType, {"name":true,"age":true}>
+              | GraphQLRecursivePick<FederationType, {"name":true,"age":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
+              | GraphQLRecursivePick<FederationType, {"name":true}>
+              | GraphQLRecursivePick<FederationType, {"name":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
+              | GraphQLRecursivePick<FederationType, {"birthDay":true,"birthMonth":true,"birthYear":true}> ) ), ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+        publicName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        birthDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
       };
     `);
   });
@@ -315,6 +340,10 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
       extend type User @key(fields: "id") {
         id: ID! @external
+
+        favouriteColor: String! @external
+        favouriteColorHex: String! @requires(fields: "favouriteColor")
+
         name: String @external
         age: Int! @external
         address: Address! @external
@@ -337,7 +366,13 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         Query: {};
-        User: User | ( { __typename: 'User' } & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> & GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true,"address":{"street":true}}> );
+        User: User |
+          ( { __typename: 'User' }
+            & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
+            & ( {}
+                | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true}>
+                | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true,"name":true,"age":true,"address":{"street":true}}>
+                | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true,"address":{"street":true}}> ) );
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
         Int: Scalars['Int']['output'];
@@ -350,8 +385,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
           ( { __typename: 'User' }
-          & GraphQLRecursivePick<FederationType, {"id":true}>
-          & GraphQLRecursivePick<FederationType, {"name":true,"age":true,"address":{"street":true}}> ), ContextType>;
+            & GraphQLRecursivePick<FederationType, {"id":true}>
+            & ( {}
+                | GraphQLRecursivePick<FederationType, {"favouriteColor":true}>
+                | GraphQLRecursivePick<FederationType, {"favouriteColor":true,"name":true,"age":true,"address":{"street":true}}>
+                | GraphQLRecursivePick<FederationType, {"name":true,"age":true,"address":{"street":true}}> ) ), ContextType>;
+        favouriteColorHex?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       };
     `);
