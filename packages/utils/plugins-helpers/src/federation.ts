@@ -38,11 +38,14 @@ export const federationSpec = parse(/* GraphQL */ `
  * @example
  * - resolvable fields marked with `@key`
  * - fields declared in `@provides`
+ * - fields declared in `@requires`
  */
-interface ReferenceSelectionSet {
+interface DirectiveSelectionSet {
   name: string;
-  selection: boolean | ReferenceSelectionSet[];
+  selection: boolean | DirectiveSelectionSet[];
 }
+
+type ReferenceSelectionSet = Record<string, boolean>; // TODO: handle nested
 
 interface TypeMeta {
   hasResolveReference: boolean;
@@ -56,7 +59,7 @@ interface TypeMeta {
    * - [[A, B], [C], [D]]      -> (A | B) & C & D
    * - [[A, B], [C, D], [E]] -> (A | B) & (C | D) & E
    */
-  referenceSelectionSets: ReferenceSelectionSet[][];
+  referenceSelectionSets: { directive: '@key' | '@requires'; selectionSets: ReferenceSelectionSet[] }[];
 }
 
 export type FederationMeta = { [typeName: string]: TypeMeta };
@@ -99,21 +102,23 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
     resolvableKeyDirectives: readonly DirectiveNode[];
     fields: GraphQLFieldConfigMap<any, any>;
   }): TypeMeta['referenceSelectionSets'] => {
-    const referenceSelectionSets: ReferenceSelectionSet[][] = [];
+    const referenceSelectionSets: TypeMeta['referenceSelectionSets'] = [];
 
     // @key() @key() - "primary keys" in Federation
     // A reference may receive one primary key combination at a time, so they will be combined with `|`
     const primaryKeys = resolvableKeyDirectives.map(extractReferenceSelectionSet);
-    referenceSelectionSets.push([...primaryKeys]);
+    referenceSelectionSets.push({ directive: '@key', selectionSets: [...primaryKeys] });
 
+    const requiresPossibleTypes: ReferenceSelectionSet[] = [];
     for (const fieldNode of Object.values(fields)) {
       // Look for @requires and see what the service needs and gets
       const directives = getDirectivesByName('requires', fieldNode.astNode);
       for (const directive of directives) {
         const requires = extractReferenceSelectionSet(directive);
-        referenceSelectionSets.push([requires]);
+        requiresPossibleTypes.push(requires);
       }
     }
+    referenceSelectionSets.push({ directive: '@requires', selectionSets: requiresPossibleTypes });
 
     return referenceSelectionSets;
   };
@@ -436,15 +441,26 @@ export class ApolloFederation {
     }
 
     return `\n    ( { __typename: '${typeName}' }\n    & ${federationMeta.referenceSelectionSets
-      .map(referenceSelectionSetArray => {
-        const result = referenceSelectionSetArray.map(referenceSelectionSet => {
-          return this.printReferenceSelectionSet({
-            referenceSelectionSet,
-            typeName: baseFederationType,
-          });
-        });
+      .map(({ directive, selectionSets: originalSelectionSets }) => {
+        const result: string[] = [];
 
-        return result.length > 1 ? `( ${result.join(' | ')} )` : result.join(' | ');
+        let selectionSets = originalSelectionSets;
+        if (directive === '@requires') {
+          result.push('{}');
+          selectionSets = [];
+          findAllCombinations(originalSelectionSets, selectionSets);
+        }
+
+        for (const referenceSelectionSet of selectionSets) {
+          result.push(
+            this.printReferenceSelectionSet({
+              referenceSelectionSet,
+              typeName: baseFederationType,
+            })
+          );
+        }
+
+        return result.length > 1 ? `( ${result.join('\n        | ')} )` : result.join(' | ');
       })
       .join('\n    & ')} )`;
   }
@@ -547,7 +563,7 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
   return oldVisit(parse(`{${value}}`), {
     leave: {
       SelectionSet(node) {
-        return (node.selections as any as ReferenceSelectionSet[]).reduce((accum, field) => {
+        return (node.selections as any as DirectiveSelectionSet[]).reduce((accum, field) => {
           accum[field.name] = field.selection;
           return accum;
         }, {});
@@ -556,7 +572,7 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
         return {
           name: node.name.value,
           selection: node.selectionSet || true,
-        } as ReferenceSelectionSet;
+        } as DirectiveSelectionSet;
       },
       Document(node) {
         return node.definitions.find(
@@ -566,4 +582,17 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
       },
     },
   });
+}
+
+function findAllCombinations(selectionSets: ReferenceSelectionSet[], result: ReferenceSelectionSet[]): void {
+  const [currentSelectionSet, ...rest] = selectionSets;
+
+  result.push(currentSelectionSet);
+  for (const selectionSet of rest) {
+    result.push({ ...currentSelectionSet, ...selectionSet });
+  }
+
+  if (rest.length > 0) {
+    findAllCombinations(rest, result);
+  }
 }
