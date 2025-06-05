@@ -1,5 +1,11 @@
 # @graphql-codegen/plugin-helpers
 
+## 5.1.1
+
+### Patch Changes
+
+- [#10150](https://github.com/dotansimha/graphql-code-generator/pull/10150) [`e324382`](https://github.com/dotansimha/graphql-code-generator/commit/e3243824cfe0d7ab463cf0d5a6455715510959be) Thanks [@ArminWiebigke](https://github.com/ArminWiebigke)! - Allow functions to be passed as valid values for `UrlSchemaOptions.customFetch`. This was already possible, but the type definitions did not reflect that correctly.
+
 ## 5.1.0
 
 ### Minor Changes

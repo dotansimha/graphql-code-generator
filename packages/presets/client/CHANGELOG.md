@@ -1,5 +1,14 @@
 # @graphql-codegen/client-preset
 
+## 4.8.2
+
+### Patch Changes
+
+- [#10120](https://github.com/dotansimha/graphql-code-generator/pull/10120) [`98392fc`](https://github.com/dotansimha/graphql-code-generator/commit/98392fc5d91035b5b5b0ffdefd78d0398762a523) Thanks [@yangirov](https://github.com/yangirov)! - The `@graphql-codegen/client-preset` package now supports the `enumValues` option.
+
+- Updated dependencies [[`e324382`](https://github.com/dotansimha/graphql-code-generator/commit/e3243824cfe0d7ab463cf0d5a6455715510959be)]:
+  - @graphql-codegen/plugin-helpers@5.1.1
+
 ## 4.8.1
 
 ### Patch Changes
