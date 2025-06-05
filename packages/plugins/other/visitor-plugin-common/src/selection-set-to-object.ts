@@ -844,7 +844,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       this.getEmptyObjectTypeString(mustAddEmptyObject),
     ].filter(Boolean);
 
-    const content = typeParts.join(' | ');
+    const content = formatUnion(typeParts);
 
     if (typeParts.length > 1 && this._config.extractAllFieldsToTypes) {
       return {
@@ -944,7 +944,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         .export()
         .asKind('type')
         .withName(mergedTypeString)
-        .withContent(subTypes.map(t => t.name).join(' | ')).string,
+        .withContent(formatUnion(subTypes.map(t => t.name))).string,
     ].join('\n');
   }
 
@@ -960,4 +960,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     // so we can skip affixing the field names with typeName
     return operationTypes.includes(typeName) ? parentName : `${parentName}_${typeName}`;
   }
+}
+
+function formatUnion(members: string[]): string {
+  if (members.length > 1) {
+    return `\n  | ${members.map(m => m.replace(/\n/g, '\n  ')).join('\n  | ')}\n`;
+  }
+  return members.join(' | ');
 }
