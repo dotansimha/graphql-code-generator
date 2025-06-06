@@ -1,17 +1,16 @@
 use std::path::PathBuf;
 use swc_core::{
     ecma::{
-        parser::{Syntax, TsConfig},
+        parser::{Syntax, TsSyntax},
         transforms::testing::{test, test_fixture},
-        visit::as_folder,
     },
     testing,
 };
 
 use super::*;
 
-fn get_test_code_visitor() -> GraphQLVisitor {
-    GraphQLVisitor::new(GraphQLCodegenOptions {
+fn get_test_code_visitor() -> GraphQLCodegen {
+    GraphQLCodegen::new(GraphQLCodegenOptions {
         filename: "test.ts".to_string(),
         cwd: "/home/faketestproject".to_string(),
         artifact_directory: "./src/gql".to_string(),
@@ -28,12 +27,12 @@ fn import_files_from_same_directory(input_path: PathBuf) {
     let output_path = input_path.with_extension("js");
 
     test_fixture(
-        Syntax::Typescript(TsConfig {
+        Syntax::Typescript(TsSyntax {
             tsx: input_path.to_string_lossy().ends_with(".tsx"),
             ..Default::default()
         }),
         &|_metadata| {
-            as_folder(GraphQLVisitor::new(GraphQLCodegenOptions {
+            fold_pass(GraphQLCodegen::new(GraphQLCodegenOptions {
                 filename: relative_file_path.to_string_lossy().to_string(),
                 cwd: cwd.to_string_lossy().to_string(),
                 artifact_directory: "./tests/fixtures".to_string(),
@@ -57,12 +56,12 @@ fn import_files_from_other_directory(input_path: PathBuf) {
     let output_path = input_path.with_extension("other-dir.js");
 
     test_fixture(
-        Syntax::Typescript(TsConfig {
+        Syntax::Typescript(TsSyntax {
             tsx: input_path.to_string_lossy().ends_with(".tsx"),
             ..Default::default()
         }),
         &|_metadata| {
-            as_folder(GraphQLVisitor::new(GraphQLCodegenOptions {
+            fold_pass(GraphQLCodegen::new(GraphQLCodegenOptions {
                 filename: relative_file_path.to_string_lossy().to_string(),
                 cwd: cwd.to_string_lossy().to_string(),
                 artifact_directory: cwd.to_string_lossy().to_string(),
@@ -77,13 +76,27 @@ fn import_files_from_other_directory(input_path: PathBuf) {
 
 test!(
     Default::default(),
-    |_| as_folder(get_test_code_visitor()),
+    |_| fold_pass(get_test_code_visitor()),
     expect_normal_declarations_to_not_panic_and_to_be_ignored,
     // Example from Next.js' server.js
     r#"const emitter = (0, _mitt).default();
     const looseToArray = (input)=>[].slice.call(input);
-    const targetTag = document.querySelector(`style[data-n-href="${href}"]`);"#,
-    r#"const emitter = (0, _mitt).default();
-    const looseToArray = (input)=>[].slice.call(input);
     const targetTag = document.querySelector(`style[data-n-href="${href}"]`);"#
+);
+
+test!(
+    Default::default(),
+    |_| fold_pass(get_test_code_visitor()),
+    top_level_directives_are_preserved,
+    r#""use client";
+    //@ts-ignore
+    import gql from "gql-tag";
+
+    //@ts-ignore
+    const A = gql(/* GraphQL */ `
+    query A {
+        a
+    }
+    `);
+"#
 );
