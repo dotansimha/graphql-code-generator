@@ -268,19 +268,25 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         users: [User]
       }
 
+      type Account @key(fields: "id") {
+        id: ID!
+        key: String!
+      }
+
       type User @key(fields: "id") {
         id: ID!
 
-        name: String @external
-        age: Int! @external
-        username: String @requires(fields: "name age")
+        a: String @external
+        aRequires: String @requires(fields: "a")
 
-        publicName: String! @requires(fields: "name")
+        b: String! @external
+        bRequires: String! @requires(fields: "b")
 
-        birthDay: String! @external
-        birthMonth: String! @external
-        birthYear: String! @external
-        birthDate: String! @requires(fields: "birthDay birthMonth birthYear")
+        c: String! @external
+        cRequires: String! @requires(fields: "c")
+
+        d: String! @external
+        dRequires: String! @requires(fields: "d")
       }
     `;
 
@@ -294,19 +300,29 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         Query: {};
+        Account: Account |
+          ( { __typename: 'Account' }
+          & GraphQLRecursivePick<FederationTypes['Account'], {"id":true}> );
+        ID: Scalars['ID']['output'];
+        String: Scalars['String']['output'];
         User: User |
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
           & ( {}
-              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true}>
-              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true}>
-              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
-              | GraphQLRecursivePick<FederationTypes['User'], {"name":true}>
-              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
-              | GraphQLRecursivePick<FederationTypes['User'], {"birthDay":true,"birthMonth":true,"birthYear":true}> ) );
-        ID: Scalars['ID']['output'];
-        String: Scalars['String']['output'];
-        Int: Scalars['Int']['output'];
+              | GraphQLRecursivePick<FederationTypes['User'], {"a":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"b":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"c":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"d":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"b":true,"c":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"b":true,"d":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"b":true,"c":true,"d":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"b":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"b":true,"c":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"b":true,"d":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"b":true,"c":true,"d":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"c":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"c":true,"d":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"d":true}> ) );
         Boolean: Scalars['Boolean']['output'];
       };
     `);
@@ -318,16 +334,25 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationType, {"id":true}>
           & ( {}
-              | GraphQLRecursivePick<FederationType, {"name":true,"age":true}>
-              | GraphQLRecursivePick<FederationType, {"name":true,"age":true}>
-              | GraphQLRecursivePick<FederationType, {"name":true,"age":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
-              | GraphQLRecursivePick<FederationType, {"name":true}>
-              | GraphQLRecursivePick<FederationType, {"name":true,"birthDay":true,"birthMonth":true,"birthYear":true}>
-              | GraphQLRecursivePick<FederationType, {"birthDay":true,"birthMonth":true,"birthYear":true}> ) ), ContextType>;
+              | GraphQLRecursivePick<FederationType, {"a":true}>
+              | GraphQLRecursivePick<FederationType, {"a":true,"b":true}>
+              | GraphQLRecursivePick<FederationType, {"a":true,"c":true}>
+              | GraphQLRecursivePick<FederationType, {"a":true,"d":true}>
+              | GraphQLRecursivePick<FederationType, {"a":true,"b":true,"c":true}>
+              | GraphQLRecursivePick<FederationType, {"a":true,"b":true,"d":true}>
+              | GraphQLRecursivePick<FederationType, {"a":true,"b":true,"c":true,"d":true}>
+              | GraphQLRecursivePick<FederationType, {"b":true}>
+              | GraphQLRecursivePick<FederationType, {"b":true,"c":true}>
+              | GraphQLRecursivePick<FederationType, {"b":true,"d":true}>
+              | GraphQLRecursivePick<FederationType, {"b":true,"c":true,"d":true}>
+              | GraphQLRecursivePick<FederationType, {"c":true}>
+              | GraphQLRecursivePick<FederationType, {"c":true,"d":true}>
+              | GraphQLRecursivePick<FederationType, {"d":true}> ) ), ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-        username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-        publicName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-        birthDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        aRequires?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+        bRequires?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        cRequires?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        dRequires?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
       };
     `);
   });
@@ -475,9 +500,13 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         Query: {};
         User: User |
           ( { __typename: 'User' }
-          & ( GraphQLRecursivePick<FederationTypes['User'], {"id":true}> | GraphQLRecursivePick<FederationTypes['User'], {"uuid":true}> | GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true,"oldId2":true}}> )
-          & GraphQLRecursivePick<FederationTypes['User'], {"id":true,"name":true}>
-          & GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true},"name":true}> );
+            & ( GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"uuid":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true,"oldId2":true}}> )
+            & ( {}
+              | GraphQLRecursivePick<FederationTypes['User'], {"id":true,"name":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"id":true,"name":true,"legacyId":{"oldId1":true}}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true},"name":true}> ) );
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
         LegacyId: LegacyId;
@@ -489,9 +518,13 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
           ( { __typename: 'User' }
-          & ( GraphQLRecursivePick<FederationType, {"id":true}> | GraphQLRecursivePick<FederationType, {"uuid":true}> | GraphQLRecursivePick<FederationType, {"legacyId":{"oldId1":true,"oldId2":true}}> )
-          & GraphQLRecursivePick<FederationType, {"id":true,"name":true}>
-          & GraphQLRecursivePick<FederationType, {"legacyId":{"oldId1":true},"name":true}> ), ContextType>;
+            & ( GraphQLRecursivePick<FederationType, {"id":true}>
+              | GraphQLRecursivePick<FederationType, {"uuid":true}>
+              | GraphQLRecursivePick<FederationType, {"legacyId":{"oldId1":true,"oldId2":true}}> )
+            & ( {}
+              | GraphQLRecursivePick<FederationType, {"id":true,"name":true}>
+              | GraphQLRecursivePick<FederationType, {"id":true,"name":true,"legacyId":{"oldId1":true}}>
+              | GraphQLRecursivePick<FederationType, {"legacyId":{"oldId1":true},"name":true}> ) ), ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         uuid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
