@@ -440,15 +440,17 @@ export class ApolloFederation {
       return false;
     }
 
-    return `\n    ( { __typename: '${typeName}' }\n    & ${federationMeta.referenceSelectionSets
-      .map(({ directive, selectionSets: originalSelectionSets }) => {
+    const referenceSelectionSetStrings = federationMeta.referenceSelectionSets.reduce<string[]>(
+      (acc, { directive, selectionSets: originalSelectionSets }) => {
         const result: string[] = [];
 
         let selectionSets = originalSelectionSets;
         if (directive === '@requires') {
-          result.push('{}');
           selectionSets = [];
-          findAllCombinations(originalSelectionSets, selectionSets);
+          findAllSelectionSetCombinations(originalSelectionSets, selectionSets);
+          if (selectionSets.length > 0) {
+            result.push('{}');
+          }
         }
 
         for (const referenceSelectionSet of selectionSets) {
@@ -460,9 +462,22 @@ export class ApolloFederation {
           );
         }
 
-        return result.length > 1 ? `( ${result.join('\n        | ')} )` : result.join(' | ');
-      })
-      .join('\n    & ')} )`;
+        if (result.length === 0) {
+          return acc;
+        }
+
+        if (result.length === 1) {
+          acc.push(result.join(' | '));
+          return acc;
+        }
+
+        acc.push(`( ${result.join('\n        | ')} )`);
+        return acc;
+      },
+      []
+    );
+
+    return `\n    ( { __typename: '${typeName}' }\n    & ${referenceSelectionSetStrings.join('\n    & ')} )`;
   }
 
   private createMapOfProvides() {
@@ -584,15 +599,69 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
   });
 }
 
-function findAllCombinations(selectionSets: ReferenceSelectionSet[], result: ReferenceSelectionSet[]): void {
-  const [currentSelectionSet, ...rest] = selectionSets;
-
-  result.push(currentSelectionSet);
-  for (const selectionSet of rest) {
-    result.push({ ...currentSelectionSet, ...selectionSet });
+/**
+ * Function to find all combinations of selection sets and push them into the `result`
+ * This is used for `@requires` directive because depending on the operation selection set, different
+ * combination of fields are sent from the router.
+ *
+ * @example
+ * Input: [
+ *   { a: true },
+ *   { b: true },
+ *   { c: true },
+ *   { d: true},
+ * ]
+ * Output: [
+ *   { a: true },
+ *   { a: true, b: true },
+ *   { a: true, c: true },
+ *   { a: true, d: true },
+ *   { a: true, b: true, c: true },
+ *   { a: true, b: true, d: true },
+ *   { a: true, c: true, d: true },
+ *   { a: true, b: true, c: true, d: true }
+ *
+ *   { b: true },
+ *   { b: true, c: true },
+ *   { b: true, d: true },
+ *   { b: true, c: true, d: true }
+ *
+ *   { c: true },
+ *   { c: true, d: true },
+ *
+ *   { d: true },
+ * ]
+ * ```
+ */
+function findAllSelectionSetCombinations(
+  selectionSets: ReferenceSelectionSet[],
+  result: ReferenceSelectionSet[]
+): void {
+  if (selectionSets.length === 0) {
+    return;
   }
 
-  if (rest.length > 0) {
-    findAllCombinations(rest, result);
+  for (let baseIndex = 0; baseIndex < selectionSets.length; baseIndex++) {
+    const base = selectionSets.slice(0, baseIndex + 1);
+    const rest = selectionSets.slice(baseIndex + 1, selectionSets.length);
+
+    const currentSelectionSet = base.reduce((acc, selectionSet) => {
+      acc = { ...acc, ...selectionSet };
+      return acc;
+    }, {});
+
+    if (baseIndex === 0) {
+      result.push(currentSelectionSet);
+    }
+
+    for (const selectionSet of rest) {
+      result.push({ ...currentSelectionSet, ...selectionSet });
+    }
+  }
+
+  const next = selectionSets.slice(1, selectionSets.length);
+
+  if (next.length > 0) {
+    findAllSelectionSetCombinations(next, result);
   }
 }
