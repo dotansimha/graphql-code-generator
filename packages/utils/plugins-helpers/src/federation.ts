@@ -6,7 +6,6 @@ import {
   FieldDefinitionNode,
   GraphQLFieldConfigMap,
   GraphQLInterfaceType,
-  GraphQLNamedType,
   GraphQLObjectType,
   GraphQLSchema,
   InterfaceTypeDefinitionNode,
@@ -60,6 +59,7 @@ interface TypeMeta {
    * - [[A, B], [C, D], [E]] -> (A | B) & (C | D) & E
    */
   referenceSelectionSets: { directive: '@key' | '@requires'; selectionSets: ReferenceSelectionSet[] }[];
+  referenceSelectionSetsString: string;
 }
 
 export type FederationMeta = { [typeName: string]: TypeMeta };
@@ -90,6 +90,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
           hasResolveReference: false,
           resolvableKeyDirectives: [],
           referenceSelectionSets: [],
+          referenceSelectionSetsString: '',
         } satisfies TypeMeta)),
       ...update,
     };
@@ -123,6 +124,117 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
     return referenceSelectionSets;
   };
 
+  /**
+   * Function to find all combinations of selection sets and push them into the `result`
+   * This is used for `@requires` directive because depending on the operation selection set, different
+   * combination of fields are sent from the router.
+   *
+   * @example
+   * Input: [
+   *   { a: true },
+   *   { b: true },
+   *   { c: true },
+   *   { d: true},
+   * ]
+   * Output: [
+   *   { a: true },
+   *   { a: true, b: true },
+   *   { a: true, c: true },
+   *   { a: true, d: true },
+   *   { a: true, b: true, c: true },
+   *   { a: true, b: true, d: true },
+   *   { a: true, c: true, d: true },
+   *   { a: true, b: true, c: true, d: true }
+   *
+   *   { b: true },
+   *   { b: true, c: true },
+   *   { b: true, d: true },
+   *   { b: true, c: true, d: true }
+   *
+   *   { c: true },
+   *   { c: true, d: true },
+   *
+   *   { d: true },
+   * ]
+   * ```
+   */
+  function findAllSelectionSetCombinations(
+    selectionSets: ReferenceSelectionSet[],
+    result: ReferenceSelectionSet[]
+  ): void {
+    if (selectionSets.length === 0) {
+      return;
+    }
+
+    for (let baseIndex = 0; baseIndex < selectionSets.length; baseIndex++) {
+      const base = selectionSets.slice(0, baseIndex + 1);
+      const rest = selectionSets.slice(baseIndex + 1, selectionSets.length);
+
+      const currentSelectionSet = base.reduce((acc, selectionSet) => {
+        acc = { ...acc, ...selectionSet };
+        return acc;
+      }, {});
+
+      if (baseIndex === 0) {
+        result.push(currentSelectionSet);
+      }
+
+      for (const selectionSet of rest) {
+        result.push({ ...currentSelectionSet, ...selectionSet });
+      }
+    }
+
+    const next = selectionSets.slice(1, selectionSets.length);
+
+    if (next.length > 0) {
+      findAllSelectionSetCombinations(next, result);
+    }
+  }
+
+  const printReferenceSelectionSets = ({
+    typeName,
+    baseFederationType,
+    referenceSelectionSets,
+  }: {
+    typeName: string;
+    baseFederationType: string;
+    referenceSelectionSets: TypeMeta['referenceSelectionSets'];
+  }): string => {
+    const referenceSelectionSetStrings = referenceSelectionSets.reduce<string[]>(
+      (acc, { directive, selectionSets: originalSelectionSets }) => {
+        const result: string[] = [];
+
+        let selectionSets = originalSelectionSets;
+        if (directive === '@requires') {
+          selectionSets = [];
+          findAllSelectionSetCombinations(originalSelectionSets, selectionSets);
+          if (selectionSets.length > 0) {
+            result.push('{}');
+          }
+        }
+
+        for (const referenceSelectionSet of selectionSets) {
+          result.push(`GraphQLRecursivePick<${baseFederationType}, ${JSON.stringify(referenceSelectionSet)}>`);
+        }
+
+        if (result.length === 0) {
+          return acc;
+        }
+
+        if (result.length === 1) {
+          acc.push(result.join(' | '));
+          return acc;
+        }
+
+        acc.push(`( ${result.join('\n        | ')} )`);
+        return acc;
+      },
+      []
+    );
+
+    return `\n    ( { __typename: '${typeName}' }\n    & ${referenceSelectionSetStrings.join('\n    & ')} )`;
+  };
+
   const federationMeta: FederationMeta = {};
 
   const transformedSchema = mapSchema(schema, {
@@ -142,6 +254,12 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
           fields: typeConfig.fields,
         });
 
+        const referenceSelectionSetsString = printReferenceSelectionSets({
+          typeName: type.name,
+          baseFederationType: `FederationTypes['${type.name}']`, // FIXME: run convertName on FederationTypes
+          referenceSelectionSets,
+        });
+
         setFederationMeta({
           meta: federationMeta,
           typeName: type.name,
@@ -149,6 +267,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
             hasResolveReference: true,
             resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
             referenceSelectionSets,
+            referenceSelectionSetsString,
           },
         });
 
@@ -174,6 +293,12 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
           ...typeConfig.fields,
         };
 
+        const referenceSelectionSetsString = printReferenceSelectionSets({
+          typeName: type.name,
+          baseFederationType: `FederationTypes['${type.name}']`, // FIXME: run convertName on FederationTypes
+          referenceSelectionSets,
+        });
+
         setFederationMeta({
           meta: federationMeta,
           typeName: type.name,
@@ -181,6 +306,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
             hasResolveReference: true,
             resolvableKeyDirectives: federationDetails.resolvableKeyDirectives,
             referenceSelectionSets,
+            referenceSelectionSetsString,
           },
         });
 
@@ -344,44 +470,6 @@ export class ApolloFederation {
     return this.enabled && name === resolveReferenceFieldName;
   }
 
-  /**
-   * Transforms a field's ParentType signature in ObjectTypes or InterfaceTypes involved in Federation
-   */
-  transformFieldParentType({
-    fieldNode,
-    parentType,
-    parentTypeSignature,
-    federationTypeSignature,
-  }: {
-    fieldNode: FieldDefinitionNode;
-    parentType: GraphQLNamedType;
-    parentTypeSignature: string;
-    federationTypeSignature: string;
-  }): string {
-    if (!this.enabled) {
-      return parentTypeSignature;
-    }
-
-    const result = this.printReferenceSelectionSets({
-      typeName: parentType.name,
-      baseFederationType: federationTypeSignature,
-    });
-
-    // When `!result`, it means this is not a Federation entity, so we just return the parentTypeSignature
-    if (!result) {
-      return parentTypeSignature;
-    }
-
-    const isEntityResolveReferenceField =
-      (isObjectType(parentType) || isInterfaceType(parentType)) && fieldNode.name.value === resolveReferenceFieldName;
-
-    if (!isEntityResolveReferenceField) {
-      return parentTypeSignature;
-    }
-
-    return result;
-  }
-
   addFederationTypeGenericIfApplicable({
     genericTypes,
     typeName,
@@ -396,7 +484,7 @@ export class ApolloFederation {
     }
 
     const typeRef = `${federationTypesType}['${typeName}']`;
-    genericTypes.push(`FederationType extends ${typeRef} = ${typeRef}`);
+    genericTypes.push(`FederationReferenceType extends ${typeRef} = ${typeRef}`);
   }
 
   getMeta() {
@@ -415,69 +503,6 @@ export class ApolloFederation {
     }
 
     return false;
-  }
-
-  printReferenceSelectionSet({
-    typeName,
-    referenceSelectionSet,
-  }: {
-    typeName: string;
-    referenceSelectionSet: ReferenceSelectionSet;
-  }): string {
-    return `GraphQLRecursivePick<${typeName}, ${JSON.stringify(referenceSelectionSet)}>`;
-  }
-
-  printReferenceSelectionSets({
-    typeName,
-    baseFederationType,
-  }: {
-    typeName: string;
-    baseFederationType: string;
-  }): string | false {
-    const federationMeta = this.getMeta()[typeName];
-
-    if (!federationMeta?.hasResolveReference) {
-      return false;
-    }
-
-    const referenceSelectionSetStrings = federationMeta.referenceSelectionSets.reduce<string[]>(
-      (acc, { directive, selectionSets: originalSelectionSets }) => {
-        const result: string[] = [];
-
-        let selectionSets = originalSelectionSets;
-        if (directive === '@requires') {
-          selectionSets = [];
-          findAllSelectionSetCombinations(originalSelectionSets, selectionSets);
-          if (selectionSets.length > 0) {
-            result.push('{}');
-          }
-        }
-
-        for (const referenceSelectionSet of selectionSets) {
-          result.push(
-            this.printReferenceSelectionSet({
-              referenceSelectionSet,
-              typeName: baseFederationType,
-            })
-          );
-        }
-
-        if (result.length === 0) {
-          return acc;
-        }
-
-        if (result.length === 1) {
-          acc.push(result.join(' | '));
-          return acc;
-        }
-
-        acc.push(`( ${result.join('\n        | ')} )`);
-        return acc;
-      },
-      []
-    );
-
-    return `\n    ( { __typename: '${typeName}' }\n    & ${referenceSelectionSetStrings.join('\n    & ')} )`;
   }
 
   private createMapOfProvides() {
@@ -597,71 +622,4 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
       },
     },
   });
-}
-
-/**
- * Function to find all combinations of selection sets and push them into the `result`
- * This is used for `@requires` directive because depending on the operation selection set, different
- * combination of fields are sent from the router.
- *
- * @example
- * Input: [
- *   { a: true },
- *   { b: true },
- *   { c: true },
- *   { d: true},
- * ]
- * Output: [
- *   { a: true },
- *   { a: true, b: true },
- *   { a: true, c: true },
- *   { a: true, d: true },
- *   { a: true, b: true, c: true },
- *   { a: true, b: true, d: true },
- *   { a: true, c: true, d: true },
- *   { a: true, b: true, c: true, d: true }
- *
- *   { b: true },
- *   { b: true, c: true },
- *   { b: true, d: true },
- *   { b: true, c: true, d: true }
- *
- *   { c: true },
- *   { c: true, d: true },
- *
- *   { d: true },
- * ]
- * ```
- */
-function findAllSelectionSetCombinations(
-  selectionSets: ReferenceSelectionSet[],
-  result: ReferenceSelectionSet[]
-): void {
-  if (selectionSets.length === 0) {
-    return;
-  }
-
-  for (let baseIndex = 0; baseIndex < selectionSets.length; baseIndex++) {
-    const base = selectionSets.slice(0, baseIndex + 1);
-    const rest = selectionSets.slice(baseIndex + 1, selectionSets.length);
-
-    const currentSelectionSet = base.reduce((acc, selectionSet) => {
-      acc = { ...acc, ...selectionSet };
-      return acc;
-    }, {});
-
-    if (baseIndex === 0) {
-      result.push(currentSelectionSet);
-    }
-
-    for (const selectionSet of rest) {
-      result.push({ ...currentSelectionSet, ...selectionSet });
-    }
-  }
-
-  const next = selectionSets.slice(1, selectionSets.length);
-
-  if (next.length > 0) {
-    findAllSelectionSetCombinations(next, result);
-  }
 }
