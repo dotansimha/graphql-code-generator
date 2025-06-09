@@ -300,12 +300,20 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         Query: {};
-        Account: Account |
-          ( { __typename: 'Account' }
-          & GraphQLRecursivePick<FederationTypes['Account'], {"id":true}> );
+        Account: Account | FederationReferenceTypes['Account'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
-        User: User |
+        User: User | FederationReferenceTypes['User'];
+        Boolean: Scalars['Boolean']['output'];
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type FederationReferenceTypes = {
+        Account:
+          ( { __typename: 'Account' }
+          & GraphQLRecursivePick<FederationTypes['Account'], {"id":true}> );
+        User:
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
           & ( {}
@@ -323,31 +331,13 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
               | GraphQLRecursivePick<FederationTypes['User'], {"c":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"c":true,"d":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"d":true}> ) );
-        Boolean: Scalars['Boolean']['output'];
       };
     `);
 
     // User should have it
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-          ( { __typename: 'User' }
-          & GraphQLRecursivePick<FederationType, {"id":true}>
-          & ( {}
-              | GraphQLRecursivePick<FederationType, {"a":true}>
-              | GraphQLRecursivePick<FederationType, {"a":true,"b":true}>
-              | GraphQLRecursivePick<FederationType, {"a":true,"c":true}>
-              | GraphQLRecursivePick<FederationType, {"a":true,"d":true}>
-              | GraphQLRecursivePick<FederationType, {"a":true,"b":true,"c":true}>
-              | GraphQLRecursivePick<FederationType, {"a":true,"b":true,"d":true}>
-              | GraphQLRecursivePick<FederationType, {"a":true,"b":true,"c":true,"d":true}>
-              | GraphQLRecursivePick<FederationType, {"b":true}>
-              | GraphQLRecursivePick<FederationType, {"b":true,"c":true}>
-              | GraphQLRecursivePick<FederationType, {"b":true,"d":true}>
-              | GraphQLRecursivePick<FederationType, {"b":true,"c":true,"d":true}>
-              | GraphQLRecursivePick<FederationType, {"c":true}>
-              | GraphQLRecursivePick<FederationType, {"c":true,"d":true}>
-              | GraphQLRecursivePick<FederationType, {"d":true}> ) ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         aRequires?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
         bRequires?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
