@@ -93,16 +93,34 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
+      export type FederationReferenceTypes = {
+        User:
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+        SingleResolvable:
+          ( { __typename: 'SingleResolvable' }
+          & GraphQLRecursivePick<FederationTypes['SingleResolvable'], {"id":true}> );
+        AtLeastOneResolvable:
+          ( { __typename: 'AtLeastOneResolvable' }
+          & GraphQLRecursivePick<FederationTypes['AtLeastOneResolvable'], {"id2":true}> );
+        MixedResolvable:
+          ( { __typename: 'MixedResolvable' }
+          & ( GraphQLRecursivePick<FederationTypes['MixedResolvable'], {"id":true}>
+              | GraphQLRecursivePick<FederationTypes['MixedResolvable'], {"id2":true}> ) );
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         Query: {};
-        User: User | ( { __typename: 'User' } & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+        User: User | FederationReferenceTypes['User'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
         Book: Book;
-        SingleResolvable: SingleResolvable | ( { __typename: 'SingleResolvable' } & GraphQLRecursivePick<FederationTypes['SingleResolvable'], {"id":true}> );
+        SingleResolvable: SingleResolvable | FederationReferenceTypes['SingleResolvable'];
         SingleNonResolvable: SingleNonResolvable;
-        AtLeastOneResolvable: AtLeastOneResolvable | ( { __typename: 'AtLeastOneResolvable' } & GraphQLRecursivePick<FederationTypes['AtLeastOneResolvable'], {"id2":true}> );
-        MixedResolvable: MixedResolvable | ( { __typename: 'MixedResolvable' } & ( GraphQLRecursivePick<FederationTypes['MixedResolvable'], {"id":true}> | GraphQLRecursivePick<FederationTypes['MixedResolvable'], {"id2":true}> ) );
+        AtLeastOneResolvable: AtLeastOneResolvable | FederationReferenceTypes['AtLeastOneResolvable'];
+        MixedResolvable: MixedResolvable | FederationReferenceTypes['MixedResolvable'];
         MultipleNonResolvable: MultipleNonResolvable;
         Boolean: Scalars['Boolean']['output'];
       };
@@ -110,24 +128,21 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // User should have __resolveReference because it has resolvable @key (by default)
     expect(content).toBeSimilarStringTo(`
-    export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-        ( { __typename: 'User' } & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
-      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-      name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-      username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-    };
-  `);
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+        username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+      };
+    `);
 
     // SingleResolvable has __resolveReference because it has resolvable: true
     expect(content).toBeSimilarStringTo(`
-    export type SingleResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingleResolvable'] = ResolversParentTypes['SingleResolvable'], FederationType extends FederationTypes['SingleResolvable'] = FederationTypes['SingleResolvable']> = {
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['SingleResolvable']>,
-        ( { __typename: 'SingleResolvable' }
-        & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
-      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-    };
-  `);
+      export type SingleResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingleResolvable'] = ResolversParentTypes['SingleResolvable'], FederationReferenceType extends FederationReferenceTypes['SingleResolvable'] = FederationReferenceTypes['SingleResolvable']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['SingleResolvable']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      };
+    `);
 
     // SingleNonResolvable does NOT have __resolveReference because it has resolvable: false
     expect(content).toBeSimilarStringTo(`
@@ -138,26 +153,23 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // AtLeastOneResolvable has __resolveReference because it at least one resolvable
     expect(content).toBeSimilarStringTo(`
-    export type AtLeastOneResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtLeastOneResolvable'] = ResolversParentTypes['AtLeastOneResolvable'], FederationType extends FederationTypes['AtLeastOneResolvable'] = FederationTypes['AtLeastOneResolvable']> = {
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['AtLeastOneResolvable']>,
-        ( { __typename: 'AtLeastOneResolvable' } & GraphQLRecursivePick<FederationType, {"id2":true}> ), ContextType>;
-      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-    };
-  `);
+      export type AtLeastOneResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtLeastOneResolvable'] = ResolversParentTypes['AtLeastOneResolvable'], FederationReferenceType extends FederationReferenceTypes['AtLeastOneResolvable'] = FederationReferenceTypes['AtLeastOneResolvable']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['AtLeastOneResolvable']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      };
+    `);
 
     // MixedResolvable has __resolveReference and references for resolvable keys
     expect(content).toBeSimilarStringTo(`
-    export type MixedResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MixedResolvable'] = ResolversParentTypes['MixedResolvable'], FederationType extends FederationTypes['MixedResolvable'] = FederationTypes['MixedResolvable']> = {
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['MixedResolvable']>,
-        ( { __typename: 'MixedResolvable' }
-        & ( GraphQLRecursivePick<FederationType, {"id":true}> | GraphQLRecursivePick<FederationType, {"id2":true}> ) ), ContextType>;
-      id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-      id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-      id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-    };
-  `);
+      export type MixedResolvableResolvers<ContextType = any, ParentType extends ResolversParentTypes['MixedResolvable'] = ResolversParentTypes['MixedResolvable'], FederationReferenceType extends FederationReferenceTypes['MixedResolvable'] = FederationReferenceTypes['MixedResolvable']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['MixedResolvable']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        id2?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        id3?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+      };
+    `);
 
     // MultipleNonResolvableResolvers does NOT have __resolveReference because all keys are non-resolvable
     expect(content).toBeSimilarStringTo(`
@@ -200,13 +212,21 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
+    expect(content).toBeSimilarStringTo(`
+      export type FederationReferenceTypes = {
+        User:
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+      };
+    `);
+
     // User should have it
     expect(content).toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, ( { __typename: 'User' } & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
     `);
     // Foo shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
-      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Book']>, ( { __typename: 'Book' } & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
+      __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Book'] | FederationReferenceType>, FederationReferenceType, ContextType>;
     `);
   });
 
@@ -242,23 +262,30 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     });
 
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
+      export type FederationReferenceTypes = {
+        Name:
+          ( { __typename: 'Name' }
+          & GraphQLRecursivePick<FederationTypes['Name'], {"id":true}> );
+        User:
           ( { __typename: 'User' }
-          & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-        name?: Resolver<Maybe<ResolversTypes['Name']>, ParentType, ContextType>;
-      }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+      };
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type NameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name'], FederationType extends FederationTypes['Name'] = FederationTypes['Name']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Name']>,
-          ( { __typename: 'Name' }
-          & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        name?: Resolver<Maybe<ResolversTypes['Name']>, ParentType, ContextType>;
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type NameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name'], FederationReferenceType extends FederationReferenceTypes['Name'] = FederationReferenceTypes['Name']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Name']> | FederationReferenceType, FederationReferenceType, ContextType>;
         first?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         last?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-      }
+      };
     `);
   });
 
@@ -379,15 +406,21 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     });
 
     expect(content).toBeSimilarStringTo(`
+      export type FederationReferenceTypes = {
+        User:
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
+          & ( {}
+              | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true,"name":true,"age":true,"address":{"street":true}}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true,"address":{"street":true}}> ) );
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
         Query: {};
-        User: User |
-          ( { __typename: 'User' }
-            & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
-            & ( {}
-                | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true}>
-                | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true,"name":true,"age":true,"address":{"street":true}}>
-                | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true,"address":{"street":true}}> ) );
+        User: User | FederationReferenceTypes['User'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
         Int: Scalars['Int']['output'];
@@ -397,14 +430,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-          ( { __typename: 'User' }
-            & GraphQLRecursivePick<FederationType, {"id":true}>
-            & ( {}
-                | GraphQLRecursivePick<FederationType, {"favouriteColor":true}>
-                | GraphQLRecursivePick<FederationType, {"favouriteColor":true,"name":true,"age":true,"address":{"street":true}}>
-                | GraphQLRecursivePick<FederationType, {"name":true,"age":true,"address":{"street":true}}> ) ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         favouriteColorHex?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       };
@@ -436,11 +463,17 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     });
 
     expect(content).toBeSimilarStringTo(`
-      export type ResolversParentTypes = {
-        Query: {};
-        User: User |
+      export type FederationReferenceTypes = {
+        User:
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationTypes['User'], {"name":{"first":true,"last":true}}> );
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        Query: {};
+        User: User | FederationReferenceTypes['User'];
         String: Scalars['String']['output'];
         Name: Name;
         Boolean: Scalars['Boolean']['output'];
@@ -448,10 +481,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-          ( { __typename: 'User' }
-          & GraphQLRecursivePick<FederationType, {"name":{"first":true,"last":true}}> ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       };
     `);
@@ -486,17 +517,23 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     });
 
     expect(content).toBeSimilarStringTo(`
-      export type ResolversParentTypes = {
-        Query: {};
-        User: User |
+      export type FederationReferenceTypes = {
+        User:
           ( { __typename: 'User' }
-            & ( GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
+          & ( GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"uuid":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true,"oldId2":true}}> )
-            & ( {}
+          & ( {}
               | GraphQLRecursivePick<FederationTypes['User'], {"id":true,"name":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"id":true,"name":true,"legacyId":{"oldId1":true}}>
               | GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true},"name":true}> ) );
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        Query: {};
+        User: User | FederationReferenceTypes['User'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
         LegacyId: LegacyId;
@@ -505,16 +542,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-          ( { __typename: 'User' }
-            & ( GraphQLRecursivePick<FederationType, {"id":true}>
-              | GraphQLRecursivePick<FederationType, {"uuid":true}>
-              | GraphQLRecursivePick<FederationType, {"legacyId":{"oldId1":true,"oldId2":true}}> )
-            & ( {}
-              | GraphQLRecursivePick<FederationType, {"id":true,"name":true}>
-              | GraphQLRecursivePick<FederationType, {"id":true,"name":true,"legacyId":{"oldId1":true}}>
-              | GraphQLRecursivePick<FederationType, {"legacyId":{"oldId1":true},"name":true}> ) ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         uuid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -548,10 +577,16 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     });
 
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
+      export type FederationReferenceTypes = {
+        User:
           ( { __typename: 'User' }
-          & GraphQLRecursivePick<FederationType, {"name":{"first":true,"last":true}}> ), ContextType>;
+            & GraphQLRecursivePick<FederationTypes['User'], {"name":{"first":true,"last":true}}> );
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         name?: Resolver<ResolversTypes['Name'], ParentType, ContextType>;
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       };
@@ -608,13 +643,19 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
+    expect(content).toBeSimilarStringTo(`
+      export type FederationReferenceTypes = {
+        User:
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+      };
+    `);
+
     // `UserResolvers` should not have `username` resolver because it is marked with `@external`
     // `UserResolvers` should have `name` resolver because whilst it is marked with `@external`, it is provided by `Book.author`
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-          ( { __typename: 'User' }
-          & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
         address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
@@ -761,12 +802,19 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
+    expect(content).toBeSimilarStringTo(`
+      export type FederationReferenceTypes = {
+        User:
+          ( { __typename: 'User' }
+          & ( GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
+              | GraphQLRecursivePick<FederationTypes['User'], {"name":true}> ) );
+      };
+    `);
+
     // User should have it
     expect(content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-          ( { __typename: 'User' }
-          & ( GraphQLRecursivePick<FederationType, {"id":true}> | GraphQLRecursivePick<FederationType, {"name":true}> ) ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       };
