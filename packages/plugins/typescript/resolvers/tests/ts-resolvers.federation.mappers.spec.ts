@@ -117,6 +117,13 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         User: User;
       };
 
+      /** Mapping of federation reference types */
+      export type FederationReferenceTypes = {
+        User:
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+      };
+
 
 
       /** Mapping between all available schema types and the resolvers types */
@@ -143,10 +150,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
       };
 
-      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationType extends FederationTypes['User'] = FederationTypes['User']> = {
-        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>,
-          ( { __typename: 'User' }
-          & GraphQLRecursivePick<FederationType, {"id":true}> ), ContextType>;
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'], FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
       };
