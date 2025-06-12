@@ -3,7 +3,6 @@ on:
   pull_request:
     branches:
       - master
-      - federation-fixes
 
 jobs:
   # dependencies:
