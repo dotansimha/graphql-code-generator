@@ -17,6 +17,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         id: ID!
         user: User!
       }
+
+      type Account @key(fields: "id") {
+        id: ID!
+        name: String! @external
+        displayName: String! @requires(fields: "name")
+      }
     `;
 
     const content = await generate({
@@ -25,6 +31,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         federation: true,
         mappers: {
           User: './mappers#UserMapper',
+          Account: './mappers#AccountMapper',
         },
       },
     });
@@ -32,7 +39,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
     // User should have it
     expect(content).toMatchInlineSnapshot(`
       "import { GraphQLResolveInfo } from 'graphql';
-      import { UserMapper } from './mappers';
+      import { UserMapper, AccountMapper } from './mappers';
       export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 
@@ -115,6 +122,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
       /** Mapping of federation types */
       export type FederationTypes = {
         User: User;
+        Account: Account;
       };
 
       /** Mapping of federation reference types */
@@ -122,6 +130,11 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         User:
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationTypes['User'], {"id":true}> );
+        Account:
+          ( { __typename: 'Account' }
+          & GraphQLRecursivePick<FederationTypes['Account'], {"id":true}>
+          & ( {}
+              | GraphQLRecursivePick<FederationTypes['Account'], {"name":true}> ) );
       };
 
 
@@ -133,6 +146,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
         UserProfile: ResolverTypeWrapper<Omit<UserProfile, 'user'> & { user: ResolversTypes['User'] }>;
+        Account: ResolverTypeWrapper<AccountMapper>;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
       };
 
@@ -143,6 +157,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
         UserProfile: Omit<UserProfile, 'user'> & { user: ResolversParentTypes['User'] };
+        Account: AccountMapper;
         Boolean: Scalars['Boolean']['output'];
       };
 
@@ -161,10 +176,17 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
       };
 
+      export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account'], FederationReferenceType extends FederationReferenceTypes['Account'] = FederationReferenceTypes['Account']> = {
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Account']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+      };
+
       export type Resolvers<ContextType = any> = {
         Query?: QueryResolvers<ContextType>;
         User?: UserResolvers<ContextType>;
         UserProfile?: UserProfileResolvers<ContextType>;
+        Account?: AccountResolvers<ContextType>;
       };
 
       "
