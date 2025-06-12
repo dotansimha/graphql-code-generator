@@ -133,6 +133,15 @@ export type FederationTypes = {
   User: User;
 };
 
+/** Mapping of federation reference types */
+export type FederationReferenceTypes = {
+  User: { __typename: 'User' } & (
+    | GraphQLRecursivePick<FederationTypes['User'], { id: true }>
+    | GraphQLRecursivePick<FederationTypes['User'], { name: true }>
+  ) &
+    ({} | GraphQLRecursivePick<FederationTypes['User'], { address: { city: true; lines: { line2: true } } }>);
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Address: ResolverTypeWrapper<Address>;
@@ -154,13 +163,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Lines: Lines;
   Query: {};
-  User:
-    | User
-    | ({ __typename: 'User' } & (
-        | GraphQLRecursivePick<FederationTypes['User'], { id: true }>
-        | GraphQLRecursivePick<FederationTypes['User'], { name: true }>
-      ) &
-        GraphQLRecursivePick<FederationTypes['User'], { address: { city: true; lines: { line2: true } } }>);
+  User: User | FederationReferenceTypes['User'];
   Int: Scalars['Int']['output'];
   Boolean: Scalars['Boolean']['output'];
 };
@@ -199,15 +202,11 @@ export type QueryResolvers<
 export type UserResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
-  FederationType extends FederationTypes['User'] = FederationTypes['User']
+  FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']
 > = {
   __resolveReference?: ReferenceResolver<
-    Maybe<ResolversTypes['User']>,
-    { __typename: 'User' } & (
-      | GraphQLRecursivePick<FederationType, { id: true }>
-      | GraphQLRecursivePick<FederationType, { name: true }>
-    ) &
-      GraphQLRecursivePick<FederationType, { address: { city: true; lines: { line2: true } } }>,
+    Maybe<ResolversTypes['User']> | FederationReferenceType,
+    FederationReferenceType,
     ContextType
   >;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

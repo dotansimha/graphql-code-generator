@@ -250,6 +250,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 `;
 
   const federationTypes = visitor.buildFederationTypes();
+  const federationReferenceTypes = visitor.buildFederationReferenceTypes();
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const resolversUnionTypesMapping = visitor.buildResolversUnionTypes();
@@ -294,6 +295,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     content: [
       header,
       federationTypes,
+      federationReferenceTypes,
       resolversUnionTypesMapping,
       resolversInterfaceTypesMapping,
       resolversTypeMapping,
