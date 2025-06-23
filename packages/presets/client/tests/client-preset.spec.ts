@@ -2463,7 +2463,7 @@ export * from "./gql.js";`);
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
-          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
           private value: string;
           public __meta__?: Record<string, any> | undefined;
 
@@ -2608,7 +2608,7 @@ export * from "./gql.js";`);
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
-          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
           private value: string;
           public __meta__?: Record<string, any> | undefined;
 
@@ -2748,7 +2748,7 @@ export * from "./gql.js";`);
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
-          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
           private value: string;
           public __meta__?: Record<string, any> | undefined;
 
@@ -3047,7 +3047,7 @@ export * from "./gql.js";`);
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
-          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
           private value: string;
           public __meta__?: Record<string, any> | undefined;
 
