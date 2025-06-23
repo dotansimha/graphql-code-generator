@@ -2473,7 +2473,7 @@ export * from "./gql.js";`);
             this.__meta__ = __meta__;
           }
 
-          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
@@ -2618,7 +2618,7 @@ export * from "./gql.js";`);
             this.__meta__ = __meta__;
           }
 
-          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
@@ -2758,7 +2758,7 @@ export * from "./gql.js";`);
             this.__meta__ = __meta__;
           }
 
-          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
@@ -3057,7 +3057,7 @@ export * from "./gql.js";`);
             this.__meta__ = __meta__;
           }
 
-          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
