@@ -181,6 +181,7 @@ We can build a simple wrapper around `fetch` that takes a `TypedDocumentString` 
 returns a typed response.
 
 ```typescript filename="src/graphql/execute.ts"
+import type { ExecutionResult } from 'graphql'
 import type { TypedDocumentString } from './graphql'
 
 export async function execute<TResult, TVariables>(
@@ -203,7 +204,7 @@ export async function execute<TResult, TVariables>(
     throw new Error('Network response was not ok')
   }
 
-  return response.json() as TResult
+  return response.json() as ExecutionResult<TResult>
 }
 ```
 
