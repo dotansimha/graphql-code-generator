@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typed-document-node",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "GraphQL Code Generator plugin for generating ready-to-use TypedDocumentNode based on GraphQL operations",
   "repository": {
     "type": "git",
