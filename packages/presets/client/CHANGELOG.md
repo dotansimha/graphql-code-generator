@@ -1,5 +1,25 @@
 # @graphql-codegen/client-preset
 
+## 4.8.3
+
+### Patch Changes
+
+- [#10362](https://github.com/dotansimha/graphql-code-generator/pull/10362) [`3188b8c`](https://github.com/dotansimha/graphql-code-generator/commit/3188b8c39e9fd24e3dbbd0bcc8767052153eb399) Thanks [@Brookke](https://github.com/Brookke)! - Make generated type compatible with noImplicitOverride=true
+
+- [#10373](https://github.com/dotansimha/graphql-code-generator/pull/10373) [`c3295f9`](https://github.com/dotansimha/graphql-code-generator/commit/c3295f9c60383e5631ccc4080bc28e7c00a4d61b) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix client preset not working with exactOptionalPropertyTypes=true when documentMode=string
+
+- Updated dependencies [[`3188b8c`](https://github.com/dotansimha/graphql-code-generator/commit/3188b8c39e9fd24e3dbbd0bcc8767052153eb399), [`c3295f9`](https://github.com/dotansimha/graphql-code-generator/commit/c3295f9c60383e5631ccc4080bc28e7c00a4d61b)]:
+  - @graphql-codegen/typed-document-node@5.1.2
+
+## 4.8.2
+
+### Patch Changes
+
+- [#10120](https://github.com/dotansimha/graphql-code-generator/pull/10120) [`98392fc`](https://github.com/dotansimha/graphql-code-generator/commit/98392fc5d91035b5b5b0ffdefd78d0398762a523) Thanks [@yangirov](https://github.com/yangirov)! - The `@graphql-codegen/client-preset` package now supports the `enumValues` option.
+
+- Updated dependencies [[`e324382`](https://github.com/dotansimha/graphql-code-generator/commit/e3243824cfe0d7ab463cf0d5a6455715510959be)]:
+  - @graphql-codegen/plugin-helpers@5.1.1
+
 ## 4.8.1
 
 ### Patch Changes
