@@ -25,7 +25,7 @@ describe('Codegen Executor', () => {
 
   describe('Generator General Options', () => {
     it('Should output the correct filenames', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': { plugins: ['typescript'] },
@@ -33,13 +33,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(2);
-      expect(output.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
+      expect(result.length).toBe(2);
+      expect(result.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
     });
 
     it('Should load require extensions', async () => {
       expect((global as any).dummyWasLoaded).toBeFalsy();
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
         require: join(__dirname, './dummy-require.js'),
         generates: {
@@ -48,7 +48,7 @@ describe('Codegen Executor', () => {
         cwd: __dirname,
       });
 
-      expect(output.length).toBe(1);
+      expect(result.length).toBe(1);
       expect((global as any).dummyWasLoaded).toBeTruthy();
     });
 
@@ -70,7 +70,7 @@ describe('Codegen Executor', () => {
     });
 
     it('Should accept plugins as object', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -84,12 +84,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type RootQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type RootQuery');
     });
 
     it('Should accept plugins as array of objects', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -99,8 +99,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type RootQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type RootQuery');
     });
 
     it('Should throw when no output files has been specified', async () => {
@@ -118,7 +118,7 @@ describe('Codegen Executor', () => {
     });
 
     it('Should work with just schema', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out.ts': {
@@ -127,12 +127,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
+      expect(result.length).toBe(1);
     });
 
     it('Should not throw when every output has a schema and there is no root schema', async () => {
       try {
-        const output = await executeCodegen({
+        const { result } = await executeCodegen({
           generates: {
             'out.ts': {
               schema: SIMPLE_TEST_SCHEMA,
@@ -141,7 +141,7 @@ describe('Codegen Executor', () => {
           },
         });
 
-        expect(output.length).toBe(1);
+        expect(result.length).toBe(1);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).not.toMatch('Invalid Codegen Configuration!');
@@ -207,7 +207,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle extend keyword when GraphQLSchema is used', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: './tests/test-files/schema-dir/with-extend.js',
         generates: {
           'out.ts': {
@@ -216,15 +216,15 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].filename).toBe('out.ts');
-      expect(output[0].content).toContain(`hello?: Maybe<Scalars['String']['output']>`);
+      expect(result.length).toBe(1);
+      expect(result[0].filename).toBe('out.ts');
+      expect(result[0].content).toContain(`hello?: Maybe<Scalars['String']['output']>`);
     });
   });
 
   describe('Per-output options', () => {
     it('Should allow to specify schema extension for specific output', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
@@ -236,14 +236,14 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type Query');
-      expect(output[0].content).toContain('export type MyType');
-      expect(output[0].content).toContain('export type OtherType');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type Query');
+      expect(result[0].content).toContain('export type MyType');
+      expect(result[0].content).toContain('export type OtherType');
     });
 
     it('Should allow to specify documents extension for specific output', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
@@ -253,12 +253,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type QQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type QQuery');
     });
 
     it('Should extend existing documents', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -269,8 +269,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type QQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type QQuery');
     });
 
     it('Should throw on duplicated names', async () => {
@@ -446,7 +446,7 @@ describe('Codegen Executor', () => {
 
   describe('Plugin Configuration', () => {
     it('Should inherit root config', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
@@ -459,13 +459,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type rootquery');
-      expect(output[0].content).toContain('export type root');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type rootquery');
+      expect(result[0].content).toContain('export type root');
     });
 
     it('Should accept config in per-output (override)', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -484,13 +484,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(2);
-      expect(output[0].content).toContain('export type rootquery');
-      expect(output[1].content).toContain('export type ROOTQUERY');
+      expect(result.length).toBe(2);
+      expect(result[0].content).toContain('export type rootquery');
+      expect(result[1].content).toContain('export type ROOTQUERY');
     });
 
     it('Should accept config in per-plugin', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -506,13 +506,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type root');
-      expect(output[0].content).toContain('export type rootquery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type root');
+      expect(result[0].content).toContain('export type rootquery');
     });
 
     it('Should allow override of config in', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
@@ -540,15 +540,15 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(2);
-      expect(output[0].content).toContain('export type ROOTQUERY');
-      expect(output[1].content).toContain('export type RootQuery');
+      expect(result.length).toBe(2);
+      expect(result[0].content).toContain('export type ROOTQUERY');
+      expect(result[1].content).toContain('export type RootQuery');
     });
   });
 
   describe('Plugin loading', () => {
     it('Should load custom plugin from local file', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
@@ -557,8 +557,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('plugin');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('plugin');
     });
 
     it('Should throw when custom plugin is not valid', async () => {
@@ -708,7 +708,7 @@ describe('Codegen Executor', () => {
         }
       `;
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [schemaA, schemaB],
         generates: {
           'out1.ts': {
@@ -717,8 +717,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toBeSimilarStringTo(`export type Scalars = {
+      expect(result.length).toBe(1);
+      expect(result[0].content).toBeSimilarStringTo(`export type Scalars = {
         ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
@@ -1016,7 +1016,7 @@ describe('Codegen Executor', () => {
 
   it('Should allow plugins to extend schema with custom root', async () => {
     try {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: `schema { query: RootQuery } type MyType { f: String } type RootQuery { f: String }`,
         documents: `query root { f }`,
         generates: {
@@ -1025,14 +1025,14 @@ describe('Codegen Executor', () => {
           },
         },
       });
-      expect(output.length).toBe(1);
+      expect(result.length).toBe(1);
     } catch (e) {
       expect(e.message).not.toBe('Query root type must be provided.');
     }
   });
 
   it('Should allow plugin context to be accessed and modified', async () => {
-    const output = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         {
           './tests/test-documents/schema.graphql': {
@@ -1047,8 +1047,8 @@ describe('Codegen Executor', () => {
       },
     });
 
-    expect(output.length).toBe(1);
-    expect(output[0].content).toContain('Hello world!');
+    expect(result.length).toBe(1);
+    expect(result[0].content).toContain('Hello world!');
   });
 
   it('Should sort the input schema', async () => {
@@ -1069,7 +1069,7 @@ describe('Codegen Executor', () => {
         b: String
       }
     `;
-    const output = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [nonSortedSchema],
       generates: {
         'out1.graphql': {
@@ -1081,8 +1081,8 @@ describe('Codegen Executor', () => {
       },
     });
 
-    expect(output.length).toBe(1);
-    expect(output[0].content).toBeSimilarStringTo(/* GraphQL */ `
+    expect(result.length).toBe(1);
+    expect(result[0].content).toBeSimilarStringTo(/* GraphQL */ `
       type A {
         b: String
         s: String
@@ -1156,7 +1156,7 @@ describe('Codegen Executor', () => {
         return newDocuments;
       };
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query foo { f }`,
         generates: {
@@ -1167,8 +1167,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type BarQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type BarQuery');
     });
 
     it('Should allow users to set config', async () => {
@@ -1195,7 +1195,7 @@ describe('Codegen Executor', () => {
         };
       };
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query foo { f }`,
         generates: {
@@ -1206,12 +1206,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type TestQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type TestQuery');
     });
 
     it('Should transform documents when specifying files', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -1222,12 +1222,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type BarQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type BarQuery');
     });
 
     it('Should allow users to set config when specifying files', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -1244,12 +1244,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type TestQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type TestQuery');
     });
 
     it('Should allow plugin context to be accessed and modified', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -1267,8 +1267,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('Hello world!');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('Hello world!');
     });
 
     it('should throw an understandable error if it fails.', async () => {
@@ -1315,7 +1315,7 @@ describe('Codegen Executor', () => {
         return newDocuments;
       };
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query foo { f }`,
         generates: {
@@ -1326,13 +1326,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      const fileOutput = output.find(file => file.filename === './src/gql/graphql.ts');
+      const fileOutput = result.find(file => file.filename === './src/gql/graphql.ts');
       expect(fileOutput.content).toContain('export type BarQuery');
     });
   });
 
   it('should not run out of memory when generating very complex types (issue #7720)', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: ['../../dev-test/gatsby/schema.graphql'],
       documents: ['../../dev-test/gatsby/fragments.ts'],
       config: {
