@@ -138,13 +138,9 @@ export async function generate(
   const { result: outputFiles, error } = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
   if (error) {
     if (config.writeOnPartialSuccess) {
-      getLogger().warn(
-        `  ${logSymbols.warning} One or more errors occurred while generating files. Successful processes wrote output to files.`
-      );
+      getLogger().warn(`  ${logSymbols.warning} One or more errors occurred. Successful generation wrote to files.`);
     } else {
-      getLogger().error(
-        `  ${logSymbols.error} One or more errors occurred while generating files. No output was written to files.`
-      );
+      getLogger().error(`  ${logSymbols.error} One or more errors occurred. No output was written to files.`);
       throw error;
     }
   }
