@@ -122,7 +122,8 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
 
   const transformedSchema = mapSchema(schema, {
     [MapperKind.INTERFACE_TYPE]: type => {
-      const federationDetails = checkTypeFederationDetails(type, schema);
+      const node = astFromInterfaceType(type, schema);
+      const federationDetails = checkTypeFederationDetails(node, schema);
       if (federationDetails && federationDetails.resolvableKeyDirectives.length > 0) {
         const typeConfig = type.toConfig();
         typeConfig.fields = {
@@ -153,7 +154,8 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
       return type;
     },
     [MapperKind.OBJECT_TYPE]: type => {
-      const federationDetails = checkTypeFederationDetails(type, schema);
+      const node = astFromObjectType(type, schema);
+      const federationDetails = checkTypeFederationDetails(node, schema);
       if (federationDetails && federationDetails.resolvableKeyDirectives.length > 0) {
         const typeConfig = type.toConfig();
 
@@ -478,15 +480,9 @@ export class ApolloFederation {
  * @param node Type
  */
 function checkTypeFederationDetails(
-  typeOrNode: ObjectTypeDefinitionNode | GraphQLObjectType | InterfaceTypeDefinitionNode | GraphQLInterfaceType,
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   schema: GraphQLSchema
 ): { resolvableKeyDirectives: readonly DirectiveNode[] } | false {
-  const node = isObjectType(typeOrNode)
-    ? astFromObjectType(typeOrNode, schema)
-    : isInterfaceType(typeOrNode)
-    ? astFromInterfaceType(typeOrNode, schema)
-    : typeOrNode;
-
   const name = node.name.value;
   const directives = node.directives;
 
@@ -520,17 +516,9 @@ function checkTypeFederationDetails(
  */
 function getDirectivesByName(
   name: string,
-  node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode | InterfaceTypeDefinitionNode
+  node: ObjectTypeDefinitionNode | FieldDefinitionNode | InterfaceTypeDefinitionNode
 ): readonly DirectiveNode[] {
-  let astNode: ObjectTypeDefinitionNode | FieldDefinitionNode | InterfaceTypeDefinitionNode;
-
-  if (isObjectType(node) || isInterfaceType(node)) {
-    astNode = node.astNode;
-  } else {
-    astNode = node;
-  }
-
-  return astNode?.directives?.filter(d => d.name.value === name) || [];
+  return node?.directives?.filter(d => d.name.value === name) || [];
 }
 
 function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {
