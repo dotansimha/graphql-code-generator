@@ -286,7 +286,7 @@ export class ApolloFederation {
   }: {
     node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
   }): readonly FieldDefinitionNode[] {
-    const nodeName = node.name as unknown as string;
+    const nodeName = node.name.value;
     if (this.fieldsToGenerate[nodeName]) {
       return this.fieldsToGenerate[nodeName];
     }
@@ -403,7 +403,7 @@ export class ApolloFederation {
   }
 
   private hasProvides(node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode, fieldName: string): boolean {
-    const fields = this.providesMap[node.name as unknown as string];
+    const fields = this.providesMap[node.name.value];
 
     if (fields?.length) {
       return fields.includes(fieldName);
@@ -487,13 +487,13 @@ function checkTypeFederationDetails(
     ? astFromInterfaceType(typeOrNode, schema)
     : typeOrNode;
 
-  const name = node.name.value || (typeOrNode.name as unknown as string);
+  const name = node.name.value;
   const directives = node.directives;
 
   const rootTypeNames = getRootTypeNames(schema);
   const isNotRoot = !rootTypeNames.has(name);
   const isNotIntrospection = !name.startsWith('__');
-  const keyDirectives = directives.filter(d => d.name.value === 'key' || (d.name as unknown as string) === 'key');
+  const keyDirectives = directives.filter(d => d.name.value === 'key');
 
   const check = isNotRoot && isNotIntrospection && keyDirectives.length > 0;
 
@@ -530,14 +530,7 @@ function getDirectivesByName(
     astNode = node;
   }
 
-  return (
-    astNode?.directives?.filter(d => {
-      // A ObjectTypeDefinitionNode's directive looks like `{ kind: 'Directive', name: 'external', arguments: [] }`
-      // However, other directives looks like `{ kind: 'Directive', name: { kind: 'Name', value: 'external' }, arguments: [] }`
-      // Therefore, we need to check for both `d.name.value` and d.name
-      return d.name.value === name || (d.name as unknown as string) === name;
-    }) || []
-  );
+  return astNode?.directives?.filter(d => d.name.value === name) || [];
 }
 
 function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {

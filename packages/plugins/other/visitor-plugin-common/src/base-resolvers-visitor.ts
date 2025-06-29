@@ -20,7 +20,6 @@ import {
   isUnionType,
   ListTypeNode,
   NamedTypeNode,
-  NameNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
@@ -1472,13 +1471,6 @@ export class BaseResolversVisitor<
     return '';
   }
 
-  // FIXME: this Name method causes a lot of type inconsistencies
-  // because the type of nodes no longer matches the `graphql-js` types
-  // So, we should update this and remove any relevant `as any as string` or `as unknown as string`
-  Name(node: NameNode): string {
-    return node.value;
-  }
-
   ListType(node: ListTypeNode): string {
     const asString = node.type as any as string;
 
@@ -1492,7 +1484,7 @@ export class BaseResolversVisitor<
   }
 
   NamedType(node: NamedTypeNode): string {
-    const nameStr = node.name as any as string;
+    const nameStr = node.name.value;
 
     if (this.config.scalars[nameStr]) {
       return this._getScalar(nameStr);
@@ -1540,10 +1532,10 @@ export class BaseResolversVisitor<
     return {
       node: original,
       printContent: (parentNode, avoidResolverOptionals) => {
-        const parentName = parentNode.name as unknown as string;
+        const parentName = parentNode.name.value;
         const parentType = this.schema.getType(parentName);
         const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
-        const typeName = node.name as unknown as string;
+        const typeName = node.name.value;
 
         const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ node: parentNode });
         const shouldGenerateField =
@@ -1618,7 +1610,7 @@ export class BaseResolversVisitor<
 
           const directiveMappings =
             node.directives
-              ?.map(directive => this._directiveResolverMappings[directive.name as any])
+              ?.map(directive => this._directiveResolverMappings[directive.name.value])
               .filter(Boolean)
               .reverse() ?? [];
 
@@ -1662,8 +1654,8 @@ export class BaseResolversVisitor<
   }
 
   private getFieldContextType(parentName: string, node: FieldDefinitionNode): string {
-    if (this._fieldContextTypeMap[`${parentName}.${node.name}`]) {
-      return this._fieldContextTypeMap[`${parentName}.${node.name}`].type;
+    if (this._fieldContextTypeMap[`${parentName}.${node.name.value}`]) {
+      return this._fieldContextTypeMap[`${parentName}.${node.name.value}`].type;
     }
     return 'ContextType';
   }
@@ -1672,7 +1664,7 @@ export class BaseResolversVisitor<
     let contextType = this.getFieldContextType(parentName, node);
 
     for (const directive of node.directives) {
-      const name = directive.name as unknown as string;
+      const name = directive.name.value;
       const directiveMap = this._directiveContextTypesMap[name];
       if (directiveMap) {
         contextType = `${directiveMap.type}<${contextType}>`;
@@ -1731,7 +1723,7 @@ export class BaseResolversVisitor<
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string | null {
-    const typeName = node.name as unknown as string;
+    const typeName = node.name.value;
     const fieldsToGenerate = this._federation.findFieldNodesToGenerate({ node });
     if (fieldsToGenerate.length === 0) {
       return null;
@@ -1798,7 +1790,7 @@ export class BaseResolversVisitor<
       .withName(name, `<${genericTypes.join(', ')}>`)
       .withBlock(fieldsContent.join('\n'));
 
-    this._collectedResolvers[node.name as any] = {
+    this._collectedResolvers[node.name.value] = {
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
@@ -1817,11 +1809,11 @@ export class BaseResolversVisitor<
       .map(f => `'${f}'`)
       .join(' | ');
 
-    this._collectedResolvers[node.name as any] = {
+    this._collectedResolvers[node.name.value] = {
       typename: name + '<ContextType>',
       baseGeneratedTypename: name,
     };
-    const parentType = this.getParentTypeToUse(node.name as any as string);
+    const parentType = this.getParentTypeToUse(node.name.value);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -1837,7 +1829,7 @@ export class BaseResolversVisitor<
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
-    const nameAsString = node.name as any as string;
+    const nameAsString = node.name.value;
     const baseName = this.getTypeToUse(nameAsString);
 
     if (this._federation.skipScalar(nameAsString)) {
@@ -1845,7 +1837,7 @@ export class BaseResolversVisitor<
     }
 
     this._hasScalars = true;
-    this._collectedResolvers[node.name as any] = {
+    this._collectedResolvers[node.name.value] = {
       typename: 'GraphQLScalarType',
     };
 
@@ -1863,11 +1855,11 @@ export class BaseResolversVisitor<
         }),
         ` extends GraphQLScalarTypeConfig<${baseName}, any>`
       )
-      .withBlock(indent(`name: '${node.name}'${this.getPunctuation('interface')}`)).string;
+      .withBlock(indent(`name: '${node.name.value}'${this.getPunctuation('interface')}`)).string;
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode, key: string | number, parent: any): string {
-    if (this._federation.skipDirective(node.name as any)) {
+    if (this._federation.skipDirective(node.name.value)) {
       return null;
     }
 
@@ -1877,7 +1869,7 @@ export class BaseResolversVisitor<
     const sourceNode = parent[key] as DirectiveDefinitionNode;
     const hasArguments = sourceNode.arguments && sourceNode.arguments.length > 0;
 
-    this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, ContextType>';
+    this._collectedDirectiveResolvers[node.name.value] = directiveName + '<any, any, ContextType>';
 
     const directiveArgsTypeName = this.convertName(node, {
       suffix: 'DirectiveArgs',
@@ -1926,7 +1918,7 @@ export class BaseResolversVisitor<
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const rawTypeName = node.name as any;
+    const rawTypeName = node.name.value;
 
     // If we have enumValues set, and it's point to an external enum - we need to allow internal values resolvers
     // In case we have enumValues set but as explicit values, no need to to do mapping since it's already
@@ -1959,7 +1951,7 @@ export class BaseResolversVisitor<
       suffix: this.config.resolverTypeSuffix,
     });
     const declarationKind = 'type';
-    const typeName = node.name as any as string;
+    const typeName = node.name.value;
     const implementingTypes = Object.keys(this._parsedSchemaMeta.types.interface[typeName].implementingTypes);
 
     this._collectedResolvers[typeName] = {
