@@ -136,11 +136,13 @@ export async function generate(
   }
 
   const { result: outputFiles, error } = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
+
+  if (outputFiles.length === 0 && error) {
+    // If all generation failed, just throw to return non-zero code.
+    throw error;
+  }
+
   if (error && config.allowPartialOutputs) {
-    if (outputFiles.length === 0) {
-      // If all generation failed, just throw to return non-zero code.
-      throw error;
-    }
     getLogger().warn(
       `  ${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`
     );

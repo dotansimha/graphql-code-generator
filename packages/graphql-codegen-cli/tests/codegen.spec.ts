@@ -273,27 +273,22 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('export type QQuery');
     });
 
-    it('Should throw on duplicated names', async () => {
-      try {
-        await executeCodegen({
-          schema: `
+    it('Should return error on duplicated names', async () => {
+      const { error } = await executeCodegen({
+        schema: `
             type RootQuery { f: String }
             schema { query: RootQuery }
           `,
-          documents: [`query q { e }`, `query q { f }`],
-          generates: {
-            'out1.ts': { plugins: ['typescript'] },
-          },
-        });
-        throw SHOULD_NOT_THROW_STRING;
-      } catch (e) {
-        expect(e).not.toEqual(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('Not all operations have an unique name: q');
-      }
+        documents: [`query q { e }`, `query q { f }`],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+      expect(error.message).toContain('Not all operations have an unique name: q');
     });
 
     it('should handle gql tag in ts with with nested fragment', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
@@ -307,7 +302,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle gql tag in ts with with multiple nested fragment', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
@@ -322,7 +317,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle gql tag in js with with nested fragment', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
         generates: {
@@ -337,7 +332,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle TypeScript features', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/ts-features-with-query.ts'],
         generates: {
@@ -353,7 +348,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle multiple fragments with the same name, but one is commented out', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
         generates: {
@@ -367,7 +362,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle graphql-tag and gatsby by default (documents)', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
@@ -382,7 +377,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle custom graphql string parsers (documents)', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
@@ -561,42 +556,32 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('plugin');
     });
 
-    it('Should throw when custom plugin is not valid', async () => {
-      try {
-        await executeCodegen({
-          schema: SIMPLE_TEST_SCHEMA,
-          generates: {
-            'out1.ts': {
-              plugins: ['./tests/custom-plugins/invalid.js'],
-            },
+    it('Should return error when custom plugin is not valid', async () => {
+      const { error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': {
+            plugins: ['./tests/custom-plugins/invalid.js'],
           },
-        });
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('Invalid Custom Plugin');
-      }
+        },
+      });
+      expect(error.message).toContain('Invalid Custom Plugin');
     });
 
-    it('Should execute custom plugin validation and throw when it fails', async () => {
-      try {
-        await executeCodegen({
-          schema: SIMPLE_TEST_SCHEMA,
-          generates: {
-            'out1.ts': {
-              plugins: ['./tests/custom-plugins/validation.js'],
-            },
+    it('Should execute custom plugin validation and return error when it fails', async () => {
+      const { error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': {
+            plugins: ['./tests/custom-plugins/validation.js'],
           },
-        });
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('validation failed');
-      }
+        },
+      });
+      expect(error.message).toContain('validation failed');
     });
 
     it('Should allow plugins to extend schema', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
@@ -605,13 +590,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output[0].content).toContain('MyType,');
-      expect(output[0].content).toContain('Extension');
-      expect(output[0].content).toContain(`Should have the Extension type: 'Extension'`);
+      expect(result[0].content).toContain('MyType,');
+      expect(result[0].content).toContain('Extension');
+      expect(result[0].content).toContain(`Should have the Extension type: 'Extension'`);
     });
 
     it('Should allow plugins to extend schema (using a function)', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         config: {
           test: 'MyType',
@@ -623,7 +608,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output[0].content).toContain('MyType');
+      expect(result[0].content).toContain('MyType');
     });
   });
 
@@ -766,72 +751,60 @@ describe('Codegen Executor', () => {
       expect((global as any).CUSTOM_SCHEMA_LOADER_CALLED).toBeTruthy();
     });
 
-    it('Should throw when invalid return value from loader', async () => {
-      try {
-        await executeCodegen({
-          schema: [
-            {
-              './tests/test-documents/schema.graphql': {
-                loader: './tests/custom-loaders/invalid-return-value-schema-loader.js',
-              },
+    it('Should return error when invalid return value from loader', async () => {
+      const { error } = await executeCodegen({
+        schema: [
+          {
+            './tests/test-documents/schema.graphql': {
+              loader: './tests/custom-loaders/invalid-return-value-schema-loader.js',
             },
-          ],
-          generates: {
-            'out1.ts': { plugins: ['typescript'] },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load schema');
-      }
+      expect(error.message).toContain('Failed to load schema');
     });
 
-    it('Should throw when invalid module specified as loader', async () => {
-      try {
-        await executeCodegen({
-          schema: [
-            {
-              './tests/test-documents/schema.graphql': {
-                loader: './tests/custom-loaders/non-existing.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid module specified as loader', async () => {
+      const { error } = await executeCodegen({
+        schema: [
+          {
+            './tests/test-documents/schema.graphql': {
+              loader: './tests/custom-loaders/non-existing.js',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load custom loader');
     });
 
-    it('Should throw when invalid file declaration', async () => {
-      try {
-        await executeCodegen({
-          schema: [
-            {
-              './tests/test-documents/schema.graphql': {
-                loader: './tests/custom-loaders/invalid-export.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid file declaration', async () => {
+      const { error } = await executeCodegen({
+        schema: [
+          {
+            './tests/test-documents/schema.graphql': {
+              loader: './tests/custom-loaders/invalid-export.js',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load schema');
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load schema');
+      expect(error.message).toContain('Failed to load custom loader');
     });
   });
 
@@ -876,76 +849,64 @@ describe('Codegen Executor', () => {
       expect((global as any).CUSTOM_DOCUMENT_LOADER_CALLED).toBeTruthy();
     });
 
-    it('Should throw when invalid return value from custom documents loader', async () => {
-      try {
-        await executeCodegen({
-          schema: ['./tests/test-documents/schema.graphql'],
-          documents: [
-            {
-              './tests/test-documents/valid.graphql': {
-                loader: './tests/custom-loaders/invalid-return-value-documents-loader.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid return value from custom documents loader', async () => {
+      const { error } = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            './tests/test-documents/valid.graphql': {
+              loader: './tests/custom-loaders/invalid-return-value-documents-loader.js',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Unable to find any GraphQL type definitions for the following pointers');
-      }
+      expect(error.message).toContain('Unable to find any GraphQL type definitions for the following pointers');
     });
 
-    it('Should throw when invalid module specified as loader', async () => {
-      try {
-        await executeCodegen({
-          schema: ['./tests/test-documents/schema.graphql'],
-          documents: [
-            {
-              './tests/test-documents/valid.graphql': {
-                loader: './tests/custom-loaders/non-existing.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid module specified as loader', async () => {
+      const { error } = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            './tests/test-documents/valid.graphql': {
+              loader: './tests/custom-loaders/non-existing.js',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load custom loader');
     });
 
-    it('Should throw when invalid file declaration', async () => {
-      try {
-        await executeCodegen({
-          schema: ['./tests/test-documents/schema.graphql'],
-          documents: [
-            {
-              './tests/test-documents/valid.graphql': {
-                loader: './tests/custom-loaders/invalid-export.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid file declaration', async () => {
+      const { error } = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            './tests/test-documents/valid.graphql': {
+              loader: './tests/custom-loaders/invalid-export.js',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load custom loader');
     });
   });
 
@@ -1133,8 +1094,8 @@ describe('Codegen Executor', () => {
       watch: false,
     });
     const config = prj1.getConfig();
-    const output = await executeCodegen(config);
-    expect(output[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
+    const { result } = await executeCodegen(config);
+    expect(result[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
   });
 
   describe('Document Transform', () => {
@@ -1271,30 +1232,26 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('Hello world!');
     });
 
-    it('should throw an understandable error if it fails.', async () => {
-      try {
-        await executeCodegen({
-          schema: SIMPLE_TEST_SCHEMA,
-          documents: `query foo { f }`,
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
-              documentTransforms: [
-                {
-                  transform: () => {
-                    throw new Error('Something Wrong!');
-                  },
+    it('should return error an understandable error if it fails.', async () => {
+      const { error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+            documentTransforms: [
+              {
+                transform: () => {
+                  throw new Error('Something Wrong!');
                 },
-              ],
-            },
+              },
+            ],
           },
-        });
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('DocumentTransform "the element at index 0 of the documentTransforms" failed');
-        expect(e.message).toContain('Something Wrong!');
-      }
+        },
+      });
+
+      expect(error.message).toContain('DocumentTransform "the element at index 0 of the documentTransforms" failed');
+      expect(error.message).toContain('Something Wrong!');
     });
 
     it('Should transform documents with client-preset', async () => {
