@@ -136,13 +136,19 @@ export async function generate(
   }
 
   const { result: outputFiles, error } = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
-  if (error) {
-    if (config.writeOnPartialSuccess) {
-      getLogger().warn(`  ${logSymbols.warning} One or more errors occurred. Successful generation wrote to files.`);
-    } else {
-      getLogger().error(`  ${logSymbols.error} One or more errors occurred. No output was written to files.`);
+  if (error && config.allowPartialOutputs) {
+    if (outputFiles.length === 0) {
+      // If all generation failed, just throw to return non-zero code.
       throw error;
     }
+    getLogger().warn(
+      `  ${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`
+    );
+  } else if (error && !config.allowPartialOutputs) {
+    getLogger().error(
+      `  ${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`
+    );
+    throw error;
   }
 
   await context.profiler.run(() => writeOutput(outputFiles), 'writeOutput');

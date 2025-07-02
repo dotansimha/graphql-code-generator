@@ -555,7 +555,7 @@ export namespace Types {
     /**
      * @description If `true`, write to files whichever `generates` block succeeds. If `false`, one failed `generates` means no output is written to files. Default: false
      */
-    writeOnPartialSuccess?: boolean;
+    allowPartialOutputs?: boolean;
   }
 
   export type ComplexPluginOutput<M = Record<string, unknown>> = {
