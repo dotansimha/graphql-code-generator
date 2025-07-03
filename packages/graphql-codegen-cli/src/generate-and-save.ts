@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import { dirname, isAbsolute, join } from 'path';
+import logSymbols from 'log-symbols';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen.js';
 import { CodegenContext, ensureContext } from './config.js';
@@ -7,6 +8,7 @@ import { lifecycleHooks } from './hooks.js';
 import { debugLog } from './utils/debugging.js';
 import { mkdirp, readFile, unlinkFile, writeFile } from './utils/file-system.js';
 import { createWatcher } from './utils/watcher.js';
+import { getLogger } from './utils/logger.js';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 
@@ -133,7 +135,27 @@ export async function generate(
     return createWatcher(context, writeOutput).runningWatcher;
   }
 
-  const outputFiles = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
+  const { result: outputFiles, error } = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
+
+  if (error) {
+    // If all generation failed, just throw to return non-zero code.
+    if (outputFiles.length === 0) {
+      throw error;
+    }
+
+    // If partial success, but partial output is not allowed, throw to return non-zero code.
+    if (!config.allowPartialOutputs) {
+      getLogger().error(
+        `  ${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`
+      );
+      throw error;
+    }
+
+    // If partial success, and partial output is allowed, warn and proceed to write to files.
+    getLogger().warn(
+      `  ${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`
+    );
+  }
 
   await context.profiler.run(() => writeOutput(outputFiles), 'writeOutput');
   await context.profiler.run(() => lifecycleHooks(config.hooks).beforeDone(), 'Lifecycle: beforeDone');
