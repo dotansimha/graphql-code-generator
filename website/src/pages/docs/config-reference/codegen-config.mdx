@@ -66,7 +66,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`overwrite`** - A flag to overwrite files if they already exist when generating code (`true` by default)
 
-- **`watch`** - A flag to trigger codegen when there are changes in the specified GraphQL schemas. You can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch
+- **`watch`** - A flag to trigger codegen when there are changes in the specified GraphQL schemas. You can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch. When in watch mode, partial success still writes to files.
 
 - **`silent`** - A flag to suppress printing errors when they occur
 
