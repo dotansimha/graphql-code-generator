@@ -75,12 +75,20 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
     }
   }
 
-  let transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
+  let { transformedSchema, federationMeta } = config.federation
+    ? addFederationReferencesToSchema(schema)
+    : { transformedSchema: schema, federationMeta: {} };
+
   transformedSchema = config.customDirectives?.semanticNonNull
     ? await semanticToStrict(transformedSchema)
     : transformedSchema;
 
-  const visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
+  const visitor = new TypeScriptResolversVisitor(
+    { ...config, directiveResolverMappings },
+    transformedSchema,
+    federationMeta
+  );
+
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
@@ -110,13 +118,6 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
   if (visitor.hasFederation()) {
-    if (visitor.config.wrapFieldDefinitions) {
-      defsToInclude.push(`export type UnwrappedObject<T> = {
-        [P in keyof T]: T[P] extends infer R | Promise<infer R> | (() => infer R2 | Promise<infer R2>)
-          ? R & R2 : T[P]
-      };`);
-    }
-
     defsToInclude.push(
       `export type ReferenceResolver<TResult, TReference, TContext> = (
       reference: TReference,
@@ -248,6 +249,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
+  const federationTypes = visitor.buildFederationTypes();
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const resolversUnionTypesMapping = visitor.buildResolversUnionTypes();
@@ -291,6 +293,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     prepend,
     content: [
       header,
+      federationTypes,
       resolversUnionTypesMapping,
       resolversInterfaceTypesMapping,
       resolversTypeMapping,
