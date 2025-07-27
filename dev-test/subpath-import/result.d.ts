@@ -144,7 +144,6 @@ export type UserResolvers<
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<
@@ -157,7 +156,6 @@ export type MutationResolvers<
     FiedContextType,
     RequireFields<MutationCreateUserArgs, 'email' | 'name' | 'password'>
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = TestContext> = {
