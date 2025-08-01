@@ -81,7 +81,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   constEnums?: boolean;
   /**
-   * @description Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns
+   * @description Generates enum as TypeScript const arrays with a corresponding type derived using `(typeof EnumValues)[number]` pattern instead of an `enum`. This creates an array with all enum values and a type from that using indexed access. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns
    * @default false
    *
    * @exampleMarkdown
@@ -100,6 +100,15 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *   }
    * }
    * export default config
+   * ```
+   *
+   * Will generate:
+   * ```ts
+   * export const StatusValues = [
+   *   'ACTIVE',
+   *   'INACTIVE'
+   * ] as const;
+   * export type Status = (typeof StatusValues)[number];
    * ```
    */
   enumsAsTypes?: boolean;
