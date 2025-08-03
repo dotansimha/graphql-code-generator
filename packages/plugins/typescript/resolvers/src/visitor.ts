@@ -109,7 +109,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
     const valuesMap = `{ ${(node.values || [])
-      .map(v => `${v.name as any as string}${this.config.avoidOptionals.resolvers ? '' : '?'}: any`)
+      .map(v => `${v.name.value}${this.config.avoidOptionals.resolvers ? '' : '?'}: any`)
       .join(', ')} }`;
 
     this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
@@ -123,7 +123,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   ): string {
     return `{ ${(node.values || [])
       .map(v => {
-        const valueName = v.name as any as string;
+        const valueName = v.name.value;
         const mappedValue = valuesMapping[valueName];
 
         return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
