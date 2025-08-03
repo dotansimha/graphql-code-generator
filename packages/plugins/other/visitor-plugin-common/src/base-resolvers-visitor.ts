@@ -817,12 +817,8 @@ export class BaseResolversVisitor<
       shouldInclude: namedType => !isEnumType(namedType),
       onNotMappedObjectType: ({ typeName, initialType }) => {
         let result = initialType;
-        const federationReferenceTypes = this._federation.printReferenceSelectionSets({
-          typeName,
-          baseFederationType: `${this.convertName('FederationTypes')}['${typeName}']`,
-        });
-        if (federationReferenceTypes) {
-          result += ` | ${federationReferenceTypes}`;
+        if (this._federation.getMeta()[typeName]?.referenceSelectionSetsString) {
+          result += ` | ${this.convertName('FederationReferenceTypes')}['${typeName}']`;
         }
         return result;
       },
@@ -1305,6 +1301,33 @@ export class BaseResolversVisitor<
       ).string;
   }
 
+  public buildFederationReferenceTypes(): string {
+    const federationMeta = this._federation.getMeta();
+
+    if (Object.keys(federationMeta).length === 0) {
+      return '';
+    }
+
+    const declarationKind = 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName('FederationReferenceTypes'))
+      .withComment('Mapping of federation reference types')
+      .withBlock(
+        Object.entries(federationMeta)
+          .map(([typeName, { referenceSelectionSetsString }]) => {
+            if (!referenceSelectionSetsString) {
+              return undefined;
+            }
+
+            return indent(`${typeName}: ${referenceSelectionSetsString}${this.getPunctuation(declarationKind)}`);
+          })
+          .filter(v => v)
+          .join('\n')
+      ).string;
+  }
+
   public get schema(): GraphQLSchema {
     return this._schema;
   }
@@ -1578,13 +1601,6 @@ export class BaseResolversVisitor<
           }
         }
 
-        const parentTypeSignature = this._federation.transformFieldParentType({
-          fieldNode: original,
-          parentType,
-          parentTypeSignature: this.getParentTypeForSignature(node),
-          federationTypeSignature: 'FederationType',
-        });
-
         const { mappedTypeKey, resolverType } = ((): { mappedTypeKey: string; resolverType: string } => {
           const baseType = getBaseTypeNode(original.type);
           const realType = baseType.name.value;
@@ -1629,15 +1645,18 @@ export class BaseResolversVisitor<
           name: typeName,
           modifier: avoidResolverOptionals ? '' : '?',
           type: resolverType,
-          genericTypes: [mappedTypeKey, parentTypeSignature, contextType, argsType].filter(f => f),
+          genericTypes: [mappedTypeKey, this.getParentTypeForSignature(node), contextType, argsType].filter(f => f),
         };
 
         if (this._federation.isResolveReferenceField(node)) {
           if (!this._federation.getMeta()[parentType.name].hasResolveReference) {
             return { value: '', meta };
           }
+          const resultType = `${mappedTypeKey} | FederationReferenceType`;
+          const referenceType = 'FederationReferenceType';
+
           signature.type = 'ReferenceResolver';
-          signature.genericTypes = [mappedTypeKey, parentTypeSignature, contextType];
+          signature.genericTypes = [resultType, referenceType, contextType];
           meta.federation = { isResolveReference: true };
         }
 
@@ -1780,7 +1799,7 @@ export class BaseResolversVisitor<
     ];
     this._federation.addFederationTypeGenericIfApplicable({
       genericTypes,
-      federationTypesType: this.convertName('FederationTypes'),
+      federationTypesType: this.convertName('FederationReferenceTypes'),
       typeName,
     });
 
@@ -1967,7 +1986,7 @@ export class BaseResolversVisitor<
     ];
     this._federation.addFederationTypeGenericIfApplicable({
       genericTypes,
-      federationTypesType: this.convertName('FederationTypes'),
+      federationTypesType: this.convertName('FederationReferenceTypes'),
       typeName,
     });
 
