@@ -9,7 +9,6 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   InterfaceTypeDefinitionNode,
-  isInterfaceType,
   isObjectType,
   ObjectTypeDefinitionNode,
   OperationDefinitionNode,
