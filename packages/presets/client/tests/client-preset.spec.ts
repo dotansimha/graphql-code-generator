@@ -9,7 +9,7 @@ import { addTypenameSelectionDocumentTransform, preset } from '../src/index.js';
 
 describe('client-preset', () => {
   it('can generate simple examples uppercase names', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -102,7 +102,7 @@ export * from "./gql";`);
   });
 
   it('can generate simple examples lowercase names', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -195,7 +195,7 @@ export * from "./gql";`);
   });
 
   it('generates \\n regardless of whether the source contains LF or CRLF', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -276,7 +276,7 @@ export * from "./gql";`);
   });
 
   it("follows 'useTypeImports': true", async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -412,7 +412,7 @@ export * from "./gql";`);
   });
 
   it("follows 'nonOptionalTypename': true", async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -543,7 +543,7 @@ export * from "./gql";`);
   });
 
   it('supports Apollo fragment masking', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: /* GraphQL */ `
         type Query {
           me: User
@@ -632,7 +632,7 @@ export * from "./gql";`);
   });
 
   it('prevent duplicate operations', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -740,7 +740,7 @@ export * from "./gql";`);
 
   describe('fragment masking', () => {
     it('fragmentMasking: false', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -833,7 +833,7 @@ export * from "./gql";`);
     });
 
     it('fragmentMasking: {}', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -858,7 +858,7 @@ export * from "./gql";`);
     });
 
     it('fragmentMasking.unmaskFunctionName', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -977,7 +977,7 @@ export * from "./gql";`);
 
     it('can accept null in useFragment', async () => {
       const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1016,7 +1016,7 @@ export * from "./gql";`);
 
     it('can accept list in useFragment', async () => {
       const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1056,7 +1056,7 @@ export * from "./gql";`);
 
     it('useFragment preserves ReadonlyArray<T> type', async () => {
       const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1096,7 +1096,7 @@ export * from "./gql";`);
   });
 
   it('generates correct named imports for ESM', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -1196,7 +1196,7 @@ export * from "./gql.js";`);
     };
 
     const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -1256,7 +1256,7 @@ export * from "./gql.js";`);
     };
 
     const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -1312,7 +1312,7 @@ export * from "./gql.js";`);
 
   describe('when no operations are found', () => {
     it('still generates the helper `graphql()` (or under another `presetConfig.gqlTagName` name) function', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1371,7 +1371,7 @@ export * from "./gql.js";`);
   });
 
   it('embed metadata in executable document node', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -1452,7 +1452,7 @@ export * from "./gql.js";`);
 
   describe('persisted operations', () => {
     it('apply default settings', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1531,7 +1531,7 @@ export * from "./gql.js";`);
     });
 
     it('mode="replaceDocumentWithHash"', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1612,7 +1612,7 @@ export * from "./gql.js";`);
     });
 
     it('hashPropertyName="custom_property_name"', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1693,7 +1693,7 @@ export * from "./gql.js";`);
     });
 
     it('embed metadata in executable document node', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1774,7 +1774,7 @@ export * from "./gql.js";`);
     });
 
     it('hashAlgorithm="sha256"', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1857,7 +1857,7 @@ export * from "./gql.js";`);
     // This test serves to demonstrate that the custom hash function can perform arbitrary logic
     // Removing whitespace has no real-world application but clearly shows the custom hash function is being used
     it('custom hash remove whitespace', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1941,7 +1941,7 @@ export * from "./gql.js";`);
 
     // Tests that the custom hash function can replicate the logic and behavior by re-implementing the existing hash function (for sha256)
     it('custom hash sha256', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2027,7 +2027,7 @@ export * from "./gql.js";`);
 
     // Custom hash example used in `preset-client.mdx` docs
     it('custom hash docs sha512', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2113,7 +2113,7 @@ export * from "./gql.js";`);
   });
 
   it('correctly handle fragment references', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: /* GraphQL */ `
         type Query {
           a: A!
@@ -2215,7 +2215,7 @@ export * from "./gql.js";`);
 
   describe('handles @defer directive', () => {
     it('generates correct types and metadata', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2297,7 +2297,7 @@ export * from "./gql.js";`);
     });
 
     it('works with persisted documents', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2382,7 +2382,7 @@ export * from "./gql.js";`);
     });
 
     it('works with documentMode: string', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2524,7 +2524,7 @@ export * from "./gql.js";`);
     });
 
     it('works with documentMode: string and persisted documents', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2671,7 +2671,7 @@ export * from "./gql.js";`);
 
   describe('documentMode: "string"', () => {
     it('generates correct types', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2789,7 +2789,7 @@ export * from "./gql.js";`);
     });
 
     it('graphql overloads have a nice result type', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2864,7 +2864,7 @@ export * from "./gql.js";`);
     });
 
     it('correctly resolves nested fragments', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             scalar Date
@@ -2953,7 +2953,7 @@ export * from "./gql.js";`);
     });
 
     it('correctly skips the typename addition for the root node for subscriptions', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             schema {
@@ -3076,7 +3076,7 @@ export * from "./gql.js";`);
   });
 
   it('support enumsAsConst option', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -3148,7 +3148,7 @@ export * from "./gql.js";`);
   });
 
   it('support enumValues option', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           enum Color {
