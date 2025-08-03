@@ -1,10 +1,12 @@
 import { dirname, join } from 'path';
+import logSymbols from 'log-symbols';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { useMonorepo } from '@graphql-codegen/testing';
 import makeDir from 'make-dir';
 import { createContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as fs from '../src/utils/file-system.js';
+import { setLogger } from '../src/utils/logger.js';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
@@ -423,6 +425,152 @@ describe('generate-and-save', () => {
       await generate(config, false);
 
       expect(consoleErrorMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('config.allowPartialOutputs', () => {
+    const mockLogger: any = {
+      warn: jest.fn(),
+      error: jest.fn(),
+    };
+
+    beforeEach(() => {
+      setLogger(mockLogger);
+    });
+
+    test('when allowPartialOutputs=true - writes partial success and does not throw', async () => {
+      const invalidSchema = /* GraphQL */ `
+        type A {
+          id: WRONG_TYPE!
+        }
+      `;
+      const validSchema = /* GraphQL */ `
+        type B {
+          id: ID!
+        }
+      `;
+      const output = await generate(
+        {
+          allowPartialOutputs: true,
+          generates: {
+            'src/a.ts': {
+              schema: invalidSchema,
+              plugins: ['typescript'],
+            },
+            'src/b.ts': {
+              schema: validSchema,
+              plugins: ['typescript'],
+            },
+          },
+        },
+        false
+      );
+
+      expect(output.length).toBe(1);
+      expect(output[0].filename).toBe('src/b.ts');
+      expect(mockLogger.warn.mock.calls[0][0]).toBeSimilarStringTo(
+        `${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`
+      );
+    });
+
+    test('when allowPartialOutputs=true - complete failure throws', async () => {
+      expect.assertions(2);
+
+      try {
+        const invalidSchema = /* GraphQL */ `
+          type A {
+            id: WRONG_TYPE!
+          }
+        `;
+        await generate(
+          {
+            allowPartialOutputs: true,
+            generates: {
+              'src/a.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+              'src/b.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        expect(mockLogger.warn).not.toHaveBeenCalled();
+        expect(mockLogger.error).not.toHaveBeenCalled();
+      }
+    });
+
+    test('when allowPartialOutputs=false - does not write partial success and throws', async () => {
+      expect.assertions(1);
+
+      const invalidSchema = /* GraphQL */ `
+        type A {
+          id: WRONG_TYPE!
+        }
+      `;
+      const validSchema = /* GraphQL */ `
+        type B {
+          id: ID!
+        }
+      `;
+
+      try {
+        await generate(
+          {
+            allowPartialOutputs: false,
+            generates: {
+              'src/a.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+              'src/b.ts': {
+                schema: validSchema,
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        expect(mockLogger.error.mock.calls[0][0]).toBeSimilarStringTo(
+          `${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`
+        );
+      }
+    });
+
+    test('when allowPartialOutputs=false - complete failure throws', async () => {
+      expect.assertions(2);
+
+      try {
+        const invalidSchema = /* GraphQL */ `
+          type A {
+            id: WRONG_TYPE!
+          }
+        `;
+        await generate(
+          {
+            allowPartialOutputs: false,
+            generates: {
+              'src/a.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+              'src/b.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        expect(mockLogger.warn).not.toHaveBeenCalled();
+        expect(mockLogger.error).not.toHaveBeenCalled();
+      }
     });
   });
 });
