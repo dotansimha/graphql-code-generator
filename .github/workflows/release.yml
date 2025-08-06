@@ -9,7 +9,6 @@ jobs:
     uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
     with:
       releaseScript: release
-      nodeVersion: 18
     secrets:
       # githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
       githubToken: ${{ secrets.GITHUB_TOKEN }}
