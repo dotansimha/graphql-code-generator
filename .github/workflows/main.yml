@@ -29,8 +29,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - name: Prettier Check
         run: yarn prettier:check
   dev-tests-old:
@@ -46,8 +44,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - name: Build
         run: yarn build
         env:
@@ -64,8 +60,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - name: Build
         run: yarn build
         env:
@@ -88,8 +82,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
         with:
           toolchain: 1.65.0
@@ -121,8 +113,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - name: Build
         run: yarn build
         env:
@@ -139,10 +129,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
-        node_version: [16, 18, 20]
+        node_version: [20, 22, 24]
         graphql_version: [15, 16]
         include:
-          - node-version: 14
+          - node-version: 20
             os: windows-latest
             graphql_version: 16
     steps:
