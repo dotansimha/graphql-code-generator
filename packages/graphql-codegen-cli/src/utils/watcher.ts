@@ -78,7 +78,10 @@ export const createWatcher = (
     const debouncedExec = debounce(() => {
       if (!isShutdown) {
         executeCodegen(initialContext)
-          .then(onNext, () => Promise.resolve())
+          .then(
+            ({ result }) => onNext(result),
+            () => Promise.resolve()
+          )
           .then(() => emitWatching(watchDirectory));
       }
     }, 100);
@@ -198,7 +201,10 @@ export const createWatcher = (
    */
   stopWatching.runningWatcher = new Promise<void>((resolve, reject) => {
     executeCodegen(initialContext)
-      .then(onNext, () => Promise.resolve())
+      .then(
+        ({ result }) => onNext(result),
+        () => Promise.resolve()
+      )
       .then(() => runWatcher(abortController.signal))
       .catch(err => {
         watcherSubscription.unsubscribe();
