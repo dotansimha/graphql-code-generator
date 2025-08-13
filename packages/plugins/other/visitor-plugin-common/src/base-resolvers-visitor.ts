@@ -691,7 +691,7 @@ export class BaseResolversVisitor<
   TRawConfig extends RawResolversConfig = RawResolversConfig,
   TPluginConfig extends ParsedResolversConfig = ParsedResolversConfig
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
-  protected _parsedConfig: TPluginConfig;
+  protected declare _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   protected _collectedResolvers: {
     [key: string]: {
