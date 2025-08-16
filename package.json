@@ -94,7 +94,6 @@
     "**/@types/graphql-upload/graphql": "^16.0.0",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
-    "cosmiconfig": "8.3.6",
     "eslint-plugin-promise": "7.1.0"
   }
 }

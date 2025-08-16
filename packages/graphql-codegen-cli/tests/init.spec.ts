@@ -273,7 +273,7 @@ describe('init', () => {
     });
   });
 
-  it('should have few default values', async () => {
+  it('should have few default values for Angular', async () => {
     const fs = require('fs');
     fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
     // make sure we don't write stuff
@@ -305,7 +305,7 @@ describe('init', () => {
     expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(defaults.config)}`);
   });
 
-  it('should have few default values', async () => {
+  it('should have few default values for React', async () => {
     const fs = require('fs');
     fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
     // make sure we don't write stuff
@@ -389,15 +389,11 @@ describe('init', () => {
 
   describe('plugin choices', () => {
     function getAvailable(tags: Tags[]): string[] {
-      return getPluginChoices({
-        targets: tags,
-      } as any).map((c: any) => c.value.value);
+      return getPluginChoices(tags).map((c: any) => c.value.value);
     }
 
     function getSelected(tags: Tags[]): string[] {
-      return getPluginChoices({
-        targets: tags,
-      } as any)
+      return getPluginChoices(tags)
         .filter((c: any) => c.checked)
         .map((c: any) => c.value.value);
     }

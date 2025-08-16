@@ -1,10 +1,12 @@
 import { dirname, join } from 'path';
+import logSymbols from 'log-symbols';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { useMonorepo } from '@graphql-codegen/testing';
 import makeDir from 'make-dir';
 import { createContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as fs from '../src/utils/file-system.js';
+import { setLogger } from '../src/utils/logger.js';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
@@ -240,31 +242,26 @@ describe('generate-and-save', () => {
   });
 
   describe('Errors when loading pointers', () => {
-    const originalConsole = { ...console };
     const originalNodeEnv = process.env.NODE_ENV;
 
-    let consoleErrorMock: jest.Mock;
+    let outputErrorMock: jest.SpyInstance;
 
     beforeEach(() => {
-      // Mock common console functions to avoid noise in the terminal
-      global.console.log = jest.fn();
-      global.console.warn = jest.fn();
-      global.console.error = jest.fn();
-
       // By default, the NODE_ENV is set to 'test', and this is used to silent console errors.
       // For these tests below, we want to see what's being logged out to console errors.
       process.env.NODE_ENV = 'not_test_so_error';
 
-      consoleErrorMock = jest.mocked(global.console.error);
+      jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+      outputErrorMock = jest.spyOn(process.stderr, 'write').mockImplementation(() => true);
+      outputErrorMock.mockReset();
     });
 
     afterEach(() => {
-      global.console = originalConsole;
       process.env.NODE_ENV = originalNodeEnv;
     });
 
     test('Schema syntax error - should print native GraphQLError', async () => {
-      expect.assertions(4);
+      expect.assertions(1);
       try {
         await generate(
           {
@@ -279,37 +276,34 @@ describe('generate-and-save', () => {
           false
         );
       } catch {
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(
-          '[FAILED] Failed to load schema from ./tests/test-files/schema-dir/error-schema.graphql:'
-        );
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(
-          '[FAILED] Syntax Error: Expected Name, found "!".'
-        );
-        // We can only use partial file path to the error file, because the error contains absolute path on the host machine
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(
-          '/tests/test-files/schema-dir/error-schema.graphql:2:15'
-        );
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(`
-          [FAILED] 1 | type Query {
-          [FAILED] 2 |   foo: String!!
-          [FAILED]   |               ^
-          [FAILED] 3 | }
-          [FAILED]
-          [FAILED] GraphQL Code Generator supports:
-          [FAILED]
-          [FAILED] - ES Modules and CommonJS exports (export as default or named export "schema")
-          [FAILED] - Introspection JSON File
-          [FAILED] - URL of GraphQL endpoint
-          [FAILED] - Multiple files with type definitions (glob expression)
-          [FAILED] - String in config file
-          [FAILED]
-          [FAILED] Try to use one of above options and run codegen again.
+        const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
+        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+          "[31m[FAILED][39m Failed to load schema from ./tests/test-files/schema-dir/error-schema.graphql:
+          [31m[FAILED][39m Syntax Error: Expected Name, found "!".
+
+          [31m[FAILED][39m ${cwd}/tests/test-files/schema-dir/error-schema.graphql:2:15
+          [31m[FAILED][39m 1 | type Query {
+          [31m[FAILED][39m 2 |   foo: String!!
+          [31m[FAILED][39m   |               ^
+          [31m[FAILED][39m 3 | }
+
+          [31m[FAILED][39m GraphQL Code Generator supports:
+
+          [31m[FAILED][39m - ES Modules and CommonJS exports (export as default or named export "schema")
+          [31m[FAILED][39m - Introspection JSON File
+          [31m[FAILED][39m - URL of GraphQL endpoint
+          [31m[FAILED][39m - Multiple files with type definitions (glob expression)
+          [31m[FAILED][39m - String in config file
+
+          [31m[FAILED][39m Try to use one of above options and run codegen again.
+
+          "
         `);
       }
     });
 
     test('Document syntax error - should print native GraphQLError', async () => {
-      expect.assertions(4);
+      expect.assertions(1);
       try {
         await generate(
           {
@@ -325,16 +319,16 @@ describe('generate-and-save', () => {
           false
         );
       } catch {
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(
-          'Failed to load documents from ./tests/test-files/error-document.graphql:'
-        );
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo('Syntax Error: Expected "{", found <EOF>.');
-        // We can only use partial file path to the error file, because the error contains absolute path on the host machine
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo('/tests/test-files/error-document.graphql:2:1');
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(`
-          [FAILED] 1 | query
-          [FAILED] 2 |
-          [FAILED]   | ^
+        const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
+        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+          "[31m[FAILED][39m Failed to load documents from ./tests/test-files/error-document.graphql:
+          [31m[FAILED][39m Syntax Error: Expected "{", found <EOF>.
+
+          [31m[FAILED][39m ${cwd}/tests/test-files/error-document.graphql:2:1
+          [31m[FAILED][39m 1 | query
+          [31m[FAILED][39m 2 |
+          [31m[FAILED][39m   | ^
+          "
         `);
       }
     });
@@ -356,10 +350,11 @@ describe('generate-and-save', () => {
           false
         );
       } catch {
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(`
-          [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
-          [FAILED]
-          [FAILED]         - ./tests/test-files/document-file-does-not-exist.graphql
+        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+          "
+          [31m[FAILED][39m       Unable to find any GraphQL type definitions for the following pointers:
+          [31m[FAILED][39m         - ./tests/test-files/document-file-does-not-exist.graphql
+          "
         `);
       }
     });
@@ -379,7 +374,7 @@ describe('generate-and-save', () => {
         },
         false
       );
-      expect(consoleErrorMock).not.toHaveBeenCalled();
+      expect(outputErrorMock).not.toHaveBeenCalled();
     });
 
     test('No documents found - GraphQL Config - should throw error by default', async () => {
@@ -398,11 +393,11 @@ describe('generate-and-save', () => {
 
         await generate(config, false);
       } catch {
-        expect(consoleErrorMock.mock.calls[0][0]).toBeSimilarStringTo(`
-          [FAILED]
-          [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
-          [FAILED]
-          [FAILED]         - ../test-documents/empty.graphql
+        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+          "
+          [31m[FAILED][39m       Unable to find any GraphQL type definitions for the following pointers:
+          [31m[FAILED][39m         - ../test-documents/empty.graphql
+          "
         `);
       }
     });
@@ -422,7 +417,153 @@ describe('generate-and-save', () => {
 
       await generate(config, false);
 
-      expect(consoleErrorMock).not.toHaveBeenCalled();
+      expect(outputErrorMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('config.allowPartialOutputs', () => {
+    const mockLogger: any = {
+      warn: jest.fn(),
+      error: jest.fn(),
+    };
+
+    beforeEach(() => {
+      setLogger(mockLogger);
+    });
+
+    test('when allowPartialOutputs=true - writes partial success and does not throw', async () => {
+      const invalidSchema = /* GraphQL */ `
+        type A {
+          id: WRONG_TYPE!
+        }
+      `;
+      const validSchema = /* GraphQL */ `
+        type B {
+          id: ID!
+        }
+      `;
+      const output = await generate(
+        {
+          allowPartialOutputs: true,
+          generates: {
+            'src/a.ts': {
+              schema: invalidSchema,
+              plugins: ['typescript'],
+            },
+            'src/b.ts': {
+              schema: validSchema,
+              plugins: ['typescript'],
+            },
+          },
+        },
+        false
+      );
+
+      expect(output.length).toBe(1);
+      expect(output[0].filename).toBe('src/b.ts');
+      expect(mockLogger.warn.mock.calls[0][0]).toBeSimilarStringTo(
+        `${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`
+      );
+    });
+
+    test('when allowPartialOutputs=true - complete failure throws', async () => {
+      expect.assertions(2);
+
+      try {
+        const invalidSchema = /* GraphQL */ `
+          type A {
+            id: WRONG_TYPE!
+          }
+        `;
+        await generate(
+          {
+            allowPartialOutputs: true,
+            generates: {
+              'src/a.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+              'src/b.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        expect(mockLogger.warn).not.toHaveBeenCalled();
+        expect(mockLogger.error).not.toHaveBeenCalled();
+      }
+    });
+
+    test('when allowPartialOutputs=false - does not write partial success and throws', async () => {
+      expect.assertions(1);
+
+      const invalidSchema = /* GraphQL */ `
+        type A {
+          id: WRONG_TYPE!
+        }
+      `;
+      const validSchema = /* GraphQL */ `
+        type B {
+          id: ID!
+        }
+      `;
+
+      try {
+        await generate(
+          {
+            allowPartialOutputs: false,
+            generates: {
+              'src/a.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+              'src/b.ts': {
+                schema: validSchema,
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        expect(mockLogger.error.mock.calls[0][0]).toBeSimilarStringTo(
+          `${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`
+        );
+      }
+    });
+
+    test('when allowPartialOutputs=false - complete failure throws', async () => {
+      expect.assertions(2);
+
+      try {
+        const invalidSchema = /* GraphQL */ `
+          type A {
+            id: WRONG_TYPE!
+          }
+        `;
+        await generate(
+          {
+            allowPartialOutputs: false,
+            generates: {
+              'src/a.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+              'src/b.ts': {
+                schema: invalidSchema,
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        expect(mockLogger.warn).not.toHaveBeenCalled();
+        expect(mockLogger.error).not.toHaveBeenCalled();
+      }
     });
   });
 });

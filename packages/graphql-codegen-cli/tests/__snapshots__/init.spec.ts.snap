@@ -99,7 +99,7 @@ export default config;
 "
 `;
 
-exports[`init should have few default values 1`] = `
+exports[`init should have few default values for Angular 1`] = `
 "
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -119,7 +119,7 @@ export default config;
 "
 `;
 
-exports[`init should have few default values 2`] = `
+exports[`init should have few default values for React 1`] = `
 "overwrite: true
 schema: "./schema.ts"
 documents: "graphql/**/*.graphql"

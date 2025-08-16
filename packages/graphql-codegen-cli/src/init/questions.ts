@@ -1,82 +1,58 @@
-import inquirer from 'inquirer';
+import { checkbox, input, select, confirm } from '@inquirer/prompts';
 import { grey } from './helpers.js';
 import { plugins } from './plugins.js';
-import { Answers, Tags } from './types.js';
+import { type Answers, type PluginOption, Tags } from './types.js';
 
-export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.QuestionCollection {
-  return [
-    {
-      type: 'list',
-      name: 'targets',
+export async function getAnswers(possibleTargets: Record<Tags, boolean>): Promise<Answers> {
+  try {
+    const targetChoices = getApplicationTypeChoices(possibleTargets);
+
+    const targets = await select({
       message: `What type of application are you building?`,
-      choices: getApplicationTypeChoices(possibleTargets),
-      validate: ((targets: any[]) => targets.length > 0) as any,
-      default: getApplicationTypeChoices(possibleTargets).findIndex(c => c.checked),
-    },
-    {
-      type: 'input',
-      name: 'schema',
-      message: 'Where is your schema?:',
-      suffix: grey(' (path or url)'),
+      choices: targetChoices,
+      default: targetChoices.find(c => c.checked)?.value,
+    });
+    const schema = await input({
+      message: `Where is your schema?: ${grey('(path or url)')}`,
       default: 'http://localhost:4000', // matches Apollo Server's default
-      validate: (str: string) => str.length > 0,
-    },
-    {
-      type: 'input',
-      name: 'documents',
-      message: 'Where are your operations and fragments?:',
-      when: answers => {
-        // flatten targets
-        // I can't find an API in Inquirer that would do that
-        answers.targets = normalizeTargets(answers.targets);
+      validate: str => str.length > 0,
+    });
 
-        return (
-          answers.targets.includes(Tags.client) ||
-          answers.targets.includes(Tags.angular) ||
-          answers.targets.includes(Tags.stencil)
-        );
-      },
-      default: getDocumentsDefaultValue,
-      validate: (str: string) => str.length > 0,
-    },
-    {
-      type: 'checkbox',
-      name: 'plugins',
-      when: answers => {
-        // flatten targets
-        // I can't find an API in Inquirer that would do that
-        answers.targets = normalizeTargets(answers.targets);
+    let documents: string | undefined;
+    if (targets.includes(Tags.client) || targets.includes(Tags.angular) || targets.includes(Tags.stencil))
+      documents = await input({
+        message: 'Where are your operations and fragments?:',
+        default: getDocumentsDefaultValue(targets),
+        validate: str => str.length > 0,
+      });
 
-        return !answers.targets.includes(Tags.client);
-      },
-      message: 'Pick plugins:',
-      choices: getPluginChoices,
-      validate: ((plugins: any[]) => plugins.length > 0) as any,
-    },
-    {
-      type: 'input',
-      name: 'output',
+    let plugins: PluginOption[];
+    if (!targets.includes(Tags.client)) {
+      plugins = await checkbox({
+        message: 'Pick plugins:',
+        choices: getPluginChoices(targets),
+        validate: plugins => plugins.length > 0,
+      });
+    }
+
+    const output = await input({
       message: 'Where to write the output:',
-      default: getOutputDefaultValue,
-      validate: (str: string) => str.length > 0,
-    },
-    {
-      type: 'confirm',
-      name: 'introspection',
-      default: false,
+      default: getOutputDefaultValue({ targets, plugins }),
+      validate: str => str.length > 0,
+    });
+
+    const introspection = await confirm({
       message: 'Do you want to generate an introspection file?',
-    },
-    {
-      type: 'input',
-      name: 'config',
+      default: false,
+    });
+
+    const config = await input({
       message: 'How to name the config file?',
-      default: answers =>
-        answers.targets.includes(Tags.client) ||
-        answers.targets.includes(Tags.typescript) ||
-        answers.targets.includes(Tags.angular)
+      default: (() =>
+        targets.includes(Tags.client) || targets.includes(Tags.typescript) || targets.includes(Tags.angular)
           ? 'codegen.ts'
-          : 'codegen.yml',
-      validate: (str: string) => {
+          : 'codegen.yml')(),
+      validate: str => {
         const isNotEmpty = str.length > 0;
         const hasCorrectExtension = ['json', 'yml', 'yaml', 'js', 'ts'].some(ext =>
           str.toLocaleLowerCase().endsWith(`.${ext}`)
@@ -84,15 +60,33 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
 
         return isNotEmpty && hasCorrectExtension;
       },
-    },
-    {
-      type: 'input',
-      name: 'script',
+    });
+
+    const script = await input({
       default: 'codegen',
       message: 'What script in package.json should run the codegen?',
       validate: (str: string) => str.length > 0,
-    },
-  ];
+    });
+
+    return {
+      targets,
+      schema,
+      documents,
+      plugins,
+      output,
+      introspection,
+      config,
+      script,
+    };
+  } catch (error) {
+    if (error instanceof Error && error.name === 'ExitPromptError') {
+      // This error because user exited using CMD+C, just exit gracefully or else user would see an ugly error message
+      // https://github.com/SBoudrias/Inquirer.js/blob/ee16061a1e3f99a6cc714a3d473f7cd12b06a3f1/packages/prompts/README.md#handling-ctrlc-gracefully
+      process.exit();
+    } else {
+      throw error;
+    }
+  }
 }
 
 export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>) {
@@ -154,43 +148,39 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
   ];
 }
 
-export function getPluginChoices(answers: Answers) {
+export function getPluginChoices(targets: Tags[]) {
   return plugins
-    .filter(p => p.available(answers.targets))
-    .map<inquirer.DistinctChoice<inquirer.AllChoiceMap>>(p => {
+    .filter(p => p.available(targets))
+    .map(p => {
       return {
         name: p.name,
         value: p,
-        checked: p.shouldBeSelected(answers.targets),
+        checked: p.shouldBeSelected(targets),
       };
     });
 }
 
-function normalizeTargets(targets: Tags[] | Tags[][]): Tags[] {
-  return [].concat(...targets);
-}
-
-export function getOutputDefaultValue(answers: Answers) {
-  if (answers.targets.includes(Tags.client)) {
+function getOutputDefaultValue({ targets, plugins }: { targets: Tags[]; plugins: PluginOption[] }) {
+  if (targets.includes(Tags.client)) {
     return 'src/gql/';
   }
-  if (answers.plugins.some(plugin => plugin.defaultExtension === '.tsx')) {
+  if (plugins.some(plugin => plugin.defaultExtension === '.tsx')) {
     return 'src/generated/graphql.tsx';
   }
-  if (answers.plugins.some(plugin => plugin.defaultExtension === '.ts')) {
+  if (plugins.some(plugin => plugin.defaultExtension === '.ts')) {
     return 'src/generated/graphql.ts';
   }
   return 'src/generated/graphql.js';
 }
 
-export function getDocumentsDefaultValue(answers: Answers) {
-  if (answers.targets.includes(Tags.vue)) {
+function getDocumentsDefaultValue(targets: Tags[]): string {
+  if (targets.includes(Tags.vue)) {
     return 'src/**/*.vue';
   }
-  if (answers.targets.includes(Tags.angular)) {
+  if (targets.includes(Tags.angular)) {
     return 'src/**/*.ts';
   }
-  if (answers.targets.includes(Tags.client)) {
+  if (targets.includes(Tags.client)) {
     return 'src/**/*.tsx';
   }
   return 'src/**/*.graphql';
