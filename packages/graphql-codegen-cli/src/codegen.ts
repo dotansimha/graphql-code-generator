@@ -397,8 +397,17 @@ export async function executeCodegen(
                     },
                   ],
                   {
-                    // it stops when of the tasks failed
+                    /**
+                     * For each `generates` task, we must do the following in order:
+                     *
+                     * 1. Load schema
+                     * 2. Load documents
+                     * 3. Generate based on the schema + documents
+                     *
+                     * This way, the 3rd step has all the schema and documents loaded in previous steps to work correctly
+                     */
                     exitOnError: true,
+                    concurrent: false,
                   }
                 );
               },
@@ -414,13 +423,13 @@ export async function executeCodegen(
     {
       rendererOptions: {
         clearOutput: false,
-        collapse: true,
+        collapseSubtasks: true,
         formatOutput: 'wrap',
         removeEmptyLines: false,
       },
       renderer: config.verbose ? 'verbose' : 'default',
       ctx: { errors: [] },
-      rendererSilent: isTest || config.silent,
+      silentRendererCondition: isTest || config.silent,
       exitOnError: true,
     }
   );
