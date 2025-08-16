@@ -87,7 +87,6 @@
   "resolutions": {
     "babel-jest": "29.7.0",
     "jest-runner": "28.1.3",
-    "typescript": "5.5.4",
     "eslint-plugin-promise": "7.1.0"
   }
 }
