@@ -65,7 +65,7 @@
     "is-glob": "^4.0.1",
     "jiti": "^2.3.0",
     "json-to-pretty-yaml": "^1.2.2",
-    "listr2": "^4.0.5",
+    "listr2": "^9.0.0",
     "log-symbols": "^4.0.0",
     "micromatch": "^4.0.5",
     "shell-quote": "^1.7.3",
