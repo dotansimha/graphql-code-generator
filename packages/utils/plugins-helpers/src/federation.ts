@@ -208,7 +208,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
           selectionSets = [];
           findAllSelectionSetCombinations(originalSelectionSets, selectionSets);
           if (selectionSets.length > 0) {
-            result.push('{}');
+            result.push('Record<PropertyKey, never>');
           }
         }
 

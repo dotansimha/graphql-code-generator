@@ -32,6 +32,7 @@ export const plugin: PluginFunction<
       ].join('\n')
     : '';
   const importType = config.useTypeImports ? 'import type' : 'import';
+  const emptyObjectType = `Record<PropertyKey, never>`;
   const prepend: string[] = [];
   const defsToInclude: string[] = [];
   const directiveResolverMappings = {} as Record<string, string>;
@@ -48,7 +49,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   resolve: ${resolverFnName}<TResult, TParent, TContext, TArgs>;
 };`;
       const resolverTypeName = `Resolver${capitalizedDirectiveName}`;
-      const resolverType = `export type ${resolverTypeName}<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
+      const resolverType = `export type ${resolverTypeName}<TResult, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> =`;
 
       if (parsedMapper.isExternal) {
         if (parsedMapper.default) {
@@ -112,7 +113,7 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };`;
-  const resolverType = `export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
+  const resolverType = `export type Resolver<TResult, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> =`;
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const resolverWithResolveUsage = `ResolverWithResolve<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
@@ -226,21 +227,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<TResult, TKey extends string, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}> = (
   parent: TParent,
   context: TContext,
   info${optionalSignForInfoArg}: GraphQLResolveInfo
 ) => ${namespacedImportPrefix}Maybe<TTypes> | Promise<${namespacedImportPrefix}Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info${optionalSignForInfoArg}: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = ${emptyObjectType}, TContext = ${emptyObjectType}> = (obj: T, context: TContext, info${optionalSignForInfoArg}: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = ${emptyObjectType}, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,

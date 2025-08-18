@@ -767,7 +767,7 @@ export class BaseResolversVisitor<
       directiveContextTypes: getConfigValue(rawConfig.directiveContextTypes, []),
       resolverTypeSuffix: getConfigValue(rawConfig.resolverTypeSuffix, 'Resolvers'),
       allResolversTypeName: getConfigValue(rawConfig.allResolversTypeName, 'Resolvers'),
-      rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
+      rootValueType: parseMapper(rawConfig.rootValueType || 'Record<PropertyKey, never>', 'RootValueType'),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, ''),
       avoidOptionals: normalizeAvoidOptionals(rawConfig.avoidOptionals),
       defaultMapper: rawConfig.defaultMapper
