@@ -465,19 +465,6 @@ export namespace Types {
      */
     watch?: boolean | string | string[];
     /**
-     * @deprecated this is not necessary since we are using `@parcel/watcher` instead of `chockidar`.
-     *
-     * @description Allows overriding the behavior of watch to use stat polling over native file watching support.
-     *
-     * Config fields have the same defaults and sematics as the identically named ones for chokidar.
-     *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode
-     */
-    watchConfig?: {
-      usePolling: boolean;
-      interval?: number;
-    };
-    /**
      * @description A flag to suppress non-zero exit code when there are no documents to generate.
      */
     ignoreNoDocuments?: boolean;

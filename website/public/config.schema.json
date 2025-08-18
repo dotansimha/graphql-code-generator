@@ -51,11 +51,6 @@
           "description": "A flag to trigger codegen when there are changes in the specified GraphQL schemas.\n\nYou can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
           "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": ["string", "boolean"] }]
         },
-        "watchConfig": {
-          "description": "Allows overriding the behavior of watch to use stat polling over native file watching support.\n\nConfig fields have the same defaults and sematics as the identically named ones for chokidar.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
-          "type": "object",
-          "properties": { "usePolling": { "type": "boolean" }, "interval": { "type": "number" } }
-        },
         "ignoreNoDocuments": {
           "description": "A flag to suppress non-zero exit code when there are no documents to generate.",
           "type": "boolean"
@@ -292,10 +287,6 @@
           "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional\nDefault value: \"false\"",
           "type": "boolean"
         },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
           "type": "string"
@@ -314,6 +305,10 @@
         },
         "skipTypename": {
           "description": "Does not add `__typename` to the generated types, unless it was specified in the selection set.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "dedupeFragments": {
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -653,10 +648,6 @@
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
@@ -849,10 +840,6 @@
         "useTypeImports": {
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
-        },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
         },
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
@@ -1631,14 +1618,6 @@
           "type": "string",
           "description": "Defines the prefix value used for `__resolveType` and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatibility.\nDefault value: \"'__'\""
         },
-        "generateInternalResolversIfNeeded": {
-          "type": "object",
-          "description": "If relevant internal resolvers are set to `true`, the resolver type will only be generated if the right conditions are met.\nEnabling this allows a more correct type generation for the resolvers.\nFor example:\n- `__isTypeOf` is generated for implementing types and union members\n- `__resolveReference` is generated for federation types that have at least one resolvable `@key` directive\nDefault value: \"{ __resolveReference: false }\""
-        },
-        "onlyResolveTypeForInterfaces": {
-          "type": "boolean",
-          "description": "Turning this flag to `true` will generate resolver signature that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.\nDefault value: \"false\""
-        },
         "resolversNonOptionalTypename": {
           "description": "Makes `__typename` of resolver mappings non-optional without affecting the base types.\nDefault value: \"false\"",
           "anyOf": [{ "$ref": "#/definitions/ResolversNonOptionalTypenameConfig" }, { "type": "boolean" }]
@@ -1676,10 +1655,6 @@
         "useTypeImports": {
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
-        },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
         },
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
@@ -2716,10 +2691,6 @@
           "description": "Adds suffix to the fragment variable\nDefault value: \"\"",
           "type": "string"
         },
-        "noGraphQLTag": {
-          "description": "Deprecated. Changes the documentMode to `documentNode`.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "gqlImport": {
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.\nDefault value: \"graphql-tag#gql\"",
           "type": "string"
@@ -2809,10 +2780,6 @@
         "useTypeImports": {
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
-        },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
         },
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
