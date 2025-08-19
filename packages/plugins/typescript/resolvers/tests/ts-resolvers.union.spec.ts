@@ -47,7 +47,7 @@ describe('TypeScript Resolvers Plugin - Union', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         StandardError: ResolverTypeWrapper<StandardError>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -63,7 +63,7 @@ describe('TypeScript Resolvers Plugin - Union', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         ID: Scalars['ID']['output'];
         StandardError: StandardError;
         String: Scalars['String']['output'];

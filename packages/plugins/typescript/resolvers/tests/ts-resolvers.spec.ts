@@ -75,7 +75,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(result.content).toBeSimilarStringTo(`export type StitchingResolver<TResult, TParent, TContext, TArgs>`);
     expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
         | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
@@ -165,7 +165,7 @@ export type ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> =
 export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
 };
-export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+export type ResolverAuthenticated<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
 `);
       expect(result.content).toBeSimilarStringTo(`
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -182,12 +182,12 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       const result = await plugin(resolversTestingSchema, [], { makeResolverTypeCallable: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>;
     `);
 
       expect(result.content).not.toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>
       | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
@@ -199,12 +199,12 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       const result = await plugin(resolversTestingSchema, [], { makeResolverTypeCallable: false }, { outputFile: '' });
 
       expect(result.content).not.toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>;
     `);
 
       expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>
       | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
@@ -229,7 +229,7 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
 };
-export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+export type ResolverAuthenticated<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
 `);
     expect(result.content).toBeSimilarStringTo(`
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -532,14 +532,14 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
     expect(result.content).not.toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
         | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
         ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
 
@@ -1369,7 +1369,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       CCCFoo: ResolverTypeWrapper<CccFoo>;
       String: ResolverTypeWrapper<Scalars['String']['output']>;
       CCCBar: ResolverTypeWrapper<CccBar>;
-      Query: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
       CCCUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['CCCUnion']>;
       Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
     };
@@ -1379,7 +1379,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         CCCFoo: CccFoo;
         String: Scalars['String']['output'];
         CCCBar: CccBar;
-        Query: {};
+        Query: Record<PropertyKey, never>;
         CCCUnion: ResolversUnionTypes<ResolversParentTypes>['CCCUnion'];
         Boolean: Scalars['Boolean']['output'];
       };
@@ -1631,9 +1631,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Subscription: ResolverTypeWrapper<{}>;
-        Query: ResolverTypeWrapper<{}>;
-        Mutation: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
         Post: ResolverTypeWrapper<Post>;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -1664,9 +1664,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Subscription: {};
-        Query: {};
-        Mutation: {};
+        Subscription: Record<PropertyKey, never>;
+        Query: Record<PropertyKey, never>;
+        Mutation: Record<PropertyKey, never>;
         String: Scalars['String']['output'];
         Post: Post;
         Boolean: Scalars['Boolean']['output'];
@@ -2214,7 +2214,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       };`);
       expect(o).toBeSimilarStringTo(`
       export type IResolversTypes = {
-        Query: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Test: Test;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
