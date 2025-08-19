@@ -41,5 +41,10 @@
     }
   },
   "include": ["packages"],
-  "exclude": ["**/tests/test-files", "**/tests/test-documents", "**/dist", "**/temp"]
+  "exclude": ["**/tests/test-files", "**/tests/test-documents", "**/dist", "**/temp"],
+  "references": [
+    {
+      "path": "tsconfig.spec.json"
+    }
+  ]
 }
