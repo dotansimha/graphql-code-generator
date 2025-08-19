@@ -5,5 +5,5 @@
     "composite": true,
     "types": ["vitest/globals"]
   },
-  "include": ["vitest.config.ts"]
+  "include": ["vitest.config.ts", "packages/**/*.spec.ts"]
 }

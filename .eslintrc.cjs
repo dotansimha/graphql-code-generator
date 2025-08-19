@@ -16,7 +16,7 @@ module.exports = {
     '@typescript-eslint/ban-types': 'off',
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts'] },
+      { devDependencies: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts', '**/vitest.config.ts'] },
     ],
 
     // todo: enable

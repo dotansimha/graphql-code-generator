@@ -1,18 +1,18 @@
 import { existsSync } from 'fs';
 import { resolve } from 'path';
-import { expect } from '@jest/globals';
+import { expect } from 'vitest';
 import { oneLine, stripIndent } from 'common-tags';
 import { diff } from 'jest-diff';
 
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      /**
-       * Normalizes whitespace and performs string comparisons
-       */
-      toBeSimilarStringTo(expected: string): R;
-    }
-  }
+interface CustomMatchers<R = unknown> {
+  /**
+   * Normalizes whitespace and performs string comparisons
+   */
+  toBeSimilarStringTo(expected: string): R;
+}
+declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface Matchers<T = any> extends CustomMatchers<T> {}
 }
 
 function compareStrings(a: string, b: string): boolean {

@@ -44,7 +44,7 @@
   "exclude": ["**/tests/test-files", "**/tests/test-documents", "**/dist", "**/temp"],
   "references": [
     {
-      "path": "tsconfig.spec.json"
+      "path": "./tsconfig.spec.json"
     }
   ]
 }
