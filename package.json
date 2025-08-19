@@ -15,6 +15,7 @@
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
     "rebuild": "bob build --incremental",
     "test": "jest --forceExit --no-watchman",
+    "test2": "vitest",
     "lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore .",
     "prettier": "prettier --cache --write --list-different .",
     "prettier:check": "prettier --cache --check .",
@@ -71,6 +72,7 @@
     "tslib": "2.6.3",
     "tsx": "4.17.0",
     "typescript": "5.5.4",
+    "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.2.4",
     "wrangler": "4.1.0"
   },
