@@ -60,7 +60,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
       export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
       };
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
       export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         parent: TParent,
@@ -97,21 +97,21 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
         | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-      export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+      export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
         | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
         | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-      export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+      export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
         parent: TParent,
         context: TContext,
         info: GraphQLResolveInfo
       ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-      export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+      export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
       export type NextResolverFn<T> = () => Promise<T>;
 
-      export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+      export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
         next: NextResolverFn<TResult>,
         parent: TParent,
         args: TArgs,
@@ -133,7 +133,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
         Account:
           ( { __typename: 'Account' }
           & GraphQLRecursivePick<FederationTypes['Account'], {"id":true}>
-          & ( {}
+          & ( Record<PropertyKey, never>
               | GraphQLRecursivePick<FederationTypes['Account'], {"name":true}> ) );
       };
 
@@ -141,7 +141,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
 
       /** Mapping between all available schema types and the resolvers types */
       export type ResolversTypes = {
-        Query: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
         User: ResolverTypeWrapper<UserMapper>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -152,7 +152,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - mappers', () => {
 
       /** Mapping between all available schema types and the resolvers parents */
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         User: UserMapper;
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];

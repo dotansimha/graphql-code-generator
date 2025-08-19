@@ -112,7 +112,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         User: User | FederationReferenceTypes['User'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
@@ -326,7 +326,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         Account: Account | FederationReferenceTypes['Account'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
@@ -343,7 +343,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         User:
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
-          & ( {}
+          & ( Record<PropertyKey, never>
               | GraphQLRecursivePick<FederationTypes['User'], {"a":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"b":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"a":true,"c":true}>
@@ -410,7 +410,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         User:
           ( { __typename: 'User' }
           & GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
-          & ( {}
+          & ( Record<PropertyKey, never>
               | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"favouriteColor":true,"name":true,"age":true,"address":{"street":true}}>
               | GraphQLRecursivePick<FederationTypes['User'], {"name":true,"age":true,"address":{"street":true}}> ) );
@@ -419,7 +419,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         User: User | FederationReferenceTypes['User'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
@@ -472,7 +472,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         User: User | FederationReferenceTypes['User'];
         String: Scalars['String']['output'];
         Name: Name;
@@ -523,7 +523,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
           & ( GraphQLRecursivePick<FederationTypes['User'], {"id":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"uuid":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true,"oldId2":true}}> )
-          & ( {}
+          & ( Record<PropertyKey, never>
               | GraphQLRecursivePick<FederationTypes['User'], {"id":true,"name":true}>
               | GraphQLRecursivePick<FederationTypes['User'], {"id":true,"name":true,"legacyId":{"oldId1":true}}>
               | GraphQLRecursivePick<FederationTypes['User'], {"legacyId":{"oldId1":true},"name":true}> ) );
@@ -532,7 +532,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         User: User | FederationReferenceTypes['User'];
         ID: Scalars['ID']['output'];
         String: Scalars['String']['output'];
