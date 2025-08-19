@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig({
+export const sharedConfig = defineConfig({
   plugins: [tsconfigPaths() as any],
   resolve: {
     alias: {
@@ -10,6 +10,11 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    include: ['packages/**/resolvers/**/*.spec.ts'],
+  },
+});
+
+export default defineConfig({
+  test: {
+    projects: ['packages/**/vitest.config.ts'],
   },
 });
