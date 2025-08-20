@@ -88,6 +88,7 @@ function findProjectDir(dirname: string): string | never {
   throw new Error(`Coudn't find project's root from: ${originalDirname}`);
 }
 
+// FIXME: Remove this since we are mocking cwd in projects needing it
 export function useMonorepo({ dirname }: { dirname: string }) {
   const cwd = findProjectDir(dirname);
 
