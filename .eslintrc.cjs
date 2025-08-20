@@ -16,7 +16,17 @@ module.exports = {
     '@typescript-eslint/ban-types': 'off',
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts', '**/vitest.config.ts'] },
+      {
+        // `packageDir: __dirname` forces this rule to look at the root package.json instead of project package.json
+        // This helps us avoid adding dev dependencies into project package.json `devDependencies` field e.g. `vitest`
+        devDependencies: [
+          '**/*.test.ts',
+          '**/*.spec.ts',
+          '**/test/**/*.ts',
+          '**/vitest.config.ts',
+          '**/vitest.setup.ts',
+        ],
+      },
     ],
 
     // todo: enable
