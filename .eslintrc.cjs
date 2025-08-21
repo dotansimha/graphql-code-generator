@@ -19,12 +19,14 @@ module.exports = {
       {
         // `packageDir: __dirname` forces this rule to look at the root package.json instead of project package.json
         // This helps us avoid adding dev dependencies into project package.json `devDependencies` field e.g. `vitest`
+        packageDir: __dirname,
         devDependencies: [
           '**/*.test.ts',
           '**/*.spec.ts',
           '**/test/**/*.ts',
           '**/vitest.config.ts',
           '**/vitest.setup.ts',
+          '**/__mocks__/*',
         ],
       },
     ],
