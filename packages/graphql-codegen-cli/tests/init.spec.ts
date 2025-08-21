@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { resolve } from 'path';
 import bddStdin from 'bdd-stdin';
+import { fs, vol } from 'memfs';
 import { bold } from '../src/init/helpers.js';
 import { init } from '../src/init/index.js';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions.js';
 import { guessTargets } from '../src/init/targets.js';
 import { Tags } from '../src/init/types.js';
 
-jest.mock('../src/utils/get-latest-version.ts', () => {
+vi.mock('../src/utils/get-latest-version.ts', () => {
   return { getLatestVersion: () => Promise.resolve('1.0.0') };
 });
 
-jest.mock('fs');
+vi.mock('fs', () => require('./__mocks__/fs.cjs'));
 const { version } = require('../package.json');
 
 const SELECT = ' '; // checkbox
@@ -78,53 +79,53 @@ const packageJson = {
 describe('init', () => {
   beforeEach(() => {
     // make sure terminal don't get noisy
-    jest.spyOn(process.stdout, 'write').mockImplementation();
+    vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+    vol.reset();
   });
 
   afterEach(() => {
-    require('fs').__resetMockFiles();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('guessTargets()', () => {
     it('should guess angular projects', async () => {
-      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
+      vol.fromJSON({ ['package.json']: packageJson.withAngular }, process.cwd());
       const targets = await guessTargets();
       expect(targets.Angular).toEqual(true);
     });
 
     it('should guess typescript projects', async () => {
-      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withTypescript);
+      vol.fromJSON({ ['package.json']: packageJson.withTypescript }, process.cwd());
       const targets = await guessTargets();
       expect(targets.TypeScript).toEqual(true);
     });
 
     it('should guess react projects', async () => {
-      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
+      vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
       const targets = await guessTargets();
       expect(targets.React).toEqual(true);
     });
 
     it('should guess stencil projects', async () => {
-      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withStencil);
+      vol.fromJSON({ ['package.json']: packageJson.withStencil }, process.cwd());
       const targets = await guessTargets();
       expect(targets.Stencil).toEqual(true);
     });
 
     it('should guess flow projects', async () => {
-      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withFlow);
+      vol.fromJSON({ ['package.json']: packageJson.withFlow }, process.cwd());
       const targets = await guessTargets();
       expect(targets.Flow).toEqual(true);
     });
 
     it('should guess vue projects', async () => {
-      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withVue);
+      vol.fromJSON({ ['package.json']: packageJson.withVue }, process.cwd());
       const targets = await guessTargets();
       expect(targets.Vue).toEqual(true);
     });
 
     it('should guess graphql-request projects', async () => {
-      require('fs').__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withGraphqlRequest);
+      vol.fromJSON({ ['package.json']: packageJson.withGraphqlRequest }, process.cwd());
       const targets = await guessTargets();
       expect(targets.graphqlRequest).toEqual(true);
     });
@@ -132,12 +133,10 @@ describe('init', () => {
 
   describe('plugins suggestions for client-side setup', () => {
     it('should use angular related plugins when @angular/core is found', async () => {
-      const fs = require('fs');
-      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withAngular);
-      // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+      vol.fromJSON({ ['package.json']: packageJson.withAngular }, process.cwd());
+      const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
       // silent
-      jest.spyOn(console, 'log').mockImplementation();
+      vi.spyOn(console, 'log').mockImplementation(() => {});
 
       useInputs({
         onTarget: [ENTER], // confirm target
@@ -167,12 +166,10 @@ describe('init', () => {
     });
 
     it('should use react related plugins when react is found', async () => {
-      const fs = require('fs');
-      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
-      // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+      vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
+      const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
       // silent
-      jest.spyOn(console, 'log').mockImplementation();
+      vi.spyOn(console, 'log').mockImplementation(() => {});
 
       useInputs({
         onTarget: [ENTER], // confirm react target
@@ -201,12 +198,10 @@ describe('init', () => {
     });
 
     it('should use stencil related plugins when @stencil/core is found', async () => {
-      const fs = require('fs');
-      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withStencil);
-      // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+      vol.fromJSON({ ['package.json']: packageJson.withStencil }, process.cwd());
+      const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
       // silent
-      jest.spyOn(console, 'log').mockImplementation();
+      vi.spyOn(console, 'log').mockImplementation(() => {});
 
       useInputs({
         onTarget: [ENTER], // confirm stencil target
@@ -239,12 +234,10 @@ describe('init', () => {
 
   describe('plugins suggestions non client-side setup', () => {
     it('should use typescript related plugins when typescript is found (node)', async () => {
-      const fs = require('fs');
-      fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withTypescript);
-      // make sure we don't write stuff
-      const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+      vol.fromJSON({ ['package.json']: packageJson.withTypescript }, process.cwd());
+      const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
       // silent
-      jest.spyOn(console, 'log').mockImplementation();
+      vi.spyOn(console, 'log').mockImplementation(() => {});
 
       useInputs({
         onTarget: [SELECT, ENTER], // confirm api target
@@ -274,11 +267,9 @@ describe('init', () => {
   });
 
   it('should have few default values for Angular', async () => {
-    const fs = require('fs');
-    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
-    // make sure we don't write stuff
-    const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
-    const logSpy = jest.spyOn(console, 'log').mockImplementation();
+    vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
+    const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const defaults = {
       config: 'codegen.ts',
     };
@@ -306,11 +297,9 @@ describe('init', () => {
   });
 
   it('should have few default values for React', async () => {
-    const fs = require('fs');
-    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
-    // make sure we don't write stuff
-    const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
-    const logSpy = jest.spyOn(console, 'log').mockImplementation();
+    vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
+    const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const options = {
       script: 'graphql',
       schema: './schema.ts',
@@ -342,11 +331,11 @@ describe('init', () => {
   });
 
   it('custom setup', async () => {
-    const fs = require('fs');
-    fs.__setMockFiles(resolve(process.cwd(), 'package.json'), packageJson.withReact);
-    // make sure we don't write stuff
-    const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
-    const logSpy = jest.spyOn(console, 'log').mockImplementation();
+    vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
+
+    const { init } = await import('../src/init/index.js');
+    const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const documents = 'graphql/*.ts';
     const script = 'generate:types';
 
