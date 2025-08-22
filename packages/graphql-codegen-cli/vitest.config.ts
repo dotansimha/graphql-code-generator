@@ -6,6 +6,7 @@ export default mergeConfig(
   defineProject({
     test: {
       name: 'cli',
+      setupFiles: './vitest.setup.ts',
       include: ['**/*.spec.ts'],
     },
   })
