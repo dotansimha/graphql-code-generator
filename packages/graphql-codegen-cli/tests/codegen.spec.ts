@@ -1,28 +1,14 @@
 import { join } from 'path';
-import { useMonorepo } from '@graphql-codegen/testing';
+import '@graphql-codegen/testing';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print, OperationDefinitionNode, Kind } from 'graphql';
 import { createContext, executeCodegen } from '../src/index.js';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
-jest.mock('some-fetch');
-
-const monorepo = useMonorepo({
-  dirname: __dirname,
-});
-
 describe('Codegen Executor', () => {
-  monorepo.correctCWD();
-
-  beforeEach(() => {
-    jest.useFakeTimers({
-      legacyFakeTimers: true,
-    });
-  });
-
   describe('Generator General Options', () => {
     it('Should output the correct filenames', async () => {
       const { result } = await executeCodegen({
@@ -40,7 +26,7 @@ describe('Codegen Executor', () => {
     it('Should load require extensions', async () => {
       expect((global as any).dummyWasLoaded).toBeFalsy();
       const { result } = await executeCodegen({
-        schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
+        schema: join(__dirname, './test-files/schema-dir/schema-object.cjs'),
         require: join(__dirname, './dummy-require.js'),
         generates: {
           'out1.ts': { plugins: ['typescript'] },
@@ -720,7 +706,7 @@ describe('Codegen Executor', () => {
         schema: [
           {
             './tests/test-documents/schema.graphql': {
-              loader: './tests/custom-loaders/custom-schema-loader.js',
+              loader: './tests/custom-loaders/custom-schema-loader.cjs',
             },
           },
         ],
@@ -739,7 +725,7 @@ describe('Codegen Executor', () => {
             schema: [
               {
                 './tests/test-documents/schema.graphql': {
-                  loader: './tests/custom-loaders/custom-schema-loader.js',
+                  loader: './tests/custom-loaders/custom-schema-loader.cjs',
                 },
               },
             ],
@@ -756,7 +742,7 @@ describe('Codegen Executor', () => {
         schema: [
           {
             './tests/test-documents/schema.graphql': {
-              loader: './tests/custom-loaders/invalid-return-value-schema-loader.js',
+              loader: './tests/custom-loaders/invalid-return-value-schema-loader.cjs',
             },
           },
         ],
@@ -792,7 +778,7 @@ describe('Codegen Executor', () => {
         schema: [
           {
             './tests/test-documents/schema.graphql': {
-              loader: './tests/custom-loaders/invalid-export.js',
+              loader: './tests/custom-loaders/invalid-export.cjs',
             },
           },
         ],
@@ -815,7 +801,7 @@ describe('Codegen Executor', () => {
         documents: [
           {
             './tests/test-documents/valid.graphql': {
-              loader: './tests/custom-loaders/custom-documents-loader.js',
+              loader: './tests/custom-loaders/custom-documents-loader.cjs',
             },
           },
         ],
@@ -855,7 +841,7 @@ describe('Codegen Executor', () => {
         documents: [
           {
             './tests/test-documents/valid.graphql': {
-              loader: './tests/custom-loaders/invalid-return-value-documents-loader.js',
+              loader: './tests/custom-loaders/invalid-return-value-documents-loader.cjs',
             },
           },
         ],
@@ -895,7 +881,7 @@ describe('Codegen Executor', () => {
         documents: [
           {
             './tests/test-documents/valid.graphql': {
-              loader: './tests/custom-loaders/invalid-export.js',
+              loader: './tests/custom-loaders/invalid-export.cjs',
             },
           },
         ],
@@ -997,7 +983,7 @@ describe('Codegen Executor', () => {
       schema: [
         {
           './tests/test-documents/schema.graphql': {
-            loader: './tests/custom-loaders/custom-schema-loader-with-context.js',
+            loader: './tests/custom-loaders/custom-schema-loader-with-context.cjs',
           },
         },
       ],
