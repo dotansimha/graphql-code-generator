@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { graphql } from './gql/index';
 import { makeYoga } from './yoga';
 import persistedDocumentsDictionary from './gql/persisted-documents.json';
