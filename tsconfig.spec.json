@@ -5,5 +5,13 @@
     "composite": true,
     "types": ["vitest/globals"]
   },
-  "include": ["vitest.config.ts", "vitest.setup.ts", "packages/**/*.spec.ts", "packages/**/tests/**/*.ts"]
+  "exclude": [],
+  "include": [
+    "**/vitest.config.ts",
+    "**/vitest.setup.ts",
+    "**/*.spec.ts",
+    "**/tests/**/*.ts",
+    "**/tests/test-files",
+    "**/tests/test-documents"
+  ]
 }
