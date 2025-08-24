@@ -35,7 +35,7 @@ module.exports = {
     {
       files: [
         '*.spec.ts',
-        '**/tests/**/*.{js,ts,tsx}',
+        '**/tests/**/*.{js,ts,tsx,cjs}',
         '**/graphql-codegen-testing/**/*.ts',
         '**/vitest.config.ts',
         '**/vitest.setup.ts',
