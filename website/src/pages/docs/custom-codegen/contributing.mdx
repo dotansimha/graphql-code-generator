@@ -29,7 +29,7 @@ GraphQL Code Generator uses the following stack to manage the source code:
 
 1. [TypeScript](https://typescriptlang.org) - for writing the code
 2. [Bob](https://github.com/kamilkisiela/bob) - for building, bundling, and development workflow
-3. [Jest](https://jestjs.io) - for running tests
+3. [Vitest](https://vitest.dev/) - for running tests
 
 ## 2. Fork and Clone
 
@@ -100,7 +100,7 @@ Make sure to follow the following instructions:
 {
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../../jest.config.js"
+    "test": "vitest --no-watch"
   }
 }
 ```

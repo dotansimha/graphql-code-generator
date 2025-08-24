@@ -1,5 +1,3 @@
-import { existsSync } from 'fs';
-import { resolve } from 'path';
 import { expect } from 'vitest';
 import { oneLine, stripIndent } from 'common-tags';
 import { diff } from 'jest-diff';
@@ -67,43 +65,6 @@ expect.extend({
     };
   },
 });
-
-function findProjectDir(dirname: string): string | never {
-  const originalDirname = dirname;
-  const cwd = process.cwd();
-  const stopDir = resolve(cwd, '..');
-
-  while (dirname !== stopDir) {
-    try {
-      if (existsSync(resolve(dirname, 'package.json'))) {
-        return dirname;
-      }
-
-      dirname = resolve(dirname, '..');
-    } catch {
-      // ignore
-    }
-  }
-
-  throw new Error(`Coudn't find project's root from: ${originalDirname}`);
-}
-
-// FIXME: Remove this since we are mocking cwd in projects needing it
-export function useMonorepo({ dirname }: { dirname: string }) {
-  const cwd = findProjectDir(dirname);
-
-  return {
-    correctCWD() {
-      let spyProcessCwd: jest.SpyInstance;
-      beforeEach(() => {
-        spyProcessCwd = jest.spyOn(process, 'cwd').mockReturnValue(cwd);
-      });
-      afterEach(() => {
-        spyProcessCwd.mockRestore();
-      });
-    },
-  };
-}
 
 export * from './mock-graphql-server.js';
 export * from './resolvers-common.js';
