@@ -24,8 +24,8 @@ describe('Persisted Documents', () => {
       }),
     });
     expect(await result.json()).toMatchInlineSnapshot(`
-      Object {
-        "data": Object {
+      {
+        "data": {
           "hello": "Hello world!",
         },
       }
@@ -46,9 +46,9 @@ describe('Persisted Documents', () => {
       }),
     });
     expect(await result.json()).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
+      {
+        "errors": [
+          {
             "message": "PersistedQueryOnly",
           },
         ],
@@ -75,8 +75,8 @@ describe('Persisted Documents', () => {
     });
 
     expect(await result.json()).toMatchInlineSnapshot(`
-      Object {
-        "data": Object {
+      {
+        "data": {
           "hello": "Hello world!",
         },
       }
