@@ -1,18 +1,16 @@
-import { existsSync } from 'fs';
-import { resolve } from 'path';
-import { expect } from '@jest/globals';
+import { expect } from 'vitest';
 import { oneLine, stripIndent } from 'common-tags';
 import { diff } from 'jest-diff';
 
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      /**
-       * Normalizes whitespace and performs string comparisons
-       */
-      toBeSimilarStringTo(expected: string): R;
-    }
-  }
+interface CustomMatchers<R = unknown> {
+  /**
+   * Normalizes whitespace and performs string comparisons
+   */
+  toBeSimilarStringTo(expected: string): R;
+}
+declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface Matchers<T = any> extends CustomMatchers<T> {}
 }
 
 function compareStrings(a: string, b: string): boolean {
@@ -67,42 +65,6 @@ expect.extend({
     };
   },
 });
-
-function findProjectDir(dirname: string): string | never {
-  const originalDirname = dirname;
-  const cwd = process.cwd();
-  const stopDir = resolve(cwd, '..');
-
-  while (dirname !== stopDir) {
-    try {
-      if (existsSync(resolve(dirname, 'package.json'))) {
-        return dirname;
-      }
-
-      dirname = resolve(dirname, '..');
-    } catch {
-      // ignore
-    }
-  }
-
-  throw new Error(`Coudn't find project's root from: ${originalDirname}`);
-}
-
-export function useMonorepo({ dirname }: { dirname: string }) {
-  const cwd = findProjectDir(dirname);
-
-  return {
-    correctCWD() {
-      let spyProcessCwd: jest.SpyInstance;
-      beforeEach(() => {
-        spyProcessCwd = jest.spyOn(process, 'cwd').mockReturnValue(cwd);
-      });
-      afterEach(() => {
-        spyProcessCwd.mockRestore();
-      });
-    },
-  };
-}
 
 export * from './mock-graphql-server.js';
 export * from './resolvers-common.js';

@@ -1,10 +1,6 @@
+import '@graphql-codegen/testing';
 import { normalize } from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
-import { useMonorepo } from '@graphql-codegen/testing';
-
-const monorepo = useMonorepo({
-  dirname: __dirname,
-});
 
 const options = {
   generates: {
@@ -22,14 +18,6 @@ const options = {
 };
 
 describe('Integration', () => {
-  monorepo.correctCWD();
-
-  beforeEach(() => {
-    jest.useFakeTimers({
-      legacyFakeTimers: true,
-    });
-  });
-
   // In this test, we make sure executeCodegen passes on a list of Sources as an extension
   // This is very important
   test('should generate a base output and 4 for modules', async () => {

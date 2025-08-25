@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TypeScript Resolvers Plugin Config allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type 1`] = `
+exports[`TypeScript Resolvers Plugin > Config > allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type 1`] = `
 "export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -361,7 +361,7 @@ export type DirectiveResolvers<ContextType = any> = ResolversObject<{
       "
 `;
 
-exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work correctly with imported namespaced type 1`] = `
+exports[`TypeScript Resolvers Plugin > Config > namespacedImportName - should work correctly with imported namespaced type 1`] = `
 "import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
@@ -620,7 +620,7 @@ export type DirectiveResolvers<ContextType = any> = ResolversObject<{
 "
 `;
 
-exports[`TypeScript Resolvers Plugin Config optionalInfoArgument - should allow to have optional info argument 1`] = `
+exports[`TypeScript Resolvers Plugin > Config > optionalInfoArgument - should allow to have optional info argument 1`] = `
 "export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };

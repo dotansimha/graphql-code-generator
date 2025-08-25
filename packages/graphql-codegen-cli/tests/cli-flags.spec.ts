@@ -23,12 +23,12 @@ const temp = new TempDir();
 describe('CLI Flags', () => {
   beforeEach(() => {
     temp.clean();
-    jest.spyOn(process, 'cwd').mockImplementation(() => temp.dir);
+    vi.spyOn(process, 'cwd').mockImplementation(() => temp.dir);
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
+    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(() => {

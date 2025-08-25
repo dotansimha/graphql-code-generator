@@ -6,7 +6,6 @@ import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
 
 describe('TypeScript Operations Plugin', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
 
   const validate = async (

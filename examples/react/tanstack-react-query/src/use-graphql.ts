@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { ExecutionResult } from 'graphql';
 import { useQuery } from '@tanstack/react-query';
 import { TypedDocumentString } from './gql/graphql';

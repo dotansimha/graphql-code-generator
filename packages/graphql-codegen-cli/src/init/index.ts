@@ -1,4 +1,4 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import { bold, writeConfig, writePackage } from './helpers.js';
 import { getAnswers } from './questions.js';
 import { guessTargets } from './targets.js';

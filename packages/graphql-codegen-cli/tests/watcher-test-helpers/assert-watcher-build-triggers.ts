@@ -1,20 +1,31 @@
 import { join, isAbsolute, relative, resolve, sep } from 'path';
-import ParcelWatcher from '@parcel/watcher';
+import { Options } from '@parcel/watcher';
 import isGlob from 'is-glob';
+import type { Mock } from 'vitest';
 
-import type { setupMockWatcher } from './setup-mock-watcher.js';
 import {
   formatBuildTriggerErrorPrelude,
   formatErrorGlobNotIgnoredByParcelWatcher,
   formatErrorPathNotIgnoredByParcelWatcher,
 } from './format-watcher-assertion-errors';
 
+interface MockWatcher {
+  watchDirectory: string;
+  subscribeOpts?: Options;
+  dispatchChange: (path: string) => Promise<unknown>;
+  stopWatching: () => Promise<void>;
+  subscribeCallbackMock: Mock;
+  subscribeMock: Mock;
+  onWatchTriggeredMock: Mock;
+  unsubscribeMock: Mock;
+}
+
 /**
  * Helper function for asserting that multiple paths did or did not trigger a build,
  * and for asserting the values of paths and globs passed to {@link ParcelWatcher.Options}`["ignore"]`
  */
 export const assertBuildTriggers = async (
-  mockWatcher: Awaited<ReturnType<typeof setupMockWatcher>>,
+  mockWatcher: MockWatcher,
   {
     shouldTriggerBuild,
     shouldNotTriggerBuild,
@@ -104,11 +115,12 @@ export const assertBuildTriggers = async (
   }
 ) => {
   const {
-    onWatchTriggered,
+    onWatchTriggeredMock,
     dispatchChange,
     stopWatching,
-    subscribeCallbackSpy,
-    unsubscribeSpy,
+    subscribeCallbackMock,
+    subscribeMock,
+    unsubscribeMock,
     watchDirectory,
     subscribeOpts,
   } = mockWatcher;
@@ -120,21 +132,25 @@ export const assertBuildTriggers = async (
   // Wrap in a try/finally block so even if there's an error, we can stop the watcher
   // This way, we avoid misleading "cannot log after tests are done" error
   try {
+    expect(subscribeMock).toHaveBeenCalledTimes(1);
+    expect(subscribeMock.mock.calls[0][0]).toBe(watchDirectory);
+    expect(subscribeMock.mock.calls[0][2]).toStrictEqual(subscribeOpts);
+
     for (const relPath of shouldTriggerBuild) {
       const path = join(process.cwd(), relPath);
-      await assertTriggeredBuild(path, { dispatchChange, subscribeCallbackSpy, onWatchTriggered });
+      await assertTriggeredBuild(path, { dispatchChange, subscribeCallbackMock, onWatchTriggeredMock });
     }
 
-    expect(subscribeCallbackSpy).toHaveBeenCalledTimes(shouldTriggerBuild.length);
-    expect(onWatchTriggered).toHaveBeenCalledTimes(shouldTriggerBuild.length);
+    expect(subscribeCallbackMock).toHaveBeenCalledTimes(shouldTriggerBuild.length);
+    expect(onWatchTriggeredMock).toHaveBeenCalledTimes(shouldTriggerBuild.length);
 
     for (const relPath of shouldNotTriggerBuild) {
       const path = join(process.cwd(), relPath);
-      await assertDidNotTriggerBuild(path, { dispatchChange, subscribeCallbackSpy, onWatchTriggered });
+      await assertDidNotTriggerBuild(path, { dispatchChange, subscribeCallbackMock, onWatchTriggeredMock });
     }
 
-    expect(subscribeCallbackSpy).toHaveBeenCalledTimes(shouldTriggerBuild.length + shouldNotTriggerBuild.length);
-    expect(onWatchTriggered).toHaveBeenCalledTimes(shouldTriggerBuild.length);
+    expect(subscribeCallbackMock).toHaveBeenCalledTimes(shouldTriggerBuild.length + shouldNotTriggerBuild.length);
+    expect(onWatchTriggeredMock).toHaveBeenCalledTimes(shouldTriggerBuild.length);
 
     const ignore = subscribeOpts.ignore ?? [];
     if (pathsWouldBeIgnoredByParcelWatcher) {
@@ -172,22 +188,22 @@ export const assertBuildTriggers = async (
   } finally {
     if (keepWatching !== true) {
       await stopWatching();
-      expect(unsubscribeSpy).toHaveBeenCalled();
+      expect(unsubscribeMock).toHaveBeenCalledTimes(1);
     }
   }
 };
 
 /**
- * Given a glob pattern, assert that {@link ParcelWatcher.options}`["ignore"]`
+ * Given a glob pattern, assert that {@link Options}`["ignore"]`
  * contains that glob pattern (exact match).
  *
  * We don't implement actual globbing logic, because Parcel Watcher does that
  * from C++ and it would be a leaky mock.
  */
 const assertParcelWouldIgnoreGlob = (
-  /** Glob pattern expected to exist in {@link ParcelWatcher.Options}`["ignore"]` */
+  /** Glob pattern expected to exist in {@link Options}`["ignore"]` */
   expectToIgnoreGlob: string,
-  { ignore, watchDirectory }: { watchDirectory: string; ignore: Required<ParcelWatcher.Options>['ignore'] }
+  { ignore, watchDirectory }: { watchDirectory: string; ignore: Required<Options>['ignore'] }
 ) => {
   const parcelIgnoredGlobs = ignore.filter(pathOrGlob => isGlob(pathOrGlob));
 
@@ -225,7 +241,7 @@ const assertParcelWouldIgnorePath = (
     ignore,
   }: {
     watchDirectory: string;
-    ignore: Required<ParcelWatcher.Options>['ignore'];
+    ignore: Required<Options>['ignore'];
   }
 ) => {
   const parcelIgnoredPaths = ignore.filter(pathOrGlob => !isGlob(pathOrGlob));
@@ -267,8 +283,8 @@ const assertParcelWouldIgnorePath = (
 };
 
 type MockWatcherAssertionHelpers = Pick<
-  Awaited<ReturnType<typeof setupMockWatcher>>,
-  'dispatchChange' | 'subscribeCallbackSpy' | 'onWatchTriggered'
+  MockWatcher,
+  'dispatchChange' | 'subscribeCallbackMock' | 'onWatchTriggeredMock'
 >;
 
 /**
@@ -276,12 +292,12 @@ type MockWatcherAssertionHelpers = Pick<
  */
 const assertTriggeredBuild = async (
   /** Absolute path */ path: string,
-  { dispatchChange, subscribeCallbackSpy, onWatchTriggered }: MockWatcherAssertionHelpers
+  { dispatchChange, subscribeCallbackMock, onWatchTriggeredMock }: MockWatcherAssertionHelpers
 ) => {
   try {
     await dispatchChange(path);
-    expect(subscribeCallbackSpy).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
-    expect(onWatchTriggered).toHaveBeenLastCalledWith('update', path);
+    expect(subscribeCallbackMock).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
+    expect(onWatchTriggeredMock).toHaveBeenLastCalledWith('update', path);
   } catch (error) {
     error.message = formatBuildTriggerErrorPrelude(path, true, error.message);
     Error.captureStackTrace(error, assertTriggeredBuild);
@@ -294,12 +310,12 @@ const assertTriggeredBuild = async (
  */
 const assertDidNotTriggerBuild = async (
   /** Absolute path */ path: string,
-  { dispatchChange, subscribeCallbackSpy, onWatchTriggered }: MockWatcherAssertionHelpers
+  { dispatchChange, subscribeCallbackMock, onWatchTriggeredMock }: MockWatcherAssertionHelpers
 ) => {
   try {
     await dispatchChange(path);
-    expect(subscribeCallbackSpy).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
-    expect(onWatchTriggered).not.toHaveBeenLastCalledWith('update', path);
+    expect(subscribeCallbackMock).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
+    expect(onWatchTriggeredMock).not.toHaveBeenLastCalledWith('update', path);
   } catch (error) {
     error.message = formatBuildTriggerErrorPrelude(path, false, error.message);
     Error.captureStackTrace(error, assertDidNotTriggerBuild);

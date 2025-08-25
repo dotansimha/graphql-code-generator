@@ -146,13 +146,13 @@ jobs:
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
         run: yarn
-      - name: Cache Jest
+      - name: Cache Vitest
         uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
         with:
-          path: .cache/jest
-          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{hashFiles('yarn.lock')}}
+          path: node_modules/.vite
+          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-vitest-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
+            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-vitest-
       - name: Build
         run: yarn build
       - name: Test
