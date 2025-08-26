@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 const { buildSchema } = require('graphql');
 const { readFileSync } = require('fs');
 const { join } = require('path');

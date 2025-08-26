@@ -5,7 +5,7 @@
       "name": "Run open test file",
       "type": "node",
       "request": "launch",
-      "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "${relativeFile}"],
+      "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/vitest", "--runInBand", "${relativeFile}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }

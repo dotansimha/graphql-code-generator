@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../jest.config.js"
+    "test": "vitest --no-watch"
   },
   "devDependencies": {
     "@types/babel__helper-plugin-utils": "7.10.3",

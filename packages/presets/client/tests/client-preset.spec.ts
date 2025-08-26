@@ -1250,7 +1250,7 @@ export * from "./gql.js";`);
   });
 
   it('should dedupe fragments in a "string" document mode', async () => {
-    const dir = path.join(__dirname, 'tmp/duplicate-fragments');
+    const dir = path.join(__dirname, 'tmp/duplicate-fragments-string');
     const cleanUp = async () => {
       await fs.promises.rm(dir, { recursive: true, force: true });
     };
