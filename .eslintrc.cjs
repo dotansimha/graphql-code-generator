@@ -14,10 +14,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/ban-types': 'off',
-    'import/no-extraneous-dependencies': [
-      'error',
-      { devDependencies: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts'] },
-    ],
+    'import/no-extraneous-dependencies': 'error',
 
     // todo: enable
     'unicorn/filename-case': 'off',
@@ -36,12 +33,17 @@ module.exports = {
       extends: '@theguild/eslint-config/react',
     },
     {
-      files: ['**/tests/**/*.{js,ts,tsx}', '**/graphql-codegen-testing/**/*.ts', '*.spec.ts'],
-      env: {
-        jest: true,
-      },
+      files: [
+        '*.spec.ts',
+        '**/tests/**/*.{js,ts,tsx,cjs}',
+        '**/graphql-codegen-testing/**/*.ts',
+        '**/vitest.config.ts',
+        '**/vitest.setup.ts',
+        '**/__mocks__/*',
+      ],
       rules: {
         'import/no-extraneous-dependencies': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
       },
     },
     {
@@ -57,7 +59,7 @@ module.exports = {
       },
     },
     {
-      files: ['scripts/*.{ts,js}', 'prettier.config.cjs', 'jest.config.js', 'jest.project.js'],
+      files: ['scripts/*.{ts,js}', 'prettier.config.cjs'],
       rules: {
         '@typescript-eslint/no-require-imports': 'off',
       },

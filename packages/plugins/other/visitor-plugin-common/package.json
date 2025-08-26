@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../../jest.config.js"
+    "test": "vitest --no-watch"
   },
   "dependencies": {
     "@graphql-tools/optimize": "^2.0.0",

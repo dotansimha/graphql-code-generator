@@ -944,48 +944,48 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       const result = await plugin(buildSchema(federatedSchema), [], { federation: true }, { outputFile: '' });
 
       expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
-        Object {
-          "resolversMap": Object {
+        {
+          "resolversMap": {
             "name": "Resolvers",
           },
-          "userDefined": Object {
-            "MultipleNonResolvable": Object {
+          "userDefined": {
+            "MultipleNonResolvable": {
               "name": "MultipleNonResolvableResolvers",
             },
-            "MultipleResolvable": Object {
-              "federation": Object {
+            "MultipleResolvable": {
+              "federation": {
                 "hasResolveReference": true,
               },
               "name": "MultipleResolvableResolvers",
             },
-            "Node": Object {
+            "Node": {
               "name": "NodeResolvers",
             },
-            "NotResolvable": Object {
+            "NotResolvable": {
               "name": "NotResolvableResolvers",
             },
-            "Query": Object {
+            "Query": {
               "name": "QueryResolvers",
             },
-            "Resolvable": Object {
-              "federation": Object {
+            "Resolvable": {
+              "federation": {
                 "hasResolveReference": true,
               },
               "name": "ResolvableResolvers",
             },
-            "User": Object {
-              "federation": Object {
+            "User": {
+              "federation": {
                 "hasResolveReference": true,
               },
               "name": "UserResolvers",
             },
-            "UserError": Object {
+            "UserError": {
               "name": "UserErrorResolvers",
             },
-            "UserOk": Object {
+            "UserOk": {
               "name": "UserOkResolvers",
             },
-            "UserPayload": Object {
+            "UserPayload": {
               "name": "UserPayloadResolvers",
             },
           },

@@ -78,37 +78,37 @@ describe('TypeScript Resolvers Plugin - Meta', () => {
     expect(result.content).toContain(`export type user_resolvers`);
 
     expect(result.meta).toMatchInlineSnapshot(`
-      Object {
-        "generatedResolverTypes": Object {
-          "resolversMap": Object {
+      {
+        "generatedResolverTypes": {
+          "resolversMap": {
             "name": "resolvers",
           },
-          "userDefined": Object {
-            "CreateUserError": Object {
+          "userDefined": {
+            "CreateUserError": {
               "name": "create_user_error_resolvers",
             },
-            "CreateUserOk": Object {
+            "CreateUserOk": {
               "name": "create_user_ok_resolvers",
             },
-            "CreateUserPayload": Object {
+            "CreateUserPayload": {
               "name": "create_user_payload_resolvers",
             },
-            "ErrorType": Object {
+            "ErrorType": {
               "name": "error_type_resolvers",
             },
-            "Mutation": Object {
+            "Mutation": {
               "name": "mutation_resolvers",
             },
-            "Node": Object {
+            "Node": {
               "name": "node_resolvers",
             },
-            "Post": Object {
+            "Post": {
               "name": "post_resolvers",
             },
-            "Query": Object {
+            "Query": {
               "name": "query_resolvers",
             },
-            "User": Object {
+            "User": {
               "name": "user_resolvers",
             },
           },

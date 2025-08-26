@@ -1,14 +1,14 @@
 import { cliError } from '../src/utils/cli-error.js';
 
 describe('cliError', () => {
-  let spyProcessExit: jest.SpyInstance;
-  let spyConsoleError: jest.SpyInstance;
+  let spyProcessExit: ReturnType<typeof vi.spyOn>;
+  let spyConsoleError: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    spyProcessExit = jest.spyOn(process, 'exit');
-    spyProcessExit.mockImplementation();
-    spyConsoleError = jest.spyOn(console, 'error');
-    spyConsoleError.mockImplementation();
+    spyProcessExit = vi.spyOn(process, 'exit');
+    spyProcessExit.mockImplementation(() => {});
+    spyConsoleError = vi.spyOn(console, 'error');
+    spyConsoleError.mockImplementation(() => {});
   });
 
   afterEach(() => {
