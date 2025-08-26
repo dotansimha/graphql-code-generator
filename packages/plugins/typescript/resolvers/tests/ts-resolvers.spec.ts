@@ -505,7 +505,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
   });
 
   it('Should not warn when noSchemaStitching is not defined', async () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(spy).not.toHaveBeenCalled();

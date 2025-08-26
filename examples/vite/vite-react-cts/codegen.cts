@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { type CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {

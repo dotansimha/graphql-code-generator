@@ -15,7 +15,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman"
+    "test": "vitest --no-watch"
   },
   "keywords": [
     "gql",
