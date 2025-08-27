@@ -18,7 +18,7 @@ export class TsIntrospectionVisitor extends TsVisitor {
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: string | number, parent: any) {
-    const name: string = node.name as any;
+    const name: string = node.name.value;
 
     if (this.typesToInclude.some(type => type.name === name)) {
       return super.ObjectTypeDefinition(node, key, parent);
@@ -28,7 +28,7 @@ export class TsIntrospectionVisitor extends TsVisitor {
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const name: string = node.name as any;
+    const name: string = node.name.value;
 
     if (this.typesToInclude.some(type => type.name === name)) {
       return super.EnumTypeDefinition(node);
