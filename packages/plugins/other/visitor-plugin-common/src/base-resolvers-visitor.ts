@@ -94,7 +94,14 @@ export interface RootResolver {
   content: string;
   generatedResolverTypes: {
     resolversMap: { name: string };
-    userDefined: Record<string, { name: string; federation?: { hasResolveReference: boolean } }>;
+    userDefined: Record<
+      string,
+      {
+        name: string;
+        hasIsTypeOf: boolean;
+        federation?: { hasResolveReference: boolean };
+      }
+    >;
   };
 }
 
@@ -1437,6 +1444,7 @@ export class BaseResolversVisitor<
               if (resolverType.baseGeneratedTypename) {
                 userDefinedTypes[schemaTypeName] = {
                   name: resolverType.baseGeneratedTypename,
+                  hasIsTypeOf: this._parsedSchemaMeta.typesWithIsTypeOf[schemaTypeName] || false,
                 };
 
                 const federationMeta = this._federation.getMeta()[schemaTypeName];
