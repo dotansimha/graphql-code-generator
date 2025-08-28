@@ -950,42 +950,52 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
           },
           "userDefined": {
             "MultipleNonResolvable": {
+              "hasIsTypeOf": false,
               "name": "MultipleNonResolvableResolvers",
             },
             "MultipleResolvable": {
               "federation": {
                 "hasResolveReference": true,
               },
+              "hasIsTypeOf": false,
               "name": "MultipleResolvableResolvers",
             },
             "Node": {
+              "hasIsTypeOf": false,
               "name": "NodeResolvers",
             },
             "NotResolvable": {
+              "hasIsTypeOf": false,
               "name": "NotResolvableResolvers",
             },
             "Query": {
+              "hasIsTypeOf": false,
               "name": "QueryResolvers",
             },
             "Resolvable": {
               "federation": {
                 "hasResolveReference": true,
               },
+              "hasIsTypeOf": false,
               "name": "ResolvableResolvers",
             },
             "User": {
               "federation": {
                 "hasResolveReference": true,
               },
+              "hasIsTypeOf": false,
               "name": "UserResolvers",
             },
             "UserError": {
+              "hasIsTypeOf": true,
               "name": "UserErrorResolvers",
             },
             "UserOk": {
+              "hasIsTypeOf": true,
               "name": "UserOkResolvers",
             },
             "UserPayload": {
+              "hasIsTypeOf": false,
               "name": "UserPayloadResolvers",
             },
           },
