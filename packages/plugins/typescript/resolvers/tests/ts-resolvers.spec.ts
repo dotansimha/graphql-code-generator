@@ -340,6 +340,8 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
           v: MyEnum
+          w: MyEnum
+          x: MyEnum
         }
 
         enum MyEnum {
