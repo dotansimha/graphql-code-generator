@@ -336,6 +336,54 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       expect(mergedOutput).toContain(`export type MyEnumResolvers = { A: 'val_1', B: 'val_2', C: 'val_3' };`);
     });
 
+    it('#10418 - Should generate enum internal values resolvers when enum has enumValues set as object with partially explicit values', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+          w: MyEnum
+          x: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        enumValues: {
+          MyEnum: {
+            A: 'val_1',
+          },
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await resolversTestingValidate(
+        result,
+        config,
+        testSchema,
+        `
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: 'val_1',
+            B: 'B'
+          },
+          Query: {
+            v: () => 'val_1',
+            w: () => 'B',
+            z: () => 'C',
+          }
+        };
+      `
+      );
+
+      expect(mergedOutput).not.toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).not.toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(`export type MyEnumResolvers = { A: 'val_1', B?: 'B', C?: 'C' };`);
+    });
+
     it('Should generate enum internal values resolvers when enum has enumValues set as external enum', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
