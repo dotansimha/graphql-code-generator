@@ -5,7 +5,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.7",
     "@graphql-codegen/typescript": "4.1.6",
-    "@graphql-codegen/typescript-resolvers": "4.5.1"
+    "@graphql-codegen/typescript-resolvers": "4.5.2"
   },
   "dependencies": {
     "graphql": "16.9.0",

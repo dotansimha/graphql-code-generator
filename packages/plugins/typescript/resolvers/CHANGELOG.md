@@ -1,5 +1,11 @@
 # @graphql-codegen/typescript-resolvers
 
+## 4.5.2
+
+### Patch Changes
+
+- [#10419](https://github.com/dotansimha/graphql-code-generator/pull/10419) [`2fc3869`](https://github.com/dotansimha/graphql-code-generator/commit/2fc3869de216554fa896359a082066eaa18e8634) Thanks [@chdanielmueller](https://github.com/chdanielmueller)! - Fix enum resolver for partially mapped enumValues
+
 ## 4.5.1
 
 ### Patch Changes
