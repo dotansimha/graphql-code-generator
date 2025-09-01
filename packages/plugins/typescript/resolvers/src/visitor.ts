@@ -134,7 +134,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     return `{ ${(node.values || [])
       .map(v => {
         const valueName = v.name as any as string;
-        const mappedValue = valuesMapping[valueName] ?? v.name;
+        const mappedValue = valuesMapping[valueName] ?? valueName;
         const hasMapping = !!valuesMapping[valueName];
 
         return `${valueName}${hasMapping || this.config.avoidOptionals.resolvers ? '' : '?'}: ${
