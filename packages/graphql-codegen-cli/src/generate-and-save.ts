@@ -5,7 +5,7 @@ import { executeCodegen } from './codegen.js';
 import { CodegenContext, ensureContext } from './config.js';
 import { lifecycleHooks } from './hooks.js';
 import { debugLog } from './utils/debugging.js';
-import { mkdirp, readFile, unlinkFile, writeFile } from './utils/file-system.js';
+import { mkdirp, readFile, unlinkFile, writeFile, writeFileSync } from './utils/file-system.js';
 import { createWatcher } from './utils/watcher.js';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
@@ -128,6 +128,13 @@ export async function generate(
     return generationResult;
   }
 
+  // Register on exit listener to write profiler output
+  process.on('exit', () => {
+    if (context.profilerOutput) {
+      writeFileSync(join(context.cwd, context.profilerOutput), JSON.stringify(context.profiler.collect()));
+    }
+  });
+
   // watch mode
   if (config.watch) {
     return createWatcher(context, writeOutput).runningWatcher;
@@ -137,10 +144,6 @@ export async function generate(
 
   await context.profiler.run(() => writeOutput(outputFiles), 'writeOutput');
   await context.profiler.run(() => lifecycleHooks(config.hooks).beforeDone(), 'Lifecycle: beforeDone');
-
-  if (context.profilerOutput) {
-    await writeFile(join(context.cwd, context.profilerOutput), JSON.stringify(context.profiler.collect()));
-  }
 
   return outputFiles;
 }
