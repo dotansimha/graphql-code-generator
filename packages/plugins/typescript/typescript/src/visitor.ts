@@ -443,7 +443,7 @@ export class TsVisitor<
                   transformUnderscore: true,
                 })
               );
-              const comment = transformComment(enumOption.description as any as string, 1);
+              const comment = this.getNodeComment(enumOption);
               const name = enumOption.name as unknown as string;
               const enumValue: string | number = getValueFromConfig(name) ?? name;
 
