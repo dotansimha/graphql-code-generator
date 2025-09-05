@@ -16,5 +16,6 @@ export const sharedConfig = defineConfig({
 export default defineConfig({
   test: {
     projects: ['packages/**/vitest.config.ts', 'examples/**/vitest.config.ts'],
+    watch: false,
   },
 });
