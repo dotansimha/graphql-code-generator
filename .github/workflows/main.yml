@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - master
-      - federation-fixes # FIXME: Remove this line after the PR is merged
 
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
