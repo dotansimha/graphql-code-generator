@@ -12,7 +12,6 @@ import {
   NoTypeDefinitionsFound,
   UnnormalizedTypeDefPointer,
 } from '@graphql-tools/load';
-import { PrismaLoader } from '@graphql-tools/prisma-loader';
 import { UrlLoader } from '@graphql-tools/url-loader';
 import { GraphQLError, GraphQLSchema } from 'graphql';
 
@@ -41,7 +40,6 @@ export async function loadSchema(
       new JsonFileLoader(),
       new UrlLoader(),
       new ApolloEngineLoader(),
-      new PrismaLoader(),
     ];
 
     const schema = await loadSchemaToolkit(schemaPointers, {

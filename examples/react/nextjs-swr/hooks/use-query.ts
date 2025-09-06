@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { buildHTTPExecutor } from '@graphql-tools/executor-http';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { ASTNode, ExecutionResult, Kind, OperationDefinitionNode } from 'graphql';

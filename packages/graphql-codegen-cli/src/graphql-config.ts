@@ -2,7 +2,6 @@ import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { CodeFileLoader } from '@graphql-tools/code-file-loader';
 import { GitLoader } from '@graphql-tools/git-loader';
 import { GithubLoader } from '@graphql-tools/github-loader';
-import { PrismaLoader } from '@graphql-tools/prisma-loader';
 import { GraphQLConfig, GraphQLExtensionDeclaration, loadConfig } from 'graphql-config';
 
 export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
@@ -17,7 +16,6 @@ export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
   api.loaders.schema.register(new GitLoader());
   api.loaders.schema.register(new GithubLoader());
   api.loaders.schema.register(new ApolloEngineLoader());
-  api.loaders.schema.register(new PrismaLoader());
   // Documents
   api.loaders.documents.register(
     new CodeFileLoader({

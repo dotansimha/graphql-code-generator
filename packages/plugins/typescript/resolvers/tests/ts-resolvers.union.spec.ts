@@ -47,7 +47,7 @@ describe('TypeScript Resolvers Plugin - Union', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         StandardError: ResolverTypeWrapper<StandardError>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -63,7 +63,7 @@ describe('TypeScript Resolvers Plugin - Union', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Query: {};
+        Query: Record<PropertyKey, never>;
         ID: Scalars['ID']['output'];
         StandardError: StandardError;
         String: Scalars['String']['output'];
@@ -233,6 +233,58 @@ describe('TypeScript Resolvers Plugin - Union', () => {
         PostsResult: PostsResult;
         PostsPayload: ResolversUnionTypes<ResolversParentTypes>['PostsPayload'];
         Boolean: Scalars['Boolean']['output'];
+      };
+    `);
+  });
+
+  it('generates __isTypeOf for only union members', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type MemberOne {
+        id: ID!
+      }
+      type MemberTwo {
+        id: ID!
+        name: String!
+      }
+      type MemberThree {
+        id: ID!
+        isMember: Boolean!
+      }
+      union Union = MemberOne | MemberTwo | MemberThree
+      type Normal {
+        id: ID!
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MemberOneResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberOne'] = ResolversParentTypes['MemberOne']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      }
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MemberTwoResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberTwo'] = ResolversParentTypes['MemberTwo']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MemberThreeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MemberThree'] = ResolversParentTypes['MemberThree']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        isMember?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+
+    // Normal type is not a union member, so it does not have __isTypeOf
+    expect(result.content).toBeSimilarStringTo(`
+      export type NormalResolvers<ContextType = any, ParentType extends ResolversParentTypes['Normal'] = ResolversParentTypes['Normal']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
   });

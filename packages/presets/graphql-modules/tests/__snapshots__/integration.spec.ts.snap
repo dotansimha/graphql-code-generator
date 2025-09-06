@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Integration dotanions module should export DefinedFields, Schema Types with Picks and resolvers 1`] = `
+exports[`Integration > dotanions module should export DefinedFields, Schema Types with Picks and resolvers 1`] = `
 "import * as Types from "../global-types";
 import * as gm from "graphql-modules";
 interface DefinedFields {

@@ -36,11 +36,6 @@ const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
 
 export interface RawClientSideBasePluginConfig extends RawConfig {
   /**
-   * @description Deprecated. Changes the documentMode to `documentNode`.
-   * @default false
-   */
-  noGraphQLTag?: boolean;
-  /**
    * @default graphql-tag#gql
    * @description Customize from which module will `gql` be imported from.
    * This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.
@@ -275,12 +270,7 @@ export class ClientSideBaseVisitor<
       documentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'Document'),
       fragmentVariablePrefix: getConfigValue(rawConfig.fragmentVariablePrefix, ''),
       fragmentVariableSuffix: getConfigValue(rawConfig.fragmentVariableSuffix, 'FragmentDoc'),
-      documentMode: ((rawConfig: RawClientSideBasePluginConfig) => {
-        if (typeof rawConfig.noGraphQLTag === 'boolean') {
-          return rawConfig.noGraphQLTag ? DocumentMode.documentNode : DocumentMode.graphQLTag;
-        }
-        return getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag);
-      })(rawConfig),
+      documentMode: getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag),
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
       pureMagicComment: getConfigValue(rawConfig.pureMagicComment, false),
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
@@ -333,7 +323,7 @@ export class ClientSideBaseVisitor<
     return fragmentNames.map(document => this.getFragmentVariableName(document));
   }
 
-  protected _includeFragments(fragments: string[], nodeKind: 'FragmentDefinition' | 'OperationDefinition'): string {
+  protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.string) {
         return Array.from(this._fragments.values())
@@ -342,9 +332,6 @@ export class ClientSideBaseVisitor<
           .join('\n');
       }
       if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-        return '';
-      }
-      if (this.config.dedupeFragments && nodeKind !== 'OperationDefinition') {
         return '';
       }
       return String(fragments.map(name => '${' + name + '}').join('\n'));
@@ -359,15 +346,13 @@ export class ClientSideBaseVisitor<
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const includeNestedFragments =
-      this.config.documentMode === DocumentMode.documentNode ||
-      this.config.documentMode === DocumentMode.string ||
-      (this.config.dedupeFragments && node.kind === 'OperationDefinition');
+      this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.string;
     const fragmentNames = this._extractFragments(node, includeNestedFragments);
     const fragments = this._transformFragments(fragmentNames);
 
     const doc = this._prepareDocument(`
     ${print(node).split('\\').join('\\\\') /* Re-escape escaped values in GraphQL syntax */}
-    ${this._includeFragments(fragments, node.kind)}`);
+    ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
       let gqlObj = gqlTag([doc]);

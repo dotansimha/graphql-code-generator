@@ -764,7 +764,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected getEmptyObjectType(): string {
-    return `{}`;
+    return 'Record<PropertyKey, never>';
   }
 
   private getEmptyObjectTypeString(mustAddEmptyObject: boolean): string {

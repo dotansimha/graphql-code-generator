@@ -297,29 +297,6 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     validateTs(mergeOutputs([result]));
   });
 
-  it('Should generate simple module without graphql-tag', async () => {
-    const result = plugin(
-      null,
-      [
-        {
-          location: 'some/file/my-query.graphql',
-          document: parse(/* GraphQL */ `
-            query MyQuery {
-              field
-            }
-          `),
-        },
-      ],
-      { noGraphQLTag: true },
-      { outputFile: '' }
-    ) as Types.ComplexPluginOutput;
-
-    expect(result.content).toBeSimilarStringTo(`
-    export const MyQuery = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}}]}}]} as unknown as DocumentNode;
-    `);
-    validateTs(mergeOutputs([result]));
-  });
-
   it('should contain fragment definitions', async () => {
     const result = plugin(
       null,

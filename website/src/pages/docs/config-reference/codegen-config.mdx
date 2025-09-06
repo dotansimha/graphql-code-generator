@@ -40,7 +40,7 @@ export default config
 
 ## Configuration options
 
-Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L92)):
+Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L388)):
 
 - [**`schema` (required)**](./schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array that specifies multiple schemas to generate code from. You can read more about the supported formats [here](./schema-field#available-formats)
 
@@ -66,7 +66,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`overwrite`** - A flag to overwrite files if they already exist when generating code (`true` by default)
 
-- **`watch`** - A flag to trigger codegen when there are changes in the specified GraphQL schemas. You can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch
+- **`watch`** - A flag to trigger codegen when there are changes in the specified GraphQL schemas. You can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch. When in watch mode, partial success still writes to files.
 
 - **`silent`** - A flag to suppress printing errors when they occur
 
@@ -101,6 +101,8 @@ Here are the supported options that you can define in the config file (see [sour
   - **`skipDocumentsValidation.ignoreRules`** - An array of rule names to ignore during the validation. You can find a list of the available rules [here](https://github.com/graphql/graphql-js/tree/main/src/validation/rules)
 
   - **`skipDocumentsValidation.skipDuplicateValidation`** - A flag to disable the validation for duplicate documents
+
+- **`allowPartialOutputs`** - Allows partial outputs to be written to files if one or more `generates` blocks have errors. Default is `false`.
 
 ## Environment Variables
 

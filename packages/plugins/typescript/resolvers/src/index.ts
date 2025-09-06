@@ -32,6 +32,7 @@ export const plugin: PluginFunction<
       ].join('\n')
     : '';
   const importType = config.useTypeImports ? 'import type' : 'import';
+  const emptyObjectType = `Record<PropertyKey, never>`;
   const prepend: string[] = [];
   const defsToInclude: string[] = [];
   const directiveResolverMappings = {} as Record<string, string>;
@@ -48,7 +49,7 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   resolve: ${resolverFnName}<TResult, TParent, TContext, TArgs>;
 };`;
       const resolverTypeName = `Resolver${capitalizedDirectiveName}`;
-      const resolverType = `export type ${resolverTypeName}<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
+      const resolverType = `export type ${resolverTypeName}<TResult, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> =`;
 
       if (parsedMapper.isExternal) {
         if (parsedMapper.default) {
@@ -75,12 +76,20 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
     }
   }
 
-  let transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
+  let { transformedSchema, federationMeta } = config.federation
+    ? addFederationReferencesToSchema(schema)
+    : { transformedSchema: schema, federationMeta: {} };
+
   transformedSchema = config.customDirectives?.semanticNonNull
     ? await semanticToStrict(transformedSchema)
     : transformedSchema;
 
-  const visitor = new TypeScriptResolversVisitor({ ...config, directiveResolverMappings }, transformedSchema);
+  const visitor = new TypeScriptResolversVisitor(
+    { ...config, directiveResolverMappings },
+    transformedSchema,
+    federationMeta
+  );
+
   const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
@@ -104,19 +113,12 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };`;
-  const resolverType = `export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
+  const resolverType = `export type Resolver<TResult, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> =`;
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const resolverWithResolveUsage = `ResolverWithResolve<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
   if (visitor.hasFederation()) {
-    if (visitor.config.wrapFieldDefinitions) {
-      defsToInclude.push(`export type UnwrappedObject<T> = {
-        [P in keyof T]: T[P] extends infer R | Promise<infer R> | (() => infer R2 | Promise<infer R2>)
-          ? R & R2 : T[P]
-      };`);
-    }
-
     defsToInclude.push(
       `export type ReferenceResolver<TResult, TReference, TContext> = (
       reference: TReference,
@@ -225,21 +227,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<TResult, TKey extends string, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}> = (
   parent: TParent,
   context: TContext,
   info${optionalSignForInfoArg}: GraphQLResolveInfo
 ) => ${namespacedImportPrefix}Maybe<TTypes> | Promise<${namespacedImportPrefix}Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info${optionalSignForInfoArg}: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = ${emptyObjectType}, TContext = ${emptyObjectType}> = (obj: T, context: TContext, info${optionalSignForInfoArg}: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = ${emptyObjectType}, TParent = ${emptyObjectType}, TContext = ${emptyObjectType}, TArgs = ${emptyObjectType}> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -248,6 +250,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
+  const federationTypes = visitor.buildFederationTypes();
+  const federationReferenceTypes = visitor.buildFederationReferenceTypes();
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const resolversUnionTypesMapping = visitor.buildResolversUnionTypes();
@@ -291,6 +295,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     prepend,
     content: [
       header,
+      federationTypes,
+      federationReferenceTypes,
       resolversUnionTypesMapping,
       resolversInterfaceTypesMapping,
       resolversTypeMapping,

@@ -8,9 +8,8 @@ const pkg = require(pkgPath);
 
 const version = argv[2];
 
-// eslint-disable-next-line logical-assignment-operators -- can be removed after drop support of Node.js 12
-pkg.resolutions = pkg.resolutions || {};
-if (pkg.resolutions.graphql.startsWith(version)) {
+pkg.resolutions ||= {};
+if (pkg.devDependencies.graphql?.startsWith(version)) {
   // eslint-disable-next-line no-console
   console.info(`GraphQL v${version} is match! Skipping.`);
   return;
@@ -19,7 +18,5 @@ if (pkg.resolutions.graphql.startsWith(version)) {
 const npmVersion = version.includes('-') ? version : `^${version}`;
 pkg.devDependencies.graphql = npmVersion;
 pkg.resolutions.graphql = npmVersion;
-pkg.resolutions['**/apollo-language-server/graphql'] = npmVersion;
-pkg.resolutions['**/@types/graphql-upload/graphql'] = npmVersion;
 
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');

@@ -40,7 +40,7 @@ describe('BaseResolversVisitor.createResolversFields', () => {
     expect(visitor.buildResolversParentTypes()).toEqual(
       `/** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {}
+  Query: Record<PropertyKey, never>
   A: A
   Boolean: Scalars['Boolean']['output']
   String: Scalars['String']['output']
@@ -75,7 +75,7 @@ export type ResolversParentTypes = {
     expect(visitor.buildResolversParentTypes()).toEqual(
       `/** Mapping between all available schema types and the resolvers parents */
 export type IResolversParentTypes = {
-  Query: {}
+  Query: Record<PropertyKey, never>
   A: IA
   Boolean: Scalars['Boolean']['output']
   String: Scalars['String']['output']
@@ -100,7 +100,7 @@ export type IResolversParentTypes = {
     expect(visitor.buildResolversParentTypes()).toEqual(
       `/** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypesI = {
-  Query: {}
+  Query: Record<PropertyKey, never>
   A: AI
   Boolean: Scalars['Boolean']['output']
   String: Scalars['String']['output']

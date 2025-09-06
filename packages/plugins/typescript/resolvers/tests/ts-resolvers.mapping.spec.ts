@@ -28,8 +28,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<MyOtherType>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -51,8 +51,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -104,8 +104,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: ResolverTypeWrapper<Omit<Child, 'bar' | 'parent'> & { bar: ResolversTypes['String'], parent?: Maybe<ResolversTypes['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] }>;
         ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-        Query: ResolverTypeWrapper<{}>;
-        Subscription: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -127,8 +127,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'bar' | 'parent'> & { bar: ResolversParentTypes['String'], parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: Omit<MyOtherType, 'bar'> & { bar: ResolversParentTypes['String'] };
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -411,8 +411,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Partial<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>>;
       MyOtherType: ResolverTypeWrapper<Partial<MyOtherType>>;
       ChildUnion: Partial<ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Partial<Scalars['ID']['output']>>;
       SomeNode: ResolverTypeWrapper<Partial<SomeNode>>;
@@ -433,8 +433,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Partial<Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> }>;
         MyOtherType: Partial<MyOtherType>;
         ChildUnion: Partial<ResolversUnionTypes<ResolversParentTypes>['ChildUnion']>;
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Partial<Scalars['ID']['output']>;
         SomeNode: Partial<SomeNode>;
@@ -484,8 +484,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<CustomPartial<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>>;
       MyOtherType: ResolverTypeWrapper<CustomPartial<MyOtherType>>;
       ChildUnion: CustomPartial<ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<CustomPartial<Scalars['ID']['output']>>;
       SomeNode: ResolverTypeWrapper<CustomPartial<SomeNode>>;
@@ -506,8 +506,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: CustomPartial<Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> }>;
         MyOtherType: CustomPartial<MyOtherType>;
         ChildUnion: CustomPartial<ResolversUnionTypes<ResolversParentTypes>['ChildUnion']>;
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: CustomPartial<Scalars['ID']['output']>;
         SomeNode: CustomPartial<SomeNode>;
@@ -560,8 +560,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<MyOtherType>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -582,8 +582,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -636,7 +636,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         ID: ResolverTypeWrapper<Partial<Scalars['ID']['output']>>;
         String: ResolverTypeWrapper<Partial<Scalars['String']['output']>>;
         Chat: ResolverTypeWrapper<Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members?: Maybe<Array<ResolversTypes['User']>> }>>;
-        Query: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']['output']>>;
       };
     `);
@@ -712,8 +712,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<MyOtherType>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -734,8 +734,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -790,8 +790,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<DatabaseMyOtherType>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -812,8 +812,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: DatabaseMyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -874,8 +874,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<DatabaseMyOtherType>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -896,8 +896,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: DatabaseMyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -938,8 +938,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<any>;
       MyOtherType: ResolverTypeWrapper<any>;
       ChildUnion: ResolverTypeWrapper<any>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<any>;
       ID: ResolverTypeWrapper<any>;
       SomeNode: ResolverTypeWrapper<any>;
@@ -960,8 +960,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: any;
       MyOtherType: any;
       ChildUnion: any;
-      Query: {};
-      Subscription: {};
+      Query: Record<PropertyKey, never>;
+      Subscription: Record<PropertyKey, never>;
       Node: any;
       ID: any;
       SomeNode: any;
@@ -1014,8 +1014,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<CustomMyOtherType>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -1036,8 +1036,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: CustomMyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -1089,8 +1089,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<MyOtherType>;
         ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-        Query: ResolverTypeWrapper<{}>;
-        Subscription: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -1113,8 +1113,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -1132,7 +1132,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
   });
 
   it('should warn about unused mappers by default', async () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {
         comments: [Comment!]!
@@ -1170,7 +1170,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
   });
 
   it('should be able not to warn about unused mappers', async () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {
         comments: [Comment!]!
@@ -1265,7 +1265,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1348,7 +1347,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1374,7 +1372,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
   });
 
   it('Should generate the correct resolvers when used with mappers with interfaces', async () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const result = (await plugin(
       resolversTestingSchema,
       [],
@@ -1429,7 +1427,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1499,7 +1496,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1569,7 +1565,6 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1628,8 +1623,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -1650,8 +1645,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherTypeCustom;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -1704,8 +1699,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
       MyOtherType: ResolverTypeWrapper<MyOtherTypeCustom>;
       ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-      Query: ResolverTypeWrapper<{}>;
-      Subscription: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+      Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
       Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
       ID: ResolverTypeWrapper<Scalars['ID']['output']>;
       SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -1726,8 +1721,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherTypeCustom;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -1782,8 +1777,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<MyNamespace.MyCustomOtherType>;
         ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-        Query: ResolverTypeWrapper<{}>;
-        Subscription: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -1806,8 +1801,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
       MyOtherType: MyNamespace.MyCustomOtherType;
       ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-      Query: {};
-      Subscription: {};
+      Query: Record<PropertyKey, never>;
+      Subscription: Record<PropertyKey, never>;
       Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
       ID: Scalars['ID']['output'];
       SomeNode: SomeNode;
@@ -1863,8 +1858,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         MyOtherType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         ChildUnion: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
-        Query: ResolverTypeWrapper<{}>;
-        Subscription: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Node: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
         SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper>;
@@ -1887,8 +1882,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: MyNamespace.MyDefaultMapper;
         MyOtherType: MyNamespace.MyDefaultMapper;
         ChildUnion: MyNamespace.MyDefaultMapper;
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: MyNamespace.MyDefaultMapper;
         ID: MyNamespace.MyDefaultMapper;
         SomeNode: MyNamespace.MyDefaultMapper;
@@ -2016,8 +2011,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Child: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>>;
         MyOtherType: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<MyOtherType>>;
         ChildUnion: MyNamespace.MyDefaultMapper<ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>>;
-        Query: ResolverTypeWrapper<{}>;
-        Subscription: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
         ID: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<Scalars['ID']['output']>>;
         SomeNode: ResolverTypeWrapper<MyNamespace.MyDefaultMapper<SomeNode>>;
@@ -2039,8 +2034,8 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       Child: MyNamespace.MyDefaultMapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> }>;
       MyOtherType: MyNamespace.MyDefaultMapper<MyOtherType>;
       ChildUnion: MyNamespace.MyDefaultMapper<ResolversUnionTypes<ResolversParentTypes>['ChildUnion']>;
-      Query: {};
-      Subscription: {};
+      Query: Record<PropertyKey, never>;
+      Subscription: Record<PropertyKey, never>;
       Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
       ID: MyNamespace.MyDefaultMapper<Scalars['ID']['output']>;
       SomeNode: MyNamespace.MyDefaultMapper<SomeNode>;

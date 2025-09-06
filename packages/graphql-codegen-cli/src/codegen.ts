@@ -69,7 +69,9 @@ function createCache(): <T>(namespace: string, key: string, factory: () => Promi
   };
 }
 
-export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
+export async function executeCodegen(
+  input: CodegenContext | Types.Config
+): Promise<{ result: Types.FileOutput[]; error: Error | null }> {
   const context = ensureContext(input);
   const config = context.getConfig();
   const pluginContext = context.getPluginContext();
@@ -395,8 +397,17 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                     },
                   ],
                   {
-                    // it stops when of the tasks failed
+                    /**
+                     * For each `generates` task, we must do the following in order:
+                     *
+                     * 1. Load schema
+                     * 2. Load documents
+                     * 3. Generate based on the schema + documents
+                     *
+                     * This way, the 3rd step has all the schema and documents loaded in previous steps to work correctly
+                     */
                     exitOnError: true,
+                    concurrent: false,
                   }
                 );
               },
@@ -412,13 +423,13 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     {
       rendererOptions: {
         clearOutput: false,
-        collapse: true,
+        collapseSubtasks: true,
         formatOutput: 'wrap',
         removeEmptyLines: false,
       },
       renderer: config.verbose ? 'verbose' : 'default',
       ctx: { errors: [] },
-      rendererSilent: isTest || config.silent,
+      silentRendererCondition: isTest || config.silent,
       exitOnError: true,
     }
   );
@@ -431,13 +442,13 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     printLogs();
   }
 
+  let error: Error | null = null;
   if (executedContext.errors.length > 0) {
     const errors = executedContext.errors.map(subErr => subErr.message || subErr.toString());
-    const newErr = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
+    error = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
     // Best-effort to all stack traces for debugging
-    newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
-    throw newErr;
+    error.stack = `${error.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
   }
 
-  return result;
+  return { result, error };
 }
