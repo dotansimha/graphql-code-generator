@@ -221,7 +221,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
+      {
+        [`typescript`]: {
+          inputMaybeValue: 'T | null | undefined',
+        },
+      },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {
