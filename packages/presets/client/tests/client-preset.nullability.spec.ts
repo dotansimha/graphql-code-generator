@@ -63,7 +63,7 @@ const document = /* GraphQL */ `
 
 describe('client-preset - nullability', () => {
   it('converts semanticNonNull to non-null when nullability.errorHandlingClient=true', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema,
       documents: [document],
       generates: {
@@ -112,7 +112,7 @@ describe('client-preset - nullability', () => {
   });
 
   it('leave semanticNonNull as null when nullability.errorHandlingClient=false', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema,
       documents: [document],
       generates: {

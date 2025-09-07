@@ -20,9 +20,6 @@ jobs:
 
       - uses: the-guild-org/shared-config/setup@main
         name: setup env
-        with:
-          nodeVersion: 18
-          packageManager: yarn
 
       - uses: the-guild-org/shared-config/website-cf@main
         name: build and deploy website

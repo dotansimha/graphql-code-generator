@@ -6,7 +6,6 @@ import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
 
 describe('TypeScript Operations Plugin', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
 
   const validate = async (
@@ -5332,13 +5331,13 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type CatFragment_Duck_Fragment = {};
+        "type CatFragment_Duck_Fragment = Record<PropertyKey, never>;
 
         type CatFragment_Lion_Fragment = { id: string };
 
         type CatFragment_Puma_Fragment = { id: string };
 
-        type CatFragment_Wolf_Fragment = {};
+        type CatFragment_Wolf_Fragment = Record<PropertyKey, never>;
 
         export type CatFragmentFragment =
           | CatFragment_Duck_Fragment
@@ -5353,7 +5352,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type KittyQuery = { animals: Array<
             | { id: string }
             | { id: string }
-            | {}
+            | Record<PropertyKey, never>
           > };
         "
       `);
@@ -5481,7 +5480,7 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type UserQuery = { user: Pick<User, 'id' | 'login'> | {} };
+        export type UserQuery = { user: Pick<User, 'id' | 'login'> | Record<PropertyKey, never> };
       `);
     });
 

@@ -15,8 +15,6 @@ jobs:
 
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
 
       - name: Build Packages
         run: yarn build
