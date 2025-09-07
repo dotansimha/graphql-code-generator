@@ -10,7 +10,7 @@
     "@graphql-codegen/cli": "5.0.7",
     "@babel/core": "7.25.2",
     "@babel/preset-env": "7.25.3",
-    "@babel/preset-typescript": "7.26.0"
+    "@babel/preset-typescript": "7.27.1"
   },
   "scripts": {
     "test": "vitest --no-watch",
