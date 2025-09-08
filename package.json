@@ -47,7 +47,7 @@
     "@babel/preset-env": "7.25.3",
     "@babel/preset-typescript": "7.27.1",
     "@changesets/changelog-github": "0.5.1",
-    "@changesets/cli": "2.27.11",
+    "@changesets/cli": "2.29.6",
     "@theguild/eslint-config": "0.13.4",
     "@theguild/prettier-config": "0.1.1",
     "bob-the-bundler": "7.0.1",
