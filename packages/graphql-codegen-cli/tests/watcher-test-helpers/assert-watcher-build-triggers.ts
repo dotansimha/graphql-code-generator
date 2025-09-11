@@ -89,7 +89,7 @@ export const assertBuildTriggers = async (
      *
      * This assertion helper will look for an **exact match** of each string
      * in this array. Any relative globs should be specified relative from the
-     * `watchDirectory`, because this asertion helper will not attempt to convert
+     * `watchDirectory`, because this assertion helper will not attempt to convert
      * them (unlike with {@link pathsWouldBeIgnoredByParcelWatcher}).
      *
      * For each string in this array:

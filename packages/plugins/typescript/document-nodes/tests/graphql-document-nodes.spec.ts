@@ -31,7 +31,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     validateTs(mergeOutputs([result]));
   });
 
-  it('Should generate correctly for mutiple files', async () => {
+  it('Should generate correctly for multiple files', async () => {
     const result = (await plugin(
       null,
       [

@@ -28,7 +28,7 @@ export type NormalizedScalarsMap = {
 };
 /**
  * Parsed scalars map - a mapping between GraphQL scalar name and the parsed mapper object,
- * including all required information for generting code for that mapping.
+ * including all required information for generating code for that mapping.
  */
 export type ParsedScalarsMap = {
   [name: string]: {
@@ -45,7 +45,7 @@ export type EnumValuesMap<AdditionalProps = {}> =
   | { [enumName: string]: string | ({ [key: string]: string | number } & AdditionalProps) };
 export type ParsedEnumValuesMap = {
   [enumName: string]: {
-    // If values are explictly set, this will include the mapped values
+    // If values are explicitly set, this will include the mapped values
     mappedValues?: { [valueName: string]: string | number };
     // The GraphQL enum name
     typeIdentifier: string;
@@ -55,7 +55,7 @@ export type ParsedEnumValuesMap = {
     sourceFile?: string;
     // If the identifier is external (imported) - this will contain the imported expression (including alias), otherwise null
     importIdentifier?: string;
-    // Is defualt import is used to import the enum
+    // Is default import is used to import the enum
     isDefault?: boolean;
   };
 };
