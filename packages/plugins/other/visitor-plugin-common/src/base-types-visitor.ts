@@ -530,7 +530,7 @@ export class BaseTypesVisitor<
       ...additionalConfig,
     });
 
-    // Note: Missing directive mappers but not a problem since always overriden by implementors
+    // Note: Missing directive mappers but not a problem since always overridden by implementers
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
   }
 

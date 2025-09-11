@@ -99,7 +99,7 @@
           "description": "Specifies scripts to run when events are happening in the codegen core.\nHooks defined on that level will effect all output files.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/lifecycle-hooks"
         },
         "noSilentErrors": {
-          "description": "Alows to raise errors if any matched files are not valid GraphQL. Default: false.",
+          "description": "Allows to raise errors if any matched files are not valid GraphQL. Default: false.",
           "type": "boolean"
         },
         "allowPartialOutputs": {
@@ -335,7 +335,7 @@
       }
     },
     "RawGenericSdkPluginConfig": {
-      "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.",
+      "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without losing the strongly-typed integration.",
       "type": "object",
       "properties": {
         "usingObservableFrom": {
@@ -4760,11 +4760,11 @@
             },
             {
               "const": "typescript-generic-sdk",
-              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without losing the strongly-typed integration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "@graphql-codegen/typescript-generic-sdk",
-              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without loosing the strongly-typed integration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
+              "description": "This plugin generate a generic SDK (without any Requester implemented), allow you to easily customize the way you fetch your data, without losing the strongly-typed integration.\n\nFor more details and documentation: https://the-guild.dev/graphql/codegen/docs/plugins/typescript-generic-sdk\n\n=> Make sure to include \"@graphql-codegen/typescript-generic-sdk\" in your package.json file and install your dependencies.\n\n"
             },
             {
               "const": "typescript-apollo-client-helpers",

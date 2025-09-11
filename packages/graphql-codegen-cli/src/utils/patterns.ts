@@ -51,7 +51,7 @@ export const makeShouldRebuild = ({
     return (path: string) => {
       // Is path negated by any negating watch pattern?
       if (matchesAnyNegatedPattern(path, [...globalPatternSet.watch.negated, ...localPatternSet.watch.negated])) {
-        // Short circut: negations in watch patterns take priority
+        // Short circuit: negations in watch patterns take priority
         return false;
       }
 
@@ -134,7 +134,7 @@ export const makeGlobalPatternSet = (initialContext: CodegenContext) => {
  *
  * In the `shouldRebuild` algorithm, any of these watch patterns will take
  * precedence over documents or schemas patterns, and the documents and schemas
- * patterns will be mixed into the pattern set of their respective gobal pattern
+ * patterns will be mixed into the pattern set of their respective global pattern
  * set equivalents.
  */
 export const makeLocalPatternSet = (conf: Types.ConfiguredOutput) => {
