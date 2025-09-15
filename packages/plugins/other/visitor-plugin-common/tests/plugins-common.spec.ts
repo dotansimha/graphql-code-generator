@@ -117,15 +117,4 @@ describe('convertFactory', () => {
     expect(factory('_Myname')).toBe('Myname');
     expect(factory('My_name')).toBe('Myname');
   });
-
-  it('Should handle enum values that are just underscores when transformUnderscore is true', () => {
-    const factory = convertFactory({
-      namingConvention: {
-        transformUnderscore: true,
-      },
-    });
-
-    expect(factory('_')).toBe('_');
-    expect(factory('__')).toBe('__');
-  });
 });

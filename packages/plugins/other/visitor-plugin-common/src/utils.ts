@@ -253,13 +253,6 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
 
 export function convertNameParts(str: string, func: (str: string) => string, removeUnderscore = false): string {
   if (removeUnderscore) {
-    // Special case: if the string is just underscores ad we're being asked to remove them, preserve it as-is.
-    // this prevents empty identifiers from making their way into the output. Yes, we want to remove underscores,
-    // but we can't when that's all the string is.
-    if (/^_+$/.test(str)) {
-      return str;
-    }
-
     return func(str);
   }
 
