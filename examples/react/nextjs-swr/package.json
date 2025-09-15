@@ -12,15 +12,15 @@
     "test:end2end": "start-server-and-test start http://127.0.0.1:3000 test"
   },
   "dependencies": {
-    "@graphql-tools/executor-http": "^1.0.0",
+    "@graphql-tools/executor-http": "^2.0.0",
     "next": "13.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "swr": "^2.0.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.7",
-    "@graphql-codegen/schema-ast": "4.1.0",
+    "@graphql-codegen/cli": "^6.0.0",
+    "@graphql-codegen/schema-ast": "5.0.0",
     "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
     "@types/node": "^22.0.0",
     "@types/react": "^18.0.17",

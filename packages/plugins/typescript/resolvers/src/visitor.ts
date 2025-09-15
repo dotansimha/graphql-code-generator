@@ -2,19 +2,14 @@ import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescrip
 import {
   BaseResolversVisitor,
   DeclarationKind,
+  DEFAULT_SCALARS,
   getConfigValue,
   normalizeAvoidOptionals,
   ParsedResolversConfig,
 } from '@graphql-codegen/visitor-plugin-common';
+import type { FederationMeta } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
-import {
-  EnumTypeDefinitionNode,
-  FieldDefinitionNode,
-  GraphQLSchema,
-  ListTypeNode,
-  NamedTypeNode,
-  NonNullTypeNode,
-} from 'graphql';
+import { EnumTypeDefinitionNode, GraphQLSchema, ListTypeNode, NamedTypeNode, NonNullTypeNode } from 'graphql';
 import { TypeScriptResolversPluginConfig } from './config.js';
 
 export const ENUM_RESOLVERS_SIGNATURE =
@@ -31,7 +26,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   TypeScriptResolversPluginConfig,
   ParsedTypeScriptResolversConfig
 > {
-  constructor(pluginConfig: TypeScriptResolversPluginConfig, schema: GraphQLSchema) {
+  constructor(pluginConfig: TypeScriptResolversPluginConfig, schema: GraphQLSchema, federationMeta: FederationMeta) {
     super(
       pluginConfig,
       {
@@ -41,7 +36,9 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         allowParentTypeOverride: getConfigValue(pluginConfig.allowParentTypeOverride, false),
         optionalInfoArgument: getConfigValue(pluginConfig.optionalInfoArgument, false),
       } as ParsedTypeScriptResolversConfig,
-      schema
+      schema,
+      DEFAULT_SCALARS,
+      federationMeta
     );
     autoBind(this);
     this.setVariablesTransformer(
@@ -96,13 +93,6 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     return `${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${str}>`;
   }
 
-  protected getParentTypeForSignature(node: FieldDefinitionNode) {
-    if (this._federation.isResolveReferenceField(node) && this.config.wrapFieldDefinitions) {
-      return 'UnwrappedObject<ParentType>';
-    }
-    return 'ParentType';
-  }
-
   NamedType(node: NamedTypeNode): string {
     return `Maybe<${super.NamedType(node)}>`;
   }
@@ -119,7 +109,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   protected buildEnumResolverContentBlock(node: EnumTypeDefinitionNode, mappedEnumType: string): string {
     const valuesMap = `{ ${(node.values || [])
-      .map(v => `${v.name as any as string}${this.config.avoidOptionals.resolvers ? '' : '?'}: any`)
+      .map(v => `${v.name.value}${this.config.avoidOptionals.resolvers ? '' : '?'}: any`)
       .join(', ')} }`;
 
     this._globalDeclarations.add(ENUM_RESOLVERS_SIGNATURE);
@@ -133,10 +123,13 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   ): string {
     return `{ ${(node.values || [])
       .map(v => {
-        const valueName = v.name as any as string;
-        const mappedValue = valuesMapping[valueName];
+        const valueName = v.name.value;
+        const mappedValue = valuesMapping[valueName] ?? valueName;
+        const hasMapping = !!valuesMapping[valueName];
 
-        return `${valueName}: ${typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`}`;
+        return `${valueName}${hasMapping || this.config.avoidOptionals.resolvers ? '' : '?'}: ${
+          typeof mappedValue === 'number' ? mappedValue : `'${mappedValue}'`
+        }`;
       })
       .join(', ')} }`;
   }

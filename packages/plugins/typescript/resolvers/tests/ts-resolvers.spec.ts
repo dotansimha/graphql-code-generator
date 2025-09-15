@@ -75,7 +75,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(result.content).toBeSimilarStringTo(`export type StitchingResolver<TResult, TParent, TContext, TArgs>`);
     expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
         | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
@@ -85,19 +85,6 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   describe('Config', () => {
-    it('onlyResolveTypeForInterfaces - should allow to have only resolveType for interfaces', async () => {
-      const config = {
-        onlyResolveTypeForInterfaces: true,
-      };
-      const result = await plugin(resolversTestingSchema, [], config, { outputFile: '' });
-      const content = await resolversTestingValidate(result, config, resolversTestingSchema);
-
-      expect(content).toBeSimilarStringTo(`
-      export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-      };`);
-    });
-
     it('optionalInfoArgument - should allow to have optional info argument', async () => {
       const config = {
         noSchemaStitching: true,
@@ -178,7 +165,7 @@ export type ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> =
 export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
 };
-export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+export type ResolverAuthenticated<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
 `);
       expect(result.content).toBeSimilarStringTo(`
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -195,12 +182,12 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       const result = await plugin(resolversTestingSchema, [], { makeResolverTypeCallable: true }, { outputFile: '' });
 
       expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>;
     `);
 
       expect(result.content).not.toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>
       | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
@@ -212,12 +199,12 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
       const result = await plugin(resolversTestingSchema, [], { makeResolverTypeCallable: false }, { outputFile: '' });
 
       expect(result.content).not.toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>;
     `);
 
       expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
       ResolverFn<TResult, TParent, TContext, TArgs>
       | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
@@ -242,7 +229,7 @@ export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParen
 export type ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFnAuthenticated<TResult, TParent, TContext, TArgs>;
 };
-export type ResolverAuthenticated<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
+export type ResolverAuthenticated<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFnAuthenticated<TResult, TParent, TContext, TArgs> | ResolverAuthenticatedWithResolve<TResult, TParent, TContext, TArgs>;
 `);
     expect(result.content).toBeSimilarStringTo(`
 export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
@@ -334,6 +321,54 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       expect(mergedOutput).not.toContain(ENUM_RESOLVERS_SIGNATURE);
       expect(mergedOutput).not.toContain('EnumResolverSignature');
       expect(mergedOutput).toContain(`export type MyEnumResolvers = { A: 'val_1', B: 'val_2', C: 'val_3' };`);
+    });
+
+    it('#10418 - Should generate enum internal values resolvers when enum has enumValues set as object with partially explicit values', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          v: MyEnum
+          w: MyEnum
+          x: MyEnum
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const config = {
+        noSchemaStitching: true,
+        enumValues: {
+          MyEnum: {
+            A: 'val_1',
+          },
+        },
+      };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      const mergedOutput = await resolversTestingValidate(
+        result,
+        config,
+        testSchema,
+        `
+        export const resolvers: Resolvers = {
+          MyEnum: {
+            A: 'val_1',
+            B: 'B'
+          },
+          Query: {
+            v: () => 'val_1',
+            w: () => 'B',
+            z: () => 'C',
+          }
+        };
+      `
+      );
+
+      expect(mergedOutput).not.toContain(ENUM_RESOLVERS_SIGNATURE);
+      expect(mergedOutput).not.toContain('EnumResolverSignature');
+      expect(mergedOutput).toContain(`export type MyEnumResolvers = { A: 'val_1', B?: 'B', C?: 'C' };`);
     });
 
     it('Should generate enum internal values resolvers when enum has enumValues set as external enum', async () => {
@@ -518,7 +553,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
   });
 
   it('Should not warn when noSchemaStitching is not defined', async () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const result = await plugin(resolversTestingSchema, [], {}, { outputFile: '' });
 
     expect(spy).not.toHaveBeenCalled();
@@ -545,14 +580,14 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
     expect(result.content).not.toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
         | ResolverWithResolve<TResult, TParent, TContext, TArgs>
         | StitchingResolver<TResult, TParent, TContext, TArgs>;
     `);
 
     expect(result.content).toBeSimilarStringTo(`
-      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
         ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
     `);
 
@@ -655,7 +690,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType?: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
   });
@@ -705,7 +739,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -778,7 +811,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -869,7 +901,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -944,7 +975,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1018,7 +1048,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1093,7 +1122,6 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 
@@ -1389,7 +1417,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       CCCFoo: ResolverTypeWrapper<CccFoo>;
       String: ResolverTypeWrapper<Scalars['String']['output']>;
       CCCBar: ResolverTypeWrapper<CccBar>;
-      Query: ResolverTypeWrapper<{}>;
+      Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
       CCCUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['CCCUnion']>;
       Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
     };
@@ -1399,7 +1427,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         CCCFoo: CccFoo;
         String: Scalars['String']['output'];
         CCCBar: CccBar;
-        Query: {};
+        Query: Record<PropertyKey, never>;
         CCCUnion: ResolversUnionTypes<ResolversParentTypes>['CCCUnion'];
         Boolean: Scalars['Boolean']['output'];
       };
@@ -1651,9 +1679,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Subscription: ResolverTypeWrapper<{}>;
-        Query: ResolverTypeWrapper<{}>;
-        Mutation: ResolverTypeWrapper<{}>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
         Post: ResolverTypeWrapper<Post>;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -1684,9 +1712,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversParentTypes = {
-        Subscription: {};
-        Query: {};
-        Mutation: {};
+        Subscription: Record<PropertyKey, never>;
+        Query: Record<PropertyKey, never>;
+        Mutation: Record<PropertyKey, never>;
         String: Scalars['String']['output'];
         Post: Post;
         Boolean: Scalars['Boolean']['output'];
@@ -2234,7 +2262,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       };`);
       expect(o).toBeSimilarStringTo(`
       export type IResolversTypes = {
-        Query: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Test: Test;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
         String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -2360,7 +2388,6 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
 

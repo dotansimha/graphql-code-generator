@@ -41,6 +41,10 @@ describe('TypeScript Resolvers Plugin - Meta', () => {
           FORBIDDEN_ERROR
           INTERNAL_ERROR
         }
+
+        type TypeWithoutInterfaceOrUnion {
+          id: ID!
+        }
       `),
       [],
       {
@@ -66,6 +70,7 @@ describe('TypeScript Resolvers Plugin - Meta', () => {
         CreateUserError?: create_user_error_resolvers<ContextType>;
         CreateUserPayload?: create_user_payload_resolvers<ContextType>;
         ErrorType?: error_type_resolvers;
+        TypeWithoutInterfaceOrUnion?: type_without_interface_or_union_resolvers<ContextType>;
       };`);
     expect(result.content).toContain(`export type create_user_error_resolvers`);
     expect(result.content).toContain(`export type create_user_ok_resolvers`);
@@ -78,37 +83,50 @@ describe('TypeScript Resolvers Plugin - Meta', () => {
     expect(result.content).toContain(`export type user_resolvers`);
 
     expect(result.meta).toMatchInlineSnapshot(`
-      Object {
-        "generatedResolverTypes": Object {
-          "resolversMap": Object {
+      {
+        "generatedResolverTypes": {
+          "resolversMap": {
             "name": "resolvers",
           },
-          "userDefined": Object {
-            "CreateUserError": Object {
+          "userDefined": {
+            "CreateUserError": {
+              "hasIsTypeOf": true,
               "name": "create_user_error_resolvers",
             },
-            "CreateUserOk": Object {
+            "CreateUserOk": {
+              "hasIsTypeOf": true,
               "name": "create_user_ok_resolvers",
             },
-            "CreateUserPayload": Object {
+            "CreateUserPayload": {
+              "hasIsTypeOf": false,
               "name": "create_user_payload_resolvers",
             },
-            "ErrorType": Object {
+            "ErrorType": {
+              "hasIsTypeOf": false,
               "name": "error_type_resolvers",
             },
-            "Mutation": Object {
+            "Mutation": {
+              "hasIsTypeOf": false,
               "name": "mutation_resolvers",
             },
-            "Node": Object {
+            "Node": {
+              "hasIsTypeOf": false,
               "name": "node_resolvers",
             },
-            "Post": Object {
+            "Post": {
+              "hasIsTypeOf": true,
               "name": "post_resolvers",
             },
-            "Query": Object {
+            "Query": {
+              "hasIsTypeOf": false,
               "name": "query_resolvers",
             },
-            "User": Object {
+            "TypeWithoutInterfaceOrUnion": {
+              "hasIsTypeOf": false,
+              "name": "type_without_interface_or_union_resolvers",
+            },
+            "User": {
+              "hasIsTypeOf": true,
               "name": "user_resolvers",
             },
           },

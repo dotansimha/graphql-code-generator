@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`init custom setup 1`] = `
+exports[`init > custom setup 1`] = `
 "
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -23,7 +23,7 @@ export default config;
 "
 `;
 
-exports[`init plugins suggestions for client-side setup should use angular related plugins when @angular/core is found 1`] = `
+exports[`init > plugins suggestions for client-side setup > should use angular related plugins when @angular/core is found 1`] = `
 "
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -42,7 +42,7 @@ export default config;
 "
 `;
 
-exports[`init plugins suggestions for client-side setup should use react related plugins when react is found 1`] = `
+exports[`init > plugins suggestions for client-side setup > should use react related plugins when react is found 1`] = `
 "
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -62,7 +62,7 @@ export default config;
 "
 `;
 
-exports[`init plugins suggestions for client-side setup should use stencil related plugins when @stencil/core is found 1`] = `
+exports[`init > plugins suggestions for client-side setup > should use stencil related plugins when @stencil/core is found 1`] = `
 "
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -81,7 +81,7 @@ export default config;
 "
 `;
 
-exports[`init plugins suggestions non client-side setup should use typescript related plugins when typescript is found (node) 1`] = `
+exports[`init > plugins suggestions non client-side setup > should use typescript related plugins when typescript is found (node) 1`] = `
 "
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -99,7 +99,7 @@ export default config;
 "
 `;
 
-exports[`init should have few default values 1`] = `
+exports[`init > should have few default values for Angular 1`] = `
 "
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
@@ -119,7 +119,7 @@ export default config;
 "
 `;
 
-exports[`init should have few default values 2`] = `
+exports[`init > should have few default values for React 1`] = `
 "overwrite: true
 schema: "./schema.ts"
 documents: "graphql/**/*.graphql"

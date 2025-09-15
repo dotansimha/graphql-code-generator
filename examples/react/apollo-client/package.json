@@ -9,9 +9,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.7",
+    "@graphql-codegen/cli": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.0",
-    "@types/jest": "^27.5.2",
     "@types/node": "^22.0.0",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.10",
