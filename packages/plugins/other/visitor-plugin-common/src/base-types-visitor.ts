@@ -495,6 +495,8 @@ export interface RawTypesConfig extends RawConfig {
   directiveArgumentAndInputFieldMappingTypeSuffix?: string;
 }
 
+const onlyUnderscoresPattern = /^_+$/;
+
 export class BaseTypesVisitor<
   TRawConfig extends RawTypesConfig = RawTypesConfig,
   TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig
@@ -915,7 +917,9 @@ export class BaseTypesVisitor<
         const optionName = this.makeValidEnumIdentifier(
           this.convertName(enumOption, {
             useTypesPrefix: false,
-            transformUnderscore: true,
+            // We can only strip out the underscores if the value contains other
+            // characters. Otherwise we'll generate syntactically invalid code.
+            transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name as any),
           })
         );
         const comment = this.getNodeComment(enumOption);
