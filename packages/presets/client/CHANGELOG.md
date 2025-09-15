@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 5.0.1
+
+### Patch Changes
+
+- [#10393](https://github.com/dotansimha/graphql-code-generator/pull/10393) [`ee2276c`](https://github.com/dotansimha/graphql-code-generator/commit/ee2276cb073a87458eda957a17c9e296c1cf313a) Thanks [@eddeee888](https://github.com/eddeee888)! - Include undefined explicitly for input maybe value in Client Preset
+
 ## 5.0.0
 
 ### Major Changes
