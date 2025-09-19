@@ -15277,7 +15277,7 @@ type WpMediaItemMeta {
   iso: Int
 
   """
-  List of keywords used to describe or identfy the media item.
+  List of keywords used to describe or identify the media item.
   """
   keywords: [String]
 
@@ -20283,7 +20283,7 @@ type WpTaxonomy implements Node & WpNode {
   public: Boolean
 
   """
-  Name of content type to diplay in REST API &quot;wp/v2&quot; namespace.
+  Name of content type to display in REST API &quot;wp/v2&quot; namespace.
   """
   restBase: String
 

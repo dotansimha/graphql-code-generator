@@ -29,18 +29,18 @@ export const schema = buildSchema(/* GraphQL */ `
     userCreated: User
   }
 
-  interface Notifiction {
+  interface Notification {
     id: ID!
     createdAt: String!
   }
 
-  type TextNotification implements Notifiction {
+  type TextNotification implements Notification {
     id: ID!
     text: String!
     createdAt: String!
   }
 
-  type ImageNotification implements Notifiction {
+  type ImageNotification implements Notification {
     id: ID!
     imageUrl: String!
     metadata: ImageMetadata!
@@ -64,7 +64,7 @@ export const schema = buildSchema(/* GraphQL */ `
   type Query {
     me: User
     unionTest: MyUnion
-    notifications: [Notifiction!]!
+    notifications: [Notification!]!
     mixedNotifications: [AnyNotification!]!
     search(term: String!): [SearchResult!]!
     dummy: String
