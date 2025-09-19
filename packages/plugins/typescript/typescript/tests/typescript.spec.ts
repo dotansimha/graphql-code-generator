@@ -193,7 +193,7 @@ describe('TypeScript', () => {
       }`);
     });
 
-    it('Should removed underscore from enum values', async () => {
+    it('Should remove underscore from enum values', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum MyEnum {
           A_B_C
@@ -210,6 +210,24 @@ describe('TypeScript', () => {
         XYZ = 'X_Y_Z',
         Test = '_TEST',
         MyValue = 'My_Value'
+      }`);
+    });
+
+    it('Should leave underscores in enum values when the value is only underscores', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          _
+          __
+          _TEST
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result.content).toBeSimilarStringTo(`
+      export enum MyEnum {
+        _ = '_',
+        __ = '__',
+        Test = '_TEST'
       }`);
     });
 
