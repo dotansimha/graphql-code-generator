@@ -34,7 +34,7 @@ describe('Integration', () => {
   test('should not duplicate type even if type and extend type are in the same module', async () => {
     const { result } = await executeCodegen(options);
 
-    const userResolversStr = `export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;`;
+    const userResolversStr = `export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;`;
     const nbOfTimeUserResolverFound = result[4].content.split(userResolversStr).length - 1;
 
     expect(nbOfTimeUserResolverFound).toBe(1);
@@ -176,7 +176,7 @@ describe('Integration', () => {
 
     // Only Query related properties should be required
     expect(usersModuleOutput.content).toBeSimilarStringTo(`
-      export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;
+      export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;
       export type QueryResolvers = Required<Pick<Types.QueryResolvers, DefinedFields['Query']>>;
     `);
     expect(usersModuleOutput.content).toBeSimilarStringTo(`
