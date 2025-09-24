@@ -1,5 +1,11 @@
 # @graphql-codegen/graphql-modules-preset
 
+## 5.0.1
+
+### Patch Changes
+
+- [#10447](https://github.com/dotansimha/graphql-code-generator/pull/10447) [`5dad86e`](https://github.com/dotansimha/graphql-code-generator/commit/5dad86e4753369e288fba5821722507d88afb3dc) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix \_\_isTypeOf wrongly picked on objects that are not implementing types or union members
+
 ## 5.0.0
 
 ### Major Changes

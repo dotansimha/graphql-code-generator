@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/graphql-modules-preset",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "GraphQL Code Generator preset for modularized schema",
   "repository": {
     "type": "git",
