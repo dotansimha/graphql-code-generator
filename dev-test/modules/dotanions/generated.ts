@@ -23,7 +23,7 @@ export namespace DotanionsModule {
 
   export type PaypalResolvers = Pick<Types.PaypalResolvers, DefinedFields['Paypal'] | '__isTypeOf'>;
   export type CreditCardResolvers = Pick<Types.CreditCardResolvers, DefinedFields['CreditCard'] | '__isTypeOf'>;
-  export type DonationResolvers = Pick<Types.DonationResolvers, DefinedFields['Donation'] | '__isTypeOf'>;
+  export type DonationResolvers = Pick<Types.DonationResolvers, DefinedFields['Donation']>;
   export type MutationResolvers = Pick<Types.MutationResolvers, DefinedFields['Mutation']>;
   export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;
 
