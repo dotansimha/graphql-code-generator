@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.0.1
+
+### Patch Changes
+
+- [#10412](https://github.com/dotansimha/graphql-code-generator/pull/10412) [`accdab6`](https://github.com/dotansimha/graphql-code-generator/commit/accdab69106605241933e9d66d64dc7077656f30) Thanks [@thekevinbrown](https://github.com/thekevinbrown)! - Add special handling for identifiers that consist entirely of _ characters when transformUnderscore is true. This prevents _ values in GraphQL enums from being emitted without identifers in the resulting types.
+
 ## 6.0.0
 
 ### Major Changes
