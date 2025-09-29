@@ -919,7 +919,7 @@ export class BaseTypesVisitor<
             useTypesPrefix: false,
             // We can only strip out the underscores if the value contains other
             // characters. Otherwise we'll generate syntactically invalid code.
-            transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name as any),
+            transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
           })
         );
         const comment = this.getNodeComment(enumOption);
