@@ -103,11 +103,15 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       this.config.documentMode === DocumentMode.documentNodeImportFragments ||
       this.config.documentMode === DocumentMode.graphQLTag
     ) {
-      return ` as unknown as DocumentNode<${resultType}, ${variablesTypes}>`;
+      return ` as unknown as DocumentNode<${this.config.importOperationTypesFrom ? 'Types.' : ''}${resultType}, ${
+        this.config.importOperationTypesFrom ? 'Types.' : ''
+      }${variablesTypes}>`;
     }
 
     if (this.config.documentMode === DocumentMode.string) {
-      return ` as unknown as TypedDocumentString<${resultType}, ${variablesTypes}>`;
+      return ` as unknown as TypedDocumentString<${
+        this.config.importOperationTypesFrom ? 'Types.' : ''
+      }${resultType}, ${this.config.importOperationTypesFrom ? 'Types.' : ''}${variablesTypes}>`;
     }
 
     return super.getDocumentNodeSignature(resultType, variablesTypes, node);
