@@ -686,13 +686,13 @@ export interface RawResolversConfig extends RawConfig {
   avoidCheckingAbstractTypesRecursively?: boolean;
   /**
    * @description If true, add field resolver types to Interfaces.
-   * By default, GraphQL Interfaces does not trigger any field resolvers,
+   * By default, GraphQL Interfaces do not trigger any field resolvers,
    * meaning every implementing type must implement the same resolver for the shared fields.
    *
    * Some tools provide a way to change the default behaviour by making GraphQL Objects inherit
    * missing resolvers from their Interface types. In these cases, it is fine to turn this option to true.
    *
-   * For example, if you are using @graphql-tools/schema#makeExecutableSchema with `inheritResolversFromInterfaces: true`,
+   * For example, if you are using `@graphql-tools/schema#makeExecutableSchema` with `inheritResolversFromInterfaces: true`,
    * you can make `addInterfaceFieldResolverTypes: true` as well
    * https://the-guild.dev/graphql/tools/docs/generate-schema#makeexecutableschema
    *
