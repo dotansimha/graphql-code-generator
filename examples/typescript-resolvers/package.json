@@ -4,8 +4,8 @@
   "private": true,
   "devDependencies": {
     "@graphql-codegen/cli": "6.0.0",
-    "@graphql-codegen/typescript": "5.0.1",
-    "@graphql-codegen/typescript-resolvers": "5.0.1"
+    "@graphql-codegen/typescript": "5.0.2",
+    "@graphql-codegen/typescript-resolvers": "5.1.0"
   },
   "dependencies": {
     "graphql": "16.9.0",
