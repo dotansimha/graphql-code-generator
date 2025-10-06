@@ -1,5 +1,11 @@
 # @graphql-codegen/client-preset
 
+## 5.1.0
+
+### Minor Changes
+
+- [#10459](https://github.com/dotansimha/graphql-code-generator/pull/10459) [`87184aa`](https://github.com/dotansimha/graphql-code-generator/commit/87184aa240cb6209e7b3ade13aa54da6ff0b3dff) Thanks [@eddeee888](https://github.com/eddeee888)! - Forward immutableTypes to client preset config
+
 ## 5.0.3
 
 ### Patch Changes
