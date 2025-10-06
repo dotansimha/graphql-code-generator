@@ -97,8 +97,12 @@ describe('TypedDocumentNode', () => {
       const ast = parse(/* GraphQL */ `
         query {
           job {
-            id
+            ...JobFragment
           }
+        }
+
+        fragment JobFragment on Job {
+          id
         }
       `);
 
@@ -110,6 +114,7 @@ describe('TypedDocumentNode', () => {
       )) as Types.ComplexPluginOutput;
 
       expect((res.content.match(/<Types.Query, Types.QueryVariables>/g) || []).length).toBe(1);
+      expect((res.content.match(/<Types.JobFragmentFragment, unknown>/g) || []).length).toBe(1);
     });
   });
 });
