@@ -141,6 +141,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       onlyOperationTypes: options.config.onlyOperationTypes,
       onlyEnums: options.config.onlyEnums,
       customDirectives: options.config.customDirectives,
+      immutableTypes: options.config.immutableTypes,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst, [], options.config, options.config);
