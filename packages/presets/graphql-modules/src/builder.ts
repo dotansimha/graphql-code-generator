@@ -34,6 +34,7 @@ type RegistryKeys = 'objects' | 'inputs' | 'interfaces' | 'scalars' | 'unions' |
 type Registry = Record<RegistryKeys, string[]>;
 const registryKeys: RegistryKeys[] = ['objects', 'inputs', 'interfaces', 'scalars', 'unions', 'enums'];
 const resolverKeys: Array<Extract<RegistryKeys, 'objects' | 'enums' | 'scalars'>> = ['scalars', 'objects', 'enums'];
+const withIsTypeOfKeys: Array<'objects'> = ['objects'];
 
 export function buildModule(
   name: string,
@@ -65,6 +66,7 @@ export function buildModule(
   const picks: Record<RegistryKeys, Record<string, string[]>> = createObject(registryKeys, () => ({}));
   const defined: Registry = createObject(registryKeys, () => []);
   const extended: Registry = createObject(registryKeys, () => []);
+  const withIsTypeOf: { objects: string[] } = createObject(withIsTypeOfKeys, () => []);
 
   // List of types used in objects, fields, arguments etc
   const usedTypes = collectUsedTypes(doc);
@@ -216,7 +218,9 @@ export function buildModule(
             'DefinedFields',
             // In case of enabled `requireRootResolvers` flag, the preset has to produce a non-optional properties.
             requireRootResolvers && rootTypes.includes(name),
-            !rootTypes.includes(name) && defined.objects.includes(name) ? ` | '__isTypeOf'` : ''
+            !rootTypes.includes(name) && defined.objects.includes(name) && withIsTypeOf.objects.includes(name)
+              ? ` | '__isTypeOf'`
+              : ''
           )
         )
         .join('\n'),
@@ -405,6 +409,11 @@ export function buildModule(
       case Kind.OBJECT_TYPE_DEFINITION: {
         defined.objects.push(name);
         collectFields(node, picks.objects);
+
+        if (node.interfaces?.length > 0) {
+          withIsTypeOf.objects.push(name);
+        }
+
         break;
       }
 
@@ -433,6 +442,10 @@ export function buildModule(
 
       case Kind.UNION_TYPE_DEFINITION: {
         defined.unions.push(name);
+
+        for (const namedType of node.types || []) {
+          pushUnique(withIsTypeOf.objects, namedType.name.value);
+        }
         break;
       }
     }
@@ -452,6 +465,10 @@ export function buildModule(
         }
 
         pushUnique(extended.objects, name);
+
+        if (node.interfaces?.length > 0) {
+          pushUnique(withIsTypeOf.objects, name);
+        }
 
         break;
       }

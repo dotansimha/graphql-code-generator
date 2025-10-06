@@ -1,5 +1,33 @@
 # @graphql-codegen/client-preset
 
+## 5.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26)]:
+  - @graphql-codegen/visitor-plugin-common@6.1.0
+  - @graphql-codegen/gql-tag-operations@5.0.2
+  - @graphql-codegen/typescript-operations@5.0.2
+  - @graphql-codegen/typed-document-node@6.0.2
+  - @graphql-codegen/typescript@5.0.2
+
+## 5.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`accdab6`](https://github.com/dotansimha/graphql-code-generator/commit/accdab69106605241933e9d66d64dc7077656f30)]:
+  - @graphql-codegen/visitor-plugin-common@6.0.1
+  - @graphql-codegen/gql-tag-operations@5.0.1
+  - @graphql-codegen/typescript-operations@5.0.1
+  - @graphql-codegen/typed-document-node@6.0.1
+  - @graphql-codegen/typescript@5.0.1
+
+## 5.0.1
+
+### Patch Changes
+
+- [#10393](https://github.com/dotansimha/graphql-code-generator/pull/10393) [`ee2276c`](https://github.com/dotansimha/graphql-code-generator/commit/ee2276cb073a87458eda957a17c9e296c1cf313a) Thanks [@eddeee888](https://github.com/eddeee888)! - Include undefined explicitly for input maybe value in Client Preset
+
 ## 5.0.0
 
 ### Major Changes

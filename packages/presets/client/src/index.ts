@@ -141,6 +141,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       onlyOperationTypes: options.config.onlyOperationTypes,
       onlyEnums: options.config.onlyEnums,
       customDirectives: options.config.customDirectives,
+      immutableTypes: options.config.immutableTypes,
     };
 
     const visitor = new ClientSideBaseVisitor(options.schemaAst, [], options.config, options.config);
@@ -220,7 +221,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
+      {
+        [`typescript`]: {
+          inputMaybeValue: 'T | null | undefined',
+        },
+      },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {

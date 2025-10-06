@@ -479,3 +479,90 @@ test('should generate a signature for ResolveMiddleware (with widlcards)', () =>
     };
   `);
 });
+
+test('only picks __isTypeOf from implementing types (of Interfaces) and union members', () => {
+  const output = buildModule(
+    'test',
+    parse(/* GraphQL */ `
+      type Query {
+        me: User
+        pet: Pet
+        offer: Offer
+      }
+
+      type User {
+        id: ID!
+        username: String!
+      }
+
+      interface Pet {
+        id: ID!
+        name: String!
+      }
+      type Cat implements Pet {
+        id: ID!
+        name: String!
+        canScratch: Boolean!
+      }
+      type Dog implements Pet {
+        id: ID!
+        name: String!
+        canBark: Boolean!
+      }
+      type Elephant {
+        id: ID!
+      }
+      extend type Elephant implements Pet {
+        name: String!
+        hasTrunk: Boolean!
+      }
+
+      union Offer = Discount | Coupon
+      type Discount {
+        id: ID!
+        name: String!
+      }
+      type Coupon {
+        id: ID!
+        name: String!
+      }
+    `),
+    {
+      importPath: '../types',
+      importNamespace: 'core',
+      encapsulate: 'none',
+      requireRootResolvers: false,
+      shouldDeclare: false,
+      rootTypes: ROOT_TYPES,
+      baseVisitor,
+      useGraphQLModules: true,
+    }
+  );
+
+  // User does not pick `__isTypeOf` because it is not a union member, or implementing types
+  expect(output).toBeSimilarStringTo(`
+    export type UserResolvers = Pick<core.UserResolvers, DefinedFields['User']>;
+  `);
+
+  // Cat picks `__isTypeOf` because it is an implementing type of Pet
+  expect(output).toBeSimilarStringTo(`
+    export type CatResolvers = Pick<core.CatResolvers, DefinedFields['Cat'] | '__isTypeOf'>;
+  `);
+  // Dog picks `__isTypeOf` because it is an implementing type of Pet
+  expect(output).toBeSimilarStringTo(`
+    export type DogResolvers = Pick<core.DogResolvers, DefinedFields['Dog'] | '__isTypeOf'>;
+  `);
+  // Elephant picks `__isTypeOf` because it is an implementing type of Pet, via `extend type `
+  expect(output).toBeSimilarStringTo(`
+    export type ElephantResolvers = Pick<core.ElephantResolvers, DefinedFields['Elephant'] | '__isTypeOf'>;
+  `);
+
+  // Discount picks `__isTypeOf` because it is a union member
+  expect(output).toBeSimilarStringTo(`
+    export type DiscountResolvers = Pick<core.DiscountResolvers, DefinedFields['Discount'] | '__isTypeOf'>;
+  `);
+  // Coupon picks `__isTypeOf` because it is a union member
+  expect(output).toBeSimilarStringTo(`
+    export type CouponResolvers = Pick<core.CouponResolvers, DefinedFields['Coupon'] | '__isTypeOf'>;
+  `);
+});

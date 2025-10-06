@@ -364,7 +364,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -500,7 +500,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -589,7 +589,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -706,7 +706,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1412,7 +1412,7 @@ export * from "./gql.js";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1490,7 +1490,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1571,7 +1571,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1652,7 +1652,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1735,7 +1735,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1814,7 +1814,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1899,7 +1899,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1985,7 +1985,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2071,7 +2071,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2163,7 +2163,7 @@ export * from "./gql.js";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2242,7 +2242,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2327,7 +2327,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2412,7 +2412,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2557,7 +2557,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2700,7 +2700,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2997,7 +2997,7 @@ export * from "./gql.js";`);
         /* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -3106,7 +3106,7 @@ export * from "./gql.js";`);
         /* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -3173,7 +3173,7 @@ export * from "./gql.js";`);
     expect(graphqlFile.content).toBeSimilarStringTo(`/* eslint-disable */
       import { MyColor as Color } from './fixtures/with-enum-values';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -3189,5 +3189,86 @@ export * from "./gql.js";`);
       };
 
       export { Color };`);
+  });
+
+  it('supports immutableTypes', async () => {
+    const { result } = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            user(id: ID!): User
+          }
+          type User {
+            id: ID!
+            name: String!
+            friends: [User!]!
+          }
+        `,
+      ],
+      documents: [
+        /* GraphQL */ `
+          query Test_User {
+            user(id: "user-001") {
+              id
+              name
+            }
+          }
+        `,
+      ],
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            immutableTypes: true,
+          },
+        },
+      },
+    });
+
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = T | null | undefined;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+      };
+
+      export type Query = {
+        readonly __typename?: 'Query';
+        readonly user?: Maybe<User>;
+      };
+
+
+      export type QueryUserArgs = {
+        id: Scalars['ID']['input'];
+      };
+
+      export type User = {
+        readonly __typename?: 'User';
+        readonly friends: ReadonlyArray<User>;
+        readonly id: Scalars['ID']['output'];
+        readonly name: Scalars['String']['output'];
+      };
+
+      export type Test_UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Test_UserQuery = { readonly __typename?: 'Query', readonly user?: { readonly __typename?: 'User', readonly id: string, readonly name: string } | null };
+
+
+      export const Test_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Test_User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"StringValue","value":"user-001","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<Test_UserQuery, Test_UserQueryVariables>;"
+    `);
   });
 });
