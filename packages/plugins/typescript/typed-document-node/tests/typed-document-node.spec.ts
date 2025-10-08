@@ -77,4 +77,44 @@ describe('TypedDocumentNode', () => {
       expect((res.content.match(/__typename/g) || []).length).toBe(1);
     });
   });
+
+  describe('addTypenameToSelectionSets', () => {
+    it('Should import Types from the given file', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          job: Job
+        }
+
+        type Job {
+          id: ID!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query {
+          job {
+            ...JobFragment
+          }
+        }
+
+        fragment JobFragment on Job {
+          id
+        }
+      `);
+
+      const res = (await plugin(
+        schema,
+        [{ location: '', document: ast }],
+        { importOperationTypesFrom: 'file.ts' },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect((res.content.match(/<Types.Query, Types.QueryVariables>/g) || []).length).toBe(1);
+      expect((res.content.match(/<Types.JobFragmentFragment, unknown>/g) || []).length).toBe(1);
+    });
+  });
 });
