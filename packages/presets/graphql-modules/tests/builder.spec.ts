@@ -400,7 +400,7 @@ test('should use and export resolver signatures of types defined or extended in 
   `);
 });
 
-test('should not generate resolver signatures of types that are not defined or extened by a module', () => {
+test('should not generate resolver signatures of types that are not defined or extended by a module', () => {
   const output = buildModule('test', testDoc, {
     importPath: '../types',
     importNamespace: 'core',

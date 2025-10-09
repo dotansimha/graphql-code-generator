@@ -1161,7 +1161,7 @@ export type Q2Query = { search: Array<
       await validate(content, config);
     });
 
-    it('Should add __typename as non-optional when its explictly specified, even if skipTypename is true', async () => {
+    it('Should add __typename as non-optional when its explicitly specified, even if skipTypename is true', async () => {
       const ast = parse(/* GraphQL */ `
         query {
           __typename
@@ -2109,7 +2109,7 @@ export type Q2Query = { search: Array<
       const ast = parse(/* GraphQL */ `
         query unionTest {
           mixedNotifications {
-            ... on Notifiction {
+            ... on Notification {
               id
             }
 
@@ -2151,7 +2151,7 @@ export type Q2Query = { search: Array<
               id
             }
 
-            ... on Notifiction {
+            ... on Notification {
               id
             }
 
@@ -2196,7 +2196,7 @@ export type Q2Query = { search: Array<
           }
         }
 
-        fragment N on Notifiction {
+        fragment N on Notification {
           id
         }
       `);
@@ -2226,7 +2226,7 @@ export type Q2Query = { search: Array<
 
     it('Should support computing correct names for merged fragment union types', async () => {
       const ast = parse(/* GraphQL */ `
-        fragment N on Notifiction {
+        fragment N on Notification {
           id
           ... on TextNotification {
             text
@@ -2350,7 +2350,7 @@ export type Q2Query = { search: Array<
           }
         }
 
-        fragment N on Notifiction {
+        fragment N on Notification {
           id
         }
       `);
@@ -2369,7 +2369,7 @@ export type Q2Query = { search: Array<
 
     it('Should support computing correct names for merged fragment union types with skipTypename', async () => {
       const ast = parse(/* GraphQL */ `
-        fragment N on Notifiction {
+        fragment N on Notification {
           id
           ... on TextNotification {
             text
@@ -2399,7 +2399,7 @@ export type Q2Query = { search: Array<
           }
         }
 
-        fragment N on Notifiction {
+        fragment N on Notification {
           id
         }
       `);
@@ -4559,7 +4559,7 @@ export type Q2Query = { search: Array<
       );
     });
 
-    it('#5422 - Error when interface doesnt have implemeting types', async () => {
+    it('#5422 - Error when interface doesnt have implementing types', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface A {
           a: String!

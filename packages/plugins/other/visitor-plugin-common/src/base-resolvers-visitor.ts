@@ -1169,7 +1169,7 @@ export class BaseResolversVisitor<
     const members = memberTypes
       .map(type => {
         const isTypeMapped = this.config.mappers[type.name];
-        // 1. If mapped without placehoder, just use it without doing extra checks
+        // 1. If mapped without placeholder, just use it without doing extra checks
         if (isTypeMapped && !hasPlaceholder(isTypeMapped.type)) {
           return { typename: type.name, typeValue: isTypeMapped.type };
         }
