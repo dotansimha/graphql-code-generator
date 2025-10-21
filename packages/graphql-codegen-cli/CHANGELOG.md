@@ -1,5 +1,17 @@
 # @graphql-codegen/cli
 
+## 6.0.1
+
+### Patch Changes
+
+- [#10468](https://github.com/dotansimha/graphql-code-generator/pull/10468) [`cb1b9d9`](https://github.com/dotansimha/graphql-code-generator/commit/cb1b9d99c413a96fde6c9af0b2315b3ad721ee4e) Thanks [@eddeee888](https://github.com/eddeee888)! - In watch mode, do not write output on failure
+
+  Previously, on partial or full failure, watch mode still write to output. However, since the output'd be an empty array, it will then call `removeStaleFiles` internally to remove all previously generated files.
+
+  This patch puts a temporary fix to avoid writing output on any failure to fix the described behaviour.
+
+  This also means the `config.allowPartialOutputs` does not work in watch mode for now.
+
 ## 6.0.0
 
 ### Major Changes
