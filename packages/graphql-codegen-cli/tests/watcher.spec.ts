@@ -30,7 +30,7 @@ const setupMockWatcher = async (
   const dispatchChange = async (path: string) => subscribeCallbackMock(undefined, [{ type: 'update', path }]);
 
   // createWatcher doesn't set up subscription immediately, so we wait for a tick before continuing
-  await new Promise(resolve => setTimeout(resolve, 10));
+  await new Promise(resolve => setTimeout(resolve, 100));
 
   return { stopWatching, dispatchChange };
 };
@@ -799,7 +799,7 @@ describe('Watch targets', () => {
       }
     `;
 
-    await setupMockWatcher(
+    const { stopWatching } = await setupMockWatcher(
       {
         filepath: './foo/some-config.ts',
         config: {
@@ -818,6 +818,10 @@ describe('Watch targets', () => {
 
     // Because document has error, onNext shouldn't be called
     expect(onNextMock).not.toHaveBeenCalled();
+
+    // Wait a tick for stopWatch to be set up correctly, before calling it
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await stopWatching();
   });
 
   test.todo('on watcher subsequent codegen run, it does not call onNext on error');
