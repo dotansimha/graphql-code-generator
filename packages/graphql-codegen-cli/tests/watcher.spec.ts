@@ -10,6 +10,8 @@ const unsubscribeMock = vi.fn();
 const subscribeMock = vi.fn();
 let subscribeCallbackMock: Mock<SubscribeCallback>;
 
+// FIXME: this mocks out the main functionality which is triggering the codegen
+// This is not great because we cannot test the actual watch functionality
 vi.mock('@parcel/watcher', () => ({
   subscribe: subscribeMock.mockImplementation((watchDirectory: string, subscribeCallback: SubscribeCallback) => {
     subscribeCallbackMock = vi.fn(subscribeCallback);
@@ -19,13 +21,16 @@ vi.mock('@parcel/watcher', () => ({
   }),
 }));
 
-const setupMockWatcher = async (codegenContext: ConstructorParameters<typeof CodegenContext>[0]) => {
-  const { stopWatching } = createWatcher(new CodegenContext(codegenContext), async () => Promise.resolve([]));
+const setupMockWatcher = async (
+  codegenContext: ConstructorParameters<typeof CodegenContext>[0],
+  onNext: Mock = vi.fn().mockResolvedValue([])
+) => {
+  const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
 
   const dispatchChange = async (path: string) => subscribeCallbackMock(undefined, [{ type: 'update', path }]);
 
   // createWatcher doesn't set up subscription immediately, so we wait for a tick before continuing
-  await new Promise(resolve => setTimeout(resolve, 10));
+  await new Promise(resolve => setTimeout(resolve, 100));
 
   return { stopWatching, dispatchChange };
 };
@@ -771,4 +776,53 @@ describe('Watch targets', () => {
       }
     );
   });
+
+  test('it does not call onNext on error', async () => {
+    vi.spyOn(fs, 'access').mockImplementation(() => Promise.resolve());
+    const onNextMock = vi.fn();
+
+    const schema = /* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID
+      }
+    `;
+    const document = /* GraphQL */ `
+      query {
+        me {
+          id
+          zzz # Error here
+        }
+      }
+    `;
+
+    const { stopWatching } = await setupMockWatcher(
+      {
+        filepath: './foo/some-config.ts',
+        config: {
+          hooks: { onWatchTriggered: vi.fn() },
+          schema,
+          documents: document,
+          generates: {
+            ['./foo/some-output.ts']: {
+              plugins: ['typescript'],
+            },
+          },
+        },
+      },
+      onNextMock
+    );
+
+    // Because document has error, onNext shouldn't be called
+    expect(onNextMock).not.toHaveBeenCalled();
+
+    // Wait a tick for stopWatch to be set up correctly, before calling it
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await stopWatching();
+  });
+
+  test.todo('on watcher subsequent codegen run, it does not call onNext on error');
 });

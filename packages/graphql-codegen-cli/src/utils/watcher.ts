@@ -79,7 +79,21 @@ export const createWatcher = (
       if (!isShutdown) {
         executeCodegen(initialContext)
           .then(
-            ({ result }) => onNext(result),
+            ({ result, error }) => {
+              // FIXME: this is a quick fix to stop `onNext` (writeOutput) from
+              // removing all files when there is an error.
+              //
+              // This is because `removeStaleFiles()` will remove files if the
+              // generated files are different between runs. And on error, it
+              // returns an empty array i.e. will remove all generated files from
+              // the previous run
+              //
+              // This also means we don't have config.allowPartialOutputs in watch mode
+              if (error) {
+                return;
+              }
+              onNext(result);
+            },
             () => Promise.resolve()
           )
           .then(() => emitWatching(watchDirectory));
@@ -202,7 +216,14 @@ export const createWatcher = (
   stopWatching.runningWatcher = new Promise<void>((resolve, reject) => {
     executeCodegen(initialContext)
       .then(
-        ({ result }) => onNext(result),
+        ({ result, error }) => {
+          // TODO: this is the initial run, the logic here mimics the above watcher logic.
+          // We need to check whether it's ok to deviate between these two.
+          if (error) {
+            return;
+          }
+          onNext(result);
+        },
         () => Promise.resolve()
       )
       .then(() => runWatcher(abortController.signal))
