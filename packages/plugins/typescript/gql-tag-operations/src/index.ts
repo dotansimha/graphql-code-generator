@@ -82,7 +82,7 @@ export const plugin: PluginFunction<{
     if (sourcesWithOperations.length > 0) {
       code.push([...getDocumentRegistryChunk(sourcesWithOperations)].join(''));
     } else {
-      code.push('const documents = [];');
+      code.push('const documents = {};');
     }
 
     code.push(
