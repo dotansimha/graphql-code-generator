@@ -6,6 +6,9 @@ const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category,
 );
 
 export default withGuildDocs({
+  nextraConfig: {
+    autoImportThemeStyle: false,
+  },
   output: 'export',
   experimental: {
     urlImports: [
@@ -95,6 +98,7 @@ export default withGuildDocs({
       '/typescript/typescript-resolvers': '/plugins/typescript/typescript-resolvers',
       '/docs/guides/graphql-cli': '/docs/migration/graphql-cli',
       '/plugins/presets/gql-tag-operations-preset': '/plugins/presets/preset-client',
+      '/plugins/gql-tag-operations-preset': '/plugins/presets/preset-client',
     })
       .concat(PLUGINS_REDIRECTS)
       .map(([from, to]) => ({

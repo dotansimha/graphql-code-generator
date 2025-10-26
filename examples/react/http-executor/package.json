@@ -3,22 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@graphql-tools/executor-http": "^1.0.0",
+    "@graphql-tools/executor-http": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.2",
-    "@vitejs/plugin-react": "^3.1.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^18.11.18",
+    "@graphql-codegen/cli": "^6.0.1",
+    "@vitejs/plugin-react": "^4.0.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.10",
-    "typescript": "5.2.2",
+    "typescript": "5.5.4",
     "serve": "14.2.3",
-    "cypress": "12.17.4",
-    "start-server-and-test": "2.0.3",
-    "vite": "^4.1.0"
+    "cypress": "14.0.0",
+    "start-server-and-test": "2.0.5",
+    "vite": "^6.0.0"
   },
   "scripts": {
     "dev": "vite",

@@ -1,5 +1,120 @@
 # @graphql-codegen/typescript-operations
 
+## 5.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26)]:
+  - @graphql-codegen/visitor-plugin-common@6.1.0
+  - @graphql-codegen/typescript@5.0.2
+
+## 5.0.1
+
+### Patch Changes
+
+- Updated dependencies [[`accdab6`](https://github.com/dotansimha/graphql-code-generator/commit/accdab69106605241933e9d66d64dc7077656f30)]:
+  - @graphql-codegen/visitor-plugin-common@6.0.1
+  - @graphql-codegen/typescript@5.0.1
+
+## 5.0.0
+
+### Major Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Use Record<PropertyKey, never> instead of {} for empty object type
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Drop Node 18 support
+
+### Patch Changes
+
+- Updated dependencies [[`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)]:
+  - @graphql-codegen/visitor-plugin-common@6.0.0
+  - @graphql-codegen/plugin-helpers@6.0.0
+  - @graphql-codegen/typescript@5.0.0
+
+## 4.6.1
+
+### Patch Changes
+
+- [#10330](https://github.com/dotansimha/graphql-code-generator/pull/10330) [`c5efba3`](https://github.com/dotansimha/graphql-code-generator/commit/c5efba34a7b422720be9ce32937dd19fb0784bae) Thanks [@jnoordsij](https://github.com/jnoordsij)! - Make graphql-sock optional peerDep
+
+## 4.6.0
+
+### Minor Changes
+
+- [#10323](https://github.com/dotansimha/graphql-code-generator/pull/10323) [`f3cf4df`](https://github.com/dotansimha/graphql-code-generator/commit/f3cf4df358a896c5df0a7d8909c2fbf192e10c01) Thanks [@eddeee888](https://github.com/eddeee888)! - Add support for `nullability.errorHandlingClient`. This allows clients to get stronger types with [semantic nullability](https://github.com/graphql/graphql-wg/blob/main/rfcs/SemanticNullability.md)-enabled schemas.
+
+### Patch Changes
+
+- Updated dependencies [[`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc)]:
+  - @graphql-codegen/visitor-plugin-common@5.8.0
+  - @graphql-codegen/typescript@4.1.6
+
+## 4.5.1
+
+### Patch Changes
+
+- [#10302](https://github.com/dotansimha/graphql-code-generator/pull/10302) [`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix Apollo unmask directive incorrectly generating fragmentRefs
+
+- Updated dependencies [[`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a)]:
+  - @graphql-codegen/visitor-plugin-common@5.7.1
+  - @graphql-codegen/typescript@4.1.5
+
+## 4.5.0
+
+### Minor Changes
+
+- [#10270](https://github.com/dotansimha/graphql-code-generator/pull/10270) [`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c) Thanks [@adapap](https://github.com/adapap)! - feat: implement `includeExternalFragments: boolean` option
+
+### Patch Changes
+
+- Updated dependencies [[`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c)]:
+  - @graphql-codegen/visitor-plugin-common@5.7.0
+  - @graphql-codegen/typescript@4.1.4
+
+## 4.4.1
+
+### Patch Changes
+
+- Updated dependencies [[`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.1
+  - @graphql-codegen/typescript@4.1.3
+
+## 4.4.0
+
+### Minor Changes
+
+- [#10163](https://github.com/dotansimha/graphql-code-generator/pull/10163) [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba) Thanks [@jerelmiller](https://github.com/jerelmiller)! - Add support for Apollo Client `@unmask` directive with fragment masking.
+
+### Patch Changes
+
+- Updated dependencies [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a), [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
+  - @graphql-codegen/visitor-plugin-common@5.6.0
+  - @graphql-codegen/typescript@4.1.2
+
+## 4.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc), [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03)]:
+  - @graphql-codegen/visitor-plugin-common@5.5.0
+  - @graphql-codegen/plugin-helpers@5.1.0
+  - @graphql-codegen/typescript@4.1.1
+
+## 4.3.0
+
+### Minor Changes
+
+- [#10077](https://github.com/dotansimha/graphql-code-generator/pull/10077) [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4) Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `config.avoidOptions` to support query, mutation and subscription
+
+  Previously, `config.avoidOptions.resolvers` was being used to make query, mutation and subscription fields non-optional.
+  Now, `config.avoidOptions.query`, `config.avoidOptions.mutation` and `config.avoidOptions.subscription` can be used to target the respective types.
+
+### Patch Changes
+
+- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+  - @graphql-codegen/visitor-plugin-common@5.4.0
+  - @graphql-codegen/typescript@4.1.0
+
 ## 4.2.3
 
 ### Patch Changes
@@ -113,21 +228,21 @@
 
   ```ts
   export type Scalars = {
-    ID: string;
-  };
+    ID: string
+  }
   ```
 
   Then, this is used in both input and output type e.g.
 
   ```ts
   export type Book = {
-    __typename?: 'Book';
-    id: Scalars['ID']; // Output's ID can be `string` 👍
-  };
+    __typename?: 'Book'
+    id: Scalars['ID'] // Output's ID can be `string` 👍
+  }
 
   export type QueryBookArgs = {
-    id: Scalars['ID']; // Input's ID can be `string` or `number`. However, the type is only `string` here 👎
-  };
+    id: Scalars['ID'] // Input's ID can be `string` or `number`. However, the type is only `string` here 👎
+  }
   ```
 
   This PR extends each Scalar to have input and output:
@@ -135,23 +250,23 @@
   ```ts
   export type Scalars = {
     ID: {
-      input: string | number;
-      output: string;
-    };
-  };
+      input: string | number
+      output: string
+    }
+  }
   ```
 
   Then, each input/output GraphQL type can correctly refer to the correct input/output scalar type:
 
   ```ts
   export type Book = {
-    __typename?: 'Book';
-    id: Scalars['ID']['output']; // Output's ID can be `string` 👍
-  };
+    __typename?: 'Book'
+    id: Scalars['ID']['output'] // Output's ID can be `string` 👍
+  }
 
   export type QueryBookArgs = {
-    id: Scalars['ID']['input']; // Input's ID can be `string` or `number` 👍
-  };
+    id: Scalars['ID']['input'] // Input's ID can be `string` or `number` 👍
+  }
   ```
 
   Note that for `typescript-resolvers`, the type of ID needs to be inverted. However, the referenced types in GraphQL input/output types should still work correctly:
@@ -204,7 +319,7 @@
   ```ts
   config: {
     scalars: {
-      ID: 'string'; // This means `string` will be used for both ID's input and output types
+      ID: 'string' // This means `string` will be used for both ID's input and output types
     }
   }
   ```
@@ -214,7 +329,7 @@
   ```ts
   config: {
     scalars: {
-      ID: './path/to/scalar-module';
+      ID: './path/to/scalar-module'
     }
   }
   ```
@@ -223,11 +338,11 @@
 
   ```ts
   // Previously, imported `ID` type can be a primitive type, now it must be an object with input/output fields
-  import { ID } from './path/to/scalar-module';
+  import { ID } from './path/to/scalar-module'
 
   export type Scalars = {
-    ID: { input: ID['input']; output: ID['output'] };
-  };
+    ID: { input: ID['input']; output: ID['output'] }
+  }
   ```
 
   ***
@@ -246,7 +361,7 @@
 
   ```jsx
   // src/index.tsx
-  import { graphql } from './gql';
+  import { graphql } from './gql'
   const OrdersFragment = graphql(`
     fragment OrdersFragment on User {
       orders {
@@ -254,7 +369,7 @@
         total
       }
     }
-  `);
+  `)
   const GetUserQuery = graphql(`
     query GetUser($id: ID!) {
       user(id: $id) {
@@ -263,7 +378,7 @@
         ...OrdersFragment @defer
       }
     }
-  `);
+  `)
   ```
 
   The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
@@ -271,10 +386,10 @@
   ```tsx
   // gql/graphql.ts
   export type GetUserQuery = { __typename?: 'Query'; id: string; name: string } & ({
-    __typename?: 'Query';
+    __typename?: 'Query'
   } & {
-    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> };
-  });
+    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> }
+  })
   ```
 
   Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred

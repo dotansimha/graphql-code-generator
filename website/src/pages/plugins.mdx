@@ -2,4 +2,16 @@
 title: Plugins
 ---
 
-export { PluginsPage as default, getStaticProps } from '../components/plugins-page'
+import { useData } from '@theguild/components'
+import { PluginsMarketplaceSearch } from '../components/plugins-marketplace-search'
+export { getPluginsStaticProps as getStaticProps } from '../components/plugins-marketplace-search'
+
+export default () => {
+  const plugins = useData()
+  return (
+    <>
+      <style>{`.light body { background: #fff; }`}</style>
+      <PluginsMarketplaceSearch plugins={plugins} />
+    </>
+  )
+}

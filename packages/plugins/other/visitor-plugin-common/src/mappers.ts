@@ -1,4 +1,3 @@
-/* eslint-disable no-inner-declarations */
 import { ParsedResolversConfig, RawResolversConfig } from './base-resolvers-visitor.js';
 import { DirectiveArgumentAndInputFieldMappings, ParsedDirectiveArgumentAndInputFieldMappings } from './types.js';
 

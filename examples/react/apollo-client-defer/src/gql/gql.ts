@@ -11,8 +11,13 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * 3. It does not support dead code elimination, so it will add unused operations.
  *
  * Therefore it is highly recommended to use the babel or swc plugin for production.
+ * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n  fragment SlowFieldFragment on Query {\n    slowField(waitFor: 5000)\n  }\n': typeof types.SlowFieldFragmentFragmentDoc;
+  '\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n\n    ... @defer {\n      inlinedSlowField: slowField(waitFor: 5000)\n    }\n  }\n': typeof types.SlowAndFastFieldWithDeferDocument;
+};
+const documents: Documents = {
   '\n  fragment SlowFieldFragment on Query {\n    slowField(waitFor: 5000)\n  }\n': types.SlowFieldFragmentFragmentDoc,
   '\n  query SlowAndFastFieldWithDefer {\n    fastField\n    ...SlowFieldFragment @defer\n\n    ... @defer {\n      inlinedSlowField: slowField(waitFor: 5000)\n    }\n  }\n':
     types.SlowAndFastFieldWithDeferDocument,

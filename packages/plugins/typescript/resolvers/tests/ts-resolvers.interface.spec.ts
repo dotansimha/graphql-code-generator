@@ -22,8 +22,8 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<MyOtherType>;
         ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-        Query: ResolverTypeWrapper<{}>;
-        Subscription: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -46,8 +46,8 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
         MyOtherType: MyOtherType;
         ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: SomeNode;
@@ -88,8 +88,8 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         Child: ResolverTypeWrapper<Omit<I_Child_Types, 'parent'> & { parent?: Maybe<I_ResolversTypes_Types['MyType']> }>;
         MyOtherType: ResolverTypeWrapper<I_MyOtherType_Types>;
         ChildUnion: ResolverTypeWrapper<I_ResolversUnionTypes_Types<I_ResolversTypes_Types>['ChildUnion']>;
-        Query: ResolverTypeWrapper<{}>;
-        Subscription: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
         Node: ResolverTypeWrapper<I_ResolversInterfaceTypes_Types<I_ResolversTypes_Types>['Node']>;
         ID: ResolverTypeWrapper<Scalars['ID']['output']>;
         SomeNode: ResolverTypeWrapper<I_SomeNode_Types>;
@@ -112,8 +112,8 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         Child: Omit<I_Child_Types, 'parent'> & { parent?: Maybe<I_ResolversParentTypes_Types['MyType']> };
         MyOtherType: I_MyOtherType_Types;
         ChildUnion: I_ResolversUnionTypes_Types<I_ResolversParentTypes_Types>['ChildUnion'];
-        Query: {};
-        Subscription: {};
+        Query: Record<PropertyKey, never>;
+        Subscription: Record<PropertyKey, never>;
         Node: I_ResolversInterfaceTypes_Types<I_ResolversParentTypes_Types>['Node'];
         ID: Scalars['ID']['output'];
         SomeNode: I_SomeNode_Types;
@@ -162,7 +162,6 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
         __resolveType: TypeResolveFn<null, ParentType, ContextType>;
-        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
   });
@@ -270,7 +269,7 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         T_WithNoAbstractFieldLevel1: ResolverTypeWrapper<T_WithNoAbstractFieldLevel1>;
         T_WithNoAbstractFieldLevel2: ResolverTypeWrapper<T_WithNoAbstractFieldLevel2>;
         T_WithNoAbstractFieldLevel3: ResolverTypeWrapper<T_WithNoAbstractFieldLevel3>;
-        Query: ResolverTypeWrapper<{}>;
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
       };
     `);
 
@@ -292,7 +291,7 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         T_WithNoAbstractFieldLevel1: T_WithNoAbstractFieldLevel1;
         T_WithNoAbstractFieldLevel2: T_WithNoAbstractFieldLevel2;
         T_WithNoAbstractFieldLevel3: T_WithNoAbstractFieldLevel3;
-        Query: {};
+        Query: Record<PropertyKey, never>;
       };
     `);
   });
@@ -403,6 +402,105 @@ describe('TypeScript Resolvers Plugin - Interfaces', () => {
         T_Type2: Omit<T_Type2, 'type1' | 'withNode'> & { type1: ResolversParentTypes['T_Type1'], withNode: ResolversParentTypes['T_WithNode'] };
         Boolean: Scalars['Boolean']['output'];
         String: Scalars['String']['output'];
+      };
+    `);
+  });
+
+  it('does not generate nested types when avoidCheckingAbstractTypesRecursively=true', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface I_Node {
+        id: ID!
+      }
+
+      type T_WithNode {
+        node: I_Node!
+      }
+
+      type T_Type1 {
+        id: ID!
+        type2: T_Type2!
+        withNode: T_WithNode! # abstract type is in T_Type1
+      }
+
+      type T_Type2 {
+        id: ID!
+        type1: T_Type1!
+      }
+    `);
+
+    const result = await plugin(schema, [], { avoidCheckingAbstractTypesRecursively: true }, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
+        I_Node: never;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        I_Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['I_Node']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+        T_WithNode: ResolverTypeWrapper<Omit<T_WithNode, 'node'> & { node: ResolversTypes['I_Node'] }>;
+        T_Type1: ResolverTypeWrapper<T_Type1>;
+        T_Type2: ResolverTypeWrapper<T_Type2>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        I_Node: ResolversInterfaceTypes<ResolversParentTypes>['I_Node'];
+        ID: Scalars['ID']['output'];
+        T_WithNode: Omit<T_WithNode, 'node'> & { node: ResolversParentTypes['I_Node'] };
+        T_Type1: T_Type1;
+        T_Type2: T_Type2;
+        Boolean: Scalars['Boolean']['output'];
+        String: Scalars['String']['output'];
+      };
+    `);
+  });
+
+  it('generates __isTypeOf for only implementing object types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface Node {
+        id: ID!
+      }
+      type Cat implements Node {
+        id: ID!
+        name: String!
+      }
+      type Dog implements Node {
+        id: ID!
+        isGoodBoy: Boolean!
+      }
+      type Human {
+        _id: ID!
+      }
+    `);
+
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type CatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Cat'] = ResolversParentTypes['Cat']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      }
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type DogResolvers<ContextType = any, ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        isGoodBoy?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+      };
+    `);
+
+    // Human does not implement Node, so it does not have __isTypeOf
+    expect(result.content).toBeSimilarStringTo(`
+      export type HumanResolvers<ContextType = any, ParentType extends ResolversParentTypes['Human'] = ResolversParentTypes['Human']> = {
+        _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
       };
     `);
   });

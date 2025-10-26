@@ -2,7 +2,7 @@
 description: Execute GraphQL queries type-safe in vanilla TypeScript with GraphQL Code Generator.
 ---
 
-# Guide: Vanilla TypeScript
+# GraphQL Codegen with Vanilla TypeScript
 
 GraphQL client libraries such as Apollo Client, Relay, and Urql are popular choices that allows
 building powerful features for querying but come with a few drawbacks:
@@ -19,9 +19,7 @@ TypeScript to generate type-safe operations and wire it up to a GraphQL server t
 GraphQL over HTTP protocol.
 
 This approach is framework/runtime (React, Vue, Svelte, Node.js, Bun) agnostic and the function for
-executing GraphQL operations will be a simple `fetch` wrapper that can be integrated with popular
-solutions such as [TanStack Query (React Query)](https://tanstack.com/query) or
-[SWR](https://swr.vercel.app/).
+executing GraphQL operations will be a simple Type-Safe `fetch` wrapper.
 
 ## Prerequisites
 
@@ -34,7 +32,7 @@ This guide will work on any JavaScript environment that supports `fetch` API.
 We are going to use the public [Star Wars GraphQL API](https://swapi-graphql.netlify.app/) as our
 GraphQL endpoint.
 
-## Setting up GraphQL Code Generator Client preset
+## Setting up GraphQL Code Generator
 
 The GraphQL Code Generator client preset is the preferred and built-in way to generate type-safe
 operations for any GraphQL client library and also vanilla JavaScript.
@@ -43,7 +41,6 @@ To get started, install the following dependencies
 
 - **`@graphql-codegen/cli`**: Codegen CLI for running code generation
 - **`@parcel/watcher`**: Enable watch mode for the codegen CLI
-- **`@graphql-codegen/client-preset`**: Client preset for generating type-safe operations
 - **`@graphql-codegen/schema-ast`**: Plugin for generating the schema file from the GraphQL API
   endpoint (optional if you already have a schema file)
 - **`@0no-co/graphqlsp`**: TypeScript language server plugin for GraphQL auto-complete (optional)
@@ -51,7 +48,7 @@ To get started, install the following dependencies
 Feel free to omit the optional dependencies if you don't need them.
 
 ```sh npm2yarn
-npm install --save-dev @graphql-codegen/cli @parcel/watcher @graphql-codegen/client-preset
+npm install --save-dev @graphql-codegen/cli @parcel/watcher
 npm install --save-dev @graphql-codegen/schema-ast
 npm install --save-dev @0no-co/graphqlsp
 ```
@@ -63,7 +60,7 @@ contents:
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: 'https://graphql.org/graphql/',
   documents: ['src/**/*.ts'],
   ignoreNoDocuments: true,
   generates: {
@@ -90,6 +87,7 @@ Next, we adjust our `tsconfig.json` to load `@0no-co/graphqlsp`.
 ```json filename="tsconfig.json"
 {
   "compilerOptions": {
+    "target": "ES6", // Requires ES6 and above
     "plugins": [
       {
         "name": "@0no-co/graphqlsp",
@@ -121,12 +119,12 @@ npx graphql-codegen --config codegen.ts
 ```
 
 After running the command, you should see a new `schema.graphql` file in the root of your project
-and a new folder `src/graphql` with the generated client preset code.
+and a new folder `src/graphql` with the generated client code.
 
 You almost never need to touch the files within `src/graphql` as they are generated and overwritten
 by GraphQL Code generator.
 
-We will now use the generated client preset code to write our type-safe GraphQL operations.
+We will now use the generated client code to write our type-safe GraphQL operations.
 
 ## Writing GraphQL Operations
 
@@ -183,20 +181,21 @@ We can build a simple wrapper around `fetch` that takes a `TypedDocumentString` 
 returns a typed response.
 
 ```typescript filename="src/graphql/execute.ts"
+import type { ExecutionResult } from 'graphql'
 import type { TypedDocumentString } from './graphql'
 
 export async function execute<TResult, TVariables>(
   query: TypedDocumentString<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ) {
-  const response = await fetch('https://swapi-graphql.netlify.app/.netlify/functions/index', {
+  const response = await fetch('https://graphql.org/graphql/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/graphql-response+json'
     },
     body: JSON.stringify({
-      query: document,
+      query,
       variables
     })
   })
@@ -205,7 +204,7 @@ export async function execute<TResult, TVariables>(
     throw new Error('Network response was not ok')
   }
 
-  return response.json() as TResult
+  return response.json() as ExecutionResult<TResult>
 }
 ```
 
@@ -238,10 +237,10 @@ TypeScript project.
 
 ## Conclusion
 
-In this article, we learned how to use the GraphQL Code Generator client preset with vanilla
+In this article, we learned how to use GraphQL Code Generator with vanilla
 TypeScript.
 
-We set up the GraphQL Code Generator client preset and wrote a simple operation that is fully typed.
+We set up the GraphQL Code Generator for clients and wrote a simple operation that is fully typed.
 
 You could now integrate the `execute` function into
 [TanStack Query (React Query)](https://tanstack.com/query) or SWR.

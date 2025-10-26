@@ -1,11 +1,10 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { buildHTTPExecutor } from '@graphql-tools/executor-http';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { ASTNode, ExecutionResult, Kind, OperationDefinitionNode } from 'graphql';
 import useSWR from 'swr';
 
 const executor = buildHTTPExecutor({
-  endpoint: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  endpoint: 'https://graphql.org/graphql/',
 });
 
 const isOperationDefinition = (def: ASTNode): def is OperationDefinitionNode => def.kind === Kind.OPERATION_DEFINITION;

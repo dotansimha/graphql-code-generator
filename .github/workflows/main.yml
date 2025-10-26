@@ -25,11 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
-        uses: actions/checkout@v3
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - name: Prettier Check
         run: yarn prettier:check
   dev-tests-old:
@@ -42,11 +40,9 @@ jobs:
           - 'esm'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - name: Build
         run: yarn build
         env:
@@ -56,48 +52,69 @@ jobs:
           yarn run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
   dev-tests:
-    name: Examples
+    name: Examples - Normal
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.65.0
-          target: wasm32-wasi
-          override: true
-      - name: Build SWC plugin
-        working-directory: ./packages/presets/swc-plugin
-        run: |
-          npm run build-wasm
       - name: Build
         run: yarn build
         env:
           CI: true
       - name: Generate and Diff Codegen Artifacts
         run: |
-          yarn examples:codegen
+          EXAMPLE_TYPE=normal yarn examples:codegen
           git diff --exit-code -- examples/
       - name: Build Examples
         run: |
-          yarn examples:build
+          EXAMPLE_TYPE=normal yarn examples:build
       - name: End2End Test Examples
         run: |
-          yarn examples:test:end2end
+          EXAMPLE_TYPE=normal yarn examples:test:end2end
+
+  # TODO: Remove all SWC test setup and references as that has been moved to https://github.com/swc-project/plugins/tree/main/contrib/graphql-codegen-client-preset
+  # dev-tests-swc:
+  #   name: Examples - SWC
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+  #     - name: Setup env
+  #       uses: the-guild-org/shared-config/setup@main
+  #     - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
+  #       with:
+  #         toolchain: 1.65.0
+  #         target: wasm32-wasi
+  #         override: true
+  #     - name: Build SWC plugin
+  #       working-directory: ./packages/presets/swc-plugin
+  #       run: |
+  #         npm run build-wasm
+  #     - name: Build
+  #       run: yarn build
+  #       env:
+  #         CI: true
+  #     - name: Generate and Diff Codegen Artifacts
+  #       run: |
+  #         EXAMPLE_TYPE=swc yarn examples:codegen
+  #         git diff --exit-code -- examples/
+  #     - name: Build Examples
+  #       run: |
+  #         EXAMPLE_TYPE=swc yarn examples:build
+  #     - name: End2End Test Examples
+  #       run: |
+  #         EXAMPLE_TYPE=swc yarn examples:test:end2end
+
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
       - name: Build
         run: yarn build
         env:
@@ -114,15 +131,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
-        node_version: [16, 18, 20]
+        node_version: [20, 22, 24]
         graphql_version: [15, 16]
         include:
-          - node-version: 14
+          - node-version: 20
             os: windows-latest
             graphql_version: 16
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
@@ -131,13 +148,13 @@ jobs:
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
         run: yarn
-      - name: Cache Jest
-        uses: actions/cache@v3
+      - name: Cache Vitest
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
         with:
-          path: .cache/jest
-          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-${{hashFiles('yarn.lock')}}
+          path: node_modules/.vite
+          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-vitest-${{hashFiles('yarn.lock')}}
           restore-keys: |
-            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-jest-
+            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-vitest-
       - name: Build
         run: yarn build
       - name: Test
@@ -148,8 +165,8 @@ jobs:
     name: Build and Unit Test SWC Plugin
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
         with:
           toolchain: 1.65.0
           target: wasm32-wasi

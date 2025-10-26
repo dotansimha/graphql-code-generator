@@ -1,5 +1,100 @@
 # @graphql-codegen/cli
 
+## 6.0.1
+
+### Patch Changes
+
+- [#10468](https://github.com/dotansimha/graphql-code-generator/pull/10468) [`cb1b9d9`](https://github.com/dotansimha/graphql-code-generator/commit/cb1b9d99c413a96fde6c9af0b2315b3ad721ee4e) Thanks [@eddeee888](https://github.com/eddeee888)! - In watch mode, do not write output on failure
+
+  Previously, on partial or full failure, watch mode still write to output. However, since the output'd be an empty array, it will then call `removeStaleFiles` internally to remove all previously generated files.
+
+  This patch puts a temporary fix to avoid writing output on any failure to fix the described behaviour.
+
+  This also means the `config.allowPartialOutputs` does not work in watch mode for now.
+
+## 6.0.0
+
+### Major Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Drop @graphql-tools/prisma-loader
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Add `allowPartialOutputs` flag to partially write successful generation to files
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Migrate inquirer to @inquirer/prompts
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Bump dependencies major versions:
+
+  - cosmiconfig v9
+  - debounce v2
+  - jiti v2.3
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Bump listr2 to v9
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Drop Node 18 support
+
+### Patch Changes
+
+- Updated dependencies [[`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)]:
+  - @graphql-codegen/plugin-helpers@6.0.0
+  - @graphql-codegen/client-preset@5.0.0
+  - @graphql-codegen/core@5.0.0
+
+## 5.0.7
+
+### Patch Changes
+
+- [#10150](https://github.com/dotansimha/graphql-code-generator/pull/10150) [`e324382`](https://github.com/dotansimha/graphql-code-generator/commit/e3243824cfe0d7ab463cf0d5a6455715510959be) Thanks [@ArminWiebigke](https://github.com/ArminWiebigke)! - Allow functions to be passed as valid values for `UrlSchemaOptions.customFetch`. This was already possible, but the type definitions did not reflect that correctly.
+
+- [#10358](https://github.com/dotansimha/graphql-code-generator/pull/10358) [`157c823`](https://github.com/dotansimha/graphql-code-generator/commit/157c8236320f00b06c470e2289315179119d4504) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove extraneous error stacktrace if fails to load `@parcel/watcher`
+
+- Updated dependencies [[`e324382`](https://github.com/dotansimha/graphql-code-generator/commit/e3243824cfe0d7ab463cf0d5a6455715510959be), [`98392fc`](https://github.com/dotansimha/graphql-code-generator/commit/98392fc5d91035b5b5b0ffdefd78d0398762a523)]:
+  - @graphql-codegen/plugin-helpers@5.1.1
+  - @graphql-codegen/client-preset@4.8.2
+
+## 5.0.6
+
+### Patch Changes
+
+- [#10338](https://github.com/dotansimha/graphql-code-generator/pull/10338) [`5d1c4e1`](https://github.com/dotansimha/graphql-code-generator/commit/5d1c4e127d860ff89590fd3a1d01493b3289ad00) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix ignoreNoDocuments=true swallowing all errors
+
+- [#10333](https://github.com/dotansimha/graphql-code-generator/pull/10333) [`10ab58d`](https://github.com/dotansimha/graphql-code-generator/commit/10ab58dbc183dff460c410ffc7cc759186f91d4c) Thanks [@eddeee888](https://github.com/eddeee888)! - Improve syntax error messages whilst loading schema/document
+
+- Updated dependencies [[`c5efba3`](https://github.com/dotansimha/graphql-code-generator/commit/c5efba34a7b422720be9ce32937dd19fb0784bae)]:
+  - @graphql-codegen/client-preset@4.8.1
+
+## 5.0.5
+
+### Patch Changes
+
+- [#10282](https://github.com/dotansimha/graphql-code-generator/pull/10282) [`7d7760d`](https://github.com/dotansimha/graphql-code-generator/commit/7d7760d55c21a99417c38ce5e77a6de22b5effcc) Thanks [@oprypkhantc](https://github.com/oprypkhantc)! - Fix watcher watching project root when schema URL is used
+
+## 5.0.4
+
+### Patch Changes
+
+- [#10248](https://github.com/dotansimha/graphql-code-generator/pull/10248) [`72eb86f`](https://github.com/dotansimha/graphql-code-generator/commit/72eb86f49bd86da6308d80f9401bcc09478ca886) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.10.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.10.0) (from `^0.9.20`, in `dependencies`)
+
+- [#10227](https://github.com/dotansimha/graphql-code-generator/pull/10227) [`6f1741a`](https://github.com/dotansimha/graphql-code-generator/commit/6f1741af03689f8146178637ecabec18347e9331) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix schema pointers type to allow an array of pointers
+
+- Updated dependencies [[`8737dd8`](https://github.com/dotansimha/graphql-code-generator/commit/8737dd86b4ce3d14234a515fa494736bf7ec35dd), [`ed71811`](https://github.com/dotansimha/graphql-code-generator/commit/ed71811ace083be61c575609e361c629ed7c1740)]:
+  - @graphql-codegen/client-preset@4.6.0
+
+## 5.0.3
+
+### Patch Changes
+
+- [#10069](https://github.com/dotansimha/graphql-code-generator/pull/10069) [`8bb34e7`](https://github.com/dotansimha/graphql-code-generator/commit/8bb34e7cd23a8891313828291c9f2edd6a3b67bc) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.9.20` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.9.20) (from `^0.8.0`, in `dependencies`)
+  - Updated dependency [`graphql-config@^5.1.1` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.1.1) (from `^5.0.2`, in `dependencies`)
+
+- [`e0092b5`](https://github.com/dotansimha/graphql-code-generator/commit/e0092b548f51c95be19c232515cf9a72873e7b83) Thanks [@ardatan](https://github.com/ardatan)! - Bump whatwg-node and graphql-config
+
+- Updated dependencies [[`8471a18`](https://github.com/dotansimha/graphql-code-generator/commit/8471a180cd61dc03dedace87876c5973b09b35f8), [`67e7556`](https://github.com/dotansimha/graphql-code-generator/commit/67e75561a3e862f26cfbb40e8ec5a08f821f9ddf)]:
+  - @graphql-codegen/client-preset@4.4.0
+
 ## 5.0.2
 
 ### Patch Changes
@@ -192,7 +287,7 @@
   To use this feature, you can write `documentTransforms` as follows:
 
   ```ts
-  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -204,21 +299,21 @@
           {
             transform: ({ documents }) => {
               // Make some changes to the documents
-              return documents;
-            },
-          },
-        ],
-      },
-    },
-  };
-  export default config;
+              return documents
+            }
+          }
+        ]
+      }
+    }
+  }
+  export default config
   ```
 
   For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the following code:
 
   ```js
-  import type { CodegenConfig } from '@graphql-codegen/cli';
-  import { visit } from 'graphql';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
+  import { visit } from 'graphql'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -233,19 +328,19 @@
                 documentFile.document = visit(documentFile.document, {
                   Directive: {
                     leave(node) {
-                      if (node.name.value === 'localOnlyDirective') return null;
-                    },
-                  },
-                });
-                return documentFile;
-              });
-            },
-          },
-        ],
-      },
-    },
-  };
-  export default config;
+                      if (node.name.value === 'localOnlyDirective') return null
+                    }
+                  }
+                })
+                return documentFile
+              })
+            }
+          }
+        ]
+      }
+    }
+  }
+  export default config
   ```
 
   DocumentTransform can also be specified by file name. You can create a custom file for a specific transformation and pass it to `documentTransforms`.
@@ -256,15 +351,15 @@
   module.exports = {
     transform: ({ documents }) => {
       // Make some changes to the documents
-      return documents;
-    },
-  };
+      return documents
+    }
+  }
   ```
 
   Then, you can specify the file name as follows:
 
   ```ts
-  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import type { CodegenConfig } from '@graphql-codegen/cli'
 
   const config: CodegenConfig = {
     schema: 'https://localhost:4000/graphql',
@@ -272,11 +367,11 @@
     generates: {
       './src/gql/': {
         preset: 'client',
-        documentTransforms: ['./my-document-transform.js'],
-      },
-    },
-  };
-  export default config;
+        documentTransforms: ['./my-document-transform.js']
+      }
+    }
+  }
+  export default config
   ```
 
 ### Patch Changes

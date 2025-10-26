@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1302,13 +1302,17 @@ export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
 {
-  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+  __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
+  private value: string;
+  public __meta__?: Record<string, any> | undefined;
 
-  constructor(private value: string, public __meta__?: Record<string, any>) {
+  constructor(value: string, __meta__?: Record<string, any> | undefined) {
     super(value);
+    this.value = value;
+    this.__meta__ = __meta__;
   }
 
-  toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+  override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
     return this.value;
   }
 }
