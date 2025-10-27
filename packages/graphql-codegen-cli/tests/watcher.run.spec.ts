@@ -114,7 +114,7 @@ describe('watcher run', () => {
     await waitForNextEvent();
     expect(onNextMock).toHaveBeenCalledTimes(2);
 
-    // 2. Subsequent run 2: incorrect document file, so `onNext` is NOT called
+    // 3. Subsequent run 2: incorrect document file, so `onNext` is NOT called
     writeFileSync(
       documentFile.absolute,
       /* GraphQL */ `
