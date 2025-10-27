@@ -1,5 +1,18 @@
 # @graphql-codegen/gql-tag-operations
 
+## 5.0.3
+
+### Patch Changes
+
+- [#10032](https://github.com/dotansimha/graphql-code-generator/pull/10032) [`1debf51`](https://github.com/dotansimha/graphql-code-generator/commit/1debf51aa714e2a53256419c549f6770b6c894a6) Thanks [@shota-tech](https://github.com/shota-tech)! - Change map of operations from an empty array to an empty object when no operations are found
+
+## 5.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26)]:
+  - @graphql-codegen/visitor-plugin-common@6.1.0
+
 ## 5.0.1
 
 ### Patch Changes

@@ -1,5 +1,29 @@
 # @graphql-codegen/client-preset
 
+## 5.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`1debf51`](https://github.com/dotansimha/graphql-code-generator/commit/1debf51aa714e2a53256419c549f6770b6c894a6)]:
+  - @graphql-codegen/gql-tag-operations@5.0.3
+
+## 5.1.0
+
+### Minor Changes
+
+- [#10459](https://github.com/dotansimha/graphql-code-generator/pull/10459) [`87184aa`](https://github.com/dotansimha/graphql-code-generator/commit/87184aa240cb6209e7b3ade13aa54da6ff0b3dff) Thanks [@eddeee888](https://github.com/eddeee888)! - Forward immutableTypes to client preset config
+
+## 5.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26)]:
+  - @graphql-codegen/visitor-plugin-common@6.1.0
+  - @graphql-codegen/gql-tag-operations@5.0.2
+  - @graphql-codegen/typescript-operations@5.0.2
+  - @graphql-codegen/typed-document-node@6.0.2
+  - @graphql-codegen/typescript@5.0.2
+
 ## 5.0.2
 
 ### Patch Changes

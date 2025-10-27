@@ -15,7 +15,14 @@ const hash = (content: string): string => createHash('sha1').update(content).dig
 export async function generate(
   input: CodegenContext | (Types.Config & { cwd?: string }),
   saveToFile = true
-): Promise<Types.FileOutput[] | any> {
+): Promise<
+  | Types.FileOutput[]
+  /**
+   * When this function runs in watch mode, it'd return an empty promise that doesn't resolve until the watcher exits
+   * FIXME: this effectively makes the result `any`, which loses type-hints
+   */
+  | any
+> {
   const context = ensureContext(input);
   const config = context.getConfig();
   await context.profiler.run(() => lifecycleHooks(config.hooks).afterStart(), 'Lifecycle: afterStart');
@@ -43,7 +50,7 @@ export async function generate(
 
   const recentOutputHash = new Map<string, string>();
 
-  async function writeOutput(generationResult: Types.FileOutput[]) {
+  async function writeOutput(generationResult: Types.FileOutput[]): Promise<Types.FileOutput[]> {
     if (!saveToFile) {
       return generationResult;
     }

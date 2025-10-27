@@ -1,5 +1,5 @@
 import { join, isAbsolute, relative, resolve, sep } from 'path';
-import { Options } from '@parcel/watcher';
+import type { Options } from '@parcel/watcher';
 import isGlob from 'is-glob';
 import type { Mock } from 'vitest';
 
@@ -22,7 +22,7 @@ interface MockWatcher {
 
 /**
  * Helper function for asserting that multiple paths did or did not trigger a build,
- * and for asserting the values of paths and globs passed to {@link ParcelWatcher.Options}`["ignore"]`
+ * and for asserting the values of paths and globs passed to {@link Options}`["ignore"]`
  */
 export const assertBuildTriggers = async (
   mockWatcher: MockWatcher,
@@ -224,7 +224,7 @@ const assertParcelWouldIgnoreGlob = (
 };
 
 /**
- * Given a path, and the `ignore` option passed to the mocked {@link ParcelWatcher.Options},
+ * Given a path, and the `ignore` option passed to the mocked {@link Options},
  * assert that ParcelWatcher "would" ignore the path if given it as part of the ignore option.
  *
  * Note that ParcelWatcher expects paths relative from the watchDirectory, but

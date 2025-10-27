@@ -210,4 +210,50 @@ describe('TypeScript Resolvers Plugin + Apollo Federation - Interface', () => {
       "
     `);
   });
+
+  it('generates normal Interface fields with addInterfaceFieldResolverTypes:true', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        me: Person
+      }
+
+      interface Person @key(fields: "id") {
+        id: ID!
+        name: PersonName!
+      }
+
+      type User implements Person @key(fields: "id") {
+        id: ID!
+        name: PersonName!
+      }
+
+      type Admin implements Person @key(fields: "id") {
+        id: ID!
+        name: PersonName!
+        canImpersonate: Boolean!
+      }
+
+      type PersonName {
+        first: String!
+        last: String!
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+        addInterfaceFieldResolverTypes: true,
+      },
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person'], FederationReferenceType extends FederationReferenceTypes['Person'] = FederationReferenceTypes['Person']> = {
+        __resolveType: TypeResolveFn<'User' | 'Admin', ParentType, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Person']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+        name?: Resolver<ResolversTypes['PersonName'], ParentType, ContextType>;
+      };
+    `);
+  });
 });
