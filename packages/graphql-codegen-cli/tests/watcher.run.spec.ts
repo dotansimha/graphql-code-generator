@@ -51,8 +51,8 @@ const setupMockWatcher = async (
   return { stopWatching };
 };
 
-describe('watcher run', () => {
-  test('on watcher subsequent codegen run, it does not call onNext on error', async () => {
+describe('Watch runs', () => {
+  test('calls onNext correctly on initial runs and subsequent runs', async () => {
     const onNextMock = vi.fn();
 
     const { testDir, schemaFile, documentFile } = setupTestFiles();

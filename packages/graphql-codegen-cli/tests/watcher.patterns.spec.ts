@@ -33,7 +33,7 @@ const setupMockWatcher = async (
   return { stopWatching, dispatchChange };
 };
 
-describe('Watch targets', () => {
+describe('Watch patterns', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
