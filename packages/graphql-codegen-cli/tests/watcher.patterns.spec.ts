@@ -10,8 +10,6 @@ const unsubscribeMock = vi.fn();
 const subscribeMock = vi.fn();
 let subscribeCallbackMock: Mock<SubscribeCallback>;
 
-// FIXME: this mocks out the main functionality which is triggering the codegen
-// This is not great because we cannot test the actual watch functionality
 vi.mock('@parcel/watcher', () => ({
   subscribe: subscribeMock.mockImplementation((watchDirectory: string, subscribeCallback: SubscribeCallback) => {
     subscribeCallbackMock = vi.fn(subscribeCallback);
