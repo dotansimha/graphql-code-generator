@@ -14,6 +14,10 @@ const inputFile = join(__dirname, '../temp/input-graphql.tsx');
 const outputFile = join(__dirname, '../temp/output-graphql.tsx');
 
 describe('generate-and-save', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
   test('allow to specify overwrite for specific output (should write file)', async () => {
     const filename = 'overwrite.ts';
     const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
@@ -193,7 +197,7 @@ describe('generate-and-save', () => {
 
     const output = await generate(
       {
-        schema: `./tests/test-files/schema-dir/gatsby-and-custom-parsers/apollo-server.ts`,
+        schema: 'packages/graphql-codegen-cli/tests/test-files/schema-dir/gatsby-and-custom-parsers/apollo-server.ts',
         generates: {
           [filename]: {
             plugins: ['typescript'],
@@ -254,7 +258,7 @@ describe('generate-and-save', () => {
         await generate(
           {
             verbose: true,
-            schema: './tests/test-files/schema-dir/error-schema.graphql',
+            schema: './packages/graphql-codegen-cli/tests/test-files/schema-dir/error-schema.graphql',
             generates: {
               'src/test.ts': {
                 plugins: ['typescript'],
@@ -266,10 +270,10 @@ describe('generate-and-save', () => {
       } catch {
         const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
         expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
-          "[FAILED] Failed to load schema from ./tests/test-files/schema-dir/error-schema.graphql:
+          "[FAILED] Failed to load schema from ./packages/graphql-codegen-cli/tests/test-files/schema-dir/error-schema.graphql:
           [FAILED] Syntax Error: Expected Name, found "!".
 
-          [FAILED] ${cwd}/tests/test-files/schema-dir/error-schema.graphql:2:15
+          [FAILED] ${cwd}/packages/graphql-codegen-cli/tests/test-files/schema-dir/error-schema.graphql:2:15
           [FAILED] 1 | type Query {
           [FAILED] 2 |   foo: String!!
           [FAILED]   |               ^
@@ -297,8 +301,8 @@ describe('generate-and-save', () => {
         await generate(
           {
             verbose: true,
-            schema: './tests/test-files/schema-dir/schema.ts',
-            documents: './tests/test-files/error-document.graphql',
+            schema: 'packages/graphql-codegen-cli/tests/test-files/schema-dir/schema.ts',
+            documents: 'packages/graphql-codegen-cli/tests/test-files/error-document.graphql',
             generates: {
               'src/test.ts': {
                 plugins: ['typescript'],
@@ -310,10 +314,10 @@ describe('generate-and-save', () => {
       } catch {
         const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
         expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
-          "[FAILED] Failed to load documents from ./tests/test-files/error-document.graphql:
+          "[FAILED] Failed to load documents from packages/graphql-codegen-cli/tests/test-files/error-document.graphql:
           [FAILED] Syntax Error: Expected "{", found <EOF>.
 
-          [FAILED] ${cwd}/tests/test-files/error-document.graphql:2:1
+          [FAILED] ${cwd}/packages/graphql-codegen-cli/tests/test-files/error-document.graphql:2:1
           [FAILED] 1 | query
           [FAILED] 2 |
           [FAILED]   | ^
@@ -329,8 +333,8 @@ describe('generate-and-save', () => {
         await generate(
           {
             verbose: true,
-            schema: './tests/test-files/schema-dir/schema.ts',
-            documents: './tests/test-files/document-file-does-not-exist.graphql',
+            schema: 'packages/graphql-codegen-cli/tests/test-files/schema-dir/schema.ts',
+            documents: 'packages/graphql-codegen-cli/tests/test-files/document-file-does-not-exist.graphql',
             generates: {
               'src/test.ts': {
                 plugins: ['typescript'],
@@ -343,7 +347,7 @@ describe('generate-and-save', () => {
         expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
           "
           [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
-          [FAILED]         - ./tests/test-files/document-file-does-not-exist.graphql
+          [FAILED]         - packages/graphql-codegen-cli/tests/test-files/document-file-does-not-exist.graphql
           "
         `);
       }
@@ -355,8 +359,8 @@ describe('generate-and-save', () => {
         {
           verbose: true,
           ignoreNoDocuments: true,
-          schema: './tests/test-files/schema-dir/schema.ts',
-          documents: './tests/test-files/document-file-does-not-exist.graphql',
+          schema: 'packages/graphql-codegen-cli/tests/test-files/schema-dir/schema.ts',
+          documents: 'packages/graphql-codegen-cli/tests/test-files/document-file-does-not-exist.graphql',
           generates: {
             'src/test.ts': {
               plugins: ['typescript'],
@@ -373,7 +377,7 @@ describe('generate-and-save', () => {
       expect.assertions(1);
       try {
         const config = await createContext({
-          config: './tests/test-files/graphql.config.no-doc.js',
+          config: 'packages/graphql-codegen-cli/tests/test-files/graphql.config.no-doc.js',
           project: undefined,
           errorsOnly: true,
           overwrite: true,
@@ -398,7 +402,7 @@ describe('generate-and-save', () => {
       const outputErrorMock = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
       vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
       const config = await createContext({
-        config: './tests/test-files/graphql.config.no-doc-ignored.js',
+        config: 'packages/graphql-codegen-cli/tests/test-files/graphql.config.no-doc-ignored.js',
         project: undefined,
         errorsOnly: true,
         overwrite: true,
