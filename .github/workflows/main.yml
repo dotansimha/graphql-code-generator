@@ -161,22 +161,24 @@ jobs:
         run: yarn test
         env:
           CI: true
-  test-rust-swc-plugin:
-    name: Build and Unit Test SWC Plugin
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
-        with:
-          toolchain: 1.65.0
-          target: wasm32-wasi
-          override: true
-      - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-        with:
-          working-directory: ./packages/presets/swc-plugin
-          command: build
-          args: --target wasm32-wasi
-      - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-        with:
-          working-directory: ./packages/presets/swc-plugin
-          command: test
+
+  # TODO: Remove all SWC test setup and references as that has been moved to https://github.com/swc-project/plugins/tree/main/contrib/graphql-codegen-client-preset
+  # test-rust-swc-plugin:
+  #   name: Build and Unit Test SWC Plugin
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+  #     - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
+  #       with:
+  #         toolchain: 1.65.0
+  #         target: wasm32-wasi
+  #         override: true
+  #     - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
+  #       with:
+  #         working-directory: ./packages/presets/swc-plugin
+  #         command: build
+  #         args: --target wasm32-wasi
+  #     - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
+  #       with:
+  #         working-directory: ./packages/presets/swc-plugin
+  #         command: test
