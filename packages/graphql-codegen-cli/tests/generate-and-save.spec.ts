@@ -13,10 +13,25 @@ const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 const inputFile = join(__dirname, '../temp/input-graphql.tsx');
 const outputFile = join(__dirname, '../temp/output-graphql.tsx');
 
+const writeSpy = vi.spyOn(fs, 'writeFile');
+const readSpy = vi.spyOn(fs, 'readFile');
+const outputErrorSpy = vi.spyOn(process.stderr, 'write');
+
 describe('generate-and-save', () => {
+  beforeEach(() => {
+    // We must call .spyOn and .mockReset these individually instead of vi.resetAllMocks
+    // because there's a `vi.spyOn(process, 'cwd').mockImplementation(() => __dirname);` in vitest.setup.ts
+    //
+    // If we called vi.resetAllMocks, the cwd spy is reset too!
+    // That would cause all `schema` and `documents`paths to be from the root of the workspace
+    writeSpy.mockReset();
+    readSpy.mockReset();
+    outputErrorSpy.mockReset();
+  });
+
   test('allow to specify overwrite for specific output (should write file)', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
+    writeSpy.mockImplementation(() => Promise.resolve());
 
     const output = await generate(
       {
@@ -42,10 +57,8 @@ describe('generate-and-save', () => {
 
   test('allow to specify overwrite for specific output (should not write file)', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
-    // forces file to exist
-    const fileReadSpy = vi.spyOn(fs, 'readFile');
-    fileReadSpy.mockImplementation(async () => '');
+    writeSpy.mockImplementation(() => Promise.resolve());
+    readSpy.mockImplementation(async () => ''); // forces file to exist
 
     const output = await generate(
       {
@@ -66,14 +79,14 @@ describe('generate-and-save', () => {
 
     expect(output.length).toBe(1);
     // makes sure it checks if file is there
-    expect(fileReadSpy).toHaveBeenCalledWith(filename);
+    expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
     expect(writeSpy).not.toHaveBeenCalled();
   });
 
   test('should use global overwrite option and write a file', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
+    writeSpy.mockImplementation(() => Promise.resolve());
 
     const output = await generate(
       {
@@ -98,10 +111,8 @@ describe('generate-and-save', () => {
 
   test('should use global overwrite option and not write a file', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
-    // forces file to exist
-    const fileReadSpy = vi.spyOn(fs, 'readFile');
-    fileReadSpy.mockImplementation(async () => '');
+    writeSpy.mockImplementation(() => Promise.resolve());
+    readSpy.mockImplementation(async () => ''); // forces file to exist
 
     const output = await generate(
       {
@@ -121,15 +132,15 @@ describe('generate-and-save', () => {
 
     expect(output.length).toBe(1);
     // makes sure it checks if file is there
-    expect(fileReadSpy).toHaveBeenCalledWith(filename);
+    expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
     expect(writeSpy).not.toHaveBeenCalled();
   });
 
   test('should overwrite a file by default', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
-    const readSpy = vi.spyOn(fs, 'readFile').mockImplementation(() => Promise.resolve(''));
+    writeSpy.mockImplementation(() => Promise.resolve());
+    readSpy.mockImplementation(() => Promise.resolve(''));
     readSpy.mockImplementation(async _f => '');
 
     const output = await generate(
@@ -189,11 +200,11 @@ describe('generate-and-save', () => {
   });
   test('should extract a document from the gql tag (imported from apollo-server)', async () => {
     const filename = 'overwrite.ts';
-    const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
+    writeSpy.mockImplementation(() => Promise.resolve());
 
     const output = await generate(
       {
-        schema: `./tests/test-files/schema-dir/gatsby-and-custom-parsers/apollo-server.ts`,
+        schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/apollo-server.ts',
         generates: {
           [filename]: {
             plugins: ['typescript'],
@@ -210,7 +221,7 @@ describe('generate-and-save', () => {
   });
   test('should allow to alter the content with the beforeOneFileWrite hook', async () => {
     const filename = 'modify.ts';
-    const writeSpy = vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
+    writeSpy.mockImplementation(() => Promise.resolve());
 
     const output = await generate(
       {
@@ -249,7 +260,7 @@ describe('generate-and-save', () => {
 
     test('Schema syntax error - should print native GraphQLError', async () => {
       expect.assertions(1);
-      const outputErrorMock = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+      outputErrorSpy.mockImplementation(() => true);
       try {
         await generate(
           {
@@ -265,7 +276,7 @@ describe('generate-and-save', () => {
         );
       } catch {
         const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
-        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "[FAILED] Failed to load schema from ./tests/test-files/schema-dir/error-schema.graphql:
           [FAILED] Syntax Error: Expected Name, found "!".
 
@@ -292,7 +303,7 @@ describe('generate-and-save', () => {
 
     test('Document syntax error - should print native GraphQLError', async () => {
       expect.assertions(1);
-      const outputErrorMock = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+      outputErrorSpy.mockImplementation(() => true);
       try {
         await generate(
           {
@@ -309,7 +320,7 @@ describe('generate-and-save', () => {
         );
       } catch {
         const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
-        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "[FAILED] Failed to load documents from ./tests/test-files/error-document.graphql:
           [FAILED] Syntax Error: Expected "{", found <EOF>.
 
@@ -324,7 +335,7 @@ describe('generate-and-save', () => {
 
     test('No documents found - should throw error by default', async () => {
       expect.assertions(1);
-      const outputErrorMock = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+      outputErrorSpy.mockImplementation(() => true);
       try {
         await generate(
           {
@@ -340,7 +351,7 @@ describe('generate-and-save', () => {
           false
         );
       } catch {
-        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "
           [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
           [FAILED]         - ./tests/test-files/document-file-does-not-exist.graphql
@@ -350,7 +361,7 @@ describe('generate-and-save', () => {
     });
 
     test('No documents found - should not fail if ignoreNoDocuments=true', async () => {
-      const outputErrorMock = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+      outputErrorSpy.mockImplementation(() => true);
       await generate(
         {
           verbose: true,
@@ -365,11 +376,11 @@ describe('generate-and-save', () => {
         },
         false
       );
-      expect(outputErrorMock).not.toHaveBeenCalled();
+      expect(outputErrorSpy).not.toHaveBeenCalled();
     });
 
     test('No documents found - GraphQL Config - should throw error by default', async () => {
-      const outputErrorMock = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+      outputErrorSpy.mockImplementation(() => true);
       expect.assertions(1);
       try {
         const config = await createContext({
@@ -385,7 +396,7 @@ describe('generate-and-save', () => {
 
         await generate(config, false);
       } catch {
-        expect(outputErrorMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "
           [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
           [FAILED]         - ../test-documents/empty.graphql
@@ -395,7 +406,7 @@ describe('generate-and-save', () => {
     });
 
     test('No documents found - GraphQL Config - should not fail if ignoreNoDocuments=true', async () => {
-      const outputErrorMock = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+      outputErrorSpy.mockImplementation(() => true);
       vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
       const config = await createContext({
         config: './tests/test-files/graphql.config.no-doc-ignored.js',
@@ -410,7 +421,7 @@ describe('generate-and-save', () => {
 
       await generate(config, false);
 
-      expect(outputErrorMock).not.toHaveBeenCalled();
+      expect(outputErrorSpy).not.toHaveBeenCalled();
     });
   });
 
