@@ -6,6 +6,7 @@ export default mergeConfig(
   defineProject({
     test: {
       name: 'cli',
+      pool: 'forks',
       setupFiles: './vitest.setup.ts',
       include: ['**/*.spec.ts'],
       server: {
