@@ -6,8 +6,6 @@ export default mergeConfig(
   defineProject({
     test: {
       name: 'cli',
-      maxWorkers: 1,
-      isolate: false,
       setupFiles: './vitest.setup.ts',
       include: ['**/*.spec.ts'],
       server: {

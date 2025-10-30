@@ -10,7 +10,7 @@ import { CodegenContext } from '../src/config.js';
  * e.g. watcher subscription setup, watcher to react to change/create events, etc.
  */
 const waitForNextEvent = async () => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  return await new Promise(resolve => setTimeout(resolve, 500));
 };
 
 type TestFilePaths = { absolute: string; relative: string };
@@ -39,22 +39,20 @@ const setupTestFiles = (): { testDir: string; schemaFile: TestFilePaths; documen
   };
 };
 
+const onNextMock = vi.fn();
+
 const setupMockWatcher = async (
   codegenContext: ConstructorParameters<typeof CodegenContext>[0],
   onNext: Mock = vi.fn().mockResolvedValue([])
 ) => {
   const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
-
   // After creating watcher, wait for a tick for subscription to be completely set up
   await waitForNextEvent();
-
   return { stopWatching };
 };
 
 describe('Watch runs', () => {
   test('calls onNext correctly on initial runs and subsequent runs', async () => {
-    const onNextMock = vi.fn();
-
     const { testDir, schemaFile, documentFile } = setupTestFiles();
     writeFileSync(
       schemaFile.absolute,
@@ -79,7 +77,7 @@ describe('Watch runs', () => {
         }
       `
     );
-
+    await waitForNextEvent();
     const { stopWatching } = await setupMockWatcher(
       {
         filepath: path.join(testDir, 'codegen.ts'),
@@ -131,5 +129,7 @@ describe('Watch runs', () => {
     expect(onNextMock).toHaveBeenCalledTimes(2);
 
     await stopWatching();
+
+    await waitForNextEvent();
   });
 });

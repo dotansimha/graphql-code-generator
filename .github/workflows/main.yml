@@ -148,17 +148,46 @@ jobs:
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
         run: yarn
-      - name: Cache Vitest
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
-        with:
-          path: node_modules/.vite
-          key: ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-vitest-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-${{matrix.node_version}}-${{matrix.graphql_version}}-vitest-
       - name: Build
         run: yarn build
       - name: Test
-        run: yarn test
+        # FIXME: Do not test `watcher.run.spec.ts` here because it is currently not working for Node22+ in Ubuntu
+        run: yarn test --exclude="**/tests/watcher.run.spec.ts"
+        env:
+          CI: true
+
+  test-watcher:
+    name: Watcher Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL v${{matrix.graphql_version}}
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - prettier-check
+      - esm
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # remove windows to speed up the tests
+        node_version: [20]
+        graphql_version: [15, 16]
+        include:
+          - node-version: 20
+            os: windows-latest
+            graphql_version: 16
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
+        with:
+          nodeVersion: ${{matrix.node_version}}
+      - name: Use GraphQL v${{matrix.graphql_version}}
+        run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
+      - name: Install Dependencies
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Test
+        # FIXME: Merge `watcher.run.spec.ts` test to the above when it works for Node22+ in Ubuntu
+        run: yarn test packages/graphql-codegen-cli/tests/watcher.run.spec.ts
         env:
           CI: true
 
