@@ -536,7 +536,7 @@ export namespace Types {
      */
     hooks?: Partial<LifecycleHooksDefinition>;
     /**
-     * @description Alows to raise errors if any matched files are not valid GraphQL. Default: false.
+     * @description Allows to raise errors if any matched files are not valid GraphQL. Default: false.
      */
     noSilentErrors?: boolean;
     /**

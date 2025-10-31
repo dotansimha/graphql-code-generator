@@ -625,7 +625,7 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
         content: `
     const resolvers: QueryResolvers = {
       something: (root, args, context, info) => {
-        return args.arg; // This should work becuase "args.arg" is now forced
+        return args.arg; // This should work because "args.arg" is now forced
       }
     };`,
       },

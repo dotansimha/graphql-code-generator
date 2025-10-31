@@ -757,7 +757,7 @@ describe('Watch targets', () => {
           './fuzz/some-other-bar/schemas/never-watch-schema.graphql', // excluded by local watchPattern group
           //
           // globally negated paths should be excluded even when a local pattern matches them
-          './fuzz/alphabet/queries/exclude-watch-everywhere.graphql', // included in types-no-sigma.ts, but globaly excluded
+          './fuzz/alphabet/queries/exclude-watch-everywhere.graphql', // included in types-no-sigma.ts, but globally excluded
           'fuzz/global-beats-local/exclude-watch-everywhere.graphql',
           'fuzz/global-beats-local/exclude-doc-everywhere.graphql',
           'fuzz/global-beats-local/exclude-schema-everywhere.graphql',

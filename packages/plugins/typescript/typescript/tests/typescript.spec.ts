@@ -155,7 +155,7 @@ describe('TypeScript', () => {
       };`);
     });
 
-    it('Should work with inteface and inteface fields', async () => {
+    it('Should work with interface and interface fields', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface Node {
           "the id"
@@ -486,7 +486,7 @@ describe('TypeScript', () => {
       };`);
     });
 
-    it('Should work with inteface and inteface fields', async () => {
+    it('Should work with interface and interface fields', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface Node {
           "the id"
@@ -1846,7 +1846,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should extend mutiple interfaces', async () => {
+    it('Should extend multiple interfaces', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface MyInterface1 {
           id: ID!

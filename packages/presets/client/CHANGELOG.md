@@ -190,7 +190,7 @@
 
 ### Minor Changes
 
-- [#10136](https://github.com/dotansimha/graphql-code-generator/pull/10136) [`3fd4486`](https://github.com/dotansimha/graphql-code-generator/commit/3fd4486a548c27099377c7bd696a22d1638227f4) Thanks [@wxt2005](https://github.com/wxt2005)! - foward skipTypeNameForRoot to client-preset
+- [#10136](https://github.com/dotansimha/graphql-code-generator/pull/10136) [`3fd4486`](https://github.com/dotansimha/graphql-code-generator/commit/3fd4486a548c27099377c7bd696a22d1638227f4) Thanks [@wxt2005](https://github.com/wxt2005)! - forward skipTypeNameForRoot to client-preset
 
 ### Patch Changes
 
@@ -394,7 +394,7 @@
 
 ### Minor Changes
 
-- [#9562](https://github.com/dotansimha/graphql-code-generator/pull/9562) [`5beee9794`](https://github.com/dotansimha/graphql-code-generator/commit/5beee9794de208fed17e516a259535f56d626c9d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add the `addTypenameSelectionDocumentTransform` for automatically adding `__typename` selections to all objct type selection sets.
+- [#9562](https://github.com/dotansimha/graphql-code-generator/pull/9562) [`5beee9794`](https://github.com/dotansimha/graphql-code-generator/commit/5beee9794de208fed17e516a259535f56d626c9d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add the `addTypenameSelectionDocumentTransform` for automatically adding `__typename` selections to all object type selection sets.
 
   This is useful for GraphQL Clients such as Apollo Client or urql that need typename information for their cache to function.
 

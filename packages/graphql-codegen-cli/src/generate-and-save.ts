@@ -83,7 +83,7 @@ export async function generate(
             const currentHash = hash(content);
 
             if (previousHash && currentHash === previousHash) {
-              debugLog(`Skipping file (${result.filename}) writing due to indentical hash...`);
+              debugLog(`Skipping file (${result.filename}) writing due to identical hash...`);
               return;
             }
 
@@ -112,7 +112,7 @@ export async function generate(
               // compare the prettified content with the previous hash
               // to compare the content with an existing prettified file
               if (hash(content) === previousHash) {
-                debugLog(`Skipping file (${result.filename}) writing due to indentical hash after prettier...`);
+                debugLog(`Skipping file (${result.filename}) writing due to identical hash after prettier...`);
                 // the modified content is NOT stored in recentOutputHash
                 // so a diff can already be detected before executing the hook
                 return;
