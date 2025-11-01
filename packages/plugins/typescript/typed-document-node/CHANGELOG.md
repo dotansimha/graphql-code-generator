@@ -1,5 +1,15 @@
 # @graphql-codegen/typed-document-node
 
+## 6.1.0
+
+### Minor Changes
+
+- [#10456](https://github.com/dotansimha/graphql-code-generator/pull/10456) [`655b91d`](https://github.com/dotansimha/graphql-code-generator/commit/655b91dd6d8b5f90eb26cd59d6a3d12c3dccc529) Thanks [@aovens-quantifi](https://github.com/aovens-quantifi)! - feat(typed-document-node): Allow importing operation types
+
+  Adds the `importOperationTypesFrom` option, similar to many other codegen
+  plugins. This allows importing the operation types rather than needing to
+  generate them within this plugin config.
+
 ## 6.0.2
 
 ### Patch Changes

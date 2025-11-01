@@ -98,16 +98,19 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
   }
 
   protected getDocumentNodeSignature(resultType: string, variablesTypes: string, node) {
+    const shouldUseImportPrefix = !!this.config.importOperationTypesFrom;
+    const resultImportPrefix = shouldUseImportPrefix && resultType !== 'unknown' ? 'Types.' : '';
+    const variablesImportPrefix = shouldUseImportPrefix && variablesTypes !== 'unknown' ? 'Types.' : '';
     if (
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.documentNodeImportFragments ||
       this.config.documentMode === DocumentMode.graphQLTag
     ) {
-      return ` as unknown as DocumentNode<${resultType}, ${variablesTypes}>`;
+      return ` as unknown as DocumentNode<${resultImportPrefix}${resultType}, ${variablesImportPrefix}${variablesTypes}>`;
     }
 
     if (this.config.documentMode === DocumentMode.string) {
-      return ` as unknown as TypedDocumentString<${resultType}, ${variablesTypes}>`;
+      return ` as unknown as TypedDocumentString<${resultImportPrefix}${resultType}, ${variablesImportPrefix}${variablesTypes}>`;
     }
 
     return super.getDocumentNodeSignature(resultType, variablesTypes, node);
