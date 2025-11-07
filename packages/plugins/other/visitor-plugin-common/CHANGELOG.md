@@ -1,5 +1,89 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.1.0
+
+### Minor Changes
+
+- [#10449](https://github.com/dotansimha/graphql-code-generator/pull/10449) [`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26) Thanks [@eddeee888](https://github.com/eddeee888)! - Add addInterfaceFieldResolverTypes option to support custom Interface resolver inheritance
+
+## 6.0.1
+
+### Patch Changes
+
+- [#10412](https://github.com/dotansimha/graphql-code-generator/pull/10412) [`accdab6`](https://github.com/dotansimha/graphql-code-generator/commit/accdab69106605241933e9d66d64dc7077656f30) Thanks [@thekevinbrown](https://github.com/thekevinbrown)! - Add special handling for identifiers that consist entirely of _ characters when transformUnderscore is true. This prevents _ values in GraphQL enums from being emitted without identifers in the resulting types.
+
+## 6.0.0
+
+### Major Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGES: Do not generate \_\_isTypeOf for non-implementing types or non-union members
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove deprecated config option `dedupeFragments`
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove NameNode override
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Use Record<PropertyKey, never> instead of {} for empty object type
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Ensure Federation Interfaces have `__resolveReference` if they are resolvable entities
+
+  BREAKING CHANGES: Deprecate `onlyResolveTypeForInterfaces` because majority of use cases cannot implement resolvers in Interfaces.
+  BREAKING CHANGES: Deprecate `generateInternalResolversIfNeeded.__resolveReference` because types do not have `__resolveReference` if they are not Federation entities or are not resolvable. Users should not have to manually set this option. This option was put in to wait for this major version.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Improve Federation Entity's resolvers' parent param type: These types were using reference types inline. This makes it hard to handle mappers. The Parent type now all comes from ParentResolverTypes to make handling mappers and parent types simpler.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Bump dependencies major versions:
+
+  - dependency-graph to v1
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `mappers` usage with Federation
+
+  `mappers` was previously used as `__resolveReference`'s first param (usually called "reference"). However, this is incorrect because `reference` interface comes directly from `@key` and `@requires` directives. This patch fixes the issue by creating a new `FederationTypes` type and use it as the base for federation entity types when being used to type entity references.
+
+  BREAKING CHANGES: No longer generate `UnwrappedObject` utility type, as this was used to support the wrong previously generated type.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Drop Node 18 support
+
+### Minor Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Report to meta user defined objects whether they have isTypeOf resolver
+
+### Patch Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Update @requires type
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fields or object types marked with @external being wrongly generated
+
+- Updated dependencies [[`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)]:
+  - @graphql-codegen/plugin-helpers@6.0.0
+
+## 5.8.0
+
+### Minor Changes
+
+- [#10315](https://github.com/dotansimha/graphql-code-generator/pull/10315) [`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc) Thanks [@eddeee888](https://github.com/eddeee888)! - Implement semanticNonNull custom directive
+
+## 5.7.1
+
+### Patch Changes
+
+- [#10302](https://github.com/dotansimha/graphql-code-generator/pull/10302) [`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix Apollo unmask directive incorrectly generating fragmentRefs
+
+## 5.7.0
+
+### Minor Changes
+
+- [#10270](https://github.com/dotansimha/graphql-code-generator/pull/10270) [`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c) Thanks [@adapap](https://github.com/adapap)! - feat: implement `includeExternalFragments: boolean` option
+
+## 5.6.1
+
+### Patch Changes
+
+- [#10230](https://github.com/dotansimha/graphql-code-generator/pull/10230) [`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix generateInternalResolversIfNeeded.\_\_resolveReference making the resolver required
+
+  `__resolveReference`'s default behaviour when not declared is to pass the ref to subsequent resolvers i.e. becoming the `parent`. So, it means we don't have to make this resolver required.
+
+  This patch makes `__resolveReference` optional when `generateInternalResolversIfNeeded.__resolveReference` is set to true.
+
 ## 5.6.0
 
 ### Minor Changes

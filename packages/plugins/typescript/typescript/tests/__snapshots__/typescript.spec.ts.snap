@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TypeScript should use implementing types as node type - issue #5126 1`] = `
+exports[`TypeScript > should use implementing types as node type - issue #5126 1`] = `
 "/** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }

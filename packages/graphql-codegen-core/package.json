@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/core",
-  "version": "4.0.2",
+  "version": "5.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../jest.config.js"
+    "test": "vitest --no-watch"
   },
   "keywords": [
     "gql",
@@ -37,7 +37,7 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^5.0.3",
+    "@graphql-codegen/plugin-helpers": "^6.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/utils": "^10.0.0",
     "tslib": "~2.6.0"

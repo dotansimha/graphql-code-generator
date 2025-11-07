@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { ExecutionResult } from 'graphql';
 import { useQuery } from '@tanstack/react-query';
 import { TypedDocumentString } from './gql/graphql';
@@ -14,7 +13,7 @@ export function useGraphQL<TResult, TVariables>(
       variables,
     ] as const,
     async ({ queryKey }) => {
-      return fetch('https://swapi-graphql.netlify.app/.netlify/functions/index', {
+      return fetch('https://graphql.org/graphql/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -95,7 +95,10 @@ describe('extractAllFieldsToTypes: true', () => {
         joinDate: any
       };
 
-      export type UserFragment = UserFragment_DummyUser | UserFragment_ActiveUser;
+      export type UserFragment =
+        | UserFragment_DummyUser
+        | UserFragment_ActiveUser
+      ;
 
       export type MeFragment_ActiveUser_parentUser_DummyUser = {
         __typename: 'DummyUser',
@@ -109,7 +112,10 @@ describe('extractAllFieldsToTypes: true', () => {
         joinDate: any
       };
 
-      export type MeFragment_ActiveUser_parentUser = MeFragment_ActiveUser_parentUser_DummyUser | MeFragment_ActiveUser_parentUser_ActiveUser;
+      export type MeFragment_ActiveUser_parentUser =
+        | MeFragment_ActiveUser_parentUser_DummyUser
+        | MeFragment_ActiveUser_parentUser_ActiveUser
+      ;
 
       type Me_DummyUser_Fragment = {
         __typename: 'DummyUser',
@@ -125,7 +131,10 @@ describe('extractAllFieldsToTypes: true', () => {
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
-      export type MeFragment = Me_DummyUser_Fragment | Me_ActiveUser_Fragment;
+      export type MeFragment =
+        | Me_DummyUser_Fragment
+        | Me_ActiveUser_Fragment
+      ;
 
       export type OverlappingFieldsMergingTestQuery_me_DummyUser = {
         __typename: 'DummyUser',
@@ -141,7 +150,10 @@ describe('extractAllFieldsToTypes: true', () => {
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
-      export type OverlappingFieldsMergingTestQuery_me = OverlappingFieldsMergingTestQuery_me_DummyUser | OverlappingFieldsMergingTestQuery_me_ActiveUser;
+      export type OverlappingFieldsMergingTestQuery_me =
+        | OverlappingFieldsMergingTestQuery_me_DummyUser
+        | OverlappingFieldsMergingTestQuery_me_ActiveUser
+      ;
 
       export type OverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
@@ -168,7 +180,10 @@ describe('extractAllFieldsToTypes: true', () => {
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
-      export type NestedOverlappingFieldsMergingTestQuery_me = NestedOverlappingFieldsMergingTestQuery_me_DummyUser | NestedOverlappingFieldsMergingTestQuery_me_ActiveUser;
+      export type NestedOverlappingFieldsMergingTestQuery_me =
+        | NestedOverlappingFieldsMergingTestQuery_me_DummyUser
+        | NestedOverlappingFieldsMergingTestQuery_me_ActiveUser
+      ;
 
       export type NestedOverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
@@ -402,7 +417,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom = ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom =
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationBotSolutionFragment = { __typename: 'BotSolution', id: string, timestamp: string, article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle, originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom };
 
@@ -424,7 +447,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom = ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom =
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       type ConversationConversationEvent_BrokenConversationEvent_Fragment = { __typename: 'BrokenConversationEvent', id: string, timestamp: string, originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom };
 
@@ -432,7 +463,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationConversationEvent_TalkPublicCallSummary_Fragment = { __typename: 'TalkPublicCallSummary', id: string, timestamp: string, originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom };
 
-      export type ConversationConversationEventFragment = ConversationConversationEvent_BrokenConversationEvent_Fragment | ConversationConversationEvent_BotSolution_Fragment | ConversationConversationEvent_TalkPublicCallSummary_Fragment;
+      export type ConversationConversationEventFragment =
+        | ConversationConversationEvent_BrokenConversationEvent_Fragment
+        | ConversationConversationEvent_BotSolution_Fragment
+        | ConversationConversationEvent_TalkPublicCallSummary_Fragment
+      ;
 
       type MessageEnvelopeData_EmailInteraction_Fragment = { __typename: 'EmailInteraction', originalEmailURLPath: string };
 
@@ -448,7 +483,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type MessageEnvelopeDataFragment = MessageEnvelopeData_EmailInteraction_Fragment | MessageEnvelopeData_CustomChannelInteraction_Fragment | MessageEnvelopeData_TalkInteraction_Fragment | MessageEnvelopeData_NativeMessagingInteraction_Fragment | MessageEnvelopeData_WhatsAppInteraction_Fragment | MessageEnvelopeData_WeChatInteraction_Fragment | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment;
+      export type MessageEnvelopeDataFragment =
+        | MessageEnvelopeData_EmailInteraction_Fragment
+        | MessageEnvelopeData_CustomChannelInteraction_Fragment
+        | MessageEnvelopeData_TalkInteraction_Fragment
+        | MessageEnvelopeData_NativeMessagingInteraction_Fragment
+        | MessageEnvelopeData_WhatsAppInteraction_Fragment
+        | MessageEnvelopeData_WeChatInteraction_Fragment
+        | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type AnyChannelOriginatedFromFragment = { __typename: 'CustomChannelInteraction', externalId: string, timestamp: string, resourceType: string };
 
@@ -466,7 +509,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationOriginatedFromFragment = ConversationOriginatedFrom_EmailInteraction_Fragment | ConversationOriginatedFrom_CustomChannelInteraction_Fragment | ConversationOriginatedFrom_TalkInteraction_Fragment | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment | ConversationOriginatedFrom_WhatsAppInteraction_Fragment | ConversationOriginatedFrom_WeChatInteraction_Fragment | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment;
+      export type ConversationOriginatedFromFragment =
+        | ConversationOriginatedFrom_EmailInteraction_Fragment
+        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
+        | ConversationOriginatedFrom_TalkInteraction_Fragment
+        | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment
+        | ConversationOriginatedFrom_WhatsAppInteraction_Fragment
+        | ConversationOriginatedFrom_WeChatInteraction_Fragment
+        | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = { __typename: 'EmailInteraction', originalEmailURLPath: string };
 
@@ -482,7 +533,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom = ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom =
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment = { __typename: 'TalkPublicCallSummary', id: string, timestamp: string, summary: string, originatedFrom: ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom };
       "
@@ -528,7 +587,12 @@ describe('extractAllFieldsToTypes: true', () => {
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom = ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction;
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom =
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction
+      ;
 
       export type ConversationBotSolutionFragment = (
         { id: string, timestamp: string, article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle, originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom }
@@ -562,7 +626,12 @@ describe('extractAllFieldsToTypes: true', () => {
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom = ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction;
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom =
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction
+      ;
 
       export type ConversationConversationEventFragment = (
         { id: string, timestamp: string, originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom }
@@ -576,7 +645,10 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type MessageEnvelopeData_8FBboKcmuva72FpaH1zuPdoYyrlyvueTn9fqP1dFi_Fragment = { __typename: 'CustomChannelInteraction' | 'TalkInteraction' | 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' | 'NotImplementedOriginatedFrom' };
 
-      export type MessageEnvelopeDataFragment = MessageEnvelopeData_EmailInteraction_Fragment | MessageEnvelopeData_8FBboKcmuva72FpaH1zuPdoYyrlyvueTn9fqP1dFi_Fragment;
+      export type MessageEnvelopeDataFragment =
+        | MessageEnvelopeData_EmailInteraction_Fragment
+        | MessageEnvelopeData_8FBboKcmuva72FpaH1zuPdoYyrlyvueTn9fqP1dFi_Fragment
+      ;
 
       export type AnyChannelOriginatedFromFragment = (
         { externalId: string, timestamp: string, resourceType: string }
@@ -600,7 +672,12 @@ describe('extractAllFieldsToTypes: true', () => {
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
-      export type ConversationOriginatedFromFragment = ConversationOriginatedFrom_EmailInteraction_Fragment | ConversationOriginatedFrom_CustomChannelInteraction_Fragment | ConversationOriginatedFrom_TalkInteraction_NotImplementedOriginatedFrom_Fragment | ConversationOriginatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction_Fragment;
+      export type ConversationOriginatedFromFragment =
+        | ConversationOriginatedFrom_EmailInteraction_Fragment
+        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
+        | ConversationOriginatedFrom_TalkInteraction_NotImplementedOriginatedFrom_Fragment
+        | ConversationOriginatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction_Fragment
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = (
         { originalEmailURLPath: string }
@@ -624,7 +701,13 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom = ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom =
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment = (
         { id: string, timestamp: string, summary: string, originatedFrom: ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom }
@@ -688,7 +771,15 @@ describe('extractAllFieldsToTypes: true', () => {
         & ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
       );
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom = ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom =
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationBotSolutionFragment = (
         { __typename: 'BotSolution', id: string, article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle, originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom }
@@ -734,7 +825,15 @@ describe('extractAllFieldsToTypes: true', () => {
         & ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
       );
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom = ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom =
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       type ConversationConversationEvent_BrokenConversationEvent_Fragment = { __typename: 'BrokenConversationEvent', id: string, timestamp: string, originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom };
 
@@ -742,7 +841,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationConversationEvent_TalkPublicCallSummary_Fragment = { __typename: 'TalkPublicCallSummary', id: string, timestamp: string, originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom };
 
-      export type ConversationConversationEventFragment = ConversationConversationEvent_BrokenConversationEvent_Fragment | ConversationConversationEvent_BotSolution_Fragment | ConversationConversationEvent_TalkPublicCallSummary_Fragment;
+      export type ConversationConversationEventFragment =
+        | ConversationConversationEvent_BrokenConversationEvent_Fragment
+        | ConversationConversationEvent_BotSolution_Fragment
+        | ConversationConversationEvent_TalkPublicCallSummary_Fragment
+      ;
 
       type MessageEnvelopeData_EmailInteraction_Fragment = { __typename: 'EmailInteraction', originalEmailURLPath: string };
 
@@ -758,7 +861,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type MessageEnvelopeDataFragment = MessageEnvelopeData_EmailInteraction_Fragment | MessageEnvelopeData_CustomChannelInteraction_Fragment | MessageEnvelopeData_TalkInteraction_Fragment | MessageEnvelopeData_NativeMessagingInteraction_Fragment | MessageEnvelopeData_WhatsAppInteraction_Fragment | MessageEnvelopeData_WeChatInteraction_Fragment | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment;
+      export type MessageEnvelopeDataFragment =
+        | MessageEnvelopeData_EmailInteraction_Fragment
+        | MessageEnvelopeData_CustomChannelInteraction_Fragment
+        | MessageEnvelopeData_TalkInteraction_Fragment
+        | MessageEnvelopeData_NativeMessagingInteraction_Fragment
+        | MessageEnvelopeData_WhatsAppInteraction_Fragment
+        | MessageEnvelopeData_WeChatInteraction_Fragment
+        | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type AnyChannelOriginatedFromFragment = { __typename: 'CustomChannelInteraction', externalId: string, timestamp: string, resourceType: string };
 
@@ -798,7 +909,15 @@ describe('extractAllFieldsToTypes: true', () => {
         & MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment
       );
 
-      export type ConversationOriginatedFromFragment = ConversationOriginatedFrom_EmailInteraction_Fragment | ConversationOriginatedFrom_CustomChannelInteraction_Fragment | ConversationOriginatedFrom_TalkInteraction_Fragment | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment | ConversationOriginatedFrom_WhatsAppInteraction_Fragment | ConversationOriginatedFrom_WeChatInteraction_Fragment | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment;
+      export type ConversationOriginatedFromFragment =
+        | ConversationOriginatedFrom_EmailInteraction_Fragment
+        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
+        | ConversationOriginatedFrom_TalkInteraction_Fragment
+        | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment
+        | ConversationOriginatedFrom_WhatsAppInteraction_Fragment
+        | ConversationOriginatedFrom_WeChatInteraction_Fragment
+        | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = { __typename: 'EmailInteraction' };
 
@@ -817,7 +936,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom = ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom =
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment = (
         { __typename: 'TalkPublicCallSummary', id: string, originatedFrom: ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom }
@@ -882,7 +1009,15 @@ describe('extractAllFieldsToTypes: true', () => {
         & { ' $fragmentRefs'?: { 'ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment': ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment } }
       );
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom = ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom =
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationBotSolutionFragment = (
         { __typename: 'BotSolution', id: string, article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle, originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom }
@@ -928,7 +1063,15 @@ describe('extractAllFieldsToTypes: true', () => {
         & { ' $fragmentRefs'?: { 'ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment': ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment } }
       );
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom = ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom =
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       type ConversationConversationEvent_BrokenConversationEvent_Fragment = { __typename: 'BrokenConversationEvent', id: string, timestamp: string, originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom } & { ' $fragmentName'?: 'ConversationConversationEvent_BrokenConversationEvent_Fragment' };
 
@@ -936,7 +1079,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationConversationEvent_TalkPublicCallSummary_Fragment = { __typename: 'TalkPublicCallSummary', id: string, timestamp: string, originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom } & { ' $fragmentName'?: 'ConversationConversationEvent_TalkPublicCallSummary_Fragment' };
 
-      export type ConversationConversationEventFragment = ConversationConversationEvent_BrokenConversationEvent_Fragment | ConversationConversationEvent_BotSolution_Fragment | ConversationConversationEvent_TalkPublicCallSummary_Fragment;
+      export type ConversationConversationEventFragment =
+        | ConversationConversationEvent_BrokenConversationEvent_Fragment
+        | ConversationConversationEvent_BotSolution_Fragment
+        | ConversationConversationEvent_TalkPublicCallSummary_Fragment
+      ;
 
       type MessageEnvelopeData_EmailInteraction_Fragment = { __typename: 'EmailInteraction', originalEmailURLPath: string } & { ' $fragmentName'?: 'MessageEnvelopeData_EmailInteraction_Fragment' };
 
@@ -952,7 +1099,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' } & { ' $fragmentName'?: 'MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment' };
 
-      export type MessageEnvelopeDataFragment = MessageEnvelopeData_EmailInteraction_Fragment | MessageEnvelopeData_CustomChannelInteraction_Fragment | MessageEnvelopeData_TalkInteraction_Fragment | MessageEnvelopeData_NativeMessagingInteraction_Fragment | MessageEnvelopeData_WhatsAppInteraction_Fragment | MessageEnvelopeData_WeChatInteraction_Fragment | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment;
+      export type MessageEnvelopeDataFragment =
+        | MessageEnvelopeData_EmailInteraction_Fragment
+        | MessageEnvelopeData_CustomChannelInteraction_Fragment
+        | MessageEnvelopeData_TalkInteraction_Fragment
+        | MessageEnvelopeData_NativeMessagingInteraction_Fragment
+        | MessageEnvelopeData_WhatsAppInteraction_Fragment
+        | MessageEnvelopeData_WeChatInteraction_Fragment
+        | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type AnyChannelOriginatedFromFragment = { __typename: 'CustomChannelInteraction', externalId: string, timestamp: string, resourceType: string } & { ' $fragmentName'?: 'AnyChannelOriginatedFromFragment' };
 
@@ -991,7 +1146,15 @@ describe('extractAllFieldsToTypes: true', () => {
         & { ' $fragmentRefs'?: { 'MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment': MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment } }
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment' };
 
-      export type ConversationOriginatedFromFragment = ConversationOriginatedFrom_EmailInteraction_Fragment | ConversationOriginatedFrom_CustomChannelInteraction_Fragment | ConversationOriginatedFrom_TalkInteraction_Fragment | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment | ConversationOriginatedFrom_WhatsAppInteraction_Fragment | ConversationOriginatedFrom_WeChatInteraction_Fragment | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment;
+      export type ConversationOriginatedFromFragment =
+        | ConversationOriginatedFrom_EmailInteraction_Fragment
+        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
+        | ConversationOriginatedFrom_TalkInteraction_Fragment
+        | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment
+        | ConversationOriginatedFrom_WhatsAppInteraction_Fragment
+        | ConversationOriginatedFrom_WeChatInteraction_Fragment
+        | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = { __typename: 'EmailInteraction' };
 
@@ -1010,7 +1173,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom = ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom =
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment = (
         { __typename: 'TalkPublicCallSummary', id: string, originatedFrom: ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom }
@@ -1038,7 +1209,13 @@ describe('extractAllFieldsToTypes: true', () => {
     expect(content).toMatchInlineSnapshot(`
       "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
         { __typename: 'ArchivedArticle' }
-        & Pick<ArchivedArticle, 'id' | 'htmlUrl' | 'title' | 'url'>
+        & Pick<
+          ArchivedArticle,
+          | 'id'
+          | 'htmlUrl'
+          | 'title'
+          | 'url'
+        >
       );
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = (
@@ -1070,12 +1247,23 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom = ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom =
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction
+        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationBotSolutionFragment = (
         { __typename: 'BotSolution' }
         & Pick<BotSolution, 'id' | 'timestamp'>
-        & { article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle, originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom }
+        & {
+          article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle,
+          originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom,
+        }
       );
 
       export type ConversationGenericCallSummaryFragment = (
@@ -1117,7 +1305,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom = ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom =
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_EmailInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_CustomChannelInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction
+        | ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       type ConversationConversationEvent_BrokenConversationEvent_Fragment = (
         { __typename: 'BrokenConversationEvent' }
@@ -1137,7 +1333,11 @@ describe('extractAllFieldsToTypes: true', () => {
         & { originatedFrom: ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom }
       );
 
-      export type ConversationConversationEventFragment = ConversationConversationEvent_BrokenConversationEvent_Fragment | ConversationConversationEvent_BotSolution_Fragment | ConversationConversationEvent_TalkPublicCallSummary_Fragment;
+      export type ConversationConversationEventFragment =
+        | ConversationConversationEvent_BrokenConversationEvent_Fragment
+        | ConversationConversationEvent_BotSolution_Fragment
+        | ConversationConversationEvent_TalkPublicCallSummary_Fragment
+      ;
 
       type MessageEnvelopeData_EmailInteraction_Fragment = (
         { __typename: 'EmailInteraction' }
@@ -1156,7 +1356,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type MessageEnvelopeDataFragment = MessageEnvelopeData_EmailInteraction_Fragment | MessageEnvelopeData_CustomChannelInteraction_Fragment | MessageEnvelopeData_TalkInteraction_Fragment | MessageEnvelopeData_NativeMessagingInteraction_Fragment | MessageEnvelopeData_WhatsAppInteraction_Fragment | MessageEnvelopeData_WeChatInteraction_Fragment | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment;
+      export type MessageEnvelopeDataFragment =
+        | MessageEnvelopeData_EmailInteraction_Fragment
+        | MessageEnvelopeData_CustomChannelInteraction_Fragment
+        | MessageEnvelopeData_TalkInteraction_Fragment
+        | MessageEnvelopeData_NativeMessagingInteraction_Fragment
+        | MessageEnvelopeData_WhatsAppInteraction_Fragment
+        | MessageEnvelopeData_WeChatInteraction_Fragment
+        | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type AnyChannelOriginatedFromFragment = (
         { __typename: 'CustomChannelInteraction' }
@@ -1192,7 +1400,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationOriginatedFromFragment = ConversationOriginatedFrom_EmailInteraction_Fragment | ConversationOriginatedFrom_CustomChannelInteraction_Fragment | ConversationOriginatedFrom_TalkInteraction_Fragment | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment | ConversationOriginatedFrom_WhatsAppInteraction_Fragment | ConversationOriginatedFrom_WeChatInteraction_Fragment | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment;
+      export type ConversationOriginatedFromFragment =
+        | ConversationOriginatedFrom_EmailInteraction_Fragment
+        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
+        | ConversationOriginatedFrom_TalkInteraction_Fragment
+        | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment
+        | ConversationOriginatedFrom_WhatsAppInteraction_Fragment
+        | ConversationOriginatedFrom_WeChatInteraction_Fragment
+        | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = (
         { __typename: 'EmailInteraction' }
@@ -1226,7 +1442,15 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom = ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom;
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom =
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction
+        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
+      ;
 
       export type ConversationTalkPublicCallSummaryFragment = (
         { __typename: 'TalkPublicCallSummary' }

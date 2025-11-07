@@ -76,6 +76,12 @@ export namespace Types {
   }
 
   /**
+   * @description A function to use for fetching the schema.
+   * @see fetch
+   */
+  export type CustomSchemaFetcher = (url: string, options?: RequestInit) => Promise<Response>;
+
+  /**
    * @additionalProperties false
    * @description Loads a schema from remote endpoint, with custom http options.
    */
@@ -85,9 +91,9 @@ export namespace Types {
      */
     headers?: { [headerName: string]: string };
     /**
-     * @description Specify a Node module name, or a custom file, to be used instead of standard `fetch`
+     * @description Specify a Node module name, a custom file, or a function, to be used instead of a standard `fetch`.
      */
-    customFetch?: string;
+    customFetch?: string | CustomSchemaFetcher;
     /**
      * @description HTTP Method to use, either POST (default) or GET.
      */
@@ -407,10 +413,9 @@ export namespace Types {
      */
     require?: RequireExtension;
     /**
-     * @description Name for a library that implements `fetch`.
-     * Use this to tell codegen to use that to fetch schemas in a custom way.
+     * @description Specify a Node module name, a custom file, or a function, to be used instead of a standard `fetch`.
      */
-    customFetch?: string;
+    customFetch?: string | CustomSchemaFetcher;
     /**
      * @description A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.
      * You can use one of the following:
@@ -459,19 +464,6 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode
      */
     watch?: boolean | string | string[];
-    /**
-     * @deprecated this is not necessary since we are using `@parcel/watcher` instead of `chockidar`.
-     *
-     * @description Allows overriding the behavior of watch to use stat polling over native file watching support.
-     *
-     * Config fields have the same defaults and sematics as the identically named ones for chokidar.
-     *
-     * For more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode
-     */
-    watchConfig?: {
-      usePolling: boolean;
-      interval?: number;
-    };
     /**
      * @description A flag to suppress non-zero exit code when there are no documents to generate.
      */
@@ -547,6 +539,10 @@ export namespace Types {
      * @description Alows to raise errors if any matched files are not valid GraphQL. Default: false.
      */
     noSilentErrors?: boolean;
+    /**
+     * @description If `true`, write to files whichever `generates` block succeeds. If `false`, one failed `generates` means no output is written to files. Default: false
+     */
+    allowPartialOutputs?: boolean;
   }
 
   export type ComplexPluginOutput<M = Record<string, unknown>> = {

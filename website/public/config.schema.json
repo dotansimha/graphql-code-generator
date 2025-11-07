@@ -15,8 +15,14 @@
           "description": "A path to a file which defines custom Node.JS require() handlers for custom file extensions.\nThis is essential if the code generator has to go through files which require other files in an unsupported format (by default).\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/require-field\nSee more information about require.extensions: https://gist.github.com/jamestalmage/df922691475cff66c7e6.\n\nNote: values that specified in your .yml file will get loaded after loading the config .yml file."
         },
         "customFetch": {
-          "description": "Name for a library that implements `fetch`.\nUse this to tell codegen to use that to fetch schemas in a custom way.",
-          "type": "string"
+          "description": "Specify a Node module name, a custom file, or a function, to be used instead of a standard `fetch`.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Types.CustomSchemaFetcher",
+              "description": "A function to use for fetching the schema."
+            },
+            { "type": "string" }
+          ]
         },
         "documents": {
           "$ref": "#/definitions/Types.InstanceOrArray_1",
@@ -25,7 +31,7 @@
         "config": {
           "type": "object",
           "additionalProperties": true,
-          "description": "Configuration object containing key => value that will be passes to the plugins.\nSpecifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.\n\nThe options may vary depends on what plugins you are using.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/config-field"
+          "description": "Configuration object containing key => value that will be passed to the plugins.\nSpecifying configuration in this level of your configuration file will pass it to all plugins, in all outputs.\n\nThe options may vary depends on what plugins you are using.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/config-field"
         },
         "generates": {
           "description": "A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.\n\nFor more details: https://graphql-code-generator.com/docs/config-reference/codegen-config",
@@ -44,11 +50,6 @@
         "watch": {
           "description": "A flag to trigger codegen when there are changes in the specified GraphQL schemas.\n\nYou can either specify a boolean to turn it on/off or specify an array of glob patterns to add custom files to the watch.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
           "anyOf": [{ "type": "array", "items": { "type": "string" } }, { "type": ["string", "boolean"] }]
-        },
-        "watchConfig": {
-          "description": "Allows overriding the behavior of watch to use stat polling over native file watching support.\n\nConfig fields have the same defaults and sematics as the identically named ones for chokidar.\n\nFor more details: https://graphql-code-generator.com/docs/getting-started/development-workflow#watch-mode",
-          "type": "object",
-          "properties": { "usePolling": { "type": "boolean" }, "interval": { "type": "number" } }
         },
         "ignoreNoDocuments": {
           "description": "A flag to suppress non-zero exit code when there are no documents to generate.",
@@ -99,6 +100,10 @@
         },
         "noSilentErrors": {
           "description": "Alows to raise errors if any matched files are not valid GraphQL. Default: false.",
+          "type": "boolean"
+        },
+        "allowPartialOutputs": {
+          "description": "If `true`, write to files whichever `generates` block succeeds. If `false`, one failed `generates` means no output is written to files. Default: false",
           "type": "boolean"
         }
       }
@@ -282,10 +287,6 @@
           "description": "Automatically adds `__typename` field to the generated types, even when they are not specified\nin the selection set, and makes it non-optional\nDefault value: \"false\"",
           "type": "boolean"
         },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
           "type": "string"
@@ -304,6 +305,10 @@
         },
         "skipTypename": {
           "description": "Does not add `__typename` to the generated types, unless it was specified in the selection set.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "dedupeFragments": {
+          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -643,16 +648,24 @@
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "inlineFragmentTypes": {
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "extractAllFieldsToTypes": {
+          "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "printFieldsOnNewLines": {
+          "description": "If you prefer to have each field in generated types printed on a new line, set this to true.\nThis can be useful for improving readability of the resulting types,\nwithout resorting to running tools like Prettier on the output.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "includeExternalFragments": {
+          "description": "Whether to include external fragments in the generated code. External fragments are not defined\nin the same location as the operation definition.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -698,6 +711,11 @@
           "description": "Adds undefined as a possible type for query variables\nDefault value: \"false\"",
           "type": "boolean"
         },
+        "nullability": {
+          "description": "Options related to handling nullability",
+          "type": "object",
+          "properties": { "errorHandlingClient": { "type": "boolean" } }
+        },
         "preResolveTypes": {
           "description": "Uses primitive types where possible.\nSet to `false` in order to use `Pick` and take use the types generated by `typescript` plugin.\nDefault value: \"true\"",
           "type": "boolean"
@@ -729,6 +747,10 @@
         "mergeFragmentTypes": {
           "description": "If set to true, merge equal fragment interfaces.\nDefault value: \"false\"",
           "type": "boolean"
+        },
+        "customDirectives": {
+          "$ref": "#/definitions/CustomDirectivesConfig",
+          "description": "Configures behavior for use with custom directives from\nvarious GraphQL libraries."
         },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
@@ -819,16 +841,24 @@
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "inlineFragmentTypes": {
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "extractAllFieldsToTypes": {
+          "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "printFieldsOnNewLines": {
+          "description": "If you prefer to have each field in generated types printed on a new line, set this to true.\nThis can be useful for improving readability of the resulting types,\nwithout resorting to running tools like Prettier on the output.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "includeExternalFragments": {
+          "description": "Whether to include external fragments in the generated code. External fragments are not defined\nin the same location as the operation definition.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -1559,6 +1589,11 @@
           "description": "Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.\nDefault value: \"true\"",
           "type": "boolean"
         },
+        "customDirectives": {
+          "description": "Configures behavior for custom directives from various GraphQL libraries.",
+          "type": "object",
+          "properties": { "semanticNonNull": { "type": "boolean" } }
+        },
         "optionalResolveType": {
           "description": "Sets the `__resolveType` field as optional field.\nDefault value: \"false\"",
           "type": "boolean"
@@ -1583,13 +1618,13 @@
           "type": "string",
           "description": "Defines the prefix value used for `__resolveType` and `__isTypeOf` resolvers.\nIf you are using `mercurius-js`, please set this field to empty string for better compatibility.\nDefault value: \"'__'\""
         },
-        "onlyResolveTypeForInterfaces": {
-          "type": "boolean",
-          "description": "Turning this flag to `true` will generate resolver signature that has only `resolveType` for interfaces, forcing developers to write inherited type resolvers in the type itself.\nDefault value: \"false\""
-        },
         "resolversNonOptionalTypename": {
           "description": "Makes `__typename` of resolver mappings non-optional without affecting the base types.\nDefault value: \"false\"",
           "anyOf": [{ "$ref": "#/definitions/ResolversNonOptionalTypenameConfig" }, { "type": "boolean" }]
+        },
+        "avoidCheckingAbstractTypesRecursively": {
+          "type": "boolean",
+          "description": "If true, recursively goes through all object type's fields, checks if they have abstract types and generates expected types correctly.\nThis may not work for cases where provided default mapper types are also nested e.g. `defaultMapper: DeepPartial<{T}>` or `defaultMapper: Partial<{T}>`.\nDefault value: \"false\""
         },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
@@ -1621,16 +1656,24 @@
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "inlineFragmentTypes": {
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "extractAllFieldsToTypes": {
+          "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "printFieldsOnNewLines": {
+          "description": "If you prefer to have each field in generated types printed on a new line, set this to true.\nThis can be useful for improving readability of the resulting types,\nwithout resorting to running tools like Prettier on the output.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "includeExternalFragments": {
+          "description": "Whether to include external fragments in the generated code. External fragments are not defined\nin the same location as the operation definition.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -2648,10 +2691,6 @@
           "description": "Adds suffix to the fragment variable\nDefault value: \"\"",
           "type": "string"
         },
-        "noGraphQLTag": {
-          "description": "Deprecated. Changes the documentMode to `documentNode`.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "gqlImport": {
           "description": "Customize from which module will `gql` be imported from.\nThis is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.\nDefault value: \"graphql-tag#gql\"",
           "type": "string"
@@ -2697,7 +2736,7 @@
           "description": "Declares how DocumentNode are created:\n\n- `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client\n- `documentNode`: document nodes will be generated as objects when we generate the templates.\n- `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.\n- `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`\n\nNote that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.\nDefault value: \"graphQLTag\""
         },
         "optimizeDocumentNode": {
-          "description": "If you are using `documentNode: documentMode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
+          "description": "If you are using `documentMode: documentNode | documentNodeImportFragments`, you can set this to `true` to apply document optimizations for your GraphQL document.\nThis will remove all \"loc\" and \"description\" fields from the compiled document, and will remove all empty arrays (such as `directives`, `arguments` and `variableDefinitions`).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importOperationTypesFrom": {
@@ -2742,16 +2781,24 @@
           "type": "boolean",
           "description": "Will use `import type {}` rather than `import {}` when importing only types. This gives\ncompatibility with TypeScript's \"importsNotUsedAsValues\": \"error\" option\nDefault value: \"false\""
         },
-        "dedupeFragments": {
-          "description": "Removes fragment duplicates for reducing data transfer.\nIt is done by removing sub-fragments imports from fragment definition\nInstead - all of them are imported to the Operation node.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
         "inlineFragmentTypes": {
-          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\nDefault value: \"inline\"",
+          "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "extractAllFieldsToTypes": {
+          "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "printFieldsOnNewLines": {
+          "description": "If you prefer to have each field in generated types printed on a new line, set this to true.\nThis can be useful for improving readability of the resulting types,\nwithout resorting to running tools like Prettier on the output.\nDefault value: \"false\"",
+          "type": "boolean"
+        },
+        "includeExternalFragments": {
+          "description": "Whether to include external fragments in the generated code. External fragments are not defined\nin the same location as the operation definition.\nDefault value: \"false\"",
           "type": "boolean"
         }
       }
@@ -3404,7 +3451,11 @@
           "description": "Create an explicit type based on your schema. This can help IDEs autofill your fragment matcher. This is mostly useful if you do more with your fragment matcher than just pass it to an Apollo-Client.\nDefault value: \"false\"",
           "type": "boolean"
         },
-        "federation": { "type": "boolean" }
+        "federation": { "type": "boolean" },
+        "deterministic": {
+          "description": "When enabled sorts the fragment types lexicographically. This is useful for deterministic output.\nDefault value: \"false\"",
+          "type": "boolean"
+        }
       }
     },
     "UrqlIntrospectionConfig": {
@@ -3601,8 +3652,14 @@
           "additionalProperties": { "type": "string" }
         },
         "customFetch": {
-          "description": "Specify a Node module name, or a custom file, to be used instead of standard `fetch`",
-          "type": "string"
+          "description": "Specify a Node module name, a custom file, or a function, to be used instead of a standard `fetch`.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Types.CustomSchemaFetcher",
+              "description": "A function to use for fetching the schema."
+            },
+            { "type": "string" }
+          ]
         },
         "method": { "description": "HTTP Method to use, either POST (default) or GET.", "type": "string" },
         "handleAsSDL": {
@@ -3611,6 +3668,8 @@
         }
       }
     },
+    "__type": { "description": "A function to use for fetching the schema.", "type": "object" },
+    "Types.CustomSchemaFetcher": { "$ref": "#/definitions/__type" },
     "Types.LocalSchemaPathWithOptions": {
       "type": "object",
       "additionalProperties": { "$ref": "#/definitions/Types.LocalSchemaPathOptions" }
@@ -3686,8 +3745,8 @@
         "includeSources": { "type": "boolean" }
       }
     },
-    "__type": { "type": "object" },
-    "Record": { "$ref": "#/definitions/__type" },
+    "__type_1": { "type": "object" },
+    "Record": { "$ref": "#/definitions/__type_1" },
     "Types.GitHubSchemaOptions": {
       "type": "object",
       "additionalProperties": { "type": "object", "properties": { "token": { "type": "string" } } }
@@ -4027,14 +4086,14 @@
         }
       ]
     },
-    "__type_1": {
+    "__type_2": {
       "type": "object",
       "properties": { "buildGeneratesSection": { "type": "object" }, "prepareDocuments": { "type": "object" } }
     },
-    "Types.OutputPreset": { "$ref": "#/definitions/__type_1" },
-    "__type_2": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T" } },
-    "Types.PluginConfig": { "$ref": "#/definitions/__type_2" },
-    "__type_3": {
+    "Types.OutputPreset": { "$ref": "#/definitions/__type_2" },
+    "__type_3": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T" } },
+    "Types.PluginConfig": { "$ref": "#/definitions/__type_3" },
+    "__type_4": {
       "type": "object",
       "properties": {
         "afterStart": {
@@ -4081,8 +4140,8 @@
         { "type": "string" }
       ]
     },
-    "__type_4": { "type": "object" },
-    "Types.HookFunction": { "$ref": "#/definitions/__type_4" },
+    "__type_5": { "type": "object" },
+    "Types.HookFunction": { "$ref": "#/definitions/__type_5" },
     "Types.LifeCycleAlterHookValue": {
       "anyOf": [
         { "$ref": "#/definitions/Types.HookFunction" },
@@ -4100,9 +4159,9 @@
         { "type": "string" }
       ]
     },
-    "__type_5": { "type": "object" },
-    "Types.HookAlterFunction": { "$ref": "#/definitions/__type_5" },
-    "Partial": { "$ref": "#/definitions/__type_3" },
+    "__type_6": { "type": "object" },
+    "Types.HookAlterFunction": { "$ref": "#/definitions/__type_6" },
+    "Partial": { "$ref": "#/definitions/__type_4" },
     "Types.OutputDocumentTransform<object>": {
       "anyOf": [
         { "$ref": "#/definitions/Types.DocumentTransformObject" },
@@ -4110,18 +4169,18 @@
         { "type": "string" }
       ]
     },
-    "__type_6": {
+    "__type_7": {
       "type": "object",
       "properties": { "transform": { "$ref": "#/definitions/Types.DocumentTransformFunction" } }
     },
-    "__type_7": { "type": "object" },
-    "Types.DocumentTransformFunction": { "$ref": "#/definitions/__type_7" },
-    "Types.DocumentTransformObject": { "$ref": "#/definitions/__type_6" },
-    "__type_8": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T_1" } },
+    "__type_8": { "type": "object" },
+    "Types.DocumentTransformFunction": { "$ref": "#/definitions/__type_8" },
+    "Types.DocumentTransformObject": { "$ref": "#/definitions/__type_7" },
+    "__type_9": { "type": "object", "additionalProperties": { "$ref": "#/definitions/T_1" } },
     "T_1": { "type": "object" },
-    "Types.DocumentTransformFileConfig": { "$ref": "#/definitions/__type_8" },
-    "__type_9": { "type": "object" },
-    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_9" },
+    "Types.DocumentTransformFileConfig": { "$ref": "#/definitions/__type_9" },
+    "__type_10": { "type": "object" },
+    "Types.PackageLoaderFn": { "$ref": "#/definitions/__type_10" },
     "Array": {
       "type": "array",
       "items": {
@@ -4143,16 +4202,16 @@
       "type": "object",
       "properties": { "_value": {}, "value": { "type": "string" } }
     },
-    "__type_10": {
+    "__type_11": {
       "type": "object",
       "properties": {
         "endpoint": { "type": "string" },
         "fetchParams": { "anyOf": [{ "$ref": "#/definitions/Record_1" }, { "type": "string" }] }
       }
     },
-    "__type_11": { "type": "object" },
-    "Record_1": { "$ref": "#/definitions/__type_11" },
-    "HardcodedFetch": { "$ref": "#/definitions/__type_10" },
+    "__type_12": { "type": "object" },
+    "Record_1": { "$ref": "#/definitions/__type_12" },
+    "HardcodedFetch": { "$ref": "#/definitions/__type_11" },
     "NamingConvention": {
       "anyOf": [
         { "$ref": "#/definitions/NamingConventionFn" },
@@ -4160,8 +4219,8 @@
         { "type": "string" }
       ]
     },
-    "__type_12": { "type": "object" },
-    "NamingConventionFn": { "$ref": "#/definitions/__type_12" },
+    "__type_13": { "type": "object" },
+    "NamingConventionFn": { "$ref": "#/definitions/__type_13" },
     "NamingConventionMap": {
       "additionalProperties": false,
       "type": "object",
@@ -4186,7 +4245,10 @@
         "object": { "type": "boolean" },
         "inputValue": { "type": "boolean" },
         "defaultValue": { "type": "boolean" },
-        "resolvers": { "type": "boolean" }
+        "resolvers": { "type": "boolean" },
+        "query": { "type": "boolean" },
+        "mutation": { "type": "boolean" },
+        "subscription": { "type": "boolean" }
       }
     },
     "EnumValuesMap": {
@@ -4222,12 +4284,12 @@
       }
     },
     "DeclarationKind": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_13": {
+    "__type_14": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_13" },
+    "DirectiveArgumentAndInputFieldMappings": { "$ref": "#/definitions/__type_14" },
     "ScalarsMap_1": {
       "description": "Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used",
       "anyOf": [
@@ -4250,8 +4312,8 @@
         { "type": "string" }
       ]
     },
-    "__type_14": { "type": "object" },
-    "NamingConventionFn_1": { "$ref": "#/definitions/__type_14" },
+    "__type_15": { "type": "object" },
+    "NamingConventionFn_1": { "$ref": "#/definitions/__type_15" },
     "NamingConventionMap_1": {
       "additionalProperties": false,
       "type": "object",
@@ -4259,6 +4321,15 @@
         "enumValues": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn_1" }, { "type": "string" }] },
         "typeNames": { "anyOf": [{ "$ref": "#/definitions/NamingConventionFn_1" }, { "type": "string" }] },
         "transformUnderscore": { "type": "boolean" }
+      }
+    },
+    "CustomDirectivesConfig": {
+      "type": "object",
+      "properties": {
+        "apolloUnmask": {
+          "description": "Adds integration with Apollo Client's `@unmask` directive\nwhen using Apollo Client's data masking feature. `@unmask` ensures fields\nmarked by `@unmask` are available in the type definition.\nDefault value: \"false\"",
+          "type": "boolean"
+        }
       }
     },
     "EnumValuesMap_1": {
@@ -4294,8 +4365,8 @@
         { "type": "string" }
       ]
     },
-    "__type_15": { "type": "object" },
-    "NamingConventionFn_2": { "$ref": "#/definitions/__type_15" },
+    "__type_16": { "type": "object" },
+    "NamingConventionFn_2": { "$ref": "#/definitions/__type_16" },
     "NamingConventionMap_2": {
       "additionalProperties": false,
       "type": "object",
@@ -4309,7 +4380,7 @@
       "enum": ["documentNode", "documentNodeImportFragments", "external", "graphQLTag", "string"],
       "type": "string"
     },
-    "__type_16": {
+    "__type_17": {
       "type": "object",
       "properties": {
         "type": { "type": "string" },
@@ -4319,7 +4390,7 @@
         "arguments": { "type": "string" }
       }
     },
-    "Partial_1": { "$ref": "#/definitions/__type_16" },
+    "Partial_1": { "$ref": "#/definitions/__type_17" },
     "AvoidOptionalsConfig_1": {
       "type": "object",
       "properties": {
@@ -4342,12 +4413,12 @@
       }
     },
     "DeclarationKind_1": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_17": {
+    "__type_18": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings_1": { "$ref": "#/definitions/__type_17" },
+    "DirectiveArgumentAndInputFieldMappings_1": { "$ref": "#/definitions/__type_18" },
     "Array_1": { "type": "array", "items": { "type": "string" } },
     "ResolversNonOptionalTypenameConfig": {
       "type": "object",
@@ -4400,12 +4471,12 @@
       }
     },
     "DeclarationKind_2": { "enum": ["abstract class", "class", "interface", "type"], "type": "string" },
-    "__type_18": {
+    "__type_19": {
       "description": "A map between the GraphQL directive name and the identifier that should be used",
       "type": "object",
       "additionalProperties": { "type": "string" }
     },
-    "DirectiveArgumentAndInputFieldMappings_2": { "$ref": "#/definitions/__type_18" },
+    "DirectiveArgumentAndInputFieldMappings_2": { "$ref": "#/definitions/__type_19" },
     "AvoidOptionalsConfig_2": {
       "type": "object",
       "properties": {
@@ -4416,8 +4487,8 @@
         "resolvers": { "type": "boolean" }
       }
     },
-    "__type_19": { "type": "object" },
-    "FragmentImportFromFn": { "$ref": "#/definitions/__type_19" },
+    "__type_20": { "type": "object" },
+    "FragmentImportFromFn": { "$ref": "#/definitions/__type_20" },
     "GeneratedPluginsMap": {
       "anyOf": [
         {

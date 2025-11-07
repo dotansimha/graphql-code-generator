@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { type ExecutionResult, print } from 'graphql';
 import { graphql } from './gql';
