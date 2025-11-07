@@ -49,15 +49,21 @@ The `client` preset allows the following `config` options:
 - [`strictScalars`](/plugins/typescript/typescript#strictscalars): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
 - [`namingConvention`](/plugins/typescript/typescript#namingconvention): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`.
 - [`useTypeImports`](/plugins/typescript/typescript#usetypeimports): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's [`"importsNotUsedAsValues": "error"`](https://www.typescriptlang.org/tsconfig#importsNotUsedAsValues) option.
+- [`immutableTypes`](/plugins/typescript/typescript#immutabletypes): Generates immutable types by adding `readonly` to properties and `ReadonlyArray` for lists.
 - [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
 - [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
 - [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
 - [`enumsAsConst`](/plugins/typescript/typescript#enumsasconst): Generates enum as TypeScript const assertions instead of enum. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
+- [`enumValues`](/plugins/typescript/typescript#enumvalues): Overrides the default value of enum values declared in your GraphQL schema. You can also map the entire enum to an external type by providing a string that of module#type.
 - [`futureProofEnums`](/plugins/typescript/typescript#futureproofenums): Adds a catch-all entry to enum type definitions for values that may be added in the future.
-- [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
 - [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
 - [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
 - [`documentMode`](#documentmode): Allows you to control how the documents are generated.
+- [`skipTypeNameForRoot`](/plugins/typescript/typescript-operations#skiptypenameforroot): Avoid adding `__typename` for root types. This is ignored when a selection explicitly specifies `__typename`.
+- [`onlyOperationTypes`](/plugins/typescript/typescript#onlyoperationtypes): This will cause the generator to emit types required for operations only i.e. only enums and scalars.
+- [`onlyEnums`](/plugins/typescript/typescript#onlyenums): This will cause the generator to emit types for enums only.
+- [`customDirectives`](/plugins/typescript/typescript-operations#customdirectives): Configures behavior for use with custom directives from various GraphQL libraries, such as Apollo Client's [@unmask](https://www.apollographql.com/docs/react/data/directives#unmask).
+- [`nullability`](/plugins/typescript/typescript-operations#nullability): Indicate the client capabilities to get stronger types with [semantic nullability](https://github.com/graphql/graphql-wg/blob/main/rfcs/SemanticNullability.md)-enabled schemas.
 
 For more information or feature request, please [refer to the repository discussions](https://github.com/dotansimha/graphql-code-generator/discussions).
 
@@ -611,26 +617,10 @@ module.exports = {
 
 ### SWC Plugin
 
-<Callout type="warning">
-  As of 2023/03/11, SWC's custom plugins is still an experimental feature, that means unexpected breaking changes that
-  makes specific nextjs versions or our plugin incompatible are possible, so please file an issue
-  [here](https://github.com/dotansimha/graphql-code-generator/issues/new?assignees=&labels=&template=bug_report.yml&title=@graphql-codegen/client-preset-swc-plugin%20...)
-  if you faced any unexpected behavior/errors while using the plugin.
-
-Pro tip: if you faced the following obscure error, or the nextjs `dev` script just instantly terminates the process without any errors,
-it most likely means that SWC is not happy with your nextjs version, so try upgrading it to `latest` if possible,
-then let us know of your current broken version to try fixing it or documenting its no longer supported.
-
-```sh
-thread '<unnamed>' panicked at 'failed to invoke plugin: failed to invoke plugin on 'Some("/app/node_modules/next/dist/client/router.js")'
-```
-
-</Callout>
-
 The SWC plugin is not bundled in the `client-preset` package, so you will need to install it separately:
 
 ```sh npm2yarn
-npm i -D @graphql-codegen/client-preset-swc-plugin
+npm i -D @swc-contrib/plugin-graphql-codegen-client-preset
 ```
 
 #### General
@@ -644,7 +634,7 @@ To use the SWC plugin without Next.js, update your `.swcrc` to add the following
     // ...
     experimental: {
       plugins: [
-        ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+        ['@swc-contrib/plugin-graphql-codegen-client-preset', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
       ]
     }
   }
@@ -664,7 +654,7 @@ export default defineConfig({
   plugins: [
     react({
       plugins: [
-        ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+        ['@swc-contrib/plugin-graphql-codegen-client-preset', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
       ]
     })
   ]
@@ -680,7 +670,7 @@ const nextConfig = {
   // ...
   experimental: {
     swcPlugins: [
-      ['@graphql-codegen/client-preset-swc-plugin', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
+      ['@swc-contrib/plugin-graphql-codegen-client-preset', { artifactDirectory: './src/gql', gqlTagName: 'graphql' }]
     ]
   }
 }

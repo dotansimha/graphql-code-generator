@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TypeScript Resolvers Plugin Config allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type 1`] = `
+exports[`TypeScript Resolvers Plugin > Config > allowParentTypeOverride - should allow to have less strict resolvers by overrding parent type 1`] = `
 "export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -107,7 +107,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -144,21 +144,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -166,17 +166,31 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
-  ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> } ) | ( MyOtherType );
-  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<_RefType['ChildUnion']> } ) | ( MyOtherType );
+  ChildUnion:
+    | ( Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> } )
+    | ( MyOtherType )
+  ;
+  MyUnion:
+    | ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<_RefType['ChildUnion']> } )
+    | ( MyOtherType )
+  ;
 }>;
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
   Node: ( SomeNode );
-  AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
-  WithChild: ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
+  AnotherNode:
+    | ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } )
+    | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } )
+  ;
+  WithChild:
+    | ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } )
+    | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } )
+  ;
   WithChildren: ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
 }>;
 
@@ -187,8 +201,8 @@ export type ResolversTypes = ResolversObject<{
   Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
   MyOtherType: ResolverTypeWrapper<MyOtherType>;
   ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-  Query: ResolverTypeWrapper<{}>;
-  Subscription: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -210,8 +224,8 @@ export type ResolversParentTypes = ResolversObject<{
   Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
   MyOtherType: MyOtherType;
   ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-  Query: {};
-  Subscription: {};
+  Query: Record<PropertyKey, never>;
+  Subscription: Record<PropertyKey, never>;
   Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   ID: Scalars['ID']['output'];
   SomeNode: SomeNode;
@@ -271,7 +285,6 @@ export type SubscriptionResolvers<ContextType = any, ParentType = ResolversParen
 
 export type NodeResolvers<ContextType = any, ParentType = ResolversParentTypes['Node']> = ResolversObject<{
   __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 }>;
 
 export type SomeNodeResolvers<ContextType = any, ParentType = ResolversParentTypes['SomeNode']> = ResolversObject<{
@@ -281,19 +294,14 @@ export type SomeNodeResolvers<ContextType = any, ParentType = ResolversParentTyp
 
 export type AnotherNodeResolvers<ContextType = any, ParentType = ResolversParentTypes['AnotherNode']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithChild' | 'AnotherNodeWithAll', ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 }>;
 
 export type WithChildResolvers<ContextType = any, ParentType = ResolversParentTypes['WithChild']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithChild' | 'AnotherNodeWithAll', ParentType, ContextType>;
-  unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['AnotherNode']>, ParentType, ContextType>;
 }>;
 
 export type WithChildrenResolvers<ContextType = any, ParentType = ResolversParentTypes['WithChildren']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithAll', ParentType, ContextType>;
-  unionChildren?: Resolver<Array<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
-  nodes?: Resolver<Array<ResolversTypes['AnotherNode']>, ParentType, ContextType>;
 }>;
 
 export type AnotherNodeWithChildResolvers<ContextType = any, ParentType = ResolversParentTypes['AnotherNodeWithChild']> = ResolversObject<{
@@ -353,7 +361,7 @@ export type DirectiveResolvers<ContextType = any> = ResolversObject<{
       "
 `;
 
-exports[`TypeScript Resolvers Plugin Config namespacedImportName - should work correctly with imported namespaced type 1`] = `
+exports[`TypeScript Resolvers Plugin > Config > namespacedImportName - should work correctly with imported namespaced type 1`] = `
 "import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
@@ -366,7 +374,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -403,21 +411,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Types.Maybe<TTypes> | Promise<Types.Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -425,17 +433,31 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
-  ChildUnion: ( Omit<Types.Child, 'parent'> & { parent?: Types.Maybe<_RefType['MyType']> } ) | ( Types.MyOtherType );
-  MyUnion: ( Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']> } ) | ( Types.MyOtherType );
+  ChildUnion:
+    | ( Omit<Types.Child, 'parent'> & { parent?: Types.Maybe<_RefType['MyType']> } )
+    | ( Types.MyOtherType )
+  ;
+  MyUnion:
+    | ( Omit<Types.MyType, 'unionChild'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']> } )
+    | ( Types.MyOtherType )
+  ;
 }>;
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
   Node: ( Types.SomeNode );
-  AnotherNode: ( Omit<Types.AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
-  WithChild: ( Omit<Types.AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']> } ) | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
+  AnotherNode:
+    | ( Omit<Types.AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']> } )
+    | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } )
+  ;
+  WithChild:
+    | ( Omit<Types.AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']> } )
+    | ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } )
+  ;
   WithChildren: ( Omit<Types.AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Types.Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Types.Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
 }>;
 
@@ -446,8 +468,8 @@ export type ResolversTypes = ResolversObject<{
   Child: ResolverTypeWrapper<Omit<Types.Child, 'parent'> & { parent?: Types.Maybe<ResolversTypes['MyType']> }>;
   MyOtherType: ResolverTypeWrapper<Types.MyOtherType>;
   ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-  Query: ResolverTypeWrapper<{}>;
-  Subscription: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   ID: ResolverTypeWrapper<Types.Scalars['ID']['output']>;
   SomeNode: ResolverTypeWrapper<Types.SomeNode>;
@@ -469,8 +491,8 @@ export type ResolversParentTypes = ResolversObject<{
   Child: Omit<Types.Child, 'parent'> & { parent?: Types.Maybe<ResolversParentTypes['MyType']> };
   MyOtherType: Types.MyOtherType;
   ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-  Query: {};
-  Subscription: {};
+  Query: Record<PropertyKey, never>;
+  Subscription: Record<PropertyKey, never>;
   Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   ID: Types.Scalars['ID']['output'];
   SomeNode: Types.SomeNode;
@@ -530,7 +552,6 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = ResolversObject<{
   __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 }>;
 
 export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = ResolversObject<{
@@ -540,19 +561,14 @@ export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type AnotherNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AnotherNode'] = ResolversParentTypes['AnotherNode']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithChild' | 'AnotherNodeWithAll', ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 }>;
 
 export type WithChildResolvers<ContextType = any, ParentType extends ResolversParentTypes['WithChild'] = ResolversParentTypes['WithChild']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithChild' | 'AnotherNodeWithAll', ParentType, ContextType>;
-  unionChild?: Resolver<Types.Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
-  node?: Resolver<Types.Maybe<ResolversTypes['AnotherNode']>, ParentType, ContextType>;
 }>;
 
 export type WithChildrenResolvers<ContextType = any, ParentType extends ResolversParentTypes['WithChildren'] = ResolversParentTypes['WithChildren']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithAll', ParentType, ContextType>;
-  unionChildren?: Resolver<Array<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
-  nodes?: Resolver<Array<ResolversTypes['AnotherNode']>, ParentType, ContextType>;
 }>;
 
 export type AnotherNodeWithChildResolvers<ContextType = any, ParentType extends ResolversParentTypes['AnotherNodeWithChild'] = ResolversParentTypes['AnotherNodeWithChild']> = ResolversObject<{
@@ -604,7 +620,7 @@ export type DirectiveResolvers<ContextType = any> = ResolversObject<{
 "
 `;
 
-exports[`TypeScript Resolvers Plugin Config optionalInfoArgument - should allow to have optional info argument 1`] = `
+exports[`TypeScript Resolvers Plugin > Config > optionalInfoArgument - should allow to have optional info argument 1`] = `
 "export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -711,7 +727,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -748,21 +764,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
   parent: TParent,
   context: TContext,
   info?: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info?: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info?: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -770,17 +786,31 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info?: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
-  ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> } ) | ( MyOtherType );
-  MyUnion: ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<_RefType['ChildUnion']> } ) | ( MyOtherType );
+  ChildUnion:
+    | ( Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> } )
+    | ( MyOtherType )
+  ;
+  MyUnion:
+    | ( Omit<MyType, 'unionChild'> & { unionChild?: Maybe<_RefType['ChildUnion']> } )
+    | ( MyOtherType )
+  ;
 }>;
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
   Node: ( SomeNode );
-  AnotherNode: ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
-  WithChild: ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } ) | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
+  AnotherNode:
+    | ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } )
+    | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } )
+  ;
+  WithChild:
+    | ( Omit<AnotherNodeWithChild, 'unionChild' | 'interfaceChild'> & { unionChild?: Maybe<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']> } )
+    | ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } )
+  ;
   WithChildren: ( Omit<AnotherNodeWithAll, 'unionChild' | 'unionChildren' | 'interfaceChild' | 'interfaceChildren'> & { unionChild?: Maybe<_RefType['ChildUnion']>, unionChildren: Array<_RefType['ChildUnion']>, interfaceChild?: Maybe<_RefType['Node']>, interfaceChildren: Array<_RefType['Node']> } );
 }>;
 
@@ -791,8 +821,8 @@ export type ResolversTypes = ResolversObject<{
   Child: ResolverTypeWrapper<Omit<Child, 'parent'> & { parent?: Maybe<ResolversTypes['MyType']> }>;
   MyOtherType: ResolverTypeWrapper<MyOtherType>;
   ChildUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ChildUnion']>;
-  Query: ResolverTypeWrapper<{}>;
-  Subscription: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   SomeNode: ResolverTypeWrapper<SomeNode>;
@@ -814,8 +844,8 @@ export type ResolversParentTypes = ResolversObject<{
   Child: Omit<Child, 'parent'> & { parent?: Maybe<ResolversParentTypes['MyType']> };
   MyOtherType: MyOtherType;
   ChildUnion: ResolversUnionTypes<ResolversParentTypes>['ChildUnion'];
-  Query: {};
-  Subscription: {};
+  Query: Record<PropertyKey, never>;
+  Subscription: Record<PropertyKey, never>;
   Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   ID: Scalars['ID']['output'];
   SomeNode: SomeNode;
@@ -875,7 +905,6 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = ResolversObject<{
   __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 }>;
 
 export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SomeNode'] = ResolversParentTypes['SomeNode']> = ResolversObject<{
@@ -885,19 +914,14 @@ export type SomeNodeResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type AnotherNodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AnotherNode'] = ResolversParentTypes['AnotherNode']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithChild' | 'AnotherNodeWithAll', ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 }>;
 
 export type WithChildResolvers<ContextType = any, ParentType extends ResolversParentTypes['WithChild'] = ResolversParentTypes['WithChild']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithChild' | 'AnotherNodeWithAll', ParentType, ContextType>;
-  unionChild?: Resolver<Maybe<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['AnotherNode']>, ParentType, ContextType>;
 }>;
 
 export type WithChildrenResolvers<ContextType = any, ParentType extends ResolversParentTypes['WithChildren'] = ResolversParentTypes['WithChildren']> = ResolversObject<{
   __resolveType: TypeResolveFn<'AnotherNodeWithAll', ParentType, ContextType>;
-  unionChildren?: Resolver<Array<ResolversTypes['ChildUnion']>, ParentType, ContextType>;
-  nodes?: Resolver<Array<ResolversTypes['AnotherNode']>, ParentType, ContextType>;
 }>;
 
 export type AnotherNodeWithChildResolvers<ContextType = any, ParentType extends ResolversParentTypes['AnotherNodeWithChild'] = ResolversParentTypes['AnotherNodeWithChild']> = ResolversObject<{

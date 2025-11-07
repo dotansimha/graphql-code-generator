@@ -5,7 +5,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import App from './App.vue';
 
 const httpLink = new HttpLink({
-  uri: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  uri: 'https://graphql.org/graphql/',
 });
 
 // Create the apollo client

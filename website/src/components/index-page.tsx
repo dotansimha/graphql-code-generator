@@ -40,6 +40,7 @@ export function IndexPage(): ReactElement {
         {`
           html {
             scroll-behavior: smooth;
+            color-scheme: light !important;
           }
           body {
             background: #fff;

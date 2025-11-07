@@ -32,6 +32,7 @@ const config: Config = {
       },
     },
   },
+  content: [...theGuildTailwindConfig.content, './theme.config.tsx'],
 };
 
 export default config;

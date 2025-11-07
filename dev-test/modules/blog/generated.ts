@@ -1,4 +1,4 @@
-import * as Types from '../types';
+import * as Types from '../types.js';
 import * as gm from 'graphql-modules';
 export namespace BlogModule {
   interface DefinedFields {
@@ -10,7 +10,7 @@ export namespace BlogModule {
   export type User = Types.User;
   export type Query = Pick<Types.Query, DefinedFields['Query']>;
 
-  export type ArticleResolvers = Pick<Types.ArticleResolvers, DefinedFields['Article'] | '__isTypeOf'>;
+  export type ArticleResolvers = Pick<Types.ArticleResolvers, DefinedFields['Article']>;
   export type QueryResolvers = Pick<Types.QueryResolvers, DefinedFields['Query']>;
 
   export interface Resolvers {

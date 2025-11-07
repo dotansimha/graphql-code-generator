@@ -1,5 +1,44 @@
 # @graphql-codegen/plugin-helpers
 
+## 6.0.0
+
+### Major Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGES: Do not generate \_\_isTypeOf for non-implementing types or non-union members
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove deprecated option `watchConfig`
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Ensure Federation Interfaces have `__resolveReference` if they are resolvable entities
+
+  BREAKING CHANGES: Deprecate `onlyResolveTypeForInterfaces` because majority of use cases cannot implement resolvers in Interfaces.
+  BREAKING CHANGES: Deprecate `generateInternalResolversIfNeeded.__resolveReference` because types do not have `__resolveReference` if they are not Federation entities or are not resolvable. Users should not have to manually set this option. This option was put in to wait for this major version.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Improve Federation Entity's resolvers' parent param type: These types were using reference types inline. This makes it hard to handle mappers. The Parent type now all comes from ParentResolverTypes to make handling mappers and parent types simpler.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `mappers` usage with Federation
+
+  `mappers` was previously used as `__resolveReference`'s first param (usually called "reference"). However, this is incorrect because `reference` interface comes directly from `@key` and `@requires` directives. This patch fixes the issue by creating a new `FederationTypes` type and use it as the base for federation entity types when being used to type entity references.
+
+  BREAKING CHANGES: No longer generate `UnwrappedObject` utility type, as this was used to support the wrong previously generated type.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Drop Node 18 support
+
+### Minor Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Add `allowPartialOutputs` flag to partially write successful generation to files
+
+### Patch Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Update @requires type
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fields or object types marked with @external being wrongly generated
+
+## 5.1.1
+
+### Patch Changes
+
+- [#10150](https://github.com/dotansimha/graphql-code-generator/pull/10150) [`e324382`](https://github.com/dotansimha/graphql-code-generator/commit/e3243824cfe0d7ab463cf0d5a6455715510959be) Thanks [@ArminWiebigke](https://github.com/ArminWiebigke)! - Allow functions to be passed as valid values for `UrlSchemaOptions.customFetch`. This was already possible, but the type definitions did not reflect that correctly.
+
 ## 5.1.0
 
 ### Minor Changes
