@@ -4,12 +4,17 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
 jobs:
-  # dependencies:
-  #   uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@main
-  #   if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
-  #   secrets:
-  #     githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
+  dependencies:
+    uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@main
+    if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN  }}
 
   alpha:
     uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
