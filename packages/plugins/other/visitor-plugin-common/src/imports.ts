@@ -8,6 +8,7 @@ export type ImportDeclaration<T = string> = {
   baseDir: string;
   typesImport: boolean;
   emitLegacyCommonJSImports: boolean;
+  preserveTSExtension: boolean;
 };
 
 export type ImportSource<T = string> = {
@@ -51,13 +52,21 @@ export function generateFragmentImportStatement(
 }
 
 export function generateImportStatement(statement: ImportDeclaration): string {
-  const { baseDir, importSource, outputPath, typesImport } = statement;
+  const { baseDir, importSource, outputPath, typesImport, preserveTSExtension } = statement;
   const importPath = resolveImportPath(baseDir, outputPath, importSource.path);
   const importNames = importSource.identifiers?.length
     ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
     : '*';
-  const importExtension =
-    importPath.startsWith('/') || importPath.startsWith('.') ? (statement.emitLegacyCommonJSImports ? '' : '.js') : '';
+
+  let importExtension = '';
+  if (importPath.startsWith('/') || importPath.startsWith('.')) {
+    if (preserveTSExtension) {
+      importExtension = '.ts';
+    } else if (!statement.emitLegacyCommonJSImports) {
+      importExtension = '.js';
+    }
+  }
+
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   const importStatement = typesImport ? 'import type' : 'import';
   return `${importStatement} ${importNames}${importAlias} from '${importPath}${importExtension}';${

@@ -598,6 +598,10 @@ export class ClientSideBaseVisitor<
       return path;
     }
 
+    if (this.config.preserveTSExtension && extension === '.ts') {
+      return path;
+    }
+
     if (EXTENSIONS_TO_REMOVE.includes(extension)) {
       return path.replace(/\.[^/.]+$/, '');
     }
@@ -636,7 +640,9 @@ export class ClientSideBaseVisitor<
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
-            if (!this.config.emitLegacyCommonJSImports) {
+            if (this.config.preserveTSExtension) {
+              documentPath += '.ts';
+            } else if (!this.config.emitLegacyCommonJSImports) {
               documentPath += '.js';
             }
 
@@ -674,6 +680,7 @@ export class ClientSideBaseVisitor<
               ),
             },
             emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+            preserveTSExtension: this.config.preserveTSExtension,
           })
         )
         .filter(fragmentImport => fragmentImport.outputPath !== fragmentImport.importSource.path);

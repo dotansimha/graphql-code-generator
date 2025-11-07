@@ -81,6 +81,76 @@ describe('getImports', () => {
         expect(imports[0]).toBe(`import * as Operations from './${fileName}.js';`);
       });
     });
+
+    describe('when preserveTSExtension is true', () => {
+      it('appends `.ts` to Operations import path', () => {
+        const fileName = 'fooBarQuery';
+        const importPath = `src/queries/${fileName}`;
+
+        const document = parse(
+          `query fooBarQuery {
+            a {
+              foo
+              bar
+            }
+          }
+        `
+        );
+
+        const visitor = new ClientSideBaseVisitor(
+          schema,
+          [],
+          {
+            emitLegacyCommonJSImports: false,
+            preserveTSExtension: true,
+            importDocumentNodeExternallyFrom: 'near-operation-file',
+            documentMode: DocumentMode.external,
+          },
+          {},
+          [{ document, location: importPath }]
+        );
+
+        visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
+
+        const imports = visitor.getImports();
+        expect(imports[0]).toBe(`import * as Operations from './${fileName}.ts';`);
+      });
+    });
+
+    describe('when preserveTSExtension is false and emitLegacyCommonJSImports is true', () => {
+      it('does not append extension to Operations import path', () => {
+        const fileName = 'fooBarQuery';
+        const importPath = `src/queries/${fileName}`;
+
+        const document = parse(
+          `query fooBarQuery {
+            a {
+              foo
+              bar
+            }
+          }
+        `
+        );
+
+        const visitor = new ClientSideBaseVisitor(
+          schema,
+          [],
+          {
+            emitLegacyCommonJSImports: true,
+            preserveTSExtension: false,
+            importDocumentNodeExternallyFrom: 'near-operation-file',
+            documentMode: DocumentMode.external,
+          },
+          {},
+          [{ document, location: importPath }]
+        );
+
+        visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
+
+        const imports = visitor.getImports();
+        expect(imports[0]).toBe(`import * as Operations from './${fileName}';`);
+      });
+    });
   });
 
   describe('when documentMode "external", importDocumentNodeExternallyFrom is relative path', () => {
@@ -186,6 +256,7 @@ describe('getImports', () => {
                 ],
               },
               emitLegacyCommonJSImports: true,
+              preserveTSExtension: false,
               typesImport: false,
             },
           ],
@@ -259,6 +330,7 @@ describe('getImports', () => {
                 ],
               },
               emitLegacyCommonJSImports: true,
+              preserveTSExtension: false,
               typesImport: false,
             },
           ],

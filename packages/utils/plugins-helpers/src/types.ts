@@ -473,6 +473,10 @@ export namespace Types {
      */
     emitLegacyCommonJSImports?: boolean;
     /**
+     * @description A flag to preserve `.ts` extension to the output file. Default: `false`.
+     */
+    preserveTSExtension?: boolean;
+    /**
      * @description A flag to suppress printing errors when they occur.
      */
     silent?: boolean;

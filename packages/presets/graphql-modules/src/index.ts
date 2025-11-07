@@ -74,8 +74,8 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
 
     const baseTypesFilename = baseTypesPath.replace(
       /\.(js|ts|d.ts)$/,
-      // we need extension if ESM modules are used
-      options.config.emitLegacyCommonJSImports ? '' : '.js'
+      // we need extension if ESM modules are used or if preserving TS extension
+      options.config.preserveTSExtension ? '.ts' : options.config.emitLegacyCommonJSImports ? '' : '.js'
     );
     const baseTypesDir = stripFilename(baseOutput.filename);
 

@@ -273,6 +273,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
           emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+          preserveTSExtension: options.config.preserveTSExtension,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
         documents: [],
@@ -282,7 +283,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     let indexFileGenerateConfig: Types.GenerateOptions | null = null;
 
-    const reexportsExtension = options.config.emitLegacyCommonJSImports ? '' : '.js';
+    const reexportsExtension = options.config.preserveTSExtension
+      ? '.ts'
+      : options.config.emitLegacyCommonJSImports
+      ? ''
+      : '.js';
 
     if (reexports.length) {
       indexFileGenerateConfig = {

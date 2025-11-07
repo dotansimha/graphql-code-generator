@@ -14,7 +14,7 @@ import {
 import { NoTypeDefinitionsFound } from '@graphql-tools/load';
 import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
-import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
+import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports, shouldPreserveTSExtension } from './config.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
@@ -327,6 +327,7 @@ export async function executeCodegen(
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
                             emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
+                            shouldPreserveTSExtension: shouldPreserveTSExtension(config),
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -379,6 +380,7 @@ export async function executeCodegen(
                               ...outputArgs,
                               // @ts-expect-error todo: fix 'emitLegacyCommonJSImports' does not exist in type 'GenerateOptions'
                               emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
+                              shouldPreserveTSExtension: shouldPreserveTSExtension(config),
                               cache,
                             });
                             result.push({

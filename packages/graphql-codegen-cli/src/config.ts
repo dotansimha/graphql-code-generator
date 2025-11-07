@@ -38,6 +38,7 @@ export type YamlCliFlags = {
   debug?: boolean;
   ignoreNoDocuments?: boolean;
   emitLegacyCommonJSImports?: boolean;
+  preserveTSExtension?: boolean;
 };
 
 export function generateSearchPlaces(moduleName: string) {
@@ -322,6 +323,10 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     config.emitLegacyCommonJSImports = cliFlags['emit-legacy-common-js-imports'] === true;
   }
 
+  if (cliFlags['preserve-ts-extension'] !== undefined) {
+    config.preserveTSExtension = cliFlags['preserve-ts-extension'] === true;
+  }
+
   if (cliFlags.project) {
     context.useProject(cliFlags.project);
   }
@@ -503,4 +508,8 @@ export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
   // }
 
   return globalValue;
+}
+
+export function shouldPreserveTSExtension(config: Types.Config): boolean {
+  return config.preserveTSExtension === true;
 }

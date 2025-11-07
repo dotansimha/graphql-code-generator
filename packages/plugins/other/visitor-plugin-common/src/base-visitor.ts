@@ -36,6 +36,7 @@ export interface ParsedConfig {
   allowEnumStringTypes: boolean;
   inlineFragmentTypes: InlineFragmentTypeOptions;
   emitLegacyCommonJSImports: boolean;
+  preserveTSExtension: boolean;
   printFieldsOnNewLines: boolean;
   includeExternalFragments: boolean;
 }
@@ -365,6 +366,11 @@ export interface RawConfig {
    * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
    */
   emitLegacyCommonJSImports?: boolean;
+  /**
+   * @description A flag to preserve `.ts` extension to the output file. Default: `false`.
+   * @default false
+   */
+  preserveTSExtension?: boolean;
 
   /**
    * @default false
@@ -410,6 +416,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       emitLegacyCommonJSImports:
         rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
+      preserveTSExtension: !!rawConfig.preserveTSExtension,
       extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
       includeExternalFragments: rawConfig.includeExternalFragments ?? false,
