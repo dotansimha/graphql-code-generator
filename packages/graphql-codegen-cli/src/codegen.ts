@@ -327,7 +327,7 @@ export async function executeCodegen(
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
                             emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
-                            shouldPreserveTSExtension: shouldPreserveTSExtension(config),
+                            preserveTSExtension: shouldPreserveTSExtension(config),
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -380,7 +380,7 @@ export async function executeCodegen(
                               ...outputArgs,
                               // @ts-expect-error todo: fix 'emitLegacyCommonJSImports' does not exist in type 'GenerateOptions'
                               emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
-                              shouldPreserveTSExtension: shouldPreserveTSExtension(config),
+                              preserveTSExtension: shouldPreserveTSExtension(config),
                               cache,
                             });
                             result.push({
