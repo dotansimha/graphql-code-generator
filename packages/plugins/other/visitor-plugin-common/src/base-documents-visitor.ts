@@ -11,7 +11,7 @@ import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor.js';
 import { BaseVisitor } from './base-visitor.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import { SelectionSetToObject } from './selection-set-to-object.js';
-import { NormalizedScalarsMap } from './types.js';
+import { NormalizedScalarsMap, CustomDirectivesConfig } from './types.js';
 import { buildScalarsFromConfig, DeclarationBlock, DeclarationBlockConfig, getConfigValue } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 
@@ -30,6 +30,7 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   addTypename: boolean;
   preResolveTypes: boolean;
+  extractAllFieldsToTypes: boolean;
   globalNamespace: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
@@ -39,6 +40,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   skipTypeNameForRoot: boolean;
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
+  customDirectives: CustomDirectivesConfig;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -148,6 +150,31 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @ignore
    */
   namespacedImportName?: string;
+
+  /**
+   * @description Configures behavior for use with custom directives from
+   * various GraphQL libraries.
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript'],
+   *        config: {
+   *          customDirectives: {
+   *            apolloUnmask: true
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  customDirectives?: CustomDirectivesConfig;
 }
 
 export class BaseDocumentsVisitor<
@@ -179,6 +206,7 @@ export class BaseDocumentsVisitor<
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
+      customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
       ...((additionalConfig || {}) as any),
     });
 
@@ -257,7 +285,7 @@ export class BaseDocumentsVisitor<
       .join('\n\n');
   }
 
-  protected applyVariablesWrapper(variablesBlock: string): string {
+  protected applyVariablesWrapper(variablesBlock: string, _operationType?: string): string {
     return variablesBlock;
   }
 
@@ -275,6 +303,11 @@ export class BaseDocumentsVisitor<
     );
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix = this.getOperationSuffix(name, operationType);
+    const selectionSetObjects = selectionSet.transformSelectionSet(
+      this.convertName(name, {
+        suffix: operationTypeSuffix,
+      })
+    );
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -284,11 +317,11 @@ export class BaseDocumentsVisitor<
           suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
-      .withContent(selectionSet.transformSelectionSet()).string;
+      .withContent(selectionSetObjects.mergedTypeString).string;
 
     const operationVariables = new DeclarationBlock({
       ...this._declarationBlockConfig,
-      blockTransformer: t => this.applyVariablesWrapper(t),
+      blockTransformer: t => this.applyVariablesWrapper(t, operationType),
     })
       .export()
       .asKind('type')
@@ -299,6 +332,23 @@ export class BaseDocumentsVisitor<
       )
       .withBlock(visitedOperationVariables).string;
 
-    return [operationVariables, operationResult].filter(r => r).join('\n\n');
+    const dependentTypesContent = this._parsedConfig.extractAllFieldsToTypes
+      ? selectionSetObjects.dependentTypes.map(
+          i =>
+            new DeclarationBlock(this._declarationBlockConfig)
+              .export()
+              .asKind('type')
+              .withName(i.name)
+              .withContent(i.content).string
+        )
+      : [];
+
+    return [
+      ...(dependentTypesContent.length > 0 ? [dependentTypesContent.join('\n')] : []),
+      operationVariables,
+      operationResult,
+    ]
+      .filter(r => r)
+      .join('\n\n');
   }
 }

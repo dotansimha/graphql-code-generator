@@ -3,7 +3,7 @@ title: Introduction
 description: GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack. From back-end to front-end, GraphQL Code Generator automates the generation of typed Queries, Mutations and, Subscriptions for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 ---
 
-import { Tabs, Callout } from '@theguild/components'
+import { Tabs, Callout, Cards} from '@theguild/components'
 
 # Introduction to GraphQL Code Generator
 
@@ -40,7 +40,7 @@ type Query {
 
 The following sections showcase why GraphQL Code Generator is a game-changer for your GraphQL Stack.
 
-### From the front-end
+### From the Frontend
 
 Most client-side implementations without GraphQL Code Generator would query the API as showcased in the following examples:
 
@@ -49,7 +49,7 @@ Most client-side implementations without GraphQL Code Generator would query the 
 ```tsx
 import { useQuery } from 'urql'
 
-interface PostQuery {
+interface PostsQuery {
   posts: {
     id: string
     title: string
@@ -88,7 +88,7 @@ const Posts = () => {
 import { request, gql } from 'graphql-request'
 import { useQuery } from '@tanstack/react-query'
 
-interface PostQuery {
+interface PostsQuery {
   posts: {
     id: string
     title: string
@@ -115,7 +115,7 @@ const postsQueryDocument = gql`
 `
 
 const Posts = () => {
-  const { data } = useQuery<PostQuery>('posts', async () => {
+  const { data } = useQuery<PostsQuery>('posts', async () => {
     const { posts } = await request(endpoint, postsQueryDocument)
     return posts
   })
@@ -250,17 +250,17 @@ Manually maintaining the GraphQL operation types or the complete absence of type
 
 - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
-The strength of your front-end application types is based on your data types.
+The strength of your frontend application types is based on your data types.
 Any mistake on your manually maintained data types ripples in many of your components.
 
 For this reason, automating and generating the typing of your GraphQL operations will both improve the developer
 experience and stability of your stack.
 
-After installing 3 packages:
+After installing GraphQL Code Generator:
 
 ```sh npm2yarn
 npm i graphql
-npm i -D typescript @graphql-codegen/cli @graphql-codegen/client-preset
+npm i -D typescript @graphql-codegen/cli
 ```
 
 and providing a simple configuration:
@@ -336,7 +336,7 @@ const postsQueryDocument = graphql(/* GraphQL */ `
 
 const Posts = () => {
   // React Query `useQuery()` knows how to work with typed graphql documents
-  const { data } = useQuery<PostQuery>('posts', async () => {
+  const { data } = useQuery<PostsQuery>('posts', async () => {
     const { posts } = await request(endpoint, postsQueryDocument)
     return posts
   })
@@ -385,7 +385,6 @@ const posts = computed(() => result.value?.posts);
 <Tabs.Tab>
 ```tsx
 import { PostsGQL, PostsQuery } from './graphql'
-// BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -416,7 +415,7 @@ export class PostsComponent {
 </Tabs.Tab>
 </Tabs>
 
-Now, with simple configuration and an npm/yarn script, a front-end developers benefits from:
+Now, with simple configuration and an npm/yarn script, a front-end developer benefits from:
 
 - **up-to-date typings**
 
@@ -436,7 +435,7 @@ GraphQL Code Generator checks for this automatically and will let you know if yo
 More details on the inner working of GraphQL Code Generator are available on [this page](/docs/advanced/how-does-it-work).
 </Callout>
 
-### To the back-end
+### To the Backend
 
 Most GraphQL API resolvers remain untyped or wrongly typed which, leads to multiple issues:
 
@@ -527,18 +526,45 @@ export const resolvers: UsersModule.Resolvers = {
 
 ## What's next?
 
-Start by [installing GraphQL Code Generator](/docs/getting-started/installation) in your project or get started with our guides:
-- [React and Vue](/docs/guides/react-vue)
-- [Angular](/docs/guides/angular)
-- [Svelte](/docs/guides/svelte)
-- [Apollo and Yoga server](/docs/guides/graphql-server-apollo-yoga)
-- [GraphQL Modules](/docs/guides/graphql-modules)
+After unstanding the basic concepts of GraphQL Code Generator, you can start setting it up within your project.
+If your stack is not listed below, please refer to [our plugin overview](/plugins).
 
-If your stack is not listed above, please refer to [our plugins directory](/plugins).
+### Client-Side GraphQL
+
+Choose your existing setup or preference to get started.
+
+<Cards>
+  <Cards.Card arrow title="Vanilla TypeScript" href="/docs/guides/vanilla-typescript" />
+  <Cards.Card arrow title="React Query" href="/docs/guides/react-query" />
+  <Cards.Card arrow title="React / Vue" href="/docs/guides/react-vue" />
+  <Cards.Card arrow title="Angular" href="/docs/guides/angular" />
+  <Cards.Card arrow title="Svelte" href="/docs/guides/svelte" />
+</Cards>
+
+### Server-Side GraphQL
+
+
+<Cards>
+  <Cards.Card
+    arrow
+    title="GraphQL Yoga with Server Preset"
+    href="/docs/guides/graphql-server-apollo-yoga-with-server-preset"
+  />
+   <Cards.Card
+    arrow
+    title="Apollo Server with Server Preset"
+    href="/docs/guides/graphql-server-apollo-yoga-with-server-preset"
+  />
+  <Cards.Card arrow title="Apollo and Yoga server" href="/docs/guides/graphql-server-apollo-yoga" />
+  <Cards.Card arrow title="GraphQL Modules" href="/docs/guides/graphql-modules" />
+</Cards>
+
+
+### Troubleshooting
 
 If you are experiencing any issues, you can reach us via the following channels:
 
 - Found a bug? [report it in our GitHub repo](https://github.com/dotansimha/graphql-code-generator)
 - Need help or have a question? You can use the live chat box in the corner of the screen, [ask it in our GitHub Discussions page](https://github.com/dotansimha/graphql-code-generator/discussions) or [reach out to us directly in our Discord](http://bit.ly/guild-chat)
 - We have more awesome [open source tools](https://github.com/the-guild-org/Stack)!
-- You can [visit our website](http://the-guild.dev) for more information about us and what we do
+- You can [visit our website](https://the-guild.dev) for more information about us and what we do

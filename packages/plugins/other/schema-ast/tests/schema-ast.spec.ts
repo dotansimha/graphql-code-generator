@@ -22,7 +22,7 @@ describe('Schema AST', () => {
         throw new Error(SHOULD_THROW_ERROR);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_THROW_ERROR);
-        expect(e.message).toBe('Plugin "schema-ast" requires extension to be ".graphql" or ".gql"!');
+        expect(e.message).toBe('Plugin "schema-ast" requires extension to be ".graphql" or ".gql" or ".graphqls"!');
       }
     });
 
@@ -39,7 +39,7 @@ describe('Schema AST', () => {
 
       try {
         await validate(null, null, null, fileName, plugins);
-      } catch (e) {
+      } catch {
         expect(true).toBeFalsy();
       }
     });
@@ -54,7 +54,7 @@ describe('Schema AST', () => {
 
       try {
         await validate(null, null, null, fileName, plugins);
-      } catch (e) {
+      } catch {
         expect(true).toBeFalsy();
       }
     });
@@ -69,7 +69,22 @@ describe('Schema AST', () => {
 
       try {
         await validate(null, null, null, fileName, plugins);
-      } catch (e) {
+      } catch {
+        expect(true).toBeFalsy();
+      }
+    });
+
+    it('Should allow .graphqls extension when its the only plugin', async () => {
+      const fileName = 'output.graphqls';
+      const plugins: Types.ConfiguredPlugin[] = [
+        {
+          'schema-ast': {},
+        },
+      ];
+
+      try {
+        await validate(null, null, null, fileName, plugins);
+      } catch {
         expect(true).toBeFalsy();
       }
     });

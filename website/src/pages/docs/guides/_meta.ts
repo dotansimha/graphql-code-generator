@@ -1,4 +1,6 @@
 export default {
+  'vanilla-typescript': 'Vanilla TypeScript',
+  'react-query': 'React Query',
   'react-vue': 'React / Vue',
   angular: 'Angular',
   svelte: 'Svelte / Kit',

@@ -29,11 +29,11 @@ GraphQL Code Generator uses the following stack to manage the source code:
 
 1. [TypeScript](https://typescriptlang.org) - for writing the code
 2. [Bob](https://github.com/kamilkisiela/bob) - for building, bundling, and development workflow
-3. [Jest](https://jestjs.io) - for running tests
+3. [Vitest](https://vitest.dev/) - for running tests
 
 ## 2. Fork and Clone
 
-Start by [creating a Fork of the `dotansimha/graphql-code-generator-community` repository](https://help.github.com/en/github/getting-started-with-github/fork-a-repo); this will allow you to make changes and push them quickly later: [`dotansimha/graphql-code-generator-community`](dotansimha/graphql-code-generator-community).
+Start by [creating a Fork of the `dotansimha/graphql-code-generator-community` repository](https://help.github.com/en/github/getting-started-with-github/fork-a-repo); this will allow you to make changes and push them quickly later: [`dotansimha/graphql-code-generator-community`](https://github.com/dotansimha/graphql-code-generator-community).
 
 Then, use Git [to clone](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github) your newly created fork repository.
 
@@ -100,7 +100,7 @@ Make sure to follow the following instructions:
 {
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../../jest.config.js"
+    "test": "vitest --no-watch"
   }
 }
 ```

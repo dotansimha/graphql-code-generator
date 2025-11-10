@@ -1,9 +1,8 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
-import inquirer from 'inquirer';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import { bold, writeConfig, writePackage } from './helpers.js';
-import { getQuestions } from './questions.js';
+import { getAnswers } from './questions.js';
 import { guessTargets } from './targets.js';
-import { Answers, Tags } from './types.js';
+import { Tags } from './types.js';
 
 function log(...msgs: string[]) {
   // eslint-disable-next-line no-console
@@ -17,8 +16,7 @@ export async function init() {
   `);
 
   const possibleTargets = await guessTargets();
-
-  const answers = await inquirer.prompt<Answers>(getQuestions(possibleTargets));
+  const answers = await getAnswers(possibleTargets);
 
   // define config
   const config: Types.Config = {

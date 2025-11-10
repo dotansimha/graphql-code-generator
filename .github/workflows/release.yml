@@ -9,16 +9,7 @@ jobs:
     uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
     with:
       releaseScript: release
-      nodeVersion: 18
     secrets:
-      githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
-      npmToken: ${{ secrets.NPM_TOKEN }}
-
-  algolia:
-    uses: the-guild-org/shared-config/.github/workflows/algolia-publish.yml@main
-    secrets:
+      # githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
       githubToken: ${{ secrets.GITHUB_TOKEN }}
-      algoliaAdminApiKey: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
-    with:
-      domain: https://www.the-guild.dev/graphql/codegen/
-      source: 'Code Generator'
+      npmToken: ${{ secrets.NPM_TOKEN }}

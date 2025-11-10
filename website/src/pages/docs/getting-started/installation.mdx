@@ -3,7 +3,7 @@ title: Quick Start
 description: GraphQL Code Generator is a plugin-based tool that helps you get the best out of your GraphQL stack. From back-end to front-end, GraphQL Code Generator automates the generation of typed Queries, Mutations and, Subscriptions for React, Vue, Angular, Next.js, Svelte, whether you are using Apollo Client, URQL or, React Query.
 ---
 
-import { Callout } from '@theguild/components'
+import { Callout, Cards } from '@theguild/components'
 
 # Quick Start
 
@@ -22,27 +22,22 @@ npm i -D @parcel/watcher
 
 ## Global Installation
 
-<Callout type="warning">
 Please avoid installing `graphql`, `@graphql-codegen/cli`, and its plugins as global dependencies. This will cause issues because of duplications of the `graphql` package. Install it only locally in your project.
-
-</Callout>
 
 ## Monorepo Project
 
-<Callout type="warning">
-If you are using Monorepo setup (Lerna/Yarn Workspaces/anything else), please note that GraphQL Codegen is using `require` to load plugins and files. This might break and fail in case of hoisting.
+If you are using Monorepo setup (Yarn or pnpm Workspaces), please note that GraphQL Codegen is using `require` to load plugins and files. This might break and fail in case of hoisting.
 
 If you are having issues with loading GraphQL-Codegen plugins, make sure it's installed correctly, at the same level of `node_modules`, and make sure it's accessible and available for the Codegen CLI.
 
-</Callout>
+## Setup
 
-GraphQL Code Generator comes with dozens of plugins, from front-end to back-end, from web apps to mobile apps. If you are not sure which plugins might be helpful for your GraphQL stack, give a try at the [_Initialization Wizard_](#initialization-wizard).
+GraphQL Code Generator comes with dozens of plugins, from frontend to backend, from web apps to mobile apps.
+We recommend looking at the [guides](#manual-setup) or trying the [initialization wizards](#initialization-wizard)
 
 Otherwise, you can start exploring the [plugins](/plugins) and [setting up them manually](#manual-setup).
 
-## Setup
-
-### Initialization Wizard
+## Initialization Wizard
 
 Once installed, GraphQL Code Generator CLI can help you configure your project based on some popular flows:
 
@@ -50,31 +45,46 @@ Once installed, GraphQL Code Generator CLI can help you configure your project b
 npx graphql-code-generator init
 ```
 
+Install the chosen packages:
+
 ```sh npm2yarn
-npm install # install the chosen packages
+npm install
 ```
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting and installing plugins, picking a destination to where your files are generated, and a lot more.
 
-### Manual Setup
+## Manual Setup
 
 Once GraphQL Code Generator is installed and added to your project's development workflow (scripts), you can start installing plugins and configuring them.
 
 If you are looking for the **best way to leverage GraphQL Code Generator on your stack**, you should read one of our _Guides_.
 
-#### Client
+### Client
 
-We recommend using [a `client` preset](/plugins/presets/preset-client) that has a recommended configuration for the client applications. You can follow one of the following guides:
+Follow one of the following guides to get started.
 
-- [React](/docs/guides/react-vue)
-- [Vue](/docs/guides/react-vue)
-- [Angular](/docs/guides/angular)
-- [Svelte](/docs/guides/svelte)
+<Cards>
+  <Cards.Card arrow title="Vanilla TypeScript" href="/docs/guides/vanilla-typescript" />
+  <Cards.Card arrow title="React Query" href="/docs/guides/react-query" />
+  <Cards.Card arrow title="React / Vue" href="/docs/guides/react-vue" />
+  <Cards.Card arrow title="Angular" href="/docs/guides/angular" />
+  <Cards.Card arrow title="Svelte" href="/docs/guides/svelte" />
+</Cards>
 
-#### Server
+### Server
 
-- [Apollo and Yoga server](/docs/guides/graphql-server-apollo-yoga)
-- [Apollo and Yoga server with Server Preset](/docs/guides/graphql-server-apollo-yoga-with-server-preset)
-- [GraphQL Modules](/docs/guides/graphql-modules)
+Follow one of the following guides to get started.
+
+<Cards>
+  <Cards.Card
+    arrow
+    title="Apollo and Yoga server with Server Preset"
+    href="/docs/guides/graphql-server-apollo-yoga-with-server-preset"
+  />
+  <Cards.Card arrow title="Apollo and Yoga server" href="/docs/guides/graphql-server-apollo-yoga" />
+  <Cards.Card arrow title="GraphQL Modules" href="/docs/guides/graphql-modules" />
+</Cards>
+
+### Other
 
 If your stack is not listed above, please refer to [our plugins directory](/plugins).

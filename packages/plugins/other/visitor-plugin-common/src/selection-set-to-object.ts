@@ -43,6 +43,8 @@ import {
 } from './types.js';
 import {
   DeclarationBlock,
+  DeclarationBlockConfig,
+  getFieldNames,
   getFieldNodeNameValue,
   getPossibleTypes,
   hasConditionalDirectives,
@@ -59,8 +61,16 @@ type FragmentSpreadUsage = {
   fragmentDirectives?: DirectiveNode[];
 };
 
+interface DependentType {
+  name: string;
+  content: string;
+  isUnionType?: boolean;
+}
+
 type CollectedFragmentNode = (SelectionNode | FragmentSpreadUsage | DirectiveNode) & FragmentDirectives;
 type GroupedStringifiedTypes = Record<string, Array<string | { union: string[] }>>;
+
+const operationTypes: string[] = ['Query', 'Mutation', 'Subscription'];
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -233,6 +243,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     };
   }
 
+  /**
+   * The `buildFragmentSpreadsUsage` method is used to collect fields from fragment spreads in the selection set.
+   * It creates a record of fragment spread usages, which includes the fragment name, type name, and the selection nodes
+   * inside the fragment.
+   */
   protected buildFragmentSpreadsUsage(spreads: FragmentSpreadNode[]): Record<string, FragmentSpreadUsage[]> {
     const selectionNodesByTypeName: Record<string, FragmentSpreadUsage[]> = {};
 
@@ -323,12 +338,13 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     }
   }
 
-  /**
-   * mustAddEmptyObject indicates that not all possible types on a union or interface field are covered.
-   */
-  protected _buildGroupedSelections(): { grouped: GroupedStringifiedTypes; mustAddEmptyObject: boolean } {
+  protected _buildGroupedSelections(parentName: string): {
+    grouped: GroupedStringifiedTypes;
+    dependentTypes: DependentType[];
+    mustAddEmptyObject: boolean;
+  } {
     if (!this._selectionSet?.selections || this._selectionSet.selections.length === 0) {
-      return { grouped: {}, mustAddEmptyObject: true };
+      return { grouped: {}, mustAddEmptyObject: true, dependentTypes: [] };
     }
 
     const selectionNodesByTypeName = this.flattenSelectionSet(this._selectionSet.selections);
@@ -338,6 +354,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     const possibleTypes = getPossibleTypes(this._schema, this._parentSchemaType);
 
+    const dependentTypes: DependentType[] = [];
     if (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask') {
       const grouped = possibleTypes.reduce<GroupedStringifiedTypes>((prev, type) => {
         const typeName = type.name;
@@ -351,9 +368,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         prev[typeName] ||= [];
 
-        const { incrementalNodes, selectionNodes } = allNodes.reduce<{
+        // incrementalNodes are the ones flagged with @defer, meaning they become nullable
+        const { incrementalNodes, selectionNodes, fragmentSpreads } = allNodes.reduce<{
           selectionNodes: (SelectionNode | FragmentSpreadUsage)[];
           incrementalNodes: FragmentSpreadUsage[];
+          fragmentSpreads: string[];
         }>(
           (acc, node) => {
             if ('fragmentDirectives' in node && hasIncrementalDeliveryDirectives(node.fragmentDirectives)) {
@@ -363,42 +382,57 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             }
             return acc;
           },
-          { selectionNodes: [], incrementalNodes: [] }
+          { selectionNodes: [], incrementalNodes: [], fragmentSpreads: [] }
         );
 
-        const { fields } = this.buildSelectionSet(schemaType, selectionNodes);
-
+        const { fields, dependentTypes: subDependentTypes } = this.buildSelectionSet(schemaType, selectionNodes, {
+          parentFieldName: this.buildParentFieldName(typeName, parentName),
+        });
         const transformedSet = this.selectionSetStringFromFields(fields);
+
         if (transformedSet) {
           prev[typeName].push(transformedSet);
-        } else {
+        }
+        dependentTypes.push(...subDependentTypes);
+        if (!transformedSet && !fragmentSpreads.length) {
           mustAddEmptyObject = true;
         }
 
         for (const incrementalNode of incrementalNodes) {
           if (this._config.inlineFragmentTypes === 'mask' && 'fragmentName' in incrementalNode) {
-            const { fields: incrementalFields } = this.buildSelectionSet(schemaType, [incrementalNode], {
-              unsetTypes: true,
-            });
-            prev[typeName].push(this.selectionSetStringFromFields(incrementalFields));
+            const { fields: incrementalFields, dependentTypes: incrementalDependentTypes } = this.buildSelectionSet(
+              schemaType,
+              [incrementalNode],
+              { unsetTypes: true, parentFieldName: parentName }
+            );
+            const incrementalSet = this.selectionSetStringFromFields(incrementalFields);
+            prev[typeName].push(incrementalSet);
+            dependentTypes.push(...incrementalDependentTypes);
 
             continue;
           }
-          const { fields: initialFields } = this.buildSelectionSet(schemaType, [incrementalNode]);
-          const { fields: subsequentFields } = this.buildSelectionSet(schemaType, [incrementalNode], {
-            unsetTypes: true,
-          });
+          const { fields: initialFields, dependentTypes: initialDependentTypes } = this.buildSelectionSet(
+            schemaType,
+            [incrementalNode],
+            { parentFieldName: parentName }
+          );
+
+          const { fields: subsequentFields, dependentTypes: subsequentDependentTypes } = this.buildSelectionSet(
+            schemaType,
+            [incrementalNode],
+            { unsetTypes: true, parentFieldName: parentName }
+          );
 
           const initialSet = this.selectionSetStringFromFields(initialFields);
           const subsequentSet = this.selectionSetStringFromFields(subsequentFields);
-
+          dependentTypes.push(...initialDependentTypes, ...subsequentDependentTypes);
           prev[typeName].push({ union: [initialSet, subsequentSet] });
         }
 
         return prev;
       }, {});
 
-      return { grouped, mustAddEmptyObject };
+      return { grouped, mustAddEmptyObject, dependentTypes };
     }
     // Accumulate a map of selected fields to the typenames that
     // share the exact same selected fields. When we find multiple
@@ -422,7 +456,14 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
       const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
 
-      const { typeInfo, fields } = this.buildSelectionSet(schemaType, selectionNodes);
+      const {
+        typeInfo,
+        fields,
+        dependentTypes: subDependentTypes,
+      } = this.buildSelectionSet(schemaType, selectionNodes, {
+        parentFieldName: this.buildParentFieldName(typeName, parentName),
+      });
+      dependentTypes.push(...subDependentTypes);
 
       const key = this.selectionSetStringFromFields(fields);
       prev[key] = {
@@ -471,7 +512,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       return acc;
     }, {});
 
-    return { grouped: compacted, mustAddEmptyObject };
+    return { grouped: compacted, mustAddEmptyObject, dependentTypes };
   }
 
   protected selectionSetStringFromFields(fields: (string | NameAndType)[]): string | null {
@@ -487,7 +528,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   protected buildSelectionSet(
     parentSchemaType: GraphQLObjectType,
     selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>,
-    options?: { unsetTypes: boolean }
+    options: { unsetTypes?: boolean; parentFieldName?: string }
   ) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
@@ -507,6 +548,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     selectionNodes = [...selectionNodes];
     let inlineFragmentConditional = false;
     for (const selectionNode of selectionNodes) {
+      // 1. Handle Field or Directtives selection nodes
       if ('kind' in selectionNode) {
         if (selectionNode.kind === 'Field') {
           if (selectionNode.selectionSet) {
@@ -557,13 +599,31 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         continue;
       }
 
+      // 2. Handle Fragment Spread nodes
+      // A Fragment Spread can be:
+      // - masked: the fields declared in the Fragment do not appear in the operation types
+      // - inline: the fields declared in the Fragment appear in the operation types
+
+      // 2a. If `inlineFragmentTypes` is 'combine' or 'mask', the Fragment Spread is masked by default
+      // In some cases, a masked node could be unmasked (i.e. treated as inline):
+      // - Fragment spread node is marked with Apollo `@unmask`, e.g. `...User @unmask`
       if (this._config.inlineFragmentTypes === 'combine' || this._config.inlineFragmentTypes === 'mask') {
-        fragmentsSpreadUsages.push(selectionNode.typeName);
-        continue;
+        let isMasked = true;
+
+        if (
+          this._config.customDirectives.apolloUnmask &&
+          selectionNode.fragmentDirectives.some(d => d.name.value === 'unmask')
+        ) {
+          isMasked = false;
+        }
+
+        if (isMasked) {
+          fragmentsSpreadUsages.push(selectionNode.typeName);
+          continue;
+        }
       }
 
-      // Handle Fragment Spreads by generating inline types.
-
+      // 2b. If the Fragment Spread is not masked, generate inline types.
       const fragmentType = this._schema.getType(selectionNode.onType);
 
       if (fragmentType == null) {
@@ -588,17 +648,26 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     }
 
     const linkFields: LinkField[] = [];
+    const linkFieldsInterfaces: DependentType[] = [];
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType as any);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
+      const fieldName = field.alias?.value ?? field.name.value;
+      const selectionSetObjects = selectionSet.transformSelectionSet(
+        options.parentFieldName ? `${options.parentFieldName}_${fieldName}` : fieldName
+      );
+
+      linkFieldsInterfaces.push(...selectionSetObjects.dependentTypes);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
-      const isOptional = options?.unsetTypes;
+      const isOptional = options.unsetTypes;
       linkFields.push({
-        alias: field.alias ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType) : undefined,
+        alias: field.alias
+          ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType, isConditional, isOptional)
+          : undefined,
         name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional, isOptional),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
-          selectionSet.transformSelectionSet().split(`\n`).join(`\n  `),
+          selectionSetObjects.mergedTypeString.split(`\n`).join(`\n  `),
           selectedFieldType
         ),
       });
@@ -624,17 +693,18 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           isConditional: hasConditionalDirectives(field),
           fieldName: field.name.value,
         })),
-        options?.unsetTypes
+        options.unsetTypes
       ),
       ...this._processor.transformAliasesPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveAliasFields.values()).map(field => ({
           alias: field.alias.value,
           fieldName: field.name.value,
+          isConditional: hasConditionalDirectives(field),
         })),
-        options?.unsetTypes
+        options.unsetTypes
       ),
-      ...this._processor.transformLinkFields(linkFields, options?.unsetTypes),
+      ...this._processor.transformLinkFields(linkFields, options.unsetTypes),
     ].filter(Boolean);
 
     const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
@@ -657,13 +727,13 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       } else if (this._config.inlineFragmentTypes === 'mask') {
         fields.push(
           `{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages
-            .map(name => `'${name}': ${options?.unsetTypes ? `Incremental<${name}>` : name}`)
+            .map(name => `'${name}': ${options.unsetTypes ? `Incremental<${name}>` : name}`)
             .join(`;`)} } }`
         );
       }
     }
 
-    return { typeInfo: typeInfoField, fields };
+    return { typeInfo: typeInfoField, fields, dependentTypes: linkFieldsInterfaces };
   }
 
   protected buildTypeNameField(
@@ -694,93 +764,170 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected getEmptyObjectType(): string {
-    return `{}`;
+    return 'Record<PropertyKey, never>';
   }
 
   private getEmptyObjectTypeString(mustAddEmptyObject: boolean): string {
-    return mustAddEmptyObject ? ' | ' + this.getEmptyObjectType() : ``;
+    return mustAddEmptyObject ? this.getEmptyObjectType() : ``;
   }
 
-  public transformSelectionSet(): string {
-    const { grouped, mustAddEmptyObject } = this._buildGroupedSelections();
+  public transformSelectionSet(fieldName: string) {
+    const possibleTypesList = getPossibleTypes(this._schema, this._parentSchemaType);
+    const possibleTypes = possibleTypesList.map(v => v.name).sort();
+    const fieldSelections = [
+      ...getFieldNames({ selections: this._selectionSet.selections, loadedFragments: this._loadedFragments }),
+    ].sort();
+
+    // Optimization: Do not create new dependentTypes if fragment typename exists in cache
+    // 2-layer cache: LOC => Field Selection Type Combination => cachedTypeString
+    const objMap = this._processor.typeCache.get(this._selectionSet.loc) ?? new Map<string, [string, string]>();
+    this._processor.typeCache.set(this._selectionSet.loc, objMap);
+
+    const cacheHashKey = `${fieldSelections.join(',')} @ ${possibleTypes.join('|')}`;
+    const [cachedTypeString] = objMap.get(cacheHashKey) ?? [];
+    if (cachedTypeString) {
+      // reuse previously generated type, as it is identical
+      return {
+        mergedTypeString: cachedTypeString,
+        // there are no new dependent types, as this is a nth use of the same type
+        dependentTypes: [],
+      };
+    }
+    const result = this.transformSelectionSetUncached(fieldName);
+    objMap.set(cacheHashKey, [result.mergedTypeString, fieldName]);
+    if (this._selectionSet.loc) {
+      this._processor.typeCache.set(this._selectionSet.loc, objMap);
+    }
+    return result;
+  }
+
+  private transformSelectionSetUncached(fieldName: string): {
+    mergedTypeString: string;
+    dependentTypes: DependentType[];
+    isUnionType?: boolean;
+  } {
+    const { grouped, mustAddEmptyObject, dependentTypes: subDependentTypes } = this._buildGroupedSelections(fieldName);
 
     // This might happen in case we have an interface, that is being queries, without any GraphQL
     // "type" that implements it. It will lead to a runtime error, but we aim to try to reflect that in
     // build time as well.
     if (Object.keys(grouped).length === 0) {
-      return this.getUnknownType();
+      return {
+        mergedTypeString: this.getUnknownType(),
+        dependentTypes: subDependentTypes,
+      };
     }
 
-    return (
-      Object.keys(grouped)
-        .map(typeName => {
-          const relevant = grouped[typeName].filter(Boolean);
+    const dependentTypes = Object.keys(grouped)
+      .map(typeName => {
+        const relevant = grouped[typeName].filter(Boolean);
+        return relevant.map(objDefinition => {
+          const name = fieldName ? `${fieldName}_${typeName}` : typeName;
+          return {
+            name,
+            content: typeof objDefinition === 'string' ? objDefinition : objDefinition.union.join(' | '),
+            isUnionType: !!(typeof objDefinition !== 'string' && objDefinition.union.length > 1),
+          };
+        });
+      })
+      .filter(pairs => pairs.length > 0);
 
-          if (relevant.length === 0) {
-            return null;
-          }
+    const typeParts = [
+      ...dependentTypes.map(pair =>
+        pair
+          .map(({ name, content, isUnionType }) =>
+            // unions need to be wrapped, as intersections have higher precedence
+            this._config.extractAllFieldsToTypes ? name : isUnionType ? `(${content})` : content
+          )
+          .join(' & ')
+      ),
+      this.getEmptyObjectTypeString(mustAddEmptyObject),
+    ].filter(Boolean);
 
-          const res = relevant
-            .map(selectionObject => {
-              if (typeof selectionObject === 'string') return selectionObject;
+    const content = formatUnion(typeParts);
 
-              return '(' + selectionObject.union.join(' | ') + ')';
-            })
-            .join(' & ');
+    if (typeParts.length > 1 && this._config.extractAllFieldsToTypes) {
+      return {
+        mergedTypeString: fieldName,
+        dependentTypes: [
+          ...subDependentTypes,
+          ...dependentTypes.flat(1),
+          { name: fieldName, content, isUnionType: true },
+        ],
+      };
+    }
 
-          const hasUnions = grouped[typeName].filter(s => typeof s !== 'string' && s.union).length > 0;
-
-          return relevant.length > 1 && !hasUnions ? `( ${res} )` : res;
-        })
-        .filter(Boolean)
-        .join(' | ') + this.getEmptyObjectTypeString(mustAddEmptyObject)
-    );
+    return {
+      mergedTypeString: content,
+      dependentTypes: [...subDependentTypes, ...dependentTypes.flat(1)],
+      isUnionType: typeParts.length > 1,
+    };
   }
 
   public transformFragmentSelectionSetToTypes(
     fragmentName: string,
     fragmentSuffix: string,
-    declarationBlockConfig
+    declarationBlockConfig: DeclarationBlockConfig
   ): string {
-    const { grouped } = this._buildGroupedSelections();
+    const mergedTypeString = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
+    const { grouped, dependentTypes } = this._buildGroupedSelections(mergedTypeString);
 
-    const subTypes: { name: string; content: string }[] = Object.keys(grouped)
-      .map(typeName => {
-        const possibleFields = grouped[typeName].filter(Boolean);
-        const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
+    const subTypes: DependentType[] = Object.keys(grouped).flatMap(typeName => {
+      const possibleFields = grouped[typeName].filter(Boolean);
+      const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
-        if (possibleFields.length === 0) {
-          if (!this._config.addTypename) {
-            return { name: declarationName, content: this.getEmptyObjectType() };
-          }
-
-          return null;
+      if (possibleFields.length === 0) {
+        if (!this._config.addTypename) {
+          return [{ name: declarationName, content: this.getEmptyObjectType() }];
         }
 
-        const content = possibleFields
-          .map(selectionObject => {
-            if (typeof selectionObject === 'string') return selectionObject;
+        return [];
+      }
 
-            return '(' + selectionObject.union.join(' | ') + ')';
-          })
-          .join(' & ');
+      const flatFields = possibleFields.map(selectionObject => {
+        if (typeof selectionObject === 'string') return { value: selectionObject };
+        return { value: selectionObject.union.join(' | '), isUnionType: true };
+      });
 
-        return { name: declarationName, content };
-      })
-      .filter(Boolean);
+      const content =
+        flatFields.length > 1
+          ? flatFields.map(({ value, isUnionType }) => (isUnionType ? `(${value})` : value)).join(' & ')
+          : flatFields.map(({ value }) => value).join(' & ');
+      return {
+        name: declarationName,
+        content,
+        isUnionType: false,
+      };
+    });
 
-    const fragmentTypeName = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
     const fragmentMaskPartial =
-      this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName'?: '${fragmentTypeName}' }` : '';
+      this._config.inlineFragmentTypes === 'mask' ? ` & { ' $fragmentName'?: '${mergedTypeString}' }` : '';
+
+    // TODO: unify with line 308 from base-documents-visitor
+    const dependentTypesContent = this._config.extractAllFieldsToTypes
+      ? dependentTypes.map(
+          i =>
+            new DeclarationBlock(declarationBlockConfig)
+              .export(true)
+              .asKind('type')
+              .withName(i.name)
+              .withContent(i.content).string
+        )
+      : [];
+
     if (subTypes.length === 1) {
-      return new DeclarationBlock(declarationBlockConfig)
-        .export()
-        .asKind('type')
-        .withName(fragmentTypeName)
-        .withContent(subTypes[0].content + fragmentMaskPartial).string;
+      return [
+        ...dependentTypesContent,
+        new DeclarationBlock(declarationBlockConfig)
+          .export()
+          .asKind('type')
+          .withName(mergedTypeString)
+          .withContent(subTypes[0].content + fragmentMaskPartial).string,
+      ].join('\n');
     }
 
     return [
+      ...dependentTypesContent,
       ...subTypes.map(
         t =>
           new DeclarationBlock(declarationBlockConfig)
@@ -796,15 +943,28 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       new DeclarationBlock(declarationBlockConfig)
         .export()
         .asKind('type')
-        .withName(fragmentTypeName)
-        .withContent(subTypes.map(t => t.name).join(' | ')).string,
+        .withName(mergedTypeString)
+        .withContent(formatUnion(subTypes.map(t => t.name))).string,
     ].join('\n');
   }
 
   protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
     return this._convertName(name, {
       useTypesPrefix: true,
-      suffix: typeName ? `_${typeName}_${suffix}` : suffix,
+      suffix: typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix,
     });
   }
+
+  protected buildParentFieldName(typeName: string, parentName: string): string {
+    // queries/mutations/fragments are guaranteed to be unique type names,
+    // so we can skip affixing the field names with typeName
+    return operationTypes.includes(typeName) ? parentName : `${parentName}_${typeName}`;
+  }
+}
+
+function formatUnion(members: string[]): string {
+  if (members.length > 1) {
+    return `\n  | ${members.map(m => m.replace(/\n/g, '\n  ')).join('\n  | ')}\n`;
+  }
+  return members.join(' | ');
 }

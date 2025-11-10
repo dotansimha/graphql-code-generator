@@ -5,7 +5,7 @@ import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { DocumentNode } from 'graphql';
+import { parse, printSchema, type DocumentNode, type GraphQLSchema } from 'graphql';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
@@ -25,7 +25,7 @@ export type ClientPresetConfig = {
    * @exampleMarkdown
    * ```tsx
    * const config = {
-   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    schema: 'https://graphql.org/graphql/',
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {
@@ -49,7 +49,7 @@ export type ClientPresetConfig = {
    * @exampleMarkdown
    * ```tsx
    * const config = {
-   *    schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+   *    schema: 'https://graphql.org/graphql/',
    *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
    *    generates: {
    *       './src/gql/': {
@@ -84,14 +84,16 @@ export type ClientPresetConfig = {
          */
         hashPropertyName?: string;
         /**
-         * @description Algorithm used to generate the hash, could be useful if your server expects something specific (e.g., Apollo Server expects `sha256`).
+         * @description Algorithm or function used to generate the hash, could be useful if your server expects something specific (e.g., Apollo Server expects `sha256`).
+         *
+         * A custom hash function can be provided to generate the hash if the preset algorithms don't fit your use case. The function receives the operation and should return the hash string.
          *
          * The algorithm parameter is typed with known algorithms and as a string rather than a union because it solely depends on Crypto's algorithms supported
          * by the version of OpenSSL on the platform.
          *
          * @default `sha1`
          */
-        hashAlgorithm?: 'sha1' | 'sha256' | (string & {});
+        hashAlgorithm?: 'sha1' | 'sha256' | (string & {}) | ((operation: string) => string);
       };
 };
 
@@ -99,7 +101,7 @@ const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/'
 
 export const preset: Types.OutputPreset<ClientPresetConfig> = {
   prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
-  buildGeneratesSection: options => {
+  buildGeneratesSection: async options => {
     if (!isOutputFolderLike(options.baseOutputDir)) {
       throw new Error(
         '[client-preset] target output should be a directory, ex: "src/gql/". Make sure you add "/" at the end of the directory path'
@@ -111,8 +113,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types'
       );
     }
-
-    const isPersistedOperations = !!options.presetConfig?.persistedDocuments ?? false;
+    const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
+    if (options.config.nullability?.errorHandlingClient) {
+      options.schemaAst = await semanticToStrict(options.schemaAst!);
+      options.schema = parse(printSchema(options.schemaAst));
+    }
 
     const reexports: Array<string> = [];
 
@@ -126,14 +131,20 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
       enumsAsTypes: options.config.enumsAsTypes,
+      enumsAsConst: options.config.enumsAsConst,
+      enumValues: options.config.enumValues,
       futureProofEnums: options.config.futureProofEnums,
-      dedupeFragments: options.config.dedupeFragments,
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
+      skipTypeNameForRoot: options.config.skipTypeNameForRoot,
+      onlyOperationTypes: options.config.onlyOperationTypes,
+      onlyEnums: options.config.onlyEnums,
+      customDirectives: options.config.customDirectives,
+      immutableTypes: options.config.immutableTypes,
     };
 
-    const visitor = new ClientSideBaseVisitor(options.schemaAst!, [], options.config, options.config);
+    const visitor = new ClientSideBaseVisitor(options.schemaAst, [], options.config, options.config);
     let fragmentMaskingConfig: FragmentMaskingConfig | null = null;
 
     if (typeof options?.presetConfig?.fragmentMasking === 'object') {
@@ -210,7 +221,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
+      {
+        [`typescript`]: {
+          inputMaybeValue: 'T | null | undefined',
+        },
+      },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {
@@ -244,9 +259,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       fragmentMaskingFileGenerateConfig = {
         filename: `${options.baseOutputDir}fragment-masking${fragmentMaskingArtifactFileExtension}`,
         pluginMap: {
+          [`add`]: addPlugin,
           [`fragment-masking`]: fragmentMaskingPlugin,
         },
         plugins: [
+          { [`add`]: { content: `/* eslint-disable */` } },
           {
             [`fragment-masking`]: {},
           },
@@ -361,5 +378,16 @@ function createDeferred<T = void>(): Deferred<T> {
   });
   return d;
 }
+
+const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
+  try {
+    const sock = await import('graphql-sock');
+    return sock.semanticToStrict(schema);
+  } catch {
+    throw new Error(
+      "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package."
+    );
+  }
+};
 
 export { addTypenameSelectionDocumentTransform } from './add-typename-selection-document-transform.js';

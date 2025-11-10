@@ -26,7 +26,7 @@ export class OperationVariablesToObject {
     protected _enumPrefix = true,
     protected _enumSuffix = true,
     protected _enumValues: ParsedEnumValuesMap = {},
-    protected _applyCoercion: Boolean = false,
+    protected _applyCoercion: boolean = false,
     protected _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {}
   ) {
     autoBind(this);
@@ -122,7 +122,7 @@ export class OperationVariablesToObject {
     return `${formattedFieldString}: ${formattedTypeString}`;
   }
 
-  public wrapAstTypeWithModifiers(_baseType: string, _typeNode: TypeNode, _applyCoercion?: Boolean): string {
+  public wrapAstTypeWithModifiers(_baseType: string, _typeNode: TypeNode, _applyCoercion?: boolean): string {
     throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 

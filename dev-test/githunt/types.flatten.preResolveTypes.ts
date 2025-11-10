@@ -248,7 +248,7 @@ export type FeedQuery = {
       owner?: { __typename?: 'User'; avatar_url: string } | null;
     };
     vote: { __typename?: 'Vote'; vote_value: number };
-    postedBy: { __typename?: 'User'; html_url: string; login: string };
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
   } | null> | null;
 };
 

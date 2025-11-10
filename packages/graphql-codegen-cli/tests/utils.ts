@@ -1,9 +1,9 @@
 import os from 'os';
 import { join, parse, relative, resolve } from 'path';
 import makeDir from 'make-dir';
-import rimraf from 'rimraf';
+import * as rimraf from 'rimraf';
 
-const fs = jest.requireActual('fs');
+const fs = await vi.importActual<typeof import('fs')>('fs');
 
 export class TempDir {
   dir: string;

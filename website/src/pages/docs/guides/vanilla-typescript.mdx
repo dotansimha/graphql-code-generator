@@ -1,0 +1,254 @@
+---
+description: Execute GraphQL queries type-safe in vanilla TypeScript with GraphQL Code Generator.
+---
+
+# GraphQL Codegen with Vanilla TypeScript
+
+GraphQL client libraries such as Apollo Client, Relay, and Urql are popular choices that allows
+building powerful features for querying but come with a few drawbacks:
+
+- **Bundle Size**: All GraphQL Client GraphQL clients come with one or more of AST parsers/
+  printers, a normalized cache, network layer abstractions, and other features that can increase the
+  bundle size of your application.
+- **Complexity**: GraphQL clients can be complex to set up and use, especially for beginners.
+  Sometimes you just want to write type-safe GraphQL operations without having to learn about
+  normalized caches and network layers. Maybe this is even the reason you ended up being here.
+
+In this guide, we will learn how to use the GraphQL Code Generator client preset with vanilla
+TypeScript to generate type-safe operations and wire it up to a GraphQL server that supports the
+GraphQL over HTTP protocol.
+
+This approach is framework/runtime (React, Vue, Svelte, Node.js, Bun) agnostic and the function for
+executing GraphQL operations will be a simple Type-Safe `fetch` wrapper.
+
+## Prerequisites
+
+For this guide, we assume that you are querying your GraphQL server from within a Browser or
+Node.js/Bun/etc. environment. So you already have your Vite, Next.js, Node.js or any other vanilla
+project with TypeScript setup.
+
+This guide will work on any JavaScript environment that supports `fetch` API.
+
+We are going to use the public [Star Wars GraphQL API](https://swapi-graphql.netlify.app/) as our
+GraphQL endpoint.
+
+## Setting up GraphQL Code Generator
+
+The GraphQL Code Generator client preset is the preferred and built-in way to generate type-safe
+operations for any GraphQL client library and also vanilla JavaScript.
+
+To get started, install the following dependencies
+
+- **`@graphql-codegen/cli`**: Codegen CLI for running code generation
+- **`@parcel/watcher`**: Enable watch mode for the codegen CLI
+- **`@graphql-codegen/schema-ast`**: Plugin for generating the schema file from the GraphQL API
+  endpoint (optional if you already have a schema file)
+- **`@0no-co/graphqlsp`**: TypeScript language server plugin for GraphQL auto-complete (optional)
+
+Feel free to omit the optional dependencies if you don't need them.
+
+```sh npm2yarn
+npm install --save-dev @graphql-codegen/cli @parcel/watcher
+npm install --save-dev @graphql-codegen/schema-ast
+npm install --save-dev @0no-co/graphqlsp
+```
+
+After that, we can create a `codegen.ts` file in the root of our project with the following
+contents:
+
+```typescript filename="GraphQL Codegen Configuration"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'https://graphql.org/graphql/',
+  documents: ['src/**/*.ts'],
+  ignoreNoDocuments: true,
+  generates: {
+    './src/graphql/': {
+      preset: 'client',
+      config: {
+        documentMode: 'string'
+      }
+    },
+    './schema.graphql': {
+      plugins: ['schema-ast'],
+      config: {
+        includeDirectives: true
+      }
+    }
+  }
+}
+
+export default config
+```
+
+Next, we adjust our `tsconfig.json` to load `@0no-co/graphqlsp`.
+
+```json filename="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "ES6", // Requires ES6 and above
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "./schema.graphql"
+      }
+    ]
+  }
+}
+```
+
+Finally, we also need to prompt Visual Studio Code to use the local TypeScript version by creating a
+`.vscode/settings.json` file with the following contents:
+
+```json filename=".vscode/settings.json"
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
+```
+
+## Running the Code Generator
+
+Now we can run the following command to generate the `schema.graphql` file and the GraphQL Code
+Generator client code. **Note:** We are not yet writing GraphQL operations in our codebase, we just
+generate the client boilerplate code.
+
+```sh filename="Run GraphQL Code Generator"
+npx graphql-codegen --config codegen.ts
+```
+
+After running the command, you should see a new `schema.graphql` file in the root of your project
+and a new folder `src/graphql` with the generated client code.
+
+You almost never need to touch the files within `src/graphql` as they are generated and overwritten
+by GraphQL Code generator.
+
+We will now use the generated client code to write our type-safe GraphQL operations.
+
+## Writing GraphQL Operations
+
+Let's start GraphQL Code Generator in watch mode to generate the client code whenever we write our
+code.
+
+```sh filename="Run GraphQL Code Generator in watch mode"
+npx graphql-codegen --config codegen.ts --watch
+```
+
+Next within any file in our projects `src` folder, we will import the `graphql` function from within
+`src/graphql`.
+
+```typescript filename="src/index.ts"
+import { graphql } from './graphql'
+```
+
+This function allows us to define a GraphQL operation.
+
+Thanks to the TypeScript GraphQL LSP plugin, we get auto-complete for our GraphQL operations while
+writing them.
+
+![GraphQLSP in Action, giving us auto-complete on the selection set](/assets/pages/docs/guides/vanilla-typescript/graphql-lsp-autocomplete.png)
+
+With that, we will write a simple query operation to get the total count of people in the Star Wars
+universe.
+
+```typescript filename="src/index.ts"
+import { graphql } from './graphql'
+
+const PeopleCountQuery = graphql(`
+  query PeopleCount {
+    allPeople {
+      totalCount
+    }
+  }
+`)
+```
+
+As we now save the file in our editor, the GraphQL Code Generator will generate the corresponding
+types, and as you hover over the `PeopleCountQuery` variable, you will see the following:
+
+![GraphQLSP in Action, giving us auto-complete on the selection set](/assets/pages/docs/guides/vanilla-typescript/typescript-typed-result.png)
+
+`TypedDocumentString` is a container type that holds the query operation string and also the
+TypeScript type for that operations response.
+
+We can now leverage this to build a type-safe function that executes the GraphQL operation against
+our GraphQL server.
+
+## Type-Safe GraphQL Operation Execution
+
+We can build a simple wrapper around `fetch` that takes a `TypedDocumentString` parameter and
+returns a typed response.
+
+```typescript filename="src/graphql/execute.ts"
+import type { ExecutionResult } from 'graphql'
+import type { TypedDocumentString } from './graphql'
+
+export async function execute<TResult, TVariables>(
+  query: TypedDocumentString<TResult, TVariables>,
+  ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
+) {
+  const response = await fetch('https://graphql.org/graphql/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/graphql-response+json'
+    },
+    body: JSON.stringify({
+      query,
+      variables
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok')
+  }
+
+  return response.json() as ExecutionResult<TResult>
+}
+```
+
+We can now use this function to execute our `PeopleCountQuery` operation.
+
+```typescript filename="src/index.ts"
+import { graphql } from './graphql'
+import { execute } from './graphql/execute'
+
+const PeopleCountQuery = graphql(`
+  query PeopleCount {
+    allPeople {
+      totalCount
+    }
+  }
+`)
+
+execute(PeopleCountQuery).then(data => {
+  console.log(data)
+})
+```
+
+When we now hover over the `data` parameter in the `then` callback, we can see that the response is
+fully typed.
+
+![Fully typed GraphQL execution result](/assets/pages/docs/guides/vanilla-typescript/typescript-typed-result.png)
+
+And that's it! We have successfully set up a type-safe GraphQL operation execution within a Vanilla
+TypeScript project.
+
+## Conclusion
+
+In this article, we learned how to use GraphQL Code Generator with vanilla
+TypeScript.
+
+We set up the GraphQL Code Generator for clients and wrote a simple operation that is fully typed.
+
+You could now integrate the `execute` function into
+[TanStack Query (React Query)](https://tanstack.com/query) or SWR.
+
+If you want to learn more about GraphQL Code Generator, check out the
+[client preset documentation](/plugins/presets/preset-client).
+E.g. you want to reduce bundle size by using the
+[client preset babel plugin](/plugins/presets/preset-client#reducing-bundle-size)
+or enable
+[persisted documents](/plugins/presets/preset-client#persisted-documents)
+in production for security and performance reasons.

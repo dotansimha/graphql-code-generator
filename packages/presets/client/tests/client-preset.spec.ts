@@ -1,14 +1,15 @@
-import * as fs from 'fs';
-import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { preset } from '../src/index.js';
+import * as crypto from 'crypto';
+import * as fs from 'fs';
 import { print } from 'graphql';
+import path from 'path';
+import { addTypenameSelectionDocumentTransform, preset } from '../src/index.js';
 
 describe('client-preset', () => {
   it('can generate simple examples uppercase names', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -48,8 +49,14 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -95,7 +102,7 @@ export * from "./gql";`);
   });
 
   it('can generate simple examples lowercase names', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -135,8 +142,14 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -182,7 +195,7 @@ export * from "./gql";`);
   });
 
   it('generates \\n regardless of whether the source contains LF or CRLF', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -214,8 +227,14 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query b {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query b {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -257,7 +276,7 @@ export * from "./gql";`);
   });
 
   it("follows 'useTypeImports': true", async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -294,8 +313,14 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -339,7 +364,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -387,7 +412,7 @@ export * from "./gql";`);
   });
 
   it("follows 'nonOptionalTypename': true", async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -424,8 +449,14 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -469,7 +500,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -511,8 +542,97 @@ export * from "./gql";`);
     expect(graphqlFile.content).toContain("__typename: 'Query';");
   });
 
+  it('supports Apollo fragment masking', async () => {
+    const { result } = await executeCodegen({
+      schema: /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+          age: Int!
+        }
+      `,
+      documents: /* GraphQL */ `
+        query Me {
+          unmasked: me {
+            id
+            ...User_Me @unmask
+          }
+          masked: me {
+            id
+            ...User_Me
+          }
+        }
+
+        fragment User_Me on User {
+          name
+          age
+        }
+      `,
+      generates: {
+        'out1/': {
+          preset,
+          presetConfig: { fragmentMasking: false },
+          config: {
+            inlineFragmentTypes: 'mask',
+            customDirectives: { apolloUnmask: true },
+          },
+        },
+      },
+    });
+
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = T | null | undefined;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+      };
+
+      export type Query = {
+        __typename?: 'Query';
+        me?: Maybe<User>;
+      };
+
+      export type User = {
+        __typename?: 'User';
+        age: Scalars['Int']['output'];
+        id: Scalars['ID']['output'];
+        name: Scalars['String']['output'];
+      };
+
+      export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type MeQuery = { __typename?: 'Query', unmasked?: { __typename?: 'User', id: string, name: string, age: number } | null, masked?: (
+          { __typename?: 'User', id: string }
+          & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
+        ) | null };
+
+      export type User_MeFragment = { __typename?: 'User', name: string, age: number } & { ' $fragmentName'?: 'User_MeFragment' };
+
+      export const User_MeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<User_MeFragment, unknown>;
+      export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"unmasked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"unmask"}}]}]}},{"kind":"Field","alias":{"kind":"Name","value":"masked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;"
+    `);
+  });
+
   it('prevent duplicate operations', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -547,8 +667,12 @@ export * from "./gql";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query a {\\n    a\\n  }\\n": typeof types.ADocument,
+      };
+      const documents: Documents = {
           "\\n  query a {\\n    a\\n  }\\n": types.ADocument,
       };
 
@@ -582,7 +706,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -611,12 +735,12 @@ export * from "./gql";`);
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
     `);
 
-    expect(gqlFile.content.match(/query a {/g).length).toBe(3);
+    expect(gqlFile.content.match(/query a {/g).length).toBe(4);
   });
 
   describe('fragment masking', () => {
     it('fragmentMasking: false', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -660,8 +784,14 @@ export * from "./gql";`);
          * 3. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
+         * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
-        const documents = {
+        type Documents = {
+            "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+            "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+            "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+        };
+        const documents: Documents = {
             "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
             "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
             "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -703,7 +833,7 @@ export * from "./gql";`);
     });
 
     it('fragmentMasking: {}', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -728,7 +858,7 @@ export * from "./gql";`);
     });
 
     it('fragmentMasking.unmaskFunctionName', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -754,7 +884,8 @@ export * from "./gql";`);
       expect(result).toHaveLength(4);
       const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
       expect(gqlFile.content).toMatchInlineSnapshot(`
-        "import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
+        "/* eslint-disable */
+        import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
         import { FragmentDefinitionNode } from 'graphql';
         import { Incremental } from './graphql';
 
@@ -775,7 +906,17 @@ export * from "./gql";`);
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
         ): TType;
+        // return nullable if \`fragmentType\` is undefined
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | undefined
+        ): TType | undefined;
         // return nullable if \`fragmentType\` is nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null
+        ): TType | null;
+        // return nullable if \`fragmentType\` is nullable or undefined
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
@@ -783,17 +924,27 @@ export * from "./gql";`);
         // return array of non-nullable if \`fragmentType\` is array of non-nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>>
+        ): Array<TType>;
+        // return array of nullable if \`fragmentType\` is array of nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+        ): Array<TType> | null | undefined;
+        // return readonly array of non-nullable if \`fragmentType\` is array of non-nullable
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
         ): ReadonlyArray<TType>;
-        // return array of nullable if \`fragmentType\` is array of nullable
+        // return readonly array of nullable if \`fragmentType\` is array of nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
           fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
         ): ReadonlyArray<TType> | null | undefined;
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
-          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-        ): TType | ReadonlyArray<TType> | null | undefined {
+          fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | Array<FragmentType<DocumentTypeDecoration<TType, any>>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+        ): TType | Array<TType> | ReadonlyArray<TType> | null | undefined {
           return fragmentType as any;
         }
 
@@ -822,44 +973,11 @@ export * from "./gql";`);
         }
         "
       `);
-
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
-      ): TType;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
-      ): TType | null | undefined;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
-      ): ReadonlyArray<TType>;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-      ): ReadonlyArray<TType> | null | undefined;
-      `);
-      expect(gqlFile.content).toBeSimilarStringTo(`
-      export function iLikeTurtles<TType>(
-        _documentNode: DocumentTypeDecoration<TType, any>,
-        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-      ): TType | ReadonlyArray<TType> | null | undefined {
-        return fragmentType as any;
-      }
-      `);
     });
 
     it('can accept null in useFragment', async () => {
       const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -898,7 +1016,47 @@ export * from "./gql";`);
 
     it('can accept list in useFragment', async () => {
       const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              foo: Foo
+              foos: [Foo!]
+            }
+
+            type Foo {
+              value: String
+            }
+          `,
+        ],
+        documents: docPath,
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              fragmentMasking: true,
+            },
+          },
+        },
+      });
+
+      const content = mergeOutputs([
+        ...result,
+        fs.readFileSync(docPath, 'utf8'),
+        `
+        function App(props: { foos: Array<FragmentType<typeof Fragment>> }) {
+          const fragments: Array<FooFragment> = useFragment(Fragment, props.foos);
+          return fragments.map(f => f.value);
+        }
+        `,
+      ]);
+
+      validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    });
+
+    it('useFragment preserves ReadonlyArray<T> type', async () => {
+      const docPath = path.join(__dirname, 'fixtures/with-fragment.ts');
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -938,7 +1096,7 @@ export * from "./gql";`);
   });
 
   it('generates correct named imports for ESM', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -979,8 +1137,14 @@ export * from "./gql.js";`);
        * 3. It does not support dead code elimination, so it will add unused operations.
        *
        * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
        */
-      const documents = {
+      type Documents = {
+          "\\n  query A {\\n    a\\n  }\\n": typeof types.ADocument,
+          "\\n  query B {\\n    b\\n  }\\n": typeof types.BDocument,
+          "\\n  fragment C on Query {\\n    c\\n  }\\n": typeof types.CFragmentDoc,
+      };
+      const documents: Documents = {
           "\\n  query A {\\n    a\\n  }\\n": types.ADocument,
           "\\n  query B {\\n    b\\n  }\\n": types.BDocument,
           "\\n  fragment C on Query {\\n    c\\n  }\\n": types.CFragmentDoc,
@@ -1032,7 +1196,7 @@ export * from "./gql.js";`);
     };
 
     const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -1086,13 +1250,13 @@ export * from "./gql.js";`);
   });
 
   it('should dedupe fragments in a "string" document mode', async () => {
-    const dir = path.join(__dirname, 'tmp/duplicate-fragments');
+    const dir = path.join(__dirname, 'tmp/duplicate-fragments-string');
     const cleanUp = async () => {
       await fs.promises.rm(dir, { recursive: true, force: true });
     };
 
     const docPath = path.join(__dirname, 'fixtures/reused-fragment.ts');
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -1148,7 +1312,7 @@ export * from "./gql.js";`);
 
   describe('when no operations are found', () => {
     it('still generates the helper `graphql()` (or under another `presetConfig.gqlTagName` name) function', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1179,7 +1343,7 @@ export * from "./gql.js";`);
         import * as types from './graphql.js';
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
-        const documents = [];
+        const documents = {};
         /**
          * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
          *
@@ -1207,7 +1371,7 @@ export * from "./gql.js";`);
   });
 
   it('embed metadata in executable document node', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         /* GraphQL */ `
           type Query {
@@ -1248,7 +1412,7 @@ export * from "./gql.js";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1288,7 +1452,7 @@ export * from "./gql.js";`);
 
   describe('persisted operations', () => {
     it('apply default settings', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1326,7 +1490,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1367,7 +1531,7 @@ export * from "./gql.js";`);
     });
 
     it('mode="replaceDocumentWithHash"', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1407,7 +1571,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1448,7 +1612,7 @@ export * from "./gql.js";`);
     });
 
     it('hashPropertyName="custom_property_name"', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1488,7 +1652,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1529,7 +1693,7 @@ export * from "./gql.js";`);
     });
 
     it('embed metadata in executable document node', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1571,7 +1735,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1610,7 +1774,7 @@ export * from "./gql.js";`);
     });
 
     it('hashAlgorithm="sha256"', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1650,7 +1814,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1689,10 +1853,267 @@ export * from "./gql.js";`);
         export const BDocument = {"__meta__":{"hash":"a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
+
+    // This test serves to demonstrate that the custom hash function can perform arbitrary logic
+    // Removing whitespace has no real-world application but clearly shows the custom hash function is being used
+    it('custom hash remove whitespace', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: {
+                hashAlgorithm: (operation: string) => {
+                  return operation.replace(/\s/g, '');
+                },
+              },
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "queryA{a}": "query A { a }",
+          "queryB{b}": "query B { b }"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = T | null | undefined;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__meta__":{"hash":"queryA{a}"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"queryB{b}"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+      `);
+    });
+
+    // Tests that the custom hash function can replicate the logic and behavior by re-implementing the existing hash function (for sha256)
+    it('custom hash sha256', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: {
+                hashAlgorithm: (operation: string) => {
+                  const shasum = crypto.createHash('sha256');
+                  shasum.update(operation);
+                  return shasum.digest('hex');
+                },
+              },
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
+          "a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = T | null | undefined;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__meta__":{"hash":"7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+      `);
+    });
+
+    // Custom hash example used in `preset-client.mdx` docs
+    it('custom hash docs sha512', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              persistedDocuments: {
+                hashAlgorithm: (operation: string) => {
+                  const shasum = crypto.createHash('sha512');
+                  shasum.update(operation);
+                  return shasum.digest('hex');
+                },
+              },
+            },
+          },
+        },
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(5);
+
+      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+
+      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+        "{
+          "a82d8b22f2bf805563146dc8ad80b2eb054845441539e3a5a69d1f534bb5bc0bd4f9470053b9f61b6aa1966cfc2f67406258102e5ee3a356a5d171506f3ede50": "query A { a }",
+          "bdc3d5b1e0dc35d9d21f8baadf515c472850baf279c8dd266fb21e8b8b29758d2386329f19a93dc101f3a6dd1214f5214835451e7eaf4410408d5c89f2e20a09": "query B { b }"
+        }"
+      `);
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = T | null | undefined;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          a?: Maybe<Scalars['String']['output']>;
+          b?: Maybe<Scalars['String']['output']>;
+          c?: Maybe<Scalars['String']['output']>;
+        };
+
+        export type AQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type AQuery = { __typename?: 'Query', a?: string | null };
+
+        export type BQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type BQuery = { __typename?: 'Query', b?: string | null };
+
+        export type CFragment = { __typename?: 'Query', c?: string | null } & { ' $fragmentName'?: 'CFragment' };
+
+        export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
+        export const ADocument = {"__meta__":{"hash":"a82d8b22f2bf805563146dc8ad80b2eb054845441539e3a5a69d1f534bb5bc0bd4f9470053b9f61b6aa1966cfc2f67406258102e5ee3a356a5d171506f3ede50"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"bdc3d5b1e0dc35d9d21f8baadf515c472850baf279c8dd266fb21e8b8b29758d2386329f19a93dc101f3a6dd1214f5214835451e7eaf4410408d5c89f2e20a09"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+      `);
+    });
   });
 
   it('correctly handle fragment references', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: /* GraphQL */ `
         type Query {
           a: A!
@@ -1742,7 +2163,7 @@ export * from "./gql.js";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Maybe<T> = T | null;
-      export type InputMaybe<T> = Maybe<T>;
+      export type InputMaybe<T> = T | null | undefined;
       export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
       export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1794,7 +2215,7 @@ export * from "./gql.js";`);
 
   describe('handles @defer directive', () => {
     it('generates correct types and metadata', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1821,7 +2242,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1851,18 +2272,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -1882,7 +2303,7 @@ export * from "./gql.js";`);
     });
 
     it('works with persisted documents', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -1912,7 +2333,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -1942,18 +2363,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -1973,7 +2394,7 @@ export * from "./gql.js";`);
     });
 
     it('works with documentMode: string', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2003,7 +2424,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2033,18 +2454,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2059,13 +2480,17 @@ export * from "./gql.js";`);
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
-          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
             super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
           }
 
-          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
@@ -2130,7 +2555,7 @@ export * from "./gql.js";`);
     });
 
     it('works with documentMode: string and persisted documents', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2163,7 +2588,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2193,18 +2618,18 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo?: ( { __typename?: 'Foo' } & (
+        export type FooQuery = { __typename?: 'Query', foo?: { __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null };
+          ) | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos?: Array<( { __typename?: 'Foo' } & (
+        export type FoosQuery = { __typename?: 'Query', foos?: Array<{ __typename?: 'Foo' } & (
             { __typename?: 'Foo' }
             & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) ) | null> | null };
+          ) | null> | null };
 
         export type FooFragment = { __typename?: 'Foo', value?: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
@@ -2219,13 +2644,17 @@ export * from "./gql.js";`);
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
-          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
             super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
           }
 
-          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
@@ -2292,7 +2721,7 @@ export * from "./gql.js";`);
 
   describe('documentMode: "string"', () => {
     it('generates correct types', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2321,7 +2750,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
+        export type InputMaybe<T> = T | null | undefined;
         export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
         export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -2369,13 +2798,17 @@ export * from "./gql.js";`);
           extends String
           implements DocumentTypeDecoration<TResult, TVariables>
         {
-          __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
 
-          constructor(private value: string, public __meta__?: Record<string, any>) {
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
             super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
           }
 
-          toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
             return this.value;
           }
         }
@@ -2406,7 +2839,7 @@ export * from "./gql.js";`);
     });
 
     it('graphql overloads have a nice result type', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             type Query {
@@ -2446,8 +2879,14 @@ export * from "./gql.js";`);
          * 3. It does not support dead code elimination, so it will add unused operations.
          *
          * Therefore it is highly recommended to use the babel or swc plugin for production.
+         * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
          */
-        const documents = {
+        type Documents = {
+            "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": typeof types.FooDocument,
+            "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": typeof types.FoosDocument,
+            "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": typeof types.FooFragmentDoc,
+        };
+        const documents: Documents = {
             "\\n  query Foo {\\n    foo {\\n      ...Foo\\n    }\\n  }\\n": types.FooDocument,
             "\\n  query Foos {\\n    foos {\\n      ...Foo\\n    }\\n  }\\n": types.FoosDocument,
             "\\n  fragment Foo on Foo {\\n    value\\n  }\\n": types.FooFragmentDoc,
@@ -2475,7 +2914,7 @@ export * from "./gql.js";`);
     });
 
     it('correctly resolves nested fragments', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [
           /* GraphQL */ `
             scalar Date
@@ -2562,5 +3001,324 @@ export * from "./gql.js";`);
           }\`) as unknown as TypedDocumentString<VideoQuery, VideoQueryVariables>;
       `);
     });
+
+    it('correctly skips the typename addition for the root node for subscriptions', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            schema {
+              query: Query
+              mutation: Mutation
+              subscription: Subscription
+            }
+
+            type Region {
+              regionId: Int!
+              regionDescription: String!
+            }
+
+            type Subscription {
+              onRegionCreated: Region!
+            }
+
+            type Query {
+              regions: [Region]
+            }
+
+            type Mutation {
+              createRegion(regionDescription: String!): Region
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/subscription-root-node.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+            documentTransforms: [addTypenameSelectionDocumentTransform],
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile.content).toBeSimilarStringTo(`
+        /* eslint-disable */
+        import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = T | null | undefined;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export type Mutation = {
+          __typename?: 'Mutation';
+          createRegion?: Maybe<Region>;
+        };
+
+
+        export type MutationCreateRegionArgs = {
+          regionDescription: Scalars['String']['input'];
+        };
+
+        export type Query = {
+          __typename?: 'Query';
+          regions?: Maybe<Array<Maybe<Region>>>;
+        };
+
+        export type Region = {
+          __typename?: 'Region';
+          regionDescription: Scalars['String']['output'];
+          regionId: Scalars['Int']['output'];
+        };
+
+        export type Subscription = {
+          __typename?: 'Subscription';
+          onRegionCreated: Region;
+        };
+
+        export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type OnRegionCreatedSubscription = { __typename?: 'Subscription', onRegionCreated: { __typename: 'Region', regionId: number, regionDescription: string } };
+
+        export class TypedDocumentString<TResult, TVariables>
+          extends String
+          implements DocumentTypeDecoration<TResult, TVariables>
+        {
+          __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
+          private value: string;
+          public __meta__?: Record<string, any> | undefined;
+
+          constructor(value: string, __meta__?: Record<string, any> | undefined) {
+            super(value);
+            this.value = value;
+            this.__meta__ = __meta__;
+          }
+
+          override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
+            return this.value;
+          }
+        }
+
+        export const OnRegionCreatedDocument = new TypedDocumentString(\`
+            subscription onRegionCreated {
+          onRegionCreated {
+            __typename
+            regionId
+            regionDescription
+          }
+        }
+            \`) as unknown as TypedDocumentString<OnRegionCreatedSubscription, OnRegionCreatedSubscriptionVariables>;
+      `);
+    });
+  });
+
+  it('support enumsAsConst option', async () => {
+    const { result } = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            thing: Thing
+          }
+          type Thing {
+            color: Color!
+          }
+          enum Color {
+            RED
+            BLUE
+          }
+        `,
+      ],
+      documents: path.join(__dirname, 'fixtures/enum.ts'),
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            enumsAsConst: true,
+          },
+        },
+      },
+    });
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toBeSimilarStringTo(`
+        /* eslint-disable */
+        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = T | null | undefined;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+        };
+
+        export const Color = {
+          Blue: 'BLUE',
+          Red: 'RED'
+        } as const;
+
+        export type Color = typeof Color[keyof typeof Color];
+        export type Query = {
+          __typename?: 'Query';
+          thing?: Maybe<Thing>;
+        };
+
+        export type Thing = {
+          __typename?: 'Thing';
+          color: Color;
+        };
+
+        export type FavoriteColorQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FavoriteColorQuery = { __typename?: 'Query', thing?: { __typename?: 'Thing', color: Color } | null };
+
+
+        export const FavoriteColorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FavoriteColor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<FavoriteColorQuery, FavoriteColorQueryVariables>;
+    `);
+  });
+
+  it('support enumValues option', async () => {
+    const { result } = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          enum Color {
+            RED
+            BLUE
+          }
+        `,
+      ],
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            enumValues: {
+              Color: './fixtures/with-enum-values#MyColor',
+            },
+          },
+        },
+      },
+    });
+
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toBeSimilarStringTo(`/* eslint-disable */
+      import { MyColor as Color } from './fixtures/with-enum-values';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = T | null | undefined;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+      };
+
+      export { Color };`);
+  });
+
+  it('supports immutableTypes', async () => {
+    const { result } = await executeCodegen({
+      schema: [
+        /* GraphQL */ `
+          type Query {
+            user(id: ID!): User
+          }
+          type User {
+            id: ID!
+            name: String!
+            friends: [User!]!
+          }
+        `,
+      ],
+      documents: [
+        /* GraphQL */ `
+          query Test_User {
+            user(id: "user-001") {
+              id
+              name
+            }
+          }
+        `,
+      ],
+      generates: {
+        'out1/': {
+          preset,
+          config: {
+            immutableTypes: true,
+          },
+        },
+      },
+    });
+
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type Maybe<T> = T | null;
+      export type InputMaybe<T> = T | null | undefined;
+      export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export type Scalars = {
+        ID: { input: string; output: string; }
+        String: { input: string; output: string; }
+        Boolean: { input: boolean; output: boolean; }
+        Int: { input: number; output: number; }
+        Float: { input: number; output: number; }
+      };
+
+      export type Query = {
+        readonly __typename?: 'Query';
+        readonly user?: Maybe<User>;
+      };
+
+
+      export type QueryUserArgs = {
+        id: Scalars['ID']['input'];
+      };
+
+      export type User = {
+        readonly __typename?: 'User';
+        readonly friends: ReadonlyArray<User>;
+        readonly id: Scalars['ID']['output'];
+        readonly name: Scalars['String']['output'];
+      };
+
+      export type Test_UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Test_UserQuery = { readonly __typename?: 'Query', readonly user?: { readonly __typename?: 'User', readonly id: string, readonly name: string } | null };
+
+
+      export const Test_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Test_User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"StringValue","value":"user-001","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<Test_UserQuery, Test_UserQueryVariables>;"
+    `);
   });
 });

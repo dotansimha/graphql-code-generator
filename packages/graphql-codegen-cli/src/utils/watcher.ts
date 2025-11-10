@@ -64,9 +64,9 @@ export const createWatcher = (
     let parcelWatcher: typeof import('@parcel/watcher');
     try {
       parcelWatcher = await import('@parcel/watcher');
-    } catch (err) {
+    } catch {
       log(
-        `Failed to import @parcel/watcher due to the following error (to use watch mode, install https://www.npmjs.com/package/@parcel/watcher):\n${err}`
+        'Failed to import @parcel/watcher.\n  To use watch mode, install https://www.npmjs.com/package/@parcel/watcher.'
       );
       return;
     }
@@ -78,7 +78,24 @@ export const createWatcher = (
     const debouncedExec = debounce(() => {
       if (!isShutdown) {
         executeCodegen(initialContext)
-          .then(onNext, () => Promise.resolve())
+          .then(
+            ({ result, error }) => {
+              // FIXME: this is a quick fix to stop `onNext` (writeOutput) from
+              // removing all files when there is an error.
+              //
+              // This is because `removeStaleFiles()` will remove files if the
+              // generated files are different between runs. And on error, it
+              // returns an empty array i.e. will remove all generated files from
+              // the previous run
+              //
+              // This also means we don't have config.allowPartialOutputs in watch mode
+              if (error) {
+                return;
+              }
+              onNext(result);
+            },
+            () => Promise.resolve()
+          )
           .then(() => emitWatching(watchDirectory));
       }
     }, 100);
@@ -119,7 +136,7 @@ export const createWatcher = (
             // In ESM require is not defined
             try {
               delete require.cache[path];
-            } catch (err) {}
+            } catch {}
 
             if (eventName === 'update' && config.configFilePath && path === config.configFilePath) {
               log(`${logSymbols.info} Config file has changed, reloading...`);
@@ -198,7 +215,17 @@ export const createWatcher = (
    */
   stopWatching.runningWatcher = new Promise<void>((resolve, reject) => {
     executeCodegen(initialContext)
-      .then(onNext, () => Promise.resolve())
+      .then(
+        ({ result, error }) => {
+          // TODO: this is the initial run, the logic here mimics the above watcher logic.
+          // We need to check whether it's ok to deviate between these two.
+          if (error) {
+            return;
+          }
+          onNext(result);
+        },
+        () => Promise.resolve()
+      )
       .then(() => runWatcher(abortController.signal))
       .catch(err => {
         watcherSubscription.unsubscribe();

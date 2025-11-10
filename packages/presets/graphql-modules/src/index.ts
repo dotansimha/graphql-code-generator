@@ -72,7 +72,11 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       documentTransforms: options.documentTransforms,
     };
 
-    const baseTypesFilename = baseTypesPath.replace(/\.(js|ts|d.ts)$/, '');
+    const baseTypesFilename = baseTypesPath.replace(
+      /\.(js|ts|d.ts)$/,
+      // we need extension if ESM modules are used
+      options.config.emitLegacyCommonJSImports ? '' : '.js'
+    );
     const baseTypesDir = stripFilename(baseOutput.filename);
 
     // One file per each module

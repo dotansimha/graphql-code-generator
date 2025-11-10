@@ -1,8 +1,8 @@
-import { GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLOutputType } from 'graphql';
+import { GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLOutputType, Location } from 'graphql';
 import { AvoidOptionalsConfig, ConvertNameFn, NormalizedScalarsMap } from '../types.js';
 
 export type PrimitiveField = { isConditional: boolean; fieldName: string };
-export type PrimitiveAliasedFields = { alias: string; fieldName: string };
+export type PrimitiveAliasedFields = { isConditional: boolean; alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type NameAndType = { name: string; type: string };
 export type ProcessResult = null | Array<NameAndType | string>;
@@ -21,12 +21,18 @@ export type SelectionSetProcessorConfig = {
   ): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
   avoidOptionals?: AvoidOptionalsConfig | boolean;
+  printFieldsOnNewLines?: boolean;
 };
 
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {
+  typeCache = new Map<Location, Map<string, [string, string]>>();
+
   constructor(public config: Config) {}
 
   buildFieldsIntoObject(allObjectsMerged: string[]): string {
+    if (this.config.printFieldsOnNewLines) {
+      return `{\n  ${allObjectsMerged.join(',\n  ')}\n}`;
+    }
     return `{ ${allObjectsMerged.join(', ')} }`;
   }
 

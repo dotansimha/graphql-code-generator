@@ -3,91 +3,10 @@ import { validateTs } from '@graphql-codegen/testing';
 import { buildClientSchema, buildSchema, parse } from 'graphql';
 import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { plugin } from '../src/index.js';
+import { schema } from './shared/schema.js';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
-
-  const schema = buildSchema(/* GraphQL */ `
-    scalar DateTime
-
-    input InputType {
-      t: String
-    }
-
-    type User {
-      id: ID!
-      username: String!
-      email: String!
-      profile: Profile
-      role: Role
-    }
-
-    type Profile {
-      age: Int
-      firstName: String!
-    }
-
-    type Mutation {
-      test: String
-      login(username: String!, password: String!): User
-    }
-
-    type Subscription {
-      userCreated: User
-    }
-
-    interface Notifiction {
-      id: ID!
-      createdAt: String!
-    }
-
-    type TextNotification implements Notifiction {
-      id: ID!
-      text: String!
-      createdAt: String!
-    }
-
-    type ImageNotification implements Notifiction {
-      id: ID!
-      imageUrl: String!
-      metadata: ImageMetadata!
-      createdAt: String!
-    }
-
-    type ImageMetadata {
-      createdBy: String!
-    }
-
-    enum Role {
-      USER
-      ADMIN
-    }
-
-    union MyUnion = User | Profile
-
-    union AnyNotification = TextNotification | ImageNotification
-    union SearchResult = TextNotification | ImageNotification | User
-
-    type Query {
-      me: User
-      unionTest: MyUnion
-      notifications: [Notifiction!]!
-      mixedNotifications: [AnyNotification!]!
-      search(term: String!): [SearchResult!]!
-      dummy: String
-      dummyNonNull: String!
-      dummyArray: [String]
-      dummyNonNullArray: [String]!
-      dummyNonNullArrayWithValues: [String!]!
-      dummyWithType: Profile
-    }
-
-    schema {
-      query: Query
-      mutation: Mutation
-      subscription: Subscription
-    }
-  `);
 
   const validate = async (
     content: Types.PluginOutput,
@@ -380,6 +299,52 @@ describe('TypeScript Operations Plugin', () => {
       );
       expect(content).toBeSimilarStringTo(`
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age?: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+      `);
+    });
+
+    it('should add undefined as possible value according to allowUndefinedQueryVariables', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User!
+        }
+
+        type User {
+          name: String!
+          age: Int
+          address: String!
+          nicknames: [String!]
+          parents: [User!]!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($showProperty: Boolean!) {
+          user {
+            name
+            age
+            address @include(if: $showProperty)
+            nicknames @include(if: $showProperty)
+            parents @include(if: $showProperty)
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document: fragment }],
+        {
+          preResolveTypes: true,
+          allowUndefinedQueryVariables: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryVariables = Exact<{
+          showProperty: Scalars['Boolean']['input'];
+        }> | undefined;
       `);
     });
   });
@@ -1018,10 +983,18 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toContain(
-        `export type Q1Query = { search: Array<{ __typename: 'Movie', id: string, title: string } | { __typename: 'Person', id: string, name: string }> };`
+        `\
+export type Q1Query = { search: Array<
+    | { __typename: 'Movie', id: string, title: string }
+    | { __typename: 'Person', id: string, name: string }
+  > };`
       );
       expect(content).toContain(
-        `export type Q2Query = { search: Array<{ __typename: 'Movie', id: string, title: string } | { __typename: 'Person', id: string, name: string }> };`
+        `\
+export type Q2Query = { search: Array<
+    | { __typename: 'Movie', id: string, title: string }
+    | { __typename: 'Person', id: string, name: string }
+  > };`
       );
       await validate(content, config, testSchema);
     });
@@ -5358,20 +5331,29 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type CatFragment_Duck_Fragment = {};
+        "type CatFragment_Duck_Fragment = Record<PropertyKey, never>;
 
         type CatFragment_Lion_Fragment = { id: string };
 
         type CatFragment_Puma_Fragment = { id: string };
 
-        type CatFragment_Wolf_Fragment = {};
+        type CatFragment_Wolf_Fragment = Record<PropertyKey, never>;
 
-        export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+        export type CatFragmentFragment =
+          | CatFragment_Duck_Fragment
+          | CatFragment_Lion_Fragment
+          | CatFragment_Puma_Fragment
+          | CatFragment_Wolf_Fragment
+        ;
 
         export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type KittyQuery = { animals: Array<{ id: string } | { id: string } | {}> };
+        export type KittyQuery = { animals: Array<
+            | { id: string }
+            | { id: string }
+            | Record<PropertyKey, never>
+          > };
         "
       `);
     });
@@ -5436,12 +5418,22 @@ function test(q: GetEntityBrandDataQuery): void {
 
         type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
 
-        export type CatFragmentFragment = CatFragment_Duck_Fragment | CatFragment_Lion_Fragment | CatFragment_Puma_Fragment | CatFragment_Wolf_Fragment;
+        export type CatFragmentFragment =
+          | CatFragment_Duck_Fragment
+          | CatFragment_Lion_Fragment
+          | CatFragment_Puma_Fragment
+          | CatFragment_Wolf_Fragment
+        ;
 
         export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type KittyQuery = { __typename?: 'Query', animals: Array<{ __typename?: 'Duck' } | { __typename?: 'Lion', id: string } | { __typename?: 'Puma', id: string } | { __typename?: 'Wolf' }> };
+        export type KittyQuery = { __typename?: 'Query', animals: Array<
+            | { __typename?: 'Duck' }
+            | { __typename?: 'Lion', id: string }
+            | { __typename?: 'Puma', id: string }
+            | { __typename?: 'Wolf' }
+          > };
         "
       `);
     });
@@ -5488,7 +5480,7 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type UserQuery = { user: Pick<User, 'id' | 'login'> | {} };
+        export type UserQuery = { user: Pick<User, 'id' | 'login'> | Record<PropertyKey, never> };
       `);
     });
 
@@ -5918,16 +5910,20 @@ function test(q: GetEntityBrandDataQuery): void {
         "export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type GetPeopleQuery = { __typename?: 'Query', people: (
-            { __typename?: 'Character' }
-            & { ' $fragmentRefs'?: { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
-          ) | (
-            { __typename?: 'Jedi' }
-            & { ' $fragmentRefs'?: { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
-          ) | (
-            { __typename?: 'Droid' }
-            & { ' $fragmentRefs'?: { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
-          ) };
+        export type GetPeopleQuery = { __typename?: 'Query', people:
+            | (
+              { __typename?: 'Character' }
+              & { ' $fragmentRefs'?: { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
+            )
+            | (
+              { __typename?: 'Jedi' }
+              & { ' $fragmentRefs'?: { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
+            )
+            | (
+              { __typename?: 'Droid' }
+              & { ' $fragmentRefs'?: { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
+            )
+           };
 
         type PeopleInfo_Character_Fragment = { __typename?: 'Character', name?: string | null } & { ' $fragmentName'?: 'PeopleInfo_Character_Fragment' };
 
@@ -5935,7 +5931,11 @@ function test(q: GetEntityBrandDataQuery): void {
 
         type PeopleInfo_Droid_Fragment = { __typename?: 'Droid', model?: string | null } & { ' $fragmentName'?: 'PeopleInfo_Droid_Fragment' };
 
-        export type PeopleInfoFragment = PeopleInfo_Character_Fragment | PeopleInfo_Jedi_Fragment | PeopleInfo_Droid_Fragment;
+        export type PeopleInfoFragment =
+          | PeopleInfo_Character_Fragment
+          | PeopleInfo_Jedi_Fragment
+          | PeopleInfo_Droid_Fragment
+        ;
         "
       `);
     });
@@ -6050,6 +6050,62 @@ function test(q: GetEntityBrandDataQuery): void {
       });
 
       expect(content).toMatchSnapshot();
+    });
+
+    it('#8461 - conditional directives are ignored on fields with alias', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type User {
+          firstName: String!
+          lastName: Int!
+          address: Address!
+        }
+
+        type Address {
+          postalCode: String!
+        }
+
+        type Query {
+          viewer: User!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query UserQuery($skipFirstName: Boolean!, $skipAddress: Boolean!) {
+          viewer {
+            givenName: firstName @skip(if: $skipFirstName)
+            lastName
+            mailingAddress: address @skip(if: $skipAddress) {
+              postalCode
+            }
+          }
+        }
+      `);
+
+      const config = { preResolveTypes: true };
+
+      const { content } = await plugin(testSchema, [{ location: '', document: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQueryQueryVariables = Exact<{
+          skipFirstName: Scalars['Boolean']['input'];
+          skipAddress: Scalars['Boolean']['input'];
+        }>;
+
+        export type UserQueryQuery = {
+          __typename?: 'Query',
+          viewer: {
+            __typename?: 'User',
+            lastName: number,
+            givenName?: string,
+            mailingAddress?: {
+              __typename?: 'Address',
+              postalCode: string
+            }
+          }
+        };
+      `);
     });
   });
 

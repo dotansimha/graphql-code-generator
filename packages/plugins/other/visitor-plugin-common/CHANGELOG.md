@@ -1,5 +1,209 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.1.0
+
+### Minor Changes
+
+- [#10449](https://github.com/dotansimha/graphql-code-generator/pull/10449) [`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26) Thanks [@eddeee888](https://github.com/eddeee888)! - Add addInterfaceFieldResolverTypes option to support custom Interface resolver inheritance
+
+## 6.0.1
+
+### Patch Changes
+
+- [#10412](https://github.com/dotansimha/graphql-code-generator/pull/10412) [`accdab6`](https://github.com/dotansimha/graphql-code-generator/commit/accdab69106605241933e9d66d64dc7077656f30) Thanks [@thekevinbrown](https://github.com/thekevinbrown)! - Add special handling for identifiers that consist entirely of _ characters when transformUnderscore is true. This prevents _ values in GraphQL enums from being emitted without identifers in the resulting types.
+
+## 6.0.0
+
+### Major Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGES: Do not generate \_\_isTypeOf for non-implementing types or non-union members
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove deprecated config option `dedupeFragments`
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove NameNode override
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Use Record<PropertyKey, never> instead of {} for empty object type
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Ensure Federation Interfaces have `__resolveReference` if they are resolvable entities
+
+  BREAKING CHANGES: Deprecate `onlyResolveTypeForInterfaces` because majority of use cases cannot implement resolvers in Interfaces.
+  BREAKING CHANGES: Deprecate `generateInternalResolversIfNeeded.__resolveReference` because types do not have `__resolveReference` if they are not Federation entities or are not resolvable. Users should not have to manually set this option. This option was put in to wait for this major version.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Improve Federation Entity's resolvers' parent param type: These types were using reference types inline. This makes it hard to handle mappers. The Parent type now all comes from ParentResolverTypes to make handling mappers and parent types simpler.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Bump dependencies major versions:
+
+  - dependency-graph to v1
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `mappers` usage with Federation
+
+  `mappers` was previously used as `__resolveReference`'s first param (usually called "reference"). However, this is incorrect because `reference` interface comes directly from `@key` and `@requires` directives. This patch fixes the issue by creating a new `FederationTypes` type and use it as the base for federation entity types when being used to type entity references.
+
+  BREAKING CHANGES: No longer generate `UnwrappedObject` utility type, as this was used to support the wrong previously generated type.
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Drop Node 18 support
+
+### Minor Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Report to meta user defined objects whether they have isTypeOf resolver
+
+### Patch Changes
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Update @requires type
+
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fields or object types marked with @external being wrongly generated
+
+- Updated dependencies [[`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)]:
+  - @graphql-codegen/plugin-helpers@6.0.0
+
+## 5.8.0
+
+### Minor Changes
+
+- [#10315](https://github.com/dotansimha/graphql-code-generator/pull/10315) [`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc) Thanks [@eddeee888](https://github.com/eddeee888)! - Implement semanticNonNull custom directive
+
+## 5.7.1
+
+### Patch Changes
+
+- [#10302](https://github.com/dotansimha/graphql-code-generator/pull/10302) [`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix Apollo unmask directive incorrectly generating fragmentRefs
+
+## 5.7.0
+
+### Minor Changes
+
+- [#10270](https://github.com/dotansimha/graphql-code-generator/pull/10270) [`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c) Thanks [@adapap](https://github.com/adapap)! - feat: implement `includeExternalFragments: boolean` option
+
+## 5.6.1
+
+### Patch Changes
+
+- [#10230](https://github.com/dotansimha/graphql-code-generator/pull/10230) [`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix generateInternalResolversIfNeeded.\_\_resolveReference making the resolver required
+
+  `__resolveReference`'s default behaviour when not declared is to pass the ref to subsequent resolvers i.e. becoming the `parent`. So, it means we don't have to make this resolver required.
+
+  This patch makes `__resolveReference` optional when `generateInternalResolversIfNeeded.__resolveReference` is set to true.
+
+## 5.6.0
+
+### Minor Changes
+
+- [#10163](https://github.com/dotansimha/graphql-code-generator/pull/10163) [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba) Thanks [@jerelmiller](https://github.com/jerelmiller)! - Add support for Apollo Client `@unmask` directive with fragment masking.
+
+### Patch Changes
+
+- [#10187](https://github.com/dotansimha/graphql-code-generator/pull/10187) [`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a) Thanks [@gilgardosh](https://github.com/gilgardosh)! - Fix: type naming for imported enums
+
+## 5.5.0
+
+### Minor Changes
+
+- [#9989](https://github.com/dotansimha/graphql-code-generator/pull/9989) [`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc) Thanks [@eddeee888](https://github.com/eddeee888)! - Add `generateInternalResolversIfNeeded` option
+
+  This option can be used to generate more correct types for internal resolvers. For example, only generate `__resolveReference` if the federation object has a resolvable `@key`.
+
+  In the future, this option can be extended to support other internal resolvers e.g. `__isTypeOf` is only generated for implementing types and union members.
+
+- [#10141](https://github.com/dotansimha/graphql-code-generator/pull/10141) [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03) Thanks [@eddeee888](https://github.com/eddeee888)! - Add avoidCheckingAbstractTypesRecursively to avoid checking and generating abstract types recursively
+
+  For users that already sets recursive default mappers e.g. `Partial<{T}>` or `DeepPartial<{T}>`, having both options on will cause a nested loop which eventually crashes Codegen. In such case, setting `avoidCheckingAbstractTypesRecursively: true` allows users to continue to use recursive default mappers as before.
+
+### Patch Changes
+
+- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc)]:
+  - @graphql-codegen/plugin-helpers@5.1.0
+
+## 5.4.0
+
+### Minor Changes
+
+- [#10077](https://github.com/dotansimha/graphql-code-generator/pull/10077) [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4) Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `config.avoidOptions` to support query, mutation and subscription
+
+  Previously, `config.avoidOptions.resolvers` was being used to make query, mutation and subscription fields non-optional.
+  Now, `config.avoidOptions.query`, `config.avoidOptions.mutation` and `config.avoidOptions.subscription` can be used to target the respective types.
+
+## 5.3.1
+
+### Patch Changes
+
+- [#10014](https://github.com/dotansimha/graphql-code-generator/pull/10014) [`79fee3c`](https://github.com/dotansimha/graphql-code-generator/commit/79fee3cada20d683d250aad5aa5fef9d6ed9f4d2) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix object types with fields being abstract types not pointing to resolver types correctly
+
+## 5.3.0
+
+### Minor Changes
+
+- [#10007](https://github.com/dotansimha/graphql-code-generator/pull/10007) [`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3) Thanks [@eddeee888](https://github.com/eddeee888)! - Add generated resolvers map type name to typescript-resolvers plugin meta
+
+### Patch Changes
+
+- [#10019](https://github.com/dotansimha/graphql-code-generator/pull/10019) [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421) Thanks [@vhfmag](https://github.com/vhfmag)! - Improve code generation performance by computing `ClientSideBaseVisitor`'s `fragmentsGraph` once at instantiation time.
+
+## 5.2.0
+
+### Minor Changes
+
+- [#9961](https://github.com/dotansimha/graphql-code-generator/pull/9961) [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e) Thanks [@eddeee888](https://github.com/eddeee888)! - Update typescript-resolvers to report generated resolver types in the run to meta field in the output
+
+### Patch Changes
+
+- [#9944](https://github.com/dotansimha/graphql-code-generator/pull/9944) [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431) Thanks [@eddeee888](https://github.com/eddeee888)! - Add \_ prefix to generated `RefType` in `ResolversInterfaceTypes` and `ResolversUnionTypes` as it is sometimes unused
+
+- [#9962](https://github.com/dotansimha/graphql-code-generator/pull/9962) [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix interface mappers not working in nested/self-referencing scenarios
+
+- Updated dependencies [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e)]:
+  - @graphql-codegen/plugin-helpers@5.0.4
+
+## 5.1.0
+
+### Minor Changes
+
+- [#9652](https://github.com/dotansimha/graphql-code-generator/pull/9652) [`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53) Thanks [@gmurphey](https://github.com/gmurphey)! - Added allowUndefinedQueryVariables as config option
+
+### Patch Changes
+
+- [#9842](https://github.com/dotansimha/graphql-code-generator/pull/9842) [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d) Thanks [@henryqdineen](https://github.com/henryqdineen)! - properly handle aliased conditionals
+
+## 5.0.0
+
+### Major Changes
+
+- [#9845](https://github.com/dotansimha/graphql-code-generator/pull/9845) [`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5) Thanks [@productdevbook](https://github.com/productdevbook)! - path starts with "#"
+
+## 4.1.2
+
+### Patch Changes
+
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+
+- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+  - @graphql-codegen/plugin-helpers@5.0.3
+
+## 4.1.1
+
+### Patch Changes
+
+- [#9673](https://github.com/dotansimha/graphql-code-generator/pull/9673) [`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f) Thanks [@maclockard](https://github.com/maclockard)! - Respect avoidOptionals when all arguments are optional
+
+## 4.1.0
+
+### Minor Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - fix: out-of-memory crash (fixes #7720)
+  perf: implement a caching mechanism that makes sure the type originating at the same location is never generated twice, as long as the combination of selected fields and possible types matches
+  feat: implement `extractAllFieldsToTypes: boolean`
+  feat: implement `printFieldsOnNewLines: boolean`
+
+### Patch Changes
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
+
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - Avoid reading from null values when selection sets only contain fragments.
+
+- Updated dependencies [[`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975)]:
+  - @graphql-codegen/plugin-helpers@5.0.2
+
 ## 4.0.1
 
 ### Patch Changes
@@ -25,21 +229,21 @@
 
   ```ts
   export type Scalars = {
-    ID: string;
-  };
+    ID: string
+  }
   ```
 
   Then, this is used in both input and output type e.g.
 
   ```ts
   export type Book = {
-    __typename?: 'Book';
-    id: Scalars['ID']; // Output's ID can be `string` 👍
-  };
+    __typename?: 'Book'
+    id: Scalars['ID'] // Output's ID can be `string` 👍
+  }
 
   export type QueryBookArgs = {
-    id: Scalars['ID']; // Input's ID can be `string` or `number`. However, the type is only `string` here 👎
-  };
+    id: Scalars['ID'] // Input's ID can be `string` or `number`. However, the type is only `string` here 👎
+  }
   ```
 
   This PR extends each Scalar to have input and output:
@@ -47,23 +251,23 @@
   ```ts
   export type Scalars = {
     ID: {
-      input: string | number;
-      output: string;
-    };
-  };
+      input: string | number
+      output: string
+    }
+  }
   ```
 
   Then, each input/output GraphQL type can correctly refer to the correct input/output scalar type:
 
   ```ts
   export type Book = {
-    __typename?: 'Book';
-    id: Scalars['ID']['output']; // Output's ID can be `string` 👍
-  };
+    __typename?: 'Book'
+    id: Scalars['ID']['output'] // Output's ID can be `string` 👍
+  }
 
   export type QueryBookArgs = {
-    id: Scalars['ID']['input']; // Input's ID can be `string` or `number` 👍
-  };
+    id: Scalars['ID']['input'] // Input's ID can be `string` or `number` 👍
+  }
   ```
 
   Note that for `typescript-resolvers`, the type of ID needs to be inverted. However, the referenced types in GraphQL input/output types should still work correctly:
@@ -116,7 +320,7 @@
   ```ts
   config: {
     scalars: {
-      ID: 'string'; // This means `string` will be used for both ID's input and output types
+      ID: 'string' // This means `string` will be used for both ID's input and output types
     }
   }
   ```
@@ -126,7 +330,7 @@
   ```ts
   config: {
     scalars: {
-      ID: './path/to/scalar-module';
+      ID: './path/to/scalar-module'
     }
   }
   ```
@@ -135,11 +339,11 @@
 
   ```ts
   // Previously, imported `ID` type can be a primitive type, now it must be an object with input/output fields
-  import { ID } from './path/to/scalar-module';
+  import { ID } from './path/to/scalar-module'
 
   export type Scalars = {
-    ID: { input: ID['input']; output: ID['output'] };
-  };
+    ID: { input: ID['input']; output: ID['output'] }
+  }
   ```
 
   ***
@@ -158,7 +362,7 @@
 
   ```jsx
   // src/index.tsx
-  import { graphql } from './gql';
+  import { graphql } from './gql'
   const OrdersFragment = graphql(`
     fragment OrdersFragment on User {
       orders {
@@ -166,7 +370,7 @@
         total
       }
     }
-  `);
+  `)
   const GetUserQuery = graphql(`
     query GetUser($id: ID!) {
       user(id: $id) {
@@ -175,7 +379,7 @@
         ...OrdersFragment @defer
       }
     }
-  `);
+  `)
   ```
 
   The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
@@ -183,10 +387,10 @@
   ```tsx
   // gql/graphql.ts
   export type GetUserQuery = { __typename?: 'Query'; id: string; name: string } & ({
-    __typename?: 'Query';
+    __typename?: 'Query'
   } & {
-    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> };
-  });
+    ' $fragmentRefs'?: { OrdersFragment: Incremental<OrdersFragment> }
+  })
   ```
 
   Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred
@@ -229,12 +433,12 @@
         config: {
           resolversNonOptionalTypename: {
             unionMember: true,
-            excludeTypes: ['MyType'],
-          },
-        },
-      },
-    },
-  };
+            excludeTypes: ['MyType']
+          }
+        }
+      }
+    }
+  }
   ```
 
 - [#9229](https://github.com/dotansimha/graphql-code-generator/pull/9229) [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c) Thanks [@eddeee888](https://github.com/eddeee888)! - Use generic to simplify ResolversUnionTypes
@@ -275,24 +479,24 @@
 
   ```ts
   export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-    CharacterNode: Fighter | Wizard;
-  };
+    CharacterNode: Fighter | Wizard
+  }
 
   export type ResolversTypes = {
     // other types...
-    CharacterNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['CharacterNode']>;
-    Fighter: ResolverTypeWrapper<Fighter>;
-    Wizard: ResolverTypeWrapper<Wizard>;
+    CharacterNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['CharacterNode']>
+    Fighter: ResolverTypeWrapper<Fighter>
+    Wizard: ResolverTypeWrapper<Wizard>
     // other types...
-  };
+  }
 
   export type ResolversParentTypes = {
     // other types...
-    CharacterNode: ResolversInterfaceTypes<ResolversParentTypes>['CharacterNode'];
-    Fighter: Fighter;
-    Wizard: Wizard;
+    CharacterNode: ResolversInterfaceTypes<ResolversParentTypes>['CharacterNode']
+    Fighter: Fighter
+    Wizard: Wizard
     // other types...
-  };
+  }
   ```
 
   The `RefType` generic is used to reference back to `ResolversTypes` and `ResolversParentTypes` in some cases such as field returning a Union.
@@ -308,35 +512,35 @@
       'src/schema/types.ts': {
         plugins: ['typescript', 'typescript-resolvers'],
         config: {
-          resolversNonOptionalTypename: true, // Or `resolversNonOptionalTypename: { interfaceImplementingType: true }`
-        },
-      },
-    },
-  };
+          resolversNonOptionalTypename: true // Or `resolversNonOptionalTypename: { interfaceImplementingType: true }`
+        }
+      }
+    }
+  }
   ```
 
   Then, the generated type looks like this:
 
   ```ts
   export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-    CharacterNode: (Fighter & { __typename: 'Fighter' }) | (Wizard & { __typename: 'Wizard' });
-  };
+    CharacterNode: (Fighter & { __typename: 'Fighter' }) | (Wizard & { __typename: 'Wizard' })
+  }
 
   export type ResolversTypes = {
     // other types...
-    CharacterNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['CharacterNode']>;
-    Fighter: ResolverTypeWrapper<Fighter>;
-    Wizard: ResolverTypeWrapper<Wizard>;
+    CharacterNode: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['CharacterNode']>
+    Fighter: ResolverTypeWrapper<Fighter>
+    Wizard: ResolverTypeWrapper<Wizard>
     // other types...
-  };
+  }
 
   export type ResolversParentTypes = {
     // other types...
-    CharacterNode: ResolversInterfaceTypes<ResolversParentTypes>['CharacterNode'];
-    Fighter: Fighter;
-    Wizard: Wizard;
+    CharacterNode: ResolversInterfaceTypes<ResolversParentTypes>['CharacterNode']
+    Fighter: Fighter
+    Wizard: Wizard
     // other types...
-  };
+  }
   ```
 
 ### Patch Changes
@@ -403,28 +607,28 @@
   // Query/book.ts
   export const book = async () => {
     try {
-      const book = await fetchBook();
+      const book = await fetchBook()
       // 1. No `__typename` in resolver results...
       return {
-        node: book,
-      };
+        node: book
+      }
     } catch (e) {
       return {
-        message: 'Failed to fetch book',
-      };
+        message: 'Failed to fetch book'
+      }
     }
-  };
+  }
 
   // BookPayload.ts
   export const BookPayload = {
     __resolveType: parent => {
       // 2. ... means more checks in `__resolveType`
       if ('message' in parent) {
-        return 'PayloadError';
+        return 'PayloadError'
       }
-      return 'BookResult';
-    },
-  };
+      return 'BookResult'
+    }
+  }
   ```
 
   _With non-optional `__typename`:_ Resolvers declare the type. This which gives us better TypeScript support in resolvers and simplify `__resolveType` implementation:
@@ -433,24 +637,24 @@
   // Query/book.ts
   export const book = async () => {
     try {
-      const book = await fetchBook();
+      const book = await fetchBook()
       // 1. `__typename` is declared in resolver results...
       return {
         __typename: 'BookResult', // 1a. this also types `node` for us 🎉
-        node: book,
-      };
+        node: book
+      }
     } catch (e) {
       return {
         __typename: 'PayloadError',
-        message: 'Failed to fetch book',
-      };
+        message: 'Failed to fetch book'
+      }
     }
-  };
+  }
 
   // BookPayload.ts
   export const BookPayload = {
-    __resolveType: parent => parent.__typename, // 2. ... means a very simple check in `__resolveType`
-  };
+    __resolveType: parent => parent.__typename // 2. ... means a very simple check in `__resolveType`
+  }
   ```
 
   _Using `resolversNonOptionalTypename`:_ add it into `typescript-resolvers` plugin config:
@@ -463,11 +667,11 @@
       'src/schema/types.ts': {
         plugins: ['typescript', 'typescript-resolvers'],
         config: {
-          resolversNonOptionalTypename: true, // Or `resolversNonOptionalTypename: { unionMember: true }`
-        },
-      },
-    },
-  };
+          resolversNonOptionalTypename: true // Or `resolversNonOptionalTypename: { unionMember: true }`
+        }
+      }
+    }
+  }
   ```
 
 ### Patch Changes
@@ -478,20 +682,20 @@
 
   ```ts
   export type ResolversTypes = {
-    Book: ResolverTypeWrapper<BookMapper>;
-    BookPayload: ResolversTypes['BookResult'] | ResolversTypes['StandardError'];
+    Book: ResolverTypeWrapper<BookMapper>
+    BookPayload: ResolversTypes['BookResult'] | ResolversTypes['StandardError']
     // Note: `result` on the next line references `ResolversTypes["Book"]`
-    BookResult: ResolverTypeWrapper<Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }>;
-    StandardError: ResolverTypeWrapper<StandardError>;
-  };
+    BookResult: ResolverTypeWrapper<Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }>
+    StandardError: ResolverTypeWrapper<StandardError>
+  }
 
   export type ResolversParentTypes = {
-    Book: BookMapper;
-    BookPayload: ResolversParentTypes['BookResult'] | ResolversParentTypes['StandardError'];
+    Book: BookMapper
+    BookPayload: ResolversParentTypes['BookResult'] | ResolversParentTypes['StandardError']
     // Note: `result` on the next line references `ResolversParentTypes["Book"]`
-    BookResult: Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> };
-    StandardError: StandardError;
-  };
+    BookResult: Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> }
+    StandardError: StandardError
+  }
   ```
 
   In https://github.com/dotansimha/graphql-code-generator/pull/9069, we extracted resolver union types to its own group:
@@ -499,36 +703,36 @@
   ```ts
   export type ResolversUnionTypes = {
     // Note: `result` on the next line references `ResolversTypes["Book"]` which is only correct for the `ResolversTypes` case
-    BookPayload: (Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }) | StandardError;
-  };
+    BookPayload: (Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }) | StandardError
+  }
 
   export type ResolversTypes = {
-    Book: ResolverTypeWrapper<BookMapper>;
-    BookPayload: ResolverTypeWrapper<ResolversUnionTypes['BookPayload']>;
-    BookResult: ResolverTypeWrapper<Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }>;
-    StandardError: ResolverTypeWrapper<StandardError>;
-  };
+    Book: ResolverTypeWrapper<BookMapper>
+    BookPayload: ResolverTypeWrapper<ResolversUnionTypes['BookPayload']>
+    BookResult: ResolverTypeWrapper<Omit<BookResult, 'result'> & { result?: Maybe<ResolversTypes['Book']> }>
+    StandardError: ResolverTypeWrapper<StandardError>
+  }
 
   export type ResolversParentTypes = {
-    Book: BookMapper;
-    BookPayload: ResolversUnionTypes['BookPayload'];
-    BookResult: Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> };
-    StandardError: StandardError;
-  };
+    Book: BookMapper
+    BookPayload: ResolversUnionTypes['BookPayload']
+    BookResult: Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> }
+    StandardError: StandardError
+  }
   ```
 
   This change creates an extra `ResolversUnionParentTypes` that is referenced by `ResolversParentTypes` to ensure backwards compatibility:
 
   ```ts
   export type ResolversUnionTypes = {
-    BookPayload: (Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> }) | StandardError;
-  };
+    BookPayload: (Omit<BookResult, 'result'> & { result?: Maybe<ResolversParentTypes['Book']> }) | StandardError
+  }
 
   // ... and the reference is changed in ResolversParentTypes:
   export type ResolversParentTypes = {
     // ... other fields
-    BookPayload: ResolversUnionParentTypes['BookPayload'];
-  };
+    BookPayload: ResolversUnionParentTypes['BookPayload']
+  }
   ```
 
 - [#9194](https://github.com/dotansimha/graphql-code-generator/pull/9194) [`acb647e4e`](https://github.com/dotansimha/graphql-code-generator/commit/acb647e4efbddecf732b6e55dc47ac40c9bdaf08) Thanks [@dstaley](https://github.com/dstaley)! - Don't emit import statements for unused fragments
@@ -880,8 +1084,8 @@
   const Query: QueryResolvers = {
     user(_, args) {
       // args.id is of type 'number'
-    },
-  };
+    }
+  }
   ```
 
 - 5086791ac: Allow overwriting the resolver type signature based on directive usages.
@@ -905,26 +1109,26 @@
 
   ```ts
   export type UnauthenticatedContext = {
-    user: null;
-  };
+    user: null
+  }
 
   export type AuthenticatedContext = {
-    user: { id: string };
-  };
+    user: { id: string }
+  }
 
   export type UnauthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
     parent: TParent,
     args: TArgs,
     context: UnauthenticatedContext,
     info: GraphQLResolveInfo
-  ) => Promise<TResult> | TResult;
+  ) => Promise<TResult> | TResult
 
   export type AuthenticatedResolver<TResult, TParent, _TContext, TArgs> = (
     parent: TParent,
     args: TArgs,
     context: AuthenticatedContext,
     info: GraphQLResolveInfo
-  ) => Promise<TResult> | TResult;
+  ) => Promise<TResult> | TResult
   ```
 
   Example Schema:

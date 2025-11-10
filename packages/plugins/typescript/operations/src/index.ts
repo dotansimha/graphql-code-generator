@@ -6,11 +6,13 @@ import { TypeScriptDocumentsVisitor } from './visitor.js';
 
 export { TypeScriptDocumentsPluginConfig } from './config.js';
 
-export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = (
-  schema: GraphQLSchema,
+export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = async (
+  inputSchema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
+  const schema = config.nullability?.errorHandlingClient ? await semanticToStrict(inputSchema) : inputSchema;
+
   const documents = config.flattenGeneratedTypes
     ? optimizeOperations(schema, rawDocuments, {
         includeFragments: config.flattenGeneratedTypesIncludeFragments,
@@ -64,3 +66,14 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 };
 
 export { TypeScriptDocumentsVisitor };
+
+const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
+  try {
+    const sock = await import('graphql-sock');
+    return sock.semanticToStrict(schema);
+  } catch {
+    throw new Error(
+      "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package."
+    );
+  }
+};

@@ -8,7 +8,7 @@ import { Tabs, Callout } from '@theguild/components'
 
 GraphQL Code Generator provides a unified way to get TypeScript types from GraphQL operations for [most modern GraphQL clients and frameworks](#appendix-ii-compatibility).
 
-This guide is built using the [Star wars films demo API](https://swapi-graphql.netlify.app/.netlify/functions/index).
+This guide is built using the [Star wars films demo API](https://graphql.org/graphql/).
 
 We will build a simple GraphQL front-end app using the following Query to fetch the list of Star Wars films:
 
@@ -45,25 +45,9 @@ All the below code examples are available in our [repository `examples` folder](
 
 For most GraphQL clients and frameworks (React, Vue), install the following packages:
 
-**For Yarn:**
-
-```bash
-yarn add graphql
-yarn add -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
-```
-
-**For npm:**
-
-```bash
-npm i -S graphql
-npm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
-```
-
-**For pnpm:**
-
-```bash
-pnpm i graphql @graphql-typed-document-node/core
-pnpm i -D typescript ts-node @graphql-codegen/cli @graphql-codegen/client-preset
+```sh npm2yarn
+npm install graphql
+npm install --save-dev typescript @graphql-codegen/cli @parcel/watcher
 ```
 
 <br />
@@ -75,10 +59,10 @@ Then provide the corresponding framework-specific configuration:
 <Tabs.Tab>
 
 ```ts filename="codegen.ts" {5}
-import { CodegenConfig } from '@graphql-codegen/cli'
+import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: 'https://graphql.org/graphql/',
   documents: ['src/**/*.tsx'],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
@@ -99,7 +83,7 @@ export default config
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: 'https://graphql.org/graphql/',
   documents: ['src/**/*.vue'],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
@@ -119,20 +103,7 @@ export default config
 
 </Tabs>
 
-> Each framework-specific lines are highlighted
-
-<br />
-
-<Callout type="info">
-
-**Usage with `@tanstack/react-query`**
-
-If you are using `@tanstack/react-query`, we recommend using it with `graphql-request@^5.0.0` to get the best developer experience.
-
-If you are willing to provide your own fetcher, you can directly jump to the ["Appendix I: React Query with a custom fetcher
-setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the guide once React Query is properly setup.
-
-</Callout>
+> **Note**: For React Query, please refer to our [dedicated guide](/docs/guides/react-query).
 
 <br />
 
@@ -140,8 +111,8 @@ setup"](#appendix-i-react-query-with-a-custom-fetcher-setup) and continue the gu
 
 First, start GraphQL Code Generator in watch mode:
 
-```
-yarn graphql-codegen --watch
+```sh npm2yarn
+npm run graphql-codegen --watch
 ```
 
 _Using GraphQL Code Generator will type your GraphQL Query and Mutations as you write them ⚡️_
@@ -213,7 +184,7 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 function App() {
   // `data` is typed!
   const { data } = useQuery(['films'], async () =>
-    request('https://swapi-graphql.netlify.app/.netlify/functions/index', allFilmsWithVariablesQueryDocument, {
+    request('https://graphql.org/graphql/', allFilmsWithVariablesQueryDocument, {
       first: 10 // variables are typed too!
     })
   )
@@ -480,13 +451,40 @@ From simple Queries to more advanced Fragments-based ones, GraphQL Code Generato
 
 **What's next?**
 
-To get the best GraphQL development experience, we recommend installing the [GraphQL VSCode extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) to get:
+To get the best GraphQL development experience, we recommend installing the [GraphQLSP](https://github.com/0no-co/GraphQLSP) package to get:
 
 - syntax highlighting
 - autocomplete suggestions
 - validation against schema
-- snippets
-- go to definition for fragments and input types
+- quick-info on hover
+
+![GraphQLSP](/assets/pages/docs/guides/react-vue/graphqlsp.png)
+
+`GraphQLSP`s a TypeScript LSP plugin for GraphQL, to get it working, we need to add the following to your `tsconfig.json`
+after installing the package (`npm i -D @0no-co/graphqlsp`):
+
+```json filename="tsconfig.json"
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "./schema.graphql"
+      }
+    ]
+  }
+}
+```
+
+Last but not least you need to ensure that when you're using `VSCode` that the workspace version of TS is used, the following
+config will make a prompt appear to switch it when visiting a TS file
+
+```json filename=".vscode/settings.json"
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
+```
 
 Also, make sure to follow GraphQL best practices by using [`graphql-eslint`](https://github.com/B2o5T/graphql-eslint) and the [ESLint VSCode extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) to visualize errors and warnings inlined in your code correctly.
 
@@ -510,7 +508,8 @@ The `client` preset allows the following `config` options:
 - [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
 - [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
 - [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
-- [`dedupeFragments`](/plugins/typescript/typescript#dedupefragments): Removes fragment duplicates for reducing data transfer. It is done by removing sub-fragments imports from fragment definition.
+- [`enumsAsConst`](/plugins/typescript/typescript#enumsasconst): Generates enum as TypeScript const assertions instead of enum. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
+- [`enumValues`](/plugins/typescript/typescript#enumvalues): Overrides the default value of enum values declared in your GraphQL schema. You can also map the entire enum to an external type by providing a string that of module#type.
 - [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
 - [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
 
@@ -536,11 +535,7 @@ export function useGraphQL<TResult, TVariables>(
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ): UseQueryResult<TResult> {
   return useQuery([(document.definitions[0] as any).name.value, variables], async ({ queryKey }) =>
-    request(
-      'https://swapi-graphql.netlify.app/.netlify/functions/index',
-      document,
-      queryKey[1] ? queryKey[1] : undefined
-    )
+    request('https://graphql.org/graphql/', document, queryKey[1] ? queryKey[1] : undefined)
   )
 }
 ```
@@ -624,7 +619,7 @@ export function useGraphQL<TResult, TVariables>(
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
 ): UseQueryResult<ExecutionResult<TResult>> {
   return useQuery([(document.definitions[0] as any).name.value, variables], () =>
-    customFetcher('https://swapi-graphql.netlify.app/.netlify/functions/index', document, variables)
+    customFetcher('https://graphql.org/graphql/', document, variables)
   )
 }
 ```

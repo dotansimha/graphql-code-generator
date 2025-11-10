@@ -11,7 +11,7 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import jiti from 'jiti';
+import { createJiti } from 'jiti';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
 import { GraphQLConfig } from 'graphql-config';
 import { env } from 'string-env-interpolation';
@@ -75,8 +75,8 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): Codeg
     }
 
     if (ext === 'ts') {
-      const jitiLoader = jiti('', { interopDefault: true });
-      return jitiLoader(filepath);
+      const jitiLoader = createJiti('');
+      return jitiLoader.import(filepath, { default: true });
     }
   };
 }
@@ -422,7 +422,7 @@ export class CodegenContext {
     return this._pluginContext;
   }
 
-  async loadSchema(pointer: Types.Schema): Promise<GraphQLSchema> {
+  async loadSchema(pointer: Types.Schema | Types.Schema[]): Promise<GraphQLSchema> {
     const config = this.getConfig(defaultSchemaLoadOptions);
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here

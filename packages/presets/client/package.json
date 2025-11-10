@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/client-preset",
-  "version": "4.1.0",
+  "version": "5.1.1",
   "description": "GraphQL Code Generator preset for client.",
   "repository": {
     "type": "git",
@@ -10,29 +10,36 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../../jest.config.js"
+    "test": "vitest --no-watch"
   },
   "devDependencies": {
-    "@types/babel__helper-plugin-utils": "7.10.2",
-    "@types/babel__template": "7.4.3"
+    "@types/babel__helper-plugin-utils": "7.10.3",
+    "@types/babel__template": "7.4.4",
+    "graphql-sock": "1.0.0"
   },
   "dependencies": {
     "@babel/helper-plugin-utils": "^7.20.2",
     "@babel/template": "^7.20.7",
-    "@graphql-codegen/add": "^5.0.0",
-    "@graphql-codegen/typed-document-node": "^5.0.1",
-    "@graphql-codegen/typescript": "^4.0.1",
-    "@graphql-codegen/typescript-operations": "^4.0.1",
-    "@graphql-codegen/gql-tag-operations": "4.0.1",
-    "@graphql-codegen/plugin-helpers": "^5.0.1",
-    "@graphql-codegen/visitor-plugin-common": "^4.0.1",
+    "@graphql-codegen/add": "^6.0.0",
+    "@graphql-codegen/typed-document-node": "^6.0.2",
+    "@graphql-codegen/typescript": "^5.0.2",
+    "@graphql-codegen/typescript-operations": "^5.0.2",
+    "@graphql-codegen/gql-tag-operations": "5.0.3",
+    "@graphql-codegen/plugin-helpers": "^6.0.0",
+    "@graphql-codegen/visitor-plugin-common": "^6.1.0",
     "@graphql-typed-document-node/core": "3.2.0",
     "@graphql-tools/documents": "^1.0.0",
     "@graphql-tools/utils": "^10.0.0",
     "tslib": "~2.6.0"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+    "graphql-sock": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "graphql-sock": {
+      "optional": true
+    }
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -61,5 +68,8 @@
     "directory": "dist",
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  }
 }

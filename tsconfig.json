@@ -9,8 +9,8 @@
     "importHelpers": true,
     "experimentalDecorators": true,
     "module": "esnext",
-    "target": "es2021",
-    "lib": ["es6", "esnext", "es2021", "dom"],
+    "target": "es2022",
+    "lib": ["es6", "esnext", "es2023", "dom"],
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
@@ -41,5 +41,19 @@
     }
   },
   "include": ["packages"],
-  "exclude": ["**/tests/test-files", "**/tests/test-documents", "**/dist", "**/temp"]
+  "exclude": [
+    "**/dist",
+    "**/temp",
+    "**/vitest.config.ts",
+    "**/vitest.setup.ts",
+    "**/*.spec.ts",
+    "**/tests/**/*.ts",
+    "**/tests/test-files",
+    "**/tests/test-documents"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

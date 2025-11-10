@@ -4,7 +4,8 @@ import { TempDir } from './utils.js';
 const mockConfig = (str: string, file = './codegen.yml') => temp.createFile(file, str);
 const createArgv = (str = ''): string[] => {
   const result = ['node', 'fake.js'];
-  const regexp = /([^\s'"]+(['"])([^\2]*?)\2)|[^\s'"]+|(['"])([^\4]*?)\4/gi;
+  // eslint-disable-next-line no-control-regex
+  const regexp = /([^\s'"]+(['"])([^\x02]*?)\x02)|[^\s'"]+|(['"])([^\x04]*?)\x04/gi;
 
   let match;
   do {
@@ -22,12 +23,12 @@ const temp = new TempDir();
 describe('CLI Flags', () => {
   beforeEach(() => {
     temp.clean();
-    jest.spyOn(process, 'cwd').mockImplementation(() => temp.dir);
+    vi.spyOn(process, 'cwd').mockImplementation(() => temp.dir);
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
+    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(() => {
