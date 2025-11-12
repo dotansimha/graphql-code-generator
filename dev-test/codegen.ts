@@ -243,6 +243,19 @@ const config: CodegenConfig = {
         },
       },
     },
+    './dev-test/test-federation/generated/types.ts': {
+      schema: './dev-test/test-federation/schema.gql',
+      plugins: ['typescript', 'typescript-resolvers'],
+      config: {
+        mapperTypeSuffix: 'Mapper',
+        enumsAsTypes: true,
+        useIndexSignature: true,
+        maybeValue: 'T | null | undefined',
+        scalars: {
+          CarKey: 'string',
+        },
+      },
+    },
   },
 };
 
