@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-operations",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "GraphQL Code Generator plugin for generating TypeScript types for GraphQL queries, mutations, subscriptions and fragments",
   "repository": {
     "type": "git",
@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^6.0.0",
-    "@graphql-codegen/typescript": "^5.0.2",
-    "@graphql-codegen/visitor-plugin-common": "6.1.0",
+    "@graphql-codegen/typescript": "^5.0.3",
+    "@graphql-codegen/visitor-plugin-common": "6.1.1",
     "auto-bind": "~4.0.0",
     "tslib": "~2.6.0"
   },
