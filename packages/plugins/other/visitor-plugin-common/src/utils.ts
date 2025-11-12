@@ -28,6 +28,8 @@ import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives, LoadedFragment } from './types.js';
 
+export const asTemplateLiteral = str => '`' + str.replace(/[`\\]|[$][{]/g, '\\$&') + '`';
+
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
     return defaultValue;
