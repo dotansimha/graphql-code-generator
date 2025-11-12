@@ -2067,6 +2067,10 @@ export class BaseResolversVisitor<
     return null;
   }
 
+  SchemaExtension() {
+    return null;
+  }
+
   private getRelevantFieldsToOmit({
     schemaType,
     shouldInclude,

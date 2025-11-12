@@ -1,0 +1,16 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/federation/v2.6", import: ["@key", "@extends"])
+
+type Car @extends @key(fields: "carKey") {
+  carKey: CarKey!
+  """
+  Extend Car with a simple "dummy" field
+  """
+  dummy: String
+}
+
+"""
+Represents a car
+"""
+scalar CarKey
