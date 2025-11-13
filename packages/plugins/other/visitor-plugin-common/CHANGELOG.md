@@ -1,5 +1,26 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.1.1
+
+### Patch Changes
+
+- [#10498](https://github.com/dotansimha/graphql-code-generator/pull/10498) [`6715330`](https://github.com/dotansimha/graphql-code-generator/commit/67153304646694d75aee24afd70c3fce12e9f1f2) Thanks [@ardatan](https://github.com/ardatan)! - Handle schema extension nodes correctly
+
+  When a schema doesn't have an operation type defined but has `schema extension` definitions with directives like below,
+  schema extensions are not converted to schema definitions by GraphQL Tools.
+  So the visitor should handle schema extension nodes correctly.
+
+  Follow-up to https://github.com/ardatan/graphql-tools/pull/7679
+
+  ```graphql
+  extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key"])
+
+  type Foo {
+    id: ID! @key
+    name: String
+  }
+  ```
+
 ## 6.1.0
 
 ### Minor Changes

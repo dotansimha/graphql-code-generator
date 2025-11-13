@@ -1,5 +1,12 @@
 # @graphql-codegen/gql-tag-operations
 
+## 5.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`6715330`](https://github.com/dotansimha/graphql-code-generator/commit/67153304646694d75aee24afd70c3fce12e9f1f2)]:
+  - @graphql-codegen/visitor-plugin-common@6.1.1
+
 ## 5.0.3
 
 ### Patch Changes

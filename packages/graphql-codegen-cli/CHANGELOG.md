@@ -1,5 +1,15 @@
 # @graphql-codegen/cli
 
+## 6.0.2
+
+### Patch Changes
+
+- [#10430](https://github.com/dotansimha/graphql-code-generator/pull/10430) [`aad7f03`](https://github.com/dotansimha/graphql-code-generator/commit/aad7f03bf812d671d3c60ff21be0b3b8da55d79f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/github-loader@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/github-loader/v/9.0.0) (from `^8.0.0`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/url-loader@^9.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/9.0.0) (from `^8.0.0`, in `dependencies`)
+- Updated dependencies []:
+  - @graphql-codegen/client-preset@5.1.2
+
 ## 6.0.1
 
 ### Patch Changes
