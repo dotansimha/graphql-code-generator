@@ -1462,7 +1462,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
     await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
   });
-  it('should handle nested interfaces with same fields correctly (issue #10502)', async () => {
+  it('should handle interfaces without fragments', async () => {
     const nestedInterfacesSchema = buildSchema(/* GraphQL */ `
       type Query {
         animals: [Animal!]
