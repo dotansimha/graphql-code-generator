@@ -958,7 +958,24 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   protected buildParentFieldName(typeName: string, parentName: string): string {
     // queries/mutations/fragments are guaranteed to be unique type names,
     // so we can skip affixing the field names with typeName
-    return operationTypes.includes(typeName) ? parentName : `${parentName}_${typeName}`;
+    if (operationTypes.includes(typeName)) {
+      return parentName;
+    }
+
+    // When the parent schema type is an interface, use the interface name instead of the concrete type
+    // BUT only if we're not inside a fragment (fragments explicitly target specific types)
+    const schemaType = this._schema.getType(typeName);
+    const isInFragment = parentName.includes('Fragment');
+    if (
+      isObjectType(schemaType) &&
+      this._parentSchemaType &&
+      isInterfaceType(this._parentSchemaType) &&
+      !isInFragment
+    ) {
+      return `${parentName}_${this._parentSchemaType.name}`;
+    }
+
+    return `${parentName}_${typeName}`;
   }
 }
 
