@@ -70,7 +70,8 @@ function createCache(): <T>(namespace: string, key: string, factory: () => Promi
 }
 
 export async function executeCodegen(
-  input: CodegenContext | Types.Config
+  input: CodegenContext | Types.Config,
+  options: { onlyGeneratesKeys: Record<string, true> } = { onlyGeneratesKeys: {} }
 ): Promise<{ result: Types.FileOutput[]; error: Error | null }> {
   const context = ensureContext(input);
   const config = context.getConfig();
@@ -197,7 +198,17 @@ export async function executeCodegen(
       {
         title: 'Generate outputs',
         task: (ctx, task) => {
-          const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
+          const originalGeneratesKeys = Object.keys(generates);
+          const foundGeneratesKeys = originalGeneratesKeys.filter(
+            generatesKey => options.onlyGeneratesKeys[generatesKey]
+          );
+          const effectiveGeneratesKeys = foundGeneratesKeys.length === 0 ? originalGeneratesKeys : foundGeneratesKeys;
+          const hasFilteredDownGeneratesKeys = originalGeneratesKeys.length > effectiveGeneratesKeys.length;
+          if (hasFilteredDownGeneratesKeys) {
+            debugLog(`[CLI] Generating partial config:\n${effectiveGeneratesKeys.map(key => `- ${key}`).join('\n')}`);
+          }
+
+          const generateTasks: ListrTask<Ctx>[] = effectiveGeneratesKeys.map(filename => {
             const outputConfig = generates[filename];
             const hasPreset = !!outputConfig.preset;
 
