@@ -68,6 +68,19 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           }
         }
       }
+
+      query UsersWithScalarInput($from: DateTime!, $to: DateTime) {
+        users(input: { from: $from, to: $to }) {
+          ... on UsersResponseOk {
+            result {
+              __typename
+            }
+          }
+          ... on ResponseError {
+            __typename
+          }
+        }
+      }
     `);
 
     const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
@@ -87,6 +100,17 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
 
       export type UsersQuery = { __typename?: 'Query', users:
+          | { __typename?: 'UsersResponseOk' }
+          | { __typename: 'ResponseError' }
+         };
+
+      export type UsersWithScalarInputQueryVariables = Exact<{
+        from: Scalars['DateTime']['input'];
+        to?: InputMaybe<Scalars['DateTime']['input']>;
+      }>;
+
+
+      export type UsersWithScalarInputQuery = { __typename?: 'Query', users:
           | { __typename?: 'UsersResponseOk' }
           | { __typename: 'ResponseError' }
          };
