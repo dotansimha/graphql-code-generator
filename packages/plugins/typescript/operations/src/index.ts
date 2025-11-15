@@ -60,7 +60,11 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   }
 
   return {
-    prepend: [...visitor.getImports(), ...visitor.getGlobalDeclarations(visitor.config.noExport)],
+    prepend: [
+      ...visitor.getImports(),
+      ...visitor.getGlobalDeclarations(visitor.config.noExport),
+      'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };',
+    ],
     content,
   };
 };
