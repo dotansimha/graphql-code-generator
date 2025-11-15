@@ -64,7 +64,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
             }
           }
           ... on ResponseError {
-            __typename
+            error
           }
         }
       }
@@ -101,7 +101,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
       export type UsersQuery = { __typename?: 'Query', users:
           | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
-          | { __typename: 'ResponseError' }
+          | { __typename?: 'ResponseError', error: ResponseErrorType }
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
