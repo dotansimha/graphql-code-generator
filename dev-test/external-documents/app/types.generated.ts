@@ -1,3 +1,4 @@
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
