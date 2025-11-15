@@ -40,7 +40,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
 
       type UsersResponseOk {
-        users: [User!]!
+        result: [User!]!
       }
       union UsersResponse = UsersResponseOk | ResponseError
 
@@ -100,7 +100,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
 
       export type UsersQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk' }
+          | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
           | { __typename: 'ResponseError' }
          };
 
@@ -111,7 +111,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
 
       export type UsersWithScalarInputQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk' }
+          | { __typename?: 'UsersResponseOk', result: Array<{ __typename: 'User' }> }
           | { __typename: 'ResponseError' }
          };
       "
