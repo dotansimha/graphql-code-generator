@@ -1291,4 +1291,23 @@ describe('Codegen Executor', () => {
     expect(result.length).toBe(1);
     expect(result[0].content).toContain('export type WpCoreImageBlockForGalleryFragment = ');
   });
+
+  it('Should accept document with = in directory name', async () => {
+    const output = await executeCodegen({
+      schema: SIMPLE_TEST_SCHEMA,
+      documents: ['./tests/test-documents-with-equal-sign/[equal=equal]/query.ts'],
+      generates: {
+        'out1.ts': {
+          plugins: [
+            {
+              'typescript-operations': {},
+            },
+          ],
+        },
+      },
+    });
+
+    expect(output[0].content).toContain('MyQuery');
+    expect(output[0].filename).toEqual('out1.ts');
+  });
 });
