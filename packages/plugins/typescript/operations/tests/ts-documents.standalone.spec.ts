@@ -88,7 +88,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type UserQueryVariables = Exact<{
-        id: Scalars['ID']['input'];
+        id: string;
       }>;
 
 
@@ -105,8 +105,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
-        from: Scalars['DateTime']['input'];
-        to?: InputMaybe<Scalars['DateTime']['input']>;
+        from: any;
+        to?: any | null;
       }>;
 
 
