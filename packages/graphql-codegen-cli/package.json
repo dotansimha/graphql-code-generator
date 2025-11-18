@@ -85,7 +85,7 @@
     "bdd-stdin": "0.2.0",
     "change-case-all": "1.0.15",
     "js-yaml": "4.1.0",
-    "make-dir": "4.0.0",
+    "make-dir": "5.1.0",
     "prettier": "2.8.8"
   },
   "peerDependencies": {
