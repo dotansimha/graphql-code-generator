@@ -13,6 +13,7 @@ import {
   ScalarsMap,
 } from './types.js';
 import { DeclarationBlockConfig } from './utils.js';
+import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -371,7 +372,7 @@ export interface RawConfig {
    * @description Append this extension to all imports.
    * Useful for ESM environments that require file extensions in import statements.
    */
-  importExtension?: string;
+  importExtension?: '' | `.${string}`;
 
   /**
    * @default false
@@ -404,9 +405,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   public readonly scalars: NormalizedScalarsMap;
 
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
-    const emitLegacyCommonJSImports =
-      rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports;
-    const importExtension = rawConfig.importExtension ?? (emitLegacyCommonJSImports ? '' : '.js');
+    const importExtension = normalizeImportExtension({
+      emitLegacyCommonJSImports: rawConfig.emitLegacyCommonJSImports,
+      importExtension: rawConfig.importExtension,
+    });
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
@@ -418,7 +420,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       useTypeImports: !!rawConfig.useTypeImports,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
-      emitLegacyCommonJSImports,
+      emitLegacyCommonJSImports: rawConfig.emitLegacyCommonJSImports ?? true,
       importExtension,
       extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,

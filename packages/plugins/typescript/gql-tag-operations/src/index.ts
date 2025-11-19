@@ -1,4 +1,4 @@
-import { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { normalizeImportExtension, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { Source } from '@graphql-tools/utils';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
@@ -28,7 +28,7 @@ export const plugin: PluginFunction<{
   augmentedModuleName?: string;
   gqlTagName?: string;
   emitLegacyCommonJSImports?: boolean;
-  importExtension?: string;
+  importExtension?: '' | `.${string}`;
   documentMode?: DocumentMode;
 }> = (
   _,
@@ -44,7 +44,10 @@ export const plugin: PluginFunction<{
   },
   _info
 ) => {
-  const appendedImportExtension = importExtension ?? (emitLegacyCommonJSImports ? '' : '.js');
+  const appendedImportExtension = normalizeImportExtension({
+    emitLegacyCommonJSImports,
+    importExtension,
+  });
   if (documentMode === DocumentMode.string) {
     const code = [`import * as types from './graphql${appendedImportExtension}';\n`, `\n`];
 
@@ -183,7 +186,7 @@ function getGqlOverloadChunk(
   sourcesWithOperations: Array<SourceWithOperations>,
   gqlTagName: string,
   mode: Mode,
-  importExtension: string
+  importExtension: '' | `.${string}`
 ) {
   const lines = new Set<string>();
 

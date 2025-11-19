@@ -1,6 +1,6 @@
 import * as addPlugin from '@graphql-codegen/add';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { normalizeImportExtension, type PluginFunction, type Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
@@ -251,7 +251,10 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
-    const importExtension = options.config.importExtension ?? (options.config.emitLegacyCommonJSImports ? '' : '.js');
+    const importExtension = normalizeImportExtension({
+      emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+      importExtension: options.config.importExtension,
+    });
 
     if (isMaskingFragments === true) {
       const fragmentMaskingArtifactFileExtension = '.ts';
