@@ -1,4 +1,4 @@
-import { AvoidOptionalsConfig, RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
+import { AvoidOptionalsConfig, EnumValuesMap, RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.
@@ -336,4 +336,8 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   nullability?: {
     errorHandlingClient: boolean;
   };
+
+  enumType?: 'string-literal' | 'numeric' | 'const' | 'native-const' | 'native';
+  enumValues?: EnumValuesMap;
+  futureProofEnums?: boolean;
 }
