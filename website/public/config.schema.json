@@ -59,6 +59,13 @@
           "description": "A flag to disable adding `.js` extension to the output file. Default: `true`.",
           "type": "boolean"
         },
+        "importExtension": {
+          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
+          "anyOf": [
+            { "type": "array", "items": { "type": "string" } },
+            { "enum": [""], "type": "string" }
+          ]
+        },
         "silent": { "description": "A flag to suppress printing errors when they occur.", "type": "boolean" },
         "verbose": { "description": "A flag to output more detailed information about tasks", "type": "boolean" },
         "debug": { "description": "A flag to output debug logs", "type": "boolean" },
@@ -656,6 +663,10 @@
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
         },
+        "importExtension": {
+          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
+          "type": "string"
+        },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
           "type": "boolean"
@@ -848,6 +859,10 @@
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
+        },
+        "importExtension": {
+          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
+          "type": "string"
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
@@ -1626,6 +1641,10 @@
           "type": "boolean",
           "description": "If true, recursively goes through all object type's fields, checks if they have abstract types and generates expected types correctly.\nThis may not work for cases where provided default mapper types are also nested e.g. `defaultMapper: DeepPartial<{T}>` or `defaultMapper: Partial<{T}>`.\nDefault value: \"false\""
         },
+        "addInterfaceFieldResolverTypes": {
+          "description": "If true, add field resolver types to Interfaces.\nBy default, GraphQL Interfaces do not trigger any field resolvers,\nmeaning every implementing type must implement the same resolver for the shared fields.\n\nSome tools provide a way to change the default behaviour by making GraphQL Objects inherit\nmissing resolvers from their Interface types. In these cases, it is fine to turn this option to true.\n\nFor example, if you are using `@graphql-tools/schema#makeExecutableSchema` with `inheritResolversFromInterfaces: true`,\nyou can make `addInterfaceFieldResolverTypes: true` as well\nhttps://the-guild.dev/graphql/tools/docs/generate-schema#makeexecutableschema\nDefault value: \"false\"",
+          "type": "boolean"
+        },
         "strictScalars": {
           "description": "Makes scalars strict.\n\nIf scalars are found in the schema that are not defined in `scalars`\nan error will be thrown during codegen.\nDefault value: \"false\"",
           "type": "boolean"
@@ -1663,6 +1682,10 @@
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
+        },
+        "importExtension": {
+          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
+          "type": "string"
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
@@ -2788,6 +2811,10 @@
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
+        },
+        "importExtension": {
+          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
+          "type": "string"
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",

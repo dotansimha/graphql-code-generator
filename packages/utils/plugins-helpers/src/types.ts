@@ -20,6 +20,8 @@ export namespace Types {
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
     documentTransforms?: ConfiguredDocumentTransform[];
+    emitLegacyCommonJSImports?: boolean;
+    importExtension?: '' | `.${string}`;
   }
 
   export type FileOutput = {
@@ -469,9 +471,15 @@ export namespace Types {
      */
     ignoreNoDocuments?: boolean;
     /**
+     * @deprecated Please use `importExtension` instead.
      * @description A flag to disable adding `.js` extension to the output file. Default: `true`.
      */
     emitLegacyCommonJSImports?: boolean;
+    /**
+     * @description Append this extension to all imports.
+     * Useful for ESM environments that require file extensions in import statements.
+     */
+    importExtension?: '' | `.${string}`;
     /**
      * @description A flag to suppress printing errors when they occur.
      */

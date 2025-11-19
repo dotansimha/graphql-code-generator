@@ -7,6 +7,7 @@ import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
   normalizeConfig,
+  normalizeImportExtension,
   normalizeInstanceOrArray,
   normalizeOutputParam,
   Types,
@@ -14,7 +15,7 @@ import {
 import { NoTypeDefinitionsFound } from '@graphql-tools/load';
 import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
-import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
+import { CodegenContext, ensureContext } from './config.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
@@ -321,12 +322,18 @@ export async function executeCodegen(
                             })
                           );
 
+                          const importExtension = normalizeImportExtension({
+                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
+                            importExtension: config.importExtension,
+                          });
+
                           const mergedConfig = {
                             ...rootConfig,
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
-                            emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
+                            importExtension,
+                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -377,8 +384,8 @@ export async function executeCodegen(
                           const process = async (outputArgs: Types.GenerateOptions) => {
                             const output = await codegen({
                               ...outputArgs,
-                              // @ts-expect-error todo: fix 'emitLegacyCommonJSImports' does not exist in type 'GenerateOptions'
-                              emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
+                              importExtension,
+                              emitLegacyCommonJSImports: config.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({

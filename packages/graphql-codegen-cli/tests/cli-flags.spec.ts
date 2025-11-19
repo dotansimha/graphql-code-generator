@@ -163,6 +163,73 @@ describe('CLI Flags', () => {
     expect(config.emitLegacyCommonJSImports).toBeFalsy();
   });
 
+  it('Should set importExtension config using cli flags to .js', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension .js');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('.js');
+  });
+
+  it('Should set importExtension config using cli flags to .mjs', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension .mjs');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('.mjs');
+  });
+
+  it('Should set importExtension config using cli flags to empty string', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension ""');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('');
+  });
+
+  it('Should overwrite importExtension from config using cli flags', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        importExtension: .js
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension .mjs');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('.mjs');
+  });
+
+  it('Should overwrite importExtension config using cli flags to empty string', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        importExtension: .js
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension ""');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('');
+  });
+
   it('Should overwrite ignoreNoDocuments config using cli flags to true', async () => {
     mockConfig(`
         schema: schema.graphql

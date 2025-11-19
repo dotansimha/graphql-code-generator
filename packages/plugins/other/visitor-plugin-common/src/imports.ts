@@ -1,5 +1,6 @@
 import { dirname, isAbsolute, join, relative, resolve } from 'path';
 import parse from 'parse-filepath';
+import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 
 export type ImportDeclaration<T = string> = {
   outputPath: string;
@@ -7,7 +8,8 @@ export type ImportDeclaration<T = string> = {
   baseOutputDir: string;
   baseDir: string;
   typesImport: boolean;
-  emitLegacyCommonJSImports: boolean;
+  emitLegacyCommonJSImports?: boolean;
+  importExtension: '' | `.${string}`;
 };
 
 export type ImportSource<T = string> = {
@@ -57,7 +59,12 @@ export function generateImportStatement(statement: ImportDeclaration): string {
     ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
     : '*';
   const importExtension =
-    importPath.startsWith('/') || importPath.startsWith('.') ? (statement.emitLegacyCommonJSImports ? '' : '.js') : '';
+    importPath.startsWith('/') || importPath.startsWith('.')
+      ? normalizeImportExtension({
+          emitLegacyCommonJSImports: statement.emitLegacyCommonJSImports,
+          importExtension: statement.importExtension,
+        })
+      : '';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   const importStatement = typesImport ? 'import type' : 'import';
   return `${importStatement} ${importNames}${importAlias} from '${importPath}${importExtension}';${

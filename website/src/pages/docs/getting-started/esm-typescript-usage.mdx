@@ -20,10 +20,14 @@ If you are impatient, [checkout this example](https://github.com/dotansimha/grap
 
 ## Codegen Configuration
 
-One quirk of ESM is that named imports, such as `./foo` or `../something/from/here`, now require adding a `.js` at the end of the import statement.
+One quirk of ESM is that named imports, such as `./foo` or `../something/from/here`, now require adding a file extension at the end of the import statement.
 For these examples, the correct ESM counterpart is `./foo.js` and `../something/from/here.js`.
 
-In order to instruct GraphQL Code Generator to generate such imports whenever a named import is generated, you need to set the `emitLegacyCommonJSImports` option to `false`.
+In order to instruct GraphQL Code Generator to generate such imports whenever a named import is generated, you need to set the `importExtension` option.
+
+### Standard ESM with TypeScript (transpiled to JavaScript)
+
+For most TypeScript projects that compile to JavaScript, you should use `.js` extensions:
 
 ```ts filename="codegen.ts" {6}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -31,7 +35,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   schema: 'http://localhost:4000/graphql',
   documents: ['src/**/*.tsx'],
-  emitLegacyCommonJSImports: false,
+  importExtension: '.js',
   generates: {
     './src/gql/': {
       preset: 'client'
@@ -41,6 +45,46 @@ const config: CodegenConfig = {
 
 export default config
 ```
+
+### Direct TypeScript Execution (Node.js 22.18.0+ or Deno)
+
+Since Node.js v22.18.0 (with type stripping enabled by default) and Deno, you can run TypeScript files directly without transpilation. In these environments, you can use `.ts` extensions in your imports:
+
+```ts filename="codegen.ts" {6}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000/graphql',
+  documents: ['src/**/*.tsx'],
+  importExtension: '.ts',
+  generates: {
+    './src/gql/': {
+      preset: 'client'
+    }
+  }
+}
+
+export default config
+```
+
+With this configuration, the generated code will use `.ts` extensions in import statements:
+
+```ts
+import { FragmentType } from './fragment-masking.ts'
+import { graphql } from './gql.ts'
+```
+
+**When to use `.ts` extensions:**
+
+- You're using Node.js v22.18.0 or later with type stripping enabled (default)
+- You're running your code with Deno
+- You want to execute TypeScript files directly without a build step
+
+**When to use `.js` extensions:**
+
+- You're compiling TypeScript to JavaScript (most common case)
+- You're using an older version of Node.js
+- You have a build step in your workflow
 
 ## TypeScript Compiler Options
 

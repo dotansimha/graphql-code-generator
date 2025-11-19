@@ -1112,7 +1112,7 @@ export * from "./gql";`);
           preset,
         },
       },
-      emitLegacyCommonJSImports: false,
+      importExtension: '.js',
     });
 
     expect(result).toHaveLength(4);
@@ -1367,6 +1367,157 @@ export * from "./gql.js";`);
       // graphql.ts
       const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(graphqlFile).toBeDefined();
+    });
+  });
+
+  describe('importExtension configuration', () => {
+    it('generates imports with .mjs extension when importExtension is set to .mjs', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+        importExtension: '.mjs',
+      });
+
+      expect(result).toHaveLength(4);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking.mjs";
+export * from "./gql.mjs";`);
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toContain(`import * as types from './graphql.mjs';`);
+    });
+
+    it('generates imports with no extension when importExtension is empty string', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+        importExtension: '',
+      });
+
+      expect(result).toHaveLength(4);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+export * from "./gql";`);
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toContain(`import * as types from './graphql';`);
+    });
+
+    it('uses importExtension over emitLegacyCommonJSImports when both are set', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+        importExtension: '.mjs',
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(4);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      // Should use .mjs from importExtension, not .js from emitLegacyCommonJSImports: false
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking.mjs";
+export * from "./gql.mjs";`);
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toContain(`import * as types from './graphql.mjs';`);
+    });
+
+    it('uses importExtension set to empty string even when emitLegacyCommonJSImports is false', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+        importExtension: '',
+        emitLegacyCommonJSImports: false,
+      });
+
+      expect(result).toHaveLength(4);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      // Should use empty string from importExtension, not .js from emitLegacyCommonJSImports: false
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+export * from "./gql";`);
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toContain(`import * as types from './graphql';`);
+    });
+
+    it('generates imports with custom .cjs extension when importExtension is set to .cjs', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+              b: String
+              c: String
+            }
+          `,
+        ],
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+        importExtension: '.cjs',
+      });
+
+      expect(result).toHaveLength(4);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking.cjs";
+export * from "./gql.cjs";`);
+
+      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+      expect(gqlFile.content).toContain(`import * as types from './graphql.cjs';`);
     });
   });
 
