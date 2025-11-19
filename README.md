@@ -1,7 +1,9 @@
+TEST
+
 <div>
     <img src="./logo.svg" width="150px" alt="GraphQL Code Generator logo"/>
     <a href="https://the-guild.dev">
-        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/> 
+        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/>
     </a>
 </div>
 
@@ -52,7 +54,7 @@ If this is your first time contributing to this project, please do read our [Con
 
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
-For a contribution guide specific to this project, please refer to: http://the-guild.dev/graphql/codegen/docs/custom-codegen/contributing.
+For a contribution guide specific to this project, please refer to: <http://the-guild.dev/graphql/codegen/docs/custom-codegen/contributing>.
 
 ## Code of Conduct
 
