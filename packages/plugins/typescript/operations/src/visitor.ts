@@ -46,12 +46,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   noExport: boolean;
   maybeValue: string;
   allowUndefinedQueryVariables: boolean;
-  enumType:
-    | { type: 'string-literal' }
-    | { type: 'numeric-enums' }
-    | { type: 'as-const' }
-    | { type: 'native-const' }
-    | { type: 'native' };
+  enumType: 'string-literal' | 'numeric' | 'const' | 'native-const' | 'native';
   futureProofEnums: boolean;
   enumValues: ParsedEnumValuesMap;
 }
@@ -75,7 +70,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         preResolveTypes: getConfigValue(config.preResolveTypes, true),
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
         allowUndefinedQueryVariables: getConfigValue(config.allowUndefinedQueryVariables, false),
-        enumType: getConfigValue(config.enumType, { type: 'string-literal' }),
+        enumType: getConfigValue(config.enumType, 'string-literal'),
         enumValues: parseEnumValues({
           schema,
           mapOrStr: config.enumValues,
@@ -208,7 +203,17 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
     ];
 
-    if (this.config.enumType.type === 'string-literal') {
+    // handle:
+    // - enumValues x
+    // - future added values
+
+    // - ✅ enumsAsTypes
+    // - numericEnums
+    // - enumsAsConst
+    // - native const enum
+    // - native enum
+
+    if (this.config.enumType === 'string-literal') {
       return new DeclarationBlock(this._declarationBlockConfig)
         .asKind('type')
         .withComment(node.description?.value)
@@ -227,16 +232,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
               .join('\n')
         ).string;
     }
-
-    // handle:
-    // - enumValues x
-    // - future added values
-
-    // - enumsAsTypes
-    // - numericEnums
-    // - enumsAsConst
-    // - native const enum
-    // - native enum
 
     return 'FOUND ';
   }

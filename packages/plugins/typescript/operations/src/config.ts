@@ -337,12 +337,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
     errorHandlingClient: boolean;
   };
 
-  enumType?:
-    | { type: 'string-literal' }
-    | { type: 'numeric-enums' }
-    | { type: 'as-const' }
-    | { type: 'native-const' }
-    | { type: 'native' };
+  enumType?: 'string-literal' | 'numeric' | 'const' | 'native-const' | 'native';
   enumValues?: EnumValuesMap;
   futureProofEnums?: boolean;
 }
