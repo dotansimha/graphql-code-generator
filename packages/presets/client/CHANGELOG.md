@@ -1,5 +1,29 @@
 # @graphql-codegen/client-preset
 
+## 5.1.3
+
+### Patch Changes
+
+- [#10499](https://github.com/dotansimha/graphql-code-generator/pull/10499) [`51a1a72`](https://github.com/dotansimha/graphql-code-generator/commit/51a1a7280578d43681391df11d320a8416c0b41d) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix nested fragment not getting correct meta field in Client Preset
+
+- Updated dependencies [[`51a1a72`](https://github.com/dotansimha/graphql-code-generator/commit/51a1a7280578d43681391df11d320a8416c0b41d)]:
+  - @graphql-codegen/visitor-plugin-common@6.1.2
+  - @graphql-codegen/gql-tag-operations@5.0.5
+  - @graphql-codegen/typescript-operations@5.0.4
+  - @graphql-codegen/typed-document-node@6.1.2
+  - @graphql-codegen/typescript@5.0.4
+
+## 5.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`6715330`](https://github.com/dotansimha/graphql-code-generator/commit/67153304646694d75aee24afd70c3fce12e9f1f2)]:
+  - @graphql-codegen/visitor-plugin-common@6.1.1
+  - @graphql-codegen/gql-tag-operations@5.0.4
+  - @graphql-codegen/typescript-operations@5.0.3
+  - @graphql-codegen/typed-document-node@6.1.1
+  - @graphql-codegen/typescript@5.0.3
+
 ## 5.1.1
 
 ### Patch Changes

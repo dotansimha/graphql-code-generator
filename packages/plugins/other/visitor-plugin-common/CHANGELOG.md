@@ -1,5 +1,32 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.1.2
+
+### Patch Changes
+
+- [#10499](https://github.com/dotansimha/graphql-code-generator/pull/10499) [`51a1a72`](https://github.com/dotansimha/graphql-code-generator/commit/51a1a7280578d43681391df11d320a8416c0b41d) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix nested fragment not getting correct meta field in Client Preset
+
+## 6.1.1
+
+### Patch Changes
+
+- [#10498](https://github.com/dotansimha/graphql-code-generator/pull/10498) [`6715330`](https://github.com/dotansimha/graphql-code-generator/commit/67153304646694d75aee24afd70c3fce12e9f1f2) Thanks [@ardatan](https://github.com/ardatan)! - Handle schema extension nodes correctly
+
+  When a schema doesn't have an operation type defined but has `schema extension` definitions with directives like below,
+  schema extensions are not converted to schema definitions by GraphQL Tools.
+  So the visitor should handle schema extension nodes correctly.
+
+  Follow-up to https://github.com/ardatan/graphql-tools/pull/7679
+
+  ```graphql
+  extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key"])
+
+  type Foo {
+    id: ID! @key
+    name: String
+  }
+  ```
+
 ## 6.1.0
 
 ### Minor Changes
