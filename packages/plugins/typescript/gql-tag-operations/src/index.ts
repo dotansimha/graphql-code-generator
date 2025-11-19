@@ -28,6 +28,7 @@ export const plugin: PluginFunction<{
   augmentedModuleName?: string;
   gqlTagName?: string;
   emitLegacyCommonJSImports?: boolean;
+  importExtension?: string;
   documentMode?: DocumentMode;
 }> = (
   _,
@@ -38,12 +39,14 @@ export const plugin: PluginFunction<{
     augmentedModuleName,
     gqlTagName = 'gql',
     emitLegacyCommonJSImports,
+    importExtension,
     documentMode,
   },
   _info
 ) => {
+  const appendedImportExtension = importExtension ?? (emitLegacyCommonJSImports ? '' : '.js');
   if (documentMode === DocumentMode.string) {
-    const code = [`import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`, `\n`];
+    const code = [`import * as types from './graphql${appendedImportExtension}';\n`, `\n`];
 
     // We need the mapping from source as written to full document source to
     // handle fragments. An identity function would not suffice.
@@ -55,9 +58,7 @@ export const plugin: PluginFunction<{
 
     if (sourcesWithOperations.length > 0) {
       code.push(
-        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports), `\n`].join(
-          ''
-        )
+        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', appendedImportExtension), `\n`].join('')
       );
     }
 
@@ -72,7 +73,7 @@ export const plugin: PluginFunction<{
 
   if (augmentedModuleName == null) {
     const code = [
-      `import * as types from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`,
+      `import * as types from './graphql${appendedImportExtension}';\n`,
       `${
         useTypeImports ? 'import type' : 'import'
       } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
@@ -103,7 +104,7 @@ export const plugin: PluginFunction<{
 
     if (sourcesWithOperations.length > 0) {
       code.push(
-        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', emitLegacyCommonJSImports), `\n`].join('')
+        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', appendedImportExtension), `\n`].join('')
       );
     }
 
@@ -126,7 +127,7 @@ export const plugin: PluginFunction<{
     [
       `\n`,
       ...(sourcesWithOperations.length > 0
-        ? getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', emitLegacyCommonJSImports)
+        ? getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', appendedImportExtension)
         : []),
       `export function ${gqlTagName}(source: string): unknown;\n`,
       `\n`,
@@ -182,7 +183,7 @@ function getGqlOverloadChunk(
   sourcesWithOperations: Array<SourceWithOperations>,
   gqlTagName: string,
   mode: Mode,
-  emitLegacyCommonJSImports?: boolean
+  importExtension: string
 ) {
   const lines = new Set<string>();
 
@@ -193,9 +194,7 @@ function getGqlOverloadChunk(
     const returnType =
       mode === 'lookup'
         ? `(typeof documents)[${JSON.stringify(originalString)}]`
-        : emitLegacyCommonJSImports
-        ? `typeof import('./graphql').${operations[0].initialName}`
-        : `typeof import('./graphql.js').${operations[0].initialName}`;
+        : `typeof import('./graphql${importExtension}').${operations[0].initialName}`;
     lines.add(
       `/**\n * The ${gqlTagName} function is used to parse GraphQL queries into a document that can be used by GraphQL clients.\n */\n` +
         `export function ${gqlTagName}(source: ${JSON.stringify(originalString)}): ${returnType};\n`

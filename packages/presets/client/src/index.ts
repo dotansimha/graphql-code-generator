@@ -251,6 +251,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
+    const importExtension = options.config.importExtension ?? (options.config.emitLegacyCommonJSImports ? '' : '.js');
+
     if (isMaskingFragments === true) {
       const fragmentMaskingArtifactFileExtension = '.ts';
 
@@ -273,6 +275,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
           emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+          importExtension,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
         documents: [],
@@ -281,8 +284,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     }
 
     let indexFileGenerateConfig: Types.GenerateOptions | null = null;
-
-    const reexportsExtension = options.config.emitLegacyCommonJSImports ? '' : '.js';
 
     if (reexports.length) {
       indexFileGenerateConfig = {
@@ -295,7 +296,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
             [`add`]: {
               content: reexports
                 .sort()
-                .map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`)
+                .map(moduleName => `export * from "./${moduleName}${importExtension}";`)
                 .join('\n'),
             },
           },

@@ -35,7 +35,8 @@ export interface ParsedConfig {
   useTypeImports: boolean;
   allowEnumStringTypes: boolean;
   inlineFragmentTypes: InlineFragmentTypeOptions;
-  emitLegacyCommonJSImports: boolean;
+  emitLegacyCommonJSImports?: boolean;
+  importExtension: '' | `.${string}`;
   printFieldsOnNewLines: boolean;
   includeExternalFragments: boolean;
 }
@@ -360,11 +361,17 @@ export interface RawConfig {
    */
   inlineFragmentTypes?: InlineFragmentTypeOptions;
   /**
+   * @deprecated Please use `importExtension` instead.
    * @default true
    * @description Emit legacy common js imports.
    * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
    */
   emitLegacyCommonJSImports?: boolean;
+  /**
+   * @description Append this extension to all imports.
+   * Useful for ESM environments that require file extensions in import statements.
+   */
+  importExtension?: string;
 
   /**
    * @default false
@@ -397,6 +404,9 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   public readonly scalars: NormalizedScalarsMap;
 
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
+    const emitLegacyCommonJSImports =
+      rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports;
+    const importExtension = rawConfig.importExtension ?? (emitLegacyCommonJSImports ? '' : '.js');
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
@@ -408,8 +418,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       useTypeImports: !!rawConfig.useTypeImports,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
-      emitLegacyCommonJSImports:
-        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
+      emitLegacyCommonJSImports,
+      importExtension,
       extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
       includeExternalFragments: rawConfig.includeExternalFragments ?? false,

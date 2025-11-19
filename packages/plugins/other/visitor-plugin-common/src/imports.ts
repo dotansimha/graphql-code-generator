@@ -7,7 +7,8 @@ export type ImportDeclaration<T = string> = {
   baseOutputDir: string;
   baseDir: string;
   typesImport: boolean;
-  emitLegacyCommonJSImports: boolean;
+  emitLegacyCommonJSImports?: boolean;
+  importExtension: '' | `.${string}`;
 };
 
 export type ImportSource<T = string> = {
@@ -56,8 +57,8 @@ export function generateImportStatement(statement: ImportDeclaration): string {
   const importNames = importSource.identifiers?.length
     ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
     : '*';
-  const importExtension =
-    importPath.startsWith('/') || importPath.startsWith('.') ? (statement.emitLegacyCommonJSImports ? '' : '.js') : '';
+  const targetImportExtension = statement.importExtension ?? (statement.emitLegacyCommonJSImports ? '' : '.js');
+  const importExtension = importPath.startsWith('/') || importPath.startsWith('.') ? targetImportExtension : '';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   const importStatement = typesImport ? 'import type' : 'import';
   return `${importStatement} ${importNames}${importAlias} from '${importPath}${importExtension}';${
