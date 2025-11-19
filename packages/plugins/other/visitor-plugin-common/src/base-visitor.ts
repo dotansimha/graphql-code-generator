@@ -40,6 +40,7 @@ export interface ParsedConfig {
   importExtension: '' | `.${string}`;
   printFieldsOnNewLines: boolean;
   includeExternalFragments: boolean;
+  useImplementingTypes: boolean;
 }
 
 export interface RawConfig {

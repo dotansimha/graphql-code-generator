@@ -491,6 +491,31 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   directiveArgumentAndInputFieldMappingTypeSuffix?: string;
+  /**
+   * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Override all definition types
+   *
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript'],
+   *       config: {
+   *         useImplementingTypes: true
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   * ```
+   */
+  useImplementingTypes?: boolean;
 }
 
 const onlyUnderscoresPattern = /^_+$/;
@@ -788,13 +813,18 @@ export class BaseTypesVisitor<
 
   getInterfaceTypeDeclarationBlock(
     node: InterfaceTypeDefinitionNode,
-    _originalNode: InterfaceTypeDefinitionNode
+    originalNode: InterfaceTypeDefinitionNode
   ): DeclarationBlock {
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
       .withComment(node.description?.value);
+
+    if (!this._parsedConfig.useImplementingTypes) {
+      const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
+      declarationBlock.withContent(this.mergeInterfaces(interfacesNames, node.fields.length > 0));
+    }
 
     return declarationBlock.withBlock(node.fields.join('\n'));
   }

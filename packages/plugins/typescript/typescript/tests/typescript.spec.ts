@@ -3950,6 +3950,31 @@ describe('TypeScript', () => {
     `);
   });
 
+  it('should list parent interface on an intermediate interface - issue #10515', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      interface TopLevel {
+        topLevelField: Boolean
+      }
+
+      interface MidLevel implements TopLevel {
+        topLevelField: Boolean
+        midLevelField: Int
+      }
+
+      type BottomLevel implements MidLevel & TopLevel {
+        topLevelField: Boolean
+        midLevelField: Int
+        bottomLevelField: String
+      }
+    `);
+
+    const output = (await plugin(testSchema, [], {} as any, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+    expect(output.content).toBeSimilarStringTo(`
+      type MidLevel = TopLevel & {
+    `);
+  });
+
   it('should use implementing types as node type - issue #5126', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Matrix {
