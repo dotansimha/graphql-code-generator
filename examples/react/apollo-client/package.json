@@ -9,7 +9,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^6.0.2",
+    "@graphql-codegen/cli": "^6.1.0",
     "@vitejs/plugin-react": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^18.0.15",

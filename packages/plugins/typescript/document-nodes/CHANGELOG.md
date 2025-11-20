@@ -1,5 +1,13 @@
 # @graphql-codegen/typescript-document-nodes
 
+## 5.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`f821e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f821e8ab9351f23a9f7e5d5e6fc69c8e8868cad8), [`9e70bcb`](https://github.com/dotansimha/graphql-code-generator/commit/9e70bcbf5390e815a6844f1965b04056e5d8e670)]:
+  - @graphql-codegen/visitor-plugin-common@6.2.0
+  - @graphql-codegen/plugin-helpers@6.1.0
+
 ## 5.0.4
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.2.0
+
+### Minor Changes
+
+- [#10510](https://github.com/dotansimha/graphql-code-generator/pull/10510) [`9e70bcb`](https://github.com/dotansimha/graphql-code-generator/commit/9e70bcbf5390e815a6844f1965b04056e5d8e670) Thanks [@nickmessing](https://github.com/nickmessing)! - add importExtension configuration option
+
+### Patch Changes
+
+- [#10512](https://github.com/dotansimha/graphql-code-generator/pull/10512) [`f821e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f821e8ab9351f23a9f7e5d5e6fc69c8e8868cad8) Thanks [@realies](https://github.com/realies)! - fix: allow mappers to override root types (Query, Mutation, Subscription)
+
+  Previously, mappers configured for root types were ignored because root types were checked before mappers. This fix moves the mapper check before the root type check, allowing mappers to override `rootValueType` when configured.
+
+- Updated dependencies [[`9e70bcb`](https://github.com/dotansimha/graphql-code-generator/commit/9e70bcbf5390e815a6844f1965b04056e5d8e670)]:
+  - @graphql-codegen/plugin-helpers@6.1.0
+
 ## 6.1.2
 
 ### Patch Changes
