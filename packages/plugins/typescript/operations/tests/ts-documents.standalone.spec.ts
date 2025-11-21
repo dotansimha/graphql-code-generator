@@ -120,4 +120,40 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     // FIXME: enable this to ensure type correctness
     // validateTs(content, undefined, undefined, undefined, undefined, true);
   });
+
+  it('test overrdiding config.scalars', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($id: ID!) {
+        user(id: $id) {
+          id
+          name
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { scalars: { ID: 'string | number | boolean' } }),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type UserQueryVariables = Exact<{
+        id: string | number | boolean;
+      }>;
+
+
+      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string | number | boolean, name: string } | null };
+      "
+    `);
+  });
 });

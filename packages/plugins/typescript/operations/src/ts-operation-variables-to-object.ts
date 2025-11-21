@@ -1,7 +1,7 @@
 import { TypeScriptOperationVariablesToObject as TSOperationVariablesToObject } from '@graphql-codegen/typescript';
 
 const SCALARS = {
-  ID: 'string',
+  ID: 'string | number',
   String: 'string',
   Int: 'number',
   Float: 'number',
@@ -28,6 +28,6 @@ export class TypeScriptOperationVariablesToObject extends TSOperationVariablesTo
   }
 
   protected getScalar(name: string): string {
-    return SCALARS[name] ?? 'any';
+    return this._scalars?.[name]?.input ?? SCALARS[name] ?? 'any';
   }
 }
