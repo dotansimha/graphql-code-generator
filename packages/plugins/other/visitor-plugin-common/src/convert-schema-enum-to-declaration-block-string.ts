@@ -3,17 +3,7 @@ import type { ConvertFn, ParsedEnumValuesMap } from './types';
 import { DeclarationBlock, type DeclarationBlockConfig, indent, transformComment, wrapWithSingleQuotes } from './utils';
 import { getNodeComment } from './get-node-comment';
 
-export const convertSchemaEnumToDeclarationBlockString = ({
-  schema,
-  node,
-  enumName,
-  enumValues,
-  futureProofEnums,
-  ignoreEnumValuesFromSchema,
-  outputType,
-  declarationBlockConfig,
-  naming,
-}: {
+interface ConvertSchemaEnumToDeclarationBlockString {
   schema: GraphQLSchema;
   node: EnumTypeDefinitionNode;
   enumName: string;
@@ -30,7 +20,19 @@ export const convertSchemaEnumToDeclarationBlockString = ({
 
   outputType: 'string-literal' | 'native-numeric' | 'const' | 'native-const' | 'native';
   declarationBlockConfig: DeclarationBlockConfig;
-}): string => {
+}
+
+export const convertSchemaEnumToDeclarationBlockString = ({
+  schema,
+  node,
+  enumName,
+  enumValues,
+  futureProofEnums,
+  ignoreEnumValuesFromSchema,
+  outputType,
+  declarationBlockConfig,
+  naming,
+}: ConvertSchemaEnumToDeclarationBlockString): string => {
   if (enumValues[enumName]?.sourceFile) {
     return `export { ${enumValues[enumName].typeIdentifier} };\n`;
   }
@@ -143,68 +145,83 @@ export const convertSchemaEnumToDeclarationBlockString = ({
     return [enumAsConst, typeName].join('\n');
   }
 
-  const buildEnumValuesBlock = ({
-    typeName,
-    values,
-    schema,
-  }: {
-    typeName: string;
-    values: ReadonlyArray<EnumValueDefinitionNode>;
-    schema: GraphQLSchema;
-  }): string => {
-    const schemaEnumType: GraphQLEnumType | undefined = schema
-      ? (schema.getType(typeName) as GraphQLEnumType)
-      : undefined;
-
-    return values
-      .map(enumOption => {
-        const onlyUnderscoresPattern = /^_+$/;
-        const optionName = makeValidEnumIdentifier(
-          convertName({
-            options: {
-              useTypesPrefix: false,
-              typesPrefix: naming.typesPrefix,
-              typesSuffix: naming.typesSuffix,
-            },
-            convert: () =>
-              naming.convert(enumOption, {
-                // We can only strip out the underscores if the value contains other
-                // characters. Otherwise we'll generate syntactically invalid code.
-                transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
-              }),
-          })
-        );
-        const comment = getNodeComment(enumOption);
-        const schemaEnumValue =
-          schemaEnumType && !ignoreEnumValuesFromSchema
-            ? schemaEnumType.getValue(enumOption.name.value).value
-            : undefined;
-        let enumValue: string | number =
-          typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
-
-        if (typeof enumValues[typeName]?.mappedValues?.[enumValue] !== 'undefined') {
-          enumValue = enumValues[typeName].mappedValues[enumValue];
-        }
-
-        return (
-          comment +
-          indent(
-            `${optionName}${declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
-              enumValue,
-              typeof schemaEnumValue !== 'undefined'
-            )}`
-          )
-        );
-      })
-      .join(',\n');
-  };
-
   return new DeclarationBlock(declarationBlockConfig)
     .export()
     .asKind(outputType === 'native-const' ? 'const enum' : 'enum')
     .withName(enumTypeName)
     .withComment(node.description?.value)
-    .withBlock(buildEnumValuesBlock({ typeName: enumName, values: node.values, schema })).string;
+    .withBlock(
+      buildEnumValuesBlock({
+        typeName: enumName,
+        values: node.values,
+        schema,
+        naming,
+        ignoreEnumValuesFromSchema,
+        declarationBlockConfig,
+        enumValues,
+      })
+    ).string;
+};
+
+export const buildEnumValuesBlock = ({
+  typeName,
+  values,
+  schema,
+  naming,
+  ignoreEnumValuesFromSchema,
+  declarationBlockConfig,
+  enumValues,
+}: Pick<
+  ConvertSchemaEnumToDeclarationBlockString,
+  'schema' | 'naming' | 'ignoreEnumValuesFromSchema' | 'declarationBlockConfig' | 'enumValues'
+> & {
+  typeName: string;
+  values: ReadonlyArray<EnumValueDefinitionNode>;
+}): string => {
+  const schemaEnumType: GraphQLEnumType | undefined = schema
+    ? (schema.getType(typeName) as GraphQLEnumType)
+    : undefined;
+
+  return values
+    .map(enumOption => {
+      const onlyUnderscoresPattern = /^_+$/;
+      const optionName = makeValidEnumIdentifier(
+        convertName({
+          options: {
+            useTypesPrefix: false,
+            typesPrefix: naming.typesPrefix,
+            typesSuffix: naming.typesSuffix,
+          },
+          convert: () =>
+            naming.convert(enumOption, {
+              // We can only strip out the underscores if the value contains other
+              // characters. Otherwise we'll generate syntactically invalid code.
+              transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
+            }),
+        })
+      );
+      const comment = getNodeComment(enumOption);
+      const schemaEnumValue =
+        schemaEnumType && !ignoreEnumValuesFromSchema
+          ? schemaEnumType.getValue(enumOption.name.value).value
+          : undefined;
+      let enumValue: string | number = typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
+
+      if (typeof enumValues[typeName]?.mappedValues?.[enumValue] !== 'undefined') {
+        enumValue = enumValues[typeName].mappedValues[enumValue];
+      }
+
+      return (
+        comment +
+        indent(
+          `${optionName}${declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
+            enumValue,
+            typeof schemaEnumValue !== 'undefined'
+          )}`
+        )
+      );
+    })
+    .join(',\n');
 };
 
 const makeValidEnumIdentifier = (identifier: string): string => {
