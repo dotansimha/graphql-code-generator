@@ -43,6 +43,7 @@ import {
   wrapWithSingleQuotes,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
+import { getNodeComment } from './get-node-comment.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -703,7 +704,7 @@ export class BaseTypesVisitor<
 
     const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
-    const comment = this.getNodeComment(node);
+    const comment = getNodeComment(node);
 
     return comment + indent(`${node.name.value}: ${typeString}${this.getPunctuation(type)}`);
   }
@@ -910,7 +911,7 @@ export class BaseTypesVisitor<
             transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
           })
         );
-        const comment = this.getNodeComment(enumOption);
+        const comment = getNodeComment(enumOption);
         const schemaEnumValue =
           schemaEnumType && !this.config.ignoreEnumValuesFromSchema
             ? schemaEnumType.getValue(enumOption.name.value).value
@@ -1048,28 +1049,6 @@ export class BaseTypesVisitor<
 
   SchemaExtension() {
     return null;
-  }
-
-  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
-    let commentText = node.description?.value;
-    const deprecationDirective = node.directives.find(v => v.name.value === 'deprecated');
-    if (deprecationDirective) {
-      const deprecationReason = this.getDeprecationReason(deprecationDirective);
-      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
-    }
-    const comment = transformComment(commentText, 1);
-    return comment;
-  }
-
-  protected getDeprecationReason(directive: DirectiveNode): string | void {
-    if (directive.name.value === 'deprecated') {
-      let reason = 'Field no longer supported';
-      const deprecatedReason = directive.arguments[0];
-      if (deprecatedReason && deprecatedReason.value.kind === Kind.STRING) {
-        reason = deprecatedReason.value.value;
-      }
-      return reason;
-    }
   }
 
   protected wrapWithListType(str: string): string {
