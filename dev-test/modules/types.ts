@@ -46,6 +46,14 @@ export type DonationInput = {
   user: Scalars['ID']['input'];
 };
 
+export type Flower = Plant & {
+  __typename?: 'Flower';
+  age: Scalars['Int']['output'];
+  color: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  species: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   donate?: Maybe<Donation>;
@@ -62,6 +70,12 @@ export type Paypal = {
   __typename?: 'Paypal';
   id: Scalars['ID']['output'];
   url: Scalars['String']['output'];
+};
+
+export type Plant = {
+  age: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  species: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -84,6 +98,14 @@ export type QueryArticlesByUserArgs = {
 
 export type QueryUserByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type Tree = Plant & {
+  __typename?: 'Tree';
+  age: Scalars['Int']['output'];
+  height: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  species: Scalars['String']['output'];
 };
 
 export type User = {
@@ -183,6 +205,11 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   PaymentOption: CreditCard | Paypal;
 };
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
+  Plant: Flower | Tree;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Article: ResolverTypeWrapper<Omit<Article, 'author'> & { author: ResolversTypes['User'] }>;
@@ -193,13 +220,16 @@ export type ResolversTypes = {
   >;
   DonationInput: DonationInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  Flower: ResolverTypeWrapper<Flower>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   PaymentOption: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['PaymentOption']>;
   Paypal: ResolverTypeWrapper<Paypal>;
+  Plant: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Plant']>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Tree: ResolverTypeWrapper<Tree>;
   User: ResolverTypeWrapper<
     Omit<User, 'paymentOptions'> & { paymentOptions?: Maybe<Array<ResolversTypes['PaymentOption']>> }
   >;
@@ -216,13 +246,16 @@ export type ResolversParentTypes = {
   };
   DonationInput: DonationInput;
   Float: Scalars['Float']['output'];
+  Flower: Flower;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: Record<PropertyKey, never>;
   PaymentOption: ResolversUnionTypes<ResolversParentTypes>['PaymentOption'];
   Paypal: Paypal;
+  Plant: ResolversInterfaceTypes<ResolversParentTypes>['Plant'];
   Query: Record<PropertyKey, never>;
   String: Scalars['String']['output'];
+  Tree: Tree;
   User: Omit<User, 'paymentOptions'> & { paymentOptions?: Maybe<Array<ResolversParentTypes['PaymentOption']>> };
 };
 
@@ -256,6 +289,17 @@ export type DonationResolvers<
   sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 };
 
+export type FlowerResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Flower'] = ResolversParentTypes['Flower']
+> = {
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  color?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  species?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
@@ -280,6 +324,13 @@ export type PaypalResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PlantResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Plant'] = ResolversParentTypes['Plant']
+> = {
+  __resolveType: TypeResolveFn<'Flower' | 'Tree', ParentType, ContextType>;
+};
+
 export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
@@ -302,6 +353,17 @@ export type QueryResolvers<
   users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
+export type TreeResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Tree'] = ResolversParentTypes['Tree']
+> = {
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  height?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  species?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
@@ -316,9 +378,12 @@ export type Resolvers<ContextType = any> = {
   Article?: ArticleResolvers<ContextType>;
   CreditCard?: CreditCardResolvers<ContextType>;
   Donation?: DonationResolvers<ContextType>;
+  Flower?: FlowerResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaymentOption?: PaymentOptionResolvers<ContextType>;
   Paypal?: PaypalResolvers<ContextType>;
+  Plant?: PlantResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Tree?: TreeResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };

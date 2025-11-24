@@ -1,0 +1,19 @@
+interface Plant {
+  id: ID!
+  species: String!
+  age: Int!
+}
+
+type Flower implements Plant {
+  id: ID!
+  species: String!
+  age: Int!
+  color: String!
+}
+
+type Tree implements Plant {
+  id: ID!
+  species: String!
+  age: Int!
+  height: Float!
+}
