@@ -35,7 +35,7 @@ export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
 
 export type EchoMutationMutationVariables = Exact<{
-  message: Scalars['String']['input'];
+  message: string;
 }>;
 
 export type EchoMutationMutation = { __typename?: 'Mutation'; echo: string };
