@@ -1284,7 +1284,7 @@ export type FilmItemFragment = {
 } & { ' $fragmentName'?: 'FilmItemFragment' };
 
 export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
-  first: Scalars['Int']['input'];
+  first: number;
 }>;
 
 export type AllFilmsWithVariablesQueryQuery = {
