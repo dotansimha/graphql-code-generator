@@ -28,7 +28,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
     useTypesSuffix?: boolean;
   };
 
-  outputType: 'string-literal' | 'numeric' | 'const' | 'native-const' | 'native';
+  outputType: 'string-literal' | 'native-numeric' | 'const' | 'native-const' | 'native';
   declarationBlockConfig: DeclarationBlockConfig;
 }): string => {
   if (enumValues[enumName]?.sourceFile) {
@@ -75,7 +75,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
       ).string;
   }
 
-  if (outputType === 'numeric') {
+  if (outputType === 'native-numeric') {
     return new DeclarationBlock(declarationBlockConfig)
       .export()
       .withComment(node.description?.value)

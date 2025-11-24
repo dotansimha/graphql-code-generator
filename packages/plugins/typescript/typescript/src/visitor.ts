@@ -350,7 +350,7 @@ export class TsVisitor<
       }
 
       if (this.config.numericEnums) {
-        return 'numeric';
+        return 'native-numeric';
       }
 
       if (this.config.enumsAsConst) {
