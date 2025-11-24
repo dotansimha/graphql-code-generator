@@ -1298,7 +1298,7 @@ export type AllPeopleQueryQuery = {
 };
 
 export type AllPeopleWithVariablesQueryQueryVariables = Exact<{
-  first: Scalars['Int']['input'];
+  first: number;
 }>;
 
 export type AllPeopleWithVariablesQueryQuery = {

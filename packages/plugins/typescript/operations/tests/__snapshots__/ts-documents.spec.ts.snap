@@ -5,15 +5,15 @@ exports[`TypeScript Operations Plugin > Config > should include fragment variabl
 
 
 export type TextNotificationFragmentFragmentVariables = Exact<{
-  skip: Scalars['Boolean']['input'];
+  skip: boolean;
 }>;
 "
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #2699 - Issues with multiple interfaces and unions 1`] = `
 "export type GetEntityBrandDataQueryVariables = Exact<{
-  gid: Scalars['ID']['input'];
-  brand: Scalars['ID']['input'];
+  gid: string;
+  brand: string;
 }>;
 
 

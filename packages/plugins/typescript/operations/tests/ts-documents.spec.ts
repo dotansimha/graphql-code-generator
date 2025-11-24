@@ -13,7 +13,7 @@ describe('TypeScript Operations Plugin', () => {
     config: any = {},
     pluginSchema = schema,
     usage = '',
-    suspenseErrors = [],
+    suspenseErrors: string[] = [],
   ) => {
     const m = mergeOutputs([
       await tsPlugin(pluginSchema, [], config, { outputFile: '' }),
@@ -379,7 +379,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UserQueryVariables = Exact<{
-          showProperty: Scalars['Boolean']['input'];
+          showProperty: boolean;
         }> | undefined;
       `);
     });
@@ -2811,7 +2811,7 @@ export type Q2Query = { search: Array<
 
       expect(content).toBeSimilarStringTo(
         `export type MeQueryVariables = Exact<{
-          repoFullName: Scalars['String']['input'];
+          repoFullName: string;
         }>;`,
       );
       expect(content).toBeSimilarStringTo(`
@@ -3244,18 +3244,17 @@ export type Q2Query = { search: Array<
         },
       );
 
-      expect(content).toBeSimilarStringTo(
-        `export type TestQueryQueryVariables = Exact<{
-          username?: InputMaybe<Scalars['String']['input']>;
-          email?: InputMaybe<Scalars['String']['input']>;
-          password: Scalars['String']['input'];
-          input?: InputMaybe<InputType>;
+      expect(content).toBeSimilarStringTo(`
+        export type TestQueryQueryVariables = Exact<{
+          username?: string | null;
+          email?: string | null;
+          password: string;
+          input?: InputType | null;
           mandatoryInput: InputType;
-          testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
-          requireString: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
-          innerRequired: Array<Scalars['String']['input']> | Scalars['String']['input'];
-        }>;`,
-      );
+          testArray?: Array<string | null> | string | null;
+          requireString: Array<string | null> | string;
+          innerRequired: Array<string> | string;
+        }>;`);
       await validate(content, config, schema);
     });
 
@@ -3277,7 +3276,7 @@ export type Q2Query = { search: Array<
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
-          test?: InputMaybe<Scalars['DateTime']['input']>;
+          test?: any | null;
         }>;`,
       );
       await validate(content, config);
@@ -3638,7 +3637,7 @@ export type Q2Query = { search: Array<
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = Exact<{
-          reverse?: InputMaybe<Scalars['Boolean']['input']>;
+          reverse?: boolean | null;
         }>;
       `);
     });
@@ -5920,9 +5919,9 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
-        requireString: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
-        innerRequired: Array<Scalars['String']['input']> | Scalars['String']['input'];
+        testArray?: Array<string | null> | string | null;
+        requireString: Array<string | null> | string;
+        innerRequired: Array<string> | string;
       }>;`);
       await validate(content, config);
     });
@@ -5956,9 +5955,9 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-        requireString: Array<InputMaybe<Scalars['String']['input']>>;
-        innerRequired: Array<Scalars['String']['input']>;
+        testArray?: Array<string | null> | null;
+        requireString: Array<string | null>;
+        innerRequired: Array<string>;
       }>;`);
       await validate(content, config);
     });
@@ -6504,8 +6503,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
         export type UserQueryQueryVariables = Exact<{
-          skipFirstName: Scalars['Boolean']['input'];
-          skipAddress: Scalars['Boolean']['input'];
+          skipFirstName: boolean;
+          skipAddress: boolean;
         }>;
 
         export type UserQueryQuery = {
@@ -6563,7 +6562,7 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean']['input'];
+        showAddress: boolean;
       }>;
 
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
@@ -6616,8 +6615,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean']['input'];
-        showName: Scalars['Boolean']['input'];
+        showAddress: boolean;
+        showName: boolean;
       }>;
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };`);
     });
@@ -6664,8 +6663,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toBeSimilarStringTo(`
       export type UserQueryVariables = Exact<{
-        showAddress: Scalars['Boolean']['input'];
-        showName: Scalars['Boolean']['input'];
+        showAddress: boolean;
+        showName: boolean;
       }>;
 
       export type UserQuery = (

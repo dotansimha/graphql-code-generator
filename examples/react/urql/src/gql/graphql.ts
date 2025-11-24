@@ -1281,7 +1281,7 @@ export type VehiclesEdge = {
 };
 
 export type AllFilmsWithVariablesQuery199QueryVariables = Exact<{
-  first: Scalars['Int']['input'];
+  first: number;
 }>;
 
 export type AllFilmsWithVariablesQuery199Query = {
