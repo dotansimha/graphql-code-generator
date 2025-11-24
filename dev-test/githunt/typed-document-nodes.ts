@@ -175,7 +175,7 @@ export enum VoteType {
 }
 
 export type OnCommentAddedSubscriptionVariables = Exact<{
-  repoFullName: Scalars['String']['input'];
+  repoFullName: string;
 }>;
 
 export type OnCommentAddedSubscription = {
@@ -190,9 +190,9 @@ export type OnCommentAddedSubscription = {
 };
 
 export type CommentQueryVariables = Exact<{
-  repoFullName: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
+  repoFullName: string;
+  limit?: number | null;
+  offset?: number | null;
 }>;
 
 export type CommentQuery = {
@@ -258,8 +258,8 @@ export type FeedEntryFragment = {
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: number | null;
+  limit?: number | null;
 }>;
 
 export type FeedQuery = {
@@ -286,7 +286,7 @@ export type FeedQuery = {
 };
 
 export type SubmitRepositoryMutationVariables = Exact<{
-  repoFullName: Scalars['String']['input'];
+  repoFullName: string;
 }>;
 
 export type SubmitRepositoryMutation = {
@@ -307,8 +307,8 @@ export type RepoInfoFragment = {
 };
 
 export type SubmitCommentMutationVariables = Exact<{
-  repoFullName: Scalars['String']['input'];
-  commentContent: Scalars['String']['input'];
+  repoFullName: string;
+  commentContent: string;
 }>;
 
 export type SubmitCommentMutation = {
@@ -329,7 +329,7 @@ export type VoteButtonsFragment = {
 };
 
 export type VoteMutationVariables = Exact<{
-  repoFullName: Scalars['String']['input'];
+  repoFullName: string;
   type: VoteType;
 }>;
 
