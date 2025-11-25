@@ -17,3 +17,4 @@ export * from './selection-set-to-object.js';
 export * from './types.js';
 export * from './utils.js';
 export * from './variables-to-object.js';
+export * from './convert-schema-enum-to-declaration-block-string.js';
