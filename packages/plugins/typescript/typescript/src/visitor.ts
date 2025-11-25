@@ -1,15 +1,15 @@
 import {
   BaseTypesVisitor,
+  convertSchemaEnumToDeclarationBlockString,
   DeclarationBlock,
   DeclarationKind,
   getConfigValue,
+  getNodeComment,
   indent,
   isOneOfInputObjectType,
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
   ParsedTypesConfig,
-  transformComment,
-  wrapWithSingleQuotes,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import {
@@ -274,7 +274,7 @@ export class TsVisitor<
       : (node.type as any as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
-    const comment = this.getNodeComment(node);
+    const comment = getNodeComment(node);
     const { type } = this.config.declarationKind;
 
     return (
@@ -300,7 +300,7 @@ export class TsVisitor<
       !this.config.avoidOptionals.inputValue &&
       (originalFieldNode.type.kind !== Kind.NON_NULL_TYPE ||
         (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
-    const comment = this.getNodeComment(node);
+    const comment = getNodeComment(node);
     const declarationKind = this.config.declarationKind.type;
 
     let type: string = node.type as any as string;
@@ -344,114 +344,39 @@ export class TsVisitor<
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const enumName = node.name.value;
 
-    // In case of mapped external enum string
-    if (this.config.enumValues[enumName]?.sourceFile) {
-      return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
-    }
-
-    const getValueFromConfig = (enumValue: string | number) => {
-      if (typeof this.config.enumValues[enumName]?.mappedValues?.[enumValue] !== 'undefined') {
-        return this.config.enumValues[enumName].mappedValues[enumValue];
+    const outputType = ((): Parameters<typeof convertSchemaEnumToDeclarationBlockString>[0]['outputType'] => {
+      if (this.config.enumsAsTypes) {
+        return 'string-literal';
       }
-      return null;
-    };
 
-    const withFutureAddedValue = [
-      this.config.futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
-    ];
+      if (this.config.numericEnums) {
+        return 'native-numeric';
+      }
 
-    const enumTypeName = this.convertName(node, {
-      useTypesPrefix: this.config.enumPrefix,
-      useTypesSuffix: this.config.enumSuffix,
+      if (this.config.enumsAsConst) {
+        return 'const';
+      }
+
+      return this.config.constEnums ? 'native-const' : 'native';
+    })();
+
+    return convertSchemaEnumToDeclarationBlockString({
+      schema: this._schema,
+      node,
+      declarationBlockConfig: this._declarationBlockConfig,
+      enumName,
+      enumValues: this.config.enumValues,
+      futureProofEnums: this.config.futureProofEnums,
+      ignoreEnumValuesFromSchema: this.config.ignoreEnumValuesFromSchema,
+      outputType,
+      naming: {
+        convert: this.config.convert,
+        typesPrefix: this.config.typesPrefix,
+        typesSuffix: this.config.typesSuffix,
+        useTypesPrefix: this.config.enumPrefix,
+        useTypesSuffix: this.config.enumSuffix,
+      },
     });
-
-    if (this.config.enumsAsTypes) {
-      return new DeclarationBlock(this._declarationBlockConfig)
-        .export()
-        .asKind('type')
-        .withComment(node.description?.value)
-        .withName(enumTypeName)
-        .withContent(
-          '\n' +
-            node.values
-              .map(enumOption => {
-                const name = enumOption.name.value;
-                const enumValue: string | number = getValueFromConfig(name) ?? name;
-                const comment = transformComment(enumOption.description?.value, 1);
-
-                return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
-              })
-              .concat(...withFutureAddedValue)
-              .join('\n')
-        ).string;
-    }
-
-    if (this.config.numericEnums) {
-      const block = new DeclarationBlock(this._declarationBlockConfig)
-        .export()
-        .withComment(node.description?.value)
-        .withName(enumTypeName)
-        .asKind('enum')
-        .withBlock(
-          node.values
-            .map((enumOption, i) => {
-              const valueFromConfig = getValueFromConfig(enumOption.name.value);
-              const enumValue: string | number = valueFromConfig ?? i;
-              const comment = transformComment(enumOption.description?.value, 1);
-              const optionName = this.makeValidEnumIdentifier(
-                this.convertName(enumOption, {
-                  useTypesPrefix: false,
-                  transformUnderscore: true,
-                })
-              );
-              return comment + indent(optionName) + ` = ${enumValue}`;
-            })
-            .concat(...withFutureAddedValue)
-            .join(',\n')
-        ).string;
-
-      return block;
-    }
-
-    if (this.config.enumsAsConst) {
-      const typeName = `export type ${enumTypeName} = typeof ${enumTypeName}[keyof typeof ${enumTypeName}];`;
-      const enumAsConst = new DeclarationBlock({
-        ...this._declarationBlockConfig,
-        blockTransformer: block => {
-          return block + ' as const';
-        },
-      })
-        .export()
-        .asKind('const')
-        .withName(enumTypeName)
-        .withComment(node.description?.value)
-        .withBlock(
-          node.values
-            .map(enumOption => {
-              const optionName = this.makeValidEnumIdentifier(
-                this.convertName(enumOption, {
-                  useTypesPrefix: false,
-                  transformUnderscore: true,
-                })
-              );
-              const comment = transformComment(enumOption.description?.value, 1);
-              const name = enumOption.name.value;
-              const enumValue: string | number = getValueFromConfig(name) ?? name;
-
-              return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
-            })
-            .join(',\n')
-        ).string;
-
-      return [enumAsConst, typeName].join('\n');
-    }
-
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind(this.config.constEnums ? 'const enum' : 'enum')
-      .withName(enumTypeName)
-      .withComment(node.description?.value)
-      .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 
   protected getPunctuation(_declarationKind: DeclarationKind): string {
