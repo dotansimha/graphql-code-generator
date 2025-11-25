@@ -1,5 +1,5 @@
 import { join, relative, resolve } from 'path';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { normalizeImportExtension, Types } from '@graphql-codegen/plugin-helpers';
 import { BaseVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { concatAST, isScalarType } from 'graphql';
 import { buildModule } from './builder.js';
@@ -72,10 +72,15 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
       documentTransforms: options.documentTransforms,
     };
 
+    const importExtension = normalizeImportExtension({
+      emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+      importExtension: options.config.importExtension,
+    });
+
     const baseTypesFilename = baseTypesPath.replace(
       /\.(js|ts|d.ts)$/,
       // we need extension if ESM modules are used
-      options.config.emitLegacyCommonJSImports ? '' : '.js'
+      importExtension
     );
     const baseTypesDir = stripFilename(baseOutput.filename);
 

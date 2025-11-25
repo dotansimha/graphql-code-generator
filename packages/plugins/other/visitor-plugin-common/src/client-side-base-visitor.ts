@@ -1,5 +1,5 @@
 import { basename, extname } from 'path';
-import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
+import { normalizeImportExtension, oldVisit, Types } from '@graphql-codegen/plugin-helpers';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
@@ -600,7 +600,12 @@ export class ClientSideBaseVisitor<
   private clearExtension(path: string): string {
     const extension = extname(path);
 
-    if (!this.config.emitLegacyCommonJSImports && extension === '.js') {
+    const importExtension = normalizeImportExtension({
+      emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+      importExtension: this.config.importExtension,
+    });
+
+    if (extension === importExtension) {
       return path;
     }
 
@@ -642,9 +647,10 @@ export class ClientSideBaseVisitor<
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
-            if (!this.config.emitLegacyCommonJSImports) {
-              documentPath += '.js';
-            }
+            documentPath += normalizeImportExtension({
+              emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+              importExtension: this.config.importExtension,
+            });
 
             this._imports.add(`import * as Operations from '${documentPath}';`);
           } else {
@@ -668,6 +674,10 @@ export class ClientSideBaseVisitor<
       options.excludeFragments || this.config.globalNamespace || this.config.documentMode !== DocumentMode.graphQLTag;
 
     if (!excludeFragments) {
+      const importExtension = normalizeImportExtension({
+        emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+        importExtension: this.config.importExtension,
+      });
       const deduplicatedImports = Object.values(groupBy(this.config.fragmentImports, fi => fi.importSource.path))
         .map(
           (fragmentImports): ImportDeclaration<FragmentImport> => ({
@@ -680,6 +690,7 @@ export class ClientSideBaseVisitor<
               ),
             },
             emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+            importExtension,
           })
         )
         .filter(fragmentImport => fragmentImport.outputPath !== fragmentImport.importSource.path);

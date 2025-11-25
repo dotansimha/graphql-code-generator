@@ -1,4 +1,4 @@
-import type { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { normalizeImportExtension, type PluginFunction } from '@graphql-codegen/plugin-helpers';
 
 const fragmentTypeHelper = `
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
@@ -128,20 +128,32 @@ export const plugin: PluginFunction<{
   augmentedModuleName?: string;
   unmaskFunctionName?: string;
   emitLegacyCommonJSImports?: boolean;
+  importExtension?: '' | `.${string}`;
   isStringDocumentMode?: boolean;
 }> = (
   _,
   __,
-  { useTypeImports, augmentedModuleName, unmaskFunctionName, emitLegacyCommonJSImports, isStringDocumentMode },
+  {
+    useTypeImports,
+    augmentedModuleName,
+    unmaskFunctionName,
+    emitLegacyCommonJSImports,
+    importExtension,
+    isStringDocumentMode,
+  },
   _info
 ) => {
+  const appendedImportExtension = normalizeImportExtension({
+    emitLegacyCommonJSImports,
+    importExtension,
+  });
   const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { ResultOf, DocumentTypeDecoration${
     isStringDocumentMode ? '' : ', TypedDocumentNode'
   } } from '@graphql-typed-document-node/core';\n`;
 
   const deferFragmentHelperImports = `${useTypeImports ? 'import type' : 'import'} { Incremental${
     isStringDocumentMode ? ', TypedDocumentString' : ''
-  } } from './graphql${emitLegacyCommonJSImports ? '' : '.js'}';\n`;
+  } } from './graphql${appendedImportExtension}';\n`;
 
   const fragmentDefinitionNodeImport = isStringDocumentMode
     ? ''

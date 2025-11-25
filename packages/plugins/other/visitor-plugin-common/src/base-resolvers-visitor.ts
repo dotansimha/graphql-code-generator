@@ -971,15 +971,20 @@ export class BaseResolversVisitor<
       const isScalar = this.config.scalars[typeName];
       const hasDefaultMapper = !!this.config.defaultMapper?.type;
 
+      // Check for mappers first, even for root types, to allow overriding rootValueType
+      if (isMapped && this.config.mappers[typeName].type && !hasPlaceholder(this.config.mappers[typeName].type)) {
+        this.markMapperAsUsed(typeName);
+        prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
+
+        return prev;
+      }
+
       if (isRootType) {
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
       }
-      if (isMapped && this.config.mappers[typeName].type && !hasPlaceholder(this.config.mappers[typeName].type)) {
-        this.markMapperAsUsed(typeName);
-        prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
-      } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
+      if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
         const isExternalFile = !!this.config.enumValues[typeName].sourceFile;
         prev[typeName] = isExternalFile
           ? this.convertName(this.config.enumValues[typeName].typeIdentifier, {

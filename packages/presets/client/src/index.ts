@@ -1,6 +1,6 @@
 import * as addPlugin from '@graphql-codegen/add';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { normalizeImportExtension, type PluginFunction, type Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
@@ -251,6 +251,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
+    const importExtension = normalizeImportExtension({
+      emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+      importExtension: options.config.importExtension,
+    });
+
     if (isMaskingFragments === true) {
       const fragmentMaskingArtifactFileExtension = '.ts';
 
@@ -273,6 +278,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
           emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+          importExtension,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
         documents: [],
@@ -281,8 +287,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     }
 
     let indexFileGenerateConfig: Types.GenerateOptions | null = null;
-
-    const reexportsExtension = options.config.emitLegacyCommonJSImports ? '' : '.js';
 
     if (reexports.length) {
       indexFileGenerateConfig = {
@@ -295,7 +299,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
             [`add`]: {
               content: reexports
                 .sort()
-                .map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`)
+                .map(moduleName => `export * from "./${moduleName}${importExtension}";`)
                 .join('\n'),
             },
           },
