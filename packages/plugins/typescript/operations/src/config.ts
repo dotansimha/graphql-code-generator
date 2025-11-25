@@ -1,4 +1,9 @@
-import { AvoidOptionalsConfig, type EnumValuesMap, RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
+import {
+  AvoidOptionalsConfig,
+  type ConvertSchemaEnumToDeclarationBlockString,
+  type EnumValuesMap,
+  RawDocumentsConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.
@@ -337,7 +342,120 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
     errorHandlingClient: boolean;
   };
 
-  enumType?: 'string-literal' | 'native-numeric' | 'const' | 'native-const' | 'native';
+  /**
+   * @description Controls the enum output type. Options: `string-literal` | `native-numeric` | `const` | `native-const` | `native`;
+   * @default `string-literal`
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript-operations'],
+   *       config: {
+   *         enumType: 'string-literal',
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   */
+  enumType?: ConvertSchemaEnumToDeclarationBlockString['outputType'];
+
+  /**
+   * @description Overrides the default value of enum values declared in your GraphQL schema.
+   * You can also map the entire enum to an external type by providing a string that of `module#type`.
+   *
+   * @exampleMarkdown
+   * ## With Custom Values
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          enumValues: {
+   *            MyEnum: {
+   *              A: 'foo'
+   *            }
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## With External Enum
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          enumValues: {
+   *            MyEnum: './my-file#MyCustomEnum',
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## Import All Enums from a file
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          enumValues: {
+   *            MyEnum: './my-file',
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
   enumValues?: EnumValuesMap;
+
+  /**
+   * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future.
+   * This is useful if you are using `relay`.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript-operations'],
+   *       config: {
+   *         futureProofEnums: true
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   * ```
+   */
   futureProofEnums?: boolean;
 }

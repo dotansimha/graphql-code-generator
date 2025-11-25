@@ -1,5 +1,6 @@
 import {
   BaseDocumentsVisitor,
+  type ConvertSchemaEnumToDeclarationBlockString,
   convertSchemaEnumToDeclarationBlockString,
   DeclarationKind,
   generateFragmentImportStatement,
@@ -43,7 +44,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   noExport: boolean;
   maybeValue: string;
   allowUndefinedQueryVariables: boolean;
-  enumType: 'string-literal' | 'native-numeric' | 'const' | 'native-const' | 'native';
+  enumType: ConvertSchemaEnumToDeclarationBlockString['outputType'];
   futureProofEnums: boolean;
   enumValues: ParsedEnumValuesMap;
 }
