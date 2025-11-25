@@ -2,9 +2,7 @@ import {
   DirectiveDefinitionNode,
   DirectiveNode,
   EnumTypeDefinitionNode,
-  EnumValueDefinitionNode,
   FieldDefinitionNode,
-  GraphQLEnumType,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
@@ -40,9 +38,11 @@ import {
   indent,
   isOneOfInputObjectType,
   transformComment,
+  getNodeComment,
   wrapWithSingleQuotes,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
+import { buildEnumValuesBlock } from './convert-schema-enum-to-declaration-block-string.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -493,8 +493,6 @@ export interface RawTypesConfig extends RawConfig {
   directiveArgumentAndInputFieldMappingTypeSuffix?: string;
 }
 
-const onlyUnderscoresPattern = /^_+$/;
-
 export class BaseTypesVisitor<
   TRawConfig extends RawTypesConfig = RawTypesConfig,
   TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig
@@ -703,7 +701,7 @@ export class BaseTypesVisitor<
 
     const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
-    const comment = this.getNodeComment(node);
+    const comment = getNodeComment(node);
 
     return comment + indent(`${node.name.value}: ${typeString}${this.getPunctuation(type)}`);
   }
@@ -885,7 +883,23 @@ export class BaseTypesVisitor<
         })
       )
       .withComment(node.description.value)
-      .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
+      .withBlock(
+        buildEnumValuesBlock({
+          typeName: enumName,
+          values: node.values,
+          schema: this._schema,
+          naming: {
+            convert: this.config.convert,
+            typesPrefix: this.config.typesPrefix,
+            useTypesPrefix: this.config.enumPrefix,
+            typesSuffix: this.config.typesSuffix,
+            useTypesSuffix: this.config.enumSuffix,
+          },
+          ignoreEnumValuesFromSchema: this.config.ignoreEnumValuesFromSchema,
+          declarationBlockConfig: this._declarationBlockConfig,
+          enumValues: this.config.enumValues,
+        })
+      ).string;
   }
 
   protected makeValidEnumIdentifier(identifier: string): string {
@@ -893,46 +907,6 @@ export class BaseTypesVisitor<
       return wrapWithSingleQuotes(identifier, true);
     }
     return identifier;
-  }
-
-  protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
-    const schemaEnumType: GraphQLEnumType | undefined = this._schema
-      ? (this._schema.getType(typeName) as GraphQLEnumType)
-      : undefined;
-
-    return values
-      .map(enumOption => {
-        const optionName = this.makeValidEnumIdentifier(
-          this.convertName(enumOption, {
-            useTypesPrefix: false,
-            // We can only strip out the underscores if the value contains other
-            // characters. Otherwise we'll generate syntactically invalid code.
-            transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
-          })
-        );
-        const comment = this.getNodeComment(enumOption);
-        const schemaEnumValue =
-          schemaEnumType && !this.config.ignoreEnumValuesFromSchema
-            ? schemaEnumType.getValue(enumOption.name.value).value
-            : undefined;
-        let enumValue: string | number =
-          typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
-
-        if (typeof this.config.enumValues[typeName]?.mappedValues?.[enumValue] !== 'undefined') {
-          enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
-        }
-
-        return (
-          comment +
-          indent(
-            `${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
-              enumValue,
-              typeof schemaEnumValue !== 'undefined'
-            )}`
-          )
-        );
-      })
-      .join(',\n');
   }
 
   DirectiveDefinition(_node: DirectiveDefinitionNode): string {
@@ -1048,28 +1022,6 @@ export class BaseTypesVisitor<
 
   SchemaExtension() {
     return null;
-  }
-
-  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
-    let commentText = node.description?.value;
-    const deprecationDirective = node.directives.find(v => v.name.value === 'deprecated');
-    if (deprecationDirective) {
-      const deprecationReason = this.getDeprecationReason(deprecationDirective);
-      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
-    }
-    const comment = transformComment(commentText, 1);
-    return comment;
-  }
-
-  protected getDeprecationReason(directive: DirectiveNode): string | void {
-    if (directive.name.value === 'deprecated') {
-      let reason = 'Field no longer supported';
-      const deprecatedReason = directive.arguments[0];
-      if (deprecatedReason && deprecatedReason.value.kind === Kind.STRING) {
-        reason = deprecatedReason.value.value;
-      }
-      return reason;
-    }
   }
 
   protected wrapWithListType(str: string): string {
