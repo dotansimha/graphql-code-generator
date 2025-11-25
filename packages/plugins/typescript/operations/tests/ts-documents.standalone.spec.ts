@@ -37,6 +37,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       input UsersInput {
         from: DateTime
         to: DateTime
+        role: UserRole
       }
 
       type UsersResponseOk {
@@ -69,8 +70,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         }
       }
 
-      query UsersWithScalarInput($from: DateTime!, $to: DateTime) {
-        users(input: { from: $from, to: $to }) {
+      query UsersWithScalarInput($from: DateTime!, $to: DateTime, $role: UserRole) {
+        users(input: { from: $from, to: $to, role: $role }) {
           ... on UsersResponseOk {
             result {
               __typename
@@ -87,6 +88,10 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type UserRole =
+        | 'ADMIN'
+        | 'CUSTOMER';
+
       export type UserQueryVariables = Exact<{
         id: string;
       }>;
@@ -107,6 +112,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: any;
         to?: any | null;
+        role?: UserRole | null;
       }>;
 
 
@@ -156,4 +162,14 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
   });
+});
+
+describe('TypeScript Operations Plugin - Enum', () => {
+  it.todo('does not generate unused enum in variables and result');
+  it.todo('handles native numeric enum correctly');
+  it.todo('handles const enum correctly');
+  it.todo('handles native const enum correctly');
+  it.todo('handles native enum correctly');
+  it.todo('handles EnumValues correctly');
+  // Bring over tests from https://github.com/dotansimha/graphql-code-generator/blob/accdab69106605241933e9d66d64dc7077656f30/packages/plugins/typescript/typescript/tests/typescript.spec.ts
 });
