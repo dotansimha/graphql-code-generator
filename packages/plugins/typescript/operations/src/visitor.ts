@@ -1,5 +1,6 @@
 import {
   BaseDocumentsVisitor,
+  convertSchemaEnumToDeclarationBlockString,
   DeclarationKind,
   generateFragmentImportStatement,
   getConfigValue,
@@ -7,6 +8,8 @@ import {
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
   ParsedDocumentsConfig,
+  type ParsedEnumValuesMap,
+  parseEnumValues,
   PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
   SelectionSetToObject,
@@ -15,6 +18,7 @@ import {
 import autoBind from 'auto-bind';
 import {
   type DocumentNode,
+  EnumTypeDefinitionNode,
   type FragmentDefinitionNode,
   GraphQLEnumType,
   GraphQLInputObjectType,
@@ -39,6 +43,9 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   noExport: boolean;
   maybeValue: string;
   allowUndefinedQueryVariables: boolean;
+  enumType: 'string-literal' | 'native-numeric' | 'const' | 'native-const' | 'native';
+  futureProofEnums: boolean;
+  enumValues: ParsedEnumValuesMap;
 }
 
 type UsedNamedInputTypes = Record<string, GraphQLNamedInputType>;
@@ -60,6 +67,13 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         preResolveTypes: getConfigValue(config.preResolveTypes, true),
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
         allowUndefinedQueryVariables: getConfigValue(config.allowUndefinedQueryVariables, false),
+        enumType: getConfigValue(config.enumType, 'string-literal'),
+        enumValues: parseEnumValues({
+          schema,
+          mapOrStr: config.enumValues,
+          ignoreEnumValuesFromSchema: config.ignoreEnumValuesFromSchema,
+        }),
+        futureProofEnums: getConfigValue(config.futureProofEnums, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
@@ -154,6 +168,31 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
     };
+  }
+
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    const enumName = node.name.value;
+    if (!this._usedNamedInputTypes[enumName]) {
+      return null;
+    }
+
+    return convertSchemaEnumToDeclarationBlockString({
+      schema: this._schema,
+      node,
+      declarationBlockConfig: this._declarationBlockConfig,
+      enumName,
+      enumValues: this.config.enumValues,
+      futureProofEnums: this.config.futureProofEnums,
+      ignoreEnumValuesFromSchema: this.config.ignoreEnumValuesFromSchema,
+      outputType: this.config.enumType,
+      naming: {
+        convert: this.config.convert,
+        typesPrefix: this.config.typesPrefix,
+        typesSuffix: this.config.typesSuffix,
+        useTypesPrefix: this.config.enumPrefix,
+        useTypesSuffix: this.config.enumSuffix,
+      },
+    });
   }
 
   public getImports(): Array<string> {

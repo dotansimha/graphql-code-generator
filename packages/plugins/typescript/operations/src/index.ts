@@ -1,4 +1,5 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { concatAST, GraphQLSchema } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
@@ -22,11 +23,9 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 
   const visitor = new TypeScriptDocumentsVisitor(schema, config, allAst);
 
-  const visitorResult = oldVisit(allAst, {
-    leave: visitor,
-  });
+  const operationsResult = oldVisit(allAst, { leave: visitor });
 
-  let content = visitorResult.definitions.join('\n');
+  let operationsContent = operationsResult.definitions.join('\n');
 
   if (config.addOperationExport) {
     const exportConsts = [];
@@ -37,15 +36,29 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
       }
     }
 
-    content = visitorResult.definitions.concat(exportConsts).join('\n');
+    operationsContent = operationsResult.definitions.concat(exportConsts).join('\n');
   }
 
   if (config.globalNamespace) {
-    content = `
+    operationsContent = `
     declare global {
-      ${content}
+      ${operationsContent}
     }`;
   }
+
+  const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
+
+  // IMPORTANT: when a visitor leaves a node with no transformation logic,
+  // It will leave the node as an object.
+  // Here, we filter in nodes that have been turned into strings, i.e. they have been transformed
+  // This way, we do not have to explicitly declare a method for every node type to convert them to null
+  const schemaTypesContent = schemaTypes.definitions.filter(def => typeof def === 'string').join('\n');
+
+  const content: string[] = [];
+  if (schemaTypesContent) {
+    content.push(schemaTypesContent);
+  }
+  content.push(operationsContent);
 
   return {
     prepend: [
@@ -53,7 +66,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
       'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };',
     ],
-    content,
+    content: content.join('\n'),
   };
 };
 
