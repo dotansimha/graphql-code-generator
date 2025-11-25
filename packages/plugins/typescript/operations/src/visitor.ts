@@ -171,7 +171,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     };
   }
 
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
     if (!this._usedNamedInputTypes[enumName]) {
       return null;
