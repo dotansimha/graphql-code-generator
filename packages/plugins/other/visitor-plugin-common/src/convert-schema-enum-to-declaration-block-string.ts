@@ -5,9 +5,9 @@ import {
   type DeclarationBlockConfig,
   indent,
   transformComment,
+  getNodeComment,
   wrapWithSingleQuotes,
 } from './utils.js';
-import { getNodeComment } from './get-node-comment.js';
 
 interface ConvertSchemaEnumToDeclarationBlockString {
   schema: GraphQLSchema;

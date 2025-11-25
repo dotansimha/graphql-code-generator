@@ -38,10 +38,10 @@ import {
   indent,
   isOneOfInputObjectType,
   transformComment,
+  getNodeComment,
   wrapWithSingleQuotes,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
-import { getNodeComment } from './get-node-comment.js';
 import { buildEnumValuesBlock } from './convert-schema-enum-to-declaration-block-string.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
