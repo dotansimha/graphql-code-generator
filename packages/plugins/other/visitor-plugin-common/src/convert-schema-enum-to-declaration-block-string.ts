@@ -9,7 +9,7 @@ import {
   wrapWithSingleQuotes,
 } from './utils.js';
 
-interface ConvertSchemaEnumToDeclarationBlockString {
+export interface ConvertSchemaEnumToDeclarationBlockString {
   schema: GraphQLSchema;
   node: EnumTypeDefinitionNode;
   enumName: string;
