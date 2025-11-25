@@ -13,7 +13,21 @@ import {
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
+import {
+  type DocumentNode,
+  type FragmentDefinitionNode,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  type GraphQLNamedInputType,
+  type GraphQLNamedType,
+  type GraphQLOutputType,
+  GraphQLScalarType,
+  type GraphQLSchema,
+  isEnumType,
+  isNonNullType,
+  Kind,
+  visit,
+} from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
@@ -27,11 +41,14 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   allowUndefinedQueryVariables: boolean;
 }
 
+type UsedNamedInputTypes = Record<string, GraphQLNamedInputType>;
+
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsPluginConfig,
   TypeScriptDocumentsParsedConfig
 > {
-  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, allFragments: LoadedFragment[]) {
+  protected _usedNamedInputTypes: UsedNamedInputTypes = {};
+  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, documentNode: DocumentNode) {
     super(
       config,
       {
@@ -75,6 +92,20 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         isOptional || isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
       return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
+
+    const allFragments: LoadedFragment[] = [
+      ...(documentNode.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+        fragmentDef => ({
+          node: fragmentDef,
+          name: fragmentDef.name.value,
+          onType: fragmentDef.typeCondition.name.value,
+          isExternal: false,
+        })
+      ),
+      ...(config.externalFragments || []),
+    ];
+
+    this._usedNamedInputTypes = this.collectUsedInputTypes({ schema, documentNode });
 
     const processorConfig: SelectionSetProcessorConfig = {
       namespacedImportName: this.config.namespacedImportName,
@@ -141,5 +172,37 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const extraType = this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
 
     return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
+  }
+
+  private collectUsedInputTypes({
+    schema,
+    documentNode,
+  }: {
+    schema: GraphQLSchema;
+    documentNode: DocumentNode;
+  }): UsedNamedInputTypes {
+    const schemaTypes = schema.getTypeMap();
+
+    const usedInputTypes: UsedNamedInputTypes = {};
+
+    visit(documentNode, {
+      VariableDefinition: variableDefinitionNode => {
+        visit(variableDefinitionNode, {
+          NamedType: namedTypeNode => {
+            const foundInputType = schemaTypes[namedTypeNode.name.value];
+            if (
+              foundInputType &&
+              (foundInputType instanceof GraphQLInputObjectType ||
+                foundInputType instanceof GraphQLScalarType ||
+                foundInputType instanceof GraphQLEnumType)
+            ) {
+              usedInputTypes[namedTypeNode.name.value] = foundInputType;
+            }
+          },
+        });
+      },
+    });
+
+    return usedInputTypes;
   }
 }

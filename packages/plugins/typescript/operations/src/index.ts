@@ -1,6 +1,6 @@
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
-import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
+import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
+import { concatAST, GraphQLSchema } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptDocumentsVisitor } from './visitor.js';
 
@@ -20,19 +20,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
     : rawDocuments;
   const allAst = concatAST(documents.map(v => v.document));
 
-  const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-      fragmentDef => ({
-        node: fragmentDef,
-        name: fragmentDef.name.value,
-        onType: fragmentDef.typeCondition.name.value,
-        isExternal: false,
-      })
-    ),
-    ...(config.externalFragments || []),
-  ];
-
-  const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
+  const visitor = new TypeScriptDocumentsVisitor(schema, config, allAst);
 
   const visitorResult = oldVisit(allAst, {
     leave: visitor,
