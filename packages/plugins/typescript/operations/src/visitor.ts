@@ -1,5 +1,7 @@
 import {
   BaseDocumentsVisitor,
+  type ConvertSchemaEnumToDeclarationBlockString,
+  convertSchemaEnumToDeclarationBlockString,
   DeclarationKind,
   generateFragmentImportStatement,
   getConfigValue,
@@ -7,13 +9,30 @@ import {
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
   ParsedDocumentsConfig,
+  type ParsedEnumValuesMap,
+  parseEnumValues,
   PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
   SelectionSetToObject,
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
+import {
+  type DocumentNode,
+  EnumTypeDefinitionNode,
+  type FragmentDefinitionNode,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  type GraphQLNamedInputType,
+  type GraphQLNamedType,
+  type GraphQLOutputType,
+  GraphQLScalarType,
+  type GraphQLSchema,
+  isEnumType,
+  isNonNullType,
+  Kind,
+  visit,
+} from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
@@ -25,13 +44,19 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   noExport: boolean;
   maybeValue: string;
   allowUndefinedQueryVariables: boolean;
+  enumType: ConvertSchemaEnumToDeclarationBlockString['outputType'];
+  futureProofEnums: boolean;
+  enumValues: ParsedEnumValuesMap;
 }
+
+type UsedNamedInputTypes = Record<string, GraphQLNamedInputType>;
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsPluginConfig,
   TypeScriptDocumentsParsedConfig
 > {
-  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, allFragments: LoadedFragment[]) {
+  protected _usedNamedInputTypes: UsedNamedInputTypes = {};
+  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, documentNode: DocumentNode) {
     super(
       config,
       {
@@ -43,6 +68,13 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         preResolveTypes: getConfigValue(config.preResolveTypes, true),
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
         allowUndefinedQueryVariables: getConfigValue(config.allowUndefinedQueryVariables, false),
+        enumType: getConfigValue(config.enumType, 'string-literal'),
+        enumValues: parseEnumValues({
+          schema,
+          mapOrStr: config.enumValues,
+          ignoreEnumValuesFromSchema: config.ignoreEnumValuesFromSchema,
+        }),
+        futureProofEnums: getConfigValue(config.futureProofEnums, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
@@ -75,6 +107,20 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         isOptional || isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
       return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
+
+    const allFragments: LoadedFragment[] = [
+      ...(documentNode.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+        fragmentDef => ({
+          node: fragmentDef,
+          name: fragmentDef.name.value,
+          onType: fragmentDef.typeCondition.name.value,
+          isExternal: false,
+        })
+      ),
+      ...(config.externalFragments || []),
+    ];
+
+    this._usedNamedInputTypes = this.collectUsedInputTypes({ schema, documentNode });
 
     const processorConfig: SelectionSetProcessorConfig = {
       namespacedImportName: this.config.namespacedImportName,
@@ -125,6 +171,31 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     };
   }
 
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
+    const enumName = node.name.value;
+    if (!this._usedNamedInputTypes[enumName]) {
+      return null;
+    }
+
+    return convertSchemaEnumToDeclarationBlockString({
+      schema: this._schema,
+      node,
+      declarationBlockConfig: this._declarationBlockConfig,
+      enumName,
+      enumValues: this.config.enumValues,
+      futureProofEnums: this.config.futureProofEnums,
+      ignoreEnumValuesFromSchema: this.config.ignoreEnumValuesFromSchema,
+      outputType: this.config.enumType,
+      naming: {
+        convert: this.config.convert,
+        typesPrefix: this.config.typesPrefix,
+        typesSuffix: this.config.typesSuffix,
+        useTypesPrefix: this.config.enumPrefix,
+        useTypesSuffix: this.config.enumSuffix,
+      },
+    });
+  }
+
   public getImports(): Array<string> {
     return !this.config.globalNamespace &&
       (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
@@ -141,5 +212,37 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const extraType = this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
 
     return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
+  }
+
+  private collectUsedInputTypes({
+    schema,
+    documentNode,
+  }: {
+    schema: GraphQLSchema;
+    documentNode: DocumentNode;
+  }): UsedNamedInputTypes {
+    const schemaTypes = schema.getTypeMap();
+
+    const usedInputTypes: UsedNamedInputTypes = {};
+
+    visit(documentNode, {
+      VariableDefinition: variableDefinitionNode => {
+        visit(variableDefinitionNode, {
+          NamedType: namedTypeNode => {
+            const foundInputType = schemaTypes[namedTypeNode.name.value];
+            if (
+              foundInputType &&
+              (foundInputType instanceof GraphQLInputObjectType ||
+                foundInputType instanceof GraphQLScalarType ||
+                foundInputType instanceof GraphQLEnumType)
+            ) {
+              usedInputTypes[namedTypeNode.name.value] = foundInputType;
+            }
+          },
+        });
+      },
+    });
+
+    return usedInputTypes;
   }
 }
