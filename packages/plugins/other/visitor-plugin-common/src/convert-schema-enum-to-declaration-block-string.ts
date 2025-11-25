@@ -1,7 +1,13 @@
 import type { EnumTypeDefinitionNode, EnumValueDefinitionNode, GraphQLEnumType, GraphQLSchema } from 'graphql';
-import type { ConvertFn, ParsedEnumValuesMap } from './types';
-import { DeclarationBlock, type DeclarationBlockConfig, indent, transformComment, wrapWithSingleQuotes } from './utils';
-import { getNodeComment } from './get-node-comment';
+import type { ConvertFn, ParsedEnumValuesMap } from './types.js';
+import {
+  DeclarationBlock,
+  type DeclarationBlockConfig,
+  indent,
+  transformComment,
+  wrapWithSingleQuotes,
+} from './utils.js';
+import { getNodeComment } from './get-node-comment.js';
 
 interface ConvertSchemaEnumToDeclarationBlockString {
   schema: GraphQLSchema;
