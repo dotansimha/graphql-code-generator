@@ -329,6 +329,9 @@ export type PlantResolvers<
   ParentType extends ResolversParentTypes['Plant'] = ResolversParentTypes['Plant']
 > = {
   __resolveType: TypeResolveFn<'Flower' | 'Tree', ParentType, ContextType>;
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  species?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type QueryResolvers<

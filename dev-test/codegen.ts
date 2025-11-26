@@ -175,6 +175,9 @@ const config: CodegenConfig = {
       preset: 'graphql-modules',
       presetConfig: { baseTypesPath: 'types.ts', filename: 'generated.ts' },
       plugins: ['typescript', 'typescript-resolvers'],
+      config: {
+        addInterfaceFieldResolverTypes: true,
+      },
     },
     './dev-test/star-wars/types.globallyAvailable.d.ts': {
       schema: './dev-test/star-wars/schema.json',
