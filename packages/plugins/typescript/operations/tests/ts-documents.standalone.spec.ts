@@ -1,5 +1,5 @@
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
-// import { validateTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
@@ -165,11 +165,304 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 });
 
 describe('TypeScript Operations Plugin - Enum', () => {
-  it.todo('does not generate unused enum in variables and result');
-  it.todo('handles native numeric enum correctly');
-  it.todo('handles const enum correctly');
-  it.todo('handles native const enum correctly');
-  it.todo('handles native enum correctly');
-  it.todo('handles EnumValues correctly');
+  it('does not generate enums if not used in variables and result', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `native-numeric` enum correctly', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-numeric' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export enum UserRole {
+        Admin = 0,
+        Customer = 1
+      }
+
+      export type MeQueryVariables = Exact<{
+        role: UserRole;
+      }>;
+
+
+      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `const` enum correctly', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export const UserRole = {
+        Admin: 'ADMIN',
+        Customer: 'CUSTOMER'
+      } as const;
+
+      export type UserRole = typeof UserRole[keyof typeof UserRole];
+      export type MeQueryVariables = Exact<{
+        role: UserRole;
+      }>;
+
+
+      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `native-const` enum correctly', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-const' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export const enum UserRole {
+        Admin = 'ADMIN',
+        Customer = 'CUSTOMER'
+      };
+
+      export type MeQueryVariables = Exact<{
+        role: UserRole;
+      }>;
+
+
+      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `native` enum correctly', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export enum UserRole {
+        Admin = 'ADMIN',
+        Customer = 'CUSTOMER'
+      }
+
+      export type MeQueryVariables = Exact<{
+        role: UserRole;
+      }>;
+
+
+      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `enumValues` with `native` enum correctly', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], {
+        enumType: 'native',
+        enumValues: {
+          UserRole: {
+            ADMIN: 0,
+            CUSTOMER: 'test',
+          },
+        },
+      }),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export enum UserRole {
+        Admin = 0,
+        Customer = 'test'
+      }
+
+      export type MeQueryVariables = Exact<{
+        role: UserRole;
+      }>;
+
+
+      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it.todo('handles `enumValues` as file correctly');
   // Bring over tests from https://github.com/dotansimha/graphql-code-generator/blob/accdab69106605241933e9d66d64dc7077656f30/packages/plugins/typescript/typescript/tests/typescript.spec.ts
 });
