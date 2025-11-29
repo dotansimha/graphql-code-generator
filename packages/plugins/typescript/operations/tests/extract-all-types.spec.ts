@@ -1462,4 +1462,97 @@ describe('extractAllFieldsToTypes: true', () => {
 
     await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
   });
+  it('should handle interfaces without fragments', async () => {
+    const nestedInterfacesSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        animals: [Animal!]
+      }
+
+      interface Animal {
+        name: String!
+        owner: Person!
+      }
+
+      type Cat implements Animal {
+        name: String!
+        owner: Person!
+      }
+
+      type Dog implements Animal {
+        name: String!
+        owner: Person!
+      }
+
+      interface Person {
+        name: String!
+      }
+
+      type Trainer implements Person {
+        name: String!
+      }
+
+      type Veterinarian implements Person {
+        name: String!
+      }
+    `);
+
+    const nestedInterfacesQuery = parse(/* GraphQL */ `
+      query GetAnimals {
+        animals {
+          name
+          owner {
+            name
+          }
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      preResolveTypes: true,
+      extractAllFieldsToTypes: true,
+      nonOptionalTypename: true,
+      dedupeOperationSuffix: true,
+    };
+
+    const { content } = await plugin(
+      nestedInterfacesSchema,
+      [{ location: 'test-file.ts', document: nestedInterfacesQuery }],
+      config,
+      { outputFile: '' }
+    );
+
+    // Issue #10502: When nested interfaces have the same fields, extractAllFieldsToTypes
+    // We need to use the interface name for the nested type name.
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type GetAnimalsQuery_animals_Animal_owner_Trainer = { __typename: 'Trainer', name: string };
+
+      export type GetAnimalsQuery_animals_Animal_owner_Veterinarian = { __typename: 'Veterinarian', name: string };
+
+      export type GetAnimalsQuery_animals_Animal_owner =
+        | GetAnimalsQuery_animals_Animal_owner_Trainer
+        | GetAnimalsQuery_animals_Animal_owner_Veterinarian
+      ;
+
+      export type GetAnimalsQuery_animals_Cat = { __typename: 'Cat', name: string, owner: GetAnimalsQuery_animals_Animal_owner };
+
+      export type GetAnimalsQuery_animals_Dog = { __typename: 'Dog', name: string, owner: GetAnimalsQuery_animals_Animal_owner };
+
+      export type GetAnimalsQuery_animals =
+        | GetAnimalsQuery_animals_Cat
+        | GetAnimalsQuery_animals_Dog
+      ;
+
+      export type GetAnimalsQuery_Query = { __typename: 'Query', animals?: Array<GetAnimalsQuery_animals> | null };
+
+
+      export type GetAnimalsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type GetAnimalsQuery = GetAnimalsQuery_Query;
+      "
+    `);
+
+    await validate(content, config, nestedInterfacesSchema);
+  });
 });
