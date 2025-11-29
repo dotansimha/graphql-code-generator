@@ -39,15 +39,18 @@ export const allAffirmativePatternsFromPatternSets = (patternSets: PatternSet[])
  *    a match even if it would be negated by some pattern in documents or schemas
  *  * The trigger returns true if any output target's local patterns result in
  *    a match, after considering the precedence of any global and local negations
+ *
+ * The result is a function that when given an absolute path,
+ * it will tell which generates blocks' keys are affected so we can re-run for those keys
  */
 export const makeShouldRebuild = ({
   globalPatternSet,
   localPatternSets,
 }: {
   globalPatternSet: PatternSet;
-  localPatternSets: PatternSet[];
-}) => {
-  const localMatchers = localPatternSets.map(localPatternSet => {
+  localPatternSets: Record<string, PatternSet>;
+}): ((params: { path: string }) => Record<string, true>) => {
+  const localMatchers = Object.entries(localPatternSets).map(([generatesPath, localPatternSet]) => {
     return (path: string) => {
       // Is path negated by any negating watch pattern?
       if (matchesAnyNegatedPattern(path, [...globalPatternSet.watch.negated, ...localPatternSet.watch.negated])) {
@@ -63,7 +66,7 @@ export const makeShouldRebuild = ({
         ])
       ) {
         // Immediately return true: Watch pattern takes priority, even if documents or schema would negate it
-        return true;
+        return generatesPath;
       }
 
       // Does path match documents patterns (without being negated)?
@@ -74,7 +77,7 @@ export const makeShouldRebuild = ({
         ]) &&
         !matchesAnyNegatedPattern(path, [...globalPatternSet.documents.negated, ...localPatternSet.documents.negated])
       ) {
-        return true;
+        return generatesPath;
       }
 
       // Does path match schemas patterns (without being negated)?
@@ -85,7 +88,7 @@ export const makeShouldRebuild = ({
         ]) &&
         !matchesAnyNegatedPattern(path, [...globalPatternSet.schemas.negated, ...localPatternSet.schemas.negated])
       ) {
-        return true;
+        return generatesPath;
       }
 
       // Otherwise, there is no match
@@ -93,17 +96,22 @@ export const makeShouldRebuild = ({
     };
   });
 
-  /**
-   * Return `true` if `path` should trigger a rebuild
-   */
-  return ({ path: absolutePath }: { path: string }) => {
+  return ({ path: absolutePath }) => {
     if (!isAbsolute(absolutePath)) {
       throw new Error('shouldRebuild trigger should be called with absolute path');
     }
 
     const path = relative(process.cwd(), absolutePath);
-    const shouldRebuild = localMatchers.some(matcher => matcher(path));
-    return shouldRebuild;
+
+    const generatesKeysToRebuild: Record<string, true> = {};
+    for (const matcher of localMatchers) {
+      const result = matcher(path);
+      if (result) {
+        generatesKeysToRebuild[result] = true;
+      }
+    }
+
+    return generatesKeysToRebuild;
   };
 };
 
@@ -137,7 +145,7 @@ export const makeGlobalPatternSet = (initialContext: CodegenContext) => {
  * patterns will be mixed into the pattern set of their respective gobal pattern
  * set equivalents.
  */
-export const makeLocalPatternSet = (conf: Types.ConfiguredOutput) => {
+export const makeLocalPatternSet = (conf: Types.ConfiguredOutput): PatternSet => {
   return {
     watch: sortPatterns(normalizeInstanceOrArray(conf.watchPattern)),
     documents: sortPatterns(
@@ -216,7 +224,7 @@ type SortedPatterns<PP extends string | NegatedPattern = string | NegatedPattern
  * patterns which are separable into "watch" (always takes precedence), "documents",
  * and "schemas". This type can hold sorted versions of these patterns.
  */
-type PatternSet = {
+export type PatternSet = {
   watch: SortedPatterns;
   documents: SortedPatterns;
   schemas: SortedPatterns;
