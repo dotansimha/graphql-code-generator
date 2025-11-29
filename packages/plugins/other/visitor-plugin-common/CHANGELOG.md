@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.2.1
+
+### Patch Changes
+
+- [#10503](https://github.com/dotansimha/graphql-code-generator/pull/10503) [`b995ed1`](https://github.com/dotansimha/graphql-code-generator/commit/b995ed13a49379ea05e0e313fac68b557527523a) Thanks [@Georgegriff](https://github.com/Georgegriff)! - Use parent type name on interface types without fragments
+
 ## 6.2.0
 
 ### Minor Changes
