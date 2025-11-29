@@ -1071,7 +1071,9 @@ export class BaseResolversVisitor<
     relevantFields: ReturnType<typeof this.getRelevantFieldsToOmit>
   ): string {
     this._globalDeclarations.add(OMIT_TYPE);
-    return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields
+    return `Omit<${typeName}, ${relevantFields
+      .map(f => `'${f.fieldName}'`)
+      .join(this.typeUnionOperator)}> & { ${relevantFields
       .map(f => `${f.fieldName}${f.addOptionalSign ? '?' : ''}: ${f.replaceWithType}`)
       .join(', ')} }`;
   }
@@ -1222,7 +1224,7 @@ export class BaseResolversVisitor<
         ? 'never'
         : members.length > 1
         ? `\n    | ${members.map(m => m.replace(/\n/g, '\n  ')).join('\n    | ')}\n  `
-        : members.join(' | ');
+        : members.join(this.typeUnionOperator);
     return result;
   }
 
@@ -1783,7 +1785,7 @@ export class BaseResolversVisitor<
 
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
     this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
-    return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(' | ')}>`;
+    return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(this.typeUnionOperator)}>`;
   }
 
   protected applyOptionalFields(argsType: string, _fields: readonly InputValueDefinitionNode[]): string {
@@ -1875,7 +1877,7 @@ export class BaseResolversVisitor<
     const possibleTypes = originalNode.types
       .map(node => node.name.value)
       .map(f => `'${f}'`)
-      .join(' | ');
+      .join(this.typeUnionOperator);
 
     this._collectedResolvers[node.name.value] = {
       typename: name + '<ContextType>',
@@ -2039,7 +2041,7 @@ export class BaseResolversVisitor<
       typeName,
     });
 
-    const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
+    const possibleTypes = implementingTypes.map(name => `'${name}'`).join(this.typeUnionOperator) || 'null';
 
     // An Interface has __resolveType resolver, and no other fields.
     const blockFields: string[] = [
