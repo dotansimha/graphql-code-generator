@@ -266,9 +266,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       const inputType = this.scalars?.[node.name.value]?.input ?? SCALARS[node.name.value] ?? 'any';
       if (inputType === 'any' && node.name.value) {
         return node.name.value;
-      } 
-        return inputType;
-      
+      }
+
+      return inputType;
     }
 
     if (schemaType instanceof GraphQLEnumType || schemaType instanceof GraphQLInputObjectType) {
