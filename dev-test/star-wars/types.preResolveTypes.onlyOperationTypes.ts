@@ -58,6 +58,16 @@ export type Episode =
   /** Star Wars Episode IV: A New Hope, released in 1977. */
   | 'NEWHOPE';
 
+/** The input object sent when someone is creating a new review */
+export type ReviewInput = {
+  /** Comment about the movie, optional */
+  commentary: string;
+  /** Favorite color, optional */
+  favoriteColor: ColorInput;
+  /** 0-5 stars */
+  stars: number;
+};
+
 export type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;

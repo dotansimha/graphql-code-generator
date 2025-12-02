@@ -84,13 +84,25 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {})]); // enumType: 'string-literal'
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type ResponseErrorType =
+        | 'NOT_FOUND'
+        | 'INPUT_VALIDATION_ERROR'
+        | 'FORBIDDEN_ERROR'
+        | 'UNEXPECTED_ERROR';
+
       export type UserRole =
         | 'ADMIN'
         | 'CUSTOMER';
+
+      export type UsersInput = {
+        from: DateTime;
+        to: DateTime;
+        role: UserRole;
+      };
 
       export type UserQueryVariables = Exact<{
         id: string;

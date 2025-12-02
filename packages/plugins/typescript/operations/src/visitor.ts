@@ -2,9 +2,12 @@ import {
   BaseDocumentsVisitor,
   type ConvertSchemaEnumToDeclarationBlockString,
   convertSchemaEnumToDeclarationBlockString,
+  DeclarationBlock,
   DeclarationKind,
   generateFragmentImportStatement,
   getConfigValue,
+  indent,
+  isOneOfInputObjectType,
   LoadedFragment,
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
@@ -14,6 +17,7 @@ import {
   PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
   SelectionSetToObject,
+  transformComment,
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
@@ -21,6 +25,7 @@ import {
   type DocumentNode,
   EnumTypeDefinitionNode,
   type FragmentDefinitionNode,
+  getNamedType,
   GraphQLEnumType,
   GraphQLInputObjectType,
   type GraphQLNamedInputType,
@@ -28,10 +33,17 @@ import {
   type GraphQLOutputType,
   GraphQLScalarType,
   type GraphQLSchema,
+  InputObjectTypeDefinitionNode,
+  InputValueDefinitionNode,
   isEnumType,
   isNonNullType,
   Kind,
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
+  TypeInfo,
   visit,
+  visitWithTypeInfo,
 } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
@@ -168,6 +180,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     );
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
+      enumNameValueSeparator: ' =',
     };
   }
 
@@ -194,6 +207,110 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         useTypesSuffix: this.config.enumSuffix,
       },
     });
+  }
+
+  InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {
+    const inputTypeName = node.name.value;
+    if (!this._usedNamedInputTypes[inputTypeName]) {
+      return null;
+    }
+
+    if (isOneOfInputObjectType(this._schema.getType(inputTypeName))) {
+      return this.getInputObjectOneOfDeclarationBlock(node).string;
+    }
+
+    return this.getInputObjectDeclarationBlock(node).string;
+  }
+
+  private getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName(node))
+      .withComment(node.description?.value)
+      .withBlock((node.fields || []).join('\n'));
+  }
+
+  private getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    const declarationKind = (node.fields?.length || 0) === 1 ? 'type' : 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName(node))
+      .withComment(node.description?.value)
+      .withContent(`\n` + (node.fields || []).join('\n  |'));
+  }
+
+  private isValidVisitor(ancestors: any): boolean {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+    const isVisitingEnumType = currentVisitContext.includes(Kind.ENUM_TYPE_DEFINITION);
+    const isVisitingOperation = currentVisitContext.includes(Kind.OPERATION_DEFINITION);
+
+    if (isVisitingOperation) {
+      return false;
+    }
+
+    if (!isVisitingInputType && !isVisitingEnumType) {
+      return false;
+    }
+
+    return true;
+  }
+
+  InputValueDefinition(node: InputValueDefinitionNode): string {
+    const comment = transformComment(node.description?.value || '', 1);
+    const type: string = node.type as any as string;
+    return comment + indent(`${node.name.value}: ${type};`);
+  }
+
+  NamedType(node: NamedTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
+    if (!this.isValidVisitor(ancestors)) {
+      return undefined;
+    }
+
+    const schemaType = this._schema.getType(node.name.value);
+
+    // For scalars, use the configured scalar type (use input property for input context)
+    if (schemaType instanceof GraphQLScalarType) {
+      const scalarConfig = this.scalars[node.name.value];
+      if (scalarConfig && 'input' in scalarConfig) {
+        // scalarConfig.input is already the type string (extracted from ParsedMapper in BaseVisitor)
+        const inputType = scalarConfig.input;
+        // If the type is 'any', use the scalar name itself instead (for custom scalars)
+        if (inputType === 'any') {
+          return node.name.value;
+        }
+        return inputType;
+      }
+      // Fallback to scalar name
+      return node.name.value;
+    }
+
+    // For enums and input types, use the converted name
+    if (schemaType instanceof GraphQLEnumType || schemaType instanceof GraphQLInputObjectType) {
+      return this.convertName(node.name.value);
+    }
+
+    return node.name.value;
+  }
+
+  ListType(node: ListTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
+    if (!this.isValidVisitor(ancestors)) {
+      return undefined;
+    }
+
+    const asString = node.type as any as string;
+    const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
+    return `${listModifier}<${asString}>`;
+  }
+
+  NonNullType(node: NonNullTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
+    if (!this.isValidVisitor(ancestors)) {
+      return undefined;
+    }
+
+    return node.type as any as string;
   }
 
   public getImports(): Array<string> {
@@ -225,6 +342,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     const usedInputTypes: UsedNamedInputTypes = {};
 
+    // First collect types from variable definitions
     visit(documentNode, {
       VariableDefinition: variableDefinitionNode => {
         visit(variableDefinitionNode, {
@@ -242,6 +360,30 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         });
       },
     });
+
+    // Only collect enums from output types when not using namespacedImportName
+    // When namespacedImportName is set, enums should come from the types package
+    if (!this.config.namespacedImportName) {
+      const typeInfo = new TypeInfo(schema);
+
+      visit(
+        documentNode,
+        visitWithTypeInfo(typeInfo, {
+          Field: () => {
+            // Get the type of the current field
+            const fieldType = typeInfo.getType();
+            if (fieldType) {
+              const namedType = getNamedType(fieldType);
+
+              // If it's an enum, add it
+              if (namedType instanceof GraphQLEnumType) {
+                usedInputTypes[namedType.name] = namedType;
+              }
+            }
+          },
+        })
+      );
+    }
 
     return usedInputTypes;
   }
