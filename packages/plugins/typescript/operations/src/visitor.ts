@@ -222,6 +222,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
+  InputValueDefinition(node: InputValueDefinitionNode): string {
+    const comment = transformComment(node.description?.value || '', 1);
+    const type: string = node.type as any as string;
+    return comment + indent(`${node.name.value}: ${type};`);
+  }
+
   private getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -239,12 +245,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       .withName(this.convertName(node))
       .withComment(node.description?.value)
       .withContent(`\n` + (node.fields || []).join('\n  |'));
-  }
-
-  InputValueDefinition(node: InputValueDefinitionNode): string {
-    const comment = transformComment(node.description?.value || '', 1);
-    const type: string = node.type as any as string;
-    return comment + indent(`${node.name.value}: ${type};`);
   }
 
   private isValidVisit(ancestors: any): boolean {
