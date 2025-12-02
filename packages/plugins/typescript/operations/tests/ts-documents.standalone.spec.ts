@@ -268,12 +268,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
          };
       "
     `);
-
-    // FIXME: enable this to ensure type correctness
-    // validateTs(content, undefined, undefined, undefined, undefined, true);
   });
 
-  it('try different way to generate enums', async () => {
+  it('try different ways to generate enums', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(id: ID!): User
@@ -300,9 +297,10 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'string-literal' })]);
+    // string-literal
+    const resultStringLiteral = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'string-literal' })]);
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(resultStringLiteral).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type UserRole =
         | 'ADMIN'
@@ -317,9 +315,10 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
 
-    const result2 = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-numeric' })]);
+    // native-numeric
+    const resultNativeNumeric = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-numeric' })]);
 
-    expect(result2).toMatchInlineSnapshot(`
+    expect(resultNativeNumeric).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export enum UserRole {
         Admin = 0,
@@ -335,9 +334,10 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
 
-    const result3 = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' })]);
+    // const
+    const resultConst = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' })]);
 
-    expect(result3).toMatchInlineSnapshot(`
+    expect(resultConst).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export const UserRole = {
         Admin: 'ADMIN',
@@ -354,9 +354,10 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
 
-    const result4 = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-const' })]);
+    // native-const
+    const resultNativeConst = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-const' })]);
 
-    expect(result4).toMatchInlineSnapshot(`
+    expect(resultNativeConst).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export const enum UserRole {
         Admin = 'ADMIN',
@@ -372,9 +373,10 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
 
-    const result5 = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    // native
+    const resultNative = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
 
-    expect(result5).toMatchInlineSnapshot(`
+    expect(resultNative).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export enum UserRole {
         Admin = 'ADMIN',
