@@ -241,31 +241,22 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       .withContent(`\n` + (node.fields || []).join('\n  |'));
   }
 
-  private isValidVisitor(ancestors: any): boolean {
-    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
-    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
-    const isVisitingEnumType = currentVisitContext.includes(Kind.ENUM_TYPE_DEFINITION);
-    const isVisitingOperation = currentVisitContext.includes(Kind.OPERATION_DEFINITION);
-
-    if (isVisitingOperation) {
-      return false;
-    }
-
-    if (!isVisitingInputType && !isVisitingEnumType) {
-      return false;
-    }
-
-    return true;
-  }
-
   InputValueDefinition(node: InputValueDefinitionNode): string {
     const comment = transformComment(node.description?.value || '', 1);
     const type: string = node.type as any as string;
     return comment + indent(`${node.name.value}: ${type};`);
   }
 
+  private isValidVisit(ancestors: any): boolean {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+    const isVisitingEnumType = currentVisitContext.includes(Kind.ENUM_TYPE_DEFINITION);
+
+    return isVisitingInputType || isVisitingEnumType;
+  }
+
   NamedType(node: NamedTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
-    if (!this.isValidVisitor(ancestors)) {
+    if (!this.isValidVisit(ancestors)) {
       return undefined;
     }
 
@@ -296,17 +287,16 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   ListType(node: ListTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
-    if (!this.isValidVisitor(ancestors)) {
+    if (!this.isValidVisit(ancestors)) {
       return undefined;
     }
 
-    const asString = node.type as any as string;
     const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
-    return `${listModifier}<${asString}>`;
+    return `${listModifier}<${node.type}>`;
   }
 
   NonNullType(node: NonNullTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
-    if (!this.isValidVisitor(ancestors)) {
+    if (!this.isValidVisit(ancestors)) {
       return undefined;
     }
 
@@ -342,7 +332,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     const usedInputTypes: UsedNamedInputTypes = {};
 
-    // First collect types from variable definitions
+    // Collect input enums and input types
     visit(documentNode, {
       VariableDefinition: variableDefinitionNode => {
         visit(variableDefinitionNode, {
@@ -361,29 +351,23 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
     });
 
-    // Only collect enums from output types when not using namespacedImportName
-    // When namespacedImportName is set, enums should come from the types package
-    if (!this.config.namespacedImportName) {
-      const typeInfo = new TypeInfo(schema);
+    // Collect output enums
+    const typeInfo = new TypeInfo(schema);
+    visit(
+      documentNode,
+      visitWithTypeInfo(typeInfo, {
+        Field: () => {
+          const fieldType = typeInfo.getType();
+          if (fieldType) {
+            const namedType = getNamedType(fieldType);
 
-      visit(
-        documentNode,
-        visitWithTypeInfo(typeInfo, {
-          Field: () => {
-            // Get the type of the current field
-            const fieldType = typeInfo.getType();
-            if (fieldType) {
-              const namedType = getNamedType(fieldType);
-
-              // If it's an enum, add it
-              if (namedType instanceof GraphQLEnumType) {
-                usedInputTypes[namedType.name] = namedType;
-              }
+            if (namedType instanceof GraphQLEnumType) {
+              usedInputTypes[namedType.name] = namedType;
             }
-          },
-        })
-      );
-    }
+          }
+        },
+      })
+    );
 
     return usedInputTypes;
   }
