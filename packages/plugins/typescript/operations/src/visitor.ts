@@ -46,7 +46,7 @@ import {
   visitWithTypeInfo,
 } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
-import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
+import { TypeScriptOperationVariablesToObject, SCALARS } from './ts-operation-variables-to-object.js';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
@@ -175,7 +175,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config.enumValues,
         this.config.arrayInputCoercion,
         undefined,
-        'InputMaybe'
+        undefined
       )
     );
     this._declarationBlockConfig = {
@@ -262,23 +262,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     const schemaType = this._schema.getType(node.name.value);
 
-    // For scalars, use the configured scalar type (use input property for input context)
     if (schemaType instanceof GraphQLScalarType) {
-      const scalarConfig = this.scalars[node.name.value];
-      if (scalarConfig && 'input' in scalarConfig) {
-        // scalarConfig.input is already the type string (extracted from ParsedMapper in BaseVisitor)
-        const inputType = scalarConfig.input;
-        // If the type is 'any', use the scalar name itself instead (for custom scalars)
-        if (inputType === 'any') {
-          return node.name.value;
-        }
+      const inputType = this.scalars?.[node.name.value]?.input ?? SCALARS[node.name.value] ?? 'any';
+      if (inputType === 'any' && node.name.value) {
+        return node.name.value;
+      } 
         return inputType;
-      }
-      // Fallback to scalar name
-      return node.name.value;
+      
     }
 
-    // For enums and input types, use the converted name
     if (schemaType instanceof GraphQLEnumType || schemaType instanceof GraphQLInputObjectType) {
       return this.convertName(node.name.value);
     }
@@ -300,7 +292,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       return undefined;
     }
 
-    return node.type as any as string;
+    return node.type as any as string | undefined;
   }
 
   public getImports(): Array<string> {
