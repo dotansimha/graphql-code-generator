@@ -84,7 +84,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]); // enumType: 'string-literal'
+    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
