@@ -168,8 +168,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       )
     );
     this._declarationBlockConfig = {
-      enumNameValueSeparator: ' =',
       ignoreExport: this.config.noExport,
+      enumNameValueSeparator: ' =',
     };
   }
 
