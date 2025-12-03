@@ -5,6 +5,7 @@ import {
   DeclarationKind,
   generateFragmentImportStatement,
   getConfigValue,
+  getEnumsImports,
   LoadedFragment,
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
@@ -247,57 +248,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return usedInputTypes;
   }
 
-  // TODO: share with base-types-visitor
   public getEnumsImports(): string[] {
-    return Object.keys(this.config.enumValues)
-      .flatMap(enumName => {
-        const mappedValue = this.config.enumValues[enumName];
-
-        if (mappedValue.sourceFile) {
-          if (mappedValue.isDefault) {
-            return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
-          }
-
-          return this.handleEnumValueMapper(
-            mappedValue.typeIdentifier,
-            mappedValue.importIdentifier,
-            mappedValue.sourceIdentifier,
-            mappedValue.sourceFile
-          );
-        }
-
-        return [];
-      })
-      .filter(Boolean);
-  }
-  protected _buildTypeImport(identifier: string, source: string, asDefault = false): string {
-    const { useTypeImports } = this.config;
-    if (asDefault) {
-      if (useTypeImports) {
-        return `import type { default as ${identifier} } from '${source}';`;
-      }
-      return `import ${identifier} from '${source}';`;
-    }
-    return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
-  }
-
-  protected handleEnumValueMapper(
-    typeIdentifier: string,
-    importIdentifier: string | null,
-    sourceIdentifier: string | null,
-    sourceFile: string | null
-  ): string[] {
-    if (importIdentifier !== sourceIdentifier) {
-      // use namespace import to dereference nested enum
-      // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
-      return [
-        this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile),
-        `import ${typeIdentifier} = ${sourceIdentifier};`,
-      ];
-    }
-    if (sourceIdentifier !== typeIdentifier) {
-      return [this._buildTypeImport(`${sourceIdentifier} as ${typeIdentifier}`, sourceFile)];
-    }
-    return [this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile)];
+    return getEnumsImports({
+      enumValues: this.config.enumValues,
+      useTypeImports: this.config.useTypeImports,
+    });
   }
 }
