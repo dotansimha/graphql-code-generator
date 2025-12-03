@@ -43,6 +43,7 @@ import {
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 import { buildEnumValuesBlock } from './convert-schema-enum-to-declaration-block-string.js';
+import { buildTypeImport, getEnumsImports } from './imports.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
@@ -559,12 +560,24 @@ export class BaseTypesVisitor<
       const mappedValue = this.config.scalars[enumName];
 
       if (mappedValue.input.isExternal) {
-        res.push(this._buildTypeImport(mappedValue.input.import, mappedValue.input.source, mappedValue.input.default));
+        res.push(
+          buildTypeImport({
+            identifier: mappedValue.input.import,
+            source: mappedValue.input.source,
+            asDefault: mappedValue.input.default,
+            useTypeImports: this.config.useTypeImports,
+          })
+        );
       }
 
       if (mappedValue.output.isExternal) {
         res.push(
-          this._buildTypeImport(mappedValue.output.import, mappedValue.output.source, mappedValue.output.default)
+          buildTypeImport({
+            identifier: mappedValue.output.import,
+            source: mappedValue.output.source,
+            asDefault: mappedValue.output.default,
+            useTypeImports: this.config.useTypeImports,
+          })
         );
       }
 
@@ -578,7 +591,12 @@ export class BaseTypesVisitor<
         const mappedValue = this.config.directiveArgumentAndInputFieldMappings[directive];
 
         if (mappedValue.isExternal) {
-          return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
+          return buildTypeImport({
+            identifier: mappedValue.import,
+            source: mappedValue.source,
+            asDefault: mappedValue.default,
+            useTypeImports: this.config.useTypeImports,
+          });
         }
 
         return null;
@@ -811,58 +829,11 @@ export class BaseTypesVisitor<
     return '';
   }
 
-  protected _buildTypeImport(identifier: string, source: string, asDefault = false): string {
-    const { useTypeImports } = this.config;
-    if (asDefault) {
-      if (useTypeImports) {
-        return `import type { default as ${identifier} } from '${source}';`;
-      }
-      return `import ${identifier} from '${source}';`;
-    }
-    return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
-  }
-
-  protected handleEnumValueMapper(
-    typeIdentifier: string,
-    importIdentifier: string | null,
-    sourceIdentifier: string | null,
-    sourceFile: string | null
-  ): string[] {
-    if (importIdentifier !== sourceIdentifier) {
-      // use namespace import to dereference nested enum
-      // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
-      return [
-        this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile),
-        `import ${typeIdentifier} = ${sourceIdentifier};`,
-      ];
-    }
-    if (sourceIdentifier !== typeIdentifier) {
-      return [this._buildTypeImport(`${sourceIdentifier} as ${typeIdentifier}`, sourceFile)];
-    }
-    return [this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile)];
-  }
-
   public getEnumsImports(): string[] {
-    return Object.keys(this.config.enumValues)
-      .flatMap(enumName => {
-        const mappedValue = this.config.enumValues[enumName];
-
-        if (mappedValue.sourceFile) {
-          if (mappedValue.isDefault) {
-            return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
-          }
-
-          return this.handleEnumValueMapper(
-            mappedValue.typeIdentifier,
-            mappedValue.importIdentifier,
-            mappedValue.sourceIdentifier,
-            mappedValue.sourceFile
-          );
-        }
-
-        return [];
-      })
-      .filter(Boolean);
+    return getEnumsImports({
+      enumValues: this.config.enumValues,
+      useTypeImports: this.config.useTypeImports,
+    });
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
