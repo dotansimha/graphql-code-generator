@@ -1,5 +1,6 @@
 import { dirname, isAbsolute, join, relative, resolve } from 'path';
 import parse from 'parse-filepath';
+import type { ParsedEnumValuesMap } from './types';
 
 export type ImportDeclaration<T = string> = {
   outputPath: string;
@@ -97,4 +98,89 @@ export function clearExtension(path: string): string {
 
 export function fixLocalFilePath(path: string): string {
   return path.startsWith('..') ? path : `./${path}`;
+}
+
+export function getEnumsImports({
+  enumValues,
+  useTypeImports,
+}: {
+  enumValues: ParsedEnumValuesMap;
+  useTypeImports: boolean;
+}): string[] {
+  function handleEnumValueMapper({
+    typeIdentifier,
+    importIdentifier,
+    sourceIdentifier,
+    sourceFile,
+    useTypeImports,
+  }: {
+    typeIdentifier: string;
+    importIdentifier: string | null;
+    sourceIdentifier: string | null;
+    sourceFile: string | null;
+    useTypeImports: boolean;
+  }): string[] {
+    if (importIdentifier !== sourceIdentifier) {
+      // use namespace import to dereference nested enum
+      // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
+      return [
+        buildTypeImport({ identifier: importIdentifier || sourceIdentifier, source: sourceFile, useTypeImports }),
+        `import ${typeIdentifier} = ${sourceIdentifier};`,
+      ];
+    }
+    if (sourceIdentifier !== typeIdentifier) {
+      return [
+        buildTypeImport({ identifier: `${sourceIdentifier} as ${typeIdentifier}`, source: sourceFile, useTypeImports }),
+      ];
+    }
+    return [buildTypeImport({ identifier: importIdentifier || sourceIdentifier, source: sourceFile, useTypeImports })];
+  }
+
+  return Object.keys(enumValues)
+    .flatMap(enumName => {
+      const mappedValue = enumValues[enumName];
+      if (mappedValue.sourceFile) {
+        if (mappedValue.isDefault) {
+          return [
+            buildTypeImport({
+              identifier: mappedValue.typeIdentifier,
+              source: mappedValue.sourceFile,
+              asDefault: true,
+              useTypeImports,
+            }),
+          ];
+        }
+
+        return handleEnumValueMapper({
+          typeIdentifier: mappedValue.typeIdentifier,
+          importIdentifier: mappedValue.importIdentifier,
+          sourceIdentifier: mappedValue.sourceIdentifier,
+          sourceFile: mappedValue.sourceFile,
+          useTypeImports,
+        });
+      }
+
+      return [];
+    })
+    .filter(Boolean);
+}
+
+export function buildTypeImport({
+  identifier,
+  source,
+  useTypeImports,
+  asDefault = false,
+}: {
+  identifier: string;
+  source: string;
+  useTypeImports: boolean;
+  asDefault?: boolean;
+}): string {
+  if (asDefault) {
+    if (useTypeImports) {
+      return `import type { default as ${identifier} } from '${source}';`;
+    }
+    return `import ${identifier} from '${source}';`;
+  }
+  return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
 }
