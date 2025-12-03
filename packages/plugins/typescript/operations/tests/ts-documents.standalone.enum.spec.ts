@@ -1192,6 +1192,110 @@ describe('TypeScript Operations Plugin - Enum', () => {
 
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
+
+  it('handles enumValues and named default import', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], {
+        typesPrefix: 'I',
+        namingConvention: { enumValues: 'change-case-all#constantCase' },
+        enumValues: {
+          UserRole: './files#default as UserRole',
+        },
+      }),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "import UserRole from './files';
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export { UserRole };
+
+      export type IMeQueryVariables = Exact<{
+        role: UserRole;
+      }>;
+
+
+      export type IMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+  });
+
+  it('enum members should be quoted if numeric when enumType is native', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        AXB
+        _1X2
+        _3X4
+      }
+
+      scalar DateTime
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export enum UserRole {
+        Axb = 'AXB',
+        '1X2' = '_1X2',
+        '3X4' = '_3X4'
+      }
+
+      export type MeQueryVariables = Exact<{
+        role: UserRole;
+      }>;
+
+
+      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+  });
 });
 
 describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
