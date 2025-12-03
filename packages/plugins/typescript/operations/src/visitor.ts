@@ -21,6 +21,7 @@ import {
   DeclarationKind,
   generateFragmentImportStatement,
   getConfigValue,
+  getEnumsImports,
   LoadedFragment,
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
@@ -181,6 +182,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     );
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
+      enumNameValueSeparator: ' =',
     };
   }
 
@@ -262,5 +264,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     });
 
     return usedInputTypes;
+  }
+
+  public getEnumsImports(): string[] {
+    return getEnumsImports({
+      enumValues: this.config.enumValues,
+      useTypeImports: this.config.useTypeImports,
+    });
   }
 }
