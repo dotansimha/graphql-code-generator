@@ -4818,10 +4818,12 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
   integrity sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==
 
-"@types/node@^16.9.2":
-  version "16.18.45"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.45.tgz#a2b845b94faf76de3160c630ce8b07f957390ca5"
-  integrity sha512-Eu7U6/0P086nyPzeS41o2NvPVr16vWJMS5RdTzPF8XQaCPtq07E5GbR4fbcv5AYjy+zd0FYSV4p0WBdDXfPZzw==
+"@types/node@^18.11.9":
+  version "18.19.130"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.130.tgz#da4c6324793a79defb7a62cba3947ec5add00d59"
+  integrity sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==
+  dependencies:
+    undici-types "~5.26.4"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.4"
@@ -4890,15 +4892,15 @@
   resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
   integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
-"@types/unist@*", "@types/unist@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/unist/-/unist-3.0.0.tgz#988ae8af1e5239e89f9fbb1ade4c935f4eeedf9a"
-  integrity sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==
-
-"@types/unist@^2", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
+"@types/unist@*", "@types/unist@^2", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.11"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.11.tgz#11af57b127e32487774841f7a4e54eab166d03c4"
   integrity sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==
+
+"@types/unist@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/unist/-/unist-3.0.0.tgz#988ae8af1e5239e89f9fbb1ade4c935f4eeedf9a"
+  integrity sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==
 
 "@types/ws@^8.0.0":
   version "8.5.4"
@@ -12167,7 +12169,7 @@ path-data-parser@0.1.0, path-data-parser@^0.1.0:
   resolved "https://registry.yarnpkg.com/path-data-parser/-/path-data-parser-0.1.0.tgz#8f5ba5cc70fc7becb3dcefaea08e2659aba60b8c"
   integrity sha512-NOnmBpt5Y2RWbuv0LMzsayp3lVylAHLPUTut412ZA3l+C4uw4ZVkQbjShYCQ8TCpUMdPapr4YjUqLYD6v68j+w==
 
-path-equal@^1.1.2:
+path-equal@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/path-equal/-/path-equal-1.2.5.tgz#9fcbdd5e5daee448e96f43f3bac06c666b5e982a"
   integrity sha512-i73IctDr3F2W+bsOWDyyVm/lqsXO47aY9nsFZUjTT/aljSbkxHxxCoyZ9UUrM8jK0JVod+An+rl48RCsvWM+9g==
@@ -14662,21 +14664,21 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typescript-json-schema@0.56.0:
-  version "0.56.0"
-  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.56.0.tgz#de3fe196633197aa66b10191e78f51d5f6b45847"
-  integrity sha512-k/aSEqx89YR2z/f2y3VwoOGzlKTWern0EIey2qqEpMRP7HL4CI8udPElzJs4eFVkPowCLJ1yVBSzuIWIUF+mMA==
+typescript-json-schema@0.67.0:
+  version "0.67.0"
+  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.67.0.tgz#cdb883573ec03f27cc69e6f7255106b71b324a94"
+  integrity sha512-YJ+0Yd7deJBx7y8w2cx0WoSfQ4onx/2yqbjzsbo2Ujr99h4ehpFDj+eWG+5mOERUuUuLeyiwgvSNKq9kAtUTOQ==
   dependencies:
     "@types/json-schema" "^7.0.9"
-    "@types/node" "^16.9.2"
+    "@types/node" "^18.11.9"
     glob "^7.1.7"
-    path-equal "^1.1.2"
+    path-equal "^1.2.5"
     safe-stable-stringify "^2.2.0"
     ts-node "^10.9.1"
-    typescript "~4.9.5"
+    typescript "~5.5.0"
     yargs "^17.1.1"
 
-typescript@5.5.4, typescript@^5, typescript@^5.0.0, typescript@~4.9.5:
+typescript@5.5.4, typescript@^5, typescript@^5.0.0, typescript@~5.5.0:
   version "5.5.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
   integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
@@ -14710,6 +14712,11 @@ underscore@1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.12.1.tgz#7bb8cc9b3d397e201cf8553336d262544ead829e"
   integrity sha512-hEQt0+ZLDVUMhebKxL4x1BTtDY7bavVofhZ9KZ4aI26X9SRaE+Y3m83XUL1UP2jn8ynjndwCCpEHdUG+9pP1Tw==
+
+undici-types@~5.26.4:
+  version "5.26.5"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
+  integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
 undici-types@~6.20.0:
   version "6.20.0"
