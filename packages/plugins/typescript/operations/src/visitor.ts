@@ -254,4 +254,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       useTypeImports: this.config.useTypeImports,
     });
   }
+
+  getExactUtilityType(): string | null {
+    if (!this.config.generatesOperationTypes) {
+      return null;
+    }
+
+    return 'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };';
+  }
 }
