@@ -65,7 +65,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
       ...visitor.getImports(),
       ...visitor.getEnumsImports(),
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
-      'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };',
+      visitor.getExactUtilityType(),
     ],
     content: content.join('\n'),
   };
