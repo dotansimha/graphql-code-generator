@@ -964,7 +964,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     const schemaType = this._schema.getType(typeName);
 
-    // Check if current selection set has inline fragments (e.g., "... on AppNotification")
+    // Check if current selection set has fragments (e.g., "... AppNotificationFragment" or "... on AppNotification")
     const hasFragment =
       this._selectionSet?.selections?.some(
         selection => selection.kind === Kind.INLINE_FRAGMENT || selection.kind === Kind.FRAGMENT_SPREAD
