@@ -962,16 +962,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       return parentName;
     }
 
-    // When the parent schema type is an interface, use the interface name instead of the concrete type
-    // BUT only if we're not inside a fragment (fragments explicitly target specific types)
     const schemaType = this._schema.getType(typeName);
-    const isInFragment = parentName.includes('Fragment');
-    if (
-      isObjectType(schemaType) &&
-      this._parentSchemaType &&
-      isInterfaceType(this._parentSchemaType) &&
-      !isInFragment
-    ) {
+
+    // Check if current selection set has fragments (e.g., "... AppNotificationFragment" or "... on AppNotification")
+    const hasFragment =
+      this._selectionSet?.selections?.some(
+        selection => selection.kind === Kind.INLINE_FRAGMENT || selection.kind === Kind.FRAGMENT_SPREAD
+      ) ?? false;
+
+    // When the parent schema type is an interface:
+    // - If we're processing inline fragments, use the concrete type name
+    // - If we're processing the interface directly, use the interface name
+    // - If we're in a named fragment, always use the concrete type name
+    if (isObjectType(schemaType) && this._parentSchemaType && isInterfaceType(this._parentSchemaType) && !hasFragment) {
       return `${parentName}_${this._parentSchemaType.name}`;
     }
 
