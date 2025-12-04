@@ -1,5 +1,5 @@
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
-// import { validateTs } from '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
@@ -29,13 +29,19 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         createdAt: DateTime!
       }
 
+      "UserRole Description"
       enum UserRole {
+        "UserRole ADMIN"
         ADMIN
+        "UserRole CUSTOMER"
         CUSTOMER
       }
 
+      "UsersInput Description"
       input UsersInput {
+        "UsersInput from"
         from: DateTime
+        "UsersInput to"
         to: DateTime
         role: UserRole
       }
@@ -94,12 +100,18 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'FORBIDDEN_ERROR'
         | 'UNEXPECTED_ERROR';
 
+      /** UserRole Description */
       export type UserRole =
+        /** UserRole ADMIN */
         | 'ADMIN'
+        /** UserRole CUSTOMER */
         | 'CUSTOMER';
 
+      /** UsersInput Description */
       export type UsersInput = {
+        /** UsersInput from */
         from: DateTime;
+        /** UsersInput to */
         to: DateTime;
         role: UserRole;
       };
@@ -458,14 +470,146 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
   });
-});
 
-describe('TypeScript Operations Plugin - Enum', () => {
-  it.todo('does not generate unused enum in variables and result');
-  it.todo('handles native numeric enum correctly');
-  it.todo('handles const enum correctly');
-  it.todo('handles native const enum correctly');
-  it.todo('handles native enum correctly');
-  it.todo('handles EnumValues correctly');
-  // Bring over tests from https://github.com/dotansimha/graphql-code-generator/blob/accdab69106605241933e9d66d64dc7077656f30/packages/plugins/typescript/typescript/tests/typescript.spec.ts
+  it('does not generate Variables, Result or Fragments when generatesOperationTypes is false', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+        users(input: UsersInput!): UsersResponse!
+      }
+
+      type Mutation {
+        makeUserAdmin(id: ID!): User!
+      }
+
+      type Subscription {
+        userChanges(id: ID!): User!
+      }
+
+      type ResponseError {
+        error: ResponseErrorType!
+      }
+
+      enum ResponseErrorType {
+        NOT_FOUND
+        INPUT_VALIDATION_ERROR
+        FORBIDDEN_ERROR
+        UNEXPECTED_ERROR
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      "UserRole Description"
+      enum UserRole {
+        "UserRole ADMIN"
+        ADMIN
+        "UserRole CUSTOMER"
+        CUSTOMER
+      }
+
+      "UsersInput Description"
+      input UsersInput {
+        "UsersInput from"
+        from: DateTime
+        "UsersInput to"
+        to: DateTime
+        role: UserRole
+      }
+
+      type UsersResponseOk {
+        result: [User!]!
+      }
+      union UsersResponse = UsersResponseOk | ResponseError
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($id: ID!) {
+        user(id: $id) {
+          id
+          name
+          role
+          createdAt
+        }
+      }
+
+      query Users($input: UsersInput!) {
+        users(input: $input) {
+          ... on UsersResponseOk {
+            result {
+              ...UserFragment
+            }
+          }
+          ... on ResponseError {
+            error
+          }
+        }
+      }
+
+      query UsersWithScalarInput($from: DateTime!, $to: DateTime, $role: UserRole) {
+        users(input: { from: $from, to: $to, role: $role }) {
+          ... on UsersResponseOk {
+            result {
+              __typename
+            }
+          }
+          ... on ResponseError {
+            __typename
+          }
+        }
+      }
+
+      mutation MakeAdmin {
+        makeUserAdmin(id: "100") {
+          ...UserFragment
+        }
+      }
+
+      subscription UserChanges {
+        makeUserAdmin(id: "100") {
+          ...UserFragment
+        }
+      }
+
+      fragment UserFragment on User {
+        id
+        role
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], { generatesOperationTypes: false })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "
+      export type ResponseErrorType =
+        | 'NOT_FOUND'
+        | 'INPUT_VALIDATION_ERROR'
+        | 'FORBIDDEN_ERROR'
+        | 'UNEXPECTED_ERROR';
+
+      /** UserRole Description */
+      export type UserRole =
+        /** UserRole ADMIN */
+        | 'ADMIN'
+        /** UserRole CUSTOMER */
+        | 'CUSTOMER';
+
+      /** UsersInput Description */
+      export type UsersInput = {
+        /** UsersInput from */
+        from: DateTime;
+        /** UsersInput to */
+        to: DateTime;
+        role: UserRole;
+      };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
 });

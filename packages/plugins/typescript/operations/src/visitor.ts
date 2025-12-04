@@ -8,6 +8,7 @@ import {
   getConfigValue,
   indent,
   isOneOfInputObjectType,
+  getEnumsImports,
   LoadedFragment,
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
@@ -317,16 +318,17 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const fields = type.getFields();
     for (const field of Object.values(fields)) {
       const fieldType = getNamedType(field.type);
-      if ((
-        fieldType instanceof GraphQLEnumType ||
-        fieldType instanceof GraphQLInputObjectType ||
-        fieldType instanceof GraphQLScalarType
-      ) && !usedInputTypes[fieldType.name]) {
-          usedInputTypes[fieldType.name] = fieldType;
-          if (fieldType instanceof GraphQLInputObjectType) {
-            this.collectInnerTypesRecursively(fieldType, usedInputTypes);
-          }
+      if (
+        (fieldType instanceof GraphQLEnumType ||
+          fieldType instanceof GraphQLInputObjectType ||
+          fieldType instanceof GraphQLScalarType) &&
+        !usedInputTypes[fieldType.name]
+      ) {
+        usedInputTypes[fieldType.name] = fieldType;
+        if (fieldType instanceof GraphQLInputObjectType) {
+          this.collectInnerTypesRecursively(fieldType, usedInputTypes);
         }
+      }
     }
   }
 
@@ -382,5 +384,20 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     );
 
     return usedInputTypes;
+  }
+
+  public getEnumsImports(): string[] {
+    return getEnumsImports({
+      enumValues: this.config.enumValues,
+      useTypeImports: this.config.useTypeImports,
+    });
+  }
+
+  getExactUtilityType(): string | null {
+    if (!this.config.generatesOperationTypes) {
+      return null;
+    }
+
+    return 'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };';
   }
 }
