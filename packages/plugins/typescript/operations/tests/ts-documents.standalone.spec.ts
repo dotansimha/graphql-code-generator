@@ -139,81 +139,45 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     // validateTs(content, undefined, undefined, undefined, undefined, true);
   });
 
-  it('test generating input types lists', async () => {
+  it('test generating input types enums in lists and inner field', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
-        users(input: UsersInput!): UsersResponse!
-      }
-
-      type ResponseError {
-        error: ResponseErrorType!
-      }
-
-      enum ResponseErrorType {
-        NOT_FOUND
-        INPUT_VALIDATION_ERROR
-        FORBIDDEN_ERROR
-        UNEXPECTED_ERROR
-      }
-
-      enum UserRole {
-        ADMIN
-        CUSTOMER
+        users(input: UsersInput!): [User!]!
       }
 
       type User {
         id: ID!
-        name: String!
-        role: UserRole!
-        createdAt: DateTime!
+      }
+
+      enum EnumRootLevel {
+        ENUM_A
+        ENUM_B
+      }
+
+      enum EnumRootLevelArray {
+        ENUM_C
+        ENUM_D
+      }
+
+      enum EnumInnerArray {
+        ENUM_E
+        ENUM_F
+      }
+
+      input EnumsInner {
+        enumsDeep: [EnumInnerArray!]!
       }
 
       input UsersInput {
-        from: DateTime
-        to: DateTime
-        role: [UserRole!]!
+        enum: EnumRootLevel!
+        enums: [EnumRootLevelArray!]!
+        innerEnums: EnumsInner!
       }
-
-      type UsersResponseOk {
-        result: [User!]!
-      }
-      union UsersResponse = UsersResponseOk | ResponseError
-
-      scalar DateTime
     `);
     const document = parse(/* GraphQL */ `
-      query User($id: ID!) {
-        user(id: $id) {
-          id
-          name
-          role
-          createdAt
-        }
-      }
-
       query Users($input: UsersInput!) {
         users(input: $input) {
-          ... on UsersResponseOk {
-            result {
-              id
-            }
-          }
-          ... on ResponseError {
-            error
-          }
-        }
-      }
-
-      query UsersWithScalarInput($from: DateTime!, $to: DateTime, $role: UserRole) {
-        users(input: { from: $from, to: $to, role: $role }) {
-          ... on UsersResponseOk {
-            result {
-              __typename
-            }
-          }
-          ... on ResponseError {
-            __typename
-          }
+          id
         }
       }
     `);
@@ -222,173 +186,126 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export type ResponseErrorType =
-        | 'NOT_FOUND'
-        | 'INPUT_VALIDATION_ERROR'
-        | 'FORBIDDEN_ERROR'
-        | 'UNEXPECTED_ERROR';
+      export type EnumRootLevel =
+        | 'ENUM_A'
+        | 'ENUM_B';
 
-      export type UserRole =
-        | 'ADMIN'
-        | 'CUSTOMER';
+      export type EnumRootLevelArray =
+        | 'ENUM_C'
+        | 'ENUM_D';
 
-      export type UsersInput = {
-        from: DateTime;
-        to: DateTime;
-        role: Array<UserRole>;
+      export type EnumInnerArray =
+        | 'ENUM_E'
+        | 'ENUM_F';
+
+      export type EnumsInner = {
+        enumsDeep: Array<EnumInnerArray>;
       };
 
-      export type UserQueryVariables = Exact<{
-        id: string;
-      }>;
-
-
-      export type UserQuery = { __typename?: 'Query' };
+      export type UsersInput = {
+        enum: EnumRootLevel;
+        enums: Array<EnumRootLevelArray>;
+        innerEnums: EnumsInner;
+      };
 
       export type UsersQueryVariables = Exact<{
         input: UsersInput;
       }>;
 
 
-      export type UsersQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
-          | { __typename?: 'ResponseError', error: ResponseErrorType }
-         };
-
-      export type UsersWithScalarInputQueryVariables = Exact<{
-        from: any;
-        to?: any | null;
-        role?: UserRole | null;
-      }>;
-
-
-      export type UsersWithScalarInputQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename: 'User' }> }
-          | { __typename: 'ResponseError' }
-         };
+      export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string }> };
       "
     `);
   });
 
-  it('try different ways to generate enums', async () => {
+  it('test generating output enums in lists and inner field', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
-        user(id: ID!): User
+        user(id: ID!): User!
+      }
+
+      enum EnumRootLevel {
+        ENUM_A
+        ENUM_B
+      }
+
+      enum EnumRootLevelArray {
+        ENUM_C
+        ENUM_D
+      }
+
+      enum EnumInnerArray {
+        ENUM_E
+        ENUM_F
+      }
+
+      type EnumsInner {
+        enumsDeep: [EnumInnerArray!]!
       }
 
       type User {
-        id: ID!
-        name: String!
-        role: UserRole!
-      }
-
-      enum UserRole {
-        ADMIN
-        CUSTOMER
+        enum: EnumRootLevel!
+        enums: [EnumRootLevelArray!]!
+        innerEnums: EnumsInner!
       }
     `);
     const document = parse(/* GraphQL */ `
       query User($id: ID!) {
         user(id: $id) {
-          id
-          name
-          role
+          enum
+          enums
+          innerEnums {
+            enumsDeep
+          }
         }
       }
     `);
 
-    // string-literal
-    const resultStringLiteral = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'string-literal' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], {
+        extractAllFieldsToTypes: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
+        printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
+      }),
+    ]);
 
-    expect(resultStringLiteral).toMatchInlineSnapshot(`
+    expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export type UserRole =
-        | 'ADMIN'
-        | 'CUSTOMER';
+      export type EnumRootLevel =
+        | 'ENUM_A'
+        | 'ENUM_B';
 
-      export type UserQueryVariables = Exact<{
-        id: string;
-      }>;
+      export type EnumRootLevelArray =
+        | 'ENUM_C'
+        | 'ENUM_D';
 
+      export type EnumInnerArray =
+        | 'ENUM_E'
+        | 'ENUM_F';
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole } | null };
-      "
-    `);
-
-    // native-numeric
-    const resultNativeNumeric = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-numeric' })]);
-
-    expect(resultNativeNumeric).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export enum UserRole {
-        Admin = 0,
-        Customer = 1
-      }
-
-      export type UserQueryVariables = Exact<{
-        id: string;
-      }>;
-
-
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole } | null };
-      "
-    `);
-
-    // const
-    const resultConst = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' })]);
-
-    expect(resultConst).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export const UserRole = {
-        Admin: 'ADMIN',
-        Customer: 'CUSTOMER'
-      } as const;
-
-      export type UserRole = typeof UserRole[keyof typeof UserRole];
-      export type UserQueryVariables = Exact<{
-        id: string;
-      }>;
-
-
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole } | null };
-      "
-    `);
-
-    // native-const
-    const resultNativeConst = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-const' })]);
-
-    expect(resultNativeConst).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export const enum UserRole {
-        Admin = 'ADMIN',
-        Customer = 'CUSTOMER'
+      export type UserQuery_user_User_innerEnums_EnumsInner = {
+        __typename?: 'EnumsInner',
+        enumsDeep: Array<EnumInnerArray>
       };
 
-      export type UserQueryVariables = Exact<{
-        id: string;
-      }>;
+      export type UserQuery_user_User = {
+        __typename?: 'User',
+        enum: EnumRootLevel,
+        enums: Array<EnumRootLevelArray>,
+        innerEnums: UserQuery_user_User_innerEnums_EnumsInner
+      };
 
+      export type UserQuery_Query = {
+        __typename?: 'Query',
+        user: UserQuery_user_User
+      };
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole } | null };
-      "
-    `);
-
-    // native
-    const resultNative = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
-
-    expect(resultNative).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export enum UserRole {
-        Admin = 'ADMIN',
-        Customer = 'CUSTOMER'
-      }
 
       export type UserQueryVariables = Exact<{
         id: string;
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole } | null };
+      export type UserQuery = UserQuery_Query;
       "
     `);
   });
@@ -425,6 +342,119 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
 
       export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string | number | boolean, name: string } | null };
+      "
+    `);
+  });
+
+  it('test render output enum from fragment in the same document', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      enum RoleType {
+        ROLE_A
+        ROLE_B
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: RoleType
+        pictureUrl: String
+      }
+
+      type Query {
+        users: [User!]!
+        viewer: User!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      fragment UserBasic on User {
+        id
+        name
+        role
+      }
+
+      query GetUsersAndViewer {
+        users {
+          ...UserBasic
+        }
+        viewer {
+          ...UserBasic
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type RoleType =
+        | 'ROLE_A'
+        | 'ROLE_B';
+
+      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role?: RoleType | null };
+
+      export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role?: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role?: RoleType | null } };
+      "
+    `);
+  });
+
+  it('test render output enum from fragment in a separate document', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      enum RoleType {
+        ROLE_A
+        ROLE_B
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: RoleType
+        pictureUrl: String
+      }
+
+      type Query {
+        users: [User!]!
+        viewer: User!
+      }
+    `);
+
+    const documentWithFragment = parse(/* GraphQL */ `
+      fragment UserBasic on User {
+        id
+        name
+        role
+      }
+    `);
+
+    const documentMain = parse(/* GraphQL */ `
+      query GetUsersAndViewer {
+        users {
+          ...UserBasic
+        }
+        viewer {
+          ...UserBasic
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document: documentMain }, { document: documentWithFragment }], {}),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type RoleType =
+        | 'ROLE_A'
+        | 'ROLE_B';
+
+      export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role?: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role?: RoleType | null } };
+
+      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role?: RoleType | null };
       "
     `);
   });

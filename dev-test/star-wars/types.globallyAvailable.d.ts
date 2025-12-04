@@ -238,6 +238,13 @@ type StarshipLengthArgs = {
   unit?: InputMaybe<LengthUnit>;
 };
 
+/** The input object sent when passing a color */
+type ColorInput = {
+  blue: number;
+  green: number;
+  red: number;
+};
+
 /** The episodes in the Star Wars trilogy */
 type Episode =
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */

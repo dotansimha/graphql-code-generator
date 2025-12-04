@@ -313,6 +313,23 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
+  private collectInnerTypesRecursively(type: GraphQLInputObjectType, usedInputTypes: UsedNamedInputTypes): void {
+    const fields = type.getFields();
+    for (const field of Object.values(fields)) {
+      const fieldType = getNamedType(field.type);
+      if ((
+        fieldType instanceof GraphQLEnumType ||
+        fieldType instanceof GraphQLInputObjectType ||
+        fieldType instanceof GraphQLScalarType
+      ) && !usedInputTypes[fieldType.name]) {
+          usedInputTypes[fieldType.name] = fieldType;
+          if (fieldType instanceof GraphQLInputObjectType) {
+            this.collectInnerTypesRecursively(fieldType, usedInputTypes);
+          }
+        }
+    }
+  }
+
   private collectUsedInputTypes({
     schema,
     documentNode,
@@ -337,6 +354,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 foundInputType instanceof GraphQLEnumType)
             ) {
               usedInputTypes[namedTypeNode.name.value] = foundInputType;
+              if (foundInputType instanceof GraphQLInputObjectType) {
+                this.collectInnerTypesRecursively(foundInputType, usedInputTypes);
+              }
             }
           },
         });
