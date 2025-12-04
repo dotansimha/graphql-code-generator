@@ -42,6 +42,7 @@ import {
   ListTypeNode,
   NamedTypeNode,
   NonNullTypeNode,
+  ScalarTypeDefinitionNode,
   TypeInfo,
   visit,
   visitWithTypeInfo,
@@ -208,6 +209,24 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         useTypesSuffix: this.config.enumSuffix,
       },
     });
+  }
+
+  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string | null {
+    const scalarName = node.name.value;
+
+    // Don't generate type aliases for built-in scalars
+    if (SCALARS[scalarName] || !this._usedNamedInputTypes[scalarName]) {
+      return null;
+    }
+
+    // Check if a custom scalar mapping is provided in config
+    const scalarType = this.scalars?.[scalarName]?.input ?? 'any';
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName(node))
+      .withContent(scalarType).string;
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {

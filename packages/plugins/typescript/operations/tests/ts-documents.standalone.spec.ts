@@ -161,12 +161,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         id: ID!
       }
 
-      enum EnumRootLevel {
+      enum EnumRoot {
         ENUM_A
         ENUM_B
       }
 
-      enum EnumRootLevelArray {
+      enum EnumRootArray {
         ENUM_C
         ENUM_D
       }
@@ -181,8 +181,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
 
       input UsersInput {
-        enum: EnumRootLevel!
-        enums: [EnumRootLevelArray!]!
+        enum: EnumRoot!
+        enums: [EnumRootArray!]!
         innerEnums: EnumsInner!
       }
     `);
@@ -198,11 +198,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export type EnumRootLevel =
+      export type EnumRoot =
         | 'ENUM_A'
         | 'ENUM_B';
 
-      export type EnumRootLevelArray =
+      export type EnumRootArray =
         | 'ENUM_C'
         | 'ENUM_D';
 
@@ -215,8 +215,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       };
 
       export type UsersInput = {
-        enum: EnumRootLevel;
-        enums: Array<EnumRootLevelArray>;
+        enum: EnumRoot;
+        enums: Array<EnumRootArray>;
         innerEnums: EnumsInner;
       };
 
@@ -236,12 +236,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         user(id: ID!): User!
       }
 
-      enum EnumRootLevel {
+      enum EnumRoot {
         ENUM_A
         ENUM_B
       }
 
-      enum EnumRootLevelArray {
+      enum EnumRootArray {
         ENUM_C
         ENUM_D
       }
@@ -256,8 +256,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
 
       type User {
-        enum: EnumRootLevel!
-        enums: [EnumRootLevelArray!]!
+        enum: EnumRoot!
+        enums: [EnumRootArray!]!
         innerEnums: EnumsInner!
       }
     `);
@@ -282,11 +282,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export type EnumRootLevel =
+      export type EnumRoot =
         | 'ENUM_A'
         | 'ENUM_B';
 
-      export type EnumRootLevelArray =
+      export type EnumRootArray =
         | 'ENUM_C'
         | 'ENUM_D';
 
@@ -301,8 +301,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
       export type UserQuery_user_User = {
         __typename?: 'User',
-        enum: EnumRootLevel,
-        enums: Array<EnumRootLevelArray>,
+        enum: EnumRoot,
+        enums: Array<EnumRootArray>,
         innerEnums: UserQuery_user_User_innerEnums_EnumsInner
       };
 
@@ -607,6 +607,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         to: DateTime;
         role: UserRole;
       };
+
+      export type DateTime = any;
       "
     `);
 
