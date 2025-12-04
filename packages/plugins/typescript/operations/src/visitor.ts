@@ -2,9 +2,12 @@ import {
   BaseDocumentsVisitor,
   type ConvertSchemaEnumToDeclarationBlockString,
   convertSchemaEnumToDeclarationBlockString,
+  DeclarationBlock,
   DeclarationKind,
   generateFragmentImportStatement,
   getConfigValue,
+  indent,
+  isOneOfInputObjectType,
   getEnumsImports,
   LoadedFragment,
   normalizeAvoidOptionals,
@@ -15,6 +18,7 @@ import {
   PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
   SelectionSetToObject,
+  transformComment,
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
@@ -22,6 +26,7 @@ import {
   type DocumentNode,
   EnumTypeDefinitionNode,
   type FragmentDefinitionNode,
+  getNamedType,
   GraphQLEnumType,
   GraphQLInputObjectType,
   type GraphQLNamedInputType,
@@ -29,13 +34,21 @@ import {
   type GraphQLOutputType,
   GraphQLScalarType,
   type GraphQLSchema,
+  InputObjectTypeDefinitionNode,
+  InputValueDefinitionNode,
   isEnumType,
   isNonNullType,
   Kind,
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
+  ScalarTypeDefinitionNode,
+  TypeInfo,
   visit,
+  visitWithTypeInfo,
 } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
-import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
+import { TypeScriptOperationVariablesToObject, SCALARS } from './ts-operation-variables-to-object.js';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
@@ -164,7 +177,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config.enumValues,
         this.config.arrayInputCoercion,
         undefined,
-        'InputMaybe'
+        undefined
       )
     );
     this._declarationBlockConfig = {
@@ -198,6 +211,110 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     });
   }
 
+  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string | null {
+    const scalarName = node.name.value;
+
+    // Don't generate type aliases for built-in scalars
+    if (SCALARS[scalarName] || !this._usedNamedInputTypes[scalarName]) {
+      return null;
+    }
+
+    // Check if a custom scalar mapping is provided in config
+    const scalarType = this.scalars?.[scalarName]?.input ?? 'any';
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName(node))
+      .withContent(scalarType).string;
+  }
+
+  InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {
+    const inputTypeName = node.name.value;
+    if (!this._usedNamedInputTypes[inputTypeName]) {
+      return null;
+    }
+
+    if (isOneOfInputObjectType(this._schema.getType(inputTypeName))) {
+      return this.getInputObjectOneOfDeclarationBlock(node).string;
+    }
+
+    return this.getInputObjectDeclarationBlock(node).string;
+  }
+
+  InputValueDefinition(node: InputValueDefinitionNode): string {
+    const comment = transformComment(node.description?.value || '', 1);
+    const type: string = node.type as any as string;
+    return comment + indent(`${node.name.value}: ${type};`);
+  }
+
+  private getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName(node))
+      .withComment(node.description?.value)
+      .withBlock((node.fields || []).join('\n'));
+  }
+
+  private getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    const declarationKind = (node.fields?.length || 0) === 1 ? 'type' : 'type';
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(declarationKind)
+      .withName(this.convertName(node))
+      .withComment(node.description?.value)
+      .withContent(`\n` + (node.fields || []).join('\n  |'));
+  }
+
+  private isValidVisit(ancestors: any): boolean {
+    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
+    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
+    const isVisitingEnumType = currentVisitContext.includes(Kind.ENUM_TYPE_DEFINITION);
+
+    return isVisitingInputType || isVisitingEnumType;
+  }
+
+  NamedType(node: NamedTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
+    if (!this.isValidVisit(ancestors)) {
+      return undefined;
+    }
+
+    const schemaType = this._schema.getType(node.name.value);
+
+    if (schemaType instanceof GraphQLScalarType) {
+      const inputType = this.scalars?.[node.name.value]?.input ?? SCALARS[node.name.value] ?? 'any';
+      if (inputType === 'any' && node.name.value) {
+        return node.name.value;
+      }
+
+      return inputType;
+    }
+
+    if (schemaType instanceof GraphQLEnumType || schemaType instanceof GraphQLInputObjectType) {
+      return this.convertName(node.name.value);
+    }
+
+    return node.name.value;
+  }
+
+  ListType(node: ListTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
+    if (!this.isValidVisit(ancestors)) {
+      return undefined;
+    }
+
+    const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
+    return `${listModifier}<${node.type}>`;
+  }
+
+  NonNullType(node: NonNullTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
+    if (!this.isValidVisit(ancestors)) {
+      return undefined;
+    }
+
+    return node.type as any as string | undefined;
+  }
+
   public getImports(): Array<string> {
     return !this.config.globalNamespace &&
       (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
@@ -216,6 +333,24 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
+  private collectInnerTypesRecursively(type: GraphQLInputObjectType, usedInputTypes: UsedNamedInputTypes): void {
+    const fields = type.getFields();
+    for (const field of Object.values(fields)) {
+      const fieldType = getNamedType(field.type);
+      if (
+        (fieldType instanceof GraphQLEnumType ||
+          fieldType instanceof GraphQLInputObjectType ||
+          fieldType instanceof GraphQLScalarType) &&
+        !usedInputTypes[fieldType.name]
+      ) {
+        usedInputTypes[fieldType.name] = fieldType;
+        if (fieldType instanceof GraphQLInputObjectType) {
+          this.collectInnerTypesRecursively(fieldType, usedInputTypes);
+        }
+      }
+    }
+  }
+
   private collectUsedInputTypes({
     schema,
     documentNode,
@@ -227,6 +362,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     const usedInputTypes: UsedNamedInputTypes = {};
 
+    // Collect input enums and input types
     visit(documentNode, {
       VariableDefinition: variableDefinitionNode => {
         visit(variableDefinitionNode, {
@@ -239,11 +375,32 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 foundInputType instanceof GraphQLEnumType)
             ) {
               usedInputTypes[namedTypeNode.name.value] = foundInputType;
+              if (foundInputType instanceof GraphQLInputObjectType) {
+                this.collectInnerTypesRecursively(foundInputType, usedInputTypes);
+              }
             }
           },
         });
       },
     });
+
+    // Collect output enums
+    const typeInfo = new TypeInfo(schema);
+    visit(
+      documentNode,
+      visitWithTypeInfo(typeInfo, {
+        Field: () => {
+          const fieldType = typeInfo.getType();
+          if (fieldType) {
+            const namedType = getNamedType(fieldType);
+
+            if (namedType instanceof GraphQLEnumType) {
+              usedInputTypes[namedType.name] = namedType;
+            }
+          }
+        },
+      })
+    );
 
     return usedInputTypes;
   }

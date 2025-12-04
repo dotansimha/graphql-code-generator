@@ -240,6 +240,13 @@ export type StarshipLengthArgs = {
   unit?: InputMaybe<LengthUnit>;
 };
 
+/** The input object sent when passing a color */
+export type ColorInput = {
+  blue: number;
+  green: number;
+  red: number;
+};
+
 /** The episodes in the Star Wars trilogy */
 export type Episode =
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
@@ -248,6 +255,16 @@ export type Episode =
   | 'JEDI'
   /** Star Wars Episode IV: A New Hope, released in 1977. */
   | 'NEWHOPE';
+
+/** The input object sent when someone is creating a new review */
+export type ReviewInput = {
+  /** Comment about the movie, optional */
+  commentary: string;
+  /** Favorite color, optional */
+  favoriteColor: ColorInput;
+  /** 0-5 stars */
+  stars: number;
+};
 
 export type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
