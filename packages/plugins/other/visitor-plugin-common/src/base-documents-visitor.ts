@@ -41,6 +41,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
   customDirectives: CustomDirectivesConfig;
+  generatesOperationTypes: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -175,6 +176,29 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * ```
    */
   customDirectives?: CustomDirectivesConfig;
+
+  /**
+   * @description Whether to generate operation types such as Variables, Query/Mutation/Subscription selection set, and Fragment types
+   * @default true
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-operations'],
+   *        config: {
+   *          generatesOperationTypes: false,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  generatesOperationTypes?: boolean;
 }
 
 export class BaseDocumentsVisitor<
@@ -207,6 +231,7 @@ export class BaseDocumentsVisitor<
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
+      generatesOperationTypes: getConfigValue(rawConfig.generatesOperationTypes, true),
       ...((additionalConfig || {}) as any),
     });
 
@@ -261,6 +286,10 @@ export class BaseDocumentsVisitor<
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
+    if (!this.config.generatesOperationTypes) {
+      return null;
+    }
+
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value);
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.getFragmentSuffix(node);
@@ -289,7 +318,11 @@ export class BaseDocumentsVisitor<
     return variablesBlock;
   }
 
-  OperationDefinition(node: OperationDefinitionNode): string {
+  OperationDefinition(node: OperationDefinitionNode): string | null {
+    if (!this.config.generatesOperationTypes) {
+      return null;
+    }
+
     const name = this.handleAnonymousOperation(node);
     const operationRootType = getRootType(node.operation, this._schema);
 
