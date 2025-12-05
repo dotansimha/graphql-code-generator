@@ -1555,4 +1555,76 @@ describe('extractAllFieldsToTypes: true', () => {
 
     await validate(content, config, nestedInterfacesSchema);
   });
+  it('should handle fragments with field aliases', async () => {
+    const itemsSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        items: [Item!]!
+      }
+      type Item {
+        id: ID!
+        name: String!
+        owner: User
+      }
+      type User {
+        id: ID!
+        realId: ID!
+        name: String!
+      }
+    `);
+
+    const itemsDoc = parse(/* GraphQL */ `
+      query GetItems {
+        items {
+          id
+          name
+          ...FragmentA
+          ...FragmentB
+        }
+      }
+      fragment FragmentA on Item {
+        owner {
+          id: realId
+          name
+        }
+      }
+      fragment FragmentB on Item {
+        owner {
+          id
+          name
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypes: true,
+    };
+
+    const { content } = await plugin(itemsSchema, [{ location: 'test-file.ts', document: itemsDoc }], config, {
+      outputFile: '',
+    });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type GetItemsQuery_items_Item_owner_User = { __typename?: 'User', name: string, id: string };
+
+      export type GetItemsQuery_items_Item = { __typename?: 'Item', id: string, name: string, owner?: GetItemsQuery_items_Item_owner_User | null };
+
+      export type GetItemsQuery_Query = { __typename?: 'Query', items: Array<GetItemsQuery_items_Item> };
+
+
+      export type GetItemsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type GetItemsQuery = GetItemsQuery_Query;
+
+      export type FragmentAFragment_Item_owner_User = { __typename?: 'User', name: string, id: string };
+
+      export type FragmentAFragment = { __typename?: 'Item', owner?: FragmentAFragment_Item_owner_User | null };
+
+      export type FragmentBFragment_Item_owner_User = { __typename?: 'User', id: string, name: string };
+
+      export type FragmentBFragment = { __typename?: 'Item', owner?: FragmentBFragment_Item_owner_User | null };
+      "
+    `);
+    await validate(content, config, itemsSchema);
+  });
 });
