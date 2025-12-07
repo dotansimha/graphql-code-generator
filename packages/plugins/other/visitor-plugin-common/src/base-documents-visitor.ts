@@ -42,6 +42,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   mergeFragmentTypes: boolean;
   customDirectives: CustomDirectivesConfig;
   generatesOperationTypes: boolean;
+  importSchemaTypesFrom: string;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -199,6 +200,11 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * ```
    */
   generatesOperationTypes?: boolean;
+
+  /**
+   * TODO
+   */
+  importSchemaTypesFrom?: string;
 }
 
 export class BaseDocumentsVisitor<
@@ -232,6 +238,7 @@ export class BaseDocumentsVisitor<
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
       generatesOperationTypes: getConfigValue(rawConfig.generatesOperationTypes, true),
+      importSchemaTypesFrom: getConfigValue(rawConfig.importSchemaTypesFrom, ''),
       ...((additionalConfig || {}) as any),
     });
 

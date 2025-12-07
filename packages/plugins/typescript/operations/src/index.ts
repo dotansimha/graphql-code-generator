@@ -63,6 +63,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   return {
     prepend: [
       ...visitor.getImports(),
+      ...visitor.getExternalSchemaTypeImports(),
       ...visitor.getEnumsImports(),
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
       visitor.getExactUtilityType(),
