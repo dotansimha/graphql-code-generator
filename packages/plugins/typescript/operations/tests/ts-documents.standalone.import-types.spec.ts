@@ -1,4 +1,5 @@
 import { buildSchema, parse } from 'graphql';
+import { validateTs } from '@graphql-codegen/testing';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin } from '../src/index.js';
 
@@ -224,7 +225,6 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       "
     `);
 
-    // FIXME: enable this to ensure type correctness
-    // validateTs(content, undefined, undefined, undefined, undefined, true);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 });
