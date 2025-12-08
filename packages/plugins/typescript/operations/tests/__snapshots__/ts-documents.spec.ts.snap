@@ -57,7 +57,7 @@ export type ElementMetadataFragment =
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset 1`] = `
-"export type UserQueryVariables = Types.Exact<{ [key: string]: never; }>;
+"export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQuery = { user: { id: string, username: string, email: string, dep: Types.Department } };
