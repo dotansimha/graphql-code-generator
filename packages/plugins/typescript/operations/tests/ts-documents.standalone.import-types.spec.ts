@@ -1,10 +1,10 @@
-import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { validateTs } from '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
+import { validateTs } from '@graphql-codegen/testing';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin } from '../src/index.js';
 
-describe('TypeScript Operations Plugin - Standalone', () => {
-  it('generates using default config', async () => {
+describe('TypeScript Operations Plugin - Import Types', () => {
+  it('imports user-defined types externally with relative importSchemaTypesFrom correctly', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(id: ID!): User
@@ -90,38 +90,43 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './base-dir/path-to-other-file.generated.ts',
+          namespacedImportName: 'TypeImport',
+        },
+        { outputFile: './base-dir/this-file.ts' }
+      ),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** UserRole Description */
-      export type UserRole =
-        /** UserRole ADMIN */
-        | 'ADMIN'
-        /** UserRole CUSTOMER */
-        | 'CUSTOMER';
+      "import type * as TypeImport from './path-to-other-file.generated';
 
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type UserQueryVariables = Exact<{
         id: string;
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole, createdAt: any } | null };
+      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
 
       export type UsersQueryVariables = Exact<{
-        input: UsersInput;
+        input: TypeImport.UsersInput;
       }>;
 
 
       export type UsersQuery = { __typename?: 'Query', users:
           | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
-          | { __typename?: 'ResponseError', error: ResponseErrorType }
+          | { __typename?: 'ResponseError', error: TypeImport.ResponseErrorType }
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: any;
         to?: any | null;
-        role?: UserRole | null;
+        role?: TypeImport.UserRole | null;
       }>;
 
 
@@ -131,60 +136,13 @@ describe('TypeScript Operations Plugin - Standalone', () => {
          };
       "
     `);
-
-    // FIXME: enable this to ensure type correctness
-    // validateTs(content, undefined, undefined, undefined, undefined, true);
   });
 
-  it('test overrdiding config.scalars', async () => {
-    const schema = buildSchema(/* GraphQL */ `
-      type Query {
-        user(id: ID!): User
-      }
-
-      type User {
-        id: ID!
-        name: String!
-      }
-    `);
-    const document = parse(/* GraphQL */ `
-      query User($id: ID!) {
-        user(id: $id) {
-          id
-          name
-        }
-      }
-    `);
-
-    const result = mergeOutputs([
-      await plugin(schema, [{ document }], { scalars: { ID: 'string | number | boolean' } }, { outputFile: '' }),
-    ]);
-
-    expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      export type UserQueryVariables = Exact<{
-        id: string | number | boolean;
-      }>;
-
-
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string | number | boolean, name: string } | null };
-      "
-    `);
-  });
-
-  it('does not generate Variables, Result or Fragments when generatesOperationTypes is false', async () => {
+  it('imports user-defined types externally with absolute importSchemaTypesFrom correctly', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(id: ID!): User
         users(input: UsersInput!): UsersResponse!
-      }
-
-      type Mutation {
-        makeUserAdmin(id: ID!): User!
-      }
-
-      type Subscription {
-        userChanges(id: ID!): User!
       }
 
       type ResponseError {
@@ -243,7 +201,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         users(input: $input) {
           ... on UsersResponseOk {
             result {
-              ...UserFragment
+              id
             }
           }
           ... on ResponseError {
@@ -264,57 +222,61 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           }
         }
       }
-
-      mutation MakeAdmin {
-        makeUserAdmin(id: "100") {
-          ...UserFragment
-        }
-      }
-
-      subscription UserChanges {
-        makeUserAdmin(id: "100") {
-          ...UserFragment
-        }
-      }
-
-      fragment UserFragment on User {
-        id
-        role
-      }
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: '~@my-company/package/types',
+          namespacedImportName: 'TypeImport',
+        },
+        { outputFile: './base-dir/this-file.ts' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "
-      /** UserRole Description */
-      export type UserRole =
-        /** UserRole ADMIN */
-        | 'ADMIN'
-        /** UserRole CUSTOMER */
-        | 'CUSTOMER';
+      "import type * as TypeImport from '@my-company/package/types';
 
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type UserQueryVariables = Exact<{
+        id: string;
+      }>;
+
+
+      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
+
+      export type UsersQueryVariables = Exact<{
+        input: TypeImport.UsersInput;
+      }>;
+
+
+      export type UsersQuery = { __typename?: 'Query', users:
+          | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
+          | { __typename?: 'ResponseError', error: TypeImport.ResponseErrorType }
+         };
+
+      export type UsersWithScalarInputQueryVariables = Exact<{
+        from: any;
+        to?: any | null;
+        role?: TypeImport.UserRole | null;
+      }>;
+
+
+      export type UsersWithScalarInputQuery = { __typename?: 'Query', users:
+          | { __typename?: 'UsersResponseOk', result: Array<{ __typename: 'User' }> }
+          | { __typename: 'ResponseError' }
+         };
       "
     `);
-
-    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
-  it('does not generate unused schema enum and input types', async () => {
+  it('does not import external types if only native GraphQL types are used in Variables and Result', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(id: ID!): User
         users(input: UsersInput!): UsersResponse!
-      }
-
-      type Mutation {
-        makeUserAdmin(id: ID!): User!
-      }
-
-      type Subscription {
-        userChanges(id: ID!): User!
       }
 
       type ResponseError {
@@ -329,8 +291,14 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
 
       type User {
+        # Native GraphQL types
         id: ID!
         name: String!
+        isOld: Boolean!
+        ageInt: Int!
+        ageFloat: Float!
+
+        # User-defined types
         role: UserRole!
         createdAt: DateTime!
       }
@@ -360,19 +328,41 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       scalar DateTime
     `);
     const document = parse(/* GraphQL */ `
-      query User {
-        user(id: "100") {
+      query User($id: ID, $name: String, $bool: Boolean, $int: Int, $float: Float) {
+        user(id: $id) {
           id
+          name
+          isOld
+          ageInt
+          ageFloat
         }
       }
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './path-to-other-file',
+          namespacedImportName: 'TypeImport',
+        },
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type UserQueryVariables = Exact<{
+        id?: string | null;
+        name?: string | null;
+        bool?: boolean | null;
+        int?: number | null;
+        float?: number | null;
+      }>;
+
+
+      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, isOld: boolean, ageInt: number, ageFloat: number } | null };
       "
     `);
 
