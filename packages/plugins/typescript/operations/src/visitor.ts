@@ -59,7 +59,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsParsedConfig
 > {
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
-  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, documentNode: DocumentNode) {
+  private _outputPath: string;
+
+  // FIXME: make this object-style param
+  constructor(
+    schema: GraphQLSchema,
+    config: TypeScriptDocumentsPluginConfig,
+    documentNode: DocumentNode,
+    outputPath: string
+  ) {
     super(
       config,
       {
@@ -82,6 +90,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema
     );
 
+    this._outputPath = outputPath;
     autoBind(this);
 
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
@@ -220,11 +229,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     return [
       generateImportStatement({
-        baseDir: '',
+        baseDir: process.cwd(),
         baseOutputDir: '',
-        outputPath: '',
+        outputPath: this._outputPath,
         importSource: {
-          path: '',
+          path: this.config.importSchemaTypesFrom,
           namespace: this.config.namespacedImportName,
           identifiers: [],
         },

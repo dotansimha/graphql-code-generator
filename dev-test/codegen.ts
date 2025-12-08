@@ -271,7 +271,7 @@ const config: CodegenConfig = {
       documents: ['./dev-test/standalone-operations/import-schema-types/*.graphql'],
       plugins: ['typescript-operations'],
       config: {
-        importSchemaTypesFrom: './_base.generated',
+        importSchemaTypesFrom: './dev-test/standalone-operations/import-schema-types/_base.generated.ts',
         namespacedImportName: 'Types',
       },
     },

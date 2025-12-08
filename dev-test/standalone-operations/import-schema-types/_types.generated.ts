@@ -1,4 +1,4 @@
-import type * as Types from './graphql-code-generator';
+import type * as Types from './_base.generated';
 
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type WithVariablesQueryVariables = Exact<{
