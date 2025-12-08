@@ -32,7 +32,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -74,7 +74,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-numeric' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native-numeric' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -126,7 +128,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -182,7 +184,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-const' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native-const' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -233,7 +237,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -285,17 +289,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'string-literal',
-        enumValues: {
-          UserRole: {
-            A_B_C: 0,
-            X_Y_Z: 'Foo',
-            _TEST: 'Bar',
-            My_Value: 1,
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'string-literal',
+          enumValues: {
+            UserRole: {
+              A_B_C: 0,
+              X_Y_Z: 'Foo',
+              _TEST: 'Bar',
+              My_Value: 1,
+            },
           },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -349,17 +358,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'const',
-        enumValues: {
-          UserRole: {
-            A_B_C: 0,
-            X_Y_Z: 'Foo',
-            _TEST: 'Bar',
-            My_Value: 1,
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'const',
+          enumValues: {
+            UserRole: {
+              A_B_C: 0,
+              X_Y_Z: 'Foo',
+              _TEST: 'Bar',
+              My_Value: 1,
+            },
           },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -413,15 +427,20 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        enumValues: {
-          UserRole: {
-            ADMIN: 0,
-            CUSTOMER: 'test',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          enumValues: {
+            UserRole: {
+              ADMIN: 0,
+              CUSTOMER: 'test',
+            },
           },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -473,11 +492,16 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumValues: {
-          UserRole: './my-file#MyEnum',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#MyEnum',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -527,11 +551,16 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumValues: {
-          UserRole: './my-file#NS.ETest',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#NS.ETest',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -582,11 +611,16 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumValues: {
-          UserRole: './my-file#NS.UserRole',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#NS.UserRole',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -642,10 +676,15 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        enumValues: './my-file',
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          enumValues: './my-file',
+        },
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -704,10 +743,15 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        enumValues: { UserRole: './my-file#UserRole', UserStatus: './my-file#UserStatus2X' },
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          enumValues: { UserRole: './my-file#UserRole', UserStatus: './my-file#UserStatus2X' },
+        },
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -762,7 +806,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -815,7 +859,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -866,7 +910,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: true })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: true }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type IUserRole =
@@ -914,7 +960,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: false })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: false }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type UserRole =
@@ -962,7 +1010,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: true })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: true }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type UserRoleZ =
@@ -1010,7 +1060,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: false })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: false }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type UserRole =
@@ -1059,12 +1111,17 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        namingConvention: {
-          typeNames: 'change-case-all#lowerCase',
-          enumValues: 'keep',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          namingConvention: {
+            typeNames: 'change-case-all#lowerCase',
+            enumValues: 'keep',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1114,13 +1171,18 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        namingConvention: {
-          typeNames: 'keep',
-          enumValues: 'change-case-all#lowerCase',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          namingConvention: {
+            typeNames: 'keep',
+            enumValues: 'change-case-all#lowerCase',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1171,9 +1233,14 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        noExport: true,
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          noExport: true,
+        },
+        { outputFile: '' }
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1223,13 +1290,18 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        typesPrefix: 'I',
-        namingConvention: { enumValues: 'change-case-all#constantCase' },
-        enumValues: {
-          UserRole: './files#default as UserRole',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          typesPrefix: 'I',
+          namingConvention: { enumValues: 'change-case-all#constantCase' },
+          enumValues: {
+            UserRole: './files#default as UserRole',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -1277,7 +1349,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1327,7 +1399,7 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { futureProofEnums: true })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { futureProofEnums: true }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
