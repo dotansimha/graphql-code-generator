@@ -1,0 +1,17 @@
+type Query {
+  user(id: ID!, role: UserRole): User
+}
+
+type User {
+  id: ID!
+  name: String!
+  role: UserRole!
+}
+
+"UserRole Description"
+enum UserRole {
+  "UserRole ADMIN"
+  ADMIN
+  "UserRole CUSTOMER"
+  CUSTOMER
+}

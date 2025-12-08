@@ -1,0 +1,6 @@
+query WithVariables($role: UserRole) {
+  user(id: "100") {
+    id
+    name
+  }
+}
