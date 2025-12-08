@@ -20,8 +20,10 @@ import {
   convertSchemaEnumToDeclarationBlockString,
   DeclarationKind,
   generateFragmentImportStatement,
+  generateImportStatement,
   getConfigValue,
   getEnumsImports,
+  isNativeNamedType,
   LoadedFragment,
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
@@ -57,10 +59,13 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsParsedConfig
 > {
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
+  private _outputPath: string;
+
   constructor(
     schema: GraphQLSchema,
     config: TypeScriptDocumentsPluginConfig,
     documentNode: DocumentNode,
+    outputPath: string,
   ) {
     super(
       config,
@@ -84,6 +89,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema,
     );
 
+    this._outputPath = outputPath;
     autoBind(this);
 
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
@@ -188,7 +194,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
-    if (!this._usedNamedInputTypes[enumName]) {
+    if (!this._usedNamedInputTypes[enumName] || this.config.importSchemaTypesFrom) {
       return null;
     }
 
@@ -220,18 +226,43 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       : [];
   }
 
+  public getExternalSchemaTypeImports(): Array<string> {
+    if (!this.config.importSchemaTypesFrom) {
+      return [];
+    }
+
+    const hasTypesToImport = Object.keys(this._usedNamedInputTypes).length > 0;
+
+    if (!hasTypesToImport) {
+      return [];
+    }
+
+    return [
+      generateImportStatement({
+        baseDir: process.cwd(),
+        baseOutputDir: '',
+        outputPath: this._outputPath,
+        importSource: {
+          path: this.config.importSchemaTypesFrom,
+          namespace: this.config.namespacedImportName,
+          identifiers: [],
+        },
+        typesImport: true,
+        // FIXME: rebase with master for the new extension
+        emitLegacyCommonJSImports: true,
+      }),
+    ];
+  }
+
   protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
 
   protected applyVariablesWrapper(variablesBlock: string, operationType: string): string {
-    const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
     const extraType =
       this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
 
-    return `${prefix}Exact<${
-      variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock
-    }>${extraType}`;
+    return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
   private collectUsedInputTypes({
@@ -254,7 +285,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
               foundInputType &&
               (foundInputType instanceof GraphQLInputObjectType ||
                 foundInputType instanceof GraphQLScalarType ||
-                foundInputType instanceof GraphQLEnumType)
+                foundInputType instanceof GraphQLEnumType) &&
+              !isNativeNamedType(foundInputType)
             ) {
               usedInputTypes[namedTypeNode.name.value] = foundInputType;
             }
