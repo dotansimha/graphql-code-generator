@@ -273,6 +273,26 @@ const config: CodegenConfig = {
       plugins: ['typescript-operations'],
     },
     // #endregion
+
+    // standalone-operations
+    './dev-test/standalone-operations/import-schema-types/_base.generated.ts': {
+      schema: './dev-test/standalone-operations/schema.graphql',
+      documents: ['./dev-test/standalone-operations/import-schema-types/*.graphql'],
+      plugins: ['typescript-operations'],
+      config: {
+        generatesOperationTypes: false,
+      },
+    },
+    './dev-test/standalone-operations/import-schema-types/_types.generated.ts': {
+      schema: './dev-test/standalone-operations/schema.graphql',
+      documents: ['./dev-test/standalone-operations/import-schema-types/*.graphql'],
+      plugins: ['typescript-operations'],
+      config: {
+        importSchemaTypesFrom:
+          './dev-test/standalone-operations/import-schema-types/_base.generated.ts',
+        namespacedImportName: 'Types',
+      },
+    },
   },
 };
 

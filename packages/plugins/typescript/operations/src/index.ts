@@ -10,11 +10,7 @@ export { TypeScriptDocumentsPluginConfig } from './config.js';
 export const plugin: PluginFunction<
   TypeScriptDocumentsPluginConfig,
   Types.ComplexPluginOutput
-> = async (
-  inputSchema: GraphQLSchema,
-  rawDocuments: Types.DocumentFile[],
-  config: TypeScriptDocumentsPluginConfig,
-) => {
+> = async (inputSchema, rawDocuments, config, { outputFile }) => {
   const schema = config.nullability?.errorHandlingClient
     ? await semanticToStrict(inputSchema)
     : inputSchema;
@@ -58,7 +54,7 @@ export const plugin: PluginFunction<
   // For Fragment types to resolve correctly, we must get read all docs (`standard` and `external`)
   // Fragment types are usually (but not always) in `external` files in certain setup, like a monorepo.
   const allDocumentsAST = concatAST(parsedDocuments.all.documentNodes);
-  const visitor = new TypeScriptDocumentsVisitor(schema, config, allDocumentsAST);
+  const visitor = new TypeScriptDocumentsVisitor(schema, config, allDocumentsAST, outputFile);
 
   // We only visit `standard` documents to generate types.
   // `external` documents are included as references for typechecking and completeness i.e. only used for reading purposes, no writing.
@@ -101,6 +97,7 @@ export const plugin: PluginFunction<
   return {
     prepend: [
       ...visitor.getImports(),
+      ...visitor.getExternalSchemaTypeImports(),
       ...visitor.getEnumsImports(),
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
       visitor.getExactUtilityType(),

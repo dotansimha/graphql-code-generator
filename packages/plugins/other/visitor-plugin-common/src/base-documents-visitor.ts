@@ -47,6 +47,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   mergeFragmentTypes: boolean;
   customDirectives: CustomDirectivesConfig;
   generatesOperationTypes: boolean;
+  importSchemaTypesFrom: string;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -184,6 +185,7 @@ export interface RawDocumentsConfig extends RawTypesConfig {
 
   /**
    * @description Whether to generate operation types such as Variables, Query/Mutation/Subscription selection set, and Fragment types
+   * This can be used with `importSchemaTypesFrom` to generate shared used Enums and Input.
    * @default true
    * @exampleMarkdown
    * ```ts filename="codegen.ts"
@@ -204,6 +206,30 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * ```
    */
   generatesOperationTypes?: boolean;
+
+  /**
+   * @description The absolute (prefixed with `~`) or relative path from `cwd` to the shared used Enums and Input (See `generatesOperationTypes`).
+   * @default true
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-operations'],
+   *        config: {
+   *          importSchemaTypesFrom: './path/to/shared-types.ts', // relative
+   *          importSchemaTypesFrom: '~@my-org/package' // absolute
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  importSchemaTypesFrom?: string;
 }
 
 export class BaseDocumentsVisitor<
@@ -239,6 +265,7 @@ export class BaseDocumentsVisitor<
         apolloUnmask: false,
       }),
       generatesOperationTypes: getConfigValue(rawConfig.generatesOperationTypes, true),
+      importSchemaTypesFrom: getConfigValue(rawConfig.importSchemaTypesFrom, ''),
       ...((additionalConfig || {}) as any),
     });
 
