@@ -91,14 +91,19 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        importSchemaTypesFrom: './path-to-other-file',
-        namespacedImportName: 'TypeImport',
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './base-dir/path-to-other-file.generated.ts',
+          namespacedImportName: 'TypeImport',
+        },
+        { outputFile: './base-dir/this-file.ts' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "import type * as TypeImport from './graphql-code-generator';
+      "import type * as TypeImport from './path-to-other-file.generated';
 
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type UserQueryVariables = Exact<{
@@ -204,10 +209,15 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        importSchemaTypesFrom: './path-to-other-file',
-        namespacedImportName: 'TypeImport',
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './path-to-other-file',
+          namespacedImportName: 'TypeImport',
+        },
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`

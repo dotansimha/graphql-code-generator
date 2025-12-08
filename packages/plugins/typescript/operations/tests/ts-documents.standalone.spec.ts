@@ -90,7 +90,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -157,7 +157,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { scalars: { ID: 'string | number | boolean' } }),
+      await plugin(schema, [{ document }], { scalars: { ID: 'string | number | boolean' } }, { outputFile: '' }),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -283,7 +283,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { generatesOperationTypes: false })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "

@@ -62,11 +62,16 @@ const document = parse(/* GraphQL */ `
 
 describe('TypeScript Operations Plugin - nullability', () => {
   it('converts semanticNonNull to nonNull when nullability.errorHandlingClient=true', async () => {
-    const result = await plugin(schema, [{ document }], {
-      nullability: {
-        errorHandlingClient: true,
+    const result = await plugin(
+      schema,
+      [{ document }],
+      {
+        nullability: {
+          errorHandlingClient: true,
+        },
       },
-    });
+      { outputFile: '' }
+    );
 
     const formattedContent = prettier.format(result.content, { parser: 'typescript' });
     expect(formattedContent).toMatchInlineSnapshot(`
@@ -103,11 +108,16 @@ describe('TypeScript Operations Plugin - nullability', () => {
   });
 
   it('does not convert nullability to nonNull when nullability.errorHandlingClient=false', async () => {
-    const result = await plugin(schema, [{ document }], {
-      nullability: {
-        errorHandlingClient: false,
+    const result = await plugin(
+      schema,
+      [{ document }],
+      {
+        nullability: {
+          errorHandlingClient: false,
+        },
       },
-    });
+      { outputFile: '' }
+    );
 
     const formattedContent = prettier.format(result.content, { parser: 'typescript' });
     expect(formattedContent).toMatchInlineSnapshot(`
