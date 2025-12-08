@@ -136,7 +136,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     // validateTs(content, undefined, undefined, undefined, undefined, true);
   });
 
-  it('does not import external types if native GraphQL types are used in Variables and Result', async () => {
+  it('does not import external types if only native GraphQL types are used in Variables and Result', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(id: ID!): User
