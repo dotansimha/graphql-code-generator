@@ -301,4 +301,81 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
+
+  it('does not generate unused schema enum and input types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+        users(input: UsersInput!): UsersResponse!
+      }
+
+      type Mutation {
+        makeUserAdmin(id: ID!): User!
+      }
+
+      type Subscription {
+        userChanges(id: ID!): User!
+      }
+
+      type ResponseError {
+        error: ResponseErrorType!
+      }
+
+      enum ResponseErrorType {
+        NOT_FOUND
+        INPUT_VALIDATION_ERROR
+        FORBIDDEN_ERROR
+        UNEXPECTED_ERROR
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      "UserRole Description"
+      enum UserRole {
+        "UserRole ADMIN"
+        ADMIN
+        "UserRole CUSTOMER"
+        CUSTOMER
+      }
+
+      "UsersInput Description"
+      input UsersInput {
+        "UsersInput from"
+        from: DateTime
+        "UsersInput to"
+        to: DateTime
+        role: UserRole
+      }
+
+      type UsersResponseOk {
+        result: [User!]!
+      }
+      union UsersResponse = UsersResponseOk | ResponseError
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query User {
+        user(id: "100") {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
 });
