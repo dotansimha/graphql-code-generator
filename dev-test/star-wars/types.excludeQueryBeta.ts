@@ -240,15 +240,6 @@ export type StarshipLengthArgs = {
   unit?: InputMaybe<LengthUnit>;
 };
 
-/** The episodes in the Star Wars trilogy */
-export type Episode =
-  /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
-  | 'EMPIRE'
-  /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
-  | 'JEDI'
-  /** Star Wars Episode IV: A New Hope, released in 1977. */
-  | 'NEWHOPE';
-
 export type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;
