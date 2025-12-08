@@ -61,7 +61,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
   private _outputPath: string;
 
-  // FIXME: make this object-style param
   constructor(
     schema: GraphQLSchema,
     config: TypeScriptDocumentsPluginConfig,
