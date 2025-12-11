@@ -258,10 +258,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   private getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
-    const declarationKind = (node.fields?.length || 0) === 1 ? 'type' : 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind(declarationKind)
+      .asKind('type')
       .withName(this.convertName(node))
       .withComment(node.description?.value)
       .withContent(`\n` + (node.fields || []).join('\n  |'));
@@ -338,6 +337,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     for (const field of Object.values(fields)) {
       const fieldType = getNamedType(field.type);
       if (
+        fieldType &&
         (fieldType instanceof GraphQLEnumType ||
           fieldType instanceof GraphQLInputObjectType ||
           fieldType instanceof GraphQLScalarType) &&
@@ -372,7 +372,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
               foundInputType &&
               (foundInputType instanceof GraphQLInputObjectType ||
                 foundInputType instanceof GraphQLScalarType ||
-                foundInputType instanceof GraphQLEnumType)
+                foundInputType instanceof GraphQLEnumType) &&
+              !usedInputTypes[namedTypeNode.name.value]
             ) {
               usedInputTypes[namedTypeNode.name.value] = foundInputType;
               if (foundInputType instanceof GraphQLInputObjectType) {
@@ -388,6 +389,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const typeInfo = new TypeInfo(schema);
     visit(
       documentNode,
+      // AST doesn’t include field types (they are defined in schema) - only names.
+      // TypeInfo is a stateful helper that tracks typing context while walking the AST
+      // visitWithTypeInfo wires that context into a visitor.
       visitWithTypeInfo(typeInfo, {
         Field: () => {
           const fieldType = typeInfo.getType();

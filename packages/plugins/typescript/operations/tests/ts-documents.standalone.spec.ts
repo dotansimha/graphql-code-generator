@@ -116,6 +116,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         role: UserRole;
       };
 
+      export type DateTime = any;
+
       export type UserQueryVariables = Exact<{
         id: string;
       }>;
