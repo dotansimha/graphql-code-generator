@@ -10,6 +10,9 @@ interface PackageInfo {
   weeklyNPMDownloads: number;
 }
 
+// FIXME: fetchPackageInfo is a simpler version of `@theguild/components`'s fetchPackageInfo
+// We cannot use the shared package version because it has imports that Next.js understands
+// but not a simple script like this. So, inlining this version helps unblock deployment
 const fetchPackageInfo = async (packageName: string): Promise<PackageInfo> => {
   const NO_NPM_README_PLACEHOLDER = 'ERROR: No README data found!';
 
