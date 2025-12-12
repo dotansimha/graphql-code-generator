@@ -3,6 +3,7 @@ import { IMarketplaceSearchProps, MarketplaceSearch } from '@theguild/components
 import { compareDesc } from 'date-fns';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { ALL_TAGS, Icon, icons, PACKAGES } from '@/lib/plugins';
+import { packagesInfo } from '@/lib/npm/packages-info.generated';
 
 export type Plugin = {
   title: string;
@@ -17,12 +18,16 @@ export type Plugin = {
 };
 
 export const getPluginsStaticProps = async () => {
-  const packagesInfo = JSON.parse(process.env.PACKAGES_INFO as string);
-
   const categoryEntries = Object.entries(CategoryToPackages);
 
-  const plugins: Plugin[] = Object.entries(PACKAGES).map(([identifier, { npmPackage, title, icon, tags }]) => {
-    const { readme, createdAt, updatedAt, description, weeklyNPMDownloads = 0 } = packagesInfo[npmPackage];
+  const plugins: Plugin[] = Object.entries(PACKAGES).map(([identifier, { title, icon, tags }]) => {
+    const packageInfo = packagesInfo[identifier as keyof typeof packagesInfo];
+    if (!packageInfo) {
+      throw new Error(`Unknown "${identifier}" plugin identifier`);
+    }
+
+    const { readme, createdAt, updatedAt, description, weeklyNPMDownloads = 0 } = packageInfo;
+
     const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || [];
 
     return {

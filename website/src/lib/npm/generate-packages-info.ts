@@ -1,7 +1,14 @@
 import { writeFileSync } from 'node:fs';
 import semver from 'semver';
 import { PACKAGES } from '../plugins/packages.js';
-import type { PackageInfo } from './types.js';
+
+interface PackageInfo {
+  readme: string;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+  weeklyNPMDownloads: number;
+}
 
 const fetchPackageInfo = async (packageName: string): Promise<PackageInfo> => {
   const NO_NPM_README_PLACEHOLDER = 'ERROR: No README data found!';
@@ -40,4 +47,6 @@ for (let [identifier, pkg] of Object.entries(PACKAGES)) {
   result[identifier] = packageInfo;
 }
 
-writeFileSync('./.env', `PACKAGES_INFO="${JSON.stringify(result)}"`, { encoding: 'utf8' });
+writeFileSync('./src/lib/npm/packages-info.generated.ts', `export const packagesInfo= ${JSON.stringify(result)}`, {
+  encoding: 'utf8',
+});
