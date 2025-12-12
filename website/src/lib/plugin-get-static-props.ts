@@ -1,5 +1,5 @@
 import { parse } from 'node:path';
-import { fetchPackageInfo } from '@theguild/components';
+import { readPackagesInfo } from './npm/read-packages-info';
 import { defaultRemarkPlugins } from '@theguild/components/next.config';
 import { format } from 'date-fns';
 import { PACKAGES } from '@/lib/plugins';
@@ -20,8 +20,11 @@ export const pluginGetStaticProps =
     if (!plugin) {
       throw new Error(`Unknown "${identifier}" plugin identifier`);
     }
+
+    const packagesInfo = JSON.parse(process.env.PACKAGES_INFO as string);
+
     const { npmPackage } = plugin;
-    const { readme, updatedAt } = await fetchPackageInfo(npmPackage);
+    const { readme, updatedAt } = packagesInfo[identifier];
 
     const generatedDocs = transformDocs();
     const source = generatedDocs.docs[identifier] || readme.replaceAll('```yml', '```yaml') || '';

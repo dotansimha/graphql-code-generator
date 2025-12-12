@@ -663,10 +663,6 @@
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
         },
-        "importExtension": {
-          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
-        },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
           "type": "boolean"
@@ -763,6 +759,11 @@
           "$ref": "#/definitions/CustomDirectivesConfig",
           "description": "Configures behavior for use with custom directives from\nvarious GraphQL libraries."
         },
+        "generatesOperationTypes": {
+          "description": "Whether to generate operation types such as Variables, Query/Mutation/Subscription selection set, and Fragment types\nDefault value: \"true\"",
+          "type": "boolean"
+        },
+        "importSchemaTypesFrom": { "description": "TODO", "type": "string" },
         "addUnderscoreToArgsType": {
           "description": "Adds `_` to generated `Args` types in order to avoid duplicate identifiers.",
           "type": "boolean"
@@ -859,10 +860,6 @@
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
-        },
-        "importExtension": {
-          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
@@ -1682,10 +1679,6 @@
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
-        },
-        "importExtension": {
-          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
@@ -2811,10 +2804,6 @@
         "emitLegacyCommonJSImports": {
           "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
-        },
-        "importExtension": {
-          "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",

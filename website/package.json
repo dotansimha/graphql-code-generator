@@ -7,7 +7,8 @@
     "start": "next start",
     "build": "yarn generate-json-config && next build && next-sitemap",
     "dev": "next",
-    "generate-json-config": "tsx generate-config-json-schema.ts"
+    "generate-json-config": "tsx generate-config-json-schema.ts",
+    "generate-packages-info": "tsx src/lib/npm/generate-packages-info.ts"
   },
   "devDependencies": {
     "@theguild/tailwind-config": "0.6.3",
@@ -20,7 +21,9 @@
     "postcss-import": "^16.1.0",
     "postcss-lightningcss": "^1.0.1",
     "prettier-plugin-tailwindcss": "0.2.8",
-    "tailwindcss": "^3.4.14"
+    "tailwindcss": "^3.4.14",
+    "semver": "7.7.3",
+    "@types/semver": "7.7.1"
   },
   "dependencies": {
     "@graphql-codegen/add": "6.0.0",

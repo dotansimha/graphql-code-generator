@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { fetchPackageInfo, IMarketplaceSearchProps, MarketplaceSearch } from '@theguild/components';
+import { IMarketplaceSearchProps, MarketplaceSearch } from '@theguild/components';
 import { compareDesc } from 'date-fns';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { ALL_TAGS, Icon, icons, PACKAGES } from '@/lib/plugins';
@@ -17,25 +17,27 @@ export type Plugin = {
 };
 
 export const getPluginsStaticProps = async () => {
-  const categoryEntries = Object.entries(CategoryToPackages);
-  const plugins: Plugin[] = await Promise.all(
-    Object.entries(PACKAGES).map(async ([identifier, { npmPackage, title, icon, tags }]) => {
-      const { readme, createdAt, updatedAt, description, weeklyNPMDownloads = 0 } = await fetchPackageInfo(npmPackage);
-      const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || [];
+  const packagesInfo = JSON.parse(process.env.PACKAGES_INFO as string);
 
-      return {
-        title,
-        readme,
-        createdAt,
-        updatedAt,
-        description,
-        linkHref: `/plugins/${category}/${identifier}`,
-        weeklyNPMDownloads,
-        icon,
-        tags,
-      };
-    })
-  );
+  const categoryEntries = Object.entries(CategoryToPackages);
+
+  const plugins: Plugin[] = Object.entries(PACKAGES).map(([identifier, { npmPackage, title, icon, tags }]) => {
+    const { readme, createdAt, updatedAt, description, weeklyNPMDownloads = 0 } = packagesInfo[npmPackage];
+    const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || [];
+
+    return {
+      title,
+      readme,
+      createdAt,
+      updatedAt,
+      description,
+      linkHref: `/plugins/${category}/${identifier}`,
+      weeklyNPMDownloads,
+      icon,
+      tags,
+    };
+  });
+
   return {
     props: {
       // We add an `ssg` field to the page props,
