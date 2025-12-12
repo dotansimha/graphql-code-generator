@@ -19,6 +19,9 @@ jobs:
       - name: Build Packages
         run: yarn build
 
+      - name: Generate Packages Info
+        run: yarn workspace website run generate-packages-info
+
       - name: Build Website
         run: yarn workspace website run build
 
