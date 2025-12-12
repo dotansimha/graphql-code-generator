@@ -33,5 +33,5 @@ jobs:
           projectName: graphql-code-generator
           prId: ${{ github.event.pull_request.number }}
           websiteDirectory: ./
-          buildScript: yarn build && cd website && yarn build
+          buildScript: yarn build && cd website && yarn generate-packages-info && yarn build
           artifactDir: website/out
