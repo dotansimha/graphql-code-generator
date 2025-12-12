@@ -48,6 +48,15 @@ const result: Record<string, PackageInfo> = {};
 for (let [identifier, pkg] of Object.entries(PACKAGES)) {
   const packageInfo = await fetchPackageInfo(pkg.npmPackage);
   result[identifier] = packageInfo;
+
+  await (async function randomSleep({ minMs, maxMs }: { minMs: number; maxMs: number }): Promise<void> {
+    function sleep(ms: number): Promise<void> {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const delay = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+    await sleep(delay);
+  })({ minMs: 100, maxMs: 5000 });
 }
 
 writeFileSync('./src/lib/npm/packages-info.generated.ts', `export const packagesInfo= ${JSON.stringify(result)}`, {
