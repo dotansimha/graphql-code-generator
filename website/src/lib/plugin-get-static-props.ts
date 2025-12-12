@@ -1,10 +1,10 @@
 import { parse } from 'node:path';
+import { packagesInfo } from '@/lib/npm/packages-info.generated';
 import { defaultRemarkPlugins } from '@theguild/components/next.config';
 import { format } from 'date-fns';
 import { PACKAGES } from '@/lib/plugins';
 import { transformDocs } from '@/lib/transform';
 import { buildDynamicMDX } from 'nextra/remote';
-import { packagesInfo } from '@/lib/npm/packages-info.generated';
 
 // Can't be used in plugin.tsx due incorrect tree shaking:
 // Module not found: Can't resolve 'fs'
