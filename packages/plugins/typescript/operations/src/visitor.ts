@@ -287,8 +287,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getEnumsImports(): string[] {
+    const usedEnumMap: ParsedEnumValuesMap = {};
+    for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
+      if (this._usedNamedInputTypes[enumName]) {
+        usedEnumMap[enumName] = enumDetails;
+      }
+    }
+
     return getEnumsImports({
-      enumValues: this.config.enumValues,
+      enumValues: usedEnumMap,
       useTypeImports: this.config.useTypeImports,
     });
   }

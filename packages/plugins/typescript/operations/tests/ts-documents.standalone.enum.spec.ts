@@ -521,6 +521,60 @@ describe('TypeScript Operations Plugin - Enum', () => {
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
+  it('does not import or export `enumValues` (as file import) if enum is not used', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#MyEnum',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
   it('handles `enumValues` with custom imported enum from namespace with different name', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
