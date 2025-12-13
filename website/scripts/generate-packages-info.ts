@@ -1,4 +1,5 @@
 import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 import semver from 'semver';
 import { PACKAGES } from '../src/lib/plugins/packages.js';
 
@@ -59,6 +60,10 @@ for (let [identifier, pkg] of Object.entries(PACKAGES)) {
   })({ minMs: 100, maxMs: 5000 });
 }
 
-writeFileSync('../src/lib/npm/packages-info.generated.ts', `export const packagesInfo= ${JSON.stringify(result)}`, {
-  encoding: 'utf8',
-});
+writeFileSync(
+  path.join(process.cwd(), 'src', 'lib', 'packages-info.generated.ts'),
+  `export const packagesInfo= ${JSON.stringify(result)}`,
+  {
+    encoding: 'utf8',
+  }
+);

@@ -3,7 +3,7 @@ import { IMarketplaceSearchProps, MarketplaceSearch } from '@theguild/components
 import { compareDesc } from 'date-fns';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
 import { ALL_TAGS, Icon, icons, PACKAGES } from '@/lib/plugins';
-import { packagesInfo } from '@/lib/npm/packages-info.generated';
+import { packagesInfo } from '@/lib/packages-info.generated';
 
 export type Plugin = {
   title: string;
