@@ -363,29 +363,7 @@ export * from "./gql";`);
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export type Query = {
-        __typename?: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
-        b?: Maybe<Scalars['String']['output']>;
-        c?: Maybe<Scalars['String']['output']>;
-      };
-
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -499,29 +477,7 @@ export * from "./gql";`);
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export type Query = {
-        __typename: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
-        b?: Maybe<Scalars['String']['output']>;
-        c?: Maybe<Scalars['String']['output']>;
-      };
-
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -538,8 +494,6 @@ export * from "./gql";`);
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
       export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
-
-    expect(graphqlFile.content).toContain("__typename: 'Query';");
   });
 
   it('supports Apollo fragment masking', async () => {
@@ -588,34 +542,7 @@ export * from "./gql";`);
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export type Query = {
-        __typename?: 'Query';
-        me?: Maybe<User>;
-      };
-
-      export type User = {
-        __typename?: 'User';
-        age: Scalars['Int']['output'];
-        id: Scalars['ID']['output'];
-        name: Scalars['String']['output'];
-      };
-
       export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -705,27 +632,7 @@ export * from "./gql";`);
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export type Query = {
-        __typename?: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
-      };
-
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1411,29 +1318,7 @@ export * from "./gql.js";`);
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export type Query = {
-        __typename?: 'Query';
-        a?: Maybe<Scalars['String']['output']>;
-        b?: Maybe<Scalars['String']['output']>;
-        c?: Maybe<Scalars['String']['output']>;
-      };
-
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1489,29 +1374,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1570,29 +1433,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1651,29 +1492,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1734,29 +1553,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1813,29 +1610,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1898,29 +1673,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1984,29 +1737,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2070,29 +1801,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          a?: Maybe<Scalars['String']['output']>;
-          b?: Maybe<Scalars['String']['output']>;
-          c?: Maybe<Scalars['String']['output']>;
-        };
-
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2162,33 +1871,7 @@ export * from "./gql.js";`);
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export type A = {
-        __typename?: 'A';
-        a: A;
-        b: Scalars['String']['output'];
-      };
-
-      export type Query = {
-        __typename?: 'Query';
-        a: A;
-      };
-
       export type AbFragment = (
         { __typename?: 'A', b: string }
         & { ' $fragmentRefs'?: { 'AcFragment': AcFragment;'AaFragment': AaFragment } }
@@ -2241,34 +1924,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
-        };
-
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2332,34 +1988,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
-        };
-
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2423,34 +2052,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
-        };
-
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2587,34 +2189,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          id?: Maybe<Scalars['String']['output']>;
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
-        };
-
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2749,33 +2324,7 @@ export * from "./gql.js";`);
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Foo = {
-          __typename?: 'Foo';
-          value?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          foo?: Maybe<Foo>;
-          foos?: Maybe<Array<Maybe<Foo>>>;
-        };
-
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3043,51 +2592,10 @@ export * from "./gql.js";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toBeSimilarStringTo(`
-        /* eslint-disable */
+      expect(graphqlFile.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Mutation = {
-          __typename?: 'Mutation';
-          createRegion?: Maybe<Region>;
-        };
-
-
-        export type MutationCreateRegionArgs = {
-          regionDescription: Scalars['String']['input'];
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          regions?: Maybe<Array<Maybe<Region>>>;
-        };
-
-        export type Region = {
-          __typename?: 'Region';
-          regionDescription: Scalars['String']['output'];
-          regionId: Scalars['Int']['output'];
-        };
-
-        export type Subscription = {
-          __typename?: 'Subscription';
-          onRegionCreated: Region;
-        };
-
         export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3120,125 +2628,9 @@ export * from "./gql.js";`);
             regionDescription
           }
         }
-            \`) as unknown as TypedDocumentString<OnRegionCreatedSubscription, OnRegionCreatedSubscriptionVariables>;
+            \`) as unknown as TypedDocumentString<OnRegionCreatedSubscription, OnRegionCreatedSubscriptionVariables>;"
       `);
     });
-  });
-
-  it('support enumsAsConst option', async () => {
-    const { result } = await executeCodegen({
-      schema: [
-        /* GraphQL */ `
-          type Query {
-            thing: Thing
-          }
-          type Thing {
-            color: Color!
-          }
-          enum Color {
-            RED
-            BLUE
-          }
-        `,
-      ],
-      documents: path.join(__dirname, 'fixtures/enum.ts'),
-      generates: {
-        'out1/': {
-          preset,
-          config: {
-            enumsAsConst: true,
-          },
-        },
-      },
-    });
-    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toBeSimilarStringTo(`
-        /* eslint-disable */
-        import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = T | null | undefined;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export const Color = {
-          Blue: 'BLUE',
-          Red: 'RED'
-        } as const;
-
-        export type Color = typeof Color[keyof typeof Color];
-        export type Query = {
-          __typename?: 'Query';
-          thing?: Maybe<Thing>;
-        };
-
-        export type Thing = {
-          __typename?: 'Thing';
-          color: Color;
-        };
-
-        export type FavoriteColorQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-        export type FavoriteColorQuery = { __typename?: 'Query', thing?: { __typename?: 'Thing', color: Color } | null };
-
-
-        export const FavoriteColorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FavoriteColor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<FavoriteColorQuery, FavoriteColorQueryVariables>;
-    `);
-  });
-
-  it('support enumValues option', async () => {
-    const { result } = await executeCodegen({
-      schema: [
-        /* GraphQL */ `
-          enum Color {
-            RED
-            BLUE
-          }
-        `,
-      ],
-      generates: {
-        'out1/': {
-          preset,
-          config: {
-            enumValues: {
-              Color: './fixtures/with-enum-values#MyColor',
-            },
-          },
-        },
-      },
-    });
-
-    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toBeSimilarStringTo(`/* eslint-disable */
-      import { MyColor as Color } from './fixtures/with-enum-values';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export { Color };`);
   });
 
   it('supports immutableTypes', async () => {
@@ -3279,39 +2671,7 @@ export * from "./gql.js";`);
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-      export type Maybe<T> = T | null;
-      export type InputMaybe<T> = T | null | undefined;
-      export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-      export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /** All built-in and custom scalars, mapped to their actual values */
-      export type Scalars = {
-        ID: { input: string; output: string; }
-        String: { input: string; output: string; }
-        Boolean: { input: boolean; output: boolean; }
-        Int: { input: number; output: number; }
-        Float: { input: number; output: number; }
-      };
-
-      export type Query = {
-        readonly __typename?: 'Query';
-        readonly user?: Maybe<User>;
-      };
-
-
-      export type QueryUserArgs = {
-        id: Scalars['ID']['input'];
-      };
-
-      export type User = {
-        readonly __typename?: 'User';
-        readonly friends: ReadonlyArray<User>;
-        readonly id: Scalars['ID']['output'];
-        readonly name: Scalars['String']['output'];
-      };
-
       export type Test_UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
