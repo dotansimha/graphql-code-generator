@@ -28,6 +28,7 @@ export interface ParsedConfig {
   typesPrefix: string;
   typesSuffix: string;
   addTypename: boolean;
+  addTypenameToInterfaces: boolean;
   nonOptionalTypename: boolean;
   extractAllFieldsToTypes: boolean;
   externalFragments: LoadedFragment[];
@@ -284,6 +285,28 @@ export interface RawConfig {
    */
   skipTypename?: boolean;
   /**
+   * @description Similarly to the `addTypename` option, if true, a `__typename` field will be added to type definitions resulting from interface declarations.
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          addTypenameToInterfaces: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  addTypenameToInterfaces?: boolean;
+  /**
    * @default false
    * @description Automatically adds `__typename` field to the generated types, even when they are not specified
    * in the selection set, and makes it non-optional
@@ -416,6 +439,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       externalFragments: rawConfig.externalFragments || [],
       fragmentImports: rawConfig.fragmentImports || [],
       addTypename: !rawConfig.skipTypename,
+      addTypenameToInterfaces: !rawConfig.skipTypename && rawConfig.addTypenameToInterfaces,
       nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       useTypeImports: !!rawConfig.useTypeImports,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
@@ -449,6 +473,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
   get config(): TPluginConfig {
     return this._parsedConfig;
+  }
+
+  get typeUnionOperator() {
+    return ' | ';
   }
 
   public convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
