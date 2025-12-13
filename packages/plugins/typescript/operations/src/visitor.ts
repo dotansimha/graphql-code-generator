@@ -15,6 +15,7 @@ import {
   type GraphQLOutputType,
   type GraphQLSchema,
 } from 'graphql';
+import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import {
   BaseDocumentsVisitor,
   convertSchemaEnumToDeclarationBlockString,
@@ -248,8 +249,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           identifiers: [],
         },
         typesImport: true,
-        // FIXME: rebase with master for the new extension
-        emitLegacyCommonJSImports: true,
+        emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+        importExtension: normalizeImportExtension({
+          emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+          importExtension: this.config.importExtension,
+        }),
       }),
     ];
   }
@@ -299,8 +303,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getEnumsImports(): string[] {
+    const usedEnumMap: ParsedEnumValuesMap = {};
+    for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
+      if (this._usedNamedInputTypes[enumName]) {
+        usedEnumMap[enumName] = enumDetails;
+      }
+    }
+
     return getEnumsImports({
-      enumValues: this.config.enumValues,
+      enumValues: usedEnumMap,
       useTypeImports: this.config.useTypeImports,
     });
   }
@@ -311,5 +322,16 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     return 'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };';
+  }
+
+  getIncrementalUtilityType(): string | null {
+    if (!this.config.generatesOperationTypes) {
+      return null;
+    }
+
+    // Note: `export` here is important for 2 reasons
+    // 1. It is not always used in the rest of the file, so this is a safe way to avoid lint rules (in tsconfig or eslint) complaining it's not used in the current file.
+    // 2. In Client Preset, it is used by fragment-masking.ts, so it needs `export`
+    return "export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };";
   }
 }

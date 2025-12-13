@@ -81,9 +81,7 @@ export const plugin: PluginFunction<
   // It will leave the node as an object.
   // Here, we filter in nodes that have been turned into strings, i.e. they have been transformed
   // This way, we do not have to explicitly declare a method for every node type to convert them to null
-  const schemaTypesDefinitions = schemaTypes.definitions
-    .filter(def => typeof def === 'string')
-    .join('\n');
+  const schemaTypesDefinitions = schemaTypes.definitions.filter(def => typeof def === 'string');
 
   let content = [...schemaTypesDefinitions, ...operationsDefinitions].join('\n');
 
@@ -101,6 +99,7 @@ export const plugin: PluginFunction<
       ...visitor.getEnumsImports(),
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
       visitor.getExactUtilityType(),
+      visitor.getIncrementalUtilityType(),
     ],
     content,
   };
