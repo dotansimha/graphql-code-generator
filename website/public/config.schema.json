@@ -665,7 +665,10 @@
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
+          "anyOf": [
+            { "type": "array", "items": { "type": "string" } },
+            { "enum": [""], "type": "string" }
+          ]
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
@@ -862,7 +865,10 @@
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
+          "anyOf": [
+            { "type": "array", "items": { "type": "string" } },
+            { "enum": [""], "type": "string" }
+          ]
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
@@ -1685,7 +1691,10 @@
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
+          "anyOf": [
+            { "type": "array", "items": { "type": "string" } },
+            { "enum": [""], "type": "string" }
+          ]
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",
@@ -2814,7 +2823,10 @@
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
-          "type": "string"
+          "anyOf": [
+            { "type": "array", "items": { "type": "string" } },
+            { "enum": [""], "type": "string" }
+          ]
         },
         "extractAllFieldsToTypes": {
           "description": "Extract all field types to their own types, instead of inlining them.\nThis helps to reduce type duplication, and makes type errors more readable.\nIt can also significantly reduce the size of the generated code, the generation time,\nand the typechecking time.\nDefault value: \"false\"",

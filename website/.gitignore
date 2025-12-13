@@ -1,0 +1,4 @@
+# NPM packages info fetched before building.
+# Without this, every page build process will hit NPM and may get rate limited.
+# Run `yarn generate-packages-info` to regenerate.
+src/lib/packages-info.generated.ts

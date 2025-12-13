@@ -1,10 +1,10 @@
 import { parse } from 'node:path';
-import { fetchPackageInfo } from '@theguild/components';
 import { defaultRemarkPlugins } from '@theguild/components/next.config';
 import { format } from 'date-fns';
 import { PACKAGES } from '@/lib/plugins';
 import { transformDocs } from '@/lib/transform';
 import { buildDynamicMDX } from 'nextra/remote';
+import { packagesInfo } from '@/lib/packages-info.generated';
 
 // Can't be used in plugin.tsx due incorrect tree shaking:
 // Module not found: Can't resolve 'fs'
@@ -20,8 +20,9 @@ export const pluginGetStaticProps =
     if (!plugin) {
       throw new Error(`Unknown "${identifier}" plugin identifier`);
     }
+
     const { npmPackage } = plugin;
-    const { readme, updatedAt } = await fetchPackageInfo(npmPackage);
+    const { readme, updatedAt } = packagesInfo[identifier as keyof typeof packagesInfo];
 
     const generatedDocs = transformDocs();
     const source = generatedDocs.docs[identifier] || readme.replaceAll('```yml', '```yaml') || '';
