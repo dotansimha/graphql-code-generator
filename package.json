@@ -51,7 +51,7 @@
     "@theguild/eslint-config": "0.13.3",
     "@theguild/prettier-config": "0.1.1",
     "bob-the-bundler": "7.0.1",
-    "cross-env": "7.0.3",
+    "cross-env": "10.1.0",
     "eslint": "9.9.0",
     "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5",
     "graphql": "16.9.0",
