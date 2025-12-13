@@ -1,54 +1,5 @@
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-};
-
-/** The input object sent when passing a color */
-export type ColorInput = {
-  blue: Scalars['Int']['input'];
-  green: Scalars['Int']['input'];
-  red: Scalars['Int']['input'];
-};
-
-/** The episodes in the Star Wars trilogy */
-export enum Episode {
-  /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
-  Empire = 'EMPIRE',
-  /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
-  Jedi = 'JEDI',
-  /** Star Wars Episode IV: A New Hope, released in 1977. */
-  Newhope = 'NEWHOPE',
-}
-
-/** Units of height */
-export enum LengthUnit {
-  /** Primarily used in the United States */
-  Foot = 'FOOT',
-  /** The standard unit around the world */
-  Meter = 'METER',
-}
-
-/** The input object sent when someone is creating a new review */
-export type ReviewInput = {
-  /** Comment about the movie, optional */
-  commentary?: InputMaybe<Scalars['String']['input']>;
-  /** Favorite color, optional */
-  favoriteColor?: InputMaybe<ColorInput>;
-  /** 0-5 stars */
-  stars: Scalars['Int']['input'];
-};
-
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;
