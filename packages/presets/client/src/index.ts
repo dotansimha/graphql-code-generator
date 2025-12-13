@@ -7,7 +7,6 @@ import {
   type Types,
 } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
-import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
@@ -140,16 +139,13 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       useTypeImports: options.config.useTypeImports,
       skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
-      enumsAsTypes: options.config.enumsAsTypes,
-      enumsAsConst: options.config.enumsAsConst,
+      enumType: options.config.enumType,
       enumValues: options.config.enumValues,
       futureProofEnums: options.config.futureProofEnums,
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
       skipTypeNameForRoot: options.config.skipTypeNameForRoot,
-      onlyOperationTypes: options.config.onlyOperationTypes,
-      onlyEnums: options.config.onlyEnums,
       customDirectives: options.config.customDirectives,
       immutableTypes: options.config.immutableTypes,
     };
@@ -202,7 +198,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const pluginMap = {
       ...options.pluginMap,
       [`add`]: addPlugin,
-      [`typescript`]: typescriptPlugin,
       [`typescript-operations`]: typescriptOperationPlugin,
       [`typed-document-node`]: {
         ...typedDocumentNodePlugin,
@@ -236,11 +231,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
-      {
-        [`typescript`]: {
-          inputMaybeValue: 'T | null | undefined',
-        },
-      },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {
