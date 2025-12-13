@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HelloQueryQuery = { __typename?: 'Query'; hello: string };

@@ -23,7 +23,8 @@ describe('client-preset - Enum', () => {
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };"
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };"
     `);
   });
 
@@ -71,6 +72,7 @@ describe('client-preset - Enum', () => {
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type Shape =
         | 'ROUND'
         | 'SQUARE';
@@ -132,6 +134,7 @@ describe('client-preset - Enum', () => {
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type ShapeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -184,6 +187,7 @@ describe('client-preset - Enum', () => {
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export const Shape = {
         Round: 'ROUND',
         Square: 'SQUARE'

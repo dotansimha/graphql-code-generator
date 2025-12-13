@@ -364,6 +364,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -478,6 +479,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -543,6 +545,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -633,6 +636,7 @@ export * from "./gql";`);
       "/* eslint-disable */
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1319,6 +1323,7 @@ export * from "./gql.js";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1375,6 +1380,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1434,6 +1440,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1493,6 +1500,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1554,6 +1562,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1611,6 +1620,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1674,6 +1684,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1738,6 +1749,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1802,6 +1814,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1872,6 +1885,7 @@ export * from "./gql.js";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type AbFragment = (
         { __typename?: 'A', b: string }
         & { ' $fragmentRefs'?: { 'AcFragment': AcFragment;'AaFragment': AaFragment } }
@@ -1925,6 +1939,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1989,6 +2004,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2053,6 +2069,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2190,6 +2207,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2325,6 +2343,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2596,6 +2615,7 @@ export * from "./gql.js";`);
         "/* eslint-disable */
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2672,6 +2692,7 @@ export * from "./gql.js";`);
       "/* eslint-disable */
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type Test_UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 

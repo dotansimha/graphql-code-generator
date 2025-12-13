@@ -307,4 +307,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     return 'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };';
   }
+
+  getIncrementalUtilityType(): string | null {
+    if (!this.config.generatesOperationTypes) {
+      return null;
+    }
+
+    // Note: `export` here is important for 2 reasons
+    // 1. It is not always used in the rest of the file, so this is a safe way to avoid lint rules (in tsconfig or eslint) complaining it's not used in the current file.
+    // 2. In Client Preset, it is used by fragment-masking.ts, so it needs `export`
+    return "export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };";
+  }
 }
