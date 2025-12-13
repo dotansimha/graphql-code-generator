@@ -7,8 +7,8 @@
     "start": "next start",
     "build": "yarn generate-json-config && next build && next-sitemap",
     "dev": "next",
-    "generate-json-config": "tsx generate-config-json-schema.ts",
-    "generate-packages-info": "tsx src/lib/npm/generate-packages-info.ts"
+    "generate-json-config": "tsx scripts/generate-config-json-schema.ts",
+    "generate-packages-info": "tsx scripts/generate-packages-info.ts"
   },
   "devDependencies": {
     "@theguild/tailwind-config": "0.6.3",

@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import semver from 'semver';
-import { PACKAGES } from '../plugins/packages.js';
+import { PACKAGES } from '../src/lib/plugins/packages.js';
 
 interface PackageInfo {
   readme: string;
@@ -59,6 +59,6 @@ for (let [identifier, pkg] of Object.entries(PACKAGES)) {
   })({ minMs: 100, maxMs: 5000 });
 }
 
-writeFileSync('./src/lib/npm/packages-info.generated.ts', `export const packagesInfo= ${JSON.stringify(result)}`, {
+writeFileSync('../src/lib/npm/packages-info.generated.ts', `export const packagesInfo= ${JSON.stringify(result)}`, {
   encoding: 'utf8',
 });
