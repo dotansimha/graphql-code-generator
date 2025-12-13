@@ -23,7 +23,7 @@
     "vite": "^6.0.0",
     "vue-tsc": "^2.0.0",
     "serve": "14.2.3",
-    "cypress": "14.0.0",
+    "cypress": "15.7.1",
     "start-server-and-test": "2.0.5"
   }
 }
