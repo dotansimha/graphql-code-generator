@@ -1,5 +1,11 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 6.2.2
+
+### Patch Changes
+
+- [#10530](https://github.com/dotansimha/graphql-code-generator/pull/10530) [`f588d91`](https://github.com/dotansimha/graphql-code-generator/commit/f588d91ac43ea0aa5931915ce980d2e6876bb59c) Thanks [@Georgegriff](https://github.com/Georgegriff)! - fix fragment type generation names
+
 ## 6.2.1
 
 ### Patch Changes
