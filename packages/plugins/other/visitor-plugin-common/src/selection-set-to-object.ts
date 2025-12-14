@@ -583,11 +583,21 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             }
             linkFieldSelectionSets.set(fieldName, linkFieldNode);
           } else if (selectionNode.alias) {
-            primitiveAliasFields.set(selectionNode.alias.value, selectionNode);
+            const outputName = selectionNode.alias.value;
+            // Check if a field with the same output name already exists
+            // (either as an alias or as a regular field)
+            if (!primitiveFields.has(outputName)) {
+              primitiveAliasFields.set(outputName, selectionNode);
+            }
           } else if (selectionNode.name.value === '__typename') {
             requireTypename = true;
           } else {
-            primitiveFields.set(selectionNode.name.value, selectionNode);
+            const outputName = selectionNode.name.value;
+            // Check if a field with the same output name already exists
+            // (either as an alias or as a regular field)
+            if (!primitiveAliasFields.has(outputName)) {
+              primitiveFields.set(outputName, selectionNode);
+            }
           }
         } else if (selectionNode.kind === 'Directive') {
           if (['skip', 'include'].includes(selectionNode?.name?.value)) {
