@@ -157,7 +157,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type OverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
-        me?: OverlappingFieldsMergingTestQuery_me | null
+        me: OverlappingFieldsMergingTestQuery_me | null
       };
 
 
@@ -187,7 +187,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type NestedOverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
-        me?: NestedOverlappingFieldsMergingTestQuery_me | null
+        me: NestedOverlappingFieldsMergingTestQuery_me | null
       };
 
 
@@ -409,11 +409,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -439,11 +439,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -501,11 +501,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationOriginatedFrom_TalkInteraction_Fragment = { __typename: 'TalkInteraction' };
 
-      type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      type ConversationOriginatedFrom_WeChatInteraction_Fragment = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      type ConversationOriginatedFrom_WeChatInteraction_Fragment = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       type ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -525,11 +525,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction', channel: string, type: CallType };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -583,7 +583,7 @@ describe('extractAllFieldsToTypes: true', () => {
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom = { __typename: 'TalkInteraction' | 'NotImplementedOriginatedFrom' };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -622,7 +622,7 @@ describe('extractAllFieldsToTypes: true', () => {
       export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom = { __typename: 'TalkInteraction' | 'NotImplementedOriginatedFrom' };
 
       export type ConversationConversationEventFragment_BrokenConversationEvent_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -668,7 +668,7 @@ describe('extractAllFieldsToTypes: true', () => {
       type ConversationOriginatedFrom_TalkInteraction_NotImplementedOriginatedFrom_Fragment = { __typename: 'TalkInteraction' | 'NotImplementedOriginatedFrom' };
 
       type ConversationOriginatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction_Fragment = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -695,7 +695,7 @@ describe('extractAllFieldsToTypes: true', () => {
       );
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -890,17 +890,17 @@ describe('extractAllFieldsToTypes: true', () => {
       );
 
       type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = (
-        { __typename: 'NativeMessagingInteraction', conversationId?: string | null }
+        { __typename: 'NativeMessagingInteraction', conversationId: string | null }
         & MessageEnvelopeData_NativeMessagingInteraction_Fragment
       );
 
       type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = (
-        { __typename: 'WhatsAppInteraction', conversationId?: string | null }
+        { __typename: 'WhatsAppInteraction', conversationId: string | null }
         & MessageEnvelopeData_WhatsAppInteraction_Fragment
       );
 
       type ConversationOriginatedFrom_WeChatInteraction_Fragment = (
-        { __typename: 'WeChatInteraction', conversationId?: string | null }
+        { __typename: 'WeChatInteraction', conversationId: string | null }
         & MessageEnvelopeData_WeChatInteraction_Fragment
       );
 
@@ -1127,17 +1127,17 @@ describe('extractAllFieldsToTypes: true', () => {
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_TalkInteraction_Fragment' };
 
       type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = (
-        { __typename: 'NativeMessagingInteraction', conversationId?: string | null }
+        { __typename: 'NativeMessagingInteraction', conversationId: string | null }
         & { ' $fragmentRefs'?: { 'MessageEnvelopeData_NativeMessagingInteraction_Fragment': MessageEnvelopeData_NativeMessagingInteraction_Fragment } }
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_NativeMessagingInteraction_Fragment' };
 
       type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = (
-        { __typename: 'WhatsAppInteraction', conversationId?: string | null }
+        { __typename: 'WhatsAppInteraction', conversationId: string | null }
         & { ' $fragmentRefs'?: { 'MessageEnvelopeData_WhatsAppInteraction_Fragment': MessageEnvelopeData_WhatsAppInteraction_Fragment } }
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_WhatsAppInteraction_Fragment' };
 
       type ConversationOriginatedFrom_WeChatInteraction_Fragment = (
-        { __typename: 'WeChatInteraction', conversationId?: string | null }
+        { __typename: 'WeChatInteraction', conversationId: string | null }
         & { ' $fragmentRefs'?: { 'MessageEnvelopeData_WeChatInteraction_Fragment': MessageEnvelopeData_WeChatInteraction_Fragment } }
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_WeChatInteraction_Fragment' };
 

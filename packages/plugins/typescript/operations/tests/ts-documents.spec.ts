@@ -9,14 +9,8 @@ import { schema } from './shared/schema.js';
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
 
-  const validate = async (
-    content: Types.PluginOutput,
-    config: any = {},
-    pluginSchema = schema,
-    usage = '',
-    suspenseErrors = []
-  ) => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
+  const validate = async (content: Types.PluginOutput, usage = '', suspenseErrors = []) => {
+    const m = mergeOutputs([content, usage]);
     validateTs(m, undefined, undefined, undefined, suspenseErrors);
 
     return m;
@@ -48,7 +42,7 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).not.toContain('export');
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should handle "namespacedImportName" and add it when specified', async () => {
@@ -97,7 +91,7 @@ describe('TypeScript Operations Plugin', () => {
           )> }
         );
       `);
-      await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
+      await validate(content, '', [`Cannot find namespace 'Types'.`]);
     });
 
     it('Can merge an inline fragment with a spread', async () => {
@@ -194,10 +188,10 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null, user: { __typename?: 'User', id: string, f?: Types.E | null, j?: any | null } };`
+        `export type TestQuery = { __typename?: 'Query', f: Types.E | null, user: { __typename?: 'User', id: string, f: Types.E | null, j: any | null } };`
       );
 
-      await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
+      await validate(content, '', [`Cannot find namespace 'Types'.`]);
     });
 
     it('Should generate the correct output when using immutableTypes config', async () => {
@@ -240,7 +234,7 @@ describe('TypeScript Operations Plugin', () => {
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('should include fragment variable definitions when experimentalFragmentVariables is set', async () => {
@@ -299,7 +293,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
       expect(content).toBeSimilarStringTo(`
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age?: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
       `);
     });
 
@@ -376,7 +370,7 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
       expect(content).toContain(`Pick<User, 'id' | 'joinDate'>`);
-      await validate(content, config, testSchema);
+      await validate(content);
     });
   });
 
@@ -425,7 +419,7 @@ describe('TypeScript Operations Plugin', () => {
         );
       `);
 
-      await validate(content, config);
+      await validate(content);
     });
   });
 
@@ -470,7 +464,7 @@ describe('TypeScript Operations Plugin', () => {
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should allow custom naming and point to the correct type - with custom prefix', async () => {
@@ -517,7 +511,7 @@ describe('TypeScript Operations Plugin', () => {
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Test for dedupeOperationSuffix', async () => {
@@ -842,12 +836,12 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type Q1Query = { test?: Maybe<(
+        `export type Q1Query = { test: Maybe<(
           { __typename?: 'Test' }
           & Pick<Test, 'foo'>
         )> };`
       );
-      await validate(content, config, testSchema);
+      await validate(content);
     });
 
     it('Should ignore __typename for root types with skipTypeNameForRoot = true, and with nonOptionalTypename = true', async () => {
@@ -877,12 +871,12 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type Q1Query = { test?: Maybe<(
+        `export type Q1Query = { test: Maybe<(
           { __typename: 'Test' }
           & Pick<Test, 'foo'>
         )> };`
       );
-      await validate(content, config, testSchema);
+      await validate(content);
     });
 
     it('Should ignore skipTypeNameForRoot = true when __typename is specified manually', async () => {
@@ -915,13 +909,13 @@ describe('TypeScript Operations Plugin', () => {
       expect(content).toBeSimilarStringTo(
         `export type Q1Query = (
           { __typename: 'Query' }
-          & { test?: Maybe<(
+          & { test: Maybe<(
             { __typename: 'Test' }
             & Pick<Test, 'foo'>
           )> }
         );`
       );
-      await validate(content, config, testSchema);
+      await validate(content);
     });
 
     it('Should add __typename correctly with nonOptionalTypename=false,skipTypename=true,preResolveTypes=true and explicit field', async () => {
@@ -997,7 +991,7 @@ export type Q2Query = { search: Array<
     | { __typename: 'Person', id: string, name: string }
   > };`
       );
-      await validate(content, config, testSchema);
+      await validate(content);
     });
 
     it('Should skip __typename when skipTypename is set to true', async () => {
@@ -1012,7 +1006,7 @@ export type Q2Query = { search: Array<
       });
 
       expect(content).not.toContain(`__typename`);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add __typename when dealing with fragments', async () => {
@@ -1054,7 +1048,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
       export type TestQuery = (
         { __typename?: 'Query' }
-        & { some?: Maybe<(
+        & { some: Maybe<(
           { __typename: 'A' }
           & Pick<A, 'id'>
         ) | (
@@ -1063,7 +1057,7 @@ export type Q2Query = { search: Array<
         )> }
       );
       `);
-      await validate(content, config, testSchema);
+      await validate(content);
     });
 
     it('Should add aliased __typename correctly', async () => {
@@ -1084,7 +1078,7 @@ export type Q2Query = { search: Array<
         & { type: 'Query' }
       );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add aliased __typename correctly with preResovleTypes', async () => {
@@ -1099,9 +1093,9 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null, type: 'Query' };
+        export type Unnamed_1_Query = { __typename?: 'Query', dummy: string | null, type: 'Query' };
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add __typename as non-optional when explicitly specified', async () => {
@@ -1121,7 +1115,7 @@ export type Q2Query = { search: Array<
           & Pick<Query, 'dummy'>
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add __typename as non-optional when forced', async () => {
@@ -1140,7 +1134,7 @@ export type Q2Query = { search: Array<
           & Pick<Query, 'dummy'>
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add __typename as optional when its not specified', async () => {
@@ -1159,7 +1153,7 @@ export type Q2Query = { search: Array<
           & Pick<Query, 'dummy'>
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add __typename as non-optional when its explictly specified, even if skipTypename is true', async () => {
@@ -1180,7 +1174,7 @@ export type Q2Query = { search: Array<
           & Pick<Query, 'dummy'>
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add __typename correctly when unions are in use', async () => {
@@ -1204,7 +1198,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type UnionTestQuery = (
           { __typename?: 'Query' }
-          & { unionTest?: Maybe<(
+          & { unionTest: Maybe<(
             { __typename?: 'User' }
             & Pick<User, 'id'>
           ) | (
@@ -1213,7 +1207,7 @@ export type Q2Query = { search: Array<
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should add __typename correctly when interfaces are in use', async () => {
@@ -1255,7 +1249,7 @@ export type Q2Query = { search: Array<
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
     it('should mark __typename as non optional in case it is included in the selection set of an interface field', async () => {
       const ast = parse(/* GraphQL */ `
@@ -1287,7 +1281,7 @@ export type Q2Query = { search: Array<
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
     it('should mark __typename as non optional in case it is included in the selection set of an union field', async () => {
       const ast = parse(/* GraphQL */ `
@@ -1309,7 +1303,7 @@ export type Q2Query = { search: Array<
       });
       expect(content).toBeSimilarStringTo(`
       { __typename?: 'Query' }
-      & { unionTest?: Maybe<(
+      & { unionTest: Maybe<(
         { __typename: 'User' }
         & Pick<User, 'email'>
       ) | (
@@ -1318,7 +1312,7 @@ export type Q2Query = { search: Array<
       )> }
     );
       `);
-      await validate(content, config);
+      await validate(content);
     });
   });
 
@@ -1339,7 +1333,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should handle unnamed documents correctly with multiple documents', async () => {
@@ -1369,7 +1363,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
       `);
-      await validate(content, config);
+      await validate(content);
     });
   });
 
@@ -1456,7 +1450,7 @@ export type Q2Query = { search: Array<
       }
       `;
 
-      await validate(content, config, testSchema, usage);
+      await validate(content, usage);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
 
@@ -1485,7 +1479,7 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      await validate(content, config, testSchema);
+      await validate(content);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
 
@@ -1518,7 +1512,7 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      await validate(content, config, testSchema);
+      await validate(content);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
 
@@ -1549,7 +1543,7 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      await validate(content, config, testSchema);
+      await validate(content);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
 
@@ -1585,8 +1579,6 @@ export type Q2Query = { search: Array<
       });
       await validate(
         content,
-        config,
-        testSchema,
         `function test(q: AaaQuery) {
         console.log(q.user.__typename === 'User' ? q.user.id : null);
         console.log(q.user.__typename === 'Error' ? q.user.__typename : null);
@@ -1644,8 +1636,6 @@ export type Q2Query = { search: Array<
 
       await validate(
         content,
-        config,
-        testSchema,
         `
           function test(a: UserFragment) {
               if (a.__typename === 'Tom') {
@@ -1717,7 +1707,7 @@ export type Q2Query = { search: Array<
       }
       `;
 
-      await validate(content, config, testSchema, usage);
+      await validate(content, usage);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
 
@@ -1743,12 +1733,12 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { me?: Maybe<(
+        export type MeQuery = { me: Maybe<(
             Pick<User, 'id' | 'username' | 'role'>
-            & { profile?: Maybe<Pick<Profile, 'age'>> }
+            & { profile: Maybe<Pick<Profile, 'age'>> }
           )> };
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support fragment spread correctly with simple type with other fields', async () => {
@@ -1773,12 +1763,12 @@ export type Q2Query = { search: Array<
       });
 
       expect(content).toBeSimilarStringTo(`
-      export type MeQuery = { me?: Maybe<(
+      export type MeQuery = { me: Maybe<(
         Pick<User, 'username' | 'id'>
-        & { profile?: Maybe<Pick<Profile, 'age'>> }
+        & { profile: Maybe<Pick<Profile, 'age'>> }
       )> };
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support fragment spread correctly with multiple fragment spread', async () => {
@@ -1809,10 +1799,10 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
       export type MeQuery = (
         { __typename?: 'Query' }
-        & { me?: Maybe<(
+        & { me: Maybe<(
           { __typename?: 'User' }
           & Pick<User, 'username' | 'id'>
-          & { profile?: Maybe<(
+          & { profile: Maybe<(
             { __typename?: 'Profile' }
             & Pick<Profile, 'age'>
           )> }
@@ -1822,7 +1812,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type UserProfileFragment = (
           { __typename?: 'User' }
-          & { profile?: Maybe<(
+          & { profile: Maybe<(
             { __typename?: 'Profile' }
             & Pick<Profile, 'age'>
           )> }
@@ -1834,7 +1824,7 @@ export type Q2Query = { search: Array<
           & Pick<User, 'id'>
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should generate the correct intersection for fragments when using with interfaces with different type', async () => {
@@ -1884,7 +1874,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
       export type Unnamed_1_Query = (
         { __typename?: 'Query' }
-        & { b?: Maybe<(
+        & { b: Maybe<(
           { __typename?: 'A' }
           & Pick<A, 'id' | 'x'>
         ) | (
@@ -1903,7 +1893,7 @@ export type Q2Query = { search: Array<
         & Pick<B, 'id' | 'y'>
       );
       `);
-      await validate(content, config, schema);
+      await validate(content);
     });
 
     it('Should generate the correct intersection for fragments when type implements 2 interfaces', async () => {
@@ -1961,7 +1951,7 @@ export type Q2Query = { search: Array<
         ) }
       );
       `);
-      await validate(content, config, schema);
+      await validate(content);
     });
 
     it('Should generate the correct intersection for fragments when using with interfaces with same type', async () => {
@@ -2009,7 +1999,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
       export type Unnamed_1_Query = (
         { __typename?: 'Query' }
-        & { b?: Maybe<(
+        & { b: Maybe<(
           { __typename?: 'A' }
           & Pick<A, 'id' | 'x'>
         ) | { __typename?: 'B' }> }
@@ -2069,7 +2059,7 @@ export type Q2Query = { search: Array<
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support union correctly when used with inline fragments', async () => {
@@ -2094,7 +2084,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type UnionTestQuery = (
           { __typename?: 'Query' }
-            & { unionTest?: Maybe<(
+            & { unionTest: Maybe<(
             { __typename?: 'User' }
             & Pick<User, 'id'>
           ) | (
@@ -2103,7 +2093,7 @@ export type Q2Query = { search: Array<
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support union correctly when used with inline fragments on types implementing common interface', async () => {
@@ -2141,7 +2131,7 @@ export type Q2Query = { search: Array<
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support union correctly when used with inline fragments on types implementing common interface and also other types', async () => {
@@ -2186,7 +2176,7 @@ export type Q2Query = { search: Array<
           )> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support merging identical fragment union types', async () => {
@@ -2222,7 +2212,7 @@ export type Q2Query = { search: Array<
           & { __typename?: 'TextNotification' | 'ImageNotification' }
         );
      `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support computing correct names for merged fragment union types', async () => {
@@ -2252,7 +2242,7 @@ export type Q2Query = { search: Array<
 
         export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support computing correct names for large merged fragment union types', async () => {
@@ -2313,7 +2303,7 @@ export type Q2Query = { search: Array<
 
          export type NFragment = N_A_Fragment | N_zhJJUzpMTyh98zugnx0IKwiLetPNjV8KybSlmpAEUU_Fragment;
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should not create empty types when merging fragment union types', async () => {
@@ -2340,7 +2330,7 @@ export type Q2Query = { search: Array<
          & { __typename?: 'Query' }
        );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support merging identical fragment union types with skipTypename', async () => {
@@ -2365,7 +2355,7 @@ export type Q2Query = { search: Array<
 
         export type testQuery = { notifications: Array<{ id: string }> };
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support computing correct names for merged fragment union types with skipTypename', async () => {
@@ -2389,7 +2379,7 @@ export type Q2Query = { search: Array<
 
        export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Ignores merging when enabled alongside inline fragment masking', async () => {
@@ -2427,7 +2417,7 @@ export type Q2Query = { search: Array<
 
        export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
      `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should support inline fragments', async () => {
@@ -2449,13 +2439,13 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
       expect(content).toBeSimilarStringTo(`
-        export type CurrentUserQuery = { me?: Maybe<(
+        export type CurrentUserQuery = { me: Maybe<(
             Pick<User, 'username' | 'id'>
-            & { profile?: Maybe<Pick<Profile, 'age'>> }
+            & { profile: Maybe<Pick<Profile, 'age'>> }
         )> };
       `);
 
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should build a basic selection set based on basic query on GitHub schema', async () => {
@@ -2486,12 +2476,12 @@ export type Q2Query = { search: Array<
         }>;`
       );
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { currentUser?: Maybe<Pick<User, 'login' | 'html_url'>>, entry?: Maybe<(
+        export type MeQuery = { currentUser: Maybe<Pick<User, 'login' | 'html_url'>>, entry: Maybe<(
           Pick<Entry, 'id' | 'createdAt'>
           & { postedBy: Pick<User, 'login' | 'html_url'> }
         )> };
       `);
-      await validate(content, config, gitHuntSchema);
+      await validate(content);
     });
 
     it('Should build a basic selection set based on basic query on GitHub schema with preResolveTypes=true', async () => {
@@ -2517,9 +2507,9 @@ export type Q2Query = { search: Array<
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
+        export type MeQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', login: string, html_url: string } | null, entry: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
       `);
-      await validate(content, config, gitHuntSchema);
+      await validate(content);
     });
 
     it('Should produce valid output with preResolveTypes=true and enums', async () => {
@@ -2561,8 +2551,8 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      const o = await validate(content, config, testSchema);
-      expect(o).toContain(`export enum Information_EntryType {`);
+      const o = await validate(content);
+      expect(o).toContain(`export type Information_EntryType =\n  | 'NAME'\n  | 'ADDRESS';`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
     });
 
@@ -2609,12 +2599,11 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      const o = await validate(content, config, testSchema);
+      const o = await validate(content);
       expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = Exact<{
         e: Information_EntryType;
       }>;`);
-      expect(o).toContain(`export type IQuery = {`);
-      expect(o).toContain(`export enum Information_EntryType {`);
+      expect(o).toContain(`export type Information_EntryType =\n  | 'NAME'\n  | 'ADDRESS';`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
     });
 
@@ -2661,12 +2650,11 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      const o = await validate(content, config, testSchema);
+      const o = await validate(content);
       expect(o).toBeSimilarStringTo(` export type TestQueryVariablesI = Exact<{
         e: Information_EntryType;
       }>;`);
-      expect(o).toContain(`export type QueryI = {`);
-      expect(o).toContain(`export enum Information_EntryType {`);
+      expect(o).toContain(`export type Information_EntryType =\n  | 'NAME'\n  | 'ADDRESS';`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
     });
 
@@ -2684,7 +2672,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type DummyQuery = Pick<Query, 'dummy'>;
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should build a basic selection set based on basic query with field aliasing for basic scalar', async () => {
@@ -2704,10 +2692,10 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type DummyQuery = (
           { customName: Query['dummy'] }
-          & { customName2?: Maybe<Pick<Profile, 'age'>> }
+          & { customName2: Maybe<Pick<Profile, 'age'>> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should build a basic selection set based on a query with inner fields', async () => {
@@ -2729,12 +2717,12 @@ export type Q2Query = { search: Array<
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type CurrentUserQuery = { me?: Maybe<(
+        export type CurrentUserQuery = { me: Maybe<(
           Pick<User, 'id' | 'username' | 'role'>
-          & { profile?: Maybe<Pick<Profile, 'age'>> }
+          & { profile: Maybe<Pick<Profile, 'age'>> }
         )> };
       `);
-      await validate(content, config);
+      await validate(content);
     });
   });
 
@@ -2757,10 +2745,10 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type UserFieldsFragment = (
           Pick<User, 'id' | 'username'>
-          & { profile?: Maybe<Pick<Profile, 'age'>> }
+          & { profile: Maybe<Pick<Profile, 'age'>> }
         );
       `);
-      await validate(content, config);
+      await validate(content);
     });
   });
 
@@ -2783,12 +2771,12 @@ export type Q2Query = { search: Array<
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type LoginMutation = { login?: Maybe<(
+        export type LoginMutation = { login: Maybe<(
           Pick<User, 'id' | 'username'>
-          & { profile?: Maybe<Pick<Profile, 'age'>> }
+          & { profile: Maybe<Pick<Profile, 'age'>> }
         )> };
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should detect Query correctly', async () => {
@@ -2805,7 +2793,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type TestQuery = Pick<Query, 'dummy'>;
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should detect Subscription correctly', async () => {
@@ -2822,9 +2810,9 @@ export type Q2Query = { search: Array<
       });
 
       expect(content).toBeSimilarStringTo(`
-        export type TestSubscription = { userCreated?: Maybe<Pick<User, 'id'>> };
+        export type TestSubscription = { userCreated: Maybe<Pick<User, 'id'>> };
       `);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should handle operation variables correctly', async () => {
@@ -2859,7 +2847,7 @@ export type Q2Query = { search: Array<
           innerRequired: Array<string> | string;
         }>;`)
       );
-      await validate(content, config, schema);
+      await validate(content);
     });
 
     it('Should handle operation variables correctly when they use custom scalars', async () => {
@@ -2878,7 +2866,7 @@ export type Q2Query = { search: Array<
           test?: any | null;
         }>;`
       );
-      await validate(content, config);
+      await validate(content);
     });
 
     it('Should create empty variables when there are no operation variables', async () => {
@@ -2893,7 +2881,7 @@ export type Q2Query = { search: Array<
       });
 
       expect(content).toBeSimilarStringTo(`export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;`);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('avoid duplicates - each type name should be unique', async () => {
@@ -3021,7 +3009,7 @@ export type Q2Query = { search: Array<
             { __typename?: '__Schema' }
             & { queryType: (
               { __typename?: '__Type' }
-              & { fields?: Maybe<Array<(
+              & { fields: Maybe<Array<(
                 { __typename?: '__Field' }
                 & Pick<__Field, 'name'>
               )>> }
@@ -3066,10 +3054,10 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type InfoQuery = (
           { __typename?: 'Query' }
-          & { __type?: Maybe<(
+          & { __type: Maybe<(
             { __typename?: '__Type' }
             & Pick<__Type, 'name'>
-            & { fields?: Maybe<Array<(
+            & { fields: Maybe<Array<(
               { __typename?: '__Field' }
               & Pick<__Field, 'name'>
               & { type: (
@@ -3193,7 +3181,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type PREFIX_UsersQuery = (
           { __typename?: 'Query' }
-          & { users?: Maybe<Array<Maybe<(
+          & { users: Maybe<Array<Maybe<(
             { __typename?: 'User' }
             & Pick<PREFIX_User, 'access'>
           )>>> }
@@ -3432,7 +3420,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type SomethingQuery = (
           { __typename?: 'Query' }
-          & { node?: Maybe<(
+          & { node: Maybe<(
             { __typename?: 'A' }
             & Pick<A, 'a'>
           ) | (
@@ -3502,7 +3490,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type UserQuery = (
           { __typename?: 'Query' }
-          & { user?: Maybe<(
+          & { user: Maybe<(
             { __typename?: 'User' }
             & Pick<User, 'id' | 'login'>
           ) | (
@@ -3511,7 +3499,7 @@ export type Q2Query = { search: Array<
           ) | (
             { __typename?: 'Error3' }
             & Pick<Error3, 'message'>
-            & { info?: Maybe<(
+            & { info: Maybe<(
               { __typename?: 'AdditionalInfo' }
               & Pick<AdditionalInfo, 'message'>
             )> }
@@ -3595,7 +3583,7 @@ export type Q2Query = { search: Array<
       expect(content).toBeSimilarStringTo(`
         export type UserQuery = (
           { __typename?: 'Query' }
-          & { user?: Maybe<(
+          & { user: Maybe<(
             { __typename?: 'User' }
             & Pick<User, 'id' | 'login'>
           ) | (
@@ -3604,7 +3592,7 @@ export type Q2Query = { search: Array<
           ) | (
             { __typename?: 'Error3' }
             & Pick<Error3, 'message'>
-            & { info?: Maybe<(
+            & { info: Maybe<(
                 { __typename?: 'AdditionalInfo' }
                 & Pick<AdditionalInfo, 'message' | 'message2'>
               )> }
@@ -3648,7 +3636,7 @@ export type Q2Query = { search: Array<
         }
       );
 
-      const o = await validate(content, {}, testSchema);
+      const o = await validate(content);
 
       expect(o).toBeSimilarStringTo(`
       export type UserQueryQuery = (
@@ -3698,7 +3686,7 @@ export type Q2Query = { search: Array<
         }
       );
 
-      const o = await validate(content, {}, testSchema);
+      const o = await validate(content);
 
       expect(o).toBeSimilarStringTo(`
       export type UserQueryQuery = (
@@ -3799,8 +3787,6 @@ export type Q2Query = { search: Array<
 
       const output = await validate(
         content,
-        {},
-        testSchema,
         `
         function t(q: UserQueryQuery) {
             if (q.user) {
@@ -3834,7 +3820,7 @@ export type Q2Query = { search: Array<
         ) | (
           { __typename?: 'Error3' }
           & Pick<Error3, 'message'>
-          & { info?: Maybe<(
+          & { info: Maybe<(
             { __typename?: 'AdditionalInfo' }
             & Pick<AdditionalInfo, 'message2' | 'message'>
           )> }
@@ -3856,7 +3842,7 @@ export type Q2Query = { search: Array<
 
       type UserResult1_Error3_Fragment = (
         { __typename?: 'Error3' }
-        & { info?: Maybe<(
+        & { info: Maybe<(
           { __typename?: 'AdditionalInfo' }
           & Pick<AdditionalInfo, 'message2'>
         )> }
@@ -3963,8 +3949,6 @@ export type Q2Query = { search: Array<
 
       const output = await validate(
         content,
-        config,
-        testSchema,
         `
         function t(q: UserQueryQuery) {
             if (q.user) {
@@ -3998,7 +3982,7 @@ export type Q2Query = { search: Array<
         ) | (
           { __typename?: 'Error3' }
           & Pick<Error3, 'message'>
-          & { info?: Maybe<(
+          & { info: Maybe<(
             { __typename?: 'AdditionalInfo' }
             & Pick<AdditionalInfo, 'message2' | 'message'>
           )> }
@@ -4066,57 +4050,21 @@ export type Q2Query = { search: Array<
         outputFile: 'graphql.ts',
       });
 
-      const output = await validate(content, config, testSchema);
+      const output = await validate(content);
       expect(mergeOutputs([output])).toMatchSnapshot();
 
       expect(output).toBeSimilarStringTo(`
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          search?: Maybe<Array<Searchable>>;
-        };
-
-        export type Concept = {
-          id?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type Dimension = Concept & {
-          __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']['output']>;
-        };
-
-        export type DimValue = {
-          __typename?: 'DimValue';
-          dimension?: Maybe<Dimension>;
-          value: Scalars['String']['output'];
-        };
-
-        export type Searchable = Dimension | DimValue;
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
         export type SearchPopularQuery = (
           { __typename?: 'Query' }
-          & { search?: Maybe<Array<(
+          & { search: Maybe<Array<(
             { __typename?: 'Dimension' }
             & Pick<Dimension, 'id'>
           ) | (
             { __typename?: 'DimValue' }
             & Pick<DimValue, 'value'>
-            & { dimension?: Maybe<(
+            & { dimension: Maybe<(
               { __typename?: 'Dimension' }
               & Pick<Dimension, 'id'>
             )> }
@@ -4176,38 +4124,14 @@ export type Q2Query = { search: Array<
         }
       );
 
-      const output = await validate(content, config, testSchema);
+      const output = await validate(content);
 
       expect(output).toBeSimilarStringTo(`
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          search?: Maybe<Array<Dimension>>;
-        };
-
-        export type Dimension = {
-          __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']['output']>;
-        };
-        export type SearchableFragmentFragment = { __typename?: 'Dimension', id?: string | null };
+        export type SearchableFragmentFragment = { __typename?: 'Dimension', id: string | null };
 
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null }> | null };`);
+        export type SearchPopularQuery = { __typename?: 'Query', search: Array<{ __typename?: 'Dimension', id: string | null }> | null };`);
     });
 
     it('Drops fragments with flattenGeneratedTypes', async () => {
@@ -4263,37 +4187,12 @@ export type Q2Query = { search: Array<
         }
       );
 
-      const output = await validate(content, config, testSchema);
+      const output = await validate(content);
 
       expect(output).toBeSimilarStringTo(`
-        export type Maybe<T> = T | null;
-        export type InputMaybe<T> = Maybe<T>;
-        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-        export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-        /** All built-in and custom scalars, mapped to their actual values */
-        export type Scalars = {
-          ID: { input: string; output: string; }
-          String: { input: string; output: string; }
-          Boolean: { input: boolean; output: boolean; }
-          Int: { input: number; output: number; }
-          Float: { input: number; output: number; }
-        };
-
-        export type Query = {
-          __typename?: 'Query';
-          search?: Maybe<Array<Dimension>>;
-        };
-
-        export type Dimension = {
-          __typename?: 'Dimension';
-          id?: Maybe<Scalars['String']['output']>;
-        };
-
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type SearchPopularQuery = { __typename?: 'Query', search?: Array<{ __typename?: 'Dimension', id?: string | null }> | null };`);
+        export type SearchPopularQuery = { __typename?: 'Query', search: Array<{ __typename?: 'Dimension', id: string | null }> | null };`);
     });
 
     it('Should add operation name when addOperationExport is true', async () => {
@@ -4447,8 +4346,6 @@ export type Q2Query = { search: Array<
 
       const output = await validate(
         content,
-        config,
-        testSchema,
         `
         function t(q: UserQueryQuery) {
             if (q.user) {
@@ -4482,7 +4379,7 @@ export type Q2Query = { search: Array<
         ) | (
           { __typename?: 'Error3' }
           & Pick<Error3, 'message'>
-          & { info?: Maybe<(
+          & { info: Maybe<(
             { __typename?: 'AdditionalInfo' }
             & Pick<AdditionalInfo, 'message2' | 'message'>
           )> }
@@ -4545,8 +4442,6 @@ export type Q2Query = { search: Array<
 
       await validate(
         content,
-        {},
-        testSchema,
         `
           function test (t: TestQuery) {
             for (const item of t.obj!.items) {
@@ -4629,7 +4524,7 @@ export type Q2Query = { search: Array<
           outputFile: 'graphql.ts',
         }
       );
-      expect(content).toContain(`{ foo?: Maybe<{ __typename?: 'C' }> }`);
+      expect(content).toContain(`{ foo: Maybe<{ __typename?: 'C' }> }`);
     });
 
     it('#5001 - incorrect output with typeSuffix', async () => {
@@ -4734,8 +4629,6 @@ export type Q2Query = { search: Array<
 
       const result = await validate(
         content,
-        {},
-        testSchema,
         `function test(q: QQuery) {
         if (q.hotel) {
             const t1 = q.hotel.gpsPosition.lat
@@ -4924,8 +4817,6 @@ export type Q2Query = { search: Array<
 
       await validate(
         content,
-        {},
-        testSchema,
         `
 function test(q: GetEntityBrandDataQuery): void {
   const typeName: 'Company' | 'Theater' | 'User' | 'Movie' = q.node.__typename; // just to check that those are the types we want here
@@ -5511,7 +5402,7 @@ function test(q: GetEntityBrandDataQuery): void {
         requireString: Array<string | null> | string;
         innerRequired: Array<string> | string;
       }>;`);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('#5352 - Prevent array input coercion if arrayInputCoercion = false', async () => {
@@ -5543,7 +5434,7 @@ function test(q: GetEntityBrandDataQuery): void {
         requireString: Array<string | null>;
         innerRequired: Array<string>;
       }>;`);
-      await validate(content, config);
+      await validate(content);
     });
 
     it('#5263 - inline fragment spread on interface field results in incorrect types', async () => {
@@ -5923,11 +5814,11 @@ function test(q: GetEntityBrandDataQuery): void {
             )
            };
 
-        type PeopleInfo_Character_Fragment = { __typename?: 'Character', name?: string | null } & { ' $fragmentName'?: 'PeopleInfo_Character_Fragment' };
+        type PeopleInfo_Character_Fragment = { __typename?: 'Character', name: string | null } & { ' $fragmentName'?: 'PeopleInfo_Character_Fragment' };
 
-        type PeopleInfo_Jedi_Fragment = { __typename?: 'Jedi', side?: string | null } & { ' $fragmentName'?: 'PeopleInfo_Jedi_Fragment' };
+        type PeopleInfo_Jedi_Fragment = { __typename?: 'Jedi', side: string | null } & { ' $fragmentName'?: 'PeopleInfo_Jedi_Fragment' };
 
-        type PeopleInfo_Droid_Fragment = { __typename?: 'Droid', model?: string | null } & { ' $fragmentName'?: 'PeopleInfo_Droid_Fragment' };
+        type PeopleInfo_Droid_Fragment = { __typename?: 'Droid', model: string | null } & { ' $fragmentName'?: 'PeopleInfo_Droid_Fragment' };
 
         export type PeopleInfoFragment =
           | PeopleInfo_Character_Fragment
@@ -6267,55 +6158,7 @@ function test(q: GetEntityBrandDataQuery): void {
       );`);
     });
 
-    it('On avoidOptionals:true, fields with @skip, @include should make container resolve into MakeMaybe type', async () => {
-      const schema = buildSchema(/* GraphQL */ `
-        type Query {
-          user(id: ID!): User!
-        }
-
-        type User {
-          id: ID!
-          username: String!
-          email: String!
-        }
-      `);
-
-      const fragment = parse(/* GraphQL */ `
-        query user {
-          user(id: 1) {
-            id
-            username
-            email @skip(if: true)
-          }
-        }
-      `);
-
-      const { content } = await plugin(
-        schema,
-        [{ location: '', document: fragment }],
-        {
-          avoidOptionals: true,
-          preResolveTypes: false,
-        },
-        {
-          outputFile: 'graphql.ts',
-        }
-      );
-
-      expect(content).toBeSimilarStringTo(`
-        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
-
-        export type UserQuery = (
-          { __typename?: 'Query' }
-          & { user: (
-            { __typename?: 'User' }
-            & MakeMaybe<Pick<User, 'id' | 'username' | 'email'>, 'email'>
-          ) }
-        );
-      `);
-    });
-
-    it('Should handle "preResolveTypes" and "avoidOptionals" together', async () => {
+    it('Should handle "preResolveTypes" ', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user(id: ID!): User!
@@ -6336,7 +6179,7 @@ function test(q: GetEntityBrandDataQuery): void {
           }
         }
       `);
-      const config = { avoidOptionals: true, preResolveTypes: true };
+      const config = { preResolveTypes: true };
       const { content } = await plugin(schema, [{ location: '', document: operations }], config, {
         outputFile: 'graphql.ts',
       });
@@ -6346,7 +6189,7 @@ function test(q: GetEntityBrandDataQuery): void {
       );
     });
 
-    it('On avoidOptionals:true, optionals (?) on types should be avoided', async () => {
+    it('optionals (?) on types should be avoided by default', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           me: User!
@@ -6375,7 +6218,6 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: '', document: fragment }],
         {
-          avoidOptionals: true,
           nonOptionalTypename: true,
           preResolveTypes: false,
         },
@@ -6398,7 +6240,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('inline fragment with conditional directives and avoidOptionals', async () => {
+    it('inline fragment with conditional directives', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user: User
@@ -6430,7 +6272,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const { content } = await plugin(
         schema,
         [{ location: '', document: fragment }],
-        { preResolveTypes: true, avoidOptionals: true },
+        { preResolveTypes: true },
         {
           outputFile: 'graphql.ts',
         }
@@ -6450,7 +6292,7 @@ function test(q: GetEntityBrandDataQuery): void {
       };`);
     });
 
-    it('resolve optionals according to maybeValue together with avoidOptionals and conditional directives', async () => {
+    it('resolve optionals according to maybeValue and conditional directives', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user: User!
@@ -6483,7 +6325,6 @@ function test(q: GetEntityBrandDataQuery): void {
         {
           preResolveTypes: true,
           maybeValue: "T | 'specialType'",
-          avoidOptionals: true,
         },
         {
           outputFile: 'graphql.ts',
@@ -6494,7 +6335,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('inline fragment with conditional directives and avoidOptionals, without preResolveTypes', async () => {
+    it('inline fragment with conditional directives, without preResolveTypes', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           user: User
@@ -6526,7 +6367,7 @@ function test(q: GetEntityBrandDataQuery): void {
       const { content } = await plugin(
         schema,
         [{ location: '', document: fragment }],
-        { preResolveTypes: false, avoidOptionals: true },
+        { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -6797,7 +6638,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('should generate an union of initial and deferred fields for fragments MakeEmpty (avoidOptionals: true)', async () => {
+    it('should generate an union of initial and deferred fields for fragments MakeEmpty', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String!
@@ -6873,7 +6714,6 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: '', document: fragment }],
         {
-          avoidOptionals: true,
           preResolveTypes: false,
         },
         { outputFile: 'graphql.ts' }
@@ -6936,7 +6776,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('should support "preResolveTypes: true" and "avoidOptionals: true" together', async () => {
+    it('should support "preResolveTypes: true"', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String!
@@ -7010,7 +6850,6 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: '', document: fragment }],
         {
-          avoidOptionals: true,
           preResolveTypes: true,
         },
         { outputFile: 'graphql.ts' }
@@ -7036,7 +6875,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('should resolve optionals according to maybeValue together with avoidOptionals and deferred fragments', async () => {
+    it('should resolve optionals according to maybeValue together with deferred fragments', async () => {
       const schema = buildSchema(`
         type Address {
           street1: String
@@ -7114,7 +6953,6 @@ function test(q: GetEntityBrandDataQuery): void {
         {
           preResolveTypes: true,
           maybeValue: "T | 'specialType'",
-          avoidOptionals: true,
         },
         { outputFile: 'graphql.ts' }
       );
@@ -7310,7 +7148,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+        export type Unnamed_1_Query = { __typename?: 'Query', me: (
             { __typename?: 'User' }
             & UserFragmentFragment
           ) | null };
@@ -7340,7 +7178,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+        export type Unnamed_1_Query = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
 
         export type UserFragmentFragment = { __typename?: 'User', id: string };
       `);
@@ -7367,7 +7205,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+        export type Unnamed_1_Query = { __typename?: 'Query', me: (
             { __typename?: 'User' }
             & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
           ) | null };

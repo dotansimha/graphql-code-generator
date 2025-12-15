@@ -666,12 +666,17 @@ export class SelectionSetToObject<
 
       linkFieldsInterfaces.push(...selectionSetObjects.dependentTypes);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
-      const isOptional = options.unsetTypes;
       linkFields.push({
         alias: field.alias
-          ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType, isConditional, isOptional)
+          ? this._processor.config.formatNamedField({
+              name: field.alias.value,
+              isOptional: isConditional || options.unsetTypes,
+            })
           : undefined,
-        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional, isOptional),
+        name: this._processor.config.formatNamedField({
+          name: field.name.value,
+          isOptional: isConditional || options.unsetTypes,
+        }),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSetObjects.mergedTypeString.split(`\n`).join(`\n  `),
@@ -758,7 +763,7 @@ export class SelectionSetToObject<
     if (nonOptionalTypename || addTypename || queriedForTypename) {
       const optionalTypename = !queriedForTypename && !nonOptionalTypename;
       return {
-        name: `${this._processor.config.formatNamedField('__typename')}${optionalTypename ? '?' : ''}`,
+        name: this._processor.config.formatNamedField({ name: '__typename', isOptional: optionalTypename }),
         type: `'${type.name}'`,
       };
     }

@@ -27,6 +27,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         name: String!
         role: UserRole!
         createdAt: DateTime!
+        nickname: String
       }
 
       "UserRole Description"
@@ -60,6 +61,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           name
           role
           createdAt
+          nickname
         }
       }
 
@@ -107,7 +109,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole, createdAt: any } | null };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, role: UserRole, createdAt: any, nickname: string | null } | null };
 
       export type UsersQueryVariables = Exact<{
         input: UsersInput;
@@ -169,7 +171,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string | number | boolean, name: string } | null };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string | number | boolean, name: string } | null };
       "
     `);
   });
