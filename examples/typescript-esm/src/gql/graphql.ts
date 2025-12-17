@@ -6,14 +6,14 @@ export type AllPeopleQueryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllPeopleQueryQuery = {
   __typename?: 'Root';
-  allPeople?: {
+  allPeople: {
     __typename?: 'PeopleConnection';
-    edges?: Array<{
+    edges: Array<{
       __typename?: 'PeopleEdge';
-      node?: {
+      node: {
         __typename?: 'Person';
-        name?: string | null;
-        homeworld?: { __typename?: 'Planet'; name?: string | null } | null;
+        name: string | null;
+        homeworld: { __typename?: 'Planet'; name: string | null } | null;
       } | null;
     } | null> | null;
   } | null;
@@ -25,14 +25,14 @@ export type AllPeopleWithVariablesQueryQueryVariables = Exact<{
 
 export type AllPeopleWithVariablesQueryQuery = {
   __typename?: 'Root';
-  allPeople?: {
+  allPeople: {
     __typename?: 'PeopleConnection';
-    edges?: Array<{
+    edges: Array<{
       __typename?: 'PeopleEdge';
-      node?: {
+      node: {
         __typename?: 'Person';
-        name?: string | null;
-        homeworld?: { __typename?: 'Planet'; name?: string | null } | null;
+        name: string | null;
+        homeworld: { __typename?: 'Planet'; name: string | null } | null;
       } | null;
     } | null> | null;
   } | null;
