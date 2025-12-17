@@ -8,7 +8,7 @@ export type OnCommentAddedSubscriptionVariables = Exact<{
 
 export type OnCommentAddedSubscription = {
   readonly __typename?: 'Subscription';
-  readonly commentAdded?: {
+  readonly commentAdded: {
     readonly __typename?: 'Comment';
     readonly id: number;
     readonly createdAt: number;
@@ -29,12 +29,17 @@ export type CommentQueryVariables = Exact<{
 
 export type CommentQuery = {
   readonly __typename?: 'Query';
+<<<<<<< HEAD
   readonly currentUser?: {
     readonly __typename?: 'User';
     readonly login: string;
     readonly html_url: string;
   } | null;
   readonly entry?: {
+=======
+  readonly currentUser: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string } | null;
+  readonly entry: {
+>>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
     readonly __typename?: 'Entry';
     readonly id: number;
     readonly createdAt: number;
@@ -57,8 +62,8 @@ export type CommentQuery = {
     } | null>;
     readonly repository: {
       readonly __typename?: 'Repository';
-      readonly description?: string | null;
-      readonly open_issues_count?: number | null;
+      readonly description: string | null;
+      readonly open_issues_count: number | null;
       readonly stargazers_count: number;
       readonly full_name: string;
       readonly html_url: string;
@@ -82,11 +87,15 @@ export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }
 
 export type CurrentUserForProfileQuery = {
   readonly __typename?: 'Query';
+<<<<<<< HEAD
   readonly currentUser?: {
     readonly __typename?: 'User';
     readonly login: string;
     readonly avatar_url: string;
   } | null;
+=======
+  readonly currentUser: { readonly __typename?: 'User'; readonly login: string; readonly avatar_url: string } | null;
+>>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
 };
 
 export type FeedEntryFragment = {
@@ -99,10 +108,10 @@ export type FeedEntryFragment = {
     readonly __typename?: 'Repository';
     readonly full_name: string;
     readonly html_url: string;
-    readonly description?: string | null;
+    readonly description: string | null;
     readonly stargazers_count: number;
-    readonly open_issues_count?: number | null;
-    readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
+    readonly open_issues_count: number | null;
+    readonly owner: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
   };
   readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
   readonly postedBy: {
@@ -120,8 +129,8 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = {
   readonly __typename?: 'Query';
-  readonly currentUser?: { readonly __typename?: 'User'; readonly login: string } | null;
-  readonly feed?: ReadonlyArray<{
+  readonly currentUser: { readonly __typename?: 'User'; readonly login: string } | null;
+  readonly feed: ReadonlyArray<{
     readonly __typename?: 'Entry';
     readonly id: number;
     readonly commentCount: number;
@@ -131,10 +140,10 @@ export type FeedQuery = {
       readonly __typename?: 'Repository';
       readonly full_name: string;
       readonly html_url: string;
-      readonly description?: string | null;
+      readonly description: string | null;
       readonly stargazers_count: number;
-      readonly open_issues_count?: number | null;
-      readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
+      readonly open_issues_count: number | null;
+      readonly owner: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
     };
     readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
     readonly postedBy: {
@@ -151,7 +160,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   readonly __typename?: 'Mutation';
-  readonly submitRepository?: { readonly __typename?: 'Entry'; readonly createdAt: number } | null;
+  readonly submitRepository: { readonly __typename?: 'Entry'; readonly createdAt: number } | null;
 };
 
 export type RepoInfoFragment = {
@@ -159,9 +168,9 @@ export type RepoInfoFragment = {
   readonly createdAt: number;
   readonly repository: {
     readonly __typename?: 'Repository';
-    readonly description?: string | null;
+    readonly description: string | null;
     readonly stargazers_count: number;
-    readonly open_issues_count?: number | null;
+    readonly open_issues_count: number | null;
   };
   readonly postedBy: {
     readonly __typename?: 'User';
@@ -177,7 +186,7 @@ export type SubmitCommentMutationVariables = Exact<{
 
 export type SubmitCommentMutation = {
   readonly __typename?: 'Mutation';
-  readonly submitComment?: {
+  readonly submitComment: {
     readonly __typename?: 'Comment';
     readonly id: number;
     readonly createdAt: number;
@@ -203,7 +212,7 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   readonly __typename?: 'Mutation';
-  readonly vote?: {
+  readonly vote: {
     readonly __typename?: 'Entry';
     readonly score: number;
     readonly id: number;

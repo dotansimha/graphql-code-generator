@@ -5,7 +5,7 @@ import {
   GraphQLOutputType,
   Location,
 } from 'graphql';
-import { AvoidOptionalsConfig, ConvertNameFn, NormalizedScalarsMap } from '../types.js';
+import { ConvertNameFn, NormalizedScalarsMap } from '../types.js';
 
 export type PrimitiveField = { isConditional: boolean; fieldName: string };
 export type PrimitiveAliasedFields = {
@@ -28,14 +28,8 @@ export type SelectionSetProcessorConfig = {
   enumPrefix: boolean | null;
   enumSuffix: boolean | null;
   scalars: NormalizedScalarsMap;
-  formatNamedField(
-    name: string,
-    type?: GraphQLOutputType | GraphQLNamedType | null,
-    isConditional?: boolean,
-    isOptional?: boolean,
-  ): string;
+  formatNamedField(params: { name: string; isOptional?: boolean }): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
-  avoidOptionals?: AvoidOptionalsConfig | boolean;
   printFieldsOnNewLines?: boolean;
 };
 

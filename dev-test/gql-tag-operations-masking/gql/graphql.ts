@@ -12,15 +12,20 @@ export type TweetFragmentFragment = ({ __typename?: 'Tweet'; id: string; body: s
 export type TweetAuthorFragmentFragment = {
   __typename?: 'Tweet';
   id: string;
-  author: { __typename?: 'User'; id: string; username?: string | null };
+  author: { __typename?: 'User'; id: string; username: string | null };
 } & { ' $fragmentName'?: 'TweetAuthorFragmentFragment' };
 
 export type TweetsFragmentFragment = {
   __typename?: 'Query';
+<<<<<<< HEAD
   Tweets?: Array<
     { __typename?: 'Tweet'; id: string } & {
       ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment };
     }
+=======
+  Tweets: Array<
+    { __typename?: 'Tweet'; id: string } & { ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment } }
+>>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
   > | null;
 } & { ' $fragmentName'?: 'TweetsFragmentFragment' };
 
