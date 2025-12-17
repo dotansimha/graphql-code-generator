@@ -41,18 +41,9 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     let resString = formattedUnionTransform('Pick', parentName, escapedFieldNames);
 
     if (hasConditionals) {
-      const avoidOptional =
-        // TODO: check type and exec only if relevant
-        this.config.avoidOptionals === true ||
-        (typeof this.config.avoidOptionals === 'object' &&
-          (this.config.avoidOptionals.field ||
-            this.config.avoidOptionals.inputValue ||
-            this.config.avoidOptionals.object));
-
-      const transform = avoidOptional ? 'MakeMaybe' : 'MakeOptional';
       resString = `${
         this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''
-      }${formattedUnionTransform(transform, resString, escapedConditionalsList)}`;
+      }${formattedUnionTransform('MakeOptional', resString, escapedConditionalsList)}`;
     }
     return [resString];
   }
