@@ -8,5 +8,5 @@ export type WithVariablesQueryVariables = Exact<{
 
 export type WithVariablesQuery = {
   __typename?: 'Query';
-  user?: { __typename?: 'User'; id: string; name: string } | null;
+  user: { __typename?: 'User'; id: string; name: string } | null;
 };
