@@ -40,7 +40,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -92,7 +92,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -149,7 +149,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -206,7 +206,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -256,7 +256,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -326,7 +326,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -398,7 +398,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -463,7 +463,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -523,7 +523,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -578,7 +578,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type Unnamed_1_Query = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -639,7 +639,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -700,7 +700,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -768,7 +768,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -836,7 +836,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -891,7 +891,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -944,7 +944,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -995,7 +995,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type IMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type IMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1046,7 +1046,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type IMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type IMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1097,7 +1097,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQueryZ = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQueryZ = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1148,7 +1148,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQueryZ = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQueryZ = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1209,7 +1209,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type mequery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type mequery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1272,7 +1272,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1330,7 +1330,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1392,7 +1392,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type IMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type IMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
   });
@@ -1443,7 +1443,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
   });
@@ -1493,7 +1493,7 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 

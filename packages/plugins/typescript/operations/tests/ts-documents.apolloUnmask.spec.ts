@@ -25,7 +25,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type Unnamed_1_Query = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
 
       export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
       "
@@ -53,7 +53,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+      export type Unnamed_1_Query = { __typename?: 'Query', me: (
           { __typename?: 'User' }
           & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
         ) | null };
@@ -84,7 +84,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+      export type Unnamed_1_Query = { __typename?: 'Query', me: (
           { __typename?: 'User' }
           & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
         ) | null };
@@ -120,7 +120,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+      export type Unnamed_1_Query = { __typename?: 'Query', me: (
           { __typename?: 'User', id: string }
           & { ' $fragmentRefs'?: { 'UserFragment2Fragment': UserFragment2Fragment } }
         ) | null };
@@ -159,7 +159,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
+      export type Unnamed_1_Query = { __typename?: 'Query', me: (
           { __typename?: 'User', id: string, email: string }
           & { ' $fragmentRefs'?: { 'UserFragment2Fragment': UserFragment2Fragment } }
         ) | null };

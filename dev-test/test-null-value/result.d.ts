@@ -4,4 +4,4 @@ export type CartLineFragment = { id: string; quantity: number };
 
 export type TestQueryVariables = Exact<{ [key: string]: never }>;
 
-export type TestQuery = { cart?: { lines: { nodes: Array<{ id: string; quantity: number }> } } | null };
+export type TestQuery = { cart: { lines: { nodes: Array<{ id: string; quantity: number }> } } | null };

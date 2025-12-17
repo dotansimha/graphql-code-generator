@@ -112,7 +112,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
 
       export type UsersQueryVariables = Exact<{
         input: TypeImport.UsersInput;
@@ -247,7 +247,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
 
       export type UsersQueryVariables = Exact<{
         input: TypeImport.UsersInput;
@@ -365,7 +365,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, isOld: boolean, ageInt: number, ageFloat: number } | null };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, isOld: boolean, ageInt: number, ageFloat: number } | null };
       "
     `);
 
