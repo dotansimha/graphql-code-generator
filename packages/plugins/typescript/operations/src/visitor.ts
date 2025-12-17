@@ -27,12 +27,9 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
   type GraphQLNamedInputType,
-  type GraphQLNamedType,
-  type GraphQLOutputType,
   GraphQLScalarType,
   type GraphQLSchema,
   isEnumType,
-  isNonNullType,
   Kind,
   visit,
 } from 'graphql';
@@ -108,17 +105,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       return `${listModifier}<${type}>`;
     };
 
-    const formatNamedField = (
-      name: string,
-      type: GraphQLOutputType | GraphQLNamedType | null,
-      isConditional = false,
-      isOptional = false
-    ): string => {
-      const optional =
-        isOptional || isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
-      return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
-    };
-
     const allFragments: LoadedFragment[] = [
       ...(documentNode.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
         fragmentDef => ({
@@ -139,11 +125,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       enumPrefix: this.config.enumPrefix,
       enumSuffix: this.config.enumSuffix,
       scalars: this.scalars,
-      formatNamedField,
+      formatNamedField: ({ name, isOptional }) => {
+        return (this.config.immutableTypes ? `readonly ${name}` : name) + (isOptional ? '?' : '');
+      },
       wrapTypeWithModifiers(baseType, type) {
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
-      avoidOptionals: this.config.avoidOptionals,
       printFieldsOnNewLines: this.config.printFieldsOnNewLines,
     };
     const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
@@ -165,6 +152,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName.bind(this),
+        // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
+        // It's also being used for Variables so people could already be using it.
+        // Maybe it's better to deprecate and remove, to see what users think.
         this.config.avoidOptionals,
         this.config.immutableTypes,
         this.config.namespacedImportName,
