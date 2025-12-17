@@ -33,6 +33,7 @@ import {
   PrimitiveAliasedFields,
   PrimitiveField,
   ProcessResult,
+  type SelectionSetProcessorConfig as BaseSelectionSetProcessorConfig,
 } from './selection-set-processor/base.js';
 import {
   ConvertNameFn,
@@ -81,14 +82,17 @@ const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
   __type: TypeMetaFieldDef,
 };
 
-export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedDocumentsConfig> {
+export class SelectionSetToObject<
+  Config extends ParsedDocumentsConfig = ParsedDocumentsConfig,
+  SelectionSetProcessorConfig extends BaseSelectionSetProcessorConfig = BaseSelectionSetProcessorConfig
+> {
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
   protected _queriedForTypename = false;
 
   constructor(
-    protected _processor: BaseSelectionSetProcessor<any>,
+    protected _processor: BaseSelectionSetProcessor<SelectionSetProcessorConfig>,
     protected _scalars: NormalizedScalarsMap,
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
@@ -399,6 +403,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         }
 
         for (const incrementalNode of incrementalNodes) {
+          // 1. fragment masking
           if (this._config.inlineFragmentTypes === 'mask' && 'fragmentName' in incrementalNode) {
             const { fields: incrementalFields, dependentTypes: incrementalDependentTypes } = this.buildSelectionSet(
               schemaType,
@@ -411,6 +416,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
             continue;
           }
+
+          // 2. @defer
           const { fields: initialFields, dependentTypes: initialDependentTypes } = this.buildSelectionSet(
             schemaType,
             [incrementalNode],
@@ -650,7 +657,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const linkFields: LinkField[] = [];
     const linkFieldsInterfaces: DependentType[] = [];
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
-      const realSelectedFieldType = getBaseType(selectedFieldType as any);
+      const realSelectedFieldType = getBaseType(selectedFieldType);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
       const fieldName = field.alias?.value ?? field.name.value;
       const selectionSetObjects = selectionSet.transformSelectionSet(
@@ -659,12 +666,17 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
       linkFieldsInterfaces.push(...selectionSetObjects.dependentTypes);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
-      const isOptional = options.unsetTypes;
       linkFields.push({
         alias: field.alias
-          ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType, isConditional, isOptional)
+          ? this._processor.config.formatNamedField({
+              name: field.alias.value,
+              isOptional: isConditional || options.unsetTypes,
+            })
           : undefined,
-        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional, isOptional),
+        name: this._processor.config.formatNamedField({
+          name: field.name.value,
+          isOptional: isConditional || options.unsetTypes,
+        }),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSetObjects.mergedTypeString.split(`\n`).join(`\n  `),
@@ -751,7 +763,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     if (nonOptionalTypename || addTypename || queriedForTypename) {
       const optionalTypename = !queriedForTypename && !nonOptionalTypename;
       return {
-        name: `${this._processor.config.formatNamedField('__typename')}${optionalTypename ? '?' : ''}`,
+        name: this._processor.config.formatNamedField({ name: '__typename', isOptional: optionalTypename }),
         type: `'${type.name}'`,
       };
     }
