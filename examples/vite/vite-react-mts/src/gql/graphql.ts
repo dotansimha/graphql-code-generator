@@ -5,9 +5,9 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 export type FilmItemFragment = {
   __typename?: 'Film';
   id: string;
-  title?: string | null;
-  releaseDate?: string | null;
-  producers?: Array<string | null> | null;
+  title: string | null;
+  releaseDate: string | null;
+  producers: Array<string | null> | null;
 } & { ' $fragmentName'?: 'FilmItemFragment' };
 
 export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
@@ -16,11 +16,11 @@ export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
 
 export type AllFilmsWithVariablesQueryQuery = {
   __typename?: 'Root';
-  allFilms?: {
+  allFilms: {
     __typename?: 'FilmsConnection';
-    edges?: Array<{
+    edges: Array<{
       __typename?: 'FilmsEdge';
-      node?: ({ __typename?: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } }) | null;
+      node: ({ __typename?: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } }) | null;
     } | null> | null;
   } | null;
 };
