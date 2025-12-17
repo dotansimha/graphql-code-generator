@@ -27,6 +27,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         name: String!
         role: UserRole!
         createdAt: DateTime!
+        nickname: String
       }
 
       "UserRole Description"
@@ -60,6 +61,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           name
           role
           createdAt
+          nickname
         }
       }
 
@@ -90,10 +92,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type ResponseErrorType =
         | 'NOT_FOUND'
         | 'INPUT_VALIDATION_ERROR'
@@ -123,7 +126,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, role: UserRole, createdAt: any } | null };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, role: UserRole, createdAt: any, nickname: string | null } | null };
 
       export type UsersQueryVariables = Exact<{
         input: UsersInput;
@@ -196,10 +199,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type EnumRoot =
         | 'ENUM_A'
         | 'ENUM_B';
@@ -276,14 +280,22 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        extractAllFieldsToTypes: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
-        printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          extractAllFieldsToTypes: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
+          printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
+        },
+        {
+          outputFile: '',
+        }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type EnumRoot =
         | 'ENUM_A'
         | 'ENUM_B';
@@ -345,17 +357,18 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { scalars: { ID: 'string | number | boolean' } }),
+      await plugin(schema, [{ document }], { scalars: { ID: 'string | number | boolean' } }, { outputFile: '' }),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id: string | number | boolean;
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string | number | boolean, name: string } | null };
+      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string | number | boolean, name: string } | null };
       "
     `);
   });
@@ -396,20 +409,21 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type RoleType =
         | 'ROLE_A'
         | 'ROLE_B';
 
-      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role?: RoleType | null };
+      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role: RoleType | null };
 
       export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role?: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role?: RoleType | null } };
+      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role: RoleType | null } };
       "
     `);
   });
@@ -454,11 +468,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document: documentMain }, { document: documentWithFragment }], {}),
+      await plugin(schema, [{ document: documentMain }, { document: documentWithFragment }], {}, { outputFile: '' }),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type RoleType =
         | 'ROLE_A'
         | 'ROLE_B';
@@ -466,9 +481,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role?: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role?: RoleType | null } };
+      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role: RoleType | null } };
 
-      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role?: RoleType | null };
+      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role: RoleType | null };
       "
     `);
   });
@@ -584,10 +599,13 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { generatesOperationTypes: false })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "
+
       export type ResponseErrorType =
         | 'NOT_FOUND'
         | 'INPUT_VALIDATION_ERROR'
@@ -611,6 +629,84 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       };
 
       export type DateTime = any;
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('does not generate unused schema enum and input types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+        users(input: UsersInput!): UsersResponse!
+      }
+
+      type Mutation {
+        makeUserAdmin(id: ID!): User!
+      }
+
+      type Subscription {
+        userChanges(id: ID!): User!
+      }
+
+      type ResponseError {
+        error: ResponseErrorType!
+      }
+
+      enum ResponseErrorType {
+        NOT_FOUND
+        INPUT_VALIDATION_ERROR
+        FORBIDDEN_ERROR
+        UNEXPECTED_ERROR
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      "UserRole Description"
+      enum UserRole {
+        "UserRole ADMIN"
+        ADMIN
+        "UserRole CUSTOMER"
+        CUSTOMER
+      }
+
+      "UsersInput Description"
+      input UsersInput {
+        "UsersInput from"
+        from: DateTime
+        "UsersInput to"
+        to: DateTime
+        role: UserRole
+      }
+
+      type UsersResponseOk {
+        result: [User!]!
+      }
+      union UsersResponse = UsersResponseOk | ResponseError
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query User {
+        user(id: "100") {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "
+
       "
     `);
 

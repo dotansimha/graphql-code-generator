@@ -32,14 +32,15 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], {})]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -74,10 +75,13 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-numeric' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native-numeric' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export enum UserRole {
         Admin = 0,
         Customer = 1
@@ -88,7 +92,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -126,10 +130,11 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export const UserRole = {
         ABC: 'A_B_C',
         XYZ: 'X_Y_Z',
@@ -144,7 +149,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -182,10 +187,13 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native-const' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native-const' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** Multiline comment test */
       export const enum UserRole {
         Admin = 'ADMIN',
@@ -198,7 +206,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -233,10 +241,11 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export enum UserRole {
         Admin = 'ADMIN',
         Customer = 'CUSTOMER'
@@ -247,7 +256,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -285,21 +294,27 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'string-literal',
-        enumValues: {
-          UserRole: {
-            A_B_C: 0,
-            X_Y_Z: 'Foo',
-            _TEST: 'Bar',
-            My_Value: 1,
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'string-literal',
+          enumValues: {
+            UserRole: {
+              A_B_C: 0,
+              X_Y_Z: 'Foo',
+              _TEST: 'Bar',
+              My_Value: 1,
+            },
           },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserRole =
         | 0
         | 'Foo'
@@ -311,7 +326,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -349,21 +364,27 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'const',
-        enumValues: {
-          UserRole: {
-            A_B_C: 0,
-            X_Y_Z: 'Foo',
-            _TEST: 'Bar',
-            My_Value: 1,
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'const',
+          enumValues: {
+            UserRole: {
+              A_B_C: 0,
+              X_Y_Z: 'Foo',
+              _TEST: 'Bar',
+              My_Value: 1,
+            },
           },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export const UserRole = {
         ABC: 0,
         XYZ: 'Foo',
@@ -377,7 +398,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -413,19 +434,25 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        enumValues: {
-          UserRole: {
-            ADMIN: 0,
-            CUSTOMER: 'test',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          enumValues: {
+            UserRole: {
+              ADMIN: 0,
+              CUSTOMER: 'test',
+            },
           },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export enum UserRole {
         Admin = 0,
         Customer = 'test'
@@ -436,7 +463,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -473,16 +500,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumValues: {
-          UserRole: './my-file#MyEnum',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#MyEnum',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "import { MyEnum as UserRole } from './my-file';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export { UserRole };
 
       export type MeQueryVariables = Exact<{
@@ -490,7 +523,62 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('does not import or export `enumValues` (as file import) if enum is not used', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#MyEnum',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Unnamed_1_Query = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -527,17 +615,23 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumValues: {
-          UserRole: './my-file#NS.ETest',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#NS.ETest',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "import { NS } from './my-file';
       import UserRole = NS.ETest;
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export { UserRole };
 
       export type MeQueryVariables = Exact<{
@@ -545,7 +639,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -582,17 +676,23 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumValues: {
-          UserRole: './my-file#NS.UserRole',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            UserRole: './my-file#NS.UserRole',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "import { NS } from './my-file';
       import UserRole = NS.UserRole;
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export { UserRole };
 
       export type MeQueryVariables = Exact<{
@@ -600,7 +700,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -642,16 +742,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        enumValues: './my-file',
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          enumValues: './my-file',
+        },
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "import { UserRole } from './my-file';
       import { UserStatus } from './my-file';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export { UserRole };
 
       export { UserStatus };
@@ -662,7 +768,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -704,16 +810,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        enumValues: { UserRole: './my-file#UserRole', UserStatus: './my-file#UserStatus2X' },
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          enumValues: { UserRole: './my-file#UserRole', UserStatus: './my-file#UserStatus2X' },
+        },
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "import { UserRole } from './my-file';
       import { UserStatus2X as UserStatus } from './my-file';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export { UserRole };
 
       export { UserStatus };
@@ -724,7 +836,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -762,10 +874,11 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export enum UserRole {
         ABC = 'A_B_C',
         XYZ = 'X_Y_Z',
@@ -778,7 +891,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -815,10 +928,11 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export enum UserRole {
         _ = '_',
         __ = '__',
@@ -830,7 +944,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -866,9 +980,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: true })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: true }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type IUserRole =
         | 'ADMIN'
         | 'CUSTOMER';
@@ -878,7 +995,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type IMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type IMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -914,9 +1031,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: false })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: false }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserRole =
         | 'ADMIN'
         | 'CUSTOMER';
@@ -926,7 +1046,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type IMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type IMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -962,9 +1082,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: true })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: true }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserRoleZ =
         | 'ADMIN'
         | 'CUSTOMER';
@@ -974,7 +1097,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQueryZ = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQueryZ = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1010,9 +1133,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: false })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: false }, { outputFile: '' }),
+    ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserRole =
         | 'ADMIN'
         | 'CUSTOMER';
@@ -1022,7 +1148,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQueryZ = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQueryZ = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1059,15 +1185,21 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        namingConvention: {
-          typeNames: 'change-case-all#lowerCase',
-          enumValues: 'keep',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          namingConvention: {
+            typeNames: 'change-case-all#lowerCase',
+            enumValues: 'keep',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type userrole =
         | 'ADMIN'
         | 'CUSTOMER';
@@ -1077,7 +1209,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type mequery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type mequery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1114,16 +1246,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        enumType: 'native',
-        namingConvention: {
-          typeNames: 'keep',
-          enumValues: 'change-case-all#lowerCase',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native',
+          namingConvention: {
+            typeNames: 'keep',
+            enumValues: 'change-case-all#lowerCase',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export enum UserRole {
         admin = 'ADMIN',
         customer = 'CUSTOMER'
@@ -1134,7 +1272,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1171,12 +1309,18 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        noExport: true,
-      }),
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          noExport: true,
+        },
+        { outputFile: '' }
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type UserRole =
         | 'ADMIN'
         | 'CUSTOMER';
@@ -1186,7 +1330,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 
@@ -1223,18 +1367,24 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], {
-        typesPrefix: 'I',
-        namingConvention: { enumValues: 'change-case-all#constantCase' },
-        enumValues: {
-          UserRole: './files#default as UserRole',
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          typesPrefix: 'I',
+          namingConvention: { enumValues: 'change-case-all#constantCase' },
+          enumValues: {
+            UserRole: './files#default as UserRole',
+          },
         },
-      }),
+        { outputFile: '' }
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
       "import UserRole from './files';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export { UserRole };
 
       export type IMeQueryVariables = Exact<{
@@ -1242,7 +1392,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type IMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type IMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
   });
@@ -1277,10 +1427,11 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export enum UserRole {
         Axb = 'AXB',
         '1X2' = '_1X2',
@@ -1292,7 +1443,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
   });
@@ -1327,10 +1478,11 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { futureProofEnums: true })]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], { futureProofEnums: true }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserRole =
         | 'ADMIN'
         | 'CUSTOMER'
@@ -1341,7 +1493,7 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
       }>;
 
 
-      export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
       "
     `);
 

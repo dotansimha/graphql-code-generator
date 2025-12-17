@@ -5,10 +5,12 @@ import {
   DeclarationBlock,
   DeclarationKind,
   generateFragmentImportStatement,
+  generateImportStatement,
   getConfigValue,
   indent,
   isOneOfInputObjectType,
   getEnumsImports,
+  isNativeNamedType,
   LoadedFragment,
   normalizeAvoidOptionals,
   NormalizedAvoidOptionalsConfig,
@@ -30,14 +32,11 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
   type GraphQLNamedInputType,
-  type GraphQLNamedType,
-  type GraphQLOutputType,
   GraphQLScalarType,
   type GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
   isEnumType,
-  isNonNullType,
   Kind,
   ListTypeNode,
   NamedTypeNode,
@@ -70,7 +69,14 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsParsedConfig
 > {
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
-  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, documentNode: DocumentNode) {
+  private _outputPath: string;
+
+  constructor(
+    schema: GraphQLSchema,
+    config: TypeScriptDocumentsPluginConfig,
+    documentNode: DocumentNode,
+    outputPath: string
+  ) {
     super(
       config,
       {
@@ -93,6 +99,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema
     );
 
+    this._outputPath = outputPath;
     autoBind(this);
 
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
@@ -109,17 +116,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const wrapArray = (type: string) => {
       const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
       return `${listModifier}<${type}>`;
-    };
-
-    const formatNamedField = (
-      name: string,
-      type: GraphQLOutputType | GraphQLNamedType | null,
-      isConditional = false,
-      isOptional = false
-    ): string => {
-      const optional =
-        isOptional || isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
-      return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
 
     const allFragments: LoadedFragment[] = [
@@ -142,11 +138,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       enumPrefix: this.config.enumPrefix,
       enumSuffix: this.config.enumSuffix,
       scalars: this.scalars,
-      formatNamedField,
+      formatNamedField: ({ name, isOptional }) => {
+        return (this.config.immutableTypes ? `readonly ${name}` : name) + (isOptional ? '?' : '');
+      },
       wrapTypeWithModifiers(baseType, type) {
         return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
       },
-      avoidOptionals: this.config.avoidOptionals,
       printFieldsOnNewLines: this.config.printFieldsOnNewLines,
     };
     const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
@@ -168,6 +165,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       new TypeScriptOperationVariablesToObject(
         this.scalars,
         this.convertName.bind(this),
+        // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
+        // It's also being used for Variables so people could already be using it.
+        // Maybe it's better to deprecate and remove, to see what users think.
         this.config.avoidOptionals,
         this.config.immutableTypes,
         this.config.namespacedImportName,
@@ -188,7 +188,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
-    if (!this._usedNamedInputTypes[enumName]) {
+    if (!this._usedNamedInputTypes[enumName] || this.config.importSchemaTypesFrom) {
       return null;
     }
 
@@ -321,15 +321,42 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       : [];
   }
 
+  public getExternalSchemaTypeImports(): Array<string> {
+    if (!this.config.importSchemaTypesFrom) {
+      return [];
+    }
+
+    const hasTypesToImport = Object.keys(this._usedNamedInputTypes).length > 0;
+
+    if (!hasTypesToImport) {
+      return [];
+    }
+
+    return [
+      generateImportStatement({
+        baseDir: process.cwd(),
+        baseOutputDir: '',
+        outputPath: this._outputPath,
+        importSource: {
+          path: this.config.importSchemaTypesFrom,
+          namespace: this.config.namespacedImportName,
+          identifiers: [],
+        },
+        typesImport: true,
+        // FIXME: rebase with master for the new extension
+        emitLegacyCommonJSImports: true,
+      }),
+    ];
+  }
+
   protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
 
   protected applyVariablesWrapper(variablesBlock: string, operationType: string): string {
-    const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
     const extraType = this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
 
-    return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
+    return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
   private collectInnerTypesRecursively(type: GraphQLInputObjectType, usedInputTypes: UsedNamedInputTypes): void {
@@ -373,7 +400,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
               (foundInputType instanceof GraphQLInputObjectType ||
                 foundInputType instanceof GraphQLScalarType ||
                 foundInputType instanceof GraphQLEnumType) &&
-              !usedInputTypes[namedTypeNode.name.value]
+              !usedInputTypes[namedTypeNode.name.value] &&
+              !isNativeNamedType(foundInputType)
             ) {
               usedInputTypes[namedTypeNode.name.value] = foundInputType;
               if (foundInputType instanceof GraphQLInputObjectType) {
@@ -410,8 +438,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getEnumsImports(): string[] {
+    const usedEnumMap: ParsedEnumValuesMap = {};
+    for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
+      if (this._usedNamedInputTypes[enumName]) {
+        usedEnumMap[enumName] = enumDetails;
+      }
+    }
+
     return getEnumsImports({
-      enumValues: this.config.enumValues,
+      enumValues: usedEnumMap,
       useTypeImports: this.config.useTypeImports,
     });
   }
@@ -422,5 +457,16 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     return 'type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };';
+  }
+
+  getIncrementalUtilityType(): string | null {
+    if (!this.config.generatesOperationTypes) {
+      return null;
+    }
+
+    // Note: `export` here is important for 2 reasons
+    // 1. It is not always used in the rest of the file, so this is a safe way to avoid lint rules (in tsconfig or eslint) complaining it's not used in the current file.
+    // 2. In Client Preset, it is used by fragment-masking.ts, so it needs `export`
+    return "export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };";
   }
 }

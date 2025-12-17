@@ -8,9 +8,10 @@ import { TypeScriptDocumentsVisitor } from './visitor.js';
 export { TypeScriptDocumentsPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = async (
-  inputSchema: GraphQLSchema,
-  rawDocuments: Types.DocumentFile[],
-  config: TypeScriptDocumentsPluginConfig
+  inputSchema,
+  rawDocuments,
+  config,
+  { outputFile }
 ) => {
   const schema = config.nullability?.errorHandlingClient ? await semanticToStrict(inputSchema) : inputSchema;
 
@@ -21,7 +22,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
     : rawDocuments;
   const allAst = concatAST(documents.map(v => v.document));
 
-  const visitor = new TypeScriptDocumentsVisitor(schema, config, allAst);
+  const visitor = new TypeScriptDocumentsVisitor(schema, config, allAst, outputFile);
 
   const operationsResult = oldVisit(allAst, { leave: visitor });
 
@@ -55,9 +56,11 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   return {
     prepend: [
       ...visitor.getImports(),
+      ...visitor.getExternalSchemaTypeImports(),
       ...visitor.getEnumsImports(),
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
       visitor.getExactUtilityType(),
+      visitor.getIncrementalUtilityType(),
     ],
     content,
   };
