@@ -15,7 +15,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
     const useTypeImports = getConfigValue(options?.config.useTypeImports, false) || false;
 
     const cwd = resolve(options.presetConfig.cwd || process.cwd());
-    const importTypesNamespace = options.presetConfig.importTypesNamespace ?? 'Types';
+    const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
 
     if (!baseTypesPath) {
       throw new Error(
