@@ -9,12 +9,12 @@ export type TweetFragmentFragment = ({ __typename?: 'Tweet'; id: string; body: s
 export type TweetAuthorFragmentFragment = {
   __typename?: 'Tweet';
   id: string;
-  author: { __typename?: 'User'; id: string; username?: string | null };
+  author: { __typename?: 'User'; id: string; username: string | null };
 } & { ' $fragmentName'?: 'TweetAuthorFragmentFragment' };
 
 export type TweetsFragmentFragment = {
   __typename?: 'Query';
-  Tweets?: Array<
+  Tweets: Array<
     { __typename?: 'Tweet'; id: string } & { ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment } }
   > | null;
 } & { ' $fragmentName'?: 'TweetsFragmentFragment' };

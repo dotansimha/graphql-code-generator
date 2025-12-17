@@ -18,19 +18,19 @@ exports[`TypeScript Operations Plugin > Issues > #2699 - Issues with multiple in
 
 
 export type GetEntityBrandDataQuery = { __typename?: 'Query', node:
-    | { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null }
-    | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null }
-    | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null }
-    | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null }
+    | { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
+    | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
+    | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
+    | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
    };
 
-type EntityBrandData_Company_Fragment = { __typename?: 'Company', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
+type EntityBrandData_Company_Fragment = { __typename?: 'Company', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
-type EntityBrandData_Theater_Fragment = { __typename?: 'Theater', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
+type EntityBrandData_Theater_Fragment = { __typename?: 'Theater', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
-type EntityBrandData_Movie_Fragment = { __typename?: 'Movie', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
+type EntityBrandData_Movie_Fragment = { __typename?: 'Movie', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
-type EntityBrandData_User_Fragment = { __typename?: 'User', brandData?: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle?: string | null, description: string } | null };
+type EntityBrandData_User_Fragment = { __typename?: 'User', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
 export type EntityBrandDataFragment =
   | EntityBrandData_Company_Fragment
@@ -39,13 +39,13 @@ export type EntityBrandDataFragment =
   | EntityBrandData_User_Fragment
 ;
 
-type ElementMetadata_Company_Fragment = { __typename?: 'Company', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_Company_Fragment = { __typename?: 'Company', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
 
-type ElementMetadata_Theater_Fragment = { __typename?: 'Theater', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_Theater_Fragment = { __typename?: 'Theater', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
 
-type ElementMetadata_Movie_Fragment = { __typename?: 'Movie', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_Movie_Fragment = { __typename?: 'Movie', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
 
-type ElementMetadata_User_Fragment = { __typename?: 'User', createdAt: any, updatedAt: any, createdBy?: { __typename?: 'User', id: string, name: string } | null, updatedBy?: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_User_Fragment = { __typename?: 'User', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
 
 export type ElementMetadataFragment =
   | ElementMetadata_Company_Fragment
@@ -82,56 +82,7 @@ export type QQuery = { __typename?: 'Query', hotel: { __typename?: 'Hotel', id: 
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #3064 - fragments over interfaces causes issues with fields 2`] = `
-"export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-};
-
-export type Venue = {
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-};
-
-export type GpsPosition = {
-  __typename?: 'GPSPosition';
-  lat: Scalars['Float']['output'];
-  lng: Scalars['Float']['output'];
-};
-
-export type VenueWithPosition = {
-  id: Scalars['String']['output'];
-  gpsPosition: GpsPosition;
-};
-
-export type Hotel = VenueWithPosition & Venue & {
-  __typename?: 'Hotel';
-  id: Scalars['String']['output'];
-  gpsPosition: GpsPosition;
-  name: Scalars['String']['output'];
-};
-
-export type Transport = Venue & {
-  __typename?: 'Transport';
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-};
-
-export type Query = {
-  __typename?: 'Query';
-  hotel: Hotel;
-  transport: Transport;
-};
-type Venue_Hotel_Fragment = { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } };
+"type Venue_Hotel_Fragment = { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } };
 
 type Venue_Transport_Fragment = { __typename?: 'Transport', id: string };
 
@@ -192,7 +143,7 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 
 export type UserQueryQuery = (
   { __typename?: 'Query' }
-  & { user?: Maybe<(
+  & { user: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
   )> }
@@ -211,7 +162,7 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 
 export type UserQueryQuery = (
   { __typename?: 'Query' }
-  & { user?: Maybe<(
+  & { user: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
   )> }
@@ -225,7 +176,7 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 
 export type UserQueryQuery = (
   { __typename?: 'Query' }
-  & { user?: Maybe<(
+  & { user: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
   )> }
@@ -266,7 +217,7 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 
 export type Unnamed_1_Query = (
   { __typename?: 'Query' }
-  & { b?: Maybe<
+  & { b: Maybe<
     | (
       { __typename?: 'A' }
       & Pick<A, 'id' | 'x'>
@@ -420,7 +371,7 @@ export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UserQueryQuery = (
   { __typename?: 'Query' }
-  & { user?: Maybe<
+  & { user: Maybe<
     | (
       { __typename?: 'Tom' }
       & Pick<Tom, 'id' | 'foo'>
@@ -435,48 +386,12 @@ export type UserQueryQuery = (
 `;
 
 exports[`TypeScript Operations Plugin > Union & Interfaces > #4216 - handle fragments against unions and interfaces with flattenGeneratedTypes 1`] = `
-"export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-};
-
-export type Query = {
-  __typename?: 'Query';
-  search?: Maybe<Array<Searchable>>;
-};
-
-export type Concept = {
-  id?: Maybe<Scalars['String']['output']>;
-};
-
-export type Dimension = Concept & {
-  __typename?: 'Dimension';
-  id?: Maybe<Scalars['String']['output']>;
-};
-
-export type DimValue = {
-  __typename?: 'DimValue';
-  dimension?: Maybe<Dimension>;
-  value: Scalars['String']['output'];
-};
-
-export type Searchable = Dimension | DimValue;
-export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+"export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SearchPopularQuery = (
   { __typename?: 'Query' }
-  & { search?: Maybe<Array<
+  & { search: Maybe<Array<
     | (
       { __typename?: 'Dimension' }
       & Pick<Dimension, 'id'>
@@ -484,7 +399,7 @@ export type SearchPopularQuery = (
     | (
       { __typename?: 'DimValue' }
       & Pick<DimValue, 'value'>
-      & { dimension?: Maybe<(
+      & { dimension: Maybe<(
         { __typename?: 'Dimension' }
         & Pick<Dimension, 'id'>
       )> }
@@ -512,7 +427,7 @@ export type UserQueryQuery = (
     | (
       { __typename?: 'Error3' }
       & Pick<Error3, 'message'>
-      & { info?: Maybe<(
+      & { info: Maybe<(
         { __typename?: 'AdditionalInfo' }
         & Pick<AdditionalInfo, 'message2' | 'message'>
       )> }
@@ -534,7 +449,7 @@ type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
 
 type UserResult1_Error3_Fragment = (
   { __typename?: 'Error3' }
-  & { info?: Maybe<(
+  & { info: Maybe<(
     { __typename?: 'AdditionalInfo' }
     & Pick<AdditionalInfo, 'message2'>
   )> }
@@ -567,60 +482,7 @@ export type UserResultFragment =
 `;
 
 exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes 1`] = `
-"export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-};
-
-export type Error = {
-  message: Scalars['String']['output'];
-};
-
-export type Error1 = Error & {
-  __typename?: 'Error1';
-  message: Scalars['String']['output'];
-};
-
-export type Error2 = Error & {
-  __typename?: 'Error2';
-  message: Scalars['String']['output'];
-};
-
-export type Error3 = Error & {
-  __typename?: 'Error3';
-  message: Scalars['String']['output'];
-  info?: Maybe<AdditionalInfo>;
-};
-
-export type AdditionalInfo = {
-  __typename?: 'AdditionalInfo';
-  message: Scalars['String']['output'];
-  message2: Scalars['String']['output'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID']['output'];
-  login: Scalars['String']['output'];
-};
-
-export type UserResult = User | Error2 | Error3;
-
-export type Query = {
-  __typename?: 'Query';
-  user: UserResult;
-};
-export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -637,7 +499,7 @@ export type UserQueryQuery = (
     | (
       { __typename?: 'Error3' }
       & Pick<Error3, 'message'>
-      & { info?: Maybe<(
+      & { info: Maybe<(
         { __typename?: 'AdditionalInfo' }
         & Pick<AdditionalInfo, 'message2' | 'message'>
       )> }
@@ -665,62 +527,7 @@ export type UserQueryQuery = (
 `;
 
 exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives 1`] = `
-"export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-};
-
-export type Error = {
-  message: Scalars['String']['output'];
-};
-
-export type Error1 = Error & {
-  __typename?: 'Error1';
-  message: Scalars['String']['output'];
-};
-
-export type Error2 = Error & {
-  __typename?: 'Error2';
-  message: Scalars['String']['output'];
-};
-
-export type Error3 = Error & {
-  __typename?: 'Error3';
-  message: Scalars['String']['output'];
-  info?: Maybe<AdditionalInfo>;
-};
-
-export type AdditionalInfo = {
-  __typename?: 'AdditionalInfo';
-  message: Scalars['String']['output'];
-  message2: Scalars['String']['output'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID']['output'];
-  login: Scalars['String']['output'];
-  test?: Maybe<Scalars['String']['output']>;
-  test2?: Maybe<Scalars['String']['output']>;
-};
-
-export type UserResult = User | Error2 | Error3;
-
-export type Query = {
-  __typename?: 'Query';
-  user: UserResult;
-};
-export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = (
@@ -743,7 +550,7 @@ export type UserQueryQuery = (
     | (
       { __typename?: 'Error3' }
       & Pick<Error3, 'message'>
-      & { info?: Maybe<(
+      & { info: Maybe<(
         { __typename?: 'AdditionalInfo' }
         & Pick<AdditionalInfo, 'message2' | 'message'>
       )> }
