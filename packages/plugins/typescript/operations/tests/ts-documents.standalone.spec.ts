@@ -124,16 +124,16 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, role: UserRole, createdAt: any, nickname: string | null } | null };
+      export type UserQuery = { user: { id: string, name: string, role: UserRole, createdAt: any, nickname: string | null } | null };
 
       export type UsersQueryVariables = Exact<{
         input: UsersInput;
       }>;
 
 
-      export type UsersQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
-          | { __typename?: 'ResponseError', error: ResponseErrorType }
+      export type UsersQuery = { users:
+          | { result: Array<{ id: string }> }
+          | { error: ResponseErrorType }
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
@@ -143,8 +143,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UsersWithScalarInputQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename: 'User' }> }
+      export type UsersWithScalarInputQuery = { users:
+          | { result: Array<{ __typename: 'User' }> }
           | { __typename: 'ResponseError' }
          };
       "
@@ -366,7 +366,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string | number | boolean, name: string } | null };
+      export type UserQuery = { user: { id: string | number | boolean, name: string } | null };
       "
     `);
   });
@@ -703,6 +703,83 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     expect(result).toMatchInlineSnapshot(`
       "
 
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('adds __typename correctly for Apollo Client when skipTypeNameForRoot:true, nonOptionalTypename:true are used', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type ResponseError {
+        error: ResponseErrorType!
+      }
+
+      enum ResponseErrorType {
+        NOT_FOUND
+        INPUT_VALIDATION_ERROR
+        FORBIDDEN_ERROR
+        UNEXPECTED_ERROR
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+        bestFriend: User
+        goodFriends: [User!]!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($id: ID!) {
+        user(id: $id) {
+          id
+          name
+          createdAt
+          bestFriend {
+            name
+          }
+          goodFriends {
+            id
+            __typename
+          }
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          skipTypeNameForRoot: true,
+          nonOptionalTypename: true,
+        },
+        { outputFile: '' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
+        id: string;
+      }>;
+
+
+      export type UserQuery = { user: { __typename: 'User', id: string, name: string, createdAt: any, bestFriend: { __typename: 'User', name: string } | null, goodFriends: Array<{ __typename: 'User', id: string }> } | null };
       "
     `);
 
