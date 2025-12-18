@@ -12,54 +12,39 @@ export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>>
     : never;
 
 // return non-nullable if `fragmentType` is non-nullable
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
-): TType;
+export function useFragment<F extends DocumentTypeDecoration<any, any>>(
+  _documentNode: F,
+  fragmentType: FragmentType<F>
+): ResultOf<F>;
 // return nullable if `fragmentType` is undefined
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | undefined
-): TType | undefined;
+export function useFragment<F extends DocumentTypeDecoration<any, any>>(
+  _documentNode: F,
+  fragmentType: FragmentType<F> | undefined
+): ResultOf<F> | undefined;
 // return nullable if `fragmentType` is nullable
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null
-): TType | null;
+export function useFragment<F extends DocumentTypeDecoration<any, any>>(
+  _documentNode: F,
+  fragmentType: FragmentType<F> | null
+): ResultOf<F> | null;
 // return nullable if `fragmentType` is nullable or undefined
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
-): TType | null | undefined;
+export function useFragment<F extends DocumentTypeDecoration<any, any>>(
+  _documentNode: F,
+  fragmentType: FragmentType<F> | null | undefined
+): ResultOf<F> | null | undefined;
 // return array of non-nullable if `fragmentType` is array of non-nullable
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>>
-): Array<TType>;
+export function useFragment<F extends DocumentTypeDecoration<any, any>>(
+  _documentNode: F,
+  fragmentType: ReadonlyArray<FragmentType<F>>
+): ReadonlyArray<ResultOf<F>>;
 // return array of nullable if `fragmentType` is array of nullable
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-): Array<TType> | null | undefined;
-// return readonly array of non-nullable if `fragmentType` is array of non-nullable
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
-): ReadonlyArray<TType>;
-// return readonly array of nullable if `fragmentType` is array of nullable
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
-): ReadonlyArray<TType> | null | undefined;
-export function useFragment<TType>(
-  _documentNode: DocumentTypeDecoration<TType, any>,
-  fragmentType:
-    | FragmentType<DocumentTypeDecoration<TType, any>>
-    | Array<FragmentType<DocumentTypeDecoration<TType, any>>>
-    | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
-    | null
-    | undefined
-): TType | Array<TType> | ReadonlyArray<TType> | null | undefined {
+export function useFragment<F extends DocumentTypeDecoration<any, any>>(
+  _documentNode: F,
+  fragmentType: ReadonlyArray<FragmentType<F>> | null | undefined
+): ReadonlyArray<ResultOf<F>> | null | undefined;
+export function useFragment<F extends DocumentTypeDecoration<any, any>>(
+  _documentNode: F,
+  fragmentType: FragmentType<F> | ReadonlyArray<FragmentType<F>> | null | undefined
+): ResultOf<F> | ReadonlyArray<ResultOf<F>> | null | undefined {
   return fragmentType as any;
 }
 
@@ -80,5 +65,5 @@ export function isFragmentReady<TQuery, TFrag>(
   if (!deferredFields || !fragName) return true;
 
   const fields = deferredFields[fragName] ?? [];
-  return fields.length > 0 && fields.every(field => data && field in data);
+  return fields.length > 0 && fields.every((field: keyof TFrag) => data && field in data);
 }
