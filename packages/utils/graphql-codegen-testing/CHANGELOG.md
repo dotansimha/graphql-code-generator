@@ -1,5 +1,12 @@
 # @graphql-codegen/testing
 
+## 4.0.1
+
+### Patch Changes
+
+- [#10313](https://github.com/dotansimha/graphql-code-generator/pull/10313) [`ace5c41`](https://github.com/dotansimha/graphql-code-generator/commit/ace5c4176ce4bc8328d3066a8111ca8ce3a34ca6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`jest-diff@^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0 || ^30.0.0` ↗︎](https://www.npmjs.com/package/jest-diff/v/23.0.0) (from `^23.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0`, in `peerDependencies`)
+
 ## 4.0.0
 
 ### Major Changes
