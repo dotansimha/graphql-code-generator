@@ -108,15 +108,13 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** UsersInput Description */
-      export type UsersInput = {
+      type UsersInput = {
         /** UsersInput from */
-        from: DateTime;
+        from?: any;
         /** UsersInput to */
-        to: DateTime;
-        role: UserRole;
+        to?: any;
+        role?: UserRole | null | undefined;
       };
-
-      export type DateTime = any;
 
       export type UserQueryVariables = Exact<{
         id: string;
@@ -254,15 +252,13 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       /** UsersInput Description */
-      export type UsersInput = {
+      type UsersInput = {
         /** UsersInput from */
-        from: DateTime;
+        from?: any;
         /** UsersInput to */
-        to: DateTime;
-        role: UserRole;
+        to?: any;
+        role?: UserRole | null | undefined;
       };
-
-      export type DateTime = any;
 
       export type UserQueryVariables = Exact<{
         id: string;

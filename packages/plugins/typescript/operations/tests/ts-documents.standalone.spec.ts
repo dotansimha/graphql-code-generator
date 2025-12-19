@@ -111,15 +111,13 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      export type UsersInput = {
+      type UsersInput = {
         /** UsersInput from */
-        from: DateTime;
+        from?: any;
         /** UsersInput to */
-        to: DateTime;
-        role: UserRole;
+        to?: any;
+        role?: UserRole | null | undefined;
       };
-
-      export type DateTime = any;
 
       export type UserQueryVariables = Exact<{
         id: string;
@@ -216,11 +214,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'ENUM_E'
         | 'ENUM_F';
 
-      export type EnumsInner = {
+      type EnumsInner = {
         enumsDeep: Array<EnumInnerArray>;
       };
 
-      export type UsersInput = {
+      type UsersInput = {
         enum: EnumRoot;
         enums: Array<EnumRootArray>;
         innerEnums: EnumsInner;
@@ -620,15 +618,13 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      export type UsersInput = {
+      type UsersInput = {
         /** UsersInput from */
-        from: DateTime;
+        from?: any;
         /** UsersInput to */
-        to: DateTime;
-        role: UserRole;
+        to?: any;
+        role?: UserRole | null | undefined;
       };
-
-      export type DateTime = any;
       "
     `);
 
