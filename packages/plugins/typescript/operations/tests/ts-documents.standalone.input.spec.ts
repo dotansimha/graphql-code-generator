@@ -253,6 +253,8 @@ describe('TypeScript Operations Plugin - Input', () => {
 
   it('generates @oneOf input correctly', async () => {
     const schema = buildSchema(/* GraphQL */ `
+      directive @oneOf on INPUT_OBJECT
+
       type Query {
         users(input: UsersInput!): [User!]!
       }
