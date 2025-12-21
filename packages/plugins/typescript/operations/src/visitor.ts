@@ -20,7 +20,7 @@ import {
   PreResolveTypesProcessor,
   SelectionSetProcessorConfig,
   SelectionSetToObject,
-  transformComment,
+  getNodeComment,
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
@@ -38,11 +38,9 @@ import {
   InputValueDefinitionNode,
   isEnumType,
   Kind,
-  ListTypeNode,
-  NamedTypeNode,
-  NonNullTypeNode,
-  ScalarTypeDefinitionNode,
+  type TypeDefinitionNode,
   TypeInfo,
+  type TypeNode,
   visit,
   visitWithTypeInfo,
 } from 'graphql';
@@ -62,7 +60,12 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   enumValues: ParsedEnumValuesMap;
 }
 
-type UsedNamedInputTypes = Record<string, GraphQLNamedInputType>;
+type UsedNamedInputTypes = Record<
+  string,
+  | { type: 'GraphQLScalarType'; node: GraphQLScalarType; tsType: string }
+  | { type: 'GraphQLEnumType'; node: GraphQLEnumType; tsType: string }
+  | { type: 'GraphQLInputObjectType'; node: GraphQLInputObjectType; tsType: string }
+>;
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsPluginConfig,
@@ -211,24 +214,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     });
   }
 
-  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string | null {
-    const scalarName = node.name.value;
-
-    // Don't generate type aliases for built-in scalars
-    if (SCALARS[scalarName] || !this._usedNamedInputTypes[scalarName]) {
-      return null;
-    }
-
-    // Check if a custom scalar mapping is provided in config
-    const scalarType = this.scalars?.[scalarName]?.input ?? 'any';
-
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName(node))
-      .withContent(scalarType).string;
-  }
-
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {
     const inputTypeName = node.name.value;
     if (!this._usedNamedInputTypes[inputTypeName]) {
@@ -236,82 +221,177 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     if (isOneOfInputObjectType(this._schema.getType(inputTypeName))) {
-      return this.getInputObjectOneOfDeclarationBlock(node).string;
+      return new DeclarationBlock(this._declarationBlockConfig)
+        .asKind('type')
+        .withName(this.convertName(node))
+        .withComment(node.description?.value)
+        .withContent(`\n` + (node.fields || []).join('\n  |')).string;
     }
 
-    return this.getInputObjectDeclarationBlock(node).string;
-  }
-
-  InputValueDefinition(node: InputValueDefinitionNode): string {
-    const comment = transformComment(node.description?.value || '', 1);
-    const type: string = node.type as any as string;
-    return comment + indent(`${node.name.value}: ${type};`);
-  }
-
-  private getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
     return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
       .asKind('type')
       .withName(this.convertName(node))
       .withComment(node.description?.value)
-      .withBlock((node.fields || []).join('\n'));
+      .withBlock((node.fields || []).join('\n')).string;
   }
 
-  private getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName(node))
-      .withComment(node.description?.value)
-      .withContent(`\n` + (node.fields || []).join('\n  |'));
-  }
+  InputValueDefinition(
+    node: InputValueDefinitionNode,
+    _key?: number | string,
+    _parent?: any,
+    _path?: Array<string | number>,
+    ancestors?: Array<TypeDefinitionNode>
+  ): string {
+    const oneOfDetails = (function parseOneOf(
+      schema: GraphQLSchema
+    ): { isOneOfInputValue: true; realParentDef: TypeDefinitionNode } | { isOneOfInputValue: false } {
+      const realParentDef = ancestors?.[ancestors.length - 1];
+      if (realParentDef) {
+        const parentType = schema.getType(realParentDef.name.value);
+        if (isOneOfInputObjectType(parentType)) {
+          if (node.type.kind === Kind.NON_NULL_TYPE) {
+            throw new Error(
+              'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+            );
+          }
+          return { isOneOfInputValue: true, realParentDef };
+        }
+      }
+      return { isOneOfInputValue: false };
+    })(this._schema);
 
-  private isValidVisit(ancestors: any): boolean {
-    const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
-    const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
-    const isVisitingEnumType = currentVisitContext.includes(Kind.ENUM_TYPE_DEFINITION);
+    // 1. Flatten GraphQL type nodes to make it easier to turn into string
+    // GraphQL type nodes may have `NonNullType` type before each `ListType` or `NamedType`
+    // This make it a bit harder to know whether a `ListType` or `Namedtype` is nullable without looking at the node before it.
+    // Flattening it into an array where the nullability is in `ListType` and `NamedType` makes it easier to code,
+    //
+    // So, we recursively call `collectAndFlattenTypeNodes` to handle the following scenarios:
+    // - [Thing]
+    // - [Thing!]
+    // - [Thing]!
+    // - [Thing!]!
+    const typeNodes: Array<
+      { type: 'ListType'; isNonNullable: boolean } | { type: 'NamedType'; isNonNullable: boolean; name: string }
+    > = [];
+    (function collectAndFlattenTypeNodes({
+      currentTypeNode,
+      isPreviousNodeNonNullable,
+    }: {
+      currentTypeNode: TypeNode;
+      isPreviousNodeNonNullable: boolean;
+    }): void {
+      if (currentTypeNode.kind === Kind.NON_NULL_TYPE) {
+        const nextTypeNode = currentTypeNode.type;
+        collectAndFlattenTypeNodes({ currentTypeNode: nextTypeNode, isPreviousNodeNonNullable: true });
+      } else if (currentTypeNode.kind === Kind.LIST_TYPE) {
+        typeNodes.push({ type: 'ListType', isNonNullable: isPreviousNodeNonNullable });
 
-    return isVisitingInputType || isVisitingEnumType;
-  }
+        const nextTypeNode = currentTypeNode.type;
+        collectAndFlattenTypeNodes({ currentTypeNode: nextTypeNode, isPreviousNodeNonNullable: false });
+      } else if (currentTypeNode.kind === Kind.NAMED_TYPE) {
+        typeNodes.push({
+          type: 'NamedType',
+          isNonNullable: isPreviousNodeNonNullable,
+          name: currentTypeNode.name.value,
+        });
+      }
+    })({
+      currentTypeNode: node.type,
+      isPreviousNodeNonNullable: oneOfDetails.isOneOfInputValue, // If the InputValue is part of @oneOf input, we treat it as non-null (even if it must be null in the schema)
+    });
 
-  NamedType(node: NamedTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
-    if (!this.isValidVisit(ancestors)) {
-      return undefined;
-    }
+    // 2. Generate the type of a TypeScript field declaration
+    // e.g. `field?: string`, then the `string` is the `typePart`
+    let typePart: string = '';
+    // We call `.reverse()` here to get the base type node first
+    for (const typeNode of typeNodes.reverse()) {
+      if (typeNode.type === 'NamedType') {
+        const usedInputType = this._usedNamedInputTypes[typeNode.name];
+        if (!usedInputType) {
+          continue;
+        }
 
-    const schemaType = this._schema.getType(node.name.value);
-
-    if (schemaType instanceof GraphQLScalarType) {
-      const inputType = this.scalars?.[node.name.value]?.input ?? SCALARS[node.name.value] ?? 'any';
-      if (inputType === 'any' && node.name.value) {
-        return node.name.value;
+        typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
+        if (usedInputType.tsType !== 'any' && !typeNode.isNonNullable) {
+          typePart += ' | null | undefined';
+        }
+        continue;
       }
 
-      return inputType;
+      if (typeNode.type === 'ListType') {
+        typePart = `Array<${typePart}>`;
+        if (!typeNode.isNonNullable) {
+          typePart += ' | null | undefined';
+        }
+      }
     }
 
-    if (schemaType instanceof GraphQLEnumType || schemaType instanceof GraphQLInputObjectType) {
-      return this.convertName(node.name.value);
+    // TODO: eddeee888 check if we want to support `directiveArgumentAndInputFieldMappings` for operations
+    // if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
+    //   typePart =
+    //     getDirectiveOverrideType({
+    //       directives: node.directives,
+    //       directiveArgumentAndInputFieldMappings: this.config.directiveArgumentAndInputFieldMappings,
+    //     }) || typePart;
+    // }
+
+    const addOptionalSign =
+      !oneOfDetails.isOneOfInputValue &&
+      !this.config.avoidOptionals.inputValue &&
+      (node.type.kind !== Kind.NON_NULL_TYPE ||
+        (!this.config.avoidOptionals.defaultValue && node.defaultValue !== undefined));
+
+    // 3. Generate the keyPart of the TypeScript field declaration
+    // e.g. `field?: string`, then the `field?` is the `keyPart`
+    const keyPart = `${node.name.value}${addOptionalSign ? '?' : ''}`;
+
+    // 4. other parts of TypeScript field declaration
+    const commentPart = getNodeComment(node);
+    const readonlyPart = this.config.immutableTypes ? 'readonly ' : '';
+
+    const currentInputValue = commentPart + indent(`${readonlyPart}${keyPart}: ${typePart};`);
+
+    // 5. Check if field is part of `@oneOf` input type
+    // If yes, we must generate a union member where the current inputValue must be provieded, and the others are not
+    // e.g.
+    // ```graphql
+    // input UserInput {
+    //   byId: ID
+    //   byEmail: String
+    //   byLegacyId: ID
+    // }
+    // ```
+    //
+    // Then, the generated type is:
+    // ```ts
+    // type UserInput =
+    //   | { byId: string | number; byEmail?: never; byLegacyId?: never }
+    //   | { byId?: never; byEmail: string; byLegacyId?: never }
+    //   | { byId?: never; byEmail?: never; byLegacyId: string | number }
+    // ```
+
+    if (oneOfDetails.isOneOfInputValue) {
+      const parentType = this._schema.getType(oneOfDetails.realParentDef.name.value);
+      if (isOneOfInputObjectType(parentType)) {
+        if (node.type.kind === Kind.NON_NULL_TYPE) {
+          throw new Error(
+            'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+          );
+        }
+        const fieldParts: Array<string> = [];
+        for (const fieldName of Object.keys(parentType.getFields())) {
+          if (fieldName === node.name.value) {
+            fieldParts.push(currentInputValue);
+            continue;
+          }
+          fieldParts.push(`${readonlyPart}${fieldName}?: never;`);
+        }
+        return indent(`{ ${fieldParts.join(' ')} }`);
+      }
     }
 
-    return node.name.value;
-  }
-
-  ListType(node: ListTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
-    if (!this.isValidVisit(ancestors)) {
-      return undefined;
-    }
-
-    const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
-    return `${listModifier}<${node.type}>`;
-  }
-
-  NonNullType(node: NonNullTypeNode, _key: any, _parent: any, _path: any, ancestors: any): string | undefined {
-    if (!this.isValidVisit(ancestors)) {
-      return undefined;
-    }
-
-    return node.type as any as string | undefined;
+    // If field is not part of @oneOf input type, then it's a input value, just return as-is
+    return currentInputValue;
   }
 
   public getImports(): Array<string> {
@@ -359,22 +439,40 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
-  private collectInnerTypesRecursively(type: GraphQLInputObjectType, usedInputTypes: UsedNamedInputTypes): void {
-    const fields = type.getFields();
+  private collectInnerTypesRecursively(node: GraphQLNamedInputType, usedInputTypes: UsedNamedInputTypes): void {
+    if (usedInputTypes[node.name]) {
+      return;
+    }
+
+    if (node instanceof GraphQLEnumType) {
+      usedInputTypes[node.name] = {
+        type: 'GraphQLEnumType',
+        node,
+        tsType: this.convertName(node.name),
+      };
+      return;
+    }
+
+    if (node instanceof GraphQLScalarType) {
+      usedInputTypes[node.name] = {
+        type: 'GraphQLScalarType',
+        node,
+        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'any',
+      };
+      return;
+    }
+
+    // GraphQLInputObjectType
+    usedInputTypes[node.name] = {
+      type: 'GraphQLInputObjectType',
+      node,
+      tsType: this.convertName(node.name),
+    };
+
+    const fields = node.getFields();
     for (const field of Object.values(fields)) {
       const fieldType = getNamedType(field.type);
-      if (
-        fieldType &&
-        (fieldType instanceof GraphQLEnumType ||
-          fieldType instanceof GraphQLInputObjectType ||
-          fieldType instanceof GraphQLScalarType) &&
-        !usedInputTypes[fieldType.name]
-      ) {
-        usedInputTypes[fieldType.name] = fieldType;
-        if (fieldType instanceof GraphQLInputObjectType) {
-          this.collectInnerTypesRecursively(fieldType, usedInputTypes);
-        }
-      }
+      this.collectInnerTypesRecursively(fieldType, usedInputTypes);
     }
   }
 
@@ -400,13 +498,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
               (foundInputType instanceof GraphQLInputObjectType ||
                 foundInputType instanceof GraphQLScalarType ||
                 foundInputType instanceof GraphQLEnumType) &&
-              !usedInputTypes[namedTypeNode.name.value] &&
               !isNativeNamedType(foundInputType)
             ) {
-              usedInputTypes[namedTypeNode.name.value] = foundInputType;
-              if (foundInputType instanceof GraphQLInputObjectType) {
-                this.collectInnerTypesRecursively(foundInputType, usedInputTypes);
-              }
+              this.collectInnerTypesRecursively(foundInputType, usedInputTypes);
             }
           },
         });
@@ -427,7 +521,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
             const namedType = getNamedType(fieldType);
 
             if (namedType instanceof GraphQLEnumType) {
-              usedInputTypes[namedType.name] = namedType;
+              usedInputTypes[namedType.name] = {
+                type: 'GraphQLEnumType',
+                node: namedType,
+                tsType: this.convertName(namedType.name),
+              };
             }
           }
         },
