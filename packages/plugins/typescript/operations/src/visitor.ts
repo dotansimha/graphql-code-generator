@@ -242,23 +242,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     _path?: Array<string | number>,
     ancestors?: Array<TypeDefinitionNode>
   ): string {
-    const oneOfDetails = (function parseOneOf(
-      schema: GraphQLSchema
-    ): { isOneOfInputValue: true; realParentDef: TypeDefinitionNode } | { isOneOfInputValue: false } {
-      const realParentDef = ancestors?.[ancestors.length - 1];
-      if (realParentDef) {
-        const parentType = schema.getType(realParentDef.name.value);
-        if (isOneOfInputObjectType(parentType)) {
-          if (node.type.kind === Kind.NON_NULL_TYPE) {
-            throw new Error(
-              'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
-            );
-          }
-          return { isOneOfInputValue: true, realParentDef };
-        }
-      }
-      return { isOneOfInputValue: false };
-    })(this._schema);
+    const oneOfDetails = parseOneOfInputValue({
+      node,
+      schema: this._schema,
+      ancestors,
+    });
 
     // 1. Flatten GraphQL type nodes to make it easier to turn into string
     // GraphQL type nodes may have `NonNullType` type before each `ListType` or `NamedType`
@@ -270,34 +258,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     // - [Thing!]
     // - [Thing]!
     // - [Thing!]!
-    const typeNodes: Array<
-      { type: 'ListType'; isNonNullable: boolean } | { type: 'NamedType'; isNonNullable: boolean; name: string }
-    > = [];
-    (function collectAndFlattenTypeNodes({
-      currentTypeNode,
-      isPreviousNodeNonNullable,
-    }: {
-      currentTypeNode: TypeNode;
-      isPreviousNodeNonNullable: boolean;
-    }): void {
-      if (currentTypeNode.kind === Kind.NON_NULL_TYPE) {
-        const nextTypeNode = currentTypeNode.type;
-        collectAndFlattenTypeNodes({ currentTypeNode: nextTypeNode, isPreviousNodeNonNullable: true });
-      } else if (currentTypeNode.kind === Kind.LIST_TYPE) {
-        typeNodes.push({ type: 'ListType', isNonNullable: isPreviousNodeNonNullable });
-
-        const nextTypeNode = currentTypeNode.type;
-        collectAndFlattenTypeNodes({ currentTypeNode: nextTypeNode, isPreviousNodeNonNullable: false });
-      } else if (currentTypeNode.kind === Kind.NAMED_TYPE) {
-        typeNodes.push({
-          type: 'NamedType',
-          isNonNullable: isPreviousNodeNonNullable,
-          name: currentTypeNode.name.value,
-        });
-      }
-    })({
+    const typeNodes: Parameters<typeof collectAndFlattenTypeNodes>[0]['typeNodes'] = [];
+    collectAndFlattenTypeNodes({
       currentTypeNode: node.type,
       isPreviousNodeNonNullable: oneOfDetails.isOneOfInputValue, // If the InputValue is part of @oneOf input, we treat it as non-null (even if it must be null in the schema)
+      typeNodes,
     });
 
     // 2. Generate the type of a TypeScript field declaration
@@ -369,25 +334,16 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     //   | { byId?: never; byEmail: string; byLegacyId?: never }
     //   | { byId?: never; byEmail?: never; byLegacyId: string | number }
     // ```
-
     if (oneOfDetails.isOneOfInputValue) {
-      const parentType = this._schema.getType(oneOfDetails.realParentDef.name.value);
-      if (isOneOfInputObjectType(parentType)) {
-        if (node.type.kind === Kind.NON_NULL_TYPE) {
-          throw new Error(
-            'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
-          );
+      const fieldParts: Array<string> = [];
+      for (const fieldName of Object.keys(oneOfDetails.parentType.getFields())) {
+        if (fieldName === node.name.value) {
+          fieldParts.push(currentInputValue);
+          continue;
         }
-        const fieldParts: Array<string> = [];
-        for (const fieldName of Object.keys(parentType.getFields())) {
-          if (fieldName === node.name.value) {
-            fieldParts.push(currentInputValue);
-            continue;
-          }
-          fieldParts.push(`${readonlyPart}${fieldName}?: never;`);
-        }
-        return indent(`{ ${fieldParts.join(' ')} }`);
+        fieldParts.push(`${readonlyPart}${fieldName}?: never;`);
       }
+      return indent(`{ ${fieldParts.join(' ')} }`);
     }
 
     // If field is not part of @oneOf input type, then it's a input value, just return as-is
@@ -566,5 +522,59 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     // 1. It is not always used in the rest of the file, so this is a safe way to avoid lint rules (in tsconfig or eslint) complaining it's not used in the current file.
     // 2. In Client Preset, it is used by fragment-masking.ts, so it needs `export`
     return "export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };";
+  }
+}
+
+function parseOneOfInputValue({
+  node,
+  schema,
+  ancestors,
+}: {
+  node: InputValueDefinitionNode;
+  schema: GraphQLSchema;
+  ancestors?: Array<TypeDefinitionNode>;
+}):
+  | { isOneOfInputValue: true; realParentDef: TypeDefinitionNode; parentType: GraphQLInputObjectType }
+  | { isOneOfInputValue: false } {
+  const realParentDef = ancestors?.[ancestors.length - 1];
+  if (realParentDef) {
+    const parentType = schema.getType(realParentDef.name.value);
+    if (isOneOfInputObjectType(parentType)) {
+      if (node.type.kind === Kind.NON_NULL_TYPE) {
+        throw new Error(
+          'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.'
+        );
+      }
+      return { isOneOfInputValue: true, realParentDef, parentType };
+    }
+  }
+  return { isOneOfInputValue: false };
+}
+
+function collectAndFlattenTypeNodes({
+  currentTypeNode,
+  isPreviousNodeNonNullable,
+  typeNodes,
+}: {
+  currentTypeNode: TypeNode;
+  isPreviousNodeNonNullable: boolean;
+  typeNodes: Array<
+    { type: 'ListType'; isNonNullable: boolean } | { type: 'NamedType'; isNonNullable: boolean; name: string }
+  >;
+}): void {
+  if (currentTypeNode.kind === Kind.NON_NULL_TYPE) {
+    const nextTypeNode = currentTypeNode.type;
+    collectAndFlattenTypeNodes({ currentTypeNode: nextTypeNode, isPreviousNodeNonNullable: true, typeNodes });
+  } else if (currentTypeNode.kind === Kind.LIST_TYPE) {
+    typeNodes.push({ type: 'ListType', isNonNullable: isPreviousNodeNonNullable });
+
+    const nextTypeNode = currentTypeNode.type;
+    collectAndFlattenTypeNodes({ currentTypeNode: nextTypeNode, isPreviousNodeNonNullable: false, typeNodes });
+  } else if (currentTypeNode.kind === Kind.NAMED_TYPE) {
+    typeNodes.push({
+      type: 'NamedType',
+      isNonNullable: isPreviousNodeNonNullable,
+      name: currentTypeNode.name.value,
+    });
   }
 }
