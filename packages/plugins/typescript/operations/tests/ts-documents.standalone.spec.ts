@@ -97,12 +97,27 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type ResponseErrorType =
+        | 'NOT_FOUND'
+        | 'INPUT_VALIDATION_ERROR'
+        | 'FORBIDDEN_ERROR'
+        | 'UNEXPECTED_ERROR';
+
       /** UserRole Description */
       export type UserRole =
         /** UserRole ADMIN */
         | 'ADMIN'
         /** UserRole CUSTOMER */
         | 'CUSTOMER';
+
+      /** UsersInput Description */
+      type UsersInput = {
+        /** UsersInput from */
+        from?: any;
+        /** UsersInput to */
+        to?: any;
+        role?: UserRole | null | undefined;
+      };
 
       export type UserQueryVariables = Exact<{
         id: string;
@@ -139,6 +154,186 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     // validateTs(content, undefined, undefined, undefined, undefined, true);
   });
 
+  it('test generating input types enums in lists and inner field', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        users(input: UsersInput!): [User!]!
+      }
+
+      type User {
+        id: ID!
+      }
+
+      enum EnumRoot {
+        ENUM_A
+        ENUM_B
+      }
+
+      enum EnumRootArray {
+        ENUM_C
+        ENUM_D
+      }
+
+      enum EnumInnerArray {
+        ENUM_E
+        ENUM_F
+      }
+
+      input EnumsInner {
+        enumsDeep: [EnumInnerArray!]!
+      }
+
+      input UsersInput {
+        enum: EnumRoot!
+        enums: [EnumRootArray!]!
+        innerEnums: EnumsInner!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      query Users($input: UsersInput!) {
+        users(input: $input) {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type EnumRoot =
+        | 'ENUM_A'
+        | 'ENUM_B';
+
+      export type EnumRootArray =
+        | 'ENUM_C'
+        | 'ENUM_D';
+
+      export type EnumInnerArray =
+        | 'ENUM_E'
+        | 'ENUM_F';
+
+      type EnumsInner = {
+        enumsDeep: Array<EnumInnerArray>;
+      };
+
+      type UsersInput = {
+        enum: EnumRoot;
+        enums: Array<EnumRootArray>;
+        innerEnums: EnumsInner;
+      };
+
+      export type UsersQueryVariables = Exact<{
+        input: UsersInput;
+      }>;
+
+
+      export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string }> };
+      "
+    `);
+  });
+
+  it('test generating output enums in lists and inner field', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User!
+      }
+
+      enum EnumRoot {
+        ENUM_A
+        ENUM_B
+      }
+
+      enum EnumRootArray {
+        ENUM_C
+        ENUM_D
+      }
+
+      enum EnumInnerArray {
+        ENUM_E
+        ENUM_F
+      }
+
+      type EnumsInner {
+        enumsDeep: [EnumInnerArray!]!
+      }
+
+      type User {
+        enum: EnumRoot!
+        enums: [EnumRootArray!]!
+        innerEnums: EnumsInner!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($id: ID!) {
+        user(id: $id) {
+          enum
+          enums
+          innerEnums {
+            enumsDeep
+          }
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          extractAllFieldsToTypes: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
+          printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
+        },
+        {
+          outputFile: '',
+        }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type EnumRoot =
+        | 'ENUM_A'
+        | 'ENUM_B';
+
+      export type EnumRootArray =
+        | 'ENUM_C'
+        | 'ENUM_D';
+
+      export type EnumInnerArray =
+        | 'ENUM_E'
+        | 'ENUM_F';
+
+      export type UserQuery_user_User_innerEnums_EnumsInner = {
+        __typename?: 'EnumsInner',
+        enumsDeep: Array<EnumInnerArray>
+      };
+
+      export type UserQuery_user_User = {
+        __typename?: 'User',
+        enum: EnumRoot,
+        enums: Array<EnumRootArray>,
+        innerEnums: UserQuery_user_User_innerEnums_EnumsInner
+      };
+
+      export type UserQuery_Query = {
+        __typename?: 'Query',
+        user: UserQuery_user_User
+      };
+
+
+      export type UserQueryVariables = Exact<{
+        id: string;
+      }>;
+
+
+      export type UserQuery = UserQuery_Query;
+      "
+    `);
+  });
+
   it('test overrdiding config.scalars', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
@@ -172,6 +367,121 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
 
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string | number | boolean, name: string } | null };
+      "
+    `);
+  });
+
+  it('test render output enum from fragment in the same document', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      enum RoleType {
+        ROLE_A
+        ROLE_B
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: RoleType
+        pictureUrl: String
+      }
+
+      type Query {
+        users: [User!]!
+        viewer: User!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      fragment UserBasic on User {
+        id
+        name
+        role
+      }
+
+      query GetUsersAndViewer {
+        users {
+          ...UserBasic
+        }
+        viewer {
+          ...UserBasic
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type RoleType =
+        | 'ROLE_A'
+        | 'ROLE_B';
+
+      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role: RoleType | null };
+
+      export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role: RoleType | null } };
+      "
+    `);
+  });
+
+  it('test render output enum from fragment in a separate document', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      enum RoleType {
+        ROLE_A
+        ROLE_B
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: RoleType
+        pictureUrl: String
+      }
+
+      type Query {
+        users: [User!]!
+        viewer: User!
+      }
+    `);
+
+    const documentWithFragment = parse(/* GraphQL */ `
+      fragment UserBasic on User {
+        id
+        name
+        role
+      }
+    `);
+
+    const documentMain = parse(/* GraphQL */ `
+      query GetUsersAndViewer {
+        users {
+          ...UserBasic
+        }
+        viewer {
+          ...UserBasic
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document: documentMain }, { document: documentWithFragment }], {}, { outputFile: '' }),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type RoleType =
+        | 'ROLE_A'
+        | 'ROLE_B';
+
+      export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role: RoleType | null } };
+
+      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role: RoleType | null };
       "
     `);
   });
@@ -294,6 +604,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     expect(result).toMatchInlineSnapshot(`
       "
 
+      export type ResponseErrorType =
+        | 'NOT_FOUND'
+        | 'INPUT_VALIDATION_ERROR'
+        | 'FORBIDDEN_ERROR'
+        | 'UNEXPECTED_ERROR';
+
       /** UserRole Description */
       export type UserRole =
         /** UserRole ADMIN */
@@ -301,6 +617,14 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         /** UserRole CUSTOMER */
         | 'CUSTOMER';
 
+      /** UsersInput Description */
+      type UsersInput = {
+        /** UsersInput from */
+        from?: any;
+        /** UsersInput to */
+        to?: any;
+        role?: UserRole | null | undefined;
+      };
       "
     `);
 

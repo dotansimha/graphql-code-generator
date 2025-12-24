@@ -1,7 +1,20 @@
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+<<<<<<< HEAD
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+=======
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+/** The episodes in the Star Wars trilogy */
+type Episode =
+  /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
+  | 'EMPIRE'
+  /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
+  | 'JEDI'
+  /** Star Wars Episode IV: A New Hope, released in 1977. */
+  | 'NEWHOPE';
+
+>>>>>>> c7b5477b6 (Generate input types and output enums into target file (#10527))
 type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;
