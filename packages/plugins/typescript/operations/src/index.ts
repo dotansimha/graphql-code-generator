@@ -26,25 +26,14 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 
   const operationsResult = oldVisit(allAst, { leave: visitor });
 
-  let operationsContent = operationsResult.definitions.join('\n');
+  const operationsDefinitions = operationsResult.definitions;
 
   if (config.addOperationExport) {
-    const exportConsts = [];
-
     for (const d of allAst.definitions) {
       if ('name' in d) {
-        exportConsts.push(`export declare const ${d.name.value}: import("graphql").DocumentNode;`);
+        operationsDefinitions.push(`export declare const ${d.name.value}: import("graphql").DocumentNode;`);
       }
     }
-
-    operationsContent = operationsResult.definitions.concat(exportConsts).join('\n');
-  }
-
-  if (config.globalNamespace) {
-    operationsContent = `
-    declare global {
-      ${operationsContent}
-    }`;
   }
 
   const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
@@ -53,13 +42,16 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   // It will leave the node as an object.
   // Here, we filter in nodes that have been turned into strings, i.e. they have been transformed
   // This way, we do not have to explicitly declare a method for every node type to convert them to null
-  const schemaTypesContent = schemaTypes.definitions.filter(def => typeof def === 'string').join('\n');
+  const schemaTypesDefinitions = schemaTypes.definitions.filter(def => typeof def === 'string');
 
-  const content: string[] = [];
-  if (schemaTypesContent) {
-    content.push(schemaTypesContent);
+  let content = [...schemaTypesDefinitions, ...operationsDefinitions].join('\n');
+
+  if (config.globalNamespace) {
+    content = `
+    declare global {
+      ${content}
+    }`;
   }
-  content.push(operationsContent);
 
   return {
     prepend: [
@@ -70,7 +62,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
       visitor.getExactUtilityType(),
       visitor.getIncrementalUtilityType(),
     ],
-    content: content.join('\n'),
+    content,
   };
 };
 
