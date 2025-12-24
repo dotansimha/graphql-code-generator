@@ -1,6 +1,6 @@
 import { TypeScriptOperationVariablesToObject as TSOperationVariablesToObject } from '@graphql-codegen/typescript';
 
-const SCALARS = {
+export const SCALARS = {
   ID: 'string | number',
   String: 'string',
   Int: 'number',
