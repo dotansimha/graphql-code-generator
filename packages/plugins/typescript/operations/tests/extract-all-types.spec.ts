@@ -401,7 +401,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = { __typename: 'EmailInteraction', originalEmailURLPath: string };
 
@@ -565,7 +571,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
         { id: string, htmlUrl: string, title: string, url: string }
         & { __typename: 'ArchivedArticle' }
       );
@@ -734,7 +746,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = (
         { __typename: 'EmailInteraction' }
@@ -972,7 +990,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = (
         { __typename: 'EmailInteraction' }
@@ -1207,7 +1231,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
         { __typename: 'ArchivedArticle' }
         & Pick<
           ArchivedArticle,
