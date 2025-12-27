@@ -688,7 +688,6 @@ export class SelectionSetToObject<
     const typeInfoField = this.buildTypeNameField(
       parentSchemaType,
       this._config.nonOptionalTypename,
-      this._config.addTypename,
       requireTypename,
       this._config.skipTypeNameForRoot
     );
@@ -750,22 +749,26 @@ export class SelectionSetToObject<
 
   protected buildTypeNameField(
     type: GraphQLObjectType,
-    nonOptionalTypename: boolean = this._config.nonOptionalTypename,
-    addTypename: boolean = this._config.addTypename,
-    queriedForTypename: boolean = this._queriedForTypename,
-    skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
-  ): { name: string; type: string } {
+    nonOptionalTypename: boolean,
+    queriedForTypename: boolean,
+    skipTypeNameForRoot: boolean
+  ): { name: string; type: string } | null {
+    const typenameField = {
+      name: this._processor.config.formatNamedField({ name: '__typename' }),
+      type: `'${type.name}'`,
+    };
+
+    if (queriedForTypename) {
+      return typenameField;
+    }
+
     const rootTypes = getRootTypes(this._schema);
-    if (rootTypes.has(type) && skipTypeNameForRoot && !queriedForTypename) {
+    if (rootTypes.has(type) && skipTypeNameForRoot) {
       return null;
     }
 
-    if (nonOptionalTypename || addTypename || queriedForTypename) {
-      const optionalTypename = !queriedForTypename && !nonOptionalTypename;
-      return {
-        name: this._processor.config.formatNamedField({ name: '__typename', isOptional: optionalTypename }),
-        type: `'${type.name}'`,
-      };
+    if (nonOptionalTypename) {
+      return typenameField;
     }
 
     return null;
@@ -889,10 +892,6 @@ export class SelectionSetToObject<
       const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
       if (possibleFields.length === 0) {
-        if (!this._config.addTypename) {
-          return [{ name: declarationName, content: this.getEmptyObjectType() }];
-        }
-
         return [];
       }
 
