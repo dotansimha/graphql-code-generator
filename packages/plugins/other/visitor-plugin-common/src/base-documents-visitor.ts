@@ -251,7 +251,6 @@ export class BaseDocumentsVisitor<
       skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
-      addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),

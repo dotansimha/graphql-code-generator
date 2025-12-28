@@ -229,7 +229,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string }> };
+      export type UsersQuery = { users: Array<{ id: string }> };
       "
     `);
   });
@@ -307,19 +307,16 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'ENUM_F';
 
       export type UserQuery_user_User_innerEnums_EnumsInner = {
-        __typename?: 'EnumsInner',
         enumsDeep: Array<EnumInnerArray>
       };
 
       export type UserQuery_user_User = {
-        __typename?: 'User',
         enum: EnumRoot,
         enums: Array<EnumRootArray>,
         innerEnums: UserQuery_user_User_innerEnums_EnumsInner
       };
 
       export type UserQuery_Query = {
-        __typename?: 'Query',
         user: UserQuery_user_User
       };
 
@@ -416,12 +413,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'ROLE_A'
         | 'ROLE_B';
 
-      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role: RoleType | null };
+      export type UserBasicFragment = { id: string, name: string, role: RoleType | null };
 
       export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role: RoleType | null } };
+      export type GetUsersAndViewerQuery = { users: Array<{ id: string, name: string, role: RoleType | null }>, viewer: { id: string, name: string, role: RoleType | null } };
       "
     `);
   });
@@ -479,9 +476,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       export type GetUsersAndViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type GetUsersAndViewerQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, name: string, role: RoleType | null }>, viewer: { __typename?: 'User', id: string, name: string, role: RoleType | null } };
+      export type GetUsersAndViewerQuery = { users: Array<{ id: string, name: string, role: RoleType | null }>, viewer: { id: string, name: string, role: RoleType | null } };
 
-      export type UserBasicFragment = { __typename?: 'User', id: string, name: string, role: RoleType | null };
+      export type UserBasicFragment = { id: string, name: string, role: RoleType | null };
       "
     `);
   });
