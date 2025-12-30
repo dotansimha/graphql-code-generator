@@ -6,7 +6,4 @@ export type WithVariablesQueryVariables = Exact<{
   role?: Types.UserRole | null;
 }>;
 
-export type WithVariablesQuery = {
-  __typename?: 'Query';
-  user: { __typename?: 'User'; id: string; name: string } | null;
-};
+export type WithVariablesQuery = { user: { id: string; name: string } | null };
