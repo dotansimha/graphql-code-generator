@@ -120,7 +120,7 @@ describe('TypeScript Operations Plugin - Input', () => {
       }>;
 
 
-      export type UsersWithScalarInputQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', ageRange1: Array<number | null> | null, ageRange2: Array<number | null>, ageRange3: Array<number> | null, ageRange4: Array<number> }> };
+      export type UsersWithScalarInputQuery = { users: Array<{ ageRange1: Array<number | null> | null, ageRange2: Array<number | null>, ageRange3: Array<number> | null, ageRange4: Array<number> }> };
       "
     `);
 
@@ -244,7 +244,7 @@ describe('TypeScript Operations Plugin - Input', () => {
       }>;
 
 
-      export type UsersWithScalarInputQuery = { readonly __typename?: 'Query', readonly users: ReadonlyArray<{ readonly __typename?: 'User', readonly ageRange1: ReadonlyArray<number | null> | null, readonly ageRange2: ReadonlyArray<number | null>, readonly ageRange3: ReadonlyArray<number> | null, readonly ageRange4: ReadonlyArray<number> }> };
+      export type UsersWithScalarInputQuery = { readonly users: ReadonlyArray<{ readonly ageRange1: ReadonlyArray<number | null> | null, readonly ageRange2: ReadonlyArray<number | null>, readonly ageRange3: ReadonlyArray<number> | null, readonly ageRange4: ReadonlyArray<number> }> };
       "
     `);
 
@@ -361,7 +361,7 @@ describe('TypeScript Operations Plugin - Input', () => {
       }>;
 
 
-      export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename: 'User' }> };
+      export type UsersQuery = { users: Array<{ __typename: 'User' }> };
       "
     `);
 

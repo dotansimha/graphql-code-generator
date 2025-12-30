@@ -3,7 +3,6 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type FilmItemFragment = {
-  __typename?: 'Film';
   id: string;
   title: string | null;
   releaseDate: string | null;
@@ -15,13 +14,8 @@ export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
 }>;
 
 export type AllFilmsWithVariablesQueryQuery = {
-  __typename?: 'Root';
   allFilms: {
-    __typename?: 'FilmsConnection';
-    edges: Array<{
-      __typename?: 'FilmsEdge';
-      node: ({ __typename?: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } }) | null;
-    } | null> | null;
+    edges: Array<{ node: { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } } | null } | null> | null;
   } | null;
 };
 

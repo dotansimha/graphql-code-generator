@@ -127,7 +127,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       strictScalars: options.config.strictScalars,
       namingConvention: options.config.namingConvention,
       useTypeImports: options.config.useTypeImports,
-      skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
       enumType: options.config.enumType,
       enumValues: options.config.enumValues,
