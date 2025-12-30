@@ -78,9 +78,7 @@ describe('TypeScript Operations Plugin - nullability', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
       export type Unnamed_1_Query = {
-        __typename?: "Query";
         me: {
-          __typename?: "User";
           field: string;
           fieldLevel0: string;
           fieldLevel1: string | null;
@@ -124,9 +122,7 @@ describe('TypeScript Operations Plugin - nullability', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
       export type Unnamed_1_Query = {
-        __typename?: "Query";
         me: {
-          __typename?: "User";
           field: string | null;
           fieldLevel0: string | null;
           fieldLevel1: string | null;

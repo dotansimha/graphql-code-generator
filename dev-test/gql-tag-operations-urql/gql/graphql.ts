@@ -4,18 +4,13 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type FooQueryVariables = Exact<{ [key: string]: never }>;
 
-export type FooQuery = { __typename?: 'Query'; Tweets: Array<{ __typename?: 'Tweet'; id: string } | null> | null };
+export type FooQuery = { Tweets: Array<{ id: string } | null> | null };
 
-export type LelFragment = { __typename?: 'Tweet'; id: string; body: string | null } & {
-  ' $fragmentName'?: 'LelFragment';
-};
+export type LelFragment = { id: string; body: string | null } & { ' $fragmentName'?: 'LelFragment' };
 
 export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
-export type BarQuery = {
-  __typename?: 'Query';
-  Tweets: Array<({ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }) | null> | null;
-};
+export type BarQuery = { Tweets: Array<{ ' $fragmentRefs'?: { LelFragment: LelFragment } } | null> | null };
 
 export const LelFragmentDoc = {
   kind: 'Document',
