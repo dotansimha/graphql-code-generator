@@ -1,8 +1,6 @@
-import dedent from 'dedent';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { buildClientSchema, buildSchema, parse } from 'graphql';
-import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
 
@@ -74,22 +72,21 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type NotificationsQuery = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<Types.TextNotification, 'text' | 'id'>
-            & { textAlias: Types.TextNotification['text'] }
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<Types.ImageNotification, 'imageUrl' | 'id'>
-            & { metadata: (
-              { __typename?: 'ImageMetadata' }
-              & { created: Types.ImageMetadata['createdBy'] }
-            ) }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQuery = { notifications: Array<
+            | (
+              Pick<Types.TextNotification, 'text' | 'id'>
+              & { textAlias: Types.TextNotification['text'] }
+            )
+            | (
+              Pick<Types.ImageNotification, 'imageUrl' | 'id'>
+              & { metadata: { created: Types.ImageMetadata['createdBy'] } }
+            )
+          > };
+        "
       `);
       await validate(content, '', [`Cannot find namespace 'Types'.`]);
     });
@@ -145,10 +142,17 @@ describe('TypeScript Operations Plugin', () => {
           outputFile: '',
         }
       );
-      expect(content).toBeSimilarStringTo(`
-        export type PostFragment = { __typename?: 'Post', id: string, comments: Array<{ __typename?: 'TextComment', text: string } | { __typename?: 'ImageComment' }> };
+      expect(content).toMatchInlineSnapshot(`
+        "export type PostFragment = { id: string, comments: Array<
+            | { text: string }
+            | Record<PropertyKey, never>
+          > };
 
-        export type PostPlusFragment = { __typename?: 'Post', id: string, comments: Array<{ __typename?: 'TextComment', text: string, id: string } | { __typename?: 'ImageComment', id: string }> };
+        export type PostPlusFragment = { id: string, comments: Array<
+            | { text: string, id: string }
+            | { id: string }
+          > };
+        "
       `);
     });
 
@@ -187,8 +191,18 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type TestQuery = { __typename?: 'Query', f: Types.E | null, user: { __typename?: 'User', id: string, f: Types.E | null, j: any | null } };`
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type E =
+          | 'A'
+          | 'B';
+
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type TestQuery = { f: Types.E | null, user: { id: string, f: Types.E | null, j: any | null } };
+        "
+      `
       );
 
       await validate(content, '', [`Cannot find namespace 'Types'.`]);
@@ -218,21 +232,18 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type notificationsquery = (
-          { readonly __typename?: 'Query' }
-          & { readonly notifications: ReadonlyArray<(
-            { readonly __typename?: 'TextNotification' }
-            & Pick<textnotification, 'text' | 'id'>
-          ) | (
-            { readonly __typename?: 'ImageNotification' }
-            & Pick<imagenotification, 'imageUrl' | 'id'>
-            & { readonly metadata: (
-              { readonly __typename?: 'ImageMetadata' }
-              & Pick<imagemetadata, 'createdBy'>
-            ) }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type notificationsqueryvariables = Exact<{ [key: string]: never; }>;
+
+
+        export type notificationsquery = { readonly notifications: ReadonlyArray<
+            | Pick<textnotification, 'text' | 'id'>
+            | (
+              Pick<imagenotification, 'imageUrl' | 'id'>
+              & { readonly metadata: Pick<imagemetadata, 'createdBy'> }
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -292,8 +303,14 @@ describe('TypeScript Operations Plugin', () => {
           outputFile: 'graphql.ts',
         }
       );
-      expect(content).toBeSimilarStringTo(`
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          showProperty: boolean;
+        }>;
+
+
+        export type UserQuery = { user: { name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+        "
       `);
     });
 
@@ -336,10 +353,14 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type UserQueryVariables = Exact<{
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
           showProperty: boolean;
         }> | undefined;
+
+
+        export type UserQuery = { user: { name: string, age: number | null, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };
+        "
       `);
     });
   });
@@ -399,24 +420,33 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;`
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQueryResult = { notifications: Array<
+            | Pick<TextNotification, 'text' | 'id'>
+            | (
+              Pick<ImageNotification, 'imageUrl' | 'id'>
+              & { metadata: Pick<ImageMetadata, 'createdBy'> }
+            )
+          > };
+        "
+      `
       );
-      expect(content).toBeSimilarStringTo(`
-        export type NotificationsQueryResult = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<TextNotification, 'text' | 'id'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<ImageNotification, 'imageUrl' | 'id'>
-            & { metadata: (
-              { __typename?: 'ImageMetadata' }
-              & Pick<ImageMetadata, 'createdBy'>
-            ) }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQueryResult = { notifications: Array<
+            | Pick<TextNotification, 'text' | 'id'>
+            | (
+              Pick<ImageNotification, 'imageUrl' | 'id'>
+              & { metadata: Pick<ImageMetadata, 'createdBy'> }
+            )
+          > };
+        "
       `);
 
       await validate(content);
@@ -448,21 +478,18 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type notificationsquery = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<textnotification, 'text' | 'id'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<imagenotification, 'imageUrl' | 'id'>
-            & { metadata: (
-              { __typename?: 'ImageMetadata' }
-              & Pick<imagemetadata, 'createdBy'>
-            ) }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type notificationsqueryvariables = Exact<{ [key: string]: never; }>;
+
+
+        export type notificationsquery = { notifications: Array<
+            | Pick<textnotification, 'text' | 'id'>
+            | (
+              Pick<imagenotification, 'imageUrl' | 'id'>
+              & { metadata: Pick<imagemetadata, 'createdBy'> }
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -492,24 +519,33 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;`
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;
+
+
+        export type inotificationsquery = { notifications: Array<
+            | Pick<itextnotification, 'text' | 'id'>
+            | (
+              Pick<iimagenotification, 'imageUrl' | 'id'>
+              & { metadata: Pick<iimagemetadata, 'createdBy'> }
+            )
+          > };
+        "
+      `
       );
-      expect(content).toBeSimilarStringTo(`
-        export type inotificationsquery = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<itextnotification, 'text' | 'id'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<iimagenotification, 'imageUrl' | 'id'>
-            & { metadata: (
-                { __typename?: 'ImageMetadata' }
-                & Pick<iimagemetadata, 'createdBy'>
-              ) }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;
+
+
+        export type inotificationsquery = { notifications: Array<
+            | Pick<itextnotification, 'text' | 'id'>
+            | (
+              Pick<iimagenotification, 'imageUrl' | 'id'>
+              & { metadata: Pick<iimagemetadata, 'createdBy'> }
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -628,29 +664,35 @@ describe('TypeScript Operations Plugin', () => {
           { outputFile: '' }
         )
       ).content;
-      expect(withUsage).toBeSimilarStringTo(`
-        export type MyFragment = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<TextNotification, 'id'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<ImageNotification, 'id'>
-          )> }
-        );
+      expect(withUsage).toMatchInlineSnapshot(`
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQuery = { notifications: Array<
+            | Pick<TextNotification, 'id'>
+            | Pick<ImageNotification, 'id'>
+          > };
+
+        export type MyFragment = { notifications: Array<
+            | Pick<TextNotification, 'id'>
+            | Pick<ImageNotification, 'id'>
+          > };
+        "
       `);
-      expect(withUsage).toBeSimilarStringTo(`
-      export type NotificationsQuery = (
-        { __typename?: 'Query' }
-        & { notifications: Array<(
-          { __typename?: 'TextNotification' }
-          & Pick<TextNotification, 'id'>
-        ) | (
-          { __typename?: 'ImageNotification' }
-          & Pick<ImageNotification, 'id'>
-        )> }
-      );
+      expect(withUsage).toMatchInlineSnapshot(`
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQuery = { notifications: Array<
+            | Pick<TextNotification, 'id'>
+            | Pick<ImageNotification, 'id'>
+          > };
+
+        export type MyFragment = { notifications: Array<
+            | Pick<TextNotification, 'id'>
+            | Pick<ImageNotification, 'id'>
+          > };
+        "
       `);
     });
   });
@@ -783,29 +825,35 @@ describe('TypeScript Operations Plugin', () => {
         { outputFile: '' }
       )
     ).content;
-    expect(withUsage).toBeSimilarStringTo(`
-      export type My = (
-        { __typename?: 'Query' }
-        & { notifications: Array<(
-          { __typename?: 'TextNotification' }
-          & Pick<TextNotification, 'id'>
-        ) | (
-          { __typename?: 'ImageNotification' }
-          & Pick<ImageNotification, 'id'>
-        )> }
-      );
+    expect(withUsage).toMatchInlineSnapshot(`
+      "export type NotificationsVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Notifications = { notifications: Array<
+          | Pick<TextNotification, 'id'>
+          | Pick<ImageNotification, 'id'>
+        > };
+
+      export type My = { notifications: Array<
+          | Pick<TextNotification, 'id'>
+          | Pick<ImageNotification, 'id'>
+        > };
+      "
     `);
-    expect(withUsage).toBeSimilarStringTo(`
-    export type Notifications = (
-      { __typename?: 'Query' }
-      & { notifications: Array<(
-        { __typename?: 'TextNotification' }
-        & Pick<TextNotification, 'id'>
-      ) | (
-        { __typename?: 'ImageNotification' }
-        & Pick<ImageNotification, 'id'>
-      )> }
-    );
+    expect(withUsage).toMatchInlineSnapshot(`
+      "export type NotificationsVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type Notifications = { notifications: Array<
+          | Pick<TextNotification, 'id'>
+          | Pick<ImageNotification, 'id'>
+        > };
+
+      export type My = { notifications: Array<
+          | Pick<TextNotification, 'id'>
+          | Pick<ImageNotification, 'id'>
+        > };
+      "
     `);
   });
 
@@ -835,11 +883,14 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type Q1Query = { test: Maybe<(
-          { __typename?: 'Test' }
-          & Pick<Test, 'foo'>
-        )> };`
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Q1Query = { test: Maybe<Pick<Test, 'foo'>> };
+        "
+      `
       );
       await validate(content);
     });
@@ -870,11 +921,17 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type Q1Query = { test: Maybe<(
-          { __typename: 'Test' }
-          & Pick<Test, 'foo'>
-        )> };`
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Q1Query = { test: Maybe<(
+            { __typename: 'Test' }
+            & Pick<Test, 'foo'>
+          )> };
+        "
+      `
       );
       await validate(content);
     });
@@ -906,14 +963,20 @@ describe('TypeScript Operations Plugin', () => {
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type Q1Query = (
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Q1Query = (
           { __typename: 'Query' }
           & { test: Maybe<(
             { __typename: 'Test' }
             & Pick<Test, 'foo'>
           )> }
-        );`
+        );
+        "
+      `
       );
       await validate(content);
     });
@@ -1045,17 +1108,36 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-      export type TestQuery = (
-        { __typename?: 'Query' }
-        & { some: Maybe<(
+      expect(content).toMatchInlineSnapshot(`
+        "type Node_A_Fragment = (
           { __typename: 'A' }
           & Pick<A, 'id'>
-        ) | (
+        );
+
+        type Node_B_Fragment = (
           { __typename: 'B' }
           & Pick<B, 'id'>
-        )> }
-      );
+        );
+
+        export type NodeFragment =
+          | Node_A_Fragment
+          | Node_B_Fragment
+        ;
+
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type TestQuery = { some: Maybe<
+            | (
+              { __typename: 'A' }
+              & Pick<A, 'id'>
+            )
+            | (
+              { __typename: 'B' }
+              & Pick<B, 'id'>
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -1071,12 +1153,15 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-      export type Unnamed_1_Query = (
-        { __typename?: 'Query' }
-        & Pick<Query, 'dummy'>
-        & { type: 'Query' }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = (
+          Pick<Query, 'dummy'>
+          & { type: 'Query' }
+        );
+        "
       `);
       await validate(content);
     });
@@ -1092,8 +1177,12 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = { __typename?: 'Query', dummy: string | null, type: 'Query' };
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { dummy: string | null, type: 'Query' };
+        "
       `);
       await validate(content);
     });
@@ -1109,11 +1198,15 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type Unnamed_1_Query = (
           { __typename: 'Query' }
           & Pick<Query, 'dummy'>
         );
+        "
       `);
       await validate(content);
     });
@@ -1128,11 +1221,15 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type Unnamed_1_Query = (
           { __typename: 'Query' }
           & Pick<Query, 'dummy'>
         );
+        "
       `);
       await validate(content);
     });
@@ -1147,11 +1244,12 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = (
-          { __typename?: 'Query' }
-          & Pick<Query, 'dummy'>
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = Pick<Query, 'dummy'>;
+        "
       `);
       await validate(content);
     });
@@ -1168,11 +1266,15 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type Unnamed_1_Query = (
           { __typename: 'Query' }
           & Pick<Query, 'dummy'>
         );
+        "
       `);
       await validate(content);
     });
@@ -1195,17 +1297,15 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-        export type UnionTestQuery = (
-          { __typename?: 'Query' }
-          & { unionTest: Maybe<(
-            { __typename?: 'User' }
-            & Pick<User, 'id'>
-          ) | (
-            { __typename?: 'Profile' }
-            & Pick<Profile, 'age'>
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UnionTestQuery = { unionTest: Maybe<
+            | Pick<User, 'id'>
+            | Pick<Profile, 'age'>
+          > };
+        "
       `);
       await validate(content);
     });
@@ -1233,21 +1333,18 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-        export type NotificationsQuery = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<TextNotification, 'text' | 'id'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<ImageNotification, 'imageUrl' | 'id'>
-            & { metadata: (
-                { __typename?: 'ImageMetadata' }
-                & Pick<ImageMetadata, 'createdBy'>
-              ) }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQuery = { notifications: Array<
+            | Pick<TextNotification, 'text' | 'id'>
+            | (
+              Pick<ImageNotification, 'imageUrl' | 'id'>
+              & { metadata: Pick<ImageMetadata, 'createdBy'> }
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -1269,17 +1366,21 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-        export type NotificationsQuery = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename: 'TextNotification' }
-            & Pick<TextNotification, 'text'>
-          ) | (
-            { __typename: 'ImageNotification' }
-            & Pick<ImageNotification, 'imageUrl'>
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQuery = { notifications: Array<
+            | (
+              { __typename: 'TextNotification' }
+              & Pick<TextNotification, 'text'>
+            )
+            | (
+              { __typename: 'ImageNotification' }
+              & Pick<ImageNotification, 'imageUrl'>
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -1301,16 +1402,21 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-      { __typename?: 'Query' }
-      & { unionTest: Maybe<(
-        { __typename: 'User' }
-        & Pick<User, 'email'>
-      ) | (
-        { __typename: 'Profile' }
-        & Pick<Profile, 'firstName'>
-      )> }
-    );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UnionTestQuery = { unionTest: Maybe<
+            | (
+              { __typename: 'User' }
+              & Pick<User, 'email'>
+            )
+            | (
+              { __typename: 'Profile' }
+              & Pick<Profile, 'firstName'>
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -1327,11 +1433,19 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
+        "
       `);
-      expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = Pick<Query, 'dummy'>;
+        "
       `);
       await validate(content);
     });
@@ -1351,17 +1465,53 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
-      `);
-      expect(content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
-      `);
-      expect(content).toBeSimilarStringTo(`
-        export type Unnamed_2_Query = Pick<Query, 'dummy'>;
-      `);
-      expect(content).toBeSimilarStringTo(`
+
         export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_2_Query = Pick<Query, 'dummy'>;
+        "
+      `);
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = Pick<Query, 'dummy'>;
+
+        export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_2_Query = Pick<Query, 'dummy'>;
+        "
+      `);
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = Pick<Query, 'dummy'>;
+
+        export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_2_Query = Pick<Query, 'dummy'>;
+        "
+      `);
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = Pick<Query, 'dummy'>;
+
+        export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_2_Query = Pick<Query, 'dummy'>;
+        "
       `);
       await validate(content);
     });
@@ -1732,11 +1882,24 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type Role =
+          | 'USER'
+          | 'ADMIN';
+
+        export type UserFieldsFragment = (
+          Pick<User, 'id' | 'username' | 'role'>
+          & { profile: Maybe<Pick<Profile, 'age'>> }
+        );
+
+        export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type MeQuery = { me: Maybe<(
             Pick<User, 'id' | 'username' | 'role'>
             & { profile: Maybe<Pick<Profile, 'age'>> }
           )> };
+        "
       `);
       await validate(content);
     });
@@ -1762,11 +1925,20 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-      export type MeQuery = { me: Maybe<(
-        Pick<User, 'username' | 'id'>
-        & { profile: Maybe<Pick<Profile, 'age'>> }
-      )> };
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserFieldsFragment = (
+          Pick<User, 'id'>
+          & { profile: Maybe<Pick<Profile, 'age'>> }
+        );
+
+        export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type MeQuery = { me: Maybe<(
+            Pick<User, 'username' | 'id'>
+            & { profile: Maybe<Pick<Profile, 'age'>> }
+          )> };
+        "
       `);
       await validate(content);
     });
@@ -1796,33 +1968,47 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-      export type MeQuery = (
-        { __typename?: 'Query' }
-        & { me: Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'username' | 'id'>
-          & { profile: Maybe<(
-            { __typename?: 'Profile' }
-            & Pick<Profile, 'age'>
-          )> }
-        )> }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserFieldsFragment = Pick<User, 'id'>;
+
+        export type UserProfileFragment = { profile: Maybe<Pick<Profile, 'age'>> };
+
+        export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type MeQuery = { me: Maybe<(
+            Pick<User, 'username' | 'id'>
+            & { profile: Maybe<Pick<Profile, 'age'>> }
+          )> };
+        "
       `);
-      expect(content).toBeSimilarStringTo(`
-        export type UserProfileFragment = (
-          { __typename?: 'User' }
-          & { profile: Maybe<(
-            { __typename?: 'Profile' }
-            & Pick<Profile, 'age'>
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserFieldsFragment = Pick<User, 'id'>;
+
+        export type UserProfileFragment = { profile: Maybe<Pick<Profile, 'age'>> };
+
+        export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type MeQuery = { me: Maybe<(
+            Pick<User, 'username' | 'id'>
+            & { profile: Maybe<Pick<Profile, 'age'>> }
+          )> };
+        "
       `);
-      expect(content).toBeSimilarStringTo(`
-        export type UserFieldsFragment = (
-          { __typename?: 'User' }
-          & Pick<User, 'id'>
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserFieldsFragment = Pick<User, 'id'>;
+
+        export type UserProfileFragment = { profile: Maybe<Pick<Profile, 'age'>> };
+
+        export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type MeQuery = { me: Maybe<(
+            Pick<User, 'username' | 'id'>
+            & { profile: Maybe<Pick<Profile, 'age'>> }
+          )> };
+        "
       `);
       await validate(content);
     });
@@ -1871,27 +2057,19 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-      export type Unnamed_1_Query = (
-        { __typename?: 'Query' }
-        & { b: Maybe<(
-          { __typename?: 'A' }
-          & Pick<A, 'id' | 'x'>
-        ) | (
-          { __typename?: 'B' }
-          & Pick<B, 'id' | 'y'>
-        )> }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
-      export type AFragment = (
-        { __typename?: 'A' }
-        & Pick<A, 'id' | 'x'>
-      );
 
-      export type BFragment = (
-        { __typename?: 'B' }
-        & Pick<B, 'id' | 'y'>
-      );
+        export type Unnamed_1_Query = { b: Maybe<
+            | Pick<A, 'id' | 'x'>
+            | Pick<B, 'id' | 'y'>
+          > };
+
+        export type AFragment = Pick<A, 'id' | 'x'>;
+
+        export type BFragment = Pick<B, 'id' | 'y'>;
+        "
       `);
       await validate(content);
     });
@@ -1942,14 +2120,18 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-      export type Unnamed_1_Query = (
-        { __typename?: 'Query' }
-        & { myType: (
-          { __typename?: 'MyType' }
-          & Pick<MyType, 'foo' | 'bar' | 'test'>
-        ) }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { myType: Pick<MyType, 'foo' | 'bar' | 'test'> };
+
+        export type CFragment = Pick<MyType, 'test'>;
+
+        export type AFragment = Pick<MyType, 'foo'>;
+
+        export type BFragment = Pick<MyType, 'bar'>;
+        "
       `);
       await validate(content);
     });
@@ -1996,24 +2178,19 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-      export type Unnamed_1_Query = (
-        { __typename?: 'Query' }
-        & { b: Maybe<(
-          { __typename?: 'A' }
-          & Pick<A, 'id' | 'x'>
-        ) | { __typename?: 'B' }> }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type AFragment = (
-          { __typename?: 'A' }
-          & Pick<A, 'id'>
-        );
 
-        export type BFragment = (
-          { __typename?: 'A' }
-          & Pick<A, 'x'>
-        );
+        export type Unnamed_1_Query = { b: Maybe<
+            | Pick<A, 'id' | 'x'>
+            | Record<PropertyKey, never>
+          > };
+
+        export type AFragment = Pick<A, 'id'>;
+
+        export type BFragment = Pick<A, 'x'>;
+        "
       `);
       validateTs(mergeOutputs([content]), config);
       expect(mergeOutputs([content])).toMatchSnapshot();
@@ -2043,21 +2220,18 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
-        export type NotificationsQuery = (
-          { __typename?: 'Query' }
-          & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<TextNotification, 'text' | 'id'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<ImageNotification, 'imageUrl' | 'id'>
-            & { metadata: (
-                { __typename?: 'ImageMetadata' }
-                & Pick<ImageMetadata, 'createdBy'>
-              ) }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type NotificationsQuery = { notifications: Array<
+            | Pick<TextNotification, 'text' | 'id'>
+            | (
+              Pick<ImageNotification, 'imageUrl' | 'id'>
+              & { metadata: Pick<ImageMetadata, 'createdBy'> }
+            )
+          > };
+        "
       `);
       await validate(content);
     });
@@ -2081,17 +2255,15 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type UnionTestQuery = (
-          { __typename?: 'Query' }
-            & { unionTest: Maybe<(
-            { __typename?: 'User' }
-            & Pick<User, 'id'>
-          ) | (
-            { __typename?: 'Profile' }
-            & Pick<Profile, 'age'>
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UnionTestQuery = { unionTest: Maybe<
+            | Pick<User, 'id'>
+            | Pick<Profile, 'age'>
+          > };
+        "
       `);
       await validate(content);
     });
@@ -2119,17 +2291,15 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type UnionTestQuery = (
-          { __typename?: 'Query' }
-          & { mixedNotifications: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<TextNotification, 'id' | 'text'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<ImageNotification, 'id' | 'imageUrl'>
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UnionTestQuery = { mixedNotifications: Array<
+            | Pick<TextNotification, 'id' | 'text'>
+            | Pick<ImageNotification, 'id' | 'imageUrl'>
+          > };
+        "
       `);
       await validate(content);
     });
@@ -2161,20 +2331,16 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type UnionTestQuery = (
-          { __typename?: 'Query' }
-          & { search: Array<(
-            { __typename?: 'TextNotification' }
-            & Pick<TextNotification, 'id' | 'text'>
-          ) | (
-            { __typename?: 'ImageNotification' }
-            & Pick<ImageNotification, 'id' | 'imageUrl'>
-          ) | (
-            { __typename?: 'User' }
-            & Pick<User, 'id'>
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UnionTestQuery = { search: Array<
+            | Pick<TextNotification, 'id' | 'text'>
+            | Pick<ImageNotification, 'id' | 'imageUrl'>
+            | Pick<User, 'id'>
+          > };
+        "
       `);
       await validate(content);
     });
@@ -2196,22 +2362,15 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type testQueryVariables = Exact<{ [key: string]: never; }>;
+      expect(content).toMatchInlineSnapshot(`
+        "export type testQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type testQuery = (
-          { notifications: Array<(
-            { id: string }
-            & { __typename?: 'TextNotification' | 'ImageNotification' }
-          )> }
-          & { __typename?: 'Query' }
-        );
 
-        export type NFragment = (
-          { id: string }
-          & { __typename?: 'TextNotification' | 'ImageNotification' }
-        );
-     `);
+        export type testQuery = { notifications: Array<{ id: string }> };
+
+        export type NFragment = { id: string };
+        "
+      `);
       await validate(content);
     });
 
@@ -2229,18 +2388,16 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        type N_TextNotification_Fragment = (
-          { text: string, id: string }
-          & { __typename?: 'TextNotification' }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "type N_TextNotification_Fragment = { text: string, id: string };
 
-        type N_ImageNotification_Fragment = (
-          { id: string }
-          & { __typename?: 'ImageNotification' }
-        );
+        type N_ImageNotification_Fragment = { id: string };
 
-        export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+        export type NFragment =
+          | N_TextNotification_Fragment
+          | N_ImageNotification_Fragment
+        ;
+        "
       `);
       await validate(content);
     });
@@ -2290,18 +2447,16 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-         type N_A_Fragment = (
-           { text: string, id: string }
-           & { __typename?: 'A' }
-         );
+      expect(content).toMatchInlineSnapshot(`
+        "type N_A_Fragment = { text: string, id: string };
 
-         type N_zhJJUzpMTyh98zugnx0IKwiLetPNjV8KybSlmpAEUU_Fragment = (
-           { id: string }
-           & { __typename?: 'B' | 'C' | 'D' | 'E' }
-         );
+        type N_ZMkK3KeglIQrCEb6gIP8zgzig3OXIb4iuHrFFPW86a4_Fragment = { id: string };
 
-         export type NFragment = N_A_Fragment | N_zhJJUzpMTyh98zugnx0IKwiLetPNjV8KybSlmpAEUU_Fragment;
+        export type NFragment =
+          | N_A_Fragment
+          | N_ZMkK3KeglIQrCEb6gIP8zgzig3OXIb4iuHrFFPW86a4_Fragment
+        ;
+        "
       `);
       await validate(content);
     });
@@ -2321,14 +2476,9 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-       export type NFragment = (
-         { notifications: Array<(
-           { text: string }
-           & { __typename?: 'TextNotification' }
-         ) | { __typename?: 'ImageNotification' }> }
-         & { __typename?: 'Query' }
-       );
+      expect(content).toMatchInlineSnapshot(`
+        "export type NFragment = { notifications: Array<{ text: string }> };
+        "
       `);
       await validate(content);
     });
@@ -2350,10 +2500,14 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type testQueryVariables = Exact<{ [key: string]: never; }>;
+      expect(content).toMatchInlineSnapshot(`
+        "export type testQueryVariables = Exact<{ [key: string]: never; }>;
+
 
         export type testQuery = { notifications: Array<{ id: string }> };
+
+        export type NFragment = { id: string };
+        "
       `);
       await validate(content);
     });
@@ -2372,12 +2526,16 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-       type N_TextNotification_Fragment = { text: string, id: string };
+      expect(content).toMatchInlineSnapshot(`
+        "type N_TextNotification_Fragment = { text: string, id: string };
 
-       type N_ImageNotification_Fragment = { id: string };
+        type N_ImageNotification_Fragment = { id: string };
 
-       export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
+        export type NFragment =
+          | N_TextNotification_Fragment
+          | N_ImageNotification_Fragment
+        ;
+        "
       `);
       await validate(content);
     });
@@ -2399,24 +2557,25 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-       export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+      expect(content).toMatchInlineSnapshot(`
+        "export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-       export type TestQuery = { __typename?: 'Query', notifications: Array<(
-        { __typename?: 'TextNotification' }
-        & { ' $fragmentRefs'?: { 'N_TextNotification_Fragment': N_TextNotification_Fragment } }
-       ) | (
-        { __typename?: 'ImageNotification' }
-        & { ' $fragmentRefs'?: { 'N_ImageNotification_Fragment': N_ImageNotification_Fragment } }
-       )> };
+        export type TestQuery = { notifications: Array<
+            | { ' $fragmentRefs'?: { 'N_TextNotification_Fragment': N_TextNotification_Fragment } }
+            | { ' $fragmentRefs'?: { 'N_ImageNotification_Fragment': N_ImageNotification_Fragment } }
+          > };
 
-       type N_TextNotification_Fragment = { __typename?: 'TextNotification', id: string } & { ' $fragmentName'?: 'N_TextNotification_Fragment' };
+        type N_TextNotification_Fragment = { id: string } & { ' $fragmentName'?: 'N_TextNotification_Fragment' };
 
-       type N_ImageNotification_Fragment = { __typename?: 'ImageNotification', id: string } & { ' $fragmentName'?: 'N_ImageNotification_Fragment' };
+        type N_ImageNotification_Fragment = { id: string } & { ' $fragmentName'?: 'N_ImageNotification_Fragment' };
 
-       export type NFragment = N_TextNotification_Fragment | N_ImageNotification_Fragment;
-     `);
+        export type NFragment =
+          | N_TextNotification_Fragment
+          | N_ImageNotification_Fragment
+        ;
+        "
+      `);
       await validate(content);
     });
 
@@ -2438,11 +2597,15 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
         outputFile: '',
       });
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type CurrentUserQuery = { me: Maybe<(
             Pick<User, 'username' | 'id'>
             & { profile: Maybe<Pick<Profile, 'age'>> }
-        )> };
+          )> };
+        "
       `);
 
       await validate(content);
@@ -2470,16 +2633,37 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type MeQueryVariables = Exact<{
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type MeQueryVariables = Exact<{
           repoFullName: string;
-        }>;`
+        }>;
+
+
+        export type MeQuery = {
+            currentUser: Maybe<Pick<User, 'login' | 'html_url'>>,
+            entry: Maybe<(
+              Pick<Entry, 'id' | 'createdAt'>
+              & { postedBy: Pick<User, 'login' | 'html_url'> }
+            )>,
+          };
+        "
+      `
       );
-      expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { currentUser: Maybe<Pick<User, 'login' | 'html_url'>>, entry: Maybe<(
-          Pick<Entry, 'id' | 'createdAt'>
-          & { postedBy: Pick<User, 'login' | 'html_url'> }
-        )> };
+      expect(content).toMatchInlineSnapshot(`
+        "export type MeQueryVariables = Exact<{
+          repoFullName: string;
+        }>;
+
+
+        export type MeQuery = {
+            currentUser: Maybe<Pick<User, 'login' | 'html_url'>>,
+            entry: Maybe<(
+              Pick<Entry, 'id' | 'createdAt'>
+              & { postedBy: Pick<User, 'login' | 'html_url'> }
+            )>,
+          };
+        "
       `);
       await validate(content);
     });
@@ -2506,8 +2690,14 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type MeQuery = { __typename?: 'Query', currentUser: { __typename?: 'User', login: string, html_url: string } | null, entry: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
+      expect(content).toMatchInlineSnapshot(`
+        "export type MeQueryVariables = Exact<{
+          repoFullName: string;
+        }>;
+
+
+        export type MeQuery = { currentUser: { login: string, html_url: string } | null, entry: { id: number, createdAt: number, postedBy: { login: string, html_url: string } } | null };
+        "
       `);
       await validate(content);
     });
@@ -2552,8 +2742,19 @@ export type Q2Query = { search: Array<
       });
 
       const o = await validate(content);
-      // expect(o).toContain(`export type Information_EntryType =\n  | 'NAME'\n  | 'ADDRESS';`); FIXME: eddeee888 this must be generated because enum is used in a Result field
-      expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
+      expect(o).toMatchInlineSnapshot(`
+        "export type Information_EntryType =
+          | 'NAME'
+          | 'ADDRESS';
+
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type TestQuery = { info: { entries: Array<{ id: Information_EntryType, value: string | null }> } | null };
+
+        export type InformationFragment = { entries: Array<{ id: Information_EntryType, value: string | null }> };
+        "
+      `);
     });
 
     it('Should produce valid output with preResolveTypes=true and enums with prefixes set', async () => {
@@ -2600,11 +2801,21 @@ export type Q2Query = { search: Array<
       });
 
       const o = await validate(content);
-      expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = Exact<{
-        e: Information_EntryType;
-      }>;`);
-      expect(o).toContain(`export type Information_EntryType =\n  | 'NAME'\n  | 'ADDRESS';`);
-      expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
+      expect(o).toMatchInlineSnapshot(`
+        "export type Information_EntryType =
+          | 'NAME'
+          | 'ADDRESS';
+
+        export type ITestQueryVariables = Exact<{
+          e: Information_EntryType;
+        }>;
+
+
+        export type ITestQuery = { info: { entries: Array<{ id: Information_EntryType, value: string | null }> } | null, infoArgTest: { entries: Array<{ id: Information_EntryType, value: string | null }> } | null };
+
+        export type IInformationFragment = { entries: Array<{ id: Information_EntryType, value: string | null }> };
+        "
+      `);
     });
 
     it('Should produce valid output with preResolveTypes=true and enums with no suffixes', async () => {
@@ -2651,11 +2862,21 @@ export type Q2Query = { search: Array<
       });
 
       const o = await validate(content);
-      expect(o).toBeSimilarStringTo(` export type TestQueryVariablesI = Exact<{
-        e: Information_EntryType;
-      }>;`);
-      expect(o).toContain(`export type Information_EntryType =\n  | 'NAME'\n  | 'ADDRESS';`);
-      expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);
+      expect(o).toMatchInlineSnapshot(`
+        "export type Information_EntryType =
+          | 'NAME'
+          | 'ADDRESS';
+
+        export type TestQueryVariablesI = Exact<{
+          e: Information_EntryType;
+        }>;
+
+
+        export type TestQueryI = { info: { entries: Array<{ id: Information_EntryType, value: string | null }> } | null, infoArgTest: { entries: Array<{ id: Information_EntryType, value: string | null }> } | null };
+
+        export type InformationFragmentI = { entries: Array<{ id: Information_EntryType, value: string | null }> };
+        "
+      `);
     });
 
     it('Should build a basic selection set based on basic query', async () => {
@@ -2669,8 +2890,12 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type DummyQuery = Pick<Query, 'dummy'>;
+        "
       `);
       await validate(content);
     });
@@ -2689,11 +2914,15 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type DummyQuery = (
           { customName: Query['dummy'] }
           & { customName2: Maybe<Pick<Profile, 'age'>> }
         );
+        "
       `);
       await validate(content);
     });
@@ -2716,11 +2945,19 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type Role =
+          | 'USER'
+          | 'ADMIN';
+
+        export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type CurrentUserQuery = { me: Maybe<(
-          Pick<User, 'id' | 'username' | 'role'>
-          & { profile: Maybe<Pick<Profile, 'age'>> }
-        )> };
+            Pick<User, 'id' | 'username' | 'role'>
+            & { profile: Maybe<Pick<Profile, 'age'>> }
+          )> };
+        "
       `);
       await validate(content);
     });
@@ -2742,11 +2979,12 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type UserFieldsFragment = (
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserFieldsFragment = (
           Pick<User, 'id' | 'username'>
           & { profile: Maybe<Pick<Profile, 'age'>> }
         );
+        "
       `);
       await validate(content);
     });
@@ -2770,11 +3008,15 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type LoginMutationVariables = Exact<{ [key: string]: never; }>;
+
+
         export type LoginMutation = { login: Maybe<(
-          Pick<User, 'id' | 'username'>
-          & { profile: Maybe<Pick<Profile, 'age'>> }
-        )> };
+            Pick<User, 'id' | 'username'>
+            & { profile: Maybe<Pick<Profile, 'age'>> }
+          )> };
+        "
       `);
       await validate(content);
     });
@@ -2790,8 +3032,12 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+
+
         export type TestQuery = Pick<Query, 'dummy'>;
+        "
       `);
       await validate(content);
     });
@@ -2809,8 +3055,12 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type TestSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
         export type TestSubscription = { userCreated: Maybe<Pick<User, 'id'>> };
+        "
       `);
       await validate(content);
     });
@@ -2835,8 +3085,13 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        dedent(`export type TestQueryQueryVariables = Exact<{
+      expect(content).toMatchInlineSnapshot(
+        `
+        "type InputType = {
+          t?: string | null | undefined;
+        };
+
+        export type TestQueryQueryVariables = Exact<{
           username?: string | null;
           email?: string | null;
           password: string;
@@ -2845,7 +3100,12 @@ export type Q2Query = { search: Array<
           testArray?: Array<string | null> | string | null;
           requireString: Array<string | null> | string;
           innerRequired: Array<string> | string;
-        }>;`)
+        }>;
+
+
+        export type TestQueryQuery = { dummy: string | null };
+        "
+      `
       );
       await validate(content);
     });
@@ -2861,10 +3121,16 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type TestQueryQueryVariables = Exact<{
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type TestQueryQueryVariables = Exact<{
           test?: any | null;
-        }>;`
+        }>;
+
+
+        export type TestQueryQuery = { dummy: string | null };
+        "
+      `
       );
       await validate(content);
     });
@@ -2880,7 +3146,13 @@ export type Q2Query = { search: Array<
         outputFile: '',
       });
 
-      expect(content).toBeSimilarStringTo(`export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type TestQueryQuery = { dummy: string | null };
+        "
+      `);
       await validate(content);
     });
 
@@ -2922,17 +3194,17 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type SubmitMessageMutation = (
-          { __typename?: 'Mutation' }
-          & { mutation: (
-            { __typename?: 'DeleteMutation' }
-            & Pick<DeleteMutation, 'deleted'>
-          ) | (
-            { __typename?: 'UpdateMutation' }
-          & Pick<UpdateMutation, 'updated'>
-          ) }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type SubmitMessageMutationVariables = Exact<{
+          message: string;
+        }>;
+
+
+        export type SubmitMessageMutation = { mutation:
+            | Pick<DeleteMutation, 'deleted'>
+            | Pick<UpdateMutation, 'updated'>
+           };
+        "
       `);
     });
 
@@ -2964,11 +3236,12 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type PostQuery = (
-          { __typename?: 'Query' }
-          & { post: { __typename: 'Post' } }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type PostQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type PostQuery = { post: { __typename: 'Post' } };
+        "
       `);
     });
 
@@ -3002,20 +3275,13 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type InfoQuery = (
-          { __typename?: 'Query' }
-          & { __schema: (
-            { __typename?: '__Schema' }
-            & { queryType: (
-              { __typename?: '__Type' }
-              & { fields: Maybe<Array<(
-                { __typename?: '__Field' }
-                & Pick<__Field, 'name'>
-              )>> }
-            ) }
-          ) }
-        );`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type InfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type InfoQuery = { __schema: { queryType: { fields: Maybe<Array<Pick<__Field, 'name'>>> } } };
+        "
+      `);
     });
 
     it('should handle introspection types (__type)', async () => {
@@ -3051,92 +3317,19 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type InfoQuery = (
-          { __typename?: 'Query' }
-          & { __type: Maybe<(
-            { __typename?: '__Type' }
-            & Pick<__Type, 'name'>
+      expect(content).toMatchInlineSnapshot(`
+        "export type InfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type InfoQuery = { __type: Maybe<(
+            Pick<__Type, 'name'>
             & { fields: Maybe<Array<(
-              { __typename?: '__Field' }
-              & Pick<__Field, 'name'>
-              & { type: (
-                { __typename?: '__Type' }
-                & Pick<__Type, 'name' | 'kind'>
-              ) }
+              Pick<__Field, 'name'>
+              & { type: Pick<__Type, 'name' | 'kind'> }
             )>> }
-          )> }
-        );
+          )> };
+        "
       `);
-    });
-
-    it('should handle introspection types (like __TypeKind)', async () => {
-      const testSchema = buildSchema(/* GraphQL */ `
-        type Post {
-          title: String
-        }
-        type Query {
-          post: Post!
-        }
-      `);
-      const query = parse(/* GraphQL */ `
-        query Info {
-          __type(name: "Post") {
-            name
-            fields {
-              name
-              type {
-                name
-                kind
-              }
-            }
-          }
-        }
-      `);
-
-      const coreContent = await tsPlugin(
-        testSchema,
-        [{ location: '', document: query }],
-        {},
-        {
-          outputFile: 'graphql.ts',
-        }
-      );
-
-      const pluginContent = await plugin(
-        testSchema,
-        [{ location: '', document: query }],
-        {},
-        {
-          outputFile: 'graphql.ts',
-        }
-      );
-
-      const content = mergeOutputs([coreContent, pluginContent]);
-
-      expect(content).toBeSimilarStringTo(`
-      /** An enum describing what kind of type a given \`__Type\` is. */
-      export enum __TypeKind {
-        /** Indicates this type is a scalar. */
-        Scalar = 'SCALAR',
-        /** Indicates this type is an object. \`fields\` and \`interfaces\` are valid fields. */
-        Object = 'OBJECT',
-        /** Indicates this type is an interface. \`fields\`, \`interfaces\`, and \`possibleTypes\` are valid fields. */
-        Interface = 'INTERFACE',
-        /** Indicates this type is a union. \`possibleTypes\` is a valid field. */
-        Union = 'UNION',
-        /** Indicates this type is an enum. \`enumValues\` is a valid field. */
-        Enum = 'ENUM',
-        /** Indicates this type is an input object. \`inputFields\` is a valid field. */
-        InputObject = 'INPUT_OBJECT',
-        /** Indicates this type is a list. \`ofType\` is a valid field. */
-        List = 'LIST',
-        /** Indicates this type is a non-null. \`ofType\` is a valid field. */
-        NonNull = 'NON_NULL'
-      }
-      `);
-
-      validateTs(content);
     });
 
     it('Should generate correctly when using enums and typesPrefix', async () => {
@@ -3173,19 +3366,41 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type PREFIX_Access =
+          | 'Read'
+          | 'Write'
+          | 'All';
+
+        type PREFIX_Filter = {
+          match: string;
+        };
+
         export type PREFIX_UsersQueryVariables = Exact<{
           filter: PREFIX_Filter;
         }>;
+
+
+        export type PREFIX_UsersQuery = { users: Maybe<Array<Maybe<Pick<PREFIX_User, 'access'>>>> };
+        "
       `);
-      expect(content).toBeSimilarStringTo(`
-        export type PREFIX_UsersQuery = (
-          { __typename?: 'Query' }
-          & { users: Maybe<Array<Maybe<(
-            { __typename?: 'User' }
-            & Pick<PREFIX_User, 'access'>
-          )>>> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type PREFIX_Access =
+          | 'Read'
+          | 'Write'
+          | 'All';
+
+        type PREFIX_Filter = {
+          match: string;
+        };
+
+        export type PREFIX_UsersQueryVariables = Exact<{
+          filter: PREFIX_Filter;
+        }>;
+
+
+        export type PREFIX_UsersQuery = { users: Maybe<Array<Maybe<Pick<PREFIX_User, 'access'>>>> };
+        "
       `);
     });
 
@@ -3215,10 +3430,14 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type UsersQueryVariables = Exact<{
+      expect(content).toMatchInlineSnapshot(`
+        "export type UsersQueryVariables = Exact<{
           reverse?: boolean | null;
         }>;
+
+
+        export type UsersQuery = { users: Array<{ name: string }> };
+        "
       `);
     });
   });
@@ -3279,23 +3498,29 @@ export type Q2Query = { search: Array<
           outputFile: 'graphql.ts',
         }
       );
-      expect(content).toBeSimilarStringTo(`
-      export type FieldQuery = (
-        { __typename?: 'Query' }
-        & { field: (
-          { __typename: 'Error1' }
-          & Pick<Error1, 'message'>
-        ) | (
-          { __typename: 'Error2' }
-          & Pick<Error2, 'message'>
-        ) | (
-          { __typename: 'ComplexError' }
-          & Pick<ComplexError, 'message' | 'additionalInfo'>
-        ) | (
-          { __typename: 'FieldResultSuccess' }
-          & Pick<FieldResultSuccess, 'someValue'>
-        ) }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type FieldQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FieldQuery = { field:
+            | (
+              { __typename: 'Error1' }
+              & Pick<Error1, 'message'>
+            )
+            | (
+              { __typename: 'Error2' }
+              & Pick<Error2, 'message'>
+            )
+            | (
+              { __typename: 'ComplexError' }
+              & Pick<ComplexError, 'message' | 'additionalInfo'>
+            )
+            | (
+              { __typename: 'FieldResultSuccess' }
+              & Pick<FieldResultSuccess, 'someValue'>
+            )
+           };
+        "
       `);
     });
 
@@ -3354,23 +3579,26 @@ export type Q2Query = { search: Array<
           outputFile: 'graphql.ts',
         }
       );
-      expect(content).toBeSimilarStringTo(`
-        export type FieldQuery = (
-          { __typename?: 'Query' }
-          & { field: (
-            { __typename: 'Error1' }
-            & Pick<Error1, 'message'>
-          ) | (
-            { __typename: 'Error2' }
-            & Pick<Error2, 'message'>
-          ) | (
-            { __typename: 'ComplexError' }
-            & Pick<ComplexError, 'message' | 'additionalInfo'>
-          ) | (
-            { __typename?: 'FieldResultSuccess' }
-            & Pick<FieldResultSuccess, 'someValue'>
-          ) }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type FieldQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type FieldQuery = { field:
+            | (
+              { __typename: 'Error1' }
+              & Pick<Error1, 'message'>
+            )
+            | (
+              { __typename: 'Error2' }
+              & Pick<Error2, 'message'>
+            )
+            | (
+              { __typename: 'ComplexError' }
+              & Pick<ComplexError, 'message' | 'additionalInfo'>
+            )
+            | Pick<FieldResultSuccess, 'someValue'>
+           };
+        "
       `);
     });
     it('interface with same field names', async () => {
@@ -3417,17 +3645,15 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type SomethingQuery = (
-          { __typename?: 'Query' }
-          & { node: Maybe<(
-            { __typename?: 'A' }
-            & Pick<A, 'a'>
-          ) | (
-            { __typename?: 'B' }
-            & Pick<B, 'a'>
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type SomethingQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type SomethingQuery = { node: Maybe<
+            | Pick<A, 'a'>
+            | Pick<B, 'a'>
+          > };
+        "
       `);
     });
     it('union returning single interface types', async () => {
@@ -3487,24 +3713,19 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type UserQuery = (
-          { __typename?: 'Query' }
-          & { user: Maybe<(
-            { __typename?: 'User' }
-            & Pick<User, 'id' | 'login'>
-          ) | (
-            { __typename?: 'Error2' }
-            & Pick<Error2, 'message'>
-          ) | (
-            { __typename?: 'Error3' }
-            & Pick<Error3, 'message'>
-            & { info: Maybe<(
-              { __typename?: 'AdditionalInfo' }
-              & Pick<AdditionalInfo, 'message'>
-            )> }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQuery = { user: Maybe<
+            | Pick<User, 'id' | 'login'>
+            | Pick<Error2, 'message'>
+            | (
+              Pick<Error3, 'message'>
+              & { info: Maybe<Pick<AdditionalInfo, 'message'>> }
+            )
+          > };
+        "
       `);
     });
 
@@ -3580,24 +3801,19 @@ export type Q2Query = { search: Array<
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type UserQuery = (
-          { __typename?: 'Query' }
-          & { user: Maybe<(
-            { __typename?: 'User' }
-            & Pick<User, 'id' | 'login'>
-          ) | (
-            { __typename?: 'Error2' }
-            & Pick<Error2, 'message'>
-          ) | (
-            { __typename?: 'Error3' }
-            & Pick<Error3, 'message'>
-            & { info: Maybe<(
-                { __typename?: 'AdditionalInfo' }
-                & Pick<AdditionalInfo, 'message' | 'message2'>
-              )> }
-          )> }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQuery = { user: Maybe<
+            | Pick<User, 'id' | 'login'>
+            | Pick<Error2, 'message'>
+            | (
+              Pick<Error3, 'message'>
+              & { info: Maybe<Pick<AdditionalInfo, 'message' | 'message2'>> }
+            )
+          > };
+        "
       `);
     });
 
@@ -3638,14 +3854,12 @@ export type Q2Query = { search: Array<
 
       const o = await validate(content);
 
-      expect(o).toBeSimilarStringTo(`
-      export type UserQueryQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & Pick<User, 'id' | 'login'>
-        ) }
-      );
+      expect(o).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQueryQuery = { user: Pick<User, 'id' | 'login'> };
+        "
       `);
     });
 
@@ -3688,19 +3902,25 @@ export type Q2Query = { search: Array<
 
       const o = await validate(content);
 
-      expect(o).toBeSimilarStringTo(`
-      export type UserQueryQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & Pick<User, 'id' | 'login'>
-        ) }
-      );`);
+      expect(o).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-      expect(o).toBeSimilarStringTo(`export type TestFragment = (
-        { __typename?: 'User' }
-        & Pick<User, 'login'>
-      );`);
+
+        export type UserQueryQuery = { user: Pick<User, 'id' | 'login'> };
+
+        export type TestFragment = Pick<User, 'login'>;
+        "
+      `);
+
+      expect(o).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQueryQuery = { user: Pick<User, 'id' | 'login'> };
+
+        export type TestFragment = Pick<User, 'login'>;
+        "
+      `);
     });
 
     it('Should handle union selection sets with both FragmentSpreads and InlineFragments', async () => {
@@ -3808,61 +4028,109 @@ export type Q2Query = { search: Array<
       );
       expect(mergeOutputs([content])).toMatchSnapshot();
 
-      expect(output).toBeSimilarStringTo(`
-      export type UserQueryQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & Pick<User, 'login' | 'id'>
-        ) | (
-          { __typename?: 'Error2' }
-          & Pick<Error2, 'message'>
-        ) | (
-          { __typename?: 'Error3' }
-          & Pick<Error3, 'message'>
-          & { info: Maybe<(
-            { __typename?: 'AdditionalInfo' }
-            & Pick<AdditionalInfo, 'message2' | 'message'>
-          )> }
-        ) }
-      );`);
+      expect(output).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-      expect(output).toBeSimilarStringTo(`
-      export type AdditionalInfoFragment = (
-        { __typename?: 'AdditionalInfo' }
-        & Pick<AdditionalInfo, 'message'>
-      );
 
-      type UserResult1_User_Fragment = (
-        { __typename?: 'User' }
-        & Pick<User, 'id'>
-      );
+        export type UserQueryQuery = { user:
+            | Pick<User, 'login' | 'id'>
+            | Pick<Error2, 'message'>
+            | (
+              Pick<Error3, 'message'>
+              & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
+            )
+           };
 
-      type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
+        export type AdditionalInfoFragment = Pick<AdditionalInfo, 'message'>;
 
-      type UserResult1_Error3_Fragment = (
-        { __typename?: 'Error3' }
-        & { info: Maybe<(
-          { __typename?: 'AdditionalInfo' }
-          & Pick<AdditionalInfo, 'message2'>
-        )> }
-      );
+        type UserResult1_User_Fragment = Pick<User, 'id'>;
 
-      export type UserResult1Fragment = UserResult1_User_Fragment | UserResult1_Error2_Fragment | UserResult1_Error3_Fragment;
+        type UserResult1_Error3_Fragment = { info: Maybe<Pick<AdditionalInfo, 'message2'>> };
 
-      type UserResult_User_Fragment = (
-        { __typename?: 'User' }
-        & Pick<User, 'id'>
-      );
+        export type UserResult1Fragment =
+          | UserResult1_User_Fragment
+          | UserResult1_Error3_Fragment
+        ;
 
-      type UserResult_Error2_Fragment = (
-        { __typename?: 'Error2' }
-        & Pick<Error2, 'message'>
-      );
+        type UserResult_User_Fragment = Pick<User, 'id'>;
 
-      type UserResult_Error3_Fragment = { __typename?: 'Error3' };
+        type UserResult_Error2_Fragment = Pick<Error2, 'message'>;
 
-      export type UserResultFragment = UserResult_User_Fragment | UserResult_Error2_Fragment | UserResult_Error3_Fragment;`);
+        export type UserResultFragment =
+          | UserResult_User_Fragment
+          | UserResult_Error2_Fragment
+        ;
+
+                function t(q: UserQueryQuery) {
+                    if (q.user) {
+                        if (q.user.__typename === 'User') {
+                            if (q.user.id) {
+                                const u = q.user.login;
+                            }
+                        }
+                        if (q.user.__typename === 'Error2') {
+                            console.log(q.user.message);
+                        }
+                        if (q.user.__typename === 'Error3') {
+                            if (q.user.info) {
+                                console.log(q.user.info.__typename)
+                            }
+                        }
+                    }
+                }"
+      `);
+
+      expect(output).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQueryQuery = { user:
+            | Pick<User, 'login' | 'id'>
+            | Pick<Error2, 'message'>
+            | (
+              Pick<Error3, 'message'>
+              & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
+            )
+           };
+
+        export type AdditionalInfoFragment = Pick<AdditionalInfo, 'message'>;
+
+        type UserResult1_User_Fragment = Pick<User, 'id'>;
+
+        type UserResult1_Error3_Fragment = { info: Maybe<Pick<AdditionalInfo, 'message2'>> };
+
+        export type UserResult1Fragment =
+          | UserResult1_User_Fragment
+          | UserResult1_Error3_Fragment
+        ;
+
+        type UserResult_User_Fragment = Pick<User, 'id'>;
+
+        type UserResult_Error2_Fragment = Pick<Error2, 'message'>;
+
+        export type UserResultFragment =
+          | UserResult_User_Fragment
+          | UserResult_Error2_Fragment
+        ;
+
+                function t(q: UserQueryQuery) {
+                    if (q.user) {
+                        if (q.user.__typename === 'User') {
+                            if (q.user.id) {
+                                const u = q.user.login;
+                            }
+                        }
+                        if (q.user.__typename === 'Error2') {
+                            console.log(q.user.message);
+                        }
+                        if (q.user.__typename === 'Error3') {
+                            if (q.user.info) {
+                                console.log(q.user.info.__typename)
+                            }
+                        }
+                    }
+                }"
+      `);
     });
 
     it('Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes', async () => {
@@ -3970,24 +4238,36 @@ export type Q2Query = { search: Array<
       );
       expect(mergeOutputs([output])).toMatchSnapshot();
 
-      expect(output).toBeSimilarStringTo(`
-      export type UserQueryQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & Pick<User, 'id' | 'login'>
-        ) | (
-          { __typename?: 'Error2' }
-          & Pick<Error2, 'message'>
-        ) | (
-          { __typename?: 'Error3' }
-          & Pick<Error3, 'message'>
-          & { info: Maybe<(
-            { __typename?: 'AdditionalInfo' }
-            & Pick<AdditionalInfo, 'message2' | 'message'>
-          )> }
-        ) }
-      );
+      expect(output).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQueryQuery = { user:
+            | Pick<User, 'id' | 'login'>
+            | Pick<Error2, 'message'>
+            | (
+              Pick<Error3, 'message'>
+              & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
+            )
+           };
+
+                function t(q: UserQueryQuery) {
+                    if (q.user) {
+                        if (q.user.__typename === 'User') {
+                            if (q.user.id) {
+                                const u = q.user.login;
+                            }
+                        }
+                        if (q.user.__typename === 'Error2') {
+                            console.log(q.user.message);
+                        }
+                        if (q.user.__typename === 'Error3') {
+                            if (q.user.info) {
+                                console.log(q.user.info.__typename)
+                            }
+                        }
+                    }
+                }"
       `);
     });
 
@@ -4053,23 +4333,19 @@ export type Q2Query = { search: Array<
       const output = await validate(content);
       expect(mergeOutputs([output])).toMatchSnapshot();
 
-      expect(output).toBeSimilarStringTo(`
-        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+      expect(output).toMatchInlineSnapshot(`
+        "export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type SearchPopularQuery = (
-          { __typename?: 'Query' }
-          & { search: Maybe<Array<(
-            { __typename?: 'Dimension' }
-            & Pick<Dimension, 'id'>
-          ) | (
-            { __typename?: 'DimValue' }
-            & Pick<DimValue, 'value'>
-            & { dimension: Maybe<(
-              { __typename?: 'Dimension' }
-              & Pick<Dimension, 'id'>
-            )> }
-          )>> }
-        );`);
+
+        export type SearchPopularQuery = { search: Maybe<Array<
+            | Pick<Dimension, 'id'>
+            | (
+              Pick<DimValue, 'value'>
+              & { dimension: Maybe<Pick<Dimension, 'id'>> }
+            )
+          >> };
+        "
+      `);
     });
 
     it('Handles fragments across files with flattenGeneratedTypes', async () => {
@@ -4126,12 +4402,15 @@ export type Q2Query = { search: Array<
 
       const output = await validate(content);
 
-      expect(output).toBeSimilarStringTo(`
-        export type SearchableFragmentFragment = { __typename?: 'Dimension', id: string | null };
+      expect(output).toMatchInlineSnapshot(`
+        "export type SearchableFragmentFragment = { id: string | null };
 
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type SearchPopularQuery = { __typename?: 'Query', search: Array<{ __typename?: 'Dimension', id: string | null }> | null };`);
+
+        export type SearchPopularQuery = { search: Array<{ id: string | null }> | null };
+        "
+      `);
     });
 
     it('Drops fragments with flattenGeneratedTypes', async () => {
@@ -4189,10 +4468,13 @@ export type Q2Query = { search: Array<
 
       const output = await validate(content);
 
-      expect(output).toBeSimilarStringTo(`
-        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+      expect(output).toMatchInlineSnapshot(`
+        "export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type SearchPopularQuery = { __typename?: 'Query', search: Array<{ __typename?: 'Dimension', id: string | null }> | null };`);
+
+        export type SearchPopularQuery = { search: Array<{ id: string | null }> | null };
+        "
+      `);
     });
 
     it('Should add operation name when addOperationExport is true', async () => {
@@ -4229,29 +4511,19 @@ export type Q2Query = { search: Array<
         outputFile: 'graphql.ts',
       });
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserIdQueryQueryVariables = Exact<{ [key: string]: never; }>;
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserIdQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-      export type UserIdQueryQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & Pick<User, 'id'>
-        ) }
-      );
 
-      export type UserLoginQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserIdQueryQuery = { user: Pick<User, 'id'> };
 
-      export type UserLoginQueryQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & Pick<User, 'login'>
-        ) }
-      );
+        export type UserLoginQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-      export declare const UserIdQuery: import("graphql").DocumentNode;
-      export declare const UserLoginQuery: import("graphql").DocumentNode;
+
+        export type UserLoginQueryQuery = { user: Pick<User, 'login'> };
+
+        export declare const UserIdQuery: import("graphql").DocumentNode;
+        export declare const UserLoginQuery: import("graphql").DocumentNode;"
       `);
     });
 
@@ -4367,24 +4639,42 @@ export type Q2Query = { search: Array<
       );
       expect(mergeOutputs([output])).toMatchSnapshot();
 
-      expect(output).toBeSimilarStringTo(`
-      export type UserQueryQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & Pick<User, 'id' | 'test2' | 'login' | 'test'>
-        ) | (
-          { __typename?: 'Error2' }
-          & Pick<Error2, 'message'>
-        ) | (
-          { __typename?: 'Error3' }
-          & Pick<Error3, 'message'>
-          & { info: Maybe<(
-            { __typename?: 'AdditionalInfo' }
-            & Pick<AdditionalInfo, 'message2' | 'message'>
-          )> }
-        ) }
-      );
+      expect(output).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQueryQuery = { user:
+            | Pick<
+                User,
+                | 'id'
+                | 'test2'
+                | 'login'
+                | 'test'
+              >
+            | Pick<Error2, 'message'>
+            | (
+              Pick<Error3, 'message'>
+              & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
+            )
+           };
+
+                function t(q: UserQueryQuery) {
+                    if (q.user) {
+                        if (q.user.__typename === 'User') {
+                            if (q.user.id) {
+                                const u = q.user.login;
+                            }
+                        }
+                        if (q.user.__typename === 'Error2') {
+                            console.log(q.user.message);
+                        }
+                        if (q.user.__typename === 'Error3') {
+                            if (q.user.info) {
+                                console.log(q.user.info.__typename)
+                            }
+                        }
+                    }
+                }"
       `);
     });
   });
@@ -4524,7 +4814,13 @@ export type Q2Query = { search: Array<
           outputFile: 'graphql.ts',
         }
       );
-      expect(content).toContain(`{ foo: Maybe<{ __typename?: 'C' }> }`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type Unnamed_1_Query = { foo: Maybe<Record<PropertyKey, never>> };
+        "
+      `);
     });
 
     it('#5001 - incorrect output with typeSuffix', async () => {
@@ -4879,29 +5175,24 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type TestQueryQuery = (
-        { __typename?: 'Query' }
-        & { fooBar: Array<(
-          { __typename?: 'Foo' }
-          & Pick<Foo, 'id'>
-        ) | (
-          { __typename?: 'Bar' }
-          & Pick<Bar, 'id'>
-        )> }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-      type FooBarFragment_Foo_Fragment = (
-        { __typename?: 'Foo' }
-        & Pick<Foo, 'id'>
-      );
 
-      type FooBarFragment_Bar_Fragment = (
-        { __typename?: 'Bar' }
-        & Pick<Bar, 'id'>
-      );
+        export type TestQueryQuery = { fooBar: Array<
+            | Pick<Foo, 'id'>
+            | Pick<Bar, 'id'>
+          > };
 
-      export type FooBarFragmentFragment = FooBarFragment_Foo_Fragment | FooBarFragment_Bar_Fragment;
+        type FooBarFragment_Foo_Fragment = Pick<Foo, 'id'>;
+
+        type FooBarFragment_Bar_Fragment = Pick<Bar, 'id'>;
+
+        export type FooBarFragmentFragment =
+          | FooBarFragment_Foo_Fragment
+          | FooBarFragment_Bar_Fragment
+        ;
+        "
       `);
     });
 
@@ -4954,20 +5245,14 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type ProductFragmentFragment = (
-        { __typename?: 'Product' }
-        & Pick<Product, 'id' | 'title'>
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type ProductFragmentFragment = Pick<Product, 'id' | 'title'>;
 
         export type PriceFragmentFragment = (
-          { __typename?: 'Price' }
-          & Pick<Price, 'id'>
-          & { item: Array<Maybe<(
-            { __typename?: 'Product' }
-            & Pick<Product, 'id' | 'title'>
-          )>> }
+          Pick<Price, 'id'>
+          & { item: Array<Maybe<Pick<Product, 'id' | 'title'>>> }
         );
+        "
       `);
     });
 
@@ -5001,14 +5286,15 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQuery = (
-        { __typename?: 'Query' }
-        & { user?: Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'name'>
-        )> }
-      );`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          withUser?: boolean;
+        }>;
+
+
+        export type UserQuery = { user?: Maybe<Pick<User, 'name'>> };
+        "
+      `);
     });
 
     it('#2436 - interface with field of same name but different type is correctly handled', async () => {
@@ -5068,25 +5354,18 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type DashboardVersionFragmentFragment = (
-          { __typename?: 'DashboardVersion' }
-          & { tiles: (
-            { __typename?: 'DashboardTileFilterDetails' }
-            & Pick<DashboardTileFilterDetails, 'tileId'>
-            & { md: (
-              { __typename?: 'TileFilterMetadata' }
-              & Pick<TileFilterMetadata, 'viz' | 'columnInfo'>
-            ) }
-          ) | (
-            { __typename?: 'DashboardTileParameterDetails' }
-            & Pick<DashboardTileParameterDetails, 'tileId'>
-            & { md: (
-              { __typename?: 'TileParameterMetadata' }
-              & Pick<TileParameterMetadata, 'viz' | 'columnInfo'>
-            ) }
-          ) }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type DashboardVersionFragmentFragment = { tiles:
+            | (
+              Pick<DashboardTileFilterDetails, 'tileId'>
+              & { md: Pick<TileFilterMetadata, 'viz' | 'columnInfo'> }
+            )
+            | (
+              Pick<DashboardTileParameterDetails, 'tileId'>
+              & { md: Pick<TileParameterMetadata, 'viz' | 'columnInfo'> }
+            )
+           };
+        "
       `);
     });
 
@@ -5146,25 +5425,18 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type DashboardVersionFragmentFragment = (
-          { __typename?: 'DashboardVersion' }
-          & { tiles: (
-            { __typename?: 'DashboardTileFilterDetails' }
-            & Pick<DashboardTileFilterDetails, 'tileId'>
-            & { md: (
-              { __typename?: 'TileFilterMetadata' }
-              & Pick<TileFilterMetadata, 'viz' | 'columnInfo'>
-            ) }
-          ) | (
-            { __typename?: 'DashboardTileParameterDetails' }
-            & Pick<DashboardTileParameterDetails, 'tileId'>
-            & { md: (
-              { __typename?: 'TileParameterMetadata' }
-              & Pick<TileParameterMetadata, 'viz' | 'columnInfo'>
-            ) }
-          ) }
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type DashboardVersionFragmentFragment = { tiles:
+            | (
+              Pick<DashboardTileFilterDetails, 'tileId'>
+              & { md: Pick<TileFilterMetadata, 'viz' | 'columnInfo'> }
+            )
+            | (
+              Pick<DashboardTileParameterDetails, 'tileId'>
+              & { md: Pick<TileParameterMetadata, 'viz' | 'columnInfo'> }
+            )
+           };
+        "
       `);
     });
 
@@ -5220,19 +5492,13 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type CatFragment_Duck_Fragment = Record<PropertyKey, never>;
-
-        type CatFragment_Lion_Fragment = { id: string };
+        "type CatFragment_Lion_Fragment = { id: string };
 
         type CatFragment_Puma_Fragment = { id: string };
 
-        type CatFragment_Wolf_Fragment = Record<PropertyKey, never>;
-
         export type CatFragmentFragment =
-          | CatFragment_Duck_Fragment
           | CatFragment_Lion_Fragment
           | CatFragment_Puma_Fragment
-          | CatFragment_Wolf_Fragment
         ;
 
         export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
@@ -5299,29 +5565,22 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type CatFragment_Duck_Fragment = { __typename?: 'Duck' };
+        "type CatFragment_Lion_Fragment = { id: string };
 
-        type CatFragment_Lion_Fragment = { __typename?: 'Lion', id: string };
-
-        type CatFragment_Puma_Fragment = { __typename?: 'Puma', id: string };
-
-        type CatFragment_Wolf_Fragment = { __typename?: 'Wolf' };
+        type CatFragment_Puma_Fragment = { id: string };
 
         export type CatFragmentFragment =
-          | CatFragment_Duck_Fragment
           | CatFragment_Lion_Fragment
           | CatFragment_Puma_Fragment
-          | CatFragment_Wolf_Fragment
         ;
 
         export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type KittyQuery = { __typename?: 'Query', animals: Array<
-            | { __typename?: 'Duck' }
-            | { __typename?: 'Lion', id: string }
-            | { __typename?: 'Puma', id: string }
-            | { __typename?: 'Wolf' }
+        export type KittyQuery = { animals: Array<
+            | { id: string }
+            | { id: string }
+            | Record<PropertyKey, never>
           > };
         "
       `);
@@ -5368,8 +5627,15 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type UserQuery = { user: Pick<User, 'id' | 'login'> | Record<PropertyKey, never> };
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQuery = { user:
+            | Pick<User, 'id' | 'login'>
+            | Record<PropertyKey, never>
+           };
+        "
       `);
     });
 
@@ -5396,12 +5662,17 @@ function test(q: GetEntityBrandDataQuery): void {
         outputFile: 'graphql.ts',
       });
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQueryVariables = Exact<{
-        testArray?: Array<string | null> | string | null;
-        requireString: Array<string | null> | string;
-        innerRequired: Array<string> | string;
-      }>;`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          testArray?: Array<string | null> | string | null;
+          requireString: Array<string | null> | string;
+          innerRequired: Array<string> | string;
+        }>;
+
+
+        export type UserQuery = { search: Array<{ id: string }> | null };
+        "
+      `);
       await validate(content);
     });
 
@@ -5428,12 +5699,17 @@ function test(q: GetEntityBrandDataQuery): void {
         outputFile: 'graphql.ts',
       });
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQueryVariables = Exact<{
-        testArray?: Array<string | null> | null;
-        requireString: Array<string | null>;
-        innerRequired: Array<string>;
-      }>;`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          testArray?: Array<string | null> | null;
+          requireString: Array<string | null>;
+          innerRequired: Array<string>;
+        }>;
+
+
+        export type UserQuery = { search: Array<{ id: string }> | null };
+        "
+      `);
       await validate(content);
     });
 
@@ -5483,17 +5759,15 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type EntityQuery = (
-        { __typename?: 'Query' }
-        & { entity: (
-          { __typename?: 'Session' }
-          & Pick<Session, 'id'>
-        ) | (
-          { __typename?: 'User' }
-          & Pick<User, 'name' | 'id'>
-        ) }
-      );
+      expect(content).toMatchInlineSnapshot(`
+        "export type EntityQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type EntityQuery = { entity:
+            | Pick<Session, 'id'>
+            | Pick<User, 'name' | 'id'>
+           };
+        "
       `);
     });
 
@@ -5537,19 +5811,12 @@ function test(q: GetEntityBrandDataQuery): void {
           }
         );
 
-        expect(content).toBeSimilarStringTo(`
-          export type InlineFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        expect(content).toMatchInlineSnapshot(`
+          "export type InlineFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-          export type InlineFragmentQueryQuery = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'id' | 'name'>
-              )> }
-            ) }
-          );
+
+          export type InlineFragmentQueryQuery = { user: { friends: Array<Pick<User, 'id' | 'name'>> } };
+          "
         `);
       });
       it('SpreadFragmentQuery', async () => {
@@ -5585,42 +5852,16 @@ function test(q: GetEntityBrandDataQuery): void {
           }
         );
 
-        expect(content).toBeSimilarStringTo(`
-          export type UserFriendsIdFragmentFragment = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'id'>
-              )> }
-            ) }
-          );
+        expect(content).toMatchInlineSnapshot(`
+          "export type UserFriendsIdFragmentFragment = { user: { friends: Array<Pick<User, 'id'>> } };
 
-          export type UserFriendsNameFragmentFragment = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'name'>
-              )> }
-            ) }
-          );
+          export type UserFriendsNameFragmentFragment = { user: { friends: Array<Pick<User, 'name'>> } };
 
           export type SpreadFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-          export type SpreadFragmentQueryQuery = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'id' | 'name'>
-              )> }
-            ) }
-          );
 
+          export type SpreadFragmentQueryQuery = { user: { friends: Array<Pick<User, 'id' | 'name'>> } };
+          "
         `);
       });
       it('SpreadFragmentWithSelectionQuery', async () => {
@@ -5653,31 +5894,17 @@ function test(q: GetEntityBrandDataQuery): void {
           }
         );
 
-        expect(content).toBeSimilarStringTo(`
-          export type UserFriendsNameFragmentFragment = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'name'>
-              )> }
-            ) }
-          );
+        expect(content).toMatchInlineSnapshot(`
+          "export type UserFriendsNameFragmentFragment = { user: { friends: Array<Pick<User, 'name'>> } };
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-          export type SpreadFragmentWithSelectionQueryQuery = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & Pick<User, 'id'>
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'id' | 'name'>
-              )> }
-            ) }
-          );
+
+          export type SpreadFragmentWithSelectionQueryQuery = { user: (
+              Pick<User, 'id'>
+              & { friends: Array<Pick<User, 'id' | 'name'>> }
+            ) };
+          "
         `);
       });
       it('SpreadFragmentWithSelectionQuery - flatten', async () => {
@@ -5710,31 +5937,17 @@ function test(q: GetEntityBrandDataQuery): void {
           }
         );
 
-        expect(content).toBeSimilarStringTo(`
-          export type UserFriendsNameFragmentFragment = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'name'>
-              )> }
-            ) }
-          );
+        expect(content).toMatchInlineSnapshot(`
+          "export type UserFriendsNameFragmentFragment = { user: { friends: Array<Pick<User, 'name'>> } };
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
-          export type SpreadFragmentWithSelectionQueryQuery = (
-            { __typename?: 'Query' }
-            & { user: (
-              { __typename?: 'User' }
-              & Pick<User, 'id'>
-              & { friends: Array<(
-                { __typename?: 'User' }
-                & Pick<User, 'id' | 'name'>
-              )> }
-            ) }
-          );
+
+          export type SpreadFragmentWithSelectionQueryQuery = { user: (
+              Pick<User, 'id'>
+              & { friends: Array<Pick<User, 'id' | 'name'>> }
+            ) };
+          "
         `);
       });
     });
@@ -5799,26 +6012,17 @@ function test(q: GetEntityBrandDataQuery): void {
         "export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type GetPeopleQuery = { __typename?: 'Query', people:
-            | (
-              { __typename?: 'Character' }
-              & { ' $fragmentRefs'?: { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
-            )
-            | (
-              { __typename?: 'Jedi' }
-              & { ' $fragmentRefs'?: { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
-            )
-            | (
-              { __typename?: 'Droid' }
-              & { ' $fragmentRefs'?: { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
-            )
+        export type GetPeopleQuery = { people:
+            | { ' $fragmentRefs'?: { 'PeopleInfo_Character_Fragment': PeopleInfo_Character_Fragment } }
+            | { ' $fragmentRefs'?: { 'PeopleInfo_Jedi_Fragment': PeopleInfo_Jedi_Fragment } }
+            | { ' $fragmentRefs'?: { 'PeopleInfo_Droid_Fragment': PeopleInfo_Droid_Fragment } }
            };
 
-        type PeopleInfo_Character_Fragment = { __typename?: 'Character', name: string | null } & { ' $fragmentName'?: 'PeopleInfo_Character_Fragment' };
+        type PeopleInfo_Character_Fragment = { name: string | null } & { ' $fragmentName'?: 'PeopleInfo_Character_Fragment' };
 
-        type PeopleInfo_Jedi_Fragment = { __typename?: 'Jedi', side: string | null } & { ' $fragmentName'?: 'PeopleInfo_Jedi_Fragment' };
+        type PeopleInfo_Jedi_Fragment = { side: string | null } & { ' $fragmentName'?: 'PeopleInfo_Jedi_Fragment' };
 
-        type PeopleInfo_Droid_Fragment = { __typename?: 'Droid', model: string | null } & { ' $fragmentName'?: 'PeopleInfo_Droid_Fragment' };
+        type PeopleInfo_Droid_Fragment = { model: string | null } & { ' $fragmentName'?: 'PeopleInfo_Droid_Fragment' };
 
         export type PeopleInfoFragment =
           | PeopleInfo_Character_Fragment
@@ -5976,24 +6180,15 @@ function test(q: GetEntityBrandDataQuery): void {
         outputFile: 'graphql.ts',
       });
 
-      expect(content).toBeSimilarStringTo(`
-        export type UserQueryQueryVariables = Exact<{
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryQueryVariables = Exact<{
           skipFirstName: boolean;
           skipAddress: boolean;
         }>;
 
-        export type UserQueryQuery = {
-          __typename?: 'Query',
-          viewer: {
-            __typename?: 'User',
-            lastName: number,
-            givenName?: string,
-            mailingAddress?: {
-              __typename?: 'Address',
-              postalCode: string
-            }
-          }
-        };
+
+        export type UserQueryQuery = { viewer: { lastName: number, givenName?: string, mailingAddress?: { postalCode: string } } };
+        "
       `);
     });
   });
@@ -6035,12 +6230,15 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQueryVariables = Exact<{
-        showAddress: boolean;
-      }>;
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          showAddress: boolean;
+        }>;
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };`);
+
+        export type UserQuery = { user: { name: string, address?: string, nicknames?: Array<string> | null, parents?: Array<User> } };
+        "
+      `);
     });
 
     it('objects with @skip, @include should pre resolve into optional', async () => {
@@ -6088,12 +6286,16 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQueryVariables = Exact<{
-        showAddress: boolean;
-        showName: boolean;
-      }>;
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name?: string, address?: { __typename?: 'Address', city: string }, friends?: Array<{ __typename?: 'User', id: string }> } };`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          showAddress: boolean;
+          showName: boolean;
+        }>;
+
+
+        export type UserQuery = { user: { id: string, name?: string, address?: { city: string }, friends?: Array<{ id: string }> } };
+        "
+      `);
     });
 
     it('fields with @skip, @include should make container resolve into MakeOptional type', async () => {
@@ -6136,26 +6338,22 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQueryVariables = Exact<{
-        showAddress: boolean;
-        showName: boolean;
-      }>;
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          showAddress: boolean;
+          showName: boolean;
+        }>;
 
-      export type UserQuery = (
-        { __typename?: 'Query' }
-        & { user: (
-          { __typename?: 'User' }
-          & MakeOptional<Pick<User, 'id' | 'name'>, 'name'>
-          & { address?: (
-            { __typename?: 'Address' }
-            & Pick<Address, 'city'>
-          ), friends?: Array<(
-            { __typename?: 'User' }
-            & Pick<User, 'id'>
-          )> }
-        ) }
-      );`);
+
+        export type UserQuery = { user: (
+            MakeOptional<Pick<User, 'id' | 'name'>, 'name'>
+            & {
+              address?: Pick<Address, 'city'>,
+              friends?: Array<Pick<User, 'id'>>,
+            }
+          ) };
+        "
+      `);
     });
 
     it('Should handle "preResolveTypes" ', async () => {
@@ -6184,8 +6382,14 @@ function test(q: GetEntityBrandDataQuery): void {
         outputFile: 'graphql.ts',
       });
 
-      expect(content).toBeSimilarStringTo(
-        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
+      expect(content).toMatchInlineSnapshot(
+        `
+        "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQuery = { user: { id: string, username: string, email: string | null } };
+        "
+      `
       );
     });
 
@@ -6226,7 +6430,12 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type MyQueryQueryVariables = Exact<{
+          include: boolean;
+        }>;
+
+
         export type MyQueryQuery = (
           { __typename: 'Query' }
           & { me: (
@@ -6237,6 +6446,7 @@ function test(q: GetEntityBrandDataQuery): void {
             )> }
           ) }
         );
+        "
       `);
     });
 
@@ -6278,18 +6488,15 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQuery = {
-        __typename?: 'Query',
-        user?: {
-          __typename?: 'User',
-          name: string | null
-        } | null,
-        group?: {
-          __typename?: 'Group',
-          id: number
-        }
-      };`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          withUser?: boolean;
+        }>;
+
+
+        export type UserQuery = { user?: { name: string | null } | null, group?: { id: number } };
+        "
+      `);
     });
 
     it('resolve optionals according to maybeValue and conditional directives', async () => {
@@ -6330,8 +6537,14 @@ function test(q: GetEntityBrandDataQuery): void {
           outputFile: 'graphql.ts',
         }
       );
-      expect(content).toBeSimilarStringTo(`
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          showProperty: boolean;
+        }>;
+
+
+        export type UserQuery = { user: { name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
+        "
       `);
     });
 
@@ -6373,23 +6586,24 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type UserQuery = (
-        { __typename?: 'Query' }
-        & { user?: Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'name'>
-        )>, group?: (
-          { __typename?: 'Group' }
-          & Pick<Group, 'id'>
-        ) }
-      );`);
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserQueryVariables = Exact<{
+          withUser?: boolean;
+        }>;
+
+
+        export type UserQuery = {
+            user?: Maybe<Pick<User, 'name'>>,
+            group?: Pick<Group, 'id'>,
+          };
+        "
+      `);
     });
   });
 
   describe('incremental delivery directive handling', () => {
     it('should generate an union of initial and deferred fields for fragments (preResolveTypes: true)', async () => {
-      const schema = buildSchema(`
+      const schema = buildSchema(/* GraphQL */ `
         type Address {
           street1: String!
         }
@@ -6420,7 +6634,7 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       `);
 
-      const fragment = parse(`
+      const fragment = parse(/* GraphQL */ `
         fragment WidgetFragment on User {
           widgetCount
           widgetPreference
@@ -6477,35 +6691,23 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type WidgetFragmentFragment = { widgetCount: number, widgetPreference: string };
+
+        export type FoodFragmentFragment = { favoriteFood: string, leastFavoriteFood: string };
+
+        export type EmploymentFragmentFragment = { employment: { title: string } };
+
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
-        export type UserQuery = {
-          __typename?: 'Query',
-          user: {
-            __typename?: 'User',
-            clearanceLevel: string,
-            name: string,
-            phone: {
-              __typename?: 'Phone',
-              home: string
-            },
-            employment: {
-              __typename?: 'Employment',
-              title: string
-            }
-          } & ({ __typename?: 'User', email: string }
-              | { __typename?: 'User', email?: never })
-            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
-              | { __typename?: 'User', address?: never })
-            & ({ __typename?: 'User', widgetCount: number, widgetPreference: string }
-              | { __typename?: 'User', widgetCount?: never, widgetPreference?: never })
-            & ({ __typename?: 'User', favoriteFood: string, leastFavoriteFood: string }
-              | { __typename?: 'User', favoriteFood?: never, leastFavoriteFood?: never }) };
+
+
+        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & ({ widgetCount: number, widgetPreference: string } | { widgetCount?: never, widgetPreference?: never }) & ({ favoriteFood: string, leastFavoriteFood: string } | { favoriteFood?: never, leastFavoriteFood?: never }) };
+        "
       `);
     });
 
     it('should generate an union of initial and deferred fields for fragments using MakeEmpty (preResolveTypes: false)', async () => {
-      const schema = buildSchema(`
+      const schema = buildSchema(/* GraphQL */ `
         type Address {
           street1: String!
         }
@@ -6533,7 +6735,7 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       `);
 
-      const fragment = parse(`
+      const fragment = parse(/* GraphQL */ `
         fragment WidgetFragment on User {
           widgetCount
         }
@@ -6581,65 +6783,27 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type WidgetFragmentFragment = (
-          { __typename?: 'User' }
-          & Pick<User, 'widgetCount'>
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type WidgetFragmentFragment = Pick<User, 'widgetCount'>;
 
-        export type EmploymentFragmentFragment = (
-          { __typename?: 'User' }
-          & { employment: (
-            { __typename?: 'Employment' }
-            & Pick<Employment, 'title'>
-          ) }
-        );
+        export type EmploymentFragmentFragment = { employment: Pick<Employment, 'title'> };
 
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type UserQuery = (
-          { __typename?: 'Query' }
-          & { user: (
-            { __typename?: 'User' }
-            & Pick<User, 'clearanceLevel' | 'name'>
-            & { phone: (
-              { __typename?: 'Phone' }
-              & Pick<Phone, 'home'>
-            ), employment: (
-              { __typename?: 'Employment' }
-              & Pick<Employment, 'title'>
-            ) }
-          ) & ((
-            { __typename?: 'User' }
-            & Pick<User, 'email'>
-          ) | (
-            { __typename?: 'User' }
-            & MakeEmpty<User, 'email'>
-          )) & ((
-            { __typename?: 'User' }
-            & { address: (
-              { __typename?: 'Address' }
-              & Pick<Address, 'street1'>
-            ) }
-          ) | (
-            { __typename?: 'User' }
-            & { address?: (
-              { __typename?: 'Address' }
-              & Pick<Address, 'street1'>
-            ) }
-          )) & ((
-            { __typename?: 'User' }
-            & Pick<User, 'widgetCount'>
-          ) | (
-            { __typename?: 'User' }
-            & MakeEmpty<User, 'widgetCount'>
-          )) }
-        );
+
+        export type UserQuery = { user: (
+            Pick<User, 'clearanceLevel' | 'name'>
+            & {
+              phone: Pick<Phone, 'home'>,
+              employment: Pick<Employment, 'title'>,
+            }
+          ) & (Pick<User, 'email'> | MakeEmpty<User, 'email'>) & ({ address: Pick<Address, 'street1'> } | { address?: Pick<Address, 'street1'> }) & (Pick<User, 'widgetCount'> | MakeEmpty<User, 'widgetCount'>) };
+        "
       `);
     });
 
     it('should generate an union of initial and deferred fields for fragments MakeEmpty', async () => {
-      const schema = buildSchema(`
+      const schema = buildSchema(/* GraphQL */ `
         type Address {
           street1: String!
         }
@@ -6668,7 +6832,7 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       `);
 
-      const fragment = parse(`
+      const fragment = parse(/* GraphQL */ `
         fragment WidgetFragment on User {
           widgetName
           widgetCount
@@ -6719,65 +6883,27 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type WidgetFragmentFragment = (
-          { __typename?: 'User' }
-          & Pick<User, 'widgetName' | 'widgetCount'>
-        );
+      expect(content).toMatchInlineSnapshot(`
+        "export type WidgetFragmentFragment = Pick<User, 'widgetName' | 'widgetCount'>;
 
-        export type EmploymentFragmentFragment = (
-          { __typename?: 'User' }
-          & { employment: (
-            { __typename?: 'Employment' }
-            & Pick<Employment, 'title'>
-          ) }
-        );
+        export type EmploymentFragmentFragment = { employment: Pick<Employment, 'title'> };
 
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
-        export type UserQuery = (
-          { __typename?: 'Query' }
-          & { user: (
-            { __typename?: 'User' }
-            & Pick<User, 'clearanceLevel' | 'name'>
-            & { phone: (
-              { __typename?: 'Phone' }
-              & Pick<Phone, 'home'>
-            ), employment: (
-              { __typename?: 'Employment' }
-              & Pick<Employment, 'title'>
-            ) }
-          ) & ((
-            { __typename?: 'User' }
-            & Pick<User, 'email'>
-          ) | (
-            { __typename?: 'User' }
-            & MakeEmpty<User, 'email'>
-          )) & ((
-            { __typename?: 'User' }
-            & { address: (
-              { __typename?: 'Address' }
-              & Pick<Address, 'street1'>
-            ) }
-          ) | (
-            { __typename?: 'User' }
-            & { address?: (
-              { __typename?: 'Address' }
-              & Pick<Address, 'street1'>
-            ) }
-          )) & ((
-            { __typename?: 'User' }
-            & Pick<User, 'widgetName' | 'widgetCount'>
-          ) | (
-            { __typename?: 'User' }
-            & MakeEmpty<User, 'widgetName' | 'widgetCount'>
-          )) }
-        );
+
+        export type UserQuery = { user: (
+            Pick<User, 'clearanceLevel' | 'name'>
+            & {
+              phone: Pick<Phone, 'home'>,
+              employment: Pick<Employment, 'title'>,
+            }
+          ) & (Pick<User, 'email'> | MakeEmpty<User, 'email'>) & ({ address: Pick<Address, 'street1'> } | { address?: Pick<Address, 'street1'> }) & (Pick<User, 'widgetName' | 'widgetCount'> | MakeEmpty<User, 'widgetName' | 'widgetCount'>) };
+        "
       `);
     });
 
     it('should support "preResolveTypes: true"', async () => {
-      const schema = buildSchema(`
+      const schema = buildSchema(/* GraphQL */ `
         type Address {
           street1: String!
         }
@@ -6805,7 +6931,7 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       `);
 
-      const fragment = parse(`
+      const fragment = parse(/* GraphQL */ `
         fragment WidgetFragment on User {
           widgetCount
         }
@@ -6855,28 +6981,21 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type WidgetFragmentFragment = { widgetCount: number };
+
+        export type EmploymentFragmentFragment = { employment: { title: string } };
+
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
-        export type UserQuery = {
-          __typename?: 'Query',
-          user: {
-            __typename?: 'User',
-            clearanceLevel: string,
-            name: string,
-            phone: { __typename?: 'Phone', home: string },
-            employment: { __typename?: 'Employment', title: string }
-          } & ({ __typename?: 'User', email: string }
-              | { __typename?: 'User', email?: never })
-            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } }
-              | { __typename?: 'User', address?: never })
-            & ({ __typename?: 'User', widgetCount: number }
-              | { __typename?: 'User', widgetCount?: never })
-          };
+
+
+        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & ({ widgetCount: number } | { widgetCount?: never }) };
+        "
       `);
     });
 
     it('should resolve optionals according to maybeValue together with deferred fragments', async () => {
-      const schema = buildSchema(`
+      const schema = buildSchema(/* GraphQL */ `
         type Address {
           street1: String
         }
@@ -6905,7 +7024,7 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       `);
 
-      const fragment = parse(`
+      const fragment = parse(/* GraphQL */ `
         fragment WidgetFragment on User {
           widgetName
           widgetCount
@@ -6957,107 +7076,100 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content).toMatchInlineSnapshot(`
+        "export type WidgetFragmentFragment = { widgetName: string, widgetCount: number };
+
+        export type EmploymentFragmentFragment = { employment: { title: string } };
+
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
-        export type UserQuery = {
-          __typename?: 'Query',
-          user: {
-            __typename?: 'User',
-            clearanceLevel: string,
-            name: string,
-            phone: { __typename?: 'Phone', home: string },
-            employment: { __typename?: 'Employment', title: string }
-          } & ({ __typename?: 'User', email: string }
-              | { __typename?: 'User', email?: never })
-            & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string | 'specialType' } }
-              | { __typename?: 'User', address?: never })
-            & ({ __typename?: 'User', widgetName: string, widgetCount: number }
-              | { __typename?: 'User', widgetName?: never, widgetCount?: never })
-          };
+
+
+        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string | 'specialType' } } | { address?: never }) & ({ widgetName: string, widgetCount: number } | { widgetName?: never, widgetCount?: never }) };
+        "
       `);
     });
 
     it('should generate correct types with inlineFragmentTypes: "mask""', async () => {
-      const schema = buildSchema(`
-      type Address {
-        street1: String!
-      }
-
-      type Phone {
-        home: String!
-      }
-
-      type Employment {
-        title: String!
-      }
-
-      type User {
-        name: String!
-        email: String!
-        address: Address!
-        phone: Phone!
-        employment: Employment!
-        widgetCount: Int!
-        widgetPreference: String!
-        clearanceLevel: String!
-        favoriteFood: String!
-        leastFavoriteFood: String!
-      }
-
-      type Query {
-        user: User!
-      }
-    `);
-
-      const fragment = parse(`
-      fragment WidgetFragment on User {
-        widgetCount
-        widgetPreference
-      }
-
-      fragment FoodFragment on User {
-        favoriteFood
-        leastFavoriteFood
-      }
-
-      fragment EmploymentFragment on User {
-        employment {
-          title
+      const schema = buildSchema(/* GraphQL */ `
+        type Address {
+          street1: String!
         }
-      }
 
-      query user {
-        user {
-          # Test inline fragment defer
-          ... @defer {
-            email
+        type Phone {
+          home: String!
+        }
+
+        type Employment {
+          title: String!
+        }
+
+        type User {
+          name: String!
+          email: String!
+          address: Address!
+          phone: Phone!
+          employment: Employment!
+          widgetCount: Int!
+          widgetPreference: String!
+          clearanceLevel: String!
+          favoriteFood: String!
+          leastFavoriteFood: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment WidgetFragment on User {
+          widgetCount
+          widgetPreference
+        }
+
+        fragment FoodFragment on User {
+          favoriteFood
+          leastFavoriteFood
+        }
+
+        fragment EmploymentFragment on User {
+          employment {
+            title
           }
+        }
 
-          # Test inline fragment defer with nested selection set
-          ... @defer {
-            address {
-              street1
+        query user {
+          user {
+            # Test inline fragment defer
+            ... @defer {
+              email
+            }
+
+            # Test inline fragment defer with nested selection set
+            ... @defer {
+              address {
+                street1
+              }
+            }
+
+            # Test named fragment defer
+            ...WidgetFragment @defer
+
+            # Test a secondary named fragment defer
+            ...FoodFragment @defer
+
+            # Not deferred fields, fragments, selection sets, etc are left alone
+            name
+            phone {
+              home
+            }
+            ...EmploymentFragment
+            ... {
+              clearanceLevel
             }
           }
-
-          # Test named fragment defer
-          ...WidgetFragment @defer
-
-          # Test a secondary named fragment defer
-          ...FoodFragment @defer
-
-          # Not deferred fields, fragments, selection sets, etc are left alone
-          name
-          phone {
-            home
-          }
-          ...EmploymentFragment
-          ... {
-            clearanceLevel
-          }
         }
-      }
-    `);
+      `);
 
       const { content } = await plugin(
         schema,
@@ -7066,32 +7178,22 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: 'graphql.ts' }
       );
 
-      expect(content).toBeSimilarStringTo(`
-      export type WidgetFragmentFragment = { __typename?: 'User', widgetCount: number, widgetPreference: string } & { ' $fragmentName'?: 'WidgetFragmentFragment' };
+      expect(content).toMatchInlineSnapshot(`
+        "export type WidgetFragmentFragment = { widgetCount: number, widgetPreference: string } & { ' $fragmentName'?: 'WidgetFragmentFragment' };
 
-      export type FoodFragmentFragment = { __typename?: 'User', favoriteFood: string, leastFavoriteFood: string } & { ' $fragmentName'?: 'FoodFragmentFragment' };
+        export type FoodFragmentFragment = { favoriteFood: string, leastFavoriteFood: string } & { ' $fragmentName'?: 'FoodFragmentFragment' };
 
-      export type EmploymentFragmentFragment = { __typename?: 'User', employment: { __typename?: 'Employment', title: string } } & { ' $fragmentName'?: 'EmploymentFragmentFragment' };
+        export type EmploymentFragmentFragment = { employment: { title: string } } & { ' $fragmentName'?: 'EmploymentFragmentFragment' };
 
-      export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
-      export type UserQuery = {
-        __typename?: 'Query',
-        user: (
-        {
-          __typename?: 'User',
-          clearanceLevel: string,
-          name: string,
-          phone: { __typename?: 'Phone', home: string }
-        } & { ' $fragmentRefs'?: { 'EmploymentFragmentFragment': EmploymentFragmentFragment } }
-      ) & ({ __typename?: 'User', email: string } | { __typename?: 'User', email?: never }) & ({ __typename?: 'User', address: { __typename?: 'Address', street1: string } } | { __typename?: 'User', address?: never }) & (
-        { __typename?: 'User' }
-        & { ' $fragmentRefs'?: { 'WidgetFragmentFragment': Incremental<WidgetFragmentFragment> } }
-      ) & (
-        { __typename?: 'User' }
-        & { ' $fragmentRefs'?: { 'FoodFragmentFragment': Incremental<FoodFragmentFragment> } }
-      ) };
-    `);
+
+        export type UserQuery = { user: (
+            { clearanceLevel: string, name: string, phone: { home: string } }
+            & { ' $fragmentRefs'?: { 'EmploymentFragmentFragment': EmploymentFragmentFragment } }
+          ) & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & { ' $fragmentRefs'?: { 'WidgetFragmentFragment': Incremental<WidgetFragmentFragment> } } & { ' $fragmentRefs'?: { 'FoodFragmentFragment': Incremental<FoodFragmentFragment> } } };
+        "
+      `);
     });
   });
 
@@ -7110,19 +7212,15 @@ function test(q: GetEntityBrandDataQuery): void {
       { preResolveTypes: false },
       { outputFile: '' }
     );
-    expect(result.content).toBeSimilarStringTo(`
-      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+    expect(result.content).toMatchInlineSnapshot(`
+      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
-      export type Unnamed_1_Query = (
-          { __typename?: 'Query' }
-        & { notifications: Array<(
-            { __typename?: 'TextNotification' }
-          & Pick<TextNotification, 'id'>
-        ) | (
-            { __typename?: 'ImageNotification' }
-          & Pick<ImageNotification, 'id'>
-        )> }
-      );
+
+      export type Unnamed_1_Query = { notifications: Array<
+          | Pick<TextNotification, 'id'>
+          | Pick<ImageNotification, 'id'>
+        > };
+      "
     `);
   });
 
@@ -7144,16 +7242,14 @@ function test(q: GetEntityBrandDataQuery): void {
         { inlineFragmentTypes: 'combine' },
         { outputFile: '' }
       );
-      expect(result.content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      expect(result.content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type Unnamed_1_Query = { __typename?: 'Query', me: (
-            { __typename?: 'User' }
-            & UserFragmentFragment
-          ) | null };
+        export type Unnamed_1_Query = { me: UserFragmentFragment | null };
 
-        export type UserFragmentFragment = { __typename?: 'User', id: string };
+        export type UserFragmentFragment = { id: string };
+        "
       `);
     });
 
@@ -7174,13 +7270,14 @@ function test(q: GetEntityBrandDataQuery): void {
         { inlineFragmentTypes: 'inline' },
         { outputFile: '' }
       );
-      expect(result.content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      expect(result.content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type Unnamed_1_Query = { __typename?: 'Query', me: { __typename?: 'User', id: string } | null };
+        export type Unnamed_1_Query = { me: { id: string } | null };
 
-        export type UserFragmentFragment = { __typename?: 'User', id: string };
+        export type UserFragmentFragment = { id: string };
+        "
       `);
     });
 
@@ -7201,16 +7298,14 @@ function test(q: GetEntityBrandDataQuery): void {
         { inlineFragmentTypes: 'mask' },
         { outputFile: '' }
       );
-      expect(result.content).toBeSimilarStringTo(`
-        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      expect(result.content).toMatchInlineSnapshot(`
+        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type Unnamed_1_Query = { __typename?: 'Query', me: (
-            { __typename?: 'User' }
-            & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
-          ) | null };
+        export type Unnamed_1_Query = { me: { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } } | null };
 
-        export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+        export type UserFragmentFragment = { id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+        "
       `);
     });
   });

@@ -4,7 +4,7 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
-export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
+export type HelloQueryQuery = { hello: string };
 
 export const HelloQueryDocument = {
   __meta__: { hash: '86f01e23de1c770cabbc35b2d87f2e5fd7557b6f' },

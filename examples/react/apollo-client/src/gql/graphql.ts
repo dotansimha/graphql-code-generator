@@ -7,18 +7,17 @@ export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
 }>;
 
 export type AllFilmsWithVariablesQueryQuery = {
-  __typename?: 'Root';
   allFilms: {
-    __typename?: 'FilmsConnection';
+    __typename: 'FilmsConnection';
     edges: Array<{
-      __typename?: 'FilmsEdge';
-      node: ({ __typename?: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } }) | null;
+      __typename: 'FilmsEdge';
+      node: ({ __typename: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } }) | null;
     } | null> | null;
   } | null;
 };
 
 export type FilmItemFragment = {
-  __typename?: 'Film';
+  __typename: 'Film';
   id: string;
   title: string | null;
   releaseDate: string | null;
