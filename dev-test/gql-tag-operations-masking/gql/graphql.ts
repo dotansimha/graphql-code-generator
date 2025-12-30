@@ -5,33 +5,24 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-export type TweetFragmentFragment = ({ __typename?: 'Tweet'; id: string; body: string } & {
+export type TweetFragmentFragment = ({ id: string; body: string } & {
   ' $fragmentRefs'?: { TweetAuthorFragmentFragment: TweetAuthorFragmentFragment };
 }) & { ' $fragmentName'?: 'TweetFragmentFragment' };
 
 export type TweetAuthorFragmentFragment = {
-  __typename?: 'Tweet';
   id: string;
-  author: { __typename?: 'User'; id: string; username: string | null };
+  author: { id: string; username: string | null };
 } & { ' $fragmentName'?: 'TweetAuthorFragmentFragment' };
 
 export type TweetsFragmentFragment = {
-  __typename?: 'Query';
-<<<<<<< HEAD
-  Tweets?: Array<
-    { __typename?: 'Tweet'; id: string } & {
-      ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment };
-    }
-=======
   Tweets: Array<
-    { __typename?: 'Tweet'; id: string } & { ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment } }
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+    { id: string } & { ' $fragmentRefs'?: { TweetFragmentFragment: TweetFragmentFragment } }
   > | null;
 } & { ' $fragmentName'?: 'TweetsFragmentFragment' };
 
 export type TweetAppQueryQueryVariables = Exact<{ [key: string]: never }>;
 
-export type TweetAppQueryQuery = { __typename?: 'Query' } & {
+export type TweetAppQueryQuery = {
   ' $fragmentRefs'?: { TweetsFragmentFragment: TweetsFragmentFragment };
 };
 

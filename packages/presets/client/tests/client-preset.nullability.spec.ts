@@ -85,9 +85,7 @@ describe('client-preset - nullability', () => {
 
     expect(formattedContent).toBeSimilarStringTo(`
       export type TestQuery = {
-        __typename?: "Query";
         me: {
-          __typename?: "User";
           field: string;
           fieldLevel0: string;
           fieldLevel1: string | null;
@@ -136,9 +134,7 @@ describe('client-preset - nullability', () => {
 
     expect(formattedContent).toBeSimilarStringTo(`
       export type TestQuery = {
-        __typename?: "Query";
         me: {
-          __typename?: "User";
           field: string | null;
           fieldLevel0: string | null;
           fieldLevel1: string | null;

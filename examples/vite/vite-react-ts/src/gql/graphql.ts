@@ -6,7 +6,6 @@ export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type FilmItemFragment = {
-  __typename?: 'Film';
   id: string;
   title: string | null;
   releaseDate: string | null;
@@ -18,18 +17,9 @@ export type AllFilmsWithVariablesQueryQueryVariables = Exact<{
 }>;
 
 export type AllFilmsWithVariablesQueryQuery = {
-  __typename?: 'Root';
   allFilms: {
-    __typename?: 'FilmsConnection';
     edges: Array<{
-      __typename?: 'FilmsEdge';
-<<<<<<< HEAD
-      node?:
-        | ({ __typename?: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } })
-        | null;
-=======
-      node: ({ __typename?: 'Film' } & { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } }) | null;
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+      node: { ' $fragmentRefs'?: { FilmItemFragment: FilmItemFragment } } | null;
     } | null> | null;
   } | null;
 };

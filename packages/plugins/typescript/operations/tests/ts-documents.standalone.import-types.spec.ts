@@ -121,16 +121,16 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
+      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
 
       export type UsersQueryVariables = Exact<{
         input: TypeImport.UsersInput;
       }>;
 
 
-      export type UsersQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
-          | { __typename?: 'ResponseError', error: TypeImport.ResponseErrorType }
+      export type UsersQuery = { users:
+          | { result: Array<{ id: string }> }
+          | { error: TypeImport.ResponseErrorType }
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
@@ -140,8 +140,8 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UsersWithScalarInputQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename: 'User' }> }
+      export type UsersWithScalarInputQuery = { users:
+          | { result: Array<{ __typename: 'User' }> }
           | { __typename: 'ResponseError' }
          };
       "
@@ -265,16 +265,16 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
+      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
 
       export type UsersQueryVariables = Exact<{
         input: TypeImport.UsersInput;
       }>;
 
 
-      export type UsersQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename?: 'User', id: string }> }
-          | { __typename?: 'ResponseError', error: TypeImport.ResponseErrorType }
+      export type UsersQuery = { users:
+          | { result: Array<{ id: string }> }
+          | { error: TypeImport.ResponseErrorType }
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
@@ -284,8 +284,8 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UsersWithScalarInputQuery = { __typename?: 'Query', users:
-          | { __typename?: 'UsersResponseOk', result: Array<{ __typename: 'User' }> }
+      export type UsersWithScalarInputQuery = { users:
+          | { result: Array<{ __typename: 'User' }> }
           | { __typename: 'ResponseError' }
          };
       "
@@ -383,7 +383,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string, isOld: boolean, ageInt: number, ageFloat: number } | null };
+      export type UserQuery = { user: { id: string, name: string, isOld: boolean, ageInt: number, ageFloat: number } | null };
       "
     `);
 

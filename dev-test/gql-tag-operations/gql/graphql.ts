@@ -7,30 +7,16 @@ export type Incremental<T> =
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type FooQueryVariables = Exact<{ [key: string]: never }>;
 
-<<<<<<< HEAD
-export type FooQuery = {
-  __typename?: 'Query';
-  Tweets?: Array<{ __typename?: 'Tweet'; id: string } | null> | null;
-};
-=======
-export type FooQuery = { __typename?: 'Query'; Tweets: Array<{ __typename?: 'Tweet'; id: string } | null> | null };
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+export type FooQuery = { Tweets: Array<{ id: string } | null> | null };
 
-export type LelFragment = { __typename?: 'Tweet'; id: string; body: string | null } & {
+export type LelFragment = { id: string; body: string | null } & {
   ' $fragmentName'?: 'LelFragment';
 };
 
 export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
 export type BarQuery = {
-  __typename?: 'Query';
-<<<<<<< HEAD
-  Tweets?: Array<
-    ({ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }) | null
-  > | null;
-=======
-  Tweets: Array<({ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }) | null> | null;
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+  Tweets: Array<{ ' $fragmentRefs'?: { LelFragment: LelFragment } } | null> | null;
 };
 
 export const LelFragmentDoc = {
