@@ -2,19 +2,14 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-export type SlowFieldFragmentFragment = { __typename?: 'Query'; slowField: string } & {
-  ' $fragmentName'?: 'SlowFieldFragmentFragment';
-};
+export type SlowFieldFragmentFragment = { slowField: string } & { ' $fragmentName'?: 'SlowFieldFragmentFragment' };
 
 export type SlowAndFastFieldWithDeferQueryVariables = Exact<{ [key: string]: never }>;
 
-export type SlowAndFastFieldWithDeferQuery = { __typename?: 'Query'; fastField: string } & (
-  | { __typename?: 'Query'; inlinedSlowField: string }
-  | { __typename?: 'Query'; inlinedSlowField?: never }
-) &
-  ({ __typename?: 'Query' } & {
-    ' $fragmentRefs'?: { SlowFieldFragmentFragment: Incremental<SlowFieldFragmentFragment> };
-  });
+export type SlowAndFastFieldWithDeferQuery = { fastField: string } & (
+  | { inlinedSlowField: string }
+  | { inlinedSlowField?: never }
+) & { ' $fragmentRefs'?: { SlowFieldFragmentFragment: Incremental<SlowFieldFragmentFragment> } };
 
 export const SlowFieldFragmentFragmentDoc = {
   kind: 'Document',

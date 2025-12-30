@@ -82,7 +82,7 @@ describe('client-preset - Enum', () => {
       }>;
 
 
-      export type ShapeQuery = { __typename?: 'Query', shape: { __typename?: 'ShapeObj', id: string } };
+      export type ShapeQuery = { shape: { id: string } };
 
 
       export const ShapeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Shape"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"shape"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Shape"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shape"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"shape"},"value":{"kind":"Variable","name":{"kind":"Name","value":"shape"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<ShapeQuery, ShapeQueryVariables>;"
@@ -142,7 +142,7 @@ describe('client-preset - Enum', () => {
       export type ShapeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type ShapeQuery = { __typename?: 'Query', shape: { __typename?: 'ShapeObj', id: string, shape: Shape } };
+      export type ShapeQuery = { shape: { id: string, shape: Shape } };
 
 
       export const ShapeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Shape"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shape"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"shape"}}]}}]}}]} as unknown as DocumentNode<ShapeQuery, ShapeQueryVariables>;"
@@ -203,7 +203,7 @@ describe('client-preset - Enum', () => {
       }>;
 
 
-      export type ShapeQuery = { __typename?: 'Query', shape: { __typename?: 'ShapeObj', id: string } };
+      export type ShapeQuery = { shape: { id: string } };
 
 
       export const ShapeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Shape"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"shape"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Shape"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shape"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"shape"},"value":{"kind":"Variable","name":{"kind":"Name","value":"shape"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<ShapeQuery, ShapeQueryVariables>;"
