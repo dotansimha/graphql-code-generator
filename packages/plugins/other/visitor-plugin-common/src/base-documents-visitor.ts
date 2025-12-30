@@ -33,7 +33,6 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 }
 
 export interface ParsedDocumentsConfig extends ParsedTypesConfig {
-  addTypename: boolean;
   preResolveTypes: boolean;
   extractAllFieldsToTypes: boolean;
   globalNamespace: boolean;
@@ -257,7 +256,6 @@ export class BaseDocumentsVisitor<
       skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
-      addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
@@ -295,10 +293,6 @@ export class BaseDocumentsVisitor<
 
   public get schema(): GraphQLSchema {
     return this._schema;
-  }
-
-  public get addTypename(): boolean {
-    return this._parsedConfig.addTypename;
   }
 
   private handleAnonymousOperation(node: OperationDefinitionNode): string {

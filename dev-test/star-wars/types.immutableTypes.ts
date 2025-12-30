@@ -1,10 +1,7 @@
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-<<<<<<< HEAD
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-=======
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** The episodes in the Star Wars trilogy */
 export type Episode =
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
@@ -14,19 +11,13 @@ export type Episode =
   /** Star Wars Episode IV: A New Hope, released in 1977. */
   | 'NEWHOPE';
 
->>>>>>> c7b5477b6 (Generate input types and output enums into target file (#10527))
 export type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;
 }>;
 
 export type CreateReviewForEpisodeMutation = {
-  readonly __typename?: 'Mutation';
-  readonly createReview: {
-    readonly __typename?: 'Review';
-    readonly stars: number;
-    readonly commentary: string | null;
-  } | null;
+  readonly createReview: { readonly stars: number; readonly commentary: string | null } | null;
 };
 
 export type ExcludeQueryAlphaQueryVariables = Exact<{
@@ -34,11 +25,7 @@ export type ExcludeQueryAlphaQueryVariables = Exact<{
 }>;
 
 export type ExcludeQueryAlphaQuery = {
-  readonly __typename?: 'Query';
-  readonly hero:
-    | { readonly __typename?: 'Droid'; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly name: string }
-    | null;
+  readonly hero: { readonly name: string } | { readonly name: string } | null;
 };
 
 export type ExcludeQueryBetaQueryVariables = Exact<{
@@ -46,11 +33,7 @@ export type ExcludeQueryBetaQueryVariables = Exact<{
 }>;
 
 export type ExcludeQueryBetaQuery = {
-  readonly __typename?: 'Query';
-  readonly hero:
-    | { readonly __typename?: 'Droid'; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly name: string }
-    | null;
+  readonly hero: { readonly name: string } | { readonly name: string } | null;
 };
 
 export type HeroAndFriendsNamesQueryVariables = Exact<{
@@ -58,24 +41,17 @@ export type HeroAndFriendsNamesQueryVariables = Exact<{
 }>;
 
 export type HeroAndFriendsNamesQuery = {
-  readonly __typename?: 'Query';
   readonly hero:
     | {
-        readonly __typename?: 'Droid';
         readonly name: string;
         readonly friends: ReadonlyArray<
-          | { readonly __typename?: 'Droid'; readonly name: string }
-          | { readonly __typename?: 'Human'; readonly name: string }
-          | null
+          { readonly name: string } | { readonly name: string } | null
         > | null;
       }
     | {
-        readonly __typename?: 'Human';
         readonly name: string;
         readonly friends: ReadonlyArray<
-          | { readonly __typename?: 'Droid'; readonly name: string }
-          | { readonly __typename?: 'Human'; readonly name: string }
-          | null
+          { readonly name: string } | { readonly name: string } | null
         > | null;
       }
     | null;
@@ -84,24 +60,9 @@ export type HeroAndFriendsNamesQuery = {
 export type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HeroAppearsInQuery = {
-  readonly __typename?: 'Query';
-<<<<<<< HEAD
-  readonly hero?:
-    | {
-        readonly __typename?: 'Droid';
-        readonly name: string;
-        readonly appearsIn: ReadonlyArray<Episode | null>;
-      }
-    | {
-        readonly __typename?: 'Human';
-        readonly name: string;
-        readonly appearsIn: ReadonlyArray<Episode | null>;
-      }
-=======
   readonly hero:
-    | { readonly __typename?: 'Droid'; readonly name: string; readonly appearsIn: ReadonlyArray<Episode | null> }
-    | { readonly __typename?: 'Human'; readonly name: string; readonly appearsIn: ReadonlyArray<Episode | null> }
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+    | { readonly name: string; readonly appearsIn: ReadonlyArray<Episode | null> }
+    | { readonly name: string; readonly appearsIn: ReadonlyArray<Episode | null> }
     | null;
 };
 
@@ -110,34 +71,18 @@ export type HeroDetailsQueryVariables = Exact<{
 }>;
 
 export type HeroDetailsQuery = {
-  readonly __typename?: 'Query';
-<<<<<<< HEAD
-  readonly hero?:
-    | {
-        readonly __typename?: 'Droid';
-        readonly primaryFunction?: string | null;
-        readonly name: string;
-      }
-    | { readonly __typename?: 'Human'; readonly height?: number | null; readonly name: string }
-=======
   readonly hero:
-    | { readonly __typename?: 'Droid'; readonly primaryFunction: string | null; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly height: number | null; readonly name: string }
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+    | { readonly primaryFunction: string | null; readonly name: string }
+    | { readonly height: number | null; readonly name: string }
     | null;
 };
 
 type HeroDetails_Droid_Fragment = {
-  readonly __typename?: 'Droid';
   readonly primaryFunction: string | null;
   readonly name: string;
 };
 
-type HeroDetails_Human_Fragment = {
-  readonly __typename?: 'Human';
-  readonly height: number | null;
-  readonly name: string;
-};
+type HeroDetails_Human_Fragment = { readonly height: number | null; readonly name: string };
 
 export type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
@@ -146,20 +91,9 @@ export type HeroDetailsWithFragmentQueryVariables = Exact<{
 }>;
 
 export type HeroDetailsWithFragmentQuery = {
-  readonly __typename?: 'Query';
-<<<<<<< HEAD
-  readonly hero?:
-    | {
-        readonly __typename?: 'Droid';
-        readonly primaryFunction?: string | null;
-        readonly name: string;
-      }
-    | { readonly __typename?: 'Human'; readonly height?: number | null; readonly name: string }
-=======
   readonly hero:
-    | { readonly __typename?: 'Droid'; readonly primaryFunction: string | null; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly height: number | null; readonly name: string }
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+    | { readonly primaryFunction: string | null; readonly name: string }
+    | { readonly height: number | null; readonly name: string }
     | null;
 };
 
@@ -168,11 +102,7 @@ export type HeroNameQueryVariables = Exact<{
 }>;
 
 export type HeroNameQuery = {
-  readonly __typename?: 'Query';
-  readonly hero:
-    | { readonly __typename?: 'Droid'; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly name: string }
-    | null;
+  readonly hero: { readonly name: string } | { readonly name: string } | null;
 };
 
 export type HeroNameConditionalInclusionQueryVariables = Exact<{
@@ -181,11 +111,7 @@ export type HeroNameConditionalInclusionQueryVariables = Exact<{
 }>;
 
 export type HeroNameConditionalInclusionQuery = {
-  readonly __typename?: 'Query';
-  readonly hero:
-    | { readonly __typename?: 'Droid'; readonly name?: string }
-    | { readonly __typename?: 'Human'; readonly name?: string }
-    | null;
+  readonly hero: { readonly name?: string } | { readonly name?: string } | null;
 };
 
 export type HeroNameConditionalExclusionQueryVariables = Exact<{
@@ -194,11 +120,7 @@ export type HeroNameConditionalExclusionQueryVariables = Exact<{
 }>;
 
 export type HeroNameConditionalExclusionQuery = {
-  readonly __typename?: 'Query';
-  readonly hero:
-    | { readonly __typename?: 'Droid'; readonly name?: string }
-    | { readonly __typename?: 'Human'; readonly name?: string }
-    | null;
+  readonly hero: { readonly name?: string } | { readonly name?: string } | null;
 };
 
 export type HeroParentTypeDependentFieldQueryVariables = Exact<{
@@ -206,39 +128,20 @@ export type HeroParentTypeDependentFieldQueryVariables = Exact<{
 }>;
 
 export type HeroParentTypeDependentFieldQuery = {
-  readonly __typename?: 'Query';
   readonly hero:
     | {
-        readonly __typename?: 'Droid';
         readonly name: string;
         readonly friends: ReadonlyArray<
-          | { readonly __typename?: 'Droid'; readonly name: string }
-<<<<<<< HEAD
-          | {
-              readonly __typename?: 'Human';
-              readonly height?: number | null;
-              readonly name: string;
-            }
-=======
-          | { readonly __typename?: 'Human'; readonly height: number | null; readonly name: string }
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+          | { readonly name: string }
+          | { readonly height: number | null; readonly name: string }
           | null
         > | null;
       }
     | {
-        readonly __typename?: 'Human';
         readonly name: string;
         readonly friends: ReadonlyArray<
-          | { readonly __typename?: 'Droid'; readonly name: string }
-<<<<<<< HEAD
-          | {
-              readonly __typename?: 'Human';
-              readonly height?: number | null;
-              readonly name: string;
-            }
-=======
-          | { readonly __typename?: 'Human'; readonly height: number | null; readonly name: string }
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+          | { readonly name: string }
+          | { readonly height: number | null; readonly name: string }
           | null
         > | null;
       }
@@ -250,44 +153,20 @@ export type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
 }>;
 
 export type HeroTypeDependentAliasedFieldQuery = {
-  readonly __typename?: 'Query';
-  readonly hero:
-    | { readonly __typename?: 'Droid'; readonly property: string | null }
-    | { readonly __typename?: 'Human'; readonly property: string | null }
-    | null;
+  readonly hero: { readonly property: string | null } | { readonly property: string | null } | null;
 };
 
-export type HumanFieldsFragment = {
-  readonly __typename?: 'Human';
-  readonly name: string;
-  readonly mass: number | null;
-};
+export type HumanFieldsFragment = { readonly name: string; readonly mass: number | null };
 
 export type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
 export type HumanWithNullHeightQuery = {
-  readonly __typename?: 'Query';
-<<<<<<< HEAD
-  readonly human?: {
-    readonly __typename?: 'Human';
-    readonly name: string;
-    readonly mass?: number | null;
-  } | null;
-=======
-  readonly human: { readonly __typename?: 'Human'; readonly name: string; readonly mass: number | null } | null;
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+  readonly human: { readonly name: string; readonly mass: number | null } | null;
 };
 
 export type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TwoHeroesQuery = {
-  readonly __typename?: 'Query';
-  readonly r2:
-    | { readonly __typename?: 'Droid'; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly name: string }
-    | null;
-  readonly luke:
-    | { readonly __typename?: 'Droid'; readonly name: string }
-    | { readonly __typename?: 'Human'; readonly name: string }
-    | null;
+  readonly r2: { readonly name: string } | { readonly name: string } | null;
+  readonly luke: { readonly name: string } | { readonly name: string } | null;
 };

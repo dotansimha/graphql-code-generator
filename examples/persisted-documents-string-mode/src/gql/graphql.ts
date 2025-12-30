@@ -7,7 +7,7 @@ export type Incremental<T> =
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 
-export type HelloQueryQuery = { __typename?: 'Query'; hello: string };
+export type HelloQueryQuery = { hello: string };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String

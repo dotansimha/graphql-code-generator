@@ -1,10 +1,7 @@
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-<<<<<<< HEAD
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-=======
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** The episodes in the Star Wars trilogy */
 type Episode =
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
@@ -14,74 +11,44 @@ type Episode =
   /** Star Wars Episode IV: A New Hope, released in 1977. */
   | 'NEWHOPE';
 
->>>>>>> c7b5477b6 (Generate input types and output enums into target file (#10527))
 type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
   review: ReviewInput;
 }>;
 
 type CreateReviewForEpisodeMutation = {
-  __typename?: 'Mutation';
-  createReview: { __typename?: 'Review'; stars: number; commentary: string | null } | null;
+  createReview: { stars: number; commentary: string | null } | null;
 };
 
 type ExcludeQueryAlphaQueryVariables = Exact<{
   episode?: Episode | null;
 }>;
 
-type ExcludeQueryAlphaQuery = {
-  __typename?: 'Query';
-  hero: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
-};
+type ExcludeQueryAlphaQuery = { hero: { name: string } | { name: string } | null };
 
 type ExcludeQueryBetaQueryVariables = Exact<{
   episode?: Episode | null;
 }>;
 
-type ExcludeQueryBetaQuery = {
-  __typename?: 'Query';
-  hero: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
-};
+type ExcludeQueryBetaQuery = { hero: { name: string } | { name: string } | null };
 
 type HeroAndFriendsNamesQueryVariables = Exact<{
   episode?: Episode | null;
 }>;
 
 type HeroAndFriendsNamesQuery = {
-  __typename?: 'Query';
   hero:
-    | {
-        __typename?: 'Droid';
-        name: string;
-<<<<<<< HEAD
-        friends?: Array<
-          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null
-        > | null;
-=======
-        friends: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
-      }
-    | {
-        __typename?: 'Human';
-        name: string;
-<<<<<<< HEAD
-        friends?: Array<
-          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null
-        > | null;
-=======
-        friends: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
-      }
+    | { name: string; friends: Array<{ name: string } | { name: string } | null> | null }
+    | { name: string; friends: Array<{ name: string } | { name: string } | null> | null }
     | null;
 };
 
 type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
 
 type HeroAppearsInQuery = {
-  __typename?: 'Query';
   hero:
-    | { __typename?: 'Droid'; name: string; appearsIn: Array<Episode | null> }
-    | { __typename?: 'Human'; name: string; appearsIn: Array<Episode | null> }
+    | { name: string; appearsIn: Array<Episode | null> }
+    | { name: string; appearsIn: Array<Episode | null> }
     | null;
 };
 
@@ -90,24 +57,15 @@ type HeroDetailsQueryVariables = Exact<{
 }>;
 
 type HeroDetailsQuery = {
-  __typename?: 'Query';
   hero:
-    | { __typename?: 'Droid'; primaryFunction: string | null; name: string }
-    | { __typename?: 'Human'; height: number | null; name: string }
+    | { primaryFunction: string | null; name: string }
+    | { height: number | null; name: string }
     | null;
 };
 
-<<<<<<< HEAD
-type HeroDetails_Droid_Fragment = {
-  __typename?: 'Droid';
-  primaryFunction?: string | null;
-  name: string;
-};
-=======
-type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction: string | null; name: string };
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+type HeroDetails_Droid_Fragment = { primaryFunction: string | null; name: string };
 
-type HeroDetails_Human_Fragment = { __typename?: 'Human'; height: number | null; name: string };
+type HeroDetails_Human_Fragment = { height: number | null; name: string };
 
 type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
@@ -116,10 +74,9 @@ type HeroDetailsWithFragmentQueryVariables = Exact<{
 }>;
 
 type HeroDetailsWithFragmentQuery = {
-  __typename?: 'Query';
   hero:
-    | { __typename?: 'Droid'; primaryFunction: string | null; name: string }
-    | { __typename?: 'Human'; height: number | null; name: string }
+    | { primaryFunction: string | null; name: string }
+    | { height: number | null; name: string }
     | null;
 };
 
@@ -127,65 +84,35 @@ type HeroNameQueryVariables = Exact<{
   episode?: Episode | null;
 }>;
 
-type HeroNameQuery = {
-  __typename?: 'Query';
-  hero: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
-};
+type HeroNameQuery = { hero: { name: string } | { name: string } | null };
 
 type HeroNameConditionalInclusionQueryVariables = Exact<{
   episode?: Episode | null;
   includeName: boolean;
 }>;
 
-type HeroNameConditionalInclusionQuery = {
-  __typename?: 'Query';
-  hero: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
-};
+type HeroNameConditionalInclusionQuery = { hero: { name?: string } | { name?: string } | null };
 
 type HeroNameConditionalExclusionQueryVariables = Exact<{
   episode?: Episode | null;
   skipName: boolean;
 }>;
 
-type HeroNameConditionalExclusionQuery = {
-  __typename?: 'Query';
-  hero: { __typename?: 'Droid'; name?: string } | { __typename?: 'Human'; name?: string } | null;
-};
+type HeroNameConditionalExclusionQuery = { hero: { name?: string } | { name?: string } | null };
 
 type HeroParentTypeDependentFieldQueryVariables = Exact<{
   episode?: Episode | null;
 }>;
 
 type HeroParentTypeDependentFieldQuery = {
-  __typename?: 'Query';
   hero:
     | {
-        __typename?: 'Droid';
         name: string;
-<<<<<<< HEAD
-        friends?: Array<
-          | { __typename?: 'Droid'; name: string }
-          | { __typename?: 'Human'; height?: number | null; name: string }
-          | null
-=======
-        friends: Array<
-          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height: number | null; name: string } | null
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
-        > | null;
+        friends: Array<{ name: string } | { height: number | null; name: string } | null> | null;
       }
     | {
-        __typename?: 'Human';
         name: string;
-<<<<<<< HEAD
-        friends?: Array<
-          | { __typename?: 'Droid'; name: string }
-          | { __typename?: 'Human'; height?: number | null; name: string }
-          | null
-=======
-        friends: Array<
-          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height: number | null; name: string } | null
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
-        > | null;
+        friends: Array<{ name: string } | { height: number | null; name: string } | null> | null;
       }
     | null;
 };
@@ -195,30 +122,18 @@ type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
 }>;
 
 type HeroTypeDependentAliasedFieldQuery = {
-  __typename?: 'Query';
-<<<<<<< HEAD
-  hero?:
-    | { __typename?: 'Droid'; property?: string | null }
-    | { __typename?: 'Human'; property?: string | null }
-    | null;
-=======
-  hero: { __typename?: 'Droid'; property: string | null } | { __typename?: 'Human'; property: string | null } | null;
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))
+  hero: { property: string | null } | { property: string | null } | null;
 };
 
-type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass: number | null };
+type HumanFieldsFragment = { name: string; mass: number | null };
 
 type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
-type HumanWithNullHeightQuery = {
-  __typename?: 'Query';
-  human: { __typename?: 'Human'; name: string; mass: number | null } | null;
-};
+type HumanWithNullHeightQuery = { human: { name: string; mass: number | null } | null };
 
 type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
 
 type TwoHeroesQuery = {
-  __typename?: 'Query';
-  r2: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
-  luke: { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null;
+  r2: { name: string } | { name: string } | null;
+  luke: { name: string } | { name: string } | null;
 };

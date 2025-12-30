@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`TypeScript Operations Plugin > Config > should include fragment variable definitions when experimentalFragmentVariables is set 1`] = `
-"export type TextNotificationFragmentFragment = { __typename?: 'TextNotification', text?: string };
+"export type TextNotificationFragmentFragment = { text?: string };
 
 
 export type TextNotificationFragmentFragmentVariables = Exact<{
@@ -17,20 +17,20 @@ exports[`TypeScript Operations Plugin > Issues > #2699 - Issues with multiple in
 }>;
 
 
-export type GetEntityBrandDataQuery = { __typename?: 'Query', node:
-    | { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
-    | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
-    | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
-    | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null }
+export type GetEntityBrandDataQuery = { node:
+    | { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
+    | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
+    | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
+    | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
    };
 
-type EntityBrandData_Company_Fragment = { __typename?: 'Company', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
+type EntityBrandData_Company_Fragment = { brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
-type EntityBrandData_Theater_Fragment = { __typename?: 'Theater', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
+type EntityBrandData_Theater_Fragment = { brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
-type EntityBrandData_Movie_Fragment = { __typename?: 'Movie', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
+type EntityBrandData_Movie_Fragment = { brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
-type EntityBrandData_User_Fragment = { __typename?: 'User', brandData: { __typename?: 'EntityBrandData', active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
+type EntityBrandData_User_Fragment = { brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
 
 export type EntityBrandDataFragment =
   | EntityBrandData_Company_Fragment
@@ -39,13 +39,13 @@ export type EntityBrandDataFragment =
   | EntityBrandData_User_Fragment
 ;
 
-type ElementMetadata_Company_Fragment = { __typename?: 'Company', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_Company_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
-type ElementMetadata_Theater_Fragment = { __typename?: 'Theater', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_Theater_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
-type ElementMetadata_Movie_Fragment = { __typename?: 'Movie', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_Movie_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
-type ElementMetadata_User_Fragment = { __typename?: 'User', createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, name: string } | null, updatedBy: { __typename?: 'User', id: string, name: string } | null };
+type ElementMetadata_User_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
 export type ElementMetadataFragment =
   | ElementMetadata_Company_Fragment
@@ -69,9 +69,9 @@ export type UserQuery = { user: { id: string, username: string, email: string, d
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #3064 - fragments over interfaces causes issues with fields 1`] = `
-"type Venue_Hotel_Fragment = { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } };
+"type Venue_Hotel_Fragment = { id: string, gpsPosition: { lat: number, lng: number } };
 
-type Venue_Transport_Fragment = { __typename?: 'Transport', id: string };
+type Venue_Transport_Fragment = { id: string };
 
 export type VenueFragment =
   | Venue_Hotel_Fragment
@@ -81,14 +81,14 @@ export type VenueFragment =
 export type QQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QQuery = { __typename?: 'Query', hotel: { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } }, transport: { __typename?: 'Transport', id: string } };
+export type QQuery = { hotel: { id: string, gpsPosition: { lat: number, lng: number } }, transport: { id: string } };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #3064 - fragments over interfaces causes issues with fields 2`] = `
-"type Venue_Hotel_Fragment = { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } };
+"type Venue_Hotel_Fragment = { id: string, gpsPosition: { lat: number, lng: number } };
 
-type Venue_Transport_Fragment = { __typename?: 'Transport', id: string };
+type Venue_Transport_Fragment = { id: string };
 
 export type VenueFragment =
   | Venue_Hotel_Fragment
@@ -98,7 +98,7 @@ export type VenueFragment =
 export type QQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QQuery = { __typename?: 'Query', hotel: { __typename?: 'Hotel', id: string, gpsPosition: { __typename?: 'GPSPosition', lat: number, lng: number } }, transport: { __typename?: 'Transport', id: string } };
+export type QQuery = { hotel: { id: string, gpsPosition: { lat: number, lng: number } }, transport: { id: string } };
 function test(q: QQuery) {
         if (q.hotel) {
             const t1 = q.hotel.gpsPosition.lat
@@ -114,14 +114,14 @@ exports[`TypeScript Operations Plugin > Issues > #6874 - generates types when pa
 "export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SnakeQueryQuery = { __typename?: 'Query', snake:
-    | { __typename?: 'Snake', name: string, features: { __typename?: 'SnakeFeatures', color: string, length: number } }
-    | { __typename?: 'Error' }
+export type SnakeQueryQuery = { snake:
+    | { name: string, features: { color: string, length: number } }
+    | Record<PropertyKey, never>
    };
 
-type AnimalFragment_Bat_Fragment = { __typename?: 'Bat', features: { __typename?: 'BatFeatures', color: string, wingspan: number } };
+type AnimalFragment_Bat_Fragment = { features: { color: string, wingspan: number } };
 
-type AnimalFragment_Snake_Fragment = { __typename?: 'Snake', features: { __typename?: 'SnakeFeatures', color: string, length: number } };
+type AnimalFragment_Snake_Fragment = { features: { color: string, length: number } };
 
 export type AnimalFragmentFragment =
   | AnimalFragment_Bat_Fragment
@@ -145,18 +145,9 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = (
-  { __typename?: 'Query' }
-  & { user: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+export type UserQueryQuery = { user: Maybe<Pick<User, 'id' | 'name'>> };
 
-export type UserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'name'>
-);
+export type UserFragment = Pick<User, 'id' | 'name'>;
 "
 `;
 
@@ -164,13 +155,7 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = (
-  { __typename?: 'Query' }
-  & { user: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+export type UserQueryQuery = { user: Maybe<Pick<User, 'id' | 'name'>> };
 "
 `;
 
@@ -178,67 +163,37 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = (
-  { __typename?: 'Query' }
-  & { user: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-  )> }
-);
+export type UserQueryQuery = { user: Maybe<Pick<User, 'id' | 'name'>> };
 
-export type UserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'name'>
-);
+export type UserFragment = Pick<User, 'id' | 'name'>;
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct __typename when using fragment spread over union 1`] = `
-"export type UserFragmentFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id'>
-);
+"export type UserFragmentFragment = Pick<User, 'id'>;
 
 export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AaaQuery = (
-  { __typename?: 'Query' }
-  & { user:
-    | (
-      { __typename?: 'User' }
-      & Pick<User, 'id'>
-    )
-    | { __typename?: 'Error' }
-   }
-);
+export type AaaQuery = { user:
+    | Pick<User, 'id'>
+    | Record<PropertyKey, never>
+   };
 "
 `;
 
-exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct intersection for fragments when using with interfaces with same type 1`] = `
+exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct intersection for fragments when using with interfaces with same type 2`] = `
 "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Unnamed_1_Query = (
-  { __typename?: 'Query' }
-  & { b: Maybe<
-    | (
-      { __typename?: 'A' }
-      & Pick<A, 'id' | 'x'>
-    )
-    | { __typename?: 'B' }
-  > }
-);
+export type Unnamed_1_Query = { b: Maybe<
+    | Pick<A, 'id' | 'x'>
+    | Record<PropertyKey, never>
+  > };
 
-export type AFragment = (
-  { __typename?: 'A' }
-  & Pick<A, 'id'>
-);
+export type AFragment = Pick<A, 'id'>;
 
-export type BFragment = (
-  { __typename?: 'A' }
-  & Pick<A, 'x'>
-);
+export type BFragment = Pick<A, 'x'>;
 "
 `;
 
@@ -267,9 +222,7 @@ export type NetRouteFragment =
 export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QqQuery = (
-  { __typename?: 'Query' }
-  & { routes: Array<
+export type QqQuery = { routes: Array<
     | (
       { __typename: 'IPV4Route' }
       & {
@@ -284,8 +237,7 @@ export type QqQuery = (
         ipv6Gateway: Ipv6Route['gateway'],
       }
     )
-  > }
-);
+  > };
 "
 `;
 
@@ -311,20 +263,15 @@ export type NetRouteFragment =
   | NetRoute_Ipv6Route_Fragment
 ;
 
-export type TestFragment = (
-  { __typename?: 'IPV6Route' }
-  & {
+export type TestFragment = {
     ipv6Address: Ipv6Route['address'],
     ipv6Gateway: Ipv6Route['gateway'],
-  }
-);
+  };
 
 export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QqQuery = (
-  { __typename?: 'Query' }
-  & { routes: Array<
+export type QqQuery = { routes: Array<
     | (
       { __typename: 'IPV4Route' }
       & {
@@ -339,31 +286,18 @@ export type QqQuery = (
         ipv6Gateway: Ipv6Route['gateway'],
       }
     )
-  > }
-);
+  > };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid fragments intersection on different types (with usage) #2498 1`] = `
-"export type TomFragment = (
-  { __typename?: 'Tom' }
-  & Pick<Tom, 'id' | 'foo'>
-);
+"export type TomFragment = Pick<Tom, 'id' | 'foo'>;
 
-export type JerryFragment = (
-  { __typename?: 'Jerry' }
-  & Pick<Jerry, 'id' | 'bar'>
-);
+export type JerryFragment = Pick<Jerry, 'id' | 'bar'>;
 
-type User_Tom_Fragment = (
-  { __typename?: 'Tom' }
-  & Pick<Tom, 'id' | 'foo'>
-);
+type User_Tom_Fragment = Pick<Tom, 'id' | 'foo'>;
 
-type User_Jerry_Fragment = (
-  { __typename?: 'Jerry' }
-  & Pick<Jerry, 'id' | 'bar'>
-);
+type User_Jerry_Fragment = Pick<Jerry, 'id' | 'bar'>;
 
 export type UserFragment =
   | User_Tom_Fragment
@@ -373,19 +307,10 @@ export type UserFragment =
 export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = (
-  { __typename?: 'Query' }
-  & { user: Maybe<
-    | (
-      { __typename?: 'Tom' }
-      & Pick<Tom, 'id' | 'foo'>
-    )
-    | (
-      { __typename?: 'Jerry' }
-      & Pick<Jerry, 'id' | 'bar'>
-    )
-  > }
-);
+export type UserQueryQuery = { user: Maybe<
+    | Pick<Tom, 'id' | 'foo'>
+    | Pick<Jerry, 'id' | 'bar'>
+  > };
 "
 `;
 
@@ -393,23 +318,13 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > #4216 - handle frag
 "export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SearchPopularQuery = (
-  { __typename?: 'Query' }
-  & { search: Maybe<Array<
+export type SearchPopularQuery = { search: Maybe<Array<
+    | Pick<Dimension, 'id'>
     | (
-      { __typename?: 'Dimension' }
-      & Pick<Dimension, 'id'>
+      Pick<DimValue, 'value'>
+      & { dimension: Maybe<Pick<Dimension, 'id'>> }
     )
-    | (
-      { __typename?: 'DimValue' }
-      & Pick<DimValue, 'value'>
-      & { dimension: Maybe<(
-        { __typename?: 'Dimension' }
-        & Pick<Dimension, 'id'>
-      )> }
-    )
-  >> }
-);
+  >> };
 "
 `;
 
@@ -417,70 +332,33 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = (
-  { __typename?: 'Query' }
-  & { user:
+export type UserQueryQuery = { user:
+    | Pick<User, 'login' | 'id'>
+    | Pick<Error2, 'message'>
     | (
-      { __typename?: 'User' }
-      & Pick<User, 'login' | 'id'>
+      Pick<Error3, 'message'>
+      & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
     )
-    | (
-      { __typename?: 'Error2' }
-      & Pick<Error2, 'message'>
-    )
-    | (
-      { __typename?: 'Error3' }
-      & Pick<Error3, 'message'>
-      & { info: Maybe<(
-        { __typename?: 'AdditionalInfo' }
-        & Pick<AdditionalInfo, 'message2' | 'message'>
-      )> }
-    )
-   }
-);
+   };
 
-export type AdditionalInfoFragment = (
-  { __typename?: 'AdditionalInfo' }
-  & Pick<AdditionalInfo, 'message'>
-);
+export type AdditionalInfoFragment = Pick<AdditionalInfo, 'message'>;
 
-type UserResult1_User_Fragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id'>
-);
+type UserResult1_User_Fragment = Pick<User, 'id'>;
 
-type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
-
-type UserResult1_Error3_Fragment = (
-  { __typename?: 'Error3' }
-  & { info: Maybe<(
-    { __typename?: 'AdditionalInfo' }
-    & Pick<AdditionalInfo, 'message2'>
-  )> }
-);
+type UserResult1_Error3_Fragment = { info: Maybe<Pick<AdditionalInfo, 'message2'>> };
 
 export type UserResult1Fragment =
   | UserResult1_User_Fragment
-  | UserResult1_Error2_Fragment
   | UserResult1_Error3_Fragment
 ;
 
-type UserResult_User_Fragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id'>
-);
+type UserResult_User_Fragment = Pick<User, 'id'>;
 
-type UserResult_Error2_Fragment = (
-  { __typename?: 'Error2' }
-  & Pick<Error2, 'message'>
-);
-
-type UserResult_Error3_Fragment = { __typename?: 'Error3' };
+type UserResult_Error2_Fragment = Pick<Error2, 'message'>;
 
 export type UserResultFragment =
   | UserResult_User_Fragment
   | UserResult_Error2_Fragment
-  | UserResult_Error3_Fragment
 ;
 "
 `;
@@ -489,27 +367,14 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = (
-  { __typename?: 'Query' }
-  & { user:
+export type UserQueryQuery = { user:
+    | Pick<User, 'id' | 'login'>
+    | Pick<Error2, 'message'>
     | (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'login'>
+      Pick<Error3, 'message'>
+      & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
     )
-    | (
-      { __typename?: 'Error2' }
-      & Pick<Error2, 'message'>
-    )
-    | (
-      { __typename?: 'Error3' }
-      & Pick<Error3, 'message'>
-      & { info: Maybe<(
-        { __typename?: 'AdditionalInfo' }
-        & Pick<AdditionalInfo, 'message2' | 'message'>
-      )> }
-    )
-   }
-);
+   };
 
         function t(q: UserQueryQuery) {
             if (q.user) {
@@ -534,33 +399,20 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = (
-  { __typename?: 'Query' }
-  & { user:
-    | (
-      { __typename?: 'User' }
-      & Pick<
+export type UserQueryQuery = { user:
+    | Pick<
         User,
         | 'id'
         | 'test2'
         | 'login'
         | 'test'
       >
-    )
+    | Pick<Error2, 'message'>
     | (
-      { __typename?: 'Error2' }
-      & Pick<Error2, 'message'>
+      Pick<Error3, 'message'>
+      & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
     )
-    | (
-      { __typename?: 'Error3' }
-      & Pick<Error3, 'message'>
-      & { info: Maybe<(
-        { __typename?: 'AdditionalInfo' }
-        & Pick<AdditionalInfo, 'message2' | 'message'>
-      )> }
-    )
-   }
-);
+   };
 
         function t(q: UserQueryQuery) {
             if (q.user) {

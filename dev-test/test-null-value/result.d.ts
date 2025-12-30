@@ -6,10 +6,6 @@ export type CartLineFragment = { id: string; quantity: number };
 
 export type TestQueryVariables = Exact<{ [key: string]: never }>;
 
-<<<<<<< HEAD
 export type TestQuery = {
-  cart?: { lines: { nodes: Array<{ id: string; quantity: number }> } } | null;
+  cart: { lines: { nodes: Array<{ id: string; quantity: number }> } } | null;
 };
-=======
-export type TestQuery = { cart: { lines: { nodes: Array<{ id: string; quantity: number }> } } | null };
->>>>>>> caa1c98e0 ([typescript-operations] No optional Result fields, unless deferred or conditional (#10548))

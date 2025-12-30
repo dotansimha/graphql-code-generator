@@ -8,16 +8,9 @@ export type Incremental<T> =
 export type AllPeopleQueryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllPeopleQueryQuery = {
-  __typename?: 'Root';
   allPeople: {
-    __typename?: 'PeopleConnection';
     edges: Array<{
-      __typename?: 'PeopleEdge';
-      node: {
-        __typename?: 'Person';
-        name: string | null;
-        homeworld: { __typename?: 'Planet'; name: string | null } | null;
-      } | null;
+      node: { name: string | null; homeworld: { name: string | null } | null } | null;
     } | null> | null;
   } | null;
 };
@@ -27,16 +20,9 @@ export type AllPeopleWithVariablesQueryQueryVariables = Exact<{
 }>;
 
 export type AllPeopleWithVariablesQueryQuery = {
-  __typename?: 'Root';
   allPeople: {
-    __typename?: 'PeopleConnection';
     edges: Array<{
-      __typename?: 'PeopleEdge';
-      node: {
-        __typename?: 'Person';
-        name: string | null;
-        homeworld: { __typename?: 'Planet'; name: string | null } | null;
-      } | null;
+      node: { name: string | null; homeworld: { name: string | null } | null } | null;
     } | null> | null;
   } | null;
 };
