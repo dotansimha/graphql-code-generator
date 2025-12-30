@@ -368,14 +368,14 @@ export * from "./gql";`);
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type AQuery = { __typename?: 'Query', a: string | null };
+      export type AQuery = { a: string | null };
 
       export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type BQuery = { __typename?: 'Query', b: string | null };
+      export type BQuery = { b: string | null };
 
-      export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+      export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
       export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -549,12 +549,12 @@ export * from "./gql";`);
       export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type MeQuery = { __typename?: 'Query', unmasked: { __typename?: 'User', id: string, name: string, age: number } | null, masked: (
-          { __typename?: 'User', id: string }
+      export type MeQuery = { unmasked: { id: string, name: string, age: number } | null, masked: (
+          { id: string }
           & { ' $fragmentRefs'?: { 'User_MeFragment': User_MeFragment } }
         ) | null };
 
-      export type User_MeFragment = { __typename?: 'User', name: string, age: number } & { ' $fragmentName'?: 'User_MeFragment' };
+      export type User_MeFragment = { name: string, age: number } & { ' $fragmentName'?: 'User_MeFragment' };
 
       export const User_MeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<User_MeFragment, unknown>;
       export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"unmasked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"unmask"}}]}]}},{"kind":"Field","alias":{"kind":"Name","value":"masked"},"name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"User_Me"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User_Me"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;"
@@ -640,7 +640,7 @@ export * from "./gql";`);
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type AQuery = { __typename?: 'Query', a: string | null };
+      export type AQuery = { a: string | null };
 
 
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
@@ -1327,12 +1327,12 @@ export * from "./gql.js";`);
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type BbbQuery = { __typename?: 'Query', b: string | null };
+      export type BbbQuery = { b: string | null };
 
       export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type AaaQuery = { __typename?: 'Query', a: string | null };
+      export type AaaQuery = { a: string | null };
 
 
       export const BbbDocument = {"__meta__":{"cacheKeys":["bbb"]},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"bbb"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BbbQuery, BbbQueryVariables>;
@@ -1384,14 +1384,14 @@ export * from "./gql.js";`);
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a: string | null };
+        export type AQuery = { a: string | null };
 
         export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', b: string | null };
+        export type BQuery = { b: string | null };
 
-        export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+        export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -1444,14 +1444,14 @@ export * from "./gql.js";`);
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a: string | null };
+        export type AQuery = { a: string | null };
 
         export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', b: string | null };
+        export type BQuery = { b: string | null };
 
-        export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+        export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"}} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -1504,14 +1504,14 @@ export * from "./gql.js";`);
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a: string | null };
+        export type AQuery = { a: string | null };
 
         export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', b: string | null };
+        export type BQuery = { b: string | null };
 
-        export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+        export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"custom_property_name":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -1566,12 +1566,12 @@ export * from "./gql.js";`);
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AaaQuery = { __typename?: 'Query', a: string | null };
+        export type AaaQuery = { a: string | null };
 
         export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BbbQuery = { __typename?: 'Query', b: string | null };
+        export type BbbQuery = { b: string | null };
 
 
         export const AaaDocument = {"__meta__":{"cacheKeys":["aaa"],"hash":"682f60dea844320c05fcb4fb6c4118015902c9a8"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"aaa"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AaaQuery, AaaQueryVariables>;
@@ -1624,14 +1624,14 @@ export * from "./gql.js";`);
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a: string | null };
+        export type AQuery = { a: string | null };
 
         export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', b: string | null };
+        export type BQuery = { b: string | null };
 
-        export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+        export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"hash":"7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -1688,14 +1688,14 @@ export * from "./gql.js";`);
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a: string | null };
+        export type AQuery = { a: string | null };
 
         export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', b: string | null };
+        export type BQuery = { b: string | null };
 
-        export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+        export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"hash":"queryA{a}"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -1753,14 +1753,14 @@ export * from "./gql.js";`);
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a: string | null };
+        export type AQuery = { a: string | null };
 
         export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', b: string | null };
+        export type BQuery = { b: string | null };
 
-        export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+        export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"hash":"7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -1818,14 +1818,14 @@ export * from "./gql.js";`);
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type AQuery = { __typename?: 'Query', a: string | null };
+        export type AQuery = { a: string | null };
 
         export type BQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type BQuery = { __typename?: 'Query', b: string | null };
+        export type BQuery = { b: string | null };
 
-        export type CFragment = { __typename?: 'Query', c: string | null } & { ' $fragmentName'?: 'CFragment' };
+        export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
         export const ADocument = {"__meta__":{"hash":"a82d8b22f2bf805563146dc8ad80b2eb054845441539e3a5a69d1f534bb5bc0bd4f9470053b9f61b6aa1966cfc2f67406258102e5ee3a356a5d171506f3ede50"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
@@ -1887,26 +1887,104 @@ export * from "./gql.js";`);
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type AbFragment = (
-        { __typename?: 'A', b: string }
+        { b: string }
         & { ' $fragmentRefs'?: { 'AcFragment': AcFragment;'AaFragment': AaFragment } }
       ) & { ' $fragmentName'?: 'AbFragment' };
 
-      export type AaFragment = { __typename?: 'A', b: string } & { ' $fragmentName'?: 'AaFragment' };
+      export type AaFragment = { b: string } & { ' $fragmentName'?: 'AaFragment' };
 
       export type OiQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type OiQuery = { __typename?: 'Query', a: (
-          { __typename?: 'A' }
-          & { ' $fragmentRefs'?: { 'AbFragment': AbFragment;'AcFragment': AcFragment } }
-        ) };
+      export type OiQuery = { a: { ' $fragmentRefs'?: { 'AbFragment': AbFragment;'AcFragment': AcFragment } } };
 
-      export type AcFragment = { __typename?: 'A', b: string } & { ' $fragmentName'?: 'AcFragment' };
+      export type AcFragment = { b: string } & { ' $fragmentName'?: 'AcFragment' };
 
       export const AcFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AcFragment, unknown>;
       export const AaFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AaFragment, unknown>;
       export const AbFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AbFragment, unknown>;
       export const OiDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OI"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AB"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}}]} as unknown as DocumentNode<OiQuery, OiQueryVariables>;"
+    `);
+  });
+
+  it('correctly handle fragment references with explicit __typename', async () => {
+    const { result } = await executeCodegen({
+      schema: /* GraphQL */ `
+        type Query {
+          a: A!
+        }
+
+        type A {
+          b: String!
+          a: A!
+        }
+      `,
+      documents: [
+        /* GraphQL */ `
+          fragment AC on A {
+            __typename
+            b
+          }
+        `,
+        /* GraphQL */ `
+          fragment AA on A {
+            __typename
+            b
+          }
+        `,
+        /* GraphQL */ `
+          fragment AB on A {
+            __typename
+            b
+            ...AC
+            ...AA
+          }
+        `,
+        /* GraphQL */ `
+          query OI {
+            __typename
+            a {
+              __typename
+              ...AB
+              ...AC
+            }
+          }
+        `,
+      ],
+      generates: {
+        'out1/': {
+          preset,
+          plugins: [],
+        },
+      },
+    });
+    const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(graphqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type AcFragment = { __typename: 'A', b: string } & { ' $fragmentName'?: 'AcFragment' };
+
+      export type AaFragment = { __typename: 'A', b: string } & { ' $fragmentName'?: 'AaFragment' };
+
+      export type AbFragment = (
+        { __typename: 'A', b: string }
+        & { ' $fragmentRefs'?: { 'AcFragment': AcFragment;'AaFragment': AaFragment } }
+      ) & { ' $fragmentName'?: 'AbFragment' };
+
+      export type OiQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type OiQuery = { __typename: 'Query', a: (
+          { __typename: 'A' }
+          & { ' $fragmentRefs'?: { 'AbFragment': AbFragment;'AcFragment': AcFragment } }
+        ) };
+
+      export const AcFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AcFragment, unknown>;
+      export const AaFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AaFragment, unknown>;
+      export const AbFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<AbFragment, unknown>;
+      export const OiDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OI"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AB"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AC"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AA"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AB"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"A"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"b"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AC"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"AA"}}]}}]} as unknown as DocumentNode<OiQuery, OiQueryVariables>;"
     `);
   });
 
@@ -1943,27 +2021,24 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo: { __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null };
+        export type FooQuery = { foo:
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos: Array<{ __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null> | null };
+        export type FoosQuery = { foos: Array<
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null> | null };
 
-        export type FooFragment = { __typename?: 'Foo', value: string | null } & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { value: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooFragment = { __typename?: 'Foo', id: string | null } & ({ __typename?: 'Foo', value: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { id: string | null } & ({ value: string | null } | { value?: never }) & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooNestedFragment = { __typename?: 'Foo', id: string | null } & (
-          { __typename?: 'Foo' }
-          & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-        ) & { ' $fragmentName'?: 'FooNestedFragment' };
+        export type FooNestedFragment = { id: string | null } & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } } & { ' $fragmentName'?: 'FooNestedFragment' };
 
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
@@ -2008,27 +2083,24 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo: { __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null };
+        export type FooQuery = { foo:
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos: Array<{ __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null> | null };
+        export type FoosQuery = { foos: Array<
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null> | null };
 
-        export type FooFragment = { __typename?: 'Foo', value: string | null } & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { value: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooFragment = { __typename?: 'Foo', id: string | null } & ({ __typename?: 'Foo', value: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { id: string | null } & ({ value: string | null } | { value?: never }) & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooNestedFragment = { __typename?: 'Foo', id: string | null } & (
-          { __typename?: 'Foo' }
-          & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-        ) & { ' $fragmentName'?: 'FooNestedFragment' };
+        export type FooNestedFragment = { id: string | null } & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } } & { ' $fragmentName'?: 'FooNestedFragment' };
 
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
@@ -2073,27 +2145,24 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo: { __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null };
+        export type FooQuery = { foo:
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos: Array<{ __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null> | null };
+        export type FoosQuery = { foos: Array<
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null> | null };
 
-        export type FooFragment = { __typename?: 'Foo', value: string | null } & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { value: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooFragment = { __typename?: 'Foo', id: string | null } & ({ __typename?: 'Foo', value: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { id: string | null } & ({ value: string | null } | { value?: never }) & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooNestedFragment = { __typename?: 'Foo', id: string | null } & (
-          { __typename?: 'Foo' }
-          & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-        ) & { ' $fragmentName'?: 'FooNestedFragment' };
+        export type FooNestedFragment = { id: string | null } & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } } & { ' $fragmentName'?: 'FooNestedFragment' };
 
         export class TypedDocumentString<TResult, TVariables>
           extends String
@@ -2211,27 +2280,24 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo: { __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null };
+        export type FooQuery = { foo:
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos: Array<{ __typename?: 'Foo' } & (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-          ) | null> | null };
+        export type FoosQuery = { foos: Array<
+            | { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
+            | Record<PropertyKey, never>
+           | null> | null };
 
-        export type FooFragment = { __typename?: 'Foo', value: string | null } & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { value: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooFragment = { __typename?: 'Foo', id: string | null } & ({ __typename?: 'Foo', value: string | null } | { __typename?: 'Foo', value?: never }) & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { id: string | null } & ({ value: string | null } | { value?: never }) & { ' $fragmentName'?: 'FooFragment' };
 
-        export type FooNestedFragment = { __typename?: 'Foo', id: string | null } & (
-          { __typename?: 'Foo' }
-          & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } }
-        ) & { ' $fragmentName'?: 'FooNestedFragment' };
+        export type FooNestedFragment = { id: string | null } & { ' $fragmentRefs'?: { 'FooFragment': Incremental<FooFragment> } } & { ' $fragmentName'?: 'FooNestedFragment' };
 
         export class TypedDocumentString<TResult, TVariables>
           extends String
@@ -2347,20 +2413,14 @@ export * from "./gql.js";`);
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FooQuery = { __typename?: 'Query', foo: (
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': FooFragment } }
-          ) | null };
+        export type FooQuery = { foo: { ' $fragmentRefs'?: { 'FooFragment': FooFragment } } | null };
 
         export type FoosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type FoosQuery = { __typename?: 'Query', foos: Array<(
-            { __typename?: 'Foo' }
-            & { ' $fragmentRefs'?: { 'FooFragment': FooFragment } }
-          ) | null> | null };
+        export type FoosQuery = { foos: Array<{ ' $fragmentRefs'?: { 'FooFragment': FooFragment } } | null> | null };
 
-        export type FooFragment = { __typename?: 'Foo', value: string | null } & { ' $fragmentName'?: 'FooFragment' };
+        export type FooFragment = { value: string | null } & { ' $fragmentName'?: 'FooFragment' };
 
         export class TypedDocumentString<TResult, TVariables>
           extends String
@@ -2619,7 +2679,7 @@ export * from "./gql.js";`);
         export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type OnRegionCreatedSubscription = { __typename?: 'Subscription', onRegionCreated: { __typename: 'Region', regionId: number, regionDescription: string } };
+        export type OnRegionCreatedSubscription = { onRegionCreated: { __typename: 'Region', regionId: number, regionDescription: string } };
 
         export class TypedDocumentString<TResult, TVariables>
           extends String
@@ -2696,7 +2756,7 @@ export * from "./gql.js";`);
       export type Test_UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Test_UserQuery = { readonly __typename?: 'Query', readonly user: { readonly __typename?: 'User', readonly id: string, readonly name: string } | null };
+      export type Test_UserQuery = { readonly user: { readonly id: string, readonly name: string } | null };
 
 
       export const Test_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Test_User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"StringValue","value":"user-001","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<Test_UserQuery, Test_UserQueryVariables>;"
