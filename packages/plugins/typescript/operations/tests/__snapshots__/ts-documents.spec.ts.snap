@@ -56,7 +56,7 @@ export type ElementMetadataFragment =
 "
 `;
 
-exports[`TypeScript Operations Plugin > Issues > #2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset 1`] = `
+exports[`TypeScript Operations Plugin > Issues > #2916 - Missing import prefix with near-operation-file preset 1`] = `
 "export type Department =
   | 'Direction'
   | 'Development';
@@ -110,7 +110,7 @@ function test(q: QQuery) {
     }"
 `;
 
-exports[`TypeScript Operations Plugin > Issues > #6874 - generates types when parent type differs from spread fragment member types and preResolveTypes=true 1`] = `
+exports[`TypeScript Operations Plugin > Issues > #6874 - generates types when parent type differs from spread fragment member types 1`] = `
 "export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -145,9 +145,9 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = { user: Maybe<Pick<User, 'id' | 'name'>> };
+export type UserQueryQuery = { user: { id: string, name: string | null } | null };
 
-export type UserFragment = Pick<User, 'id' | 'name'>;
+export type UserFragment = { id: string, name: string | null };
 "
 `;
 
@@ -155,7 +155,7 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = { user: Maybe<Pick<User, 'id' | 'name'>> };
+export type UserQueryQuery = { user: { id: string, name: string | null } | null };
 "
 `;
 
@@ -163,20 +163,20 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = { user: Maybe<Pick<User, 'id' | 'name'>> };
+export type UserQueryQuery = { user: { id: string, name: string | null } | null };
 
-export type UserFragment = Pick<User, 'id' | 'name'>;
+export type UserFragment = { id: string, name: string | null };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct __typename when using fragment spread over union 1`] = `
-"export type UserFragmentFragment = Pick<User, 'id'>;
+"export type UserFragmentFragment = { id: string };
 
 export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AaaQuery = { user:
-    | Pick<User, 'id'>
+    | { id: string }
     | Record<PropertyKey, never>
    };
 "
@@ -186,33 +186,21 @@ exports[`TypeScript Operations Plugin > Selection Set > Should generate the corr
 "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Unnamed_1_Query = { b: Maybe<
-    | Pick<A, 'id' | 'x'>
+export type Unnamed_1_Query = { b:
+    | { id: string, x: number }
     | Record<PropertyKey, never>
-  > };
+   | null };
 
-export type AFragment = Pick<A, 'id'>;
+export type AFragment = { id: string };
 
-export type BFragment = Pick<A, 'x'>;
+export type BFragment = { x: number };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 1`] = `
-"type NetRoute_Ipv4Route_Fragment = (
-  { __typename: 'IPV4Route' }
-  & {
-    ipv4Address: Ipv4Route['address'],
-    ipv4Gateway: Ipv4Route['gateway'],
-  }
-);
+"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null };
 
-type NetRoute_Ipv6Route_Fragment = (
-  { __typename: 'IPV6Route' }
-  & {
-    ipv6Address: Ipv6Route['address'],
-    ipv6Gateway: Ipv6Route['gateway'],
-  }
-);
+type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null };
 
 export type NetRouteFragment =
   | NetRoute_Ipv4Route_Fragment
@@ -223,81 +211,42 @@ export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = { routes: Array<
-    | (
-      { __typename: 'IPV4Route' }
-      & {
-        ipv4Address: Ipv4Route['address'],
-        ipv4Gateway: Ipv4Route['gateway'],
-      }
-    )
-    | (
-      { __typename: 'IPV6Route' }
-      & {
-        ipv6Address: Ipv6Route['address'],
-        ipv6Gateway: Ipv6Route['gateway'],
-      }
-    )
+    | { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null }
+    | { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null }
   > };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 2`] = `
-"type NetRoute_Ipv4Route_Fragment = (
-  { __typename: 'IPV4Route' }
-  & {
-    ipv4Address: Ipv4Route['address'],
-    ipv4Gateway: Ipv4Route['gateway'],
-  }
-);
+"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null };
 
-type NetRoute_Ipv6Route_Fragment = (
-  { __typename: 'IPV6Route' }
-  & {
-    ipv6Address: Ipv6Route['address'],
-    ipv6Gateway: Ipv6Route['gateway'],
-  }
-);
+type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null };
 
 export type NetRouteFragment =
   | NetRoute_Ipv4Route_Fragment
   | NetRoute_Ipv6Route_Fragment
 ;
 
-export type TestFragment = {
-    ipv6Address: Ipv6Route['address'],
-    ipv6Gateway: Ipv6Route['gateway'],
-  };
+export type TestFragment = { ipv6Address: any | null, ipv6Gateway: any | null };
 
 export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = { routes: Array<
-    | (
-      { __typename: 'IPV4Route' }
-      & {
-        ipv4Address: Ipv4Route['address'],
-        ipv4Gateway: Ipv4Route['gateway'],
-      }
-    )
-    | (
-      { __typename: 'IPV6Route' }
-      & {
-        ipv6Address: Ipv6Route['address'],
-        ipv6Gateway: Ipv6Route['gateway'],
-      }
-    )
+    | { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null }
+    | { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null }
   > };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid fragments intersection on different types (with usage) #2498 1`] = `
-"export type TomFragment = Pick<Tom, 'id' | 'foo'>;
+"export type TomFragment = { id: string, foo: string };
 
-export type JerryFragment = Pick<Jerry, 'id' | 'bar'>;
+export type JerryFragment = { id: string, bar: string };
 
-type User_Tom_Fragment = Pick<Tom, 'id' | 'foo'>;
+type User_Tom_Fragment = { id: string, foo: string };
 
-type User_Jerry_Fragment = Pick<Jerry, 'id' | 'bar'>;
+type User_Jerry_Fragment = { id: string, bar: string };
 
 export type UserFragment =
   | User_Tom_Fragment
@@ -307,10 +256,10 @@ export type UserFragment =
 export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQueryQuery = { user: Maybe<
-    | Pick<Tom, 'id' | 'foo'>
-    | Pick<Jerry, 'id' | 'bar'>
-  > };
+export type UserQueryQuery = { user:
+    | { id: string, foo: string }
+    | { id: string, bar: string }
+   | null };
 "
 `;
 
@@ -318,13 +267,10 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > #4216 - handle frag
 "export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SearchPopularQuery = { search: Maybe<Array<
-    | Pick<Dimension, 'id'>
-    | (
-      Pick<DimValue, 'value'>
-      & { dimension: Maybe<Pick<Dimension, 'id'>> }
-    )
-  >> };
+export type SearchPopularQuery = { search: Array<
+    | { id: string | null }
+    | { value: string, dimension: { id: string | null } | null }
+  > | null };
 "
 `;
 
@@ -333,28 +279,25 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union
 
 
 export type UserQueryQuery = { user:
-    | Pick<User, 'login' | 'id'>
-    | Pick<Error2, 'message'>
-    | (
-      Pick<Error3, 'message'>
-      & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
-    )
+    | { login: string, id: string }
+    | { message: string }
+    | { message: string, info: { message2: string, message: string } | null }
    };
 
-export type AdditionalInfoFragment = Pick<AdditionalInfo, 'message'>;
+export type AdditionalInfoFragment = { message: string };
 
-type UserResult1_User_Fragment = Pick<User, 'id'>;
+type UserResult1_User_Fragment = { id: string };
 
-type UserResult1_Error3_Fragment = { info: Maybe<Pick<AdditionalInfo, 'message2'>> };
+type UserResult1_Error3_Fragment = { info: { message2: string } | null };
 
 export type UserResult1Fragment =
   | UserResult1_User_Fragment
   | UserResult1_Error3_Fragment
 ;
 
-type UserResult_User_Fragment = Pick<User, 'id'>;
+type UserResult_User_Fragment = { id: string };
 
-type UserResult_Error2_Fragment = Pick<Error2, 'message'>;
+type UserResult_Error2_Fragment = { message: string };
 
 export type UserResultFragment =
   | UserResult_User_Fragment
@@ -368,12 +311,9 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union
 
 
 export type UserQueryQuery = { user:
-    | Pick<User, 'id' | 'login'>
-    | Pick<Error2, 'message'>
-    | (
-      Pick<Error3, 'message'>
-      & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
-    )
+    | { id: string, login: string }
+    | { message: string }
+    | { message: string, info: { message2: string, message: string } | null }
    };
 
         function t(q: UserQueryQuery) {
@@ -400,18 +340,9 @@ exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union
 
 
 export type UserQueryQuery = { user:
-    | Pick<
-        User,
-        | 'id'
-        | 'test2'
-        | 'login'
-        | 'test'
-      >
-    | Pick<Error2, 'message'>
-    | (
-      Pick<Error3, 'message'>
-      & { info: Maybe<Pick<AdditionalInfo, 'message2' | 'message'>> }
-    )
+    | { id: string, test2: string | null, login: string, test: string | null }
+    | { message: string }
+    | { message: string, info: { message2: string, message: string } | null }
    };
 
         function t(q: UserQueryQuery) {
