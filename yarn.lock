@@ -4521,10 +4521,10 @@
   resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.10.8.tgz#975446a667755222f62884c19e5c3c66d959b8b4"
   integrity sha512-PBu00mtt95jbKFi6Llk9aik8bnR3tR/oQP1o3TSi+iG//+Q2RTIzCEgKkHG8BB86kxMNW6O8wku+Lmi+QFR6jA==
 
-"@theguild/components@7.6.3":
-  version "7.6.3"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.6.3.tgz#f27db8563a3e136ded3a59b7396926e934b95b17"
-  integrity sha512-feNK4AM0L+yaBjctoAMeuERcwc2+dJRSrXalu9C1EhAOrM1gEd7mRof+UtyNDTqYbbFm7Xz/EZz83aljduA+YA==
+"@theguild/components@7.6.5":
+  version "7.6.5"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-7.6.5.tgz#bd882864a0d4aadf7299e6c5966e665511473b5b"
+  integrity sha512-0hHQs/b9PblLNBeyFRTQUhh2/73b8gza1hTTf+p36CTndEqBYYy3LHAZK9Urn5xYJz9RqHaHPqhzs9MpoSakAw==
   dependencies:
     "@giscus/react" "3.0.0"
     "@next/bundle-analyzer" "15.1.0"
@@ -4585,10 +4585,10 @@
     npm-to-yarn "^3.0.0"
     unist-util-visit "^5.0.0"
 
-"@theguild/tailwind-config@0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@theguild/tailwind-config/-/tailwind-config-0.6.3.tgz#7c1ad4ef0795313a6e21cf64bb7502dc7ce6507f"
-  integrity sha512-kmHHBnGRPiFtyBNuWCuKdC+kymh16OuFTD+R/Yb3yo+mNFJlOzGYdcu2ay6g1M+9+OlwSffifD2Zo97AZUwaSg==
+"@theguild/tailwind-config@0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@theguild/tailwind-config/-/tailwind-config-0.6.4.tgz#2f5082e866de631f7bb02499c1acd50fd404f6d2"
+  integrity sha512-7zscZk+L9x0Z8tMQGtVBC+1usAJ6Nz7hJYCmKzwXyMA4paXr/ghCeMArF9hkIkBp/GH+gKpR+ERaHwmqmvqfVg==
   dependencies:
     "@tailwindcss/container-queries" "^0.1.1"
 
