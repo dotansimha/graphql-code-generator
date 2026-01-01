@@ -6194,15 +6194,19 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: '', document: fragment }],
-        { inlineFragmentTypes: 'mask' },
-        { outputFile: 'graphql.ts' }
-      );
+      const content = mergeOutputs([
+        await plugin(
+          schema,
+          [{ location: '', document: fragment }],
+          { inlineFragmentTypes: 'mask' },
+          { outputFile: 'graphql.ts' }
+        ),
+      ]);
 
       expect(content).toMatchInlineSnapshot(`
-        "export type WidgetFragmentFragment = { widgetCount: number, widgetPreference: string } & { ' $fragmentName'?: 'WidgetFragmentFragment' };
+        "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type WidgetFragmentFragment = { widgetCount: number, widgetPreference: string } & { ' $fragmentName'?: 'WidgetFragmentFragment' };
 
         export type FoodFragmentFragment = { favoriteFood: string, leastFavoriteFood: string } & { ' $fragmentName'?: 'FoodFragmentFragment' };
 
