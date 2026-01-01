@@ -46,7 +46,6 @@ import {
 } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject, SCALARS } from './ts-operation-variables-to-object.js';
-import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;
@@ -88,7 +87,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         avoidOptionals: normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false)),
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
-        preResolveTypes: getConfigValue(config.preResolveTypes, true),
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
         allowUndefinedQueryVariables: getConfigValue(config.allowUndefinedQueryVariables, false),
         enumType: getConfigValue(config.enumType, 'string-literal'),
@@ -105,21 +103,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     this._outputPath = outputPath;
     autoBind(this);
 
-    const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const defaultMaybeValue = 'T | null';
     const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
-
-    const wrapOptional = (type: string) => {
-      if (preResolveTypes === true) {
-        return maybeValue.replace('T', type);
-      }
-      const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
-      return `${prefix}Maybe<${type}>`;
-    };
-    const wrapArray = (type: string) => {
-      const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
-      return `${listModifier}<${type}>`;
-    };
 
     const allFragments: LoadedFragment[] = [
       ...(documentNode.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
@@ -144,14 +129,18 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       formatNamedField: ({ name, isOptional }) => {
         return (this.config.immutableTypes ? `readonly ${name}` : name) + (isOptional ? '?' : '');
       },
-      wrapTypeWithModifiers(baseType, type) {
-        return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
+      wrapTypeWithModifiers: (baseType, type) => {
+        return wrapTypeWithModifiers(baseType, type, {
+          wrapOptional: type => maybeValue.replace('T', type),
+          wrapArray: type => {
+            const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
+            return `${listModifier}<${type}>`;
+          },
+        });
       },
       printFieldsOnNewLines: this.config.printFieldsOnNewLines,
     };
-    const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
-      processorConfig
-    );
+    const processor = new PreResolveTypesProcessor(processorConfig);
     this.setSelectionSetHandler(
       new SelectionSetToObject(
         processor,
