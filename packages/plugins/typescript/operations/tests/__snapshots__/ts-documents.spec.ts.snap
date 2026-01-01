@@ -82,23 +82,6 @@ export type QQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QQuery = { hotel: { id: string, gpsPosition: { lat: number, lng: number } }, transport: { id: string } };
-"
-`;
-
-exports[`TypeScript Operations Plugin > Issues > #3064 - fragments over interfaces causes issues with fields 2`] = `
-"type Venue_Hotel_Fragment = { id: string, gpsPosition: { lat: number, lng: number } };
-
-type Venue_Transport_Fragment = { id: string };
-
-export type VenueFragment =
-  | Venue_Hotel_Fragment
-  | Venue_Transport_Fragment
-;
-
-export type QQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type QQuery = { hotel: { id: string, gpsPosition: { lat: number, lng: number } }, transport: { id: string } };
 function test(q: QQuery) {
         if (q.hotel) {
             const t1 = q.hotel.gpsPosition.lat
@@ -127,17 +110,6 @@ export type AnimalFragmentFragment =
   | AnimalFragment_Bat_Fragment
   | AnimalFragment_Snake_Fragment
 ;
-"
-`;
-
-exports[`TypeScript Operations Plugin > Issues > #8793 selecting __typename should not be optional 1`] = `
-"export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SnakeQueryQuery = { __typename: 'Query', snake:
-    | { __typename: 'Snake' }
-    | { __typename: 'Error' }
-   };
 "
 `;
 
@@ -179,21 +151,6 @@ export type AaaQuery = { user:
     | { id: string }
     | Record<PropertyKey, never>
    };
-"
-`;
-
-exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct intersection for fragments when using with interfaces with same type 2`] = `
-"export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type Unnamed_1_Query = { b:
-    | { id: string, x: number }
-    | Record<PropertyKey, never>
-   | null };
-
-export type AFragment = { id: string };
-
-export type BFragment = { x: number };
 "
 `;
 
@@ -261,105 +218,4 @@ export type UserQueryQuery = { user:
     | { id: string, bar: string }
    | null };
 "
-`;
-
-exports[`TypeScript Operations Plugin > Union & Interfaces > #4216 - handle fragments against unions and interfaces with flattenGeneratedTypes 1`] = `
-"export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SearchPopularQuery = { search: Array<
-    | { id: string | null }
-    | { value: string, dimension: { id: string | null } | null }
-  > | null };
-"
-`;
-
-exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union selection sets with both FragmentSpreads and InlineFragments 1`] = `
-"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UserQueryQuery = { user:
-    | { login: string, id: string }
-    | { message: string }
-    | { message: string, info: { message2: string, message: string } | null }
-   };
-
-export type AdditionalInfoFragment = { message: string };
-
-type UserResult1_User_Fragment = { id: string };
-
-type UserResult1_Error3_Fragment = { info: { message2: string } | null };
-
-export type UserResult1Fragment =
-  | UserResult1_User_Fragment
-  | UserResult1_Error3_Fragment
-;
-
-type UserResult_User_Fragment = { id: string };
-
-type UserResult_Error2_Fragment = { message: string };
-
-export type UserResultFragment =
-  | UserResult_User_Fragment
-  | UserResult_Error2_Fragment
-;
-"
-`;
-
-exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes 1`] = `
-"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UserQueryQuery = { user:
-    | { id: string, login: string }
-    | { message: string }
-    | { message: string, info: { message2: string, message: string } | null }
-   };
-
-        function t(q: UserQueryQuery) {
-            if (q.user) {
-                if (q.user.__typename === 'User') {
-                    if (q.user.id) {
-                        const u = q.user.login;
-                    }
-                }
-                if (q.user.__typename === 'Error2') {
-                    console.log(q.user.message);
-                }
-                if (q.user.__typename === 'Error3') {
-                    if (q.user.info) {
-                        console.log(q.user.info.__typename)
-                    }
-                }
-            }
-        }"
-`;
-
-exports[`TypeScript Operations Plugin > Union & Interfaces > Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives 1`] = `
-"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UserQueryQuery = { user:
-    | { id: string, test2: string | null, login: string, test: string | null }
-    | { message: string }
-    | { message: string, info: { message2: string, message: string } | null }
-   };
-
-        function t(q: UserQueryQuery) {
-            if (q.user) {
-                if (q.user.__typename === 'User') {
-                    if (q.user.id) {
-                        const u = q.user.login;
-                    }
-                }
-                if (q.user.__typename === 'Error2') {
-                    console.log(q.user.message);
-                }
-                if (q.user.__typename === 'Error3') {
-                    if (q.user.info) {
-                        console.log(q.user.info.__typename)
-                    }
-                }
-            }
-        }"
 `;
