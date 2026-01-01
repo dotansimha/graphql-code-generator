@@ -70,7 +70,6 @@ describe('extractAllFieldsToTypes: true', () => {
 
   it('should extract types from queries', async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       printFieldsOnNewLines: true,
       nonOptionalTypename: true,
@@ -389,7 +388,6 @@ describe('extractAllFieldsToTypes: true', () => {
 
   it('should extract types from multiple fragments', async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -558,7 +556,6 @@ describe('extractAllFieldsToTypes: true', () => {
 
   it('should extract types from multiple fragments (mergeFragmentTypes: true)', async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -733,7 +730,6 @@ describe('extractAllFieldsToTypes: true', () => {
 
   it("should extract types from multiple fragments (inlineFragmentTypes: 'combine')", async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -977,7 +973,6 @@ describe('extractAllFieldsToTypes: true', () => {
 
   it("should extract types from multiple fragments (inlineFragmentTypes: 'mask')", async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -1217,281 +1212,6 @@ describe('extractAllFieldsToTypes: true', () => {
     await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
   });
 
-  it('should extract types from multiple fragments (preResolveTypes: false)', async () => {
-    const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: false,
-      extractAllFieldsToTypes: true,
-      nonOptionalTypename: true,
-      dedupeOperationSuffix: true,
-    };
-    const { content } = await plugin(
-      complexTestSchemaWithUnionsAndInterfaces,
-      [{ location: 'test-file.ts', document: fragmentsOnComplexSchema }],
-      config,
-      { outputFile: '' }
-    );
-    expect(content).toMatchInlineSnapshot(`
-      "export type CallType =
-        | 'OUTGOING'
-        | 'INCOMING'
-        | 'VOICEMAIL'
-        | 'UNKNOWN';
-
-      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
-        { __typename: 'ArchivedArticle' }
-        & Pick<
-          ArchivedArticle,
-          | 'id'
-          | 'htmlUrl'
-          | 'title'
-          | 'url'
-        >
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom =
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom
-      ;
-
-      export type ConversationBotSolutionFragment = (
-        { __typename: 'BotSolution' }
-        & Pick<BotSolution, 'id' | 'timestamp'>
-        & {
-          article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle,
-          originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom,
-        }
-      );
-
-      export type ConversationGenericCallSummaryFragment = (
-        { __typename: 'TalkPublicCallSummary' }
-        & Pick<TalkPublicCallSummary, 'id' | 'summary'>
-      );
-
-      export type ConversationTalkInteractionFragment = (
-        { __typename: 'TalkInteraction' }
-        & Pick<TalkInteraction, 'channel' | 'type'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_EmailInteraction = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_CustomChannelInteraction = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NativeMessagingInteraction = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WhatsAppInteraction = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WeChatInteraction = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom =
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_EmailInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_CustomChannelInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_TalkInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_NativeMessagingInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_WhatsAppInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_WeChatInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_NotImplementedOriginatedFrom
-      ;
-
-      type ConversationConversationEvent_BrokenConversationEvent_Fragment = (
-        { __typename: 'BrokenConversationEvent' }
-        & Pick<BrokenConversationEvent, 'id' | 'timestamp'>
-        & { originatedFrom: ConversationConversationEventFragment_ConversationEvent_originatedFrom }
-      );
-
-      type ConversationConversationEvent_BotSolution_Fragment = (
-        { __typename: 'BotSolution' }
-        & Pick<BotSolution, 'id' | 'timestamp'>
-        & { originatedFrom: ConversationConversationEventFragment_ConversationEvent_originatedFrom }
-      );
-
-      type ConversationConversationEvent_TalkPublicCallSummary_Fragment = (
-        { __typename: 'TalkPublicCallSummary' }
-        & Pick<TalkPublicCallSummary, 'id' | 'timestamp'>
-        & { originatedFrom: ConversationConversationEventFragment_ConversationEvent_originatedFrom }
-      );
-
-      export type ConversationConversationEventFragment =
-        | ConversationConversationEvent_BrokenConversationEvent_Fragment
-        | ConversationConversationEvent_BotSolution_Fragment
-        | ConversationConversationEvent_TalkPublicCallSummary_Fragment
-      ;
-
-      type MessageEnvelopeData_EmailInteraction_Fragment = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      type MessageEnvelopeData_CustomChannelInteraction_Fragment = { __typename: 'CustomChannelInteraction' };
-
-      type MessageEnvelopeData_TalkInteraction_Fragment = { __typename: 'TalkInteraction' };
-
-      type MessageEnvelopeData_NativeMessagingInteraction_Fragment = { __typename: 'NativeMessagingInteraction' };
-
-      type MessageEnvelopeData_WhatsAppInteraction_Fragment = { __typename: 'WhatsAppInteraction' };
-
-      type MessageEnvelopeData_WeChatInteraction_Fragment = { __typename: 'WeChatInteraction' };
-
-      type MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type MessageEnvelopeDataFragment =
-        | MessageEnvelopeData_EmailInteraction_Fragment
-        | MessageEnvelopeData_CustomChannelInteraction_Fragment
-        | MessageEnvelopeData_TalkInteraction_Fragment
-        | MessageEnvelopeData_NativeMessagingInteraction_Fragment
-        | MessageEnvelopeData_WhatsAppInteraction_Fragment
-        | MessageEnvelopeData_WeChatInteraction_Fragment
-        | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment
-      ;
-
-      export type AnyChannelOriginatedFromFragment = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      type ConversationOriginatedFrom_EmailInteraction_Fragment = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      type ConversationOriginatedFrom_CustomChannelInteraction_Fragment = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      type ConversationOriginatedFrom_TalkInteraction_Fragment = { __typename: 'TalkInteraction' };
-
-      type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      type ConversationOriginatedFrom_WeChatInteraction_Fragment = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      type ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationOriginatedFromFragment =
-        | ConversationOriginatedFrom_EmailInteraction_Fragment
-        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
-        | ConversationOriginatedFrom_TalkInteraction_Fragment
-        | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment
-        | ConversationOriginatedFrom_WhatsAppInteraction_Fragment
-        | ConversationOriginatedFrom_WeChatInteraction_Fragment
-        | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
-      ;
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction = (
-        { __typename: 'TalkInteraction' }
-        & Pick<TalkInteraction, 'channel' | 'type'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom =
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
-      ;
-
-      export type ConversationTalkPublicCallSummaryFragment = (
-        { __typename: 'TalkPublicCallSummary' }
-        & Pick<TalkPublicCallSummary, 'id' | 'timestamp' | 'summary'>
-        & { originatedFrom: ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom }
-      );
-      "
-    `);
-
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
-  });
   it('fields with shared types and no fragments should use the shared type interface name', async () => {
     const nestedInterfacesSchema = buildSchema(/* GraphQL */ `
       type Query {
@@ -1538,7 +1258,6 @@ describe('extractAllFieldsToTypes: true', () => {
     `);
 
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -1750,7 +1469,6 @@ describe('extractAllFieldsToTypes: true', () => {
     `);
 
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -1828,7 +1546,6 @@ describe('extractAllFieldsToTypes: true', () => {
     `);
 
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
