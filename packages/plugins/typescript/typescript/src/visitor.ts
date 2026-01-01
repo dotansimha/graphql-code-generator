@@ -125,7 +125,7 @@ export class TsVisitor<
       }
 
       if (implementingTypes.length > 0) {
-        return implementingTypes.join(' | ');
+        return implementingTypes.join(this.typeUnionOperator);
       }
     }
 
@@ -255,7 +255,7 @@ export class TsVisitor<
     const possibleTypes = originalNode.types
       .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t)))
       .concat(...withFutureAddedValue)
-      .join(' | ');
+      .join(this.typeUnionOperator);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
