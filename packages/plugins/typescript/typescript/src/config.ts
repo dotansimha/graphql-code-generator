@@ -412,31 +412,6 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   disableDescriptions?: boolean;
   /**
-   * @description When a GraphQL interface is used for a field, this flag will use the implementing types, instead of the interface itself.
-   * @default false
-   *
-   * @exampleMarkdown
-   * ## Override all definition types
-   *
-   * ```ts filename="codegen.ts"
-   * import type { CodegenConfig } from '@graphql-codegen/cli'
-   *
-   * const config: CodegenConfig = {
-   *   // ...
-   *   generates: {
-   *     'path/to/file.ts': {
-   *       plugins: ['typescript'],
-   *       config: {
-   *         useImplementingTypes: true
-   *       }
-   *     }
-   *   }
-   * }
-   * export default config
-   * ```
-   */
-  useImplementingTypes?: boolean;
-  /**
    * @name wrapEntireFieldDefinitions
    * @type boolean
    * @description Set to `true` in order to wrap field definitions with `EntireFieldWrapper`.
