@@ -15,18 +15,6 @@ import { NormalizedScalarsMap, CustomDirectivesConfig } from './types.js';
 import { buildScalarsFromConfig, DeclarationBlock, DeclarationBlockConfig, getConfigValue } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 
-function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
-  switch (operation) {
-    case 'query':
-      return schema.getQueryType();
-    case 'mutation':
-      return schema.getMutationType();
-    case 'subscription':
-      return schema.getSubscriptionType();
-  }
-  throw new Error(`Unknown operation type: ${operation}`);
-}
-
 export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   extractAllFieldsToTypes: boolean;
   globalNamespace: boolean;
@@ -379,4 +367,16 @@ export class BaseDocumentsVisitor<
       .filter(r => r)
       .join('\n\n');
   }
+}
+
+function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
+  switch (operation) {
+    case 'query':
+      return schema.getQueryType();
+    case 'mutation':
+      return schema.getMutationType();
+    case 'subscription':
+      return schema.getSubscriptionType();
+  }
+  throw new Error(`Unknown operation type: ${operation}`);
 }
