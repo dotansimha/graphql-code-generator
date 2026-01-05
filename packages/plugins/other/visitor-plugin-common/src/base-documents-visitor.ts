@@ -7,23 +7,23 @@ import {
   OperationTypeNode,
   VariableDefinitionNode,
 } from 'graphql';
-import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor.js';
-import { BaseVisitor } from './base-visitor.js';
+import { BaseVisitor, type RawConfig, type ParsedConfig } from './base-visitor.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import { SelectionSetToObject } from './selection-set-to-object.js';
 import { NormalizedScalarsMap, CustomDirectivesConfig } from './types.js';
 import { buildScalarsFromConfig, DeclarationBlock, DeclarationBlockConfig, getConfigValue } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 
-export interface ParsedDocumentsConfig extends ParsedTypesConfig {
+export interface ParsedDocumentsConfig extends ParsedConfig {
   extractAllFieldsToTypes: boolean;
-  globalNamespace: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
   omitOperationSuffix: boolean;
   namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
   skipTypeNameForRoot: boolean;
+  nonOptionalTypename: boolean;
+  globalNamespace: boolean;
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
   customDirectives: CustomDirectivesConfig;
@@ -31,7 +31,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   importSchemaTypesFrom: string;
 }
 
-export interface RawDocumentsConfig extends RawTypesConfig {
+export interface RawDocumentsConfig extends RawConfig {
   /**
    * @default false
    * @description Avoid adding `__typename` for root types. This is ignored when a selection explicitly specifies `__typename`.
@@ -55,6 +55,30 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * ```
    */
   skipTypeNameForRoot?: boolean;
+  /**
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set, and makes it non-optional
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          nonOptionalTypename: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  nonOptionalTypename?: boolean;
   /**
    * @default false
    * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
@@ -187,6 +211,14 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * ```
    */
   importSchemaTypesFrom?: string;
+  /**
+   * @default false
+   * @description Extract all field types to their own types, instead of inlining them.
+   * This helps to reduce type duplication, and makes type errors more readable.
+   * It can also significantly reduce the size of the generated code, the generation time,
+   * and the typechecking time.
+   */
+  extractAllFieldsToTypes?: boolean;
 }
 
 export class BaseDocumentsVisitor<
@@ -206,11 +238,10 @@ export class BaseDocumentsVisitor<
   ) {
     super(rawConfig, {
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
-      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
+      nonOptionalTypename: getConfigValue(rawConfig.nonOptionalTypename, false),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
       globalNamespace: !!rawConfig.globalNamespace,
@@ -219,6 +250,7 @@ export class BaseDocumentsVisitor<
       customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
       generatesOperationTypes: getConfigValue(rawConfig.generatesOperationTypes, true),
       importSchemaTypesFrom: getConfigValue(rawConfig.importSchemaTypesFrom, ''),
+      extractAllFieldsToTypes: getConfigValue(rawConfig.extractAllFieldsToTypes, false),
       ...((additionalConfig || {}) as any),
     });
 

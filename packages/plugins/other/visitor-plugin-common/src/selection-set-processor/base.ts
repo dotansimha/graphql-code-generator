@@ -10,8 +10,8 @@ export type ProcessResult = null | Array<NameAndType | string>;
 export type SelectionSetProcessorConfig = {
   namespacedImportName: string | null;
   convertName: ConvertNameFn<any>;
-  enumPrefix: boolean | null;
-  enumSuffix: boolean | null;
+  enumPrefix: boolean;
+  enumSuffix: boolean;
   scalars: NormalizedScalarsMap;
   formatNamedField(params: { name: string; isOptional?: boolean }): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;

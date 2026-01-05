@@ -186,7 +186,6 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   noExport?: boolean;
-  globalNamespace?: boolean;
   /**
    * @name addOperationExport
    * @type boolean
@@ -364,7 +363,6 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * export default config
    */
   enumType?: ConvertSchemaEnumToDeclarationBlockString['outputType'];
-
   /**
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    * You can also map the entire enum to an external type by providing a string that of `module#type`.
@@ -433,7 +431,31 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   enumValues?: EnumValuesMap;
-
+  /**
+   * @description This will cause the generator to ignore enum values defined in GraphQLSchema
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Ignore enum values from schema
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          ignoreEnumValuesFromSchema: true,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  ignoreEnumValuesFromSchema?: boolean;
   /**
    * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future.
    * This is useful if you are using `relay`.

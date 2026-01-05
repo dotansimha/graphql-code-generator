@@ -16,12 +16,12 @@ import {
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
+import { BaseVisitor, type ParsedConfig, type RawConfig } from './base-visitor.js';
 import { normalizeDeclarationKind } from './declaration-kinds.js';
 import { parseEnumValues } from './enum-values.js';
 import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import {
+import type {
   DeclarationKind,
   DeclarationKindConfig,
   DirectiveArgumentAndInputFieldMappings,
@@ -47,18 +47,18 @@ import { buildTypeImport, getEnumsImports } from './imports.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
+  ignoreEnumValuesFromSchema: boolean;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
   onlyEnums: boolean;
   onlyOperationTypes: boolean;
-  enumPrefix: boolean;
-  enumSuffix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
   entireFieldWrapperValue: string;
   wrapEntireDefinitions: boolean;
-  ignoreEnumValuesFromSchema: boolean;
   directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings;
+  addTypename: boolean;
+  nonOptionalTypename: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -155,6 +155,31 @@ export interface RawTypesConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
+   * @description This will cause the generator to ignore enum values defined in GraphQLSchema
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Ignore enum values from schema
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          ignoreEnumValuesFromSchema: true,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  ignoreEnumValuesFromSchema?: boolean;
+  /**
    * @description Overrides the default output for various GraphQL elements.
    *
    * @exampleMarkdown
@@ -200,58 +225,6 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   declarationKind?: DeclarationKind | DeclarationKindConfig;
-  /**
-   * @default true
-   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum prefixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        // plugins...
-   *        config: {
-   *          typesPrefix: 'I',
-   *          enumPrefix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumPrefix?: boolean;
-  /**
-   * @default true
-   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum suffixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        // plugins...
-   *        config: {
-   *          typesSuffix: 'I',
-   *          enumSuffix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumSuffix?: boolean;
   /**
    * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
    * @default T
@@ -354,31 +327,6 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   onlyOperationTypes?: boolean;
-  /**
-   * @description This will cause the generator to ignore enum values defined in GraphQLSchema
-   * @default false
-   *
-   * @exampleMarkdown
-   * ## Ignore enum values from schema
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        // plugins...
-   *        config: {
-   *          ignoreEnumValuesFromSchema: true,
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  ignoreEnumValuesFromSchema?: boolean;
   /**
    * @name wrapEntireFieldDefinitions
    * @type boolean
@@ -492,6 +440,53 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   directiveArgumentAndInputFieldMappingTypeSuffix?: string;
+  /**
+   * @default false
+   * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          skipTypename: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  skipTypename?: boolean;
+  /**
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set, and makes it non-optional
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          nonOptionalTypename: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  nonOptionalTypename?: boolean;
 }
 
 export class BaseTypesVisitor<
@@ -507,8 +502,6 @@ export class BaseTypesVisitor<
     defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
   ) {
     super(rawConfig, {
-      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       onlyEnums: getConfigValue(rawConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
@@ -517,17 +510,19 @@ export class BaseTypesVisitor<
         mapOrStr: rawConfig.enumValues,
         ignoreEnumValuesFromSchema: rawConfig.ignoreEnumValuesFromSchema,
       }),
+      ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
       wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
       entireFieldWrapperValue: getConfigValue(rawConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(rawConfig.wrapEntireFieldDefinitions, false),
-      ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       directiveArgumentAndInputFieldMappings: transformDirectiveArgumentAndInputFieldMappings(
         rawConfig.directiveArgumentAndInputFieldMappings ?? {},
         rawConfig.directiveArgumentAndInputFieldMappingTypeSuffix
       ),
+      addTypename: !rawConfig.skipTypename,
+      nonOptionalTypename: getConfigValue(rawConfig.nonOptionalTypename, false),
       ...additionalConfig,
     });
 
