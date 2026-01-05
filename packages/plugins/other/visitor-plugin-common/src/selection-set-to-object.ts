@@ -837,7 +837,14 @@ export class SelectionSetToObject<
       .map(typeName => {
         const relevant = grouped[typeName].filter(Boolean);
         return relevant.map(objDefinition => {
-          const name = fieldName ? `${fieldName}_${typeName}` : typeName;
+          // When extractAllFieldsToTypesFieldNamesOnly is enabled, don't append typeName
+          // to generate Apollo Tooling-compatible type names
+          let name: string;
+          if (fieldName) {
+            name = this._config.extractAllFieldsToTypesFieldNamesOnly ? fieldName : `${fieldName}_${typeName}`;
+          } else {
+            name = typeName;
+          }
           return {
             name,
             content: typeof objDefinition === 'string' ? objDefinition : objDefinition.union.join(' | '),
@@ -960,16 +967,31 @@ export class SelectionSetToObject<
   }
 
   protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
+    // When extractAllFieldsToTypesFieldNamesOnly is enabled, don't include typeName in the suffix
+    // to generate Apollo Tooling-compatible type names
+    let finalSuffix: string;
+    if (this._config.extractAllFieldsToTypesFieldNamesOnly) {
+      finalSuffix = suffix;
+    } else {
+      finalSuffix = typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix;
+    }
+
     return this._convertName(name, {
       useTypesPrefix: true,
-      suffix: typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix,
+      suffix: finalSuffix,
     });
   }
 
   protected buildParentFieldName(typeName: string, parentName: string): string {
     // queries/mutations/fragments are guaranteed to be unique type names,
     // so we can skip affixing the field names with typeName
-    return operationTypes.includes(typeName) ? parentName : `${parentName}_${typeName}`;
+    if (operationTypes.includes(typeName)) {
+      return parentName;
+    }
+
+    // When extractAllFieldsToTypesFieldNamesOnly is enabled, skip including the typeName
+    // to generate Apollo Tooling-compatible type names
+    return this._config.extractAllFieldsToTypesFieldNamesOnly ? parentName : `${parentName}_${typeName}`;
   }
 }
 

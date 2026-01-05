@@ -29,6 +29,7 @@ export interface ParsedConfig {
   addTypename: boolean;
   nonOptionalTypename: boolean;
   extractAllFieldsToTypes: boolean;
+  extractAllFieldsToTypesFieldNamesOnly: boolean;
   externalFragments: LoadedFragment[];
   fragmentImports: ImportDeclaration<FragmentImport>[];
   immutableTypes: boolean;
@@ -377,6 +378,15 @@ export interface RawConfig {
 
   /**
    * @default false
+   * @description When used with `extractAllFieldsToTypes`, generates type names based only on field names,
+   * without including GraphQL type names. This produces Apollo Tooling-compatible type names.
+   * For example, `QueryName_fieldName_nestedField` instead of `QueryName_fieldName_TypeName_nestedField_FieldTypeName`.
+   * Note: This option has no effect when `extractAllFieldsToTypes` is disabled.
+   */
+  extractAllFieldsToTypesFieldNamesOnly?: boolean;
+
+  /**
+   * @default false
    * @description If you prefer to have each field in generated types printed on a new line, set this to true.
    * This can be useful for improving readability of the resulting types,
    * without resorting to running tools like Prettier on the output.
@@ -411,6 +421,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       emitLegacyCommonJSImports:
         rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
+      extractAllFieldsToTypesFieldNamesOnly: rawConfig.extractAllFieldsToTypesFieldNamesOnly ?? false,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
       includeExternalFragments: rawConfig.includeExternalFragments ?? false,
       ...((additionalConfig || {}) as any),
