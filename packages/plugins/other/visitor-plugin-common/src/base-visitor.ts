@@ -12,7 +12,7 @@ import {
   ParsedScalarsMap,
   ScalarsMap,
 } from './types.js';
-import { DeclarationBlockConfig } from './utils.js';
+import { DeclarationBlockConfig, getConfigValue } from './utils.js';
 import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 
 export interface BaseVisitorConvertOptions {
@@ -27,9 +27,8 @@ export interface ParsedConfig {
   convert: ConvertFn;
   typesPrefix: string;
   typesSuffix: string;
-  addTypename: boolean;
-  nonOptionalTypename: boolean;
-  extractAllFieldsToTypes: boolean;
+  enumPrefix: boolean;
+  enumSuffix: boolean;
   externalFragments: LoadedFragment[];
   fragmentImports: ImportDeclaration<FragmentImport>[];
   immutableTypes: boolean;
@@ -261,10 +260,12 @@ export interface RawConfig {
    */
   typesSuffix?: string;
   /**
-   * @default false
-   * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
+   * @default true
+   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
    *
    * @exampleMarkdown
+   * ## Disable enum prefixes
+   *
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';
    *
@@ -274,7 +275,8 @@ export interface RawConfig {
    *      'path/to/file': {
    *        // plugins...
    *        config: {
-   *          skipTypename: true
+   *          typesPrefix: 'I',
+   *          enumPrefix: false
    *        },
    *      },
    *    },
@@ -282,13 +284,14 @@ export interface RawConfig {
    *  export default config;
    * ```
    */
-  skipTypename?: boolean;
+  enumPrefix?: boolean;
   /**
-   * @default false
-   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
-   * in the selection set, and makes it non-optional
+   * @default true
+   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
    *
    * @exampleMarkdown
+   * ## Disable enum suffixes
+   *
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';
    *
@@ -298,7 +301,8 @@ export interface RawConfig {
    *      'path/to/file': {
    *        // plugins...
    *        config: {
-   *          nonOptionalTypename: true
+   *          typesSuffix: 'I',
+   *          enumSuffix: false
    *        },
    *      },
    *    },
@@ -306,7 +310,7 @@ export interface RawConfig {
    *  export default config;
    * ```
    */
-  nonOptionalTypename?: boolean;
+  enumSuffix?: boolean;
   /**
    * @name useTypeImports
    * @type boolean
@@ -346,10 +350,6 @@ export interface RawConfig {
   /**
    * @ignore
    */
-  globalNamespace?: boolean;
-  /**
-   * @ignore
-   */
   allowEnumStringTypes?: boolean;
   /**
    * @description Whether fragment types should be inlined into other operations.
@@ -373,15 +373,6 @@ export interface RawConfig {
    * Useful for ESM environments that require file extensions in import statements.
    */
   importExtension?: '' | `.${string}`;
-
-  /**
-   * @default false
-   * @description Extract all field types to their own types, instead of inlining them.
-   * This helps to reduce type duplication, and makes type errors more readable.
-   * It can also significantly reduce the size of the generated code, the generation time,
-   * and the typechecking time.
-   */
-  extractAllFieldsToTypes?: boolean;
 
   /**
    * @default false
@@ -413,16 +404,16 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       typesSuffix: rawConfig.typesSuffix || '',
+      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       externalFragments: rawConfig.externalFragments || [],
       fragmentImports: rawConfig.fragmentImports || [],
-      addTypename: !rawConfig.skipTypename,
-      nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       useTypeImports: !!rawConfig.useTypeImports,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
-      emitLegacyCommonJSImports: rawConfig.emitLegacyCommonJSImports ?? true,
+      emitLegacyCommonJSImports:
+        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
       importExtension,
-      extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
       includeExternalFragments: rawConfig.includeExternalFragments ?? false,
       ...((additionalConfig || {}) as any),
