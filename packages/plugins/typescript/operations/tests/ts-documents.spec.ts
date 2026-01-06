@@ -785,7 +785,7 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content);
     });
 
-    it('Should add __typename correctly with nonOptionalTypename=false,skipTypename=true and explicit field', async () => {
+    it('Should add __typename correctly with nonOptionalTypename=false and explicit field', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Search {
           search: [SearchResult!]!
@@ -840,10 +840,7 @@ describe('TypeScript Operations Plugin', () => {
       const { content } = await plugin(
         testSchema,
         [{ location: 'test-file.ts', document: ast }],
-        {
-          nonOptionalTypename: false,
-          skipTypename: true,
-        },
+        { nonOptionalTypename: false },
         { outputFile: '' }
       );
 
@@ -861,24 +858,6 @@ export type Q2Query = { search: Array<
     | { __typename: 'Person', id: string, name: string }
   > };`
       );
-      await validate(content);
-    });
-
-    it('Should skip __typename when skipTypename is set to true', async () => {
-      const ast = parse(/* GraphQL */ `
-        query {
-          dummy
-        }
-      `);
-
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
-
-      expect(content).not.toContain(`__typename`);
       await validate(content);
     });
 
@@ -994,31 +973,6 @@ export type Q2Query = { search: Array<
         { nonOptionalTypename: true },
         { outputFile: '' }
       );
-      expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
-
-
-        export type Unnamed_1_Query = { __typename: 'Query', dummy: string | null };
-        "
-      `);
-      await validate(content);
-    });
-
-    it('Should add __typename as non-optional when its explictly specified, even if skipTypename is true', async () => {
-      const ast = parse(/* GraphQL */ `
-        query {
-          __typename
-          dummy
-        }
-      `);
-
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
-
       expect(content).toMatchInlineSnapshot(`
         "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1167,12 +1121,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
       expect(content).toMatchInlineSnapshot(`
         "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1201,12 +1150,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
@@ -1642,12 +1586,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
       expect(content).toMatchInlineSnapshot(`
         "export type Role =
           | 'USER'
@@ -1681,12 +1620,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type UserFieldsFragment = { id: string, profile: { age: number | null } | null };
@@ -1721,12 +1655,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: false },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type UserFieldsFragment = { id: string };
@@ -2205,7 +2134,7 @@ export type Q2Query = { search: Array<
       await validate(content);
     });
 
-    it('Should support merging identical fragment union types with skipTypename', async () => {
+    it('Should support merging identical fragment union types', async () => {
       const ast = parse(/* GraphQL */ `
         query test {
           notifications {
@@ -2221,7 +2150,10 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(
         schema,
         [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' },
+        {
+          mergeFragmentTypes: true,
+          namingConvention: 'keep',
+        },
         { outputFile: '' }
       );
 
@@ -2237,7 +2169,7 @@ export type Q2Query = { search: Array<
       await validate(content);
     });
 
-    it('Should support computing correct names for merged fragment union types with skipTypename', async () => {
+    it('Should support computing correct names for merged fragment union types', async () => {
       const ast = parse(/* GraphQL */ `
         fragment N on Notifiction {
           id
@@ -2250,7 +2182,10 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(
         schema,
         [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' },
+        {
+          mergeFragmentTypes: true,
+          namingConvention: 'keep',
+        },
         { outputFile: '' }
       );
 
@@ -2325,12 +2260,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
       expect(content).toMatchInlineSnapshot(`
         "export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2363,7 +2293,7 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(
         gitHuntSchema,
         [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
+        {},
         { outputFile: '' }
       );
 
@@ -2378,15 +2308,6 @@ export type Q2Query = { search: Array<
         "
       `
       );
-      expect(content).toMatchInlineSnapshot(`
-        "export type MeQueryVariables = Exact<{
-          repoFullName: string;
-        }>;
-
-
-        export type MeQuery = { currentUser: { login: string, html_url: string } | null, entry: { id: number, createdAt: number, postedBy: { login: string, html_url: string } } | null };
-        "
-      `);
       await validate(content);
     });
 
@@ -2620,12 +2541,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2647,12 +2563,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2678,12 +2589,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type Role =
@@ -2712,12 +2618,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type UserFieldsFragment = { id: string, username: string, profile: { age: number | null } | null };
@@ -2741,12 +2642,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type LoginMutationVariables = Exact<{ [key: string]: never; }>;
@@ -2765,12 +2661,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: false },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type TestQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2791,12 +2682,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type TestSubscriptionVariables = Exact<{ [key: string]: never; }>;
@@ -2824,12 +2710,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(
         `
@@ -2863,12 +2744,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(
         `
@@ -2891,12 +2767,7 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: 'test-file.ts', document: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
@@ -4529,10 +4400,7 @@ export type Q2Query = { search: Array<
       const { content } = await plugin(
         testSchema,
         [{ location: '', document: query }],
-        {
-          skipTypename: true,
-          namespacedImportName: 'Types',
-        },
+        { namespacedImportName: 'Types' },
         { outputFile: 'graphql.ts' }
       );
 
@@ -4971,7 +4839,7 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
-    it('#3950 - Invalid output with fragments and skipTypename: true', async () => {
+    it('#3950 - Invalid output with fragments', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Query {
           animals: [Animal!]!
@@ -5011,81 +4879,7 @@ function test(q: GetEntityBrandDataQuery): void {
         }
       `);
 
-      const { content } = await plugin(
-        schema,
-        [{ location: '', document: query }],
-        { skipTypename: true },
-        { outputFile: 'graphql.ts' }
-      );
-
-      expect(content).toMatchInlineSnapshot(`
-        "type CatFragment_Lion_Fragment = { id: string };
-
-        type CatFragment_Puma_Fragment = { id: string };
-
-        export type CatFragmentFragment =
-          | CatFragment_Lion_Fragment
-          | CatFragment_Puma_Fragment
-        ;
-
-        export type KittyQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-        export type KittyQuery = { animals: Array<
-            | { id: string }
-            | { id: string }
-            | Record<PropertyKey, never>
-          > };
-        "
-      `);
-    });
-
-    it('#3950 - Invalid output with fragments and skipTypename: false', async () => {
-      const schema = buildSchema(/* GraphQL */ `
-        type Query {
-          animals: [Animal!]!
-        }
-
-        interface Animal {
-          id: ID!
-        }
-        type Duck implements Animal {
-          id: ID!
-        }
-        type Lion implements Animal {
-          id: ID!
-        }
-        type Puma implements Animal {
-          id: ID!
-        }
-        type Wolf implements Animal {
-          id: ID!
-        }
-      `);
-
-      const query = parse(/* GraphQL */ `
-        fragment CatFragment on Animal {
-          ... on Lion {
-            id
-          }
-          ... on Puma {
-            id
-          }
-        }
-
-        query kitty {
-          animals {
-            ...CatFragment
-          }
-        }
-      `);
-
-      const { content } = await plugin(
-        schema,
-        [{ location: '', document: query }],
-        { skipTypename: false },
-        { outputFile: 'graphql.ts' }
-      );
+      const { content } = await plugin(schema, [{ location: '', document: query }], {}, { outputFile: 'graphql.ts' });
 
       expect(content).toMatchInlineSnapshot(`
         "type CatFragment_Lion_Fragment = { id: string };
@@ -5138,12 +4932,7 @@ function test(q: GetEntityBrandDataQuery): void {
           }
         }
       `);
-      const { content } = await plugin(
-        schema,
-        [{ location: '', document: query }],
-        { skipTypename: true },
-        { outputFile: 'graphql.ts' }
-      );
+      const { content } = await plugin(schema, [{ location: '', document: query }], {}, { outputFile: 'graphql.ts' });
 
       expect(content).toMatchInlineSnapshot(`
         "export type UserQueryVariables = Exact<{ [key: string]: never; }>;

@@ -502,9 +502,6 @@ export class SelectionSetToObject<
         // The keys here will be used to generate intermediary
         // fragment names. To avoid blowing up the type name on large
         // unions, calculate a stable hash here instead.
-        //
-        // Also use fragment hashing if skipTypename is true, since we
-        // then don't have a typename for naming the fragment.
         acc[
           selectedTypes.length <= 3
             ? // Remove quote marks to produce a valid type name
