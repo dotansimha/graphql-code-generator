@@ -5,8 +5,6 @@ import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptDocumentsVisitor } from './visitor.js';
 
-export { TypeScriptDocumentsPluginConfig } from './config.js';
-
 export const plugin: PluginFunction<
   TypeScriptDocumentsPluginConfig,
   Types.ComplexPluginOutput
