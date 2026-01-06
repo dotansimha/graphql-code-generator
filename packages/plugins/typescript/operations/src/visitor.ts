@@ -55,8 +55,9 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   maybeValue: string;
   allowUndefinedQueryVariables: boolean;
   enumType: ConvertSchemaEnumToDeclarationBlockString['outputType'];
-  futureProofEnums: boolean;
   enumValues: ParsedEnumValuesMap;
+  ignoreEnumValuesFromSchema: boolean;
+  futureProofEnums: boolean;
 }
 
 type UsedNamedInputTypes = Record<
@@ -95,6 +96,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           mapOrStr: config.enumValues,
           ignoreEnumValuesFromSchema: config.ignoreEnumValuesFromSchema,
         }),
+        ignoreEnumValuesFromSchema: getConfigValue(config.ignoreEnumValuesFromSchema, false),
         futureProofEnums: getConfigValue(config.futureProofEnums, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
@@ -140,10 +142,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       printFieldsOnNewLines: this.config.printFieldsOnNewLines,
     };
-    const processor = new PreResolveTypesProcessor(processorConfig);
+
     this.setSelectionSetHandler(
       new SelectionSetToObject(
-        processor,
+        new PreResolveTypesProcessor(processorConfig),
         this.scalars,
         this.schema,
         this.convertName.bind(this),
