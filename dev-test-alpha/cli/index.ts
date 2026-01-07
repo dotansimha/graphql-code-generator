@@ -42,7 +42,7 @@ const GRAPHQL_CODEGEN_CONFIG = {
 export const main = async () => {
   const cwd = process.cwd();
 
-  await deleteAsync([`src/**/${GENERATED}`], { cwd: cwd });
+  await deleteAsync([`src/**/${GENERATED}`], { cwd });
 
   const localSchemaFilePath = `${cwd}/schema.graphql`;
 
@@ -50,16 +50,11 @@ export const main = async () => {
 
   const generateFiles: { [scanPath: string]: Types.ConfiguredOutput } = {};
 
-  // Codegen 'generates' parmeter needs directories, not files scan-paths (such as **/*.ts)
-  // Example:
-  //   /.../packages/yelp-react-component-business-highlights/src/**/*.ts
-  // the regexp replacement will return:
-  //   /.../packages/yelp-react-component-business-highlights/src
   const includesForCodegen = uniq(internalIncludes.map((includes: string) => includes.replace(/\/\*\*\/.+$/, '')));
 
   const globalTypesPath = `${cwd}/src/${GENERATED}/${GLOBAL_TYPES_FILE}`;
 
-  const monorepoRoot = path.resolve(cwd, '../..');
+  const monorepoRoot = path.resolve(cwd, '..');
 
   if (!isEmpty(includesForCodegen)) {
     // Prepare the required structure for GraphQL Codegen
@@ -84,16 +79,6 @@ export const main = async () => {
       };
     });
 
-    // this will generate the typescript types from schema.graphql
-    // generateFiles[path.relative(monorepoRoot, globalTypesPath)] = {
-    //     plugins: ['typescript'],
-    // };
-
-    // Note, that the following call relies on patching the plugins:
-    //   @graphql-codegen/near-operation-file-preset
-    //   @graphql-codegen/typescript-operations
-    // The patches are needed in order to render output as close as possible to the old apollo-codegen
-    // The two patches are located in ./yelp-frontend/.yarn/patches/ directory.
     await generate(
       {
         schema: localSchemaFilePath,
