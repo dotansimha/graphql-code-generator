@@ -47,7 +47,7 @@ enum link__Purpose {
 }
 
 enum join__Graph {
-  SUPER_USER_MANAGER @join__graph(name: "elite_management", url: "http://i.am.not.used.example.com")
+  SUPER_USER_MANAGER @join__graph(name: "super_user_management", url: "http://i.am.not.used.example.com")
   GRAPHQL_MAIN__SHARD__BASE @join__graph(name: "graphql_main__shard__base", url: "http://i.am.not.used.example.com")
   GRAPHQL_MAIN__SHARD__INTERNAL_TESTING
     @join__graph(name: "graphql_main__shard__internal_testing", url: "http://i.am.not.used.example.com")
