@@ -372,6 +372,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         typesImport: true,
         // FIXME: rebase with master for the new extension
         emitLegacyCommonJSImports: true,
+        importExtension: this.config.importExtension,
       }),
     ];
   }

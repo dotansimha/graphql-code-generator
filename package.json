@@ -40,7 +40,8 @@
     "packages/plugins/other/*",
     "packages/presets/*",
     "website",
-    "examples/**/*"
+    "examples/**/*",
+    "dev-test-alpha"
   ],
   "devDependencies": {
     "@babel/core": "7.25.2",
