@@ -103,7 +103,7 @@ export const plugin: PluginFunction<
   };
 };
 
-export { TypeScriptDocumentsVisitor };
+export { TypeScriptDocumentsVisitor, type TypeScriptDocumentsPluginConfig };
 
 const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
   try {
