@@ -64,7 +64,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   };
 };
 
-export { TypeScriptDocumentsVisitor };
+export { TypeScriptDocumentsVisitor, type TypeScriptDocumentsPluginConfig };
 
 const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
   try {
