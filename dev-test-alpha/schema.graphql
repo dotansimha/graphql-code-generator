@@ -94,7 +94,7 @@ enum UserPhotoSize
 }
 
 type SuperUser @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
-  squadFromAlias(alias: String!): SuperUserGroup!
+  groupFromAlias(alias: String!): SuperUserGroup!
 }
 
 type SuperUserGroup

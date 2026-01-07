@@ -5,7 +5,7 @@ export const getFooQuery = gql`
   ${Helper.fragments.query}
   query GetFoo($alias: String!, $collectionId: String!) {
     superUser {
-      squadFromAlias(alias: $alias) {
+      groupFromAlias(alias: $alias) {
         managers(onlyPublic: true) {
           ...HelperFields
         }
