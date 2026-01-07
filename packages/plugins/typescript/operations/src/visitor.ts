@@ -23,6 +23,7 @@ import {
   getNodeComment,
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
+import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
 import {
   type DocumentNode,
@@ -370,8 +371,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           identifiers: [],
         },
         typesImport: true,
-        // FIXME: rebase with master for the new extension
-        emitLegacyCommonJSImports: true,
+        emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+        importExtension: normalizeImportExtension({
+          emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+          importExtension: this.config.importExtension,
+        }),
       }),
     ];
   }

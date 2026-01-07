@@ -1,12 +1,11 @@
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
-import { plugin as tsPlugin } from '../../typescript/src/index.js';
-import { plugin, TypeScriptDocumentsPluginConfig } from '../src/index.js';
+import { plugin, type TypeScriptDocumentsPluginConfig } from '../src/index.js';
 
 describe('extractAllFieldsToTypes: true', () => {
-  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema) => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]);
+  const validate = async (content: Types.PluginOutput) => {
+    const m = mergeOutputs([content]);
     validateTs(m, undefined, undefined, undefined, []);
 
     return m;
@@ -197,7 +196,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, dummyUserTestSchema);
+    await validate(content);
   });
 
   const complexTestSchemaWithUnionsAndInterfaces = buildSchema(/* GraphQL */ `
@@ -551,7 +550,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
   it('should extract types from multiple fragments (mergeFragmentTypes: true)', async () => {
@@ -725,7 +724,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
   it("should extract types from multiple fragments (inlineFragmentTypes: 'combine')", async () => {
@@ -968,7 +967,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
   it("should extract types from multiple fragments (inlineFragmentTypes: 'mask')", async () => {
@@ -1209,7 +1208,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
   it('fields with shared types and no fragments should use the shared type interface name', async () => {
@@ -1302,7 +1301,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, nestedInterfacesSchema);
+    await validate(content);
   });
 
   it('fragment spreads on the same interface should not force concrete parent type names (regression #10502)', async () => {
@@ -1518,7 +1517,7 @@ describe('extractAllFieldsToTypes: true', () => {
       export type GetNotificationsQuery = GetNotificationsQuery_Query;
       "
     `);
-    await validate(content, config, notificationSchema);
+    await validate(content);
   });
 
   it('named fragments should use their name and not parent type name', async () => {
@@ -1599,6 +1598,6 @@ describe('extractAllFieldsToTypes: true', () => {
       export type GetNotificationsQuery = GetNotificationsQuery_Query;
       "
     `);
-    await validate(content, config, notificationSchema);
+    await validate(content);
   });
 });
