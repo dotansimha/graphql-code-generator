@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^6.1.0",
+    "@graphql-codegen/schema-ast": "^5.0.0",
     "@graphql-codegen/typescript": "^5.0.7",
     "@graphql-codegen/visitor-plugin-common": "6.2.2",
     "auto-bind": "~4.0.0",
