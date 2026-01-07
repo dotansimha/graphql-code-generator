@@ -418,13 +418,6 @@ function isStringValueNode(node: any): node is StringValueNode {
   return node && typeof node === 'object' && node.kind === Kind.STRING;
 }
 
-// will be removed on next release because tools already has it
-export function getRootTypeNames(schema: GraphQLSchema): string[] {
-  return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()]
-    .filter(t => t)
-    .map(t => t.name);
-}
-
 export function stripMapperTypeInterpolation(identifier: string): string {
   return identifier.trim().replace(/<{.*}>/, '');
 }
