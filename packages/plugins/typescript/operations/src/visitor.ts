@@ -121,7 +121,13 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       ...(config.externalFragments || []),
     ];
 
-    this._usedNamedInputTypes = this.collectUsedInputTypes({ schema, documentNode });
+    // Create a combined document that includes external fragments for enum collection
+    const documentWithExternalFragments: DocumentNode = {
+      ...documentNode,
+      definitions: [...documentNode.definitions, ...(config.externalFragments || []).map(f => f.node)],
+    };
+
+    this._usedNamedInputTypes = this.collectUsedInputTypes({ schema, documentNode: documentWithExternalFragments });
 
     const processorConfig: SelectionSetProcessorConfig = {
       namespacedImportName: this.config.namespacedImportName,
