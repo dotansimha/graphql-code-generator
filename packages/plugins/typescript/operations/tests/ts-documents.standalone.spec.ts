@@ -138,9 +138,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: unknown;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: unknown;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
 
@@ -163,8 +163,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null;
-        role?: UserRole | null;
+        to?: unknown | null | undefined;
+        role?: UserRole | null | undefined;
       }>;
 
 
@@ -654,9 +654,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: unknown;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: unknown;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
       "

@@ -110,9 +110,9 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: unknown;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: unknown;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
 
@@ -135,8 +135,8 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null;
-        role?: TypeImport.UserRole | null;
+        to?: unknown | null | undefined;
+        role?: TypeImport.UserRole | null | undefined;
       }>;
 
 
@@ -254,9 +254,9 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: unknown;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: unknown;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
 
@@ -279,8 +279,8 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null;
-        role?: TypeImport.UserRole | null;
+        to?: unknown | null | undefined;
+        role?: TypeImport.UserRole | null | undefined;
       }>;
 
 
@@ -375,11 +375,11 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
-        id?: string | null;
-        name?: string | null;
-        bool?: boolean | null;
-        int?: number | null;
-        float?: number | null;
+        id?: string | null | undefined;
+        name?: string | null | undefined;
+        bool?: boolean | null | undefined;
+        int?: number | null | undefined;
+        float?: number | null | undefined;
       }>;
 
 
