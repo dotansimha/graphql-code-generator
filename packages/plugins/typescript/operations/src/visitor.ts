@@ -270,7 +270,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         }
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
-        if (usedInputType.tsType !== 'any' && !typeNode.isNonNullable) {
+        if (usedInputType.tsType !== 'any' && usedInputType.tsType !== 'unknown' && !typeNode.isNonNullable) {
           typePart += ' | null | undefined';
         }
         continue;
@@ -409,7 +409,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       usedInputTypes[node.name] = {
         type: 'GraphQLScalarType',
         node,
-        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'any',
+        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'unknown',
       };
       return;
     }

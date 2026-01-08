@@ -100,7 +100,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         from?: Date | null | undefined;
         /** UsersInput to */
         to?: Date | null | undefined;
-        timezone?: any;
+        timezone?: unknown;
         role?: UserRole | null | undefined;
         ageRange1?: Array<number | null | undefined> | null | undefined;
         ageRange2: Array<number | null | undefined>;
@@ -224,7 +224,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         readonly from?: Date | null | undefined;
         /** UsersInput to */
         readonly to?: Date | null | undefined;
-        readonly timezone?: any;
+        readonly timezone?: unknown;
         readonly role?: UserRole | null | undefined;
         readonly ageRange1?: Array<number | null | undefined> | null | undefined;
         readonly ageRange2: Array<number | null | undefined>;
@@ -344,7 +344,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         from: Date; to?: never; timezone?: never; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never;   /** UsersInput to */
         to: Date; timezone?: never; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
-        |  { from?: never; to?: never;   timezone: any; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
+        |  { from?: never; to?: never;   timezone: unknown; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never; to?: never; timezone?: never;   role: UserRole; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never; to?: never; timezone?: never; role?: never;   ageRange1: Array<number | null | undefined>; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never; to?: never; timezone?: never; role?: never; ageRange1?: never;   ageRange3: Array<number>; bestFriend?: never; nestedInput?: never; }

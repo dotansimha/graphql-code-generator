@@ -138,9 +138,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: any;
+        from?: unknown;
         /** UsersInput to */
-        to?: any;
+        to?: unknown;
         role?: UserRole | null | undefined;
       };
 
@@ -149,7 +149,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, name: string, role: UserRole, createdAt: any, nickname: string | null } | null };
+      export type UserQuery = { user: { id: string, name: string, role: UserRole, createdAt: unknown, nickname: string | null } | null };
 
       export type UsersQueryVariables = Exact<{
         input: UsersInput;
@@ -162,8 +162,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
-        from: any;
-        to?: any | null;
+        from: unknown;
+        to?: unknown | null;
         role?: UserRole | null;
       }>;
 
@@ -654,9 +654,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: any;
+        from?: unknown;
         /** UsersInput to */
-        to?: any;
+        to?: unknown;
         role?: UserRole | null | undefined;
       };
       "
@@ -802,7 +802,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { user: { __typename: 'User', id: string, name: string, createdAt: any, bestFriend: { __typename: 'User', name: string } | null, goodFriends: Array<{ __typename: 'User', id: string }> } | null };
+      export type UserQuery = { user: { __typename: 'User', id: string, name: string, createdAt: unknown, bestFriend: { __typename: 'User', name: string } | null, goodFriends: Array<{ __typename: 'User', id: string }> } | null };
       "
     `);
 
