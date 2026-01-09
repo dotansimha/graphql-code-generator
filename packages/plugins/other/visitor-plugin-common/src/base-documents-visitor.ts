@@ -371,15 +371,22 @@ export class BaseDocumentsVisitor<
       })
     );
 
-    const operationResult = new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(
-        this.convertName(name, {
-          suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
-        })
-      )
-      .withContent(selectionSetObjects.mergedTypeString).string;
+    const operationResultName = this.convertName(name, {
+      suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
+    });
+
+    // When extractAllFieldsToTypes creates a root type with the same name as the operation result,
+    // we only need the extracted type and can skip the alias to avoid duplicates
+    const shouldSkipOperationResult =
+      this._parsedConfig.extractAllFieldsToTypes && operationResultName === selectionSetObjects.mergedTypeString;
+
+    const operationResult = shouldSkipOperationResult
+      ? ''
+      : new DeclarationBlock(this._declarationBlockConfig)
+          .export()
+          .asKind('type')
+          .withName(operationResultName)
+          .withContent(selectionSetObjects.mergedTypeString).string;
 
     const operationVariables = new DeclarationBlock({
       ...this._declarationBlockConfig,
