@@ -16,6 +16,7 @@ import { OperationVariablesToObject } from './variables-to-object.js';
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
   extractAllFieldsToTypes: boolean;
+  extractAllFieldsToTypesCompact: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
   omitOperationSuffix: boolean;
@@ -219,6 +220,16 @@ export interface RawDocumentsConfig extends RawConfig {
    * and the typechecking time.
    */
   extractAllFieldsToTypes?: boolean;
+  /**
+   * @default false
+   * @description Generates type names using only field names, omitting GraphQL type names.
+   * This matches the naming convention used by Apollo Tooling.
+   * For example, instead of `Query_company_Company_office_Office_location_Location`,
+   * it generates `Query_company_office_location`.
+   *
+   * When this option is enabled, `extractAllFieldsToTypes` is automatically enabled as well.
+   */
+  extractAllFieldsToTypesCompact?: boolean;
 }
 
 export class BaseDocumentsVisitor<
@@ -250,7 +261,10 @@ export class BaseDocumentsVisitor<
       customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
       generatesOperationTypes: getConfigValue(rawConfig.generatesOperationTypes, true),
       importSchemaTypesFrom: getConfigValue(rawConfig.importSchemaTypesFrom, ''),
-      extractAllFieldsToTypes: getConfigValue(rawConfig.extractAllFieldsToTypes, false),
+      extractAllFieldsToTypes:
+        getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
+        getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false),
+      extractAllFieldsToTypesCompact: getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false),
       ...((additionalConfig || {}) as any),
     });
 
