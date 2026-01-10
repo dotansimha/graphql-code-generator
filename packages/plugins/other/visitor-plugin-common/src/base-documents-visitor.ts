@@ -378,7 +378,7 @@ export class BaseDocumentsVisitor<
     // When extractAllFieldsToTypes creates a root type with the same name as the operation result,
     // we only need the extracted type and can skip the alias to avoid duplicates
     const shouldSkipOperationResult =
-      this._parsedConfig.extractAllFieldsToTypes && operationResultName === selectionSetObjects.mergedTypeString;
+      this._parsedConfig.extractAllFieldsToTypesCompact && operationResultName === selectionSetObjects.mergedTypeString;
 
     const operationResult = shouldSkipOperationResult
       ? ''
