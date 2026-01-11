@@ -834,7 +834,19 @@ export class SelectionSetToObject<
       .map(typeName => {
         const relevant = grouped[typeName].filter(Boolean);
         return relevant.map(objDefinition => {
-          const name = fieldName ? `${fieldName}_${typeName}` : typeName;
+          // In compact mode, we still need to keep the final concrete type name for union/interface types
+          // to distinguish between different implementations, but we skip it for simple object types
+          const hasMultipleTypes = Object.keys(grouped).length > 1;
+          let name: string;
+          if (fieldName) {
+            if (this._config.extractAllFieldsToTypesCompact && !hasMultipleTypes) {
+              name = fieldName;
+            } else {
+              name = `${fieldName}_${typeName}`;
+            }
+          } else {
+            name = typeName;
+          }
           return {
             name,
             content: typeof objDefinition === 'string' ? objDefinition : objDefinition.union.join(' | '),
@@ -957,9 +969,17 @@ export class SelectionSetToObject<
   }
 
   protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
+    // In compact mode, omit typeName from fragment type names
+    let fragmentSuffix: string;
+    if (this._config.extractAllFieldsToTypesCompact) {
+      fragmentSuffix = suffix;
+    } else {
+      fragmentSuffix = typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix;
+    }
+
     return this._convertName(name, {
       useTypesPrefix: true,
-      suffix: typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix,
+      suffix: fragmentSuffix,
     });
   }
 
@@ -967,6 +987,11 @@ export class SelectionSetToObject<
     // queries/mutations/fragments are guaranteed to be unique type names,
     // so we can skip affixing the field names with typeName
     if (operationTypes.includes(typeName)) {
+      return parentName;
+    }
+
+    // When compact mode is enabled, skip appending typeName
+    if (this._config.extractAllFieldsToTypesCompact) {
       return parentName;
     }
 
