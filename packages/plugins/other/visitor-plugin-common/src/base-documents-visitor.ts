@@ -7,7 +7,7 @@ import {
   OperationTypeNode,
   VariableDefinitionNode,
 } from 'graphql';
-import { BaseVisitor, type RawConfig, type ParsedConfig } from './base-visitor.js';
+import { BaseVisitor, type ParsedConfig, type RawConfig } from './base-visitor.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import { SelectionSetToObject } from './selection-set-to-object.js';
 import { CustomDirectivesConfig, NormalizedScalarsMap } from './types.js';
@@ -21,6 +21,7 @@ import { OperationVariablesToObject } from './variables-to-object.js';
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
   extractAllFieldsToTypes: boolean;
+  extractAllFieldsToTypesCompact: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
   omitOperationSuffix: boolean;
@@ -224,6 +225,16 @@ export interface RawDocumentsConfig extends RawConfig {
    * and the typechecking time.
    */
   extractAllFieldsToTypes?: boolean;
+  /**
+   * @default false
+   * @description Generates type names using only field names, omitting GraphQL type names.
+   * This matches the naming convention used by Apollo Tooling.
+   * For example, instead of `Query_company_Company_office_Office_location_Location`,
+   * it generates `Query_company_office_location`.
+   *
+   * When this option is enabled, `extractAllFieldsToTypes` is automatically enabled as well.
+   */
+  extractAllFieldsToTypesCompact?: boolean;
 }
 
 export class BaseDocumentsVisitor<
@@ -257,7 +268,13 @@ export class BaseDocumentsVisitor<
       }),
       generatesOperationTypes: getConfigValue(rawConfig.generatesOperationTypes, true),
       importSchemaTypesFrom: getConfigValue(rawConfig.importSchemaTypesFrom, ''),
-      extractAllFieldsToTypes: getConfigValue(rawConfig.extractAllFieldsToTypes, false),
+      extractAllFieldsToTypes:
+        getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
+        getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false),
+      extractAllFieldsToTypesCompact: getConfigValue(
+        rawConfig.extractAllFieldsToTypesCompact,
+        false,
+      ),
       ...((additionalConfig || {}) as any),
     });
 
@@ -371,15 +388,23 @@ export class BaseDocumentsVisitor<
       }),
     );
 
-    const operationResult = new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(
-        this.convertName(name, {
-          suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
-        }),
-      )
-      .withContent(selectionSetObjects.mergedTypeString).string;
+    const operationResultName = this.convertName(name, {
+      suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
+    });
+
+    // When extractAllFieldsToTypes creates a root type with the same name as the operation result,
+    // we only need the extracted type and can skip the alias to avoid duplicates
+    const shouldSkipOperationResult =
+      this._parsedConfig.extractAllFieldsToTypesCompact &&
+      operationResultName === selectionSetObjects.mergedTypeString;
+
+    const operationResult = shouldSkipOperationResult
+      ? ''
+      : new DeclarationBlock(this._declarationBlockConfig)
+          .export()
+          .asKind('type')
+          .withName(operationResultName)
+          .withContent(selectionSetObjects.mergedTypeString).string;
 
     const operationVariables = new DeclarationBlock({
       ...this._declarationBlockConfig,
