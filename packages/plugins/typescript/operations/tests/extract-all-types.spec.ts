@@ -1601,3 +1601,226 @@ describe('extractAllFieldsToTypes: true', () => {
     await validate(content);
   });
 });
+
+describe('extractAllFieldsToTypesCompact: true', () => {
+  const validate = async (content: Types.PluginOutput) => {
+    const m = mergeOutputs([content]);
+    validateTs(m, undefined, undefined, undefined, []);
+
+    return m;
+  };
+
+  const companySchema = buildSchema(/* GraphQL */ `
+    type Query {
+      company(id: ID!): Company
+    }
+    type Company {
+      id: ID!
+      name: String!
+      score: Float
+      reviewCount: Int
+      office: Office
+    }
+    type Office {
+      id: ID!
+      location: Location
+    }
+    type Location {
+      formatted: String
+    }
+  `);
+
+  const companyDoc = parse(/* GraphQL */ `
+    query GetCompanyInfo($id: ID!) {
+      company(id: $id) {
+        id
+        name
+        score
+        reviewCount
+        office {
+          id
+          location {
+            formatted
+          }
+        }
+      }
+    }
+  `);
+
+  it('should generate compact type names without GraphQL type names (Apollo Tooling style)', async () => {
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(companySchema, [{ location: 'test-file.ts', document: companyDoc }], config, {
+      outputFile: '',
+    });
+    expect(content).toMatchInlineSnapshot(`
+      "export type GetCompanyInfo_company_office_location = { __typename: 'Location', formatted: string | null };
+
+      export type GetCompanyInfo_company_office = { __typename: 'Office', id: string, location: GetCompanyInfo_company_office_location | null };
+
+      export type GetCompanyInfo_company = { __typename: 'Company', id: string, name: string, score: number | null, reviewCount: number | null, office: GetCompanyInfo_company_office | null };
+
+      export type GetCompanyInfo = { __typename: 'Query', company: GetCompanyInfo_company | null };
+
+
+      export type GetCompanyInfoVariables = Exact<{
+        id: string;
+      }>;
+      "
+    `);
+
+    await validate(content);
+  });
+
+  it('should work with unions and interfaces in compact mode', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        animals: [Animal!]!
+      }
+      interface Animal {
+        name: String!
+        owner: Person!
+      }
+      type Cat implements Animal {
+        name: String!
+        owner: Person!
+      }
+      type Dog implements Animal {
+        name: String!
+        owner: Person!
+      }
+      union Person = Trainer | Veterinarian
+      type Trainer {
+        name: String!
+      }
+      type Veterinarian {
+        name: String!
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      query GetAnimals {
+        animals {
+          name
+          owner {
+            ... on Trainer {
+              name
+            }
+            ... on Veterinarian {
+              name
+            }
+          }
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document: doc }], config, { outputFile: '' });
+
+    // Verify the naming follows Apollo Tooling style (field names only, no intermediate type names)
+    expect(content).toContain('GetAnimals_animals_owner_Trainer');
+    expect(content).toContain('GetAnimals_animals_owner_Veterinarian');
+    expect(content).toContain('GetAnimals_animals_owner');
+    expect(content).toContain('GetAnimals_animals_Cat');
+    expect(content).toContain('GetAnimals_animals_Dog');
+    expect(content).toContain('GetAnimals_animals');
+
+    // Should NOT contain intermediate type names in the field paths (like Animal between animals and owner)
+    expect(content).not.toContain('GetAnimals_animals_Animal_owner');
+
+    await validate(content);
+  });
+
+  it('should automatically enable extractAllFieldsToTypes when extractAllFieldsToTypesCompact is true', async () => {
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypes: false,
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(companySchema, [{ location: 'test-file.ts', document: companyDoc }], config, {
+      outputFile: '',
+    });
+
+    // When extractAllFieldsToTypesCompact is true, extractAllFieldsToTypes should be automatically enabled
+    // So types should be extracted, not inlined
+    expect(content).toContain('GetCompanyInfo_company_office_location');
+    expect(content).toContain('GetCompanyInfo_company_office');
+    expect(content).toContain('GetCompanyInfo_company');
+    expect(content).toContain('export type GetCompanyInfo');
+
+    await validate(content);
+  });
+
+  it('should apply compact naming to fragments', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+      interface User {
+        id: ID!
+        profile: Profile
+      }
+      type AdminUser implements User {
+        id: ID!
+        profile: Profile
+        permissions: [String!]!
+      }
+      type RegularUser implements User {
+        id: ID!
+        profile: Profile
+      }
+      type Profile {
+        name: String!
+        contact: Contact
+      }
+      type Contact {
+        email: String
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      fragment UserProfile on User {
+        id
+        profile {
+          name
+          contact {
+            email
+          }
+        }
+      }
+      query GetUser($id: ID!) {
+        user(id: $id) {
+          ...UserProfile
+          ... on AdminUser {
+            permissions
+          }
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document: doc }], config, { outputFile: '' });
+
+    // Fragment types should use compact naming (no intermediate type names)
+    expect(content).toContain('UserProfile_profile_contact');
+    expect(content).toContain('UserProfile_profile');
+
+    // Should NOT contain type names in fragment paths
+    expect(content).not.toContain('UserProfile_profile_Profile_contact');
+    expect(content).not.toContain('UserProfile_profile_Profile_contact_Contact');
+
+    await validate(content);
+  });
+});
