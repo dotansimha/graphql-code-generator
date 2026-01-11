@@ -423,7 +423,7 @@ export async function executeCodegen(
             };
           });
 
-          return task.newListr(generateTasks, { concurrent: cpus().length });
+          return task.newListr(generateTasks, { concurrent: cpus().length || 1 });
         },
       },
     ],
