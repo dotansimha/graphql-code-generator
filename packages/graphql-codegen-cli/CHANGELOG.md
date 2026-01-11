@@ -1,5 +1,13 @@
 # @graphql-codegen/cli
 
+## 6.1.1
+
+### Patch Changes
+
+- [#10569](https://github.com/dotansimha/graphql-code-generator/pull/10569) [`8cb7d43`](https://github.com/dotansimha/graphql-code-generator/commit/8cb7d4369d35bc6b71750d53385949ffddd072a7) Thanks [@etr2460](https://github.com/etr2460)! - fix(graphql-codegen-cli): Don't hang when 0 CPUs are found
+
+  Fixes generation when 0 CPUs are returned by os.cpus(), which occurs in sandbox environments.
+
 ## 6.1.0
 
 ### Minor Changes
