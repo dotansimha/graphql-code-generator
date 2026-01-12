@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 
 import path from 'path';
-import { isEmpty, uniq } from 'lodash-es';
+import { uniq } from 'lodash-es';
 import { generate } from '@graphql-codegen/cli';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import deleteAsync from 'del';
@@ -47,57 +47,48 @@ export const main = async () => {
 
   const localSchemaFilePath = `${cwd}/schema.graphql`;
 
-  const { internalIncludes, externalIncludes } = { internalIncludes: [`${cwd}/src/**/*.ts`], externalIncludes: [] };
+  const includes = ['src'];
 
   const generateFiles: { [scanPath: string]: Types.ConfiguredOutput } = {};
 
-  const includesForCodegen = uniq(internalIncludes.map((includes: string) => includes.replace(/\/\*\*\/.+$/, '')));
-
-  const globalTypesPath = `${cwd}/src/${GENERATED}/${GLOBAL_TYPES_FILE}`;
-
-  const monorepoRoot = path.resolve(cwd, '..');
-
-  if (!isEmpty(includesForCodegen)) {
-    // Prepare the required structure for GraphQL Codegen
-    includesForCodegen.forEach((includes: string) => {
-      const relativeIncludes = path.relative(monorepoRoot, includes);
-
-      generateFiles[relativeIncludes] = {
-        preset: 'near-operation-file', // This preset tells the codegen to generate multiple files instead of one
-        presetConfig: {
-          extension: '.ts', //  Matches the existing Apollo-Codegen file naming
-          baseTypesPath: `../${path.relative(cwd, globalTypesPath)}`, // Relative (to repo root) path to the global types file to include
-          folder: GENERATED, // Output folder for generated files
-          importTypesNamespace: '', // Disable namespace prefix on imported types
-        },
-        plugins: [
-          'typescript-operations',
-          {
-            add: {
-              content: TS_GENERATED_FILE_HEADER,
-            },
-          },
-        ],
-      };
-    });
-
-    await generate(
-      {
-        schema: localSchemaFilePath,
-        documents: [
-          // matching js extensins as well - there are cases where js files are not converted to typescript yet
-          // (but the package is typescript)
-          ...includesForCodegen.map((include: any) => `${include}/**/*.{js,jsx,ts,tsx}`),
-          ...externalIncludes,
-          `!**/${GENERATED}/**`,
-        ],
-        config: GRAPHQL_CODEGEN_CONFIG,
-        generates: generateFiles,
-        silent: true,
+  // Prepare the required structure for GraphQL Codegen
+  includes.forEach((include: string) => {
+    generateFiles[include] = {
+      preset: 'near-operation-file', // This preset tells the codegen to generate multiple files instead of one
+      presetConfig: {
+        extension: '.ts', //  Matches the existing Apollo-Codegen file naming
+        // FIXME: The following config is required, but it is not needed with the recent version of typescript-operations.
+        // So - when the new version of near-operation-file' is available - fix this.
+        baseTypesPath: 'unused',
+        folder: GENERATED, // Output folder for generated files
+        importTypesNamespace: '', // Disable namespace prefix on imported types
       },
-      true // overwrite existing files
-    );
-  }
+      plugins: [
+        'typescript-operations',
+        {
+          add: {
+            content: TS_GENERATED_FILE_HEADER,
+          },
+        },
+      ],
+    };
+  });
+
+  await generate(
+    {
+      schema: localSchemaFilePath,
+      documents: [
+        // matching js extensins as well - there are cases where js files are not converted to typescript yet
+        // (but the package is typescript)
+        ...includes.map((include: any) => `${include}/**/*.{js,jsx,ts,tsx}`),
+        `!**/${GENERATED}/**`,
+      ],
+      config: GRAPHQL_CODEGEN_CONFIG,
+      generates: generateFiles,
+      silent: true,
+    },
+    true // overwrite existing files
+  );
 };
 
 if (import.meta.url === process.argv[1] || import.meta.url === `file://${process.argv[1]}`) {
