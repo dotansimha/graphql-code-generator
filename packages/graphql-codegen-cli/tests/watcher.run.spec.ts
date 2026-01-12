@@ -1,4 +1,3 @@
-import type { Mock } from 'vitest';
 import * as path from 'path';
 import { mkdtempSync, mkdirSync, writeFileSync } from 'fs';
 import { createWatcher } from '../src/utils/watcher.js';
@@ -39,16 +38,12 @@ const setupTestFiles = (): { testDir: string; schemaFile: TestFilePaths; documen
   };
 };
 
-const onNextMock = vi.fn();
-
-const setupMockWatcher = async (
-  codegenContext: ConstructorParameters<typeof CodegenContext>[0],
-  onNext: Mock = vi.fn().mockResolvedValue([])
-) => {
-  const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
+const setupMockWatcher = async (codegenContext: ConstructorParameters<typeof CodegenContext>[0]) => {
+  const onNextMock = vi.fn().mockResolvedValue([]);
+  const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNextMock);
   // After creating watcher, wait for a tick for subscription to be completely set up
   await waitForNextEvent();
-  return { stopWatching };
+  return { stopWatching, onNextMock };
 };
 
 describe('Watch runs', () => {
@@ -77,22 +72,19 @@ describe('Watch runs', () => {
         }
       `
     );
-    await waitForNextEvent();
-    const { stopWatching } = await setupMockWatcher(
-      {
-        filepath: path.join(testDir, 'codegen.ts'),
-        config: {
-          schema: schemaFile.relative,
-          documents: documentFile.relative,
-          generates: {
-            [path.join(testDir, 'types.ts')]: {
-              plugins: ['typescript'],
-            },
+
+    const { stopWatching, onNextMock } = await setupMockWatcher({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        generates: {
+          [path.join(testDir, 'types.ts')]: {
+            plugins: ['typescript'],
           },
         },
       },
-      onNextMock
-    );
+    });
 
     // 1. Initial setup: onNext in initial run should be called because no errors
     expect(onNextMock).toHaveBeenCalledTimes(1);
@@ -129,7 +121,97 @@ describe('Watch runs', () => {
     expect(onNextMock).toHaveBeenCalledTimes(2);
 
     await stopWatching();
+  });
 
+  test('only re-runs generates processes based on watched path', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `
+    );
+
+    const generatesKey1 = path.join(testDir, 'types-1.ts');
+    const generatesKey2 = path.join(testDir, 'types-2.ts');
+
+    const { stopWatching, onNextMock } = await setupMockWatcher({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        generates: {
+          [generatesKey1]: {
+            plugins: ['typescript'],
+          },
+          [generatesKey2]: {
+            documents: documentFile.relative, // When this file is changed, only this block will be re-generated
+            plugins: ['typescript'],
+          },
+        },
+      },
+    });
+
+    // 1. Initial setup: onNext in initial run should be called successfully with 2 files,
+    // because there are no errors
+    expect(onNextMock.mock.calls[0][0].length).toBe(2);
+    expect(onNextMock.mock.calls[0][0][0].filename).toBe(generatesKey1);
+    expect(onNextMock.mock.calls[0][0][1].filename).toBe(generatesKey2);
+
+    // 2. Subsequent run 1: update document file for generatesKey2,
+    // so only the second generates block gets triggered
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `
+    );
     await waitForNextEvent();
+    expect(onNextMock.mock.calls[1][0].length).toBe(1);
+    expect(onNextMock.mock.calls[1][0][0].filename).toBe(generatesKey2);
+
+    // 2. Subsequent run 2: update schema file, so both generates block are triggered
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+
+        scalar DateTime
+      `
+    );
+    await waitForNextEvent();
+    expect(onNextMock.mock.calls[2][0].length).toBe(2);
+    expect(onNextMock.mock.calls[2][0][0].filename).toBe(generatesKey1);
+    expect(onNextMock.mock.calls[2][0][1].filename).toBe(generatesKey2);
+
+    await stopWatching();
   });
 });
