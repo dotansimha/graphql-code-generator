@@ -30,7 +30,7 @@ const GRAPHQL_CODEGEN_CONFIG = {
   skipTypeNameForRoot: true, // Don't generate __typename for root types
   omitOperationSuffix: true, // Don't add 'Query', 'Mutation' or 'Subscription' suffixes to operation result types
   fragmentSuffix: '', // Don't add 'Fragment' suffix to fragment result types
-  extractAllFieldsToTypes: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
+  extractAllFieldsToTypesCompact: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
   printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
   importTypesNamespace: '', // Disable namespace prefix on imported types
   enumType: 'native',

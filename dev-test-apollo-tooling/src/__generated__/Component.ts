@@ -13,46 +13,42 @@ export enum UserManagerRoleType {
   ROLE_TYPE_3 = 'ROLE_TYPE_3',
 }
 
-export type GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager_fooUser_User_profilePhoto_UserProfilePhoto_photoUrl_UserPhotoUrl =
-  {
-    __typename: 'UserPhotoUrl';
-    url: string | null;
-  };
-
-export type GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager_fooUser_User_profilePhoto_UserProfilePhoto =
-  {
-    __typename: 'UserProfilePhoto';
-    photoUrl: GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager_fooUser_User_profilePhoto_UserProfilePhoto_photoUrl_UserPhotoUrl | null;
-  };
-
-export type GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager_fooUser_User = {
-  __typename: 'User';
-  profilePhoto: GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager_fooUser_User_profilePhoto_UserProfilePhoto | null;
+export type GetFoo_superUser_groupFromAlias_managers_fooUser_profilePhoto_photoUrl = {
+  __typename: 'UserPhotoUrl';
+  url: string | null;
 };
 
-export type GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager = {
+export type GetFoo_superUser_groupFromAlias_managers_fooUser_profilePhoto = {
+  __typename: 'UserProfilePhoto';
+  photoUrl: GetFoo_superUser_groupFromAlias_managers_fooUser_profilePhoto_photoUrl | null;
+};
+
+export type GetFoo_superUser_groupFromAlias_managers_fooUser = {
+  __typename: 'User';
+  profilePhoto: GetFoo_superUser_groupFromAlias_managers_fooUser_profilePhoto | null;
+};
+
+export type GetFoo_superUser_groupFromAlias_managers = {
   __typename: 'UserManager';
   roleType: Types.UserManagerRoleType;
-  fooUser: GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager_fooUser_User;
+  fooUser: GetFoo_superUser_groupFromAlias_managers_fooUser;
 };
 
-export type GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup = {
+export type GetFoo_superUser_groupFromAlias = {
   __typename: 'SuperUserGroup';
-  managers: Array<GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup_managers_UserManager> | null;
+  managers: Array<GetFoo_superUser_groupFromAlias_managers> | null;
 };
 
-export type GetFoo_superUser_SuperUser = {
+export type GetFoo_superUser = {
   __typename: 'SuperUser';
-  groupFromAlias: GetFoo_superUser_SuperUser_groupFromAlias_SuperUserGroup;
+  groupFromAlias: GetFoo_superUser_groupFromAlias;
 };
 
-export type GetFoo_Query = {
-  superUser: GetFoo_superUser_SuperUser;
+export type GetFoo = {
+  superUser: GetFoo_superUser;
 };
 
 export type GetFooVariables = Exact<{
   alias: string;
   collectionId: string;
 }>;
-
-export type GetFoo = GetFoo_Query;

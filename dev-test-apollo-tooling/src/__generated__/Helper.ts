@@ -13,23 +13,23 @@ export enum UserManagerRoleType {
   ROLE_TYPE_3 = 'ROLE_TYPE_3',
 }
 
-export type HelperFields_UserManager_fooUser_User_profilePhoto_UserProfilePhoto_photoUrl_UserPhotoUrl = {
+export type HelperFields_fooUser_profilePhoto_photoUrl = {
   __typename: 'UserPhotoUrl';
   url: string | null;
 };
 
-export type HelperFields_UserManager_fooUser_User_profilePhoto_UserProfilePhoto = {
+export type HelperFields_fooUser_profilePhoto = {
   __typename: 'UserProfilePhoto';
-  photoUrl: HelperFields_UserManager_fooUser_User_profilePhoto_UserProfilePhoto_photoUrl_UserPhotoUrl | null;
+  photoUrl: HelperFields_fooUser_profilePhoto_photoUrl | null;
 };
 
-export type HelperFields_UserManager_fooUser_User = {
+export type HelperFields_fooUser = {
   __typename: 'User';
-  profilePhoto: HelperFields_UserManager_fooUser_User_profilePhoto_UserProfilePhoto | null;
+  profilePhoto: HelperFields_fooUser_profilePhoto | null;
 };
 
 export type HelperFields = {
   __typename: 'UserManager';
   roleType: Types.UserManagerRoleType;
-  fooUser: HelperFields_UserManager_fooUser_User;
+  fooUser: HelperFields_fooUser;
 };
