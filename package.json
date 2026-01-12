@@ -40,7 +40,8 @@
     "packages/plugins/other/*",
     "packages/presets/*",
     "website",
-    "examples/**/*"
+    "examples/**/*",
+    "dev-test-apollo-tooling"
   ],
   "devDependencies": {
     "@babel/core": "7.25.2",
@@ -84,7 +85,8 @@
   },
   "resolutions": {
     "typescript": "5.5.4",
-    "eslint-plugin-promise": "7.1.0"
+    "eslint-plugin-promise": "7.1.0",
+    "graphql": "16.9.0"
   },
   "version": "0.0.0"
 }

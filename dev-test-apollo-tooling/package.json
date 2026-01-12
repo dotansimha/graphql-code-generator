@@ -1,0 +1,30 @@
+{
+  "name": "dev-test-apollo-tooling",
+  "description": "A setup which mimics Apollo tooling behavior as much as possible",
+  "version": "0.0.1",
+  "type": "module",
+  "dependencies": {
+    "@apollo/client": "3.13.8",
+    "@graphql-codegen/cli": "*",
+    "@graphql-codegen/near-operation-file-preset": "4.0.0",
+    "@graphql-codegen/plugin-helpers": "*",
+    "@graphql-codegen/typescript-operations": "*",
+    "@graphql-codegen/visitor-plugin-common": "*",
+    "@graphql-codegen/typed-document-node": "*",
+    "del": "^6.1.1",
+    "graphql": "^16.9.0",
+    "lodash-es": "^4.17.15"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "^25.0.3",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "cli"
+  ],
+  "scripts": {
+    "start": "npx tsx cli/index.ts"
+  },
+  "sideEffects": false
+}
