@@ -1,7 +1,5 @@
 #!/usr/bin/env ts-node
 
-import path from 'path';
-import { uniq } from 'lodash-es';
 import { generate } from '@graphql-codegen/cli';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import deleteAsync from 'del';
