@@ -11,6 +11,14 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         users(input: UsersInput!): UsersResponse!
       }
 
+      type Mutation {
+        makeUserAdmin(id: ID!): User!
+      }
+
+      type Subscription {
+        userChanges(id: ID!): User!
+      }
+
       type ResponseError {
         error: ResponseErrorType!
       }
@@ -90,6 +98,23 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           }
         }
       }
+
+      mutation MakeAdmin {
+        makeUserAdmin(id: "100") {
+          ...UserFragment
+        }
+      }
+
+      subscription UserChanges {
+        makeUserAdmin(id: "100") {
+          ...UserFragment
+        }
+      }
+
+      fragment UserFragment on User {
+        id
+        role
+      }
     `);
 
     const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
@@ -147,6 +172,18 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           | { result: Array<{ __typename: 'User' }> }
           | { __typename: 'ResponseError' }
          };
+
+      export type MakeAdminMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type MakeAdminMutation = { makeUserAdmin: { id: string, role: UserRole } };
+
+      export type UserChangesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type UserChangesSubscription = Record<PropertyKey, never>;
+
+      export type UserFragmentFragment = { id: string, role: UserRole };
       "
     `);
 
