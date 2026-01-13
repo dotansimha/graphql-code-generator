@@ -188,7 +188,7 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
-  it('generates `any` when defaultScalarType is set to arbitrary types', async () => {
+  it('generates correct types when defaultScalarType is set to said types', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(
