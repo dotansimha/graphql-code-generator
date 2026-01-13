@@ -15,8 +15,8 @@ export type OnCommentAddedSubscription = {
 
 export type CommentQueryVariables = Exact<{
   repoFullName: string;
-  limit?: number | null | undefined;
-  offset?: number | null | undefined;
+  limit?: number | null;
+  offset?: number | null;
 }>;
 
 export type CommentQuery = {
@@ -48,8 +48,8 @@ export type CurrentUserForProfileQuery = { currentUser: { login: string; avatar_
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: number | null | undefined;
-  limit?: number | null | undefined;
+  offset?: number | null;
+  limit?: number | null;
 }>;
 
 export type FeedQuery = {

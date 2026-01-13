@@ -2719,13 +2719,13 @@ export type Q2Query = { search: Array<
         };
 
         export type TestQueryQueryVariables = Exact<{
-          username?: string | null | undefined;
-          email?: string | null | undefined;
+          username?: string | null;
+          email?: string | null;
           password: string;
-          input?: InputType | null | undefined;
+          input?: InputType | null;
           mandatoryInput: InputType;
-          testArray?: Array<string | null | undefined> | string | null | undefined;
-          requireString: Array<string | null | undefined> | string;
+          testArray?: Array<string | null> | string | null;
+          requireString: Array<string | null> | string;
           innerRequired: Array<string> | string;
         }>;
 
@@ -2749,7 +2749,7 @@ export type Q2Query = { search: Array<
       expect(content).toMatchInlineSnapshot(
         `
         "export type TestQueryQueryVariables = Exact<{
-          test?: unknown | null | undefined;
+          test?: unknown | null;
         }>;
 
 
@@ -3019,7 +3019,7 @@ export type Q2Query = { search: Array<
 
       expect(content).toMatchInlineSnapshot(`
         "export type UsersQueryVariables = Exact<{
-          reverse?: boolean | null | undefined;
+          reverse?: boolean | null;
         }>;
 
 
@@ -4969,8 +4969,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toMatchInlineSnapshot(`
         "export type UserQueryVariables = Exact<{
-          testArray?: Array<string | null | undefined> | string | null | undefined;
-          requireString: Array<string | null | undefined> | string;
+          testArray?: Array<string | null> | string | null;
+          requireString: Array<string | null> | string;
           innerRequired: Array<string> | string;
         }>;
 
@@ -5009,8 +5009,8 @@ function test(q: GetEntityBrandDataQuery): void {
 
       expect(content).toMatchInlineSnapshot(`
         "export type UserQueryVariables = Exact<{
-          testArray?: Array<string | null | undefined> | null | undefined;
-          requireString: Array<string | null | undefined>;
+          testArray?: Array<string | null> | null;
+          requireString: Array<string | null>;
           innerRequired: Array<string>;
         }>;
 

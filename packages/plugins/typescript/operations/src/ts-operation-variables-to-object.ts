@@ -8,7 +8,7 @@ export const SCALARS = {
   Boolean: 'boolean',
 };
 
-const MAYBE_SUFFIX = ' | null | undefined';
+const MAYBE_SUFFIX = ' | null';
 
 export class TypeScriptOperationVariablesToObject extends TSOperationVariablesToObject {
   protected formatTypeString(fieldType: string, _isNonNullType: boolean, _hasDefaultValue: boolean): string {

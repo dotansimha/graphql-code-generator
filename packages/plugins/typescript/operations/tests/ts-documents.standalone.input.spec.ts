@@ -129,10 +129,10 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         inputNonNullable: UsersInput;
-        inputNullable?: UsersInput | null | undefined;
-        ageRange1?: Array<number | null | undefined> | number | null | undefined;
-        ageRange2: Array<number | null | undefined> | number;
-        ageRange3?: Array<number> | number | null | undefined;
+        inputNullable?: UsersInput | null;
+        ageRange1?: Array<number | null> | number | null;
+        ageRange2: Array<number | null> | number;
+        ageRange3?: Array<number> | number | null;
         ageRange4: Array<number> | number;
       }>;
 
@@ -257,7 +257,7 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         inputNonNullable: UsersInput;
-        inputNullable?: UsersInput | null | undefined;
+        inputNullable?: UsersInput | null;
       }>;
 
 
@@ -374,7 +374,7 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       export type UsersQueryVariables = Exact<{
         inputNonNullable: UsersInput;
-        inputNullable?: UsersInput | null | undefined;
+        inputNullable?: UsersInput | null;
       }>;
 
 
