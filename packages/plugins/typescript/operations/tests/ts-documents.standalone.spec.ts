@@ -838,22 +838,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([
-      await plugin(
-        schema,
-        [{ document }],
-        {
-          skipTypeNameForRoot: true,
-          nonOptionalTypename: true,
-        },
-        { outputFile: '' }
-      ),
-    ]);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
       "
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      export type UserPartFragment = { __typename: 'User', id: string, name: string };
+      export type UserPartFragment = { id: string, name: string };
       "
     `);
 
