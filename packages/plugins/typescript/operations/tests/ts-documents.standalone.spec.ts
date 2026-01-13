@@ -712,17 +712,6 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         user(id: ID!): User
       }
 
-      type ResponseError {
-        error: ResponseErrorType!
-      }
-
-      enum ResponseErrorType {
-        NOT_FOUND
-        INPUT_VALIDATION_ERROR
-        FORBIDDEN_ERROR
-        UNEXPECTED_ERROR
-      }
-
       type User {
         id: ID!
         name: String!
