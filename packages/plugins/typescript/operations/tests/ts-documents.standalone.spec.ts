@@ -771,4 +771,55 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
+
+  it('does not generate Exact utility type if there are only fragments', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+        bestFriend: User
+        goodFriends: [User!]!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      fragment UserPart on User {
+        id
+        name
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          skipTypeNameForRoot: true,
+          nonOptionalTypename: true,
+        },
+        { outputFile: '' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserPartFragment = { __typename: 'User', id: string, name: string };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
 });
