@@ -76,6 +76,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsParsedConfig
 > {
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
+  protected _needsExactUtilityType: boolean = false;
   private _outputPath: string;
 
   constructor(
@@ -396,7 +397,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   protected applyVariablesWrapper(variablesBlock: string, operationType: string): string {
     const extraType =
       this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
-
+    this._needsExactUtilityType = true;
     return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
@@ -514,7 +515,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   getExactUtilityType(): string | null {
-    if (!this.config.generatesOperationTypes) {
+    if (
+      !this.config.generatesOperationTypes || // 1. If we don't generate operation types, definitely do not need `Exact`
+      !this._needsExactUtilityType // 2. Even if we generate operation types, we may not need `Exact` if there's no operations in the documents i.e. only fragments found
+    ) {
       return null;
     }
 
