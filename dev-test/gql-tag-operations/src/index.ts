@@ -14,6 +14,7 @@ const LelFragment = graphql(/* GraphQL */ `
   fragment Lel on Tweet {
     id
     body
+    date
   }
 `);
 
