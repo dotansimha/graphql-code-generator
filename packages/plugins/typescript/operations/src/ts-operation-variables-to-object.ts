@@ -1,4 +1,11 @@
-import { TypeScriptOperationVariablesToObject as TSOperationVariablesToObject } from '@graphql-codegen/typescript';
+import { Kind, TypeNode } from 'graphql';
+import {
+  ConvertNameFn,
+  NormalizedAvoidOptionalsConfig,
+  NormalizedScalarsMap,
+  OperationVariablesToObject,
+  ParsedEnumValuesMap,
+} from '@graphql-codegen/visitor-plugin-common';
 
 export const SCALARS = {
   ID: 'string | number',
@@ -10,7 +17,40 @@ export const SCALARS = {
 
 const MAYBE_SUFFIX = ' | null';
 
-export class TypeScriptOperationVariablesToObject extends TSOperationVariablesToObject {
+export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
+  constructor(
+    _scalars: NormalizedScalarsMap,
+    _convertName: ConvertNameFn,
+    private _avoidOptionals: NormalizedAvoidOptionalsConfig,
+    private _immutableTypes: boolean,
+    _namespacedImportName: string | null,
+    _enumNames: string[],
+    _enumPrefix: boolean,
+    _enumSuffix: boolean,
+    _enumValues: ParsedEnumValuesMap,
+    _applyCoercion: boolean,
+  ) {
+    super(
+      _scalars,
+      _convertName,
+      _namespacedImportName,
+      _enumNames,
+      _enumPrefix,
+      _enumSuffix,
+      _enumValues,
+      _applyCoercion,
+      {},
+    );
+  }
+
+  protected formatFieldString(
+    fieldName: string,
+    isNonNullType: boolean,
+    hasDefaultValue: boolean,
+  ): string {
+    return `${fieldName}${this.getAvoidOption(isNonNullType, hasDefaultValue) ? '?' : ''}`;
+  }
+
   protected formatTypeString(
     fieldType: string,
     _isNonNullType: boolean,
@@ -27,11 +67,44 @@ export class TypeScriptOperationVariablesToObject extends TSOperationVariablesTo
     return str;
   }
 
+  protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean) {
+    const options = this._avoidOptionals;
+    return (
+      ((options.object || !options.defaultValue) && hasDefaultValue) ||
+      (!options.object && !isNonNullType)
+    );
+  }
+
+  public wrapAstTypeWithModifiers(
+    baseType: string,
+    typeNode: TypeNode,
+    applyCoercion = false,
+  ): string {
+    if (typeNode.kind === Kind.NON_NULL_TYPE) {
+      const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
+
+      return this.clearOptional(type);
+    }
+    if (typeNode.kind === Kind.LIST_TYPE) {
+      const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
+      const listInputCoercionExtension = applyCoercion ? ` | ${innerType}` : '';
+
+      return this.wrapMaybe(
+        `${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`,
+      );
+    }
+    return this.wrapMaybe(baseType);
+  }
+
   protected wrapMaybe(type: string): string {
     return type?.endsWith(MAYBE_SUFFIX) ? type : `${type}${MAYBE_SUFFIX}`;
   }
 
   protected getScalar(name: string): string {
     return this._scalars?.[name]?.input ?? SCALARS[name] ?? 'unknown';
+  }
+
+  protected getPunctuation(): string {
+    return ';';
   }
 }
