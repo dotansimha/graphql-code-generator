@@ -163,8 +163,8 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null;
-        role?: UserRole | null;
+        to?: unknown | null | undefined;
+        role?: UserRole | null | undefined;
       }>;
 
 
