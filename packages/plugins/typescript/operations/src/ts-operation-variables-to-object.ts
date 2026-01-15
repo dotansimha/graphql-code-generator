@@ -52,16 +52,24 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected clearOptional(str: string): string {
-    if (str?.endsWith(MAYBE_SUFFIX)) {
+    if (str.endsWith(MAYBE_SUFFIX)) {
       return (str = str.substring(0, str.length - MAYBE_SUFFIX.length));
     }
 
     return str;
   }
 
-  protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean) {
+  protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean): boolean {
     const options = this._avoidOptionals;
     return ((options.object || !options.defaultValue) && hasDefaultValue) || (!options.object && !isNonNullType);
+  }
+
+  protected getScalar(name: string): string {
+    return this._scalars[name]?.input ?? SCALARS[name] ?? 'unknown';
+  }
+
+  protected getPunctuation(): string {
+    return ';';
   }
 
   public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode, applyCoercion = false): string {
@@ -82,14 +90,6 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected wrapMaybe(type: string): string {
-    return type?.endsWith(MAYBE_SUFFIX) ? type : `${type}${MAYBE_SUFFIX}`;
-  }
-
-  protected getScalar(name: string): string {
-    return this._scalars?.[name]?.input ?? SCALARS[name] ?? 'unknown';
-  }
-
-  protected getPunctuation(): string {
-    return ';';
+    return type.endsWith(MAYBE_SUFFIX) ? type : `${type}${MAYBE_SUFFIX}`;
   }
 }
