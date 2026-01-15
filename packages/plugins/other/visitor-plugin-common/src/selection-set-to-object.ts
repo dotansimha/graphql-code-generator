@@ -90,6 +90,10 @@ export class SelectionSetToObject<
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
   protected _queriedForTypename = false;
+  // Enables resolving conflics in extractAllFieldsToTypesCompact mode:
+  //   key === GetFoo_user    <-- full field name
+  //   value === User         <-- last field type
+  protected _seenFieldNames: Map<string, string> = new Map();
 
   constructor(
     protected _processor: BaseSelectionSetProcessor<SelectionSetProcessorConfig>,
@@ -106,7 +110,7 @@ export class SelectionSetToObject<
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new SelectionSetToObject(
+    const next = new SelectionSetToObject(
       this._processor,
       this._scalars,
       this._schema,
@@ -117,6 +121,8 @@ export class SelectionSetToObject<
       parentSchemaType,
       selectionSet
     );
+    next._seenFieldNames = this._seenFieldNames;
+    return next;
   }
 
   /**
@@ -896,9 +902,15 @@ export class SelectionSetToObject<
     const mergedTypeString = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
     const { grouped, dependentTypes } = this._buildGroupedSelections(mergedTypeString);
 
+    const hasMultipleTypes = Object.keys(grouped).length > 1;
+
     const subTypes: DependentType[] = Object.keys(grouped).flatMap(typeName => {
       const possibleFields = grouped[typeName].filter(Boolean);
-      const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
+      // In compact mode, pass typeName only when there are multiple types
+      const declarationName =
+        this._config.extractAllFieldsToTypesCompact && !hasMultipleTypes
+          ? this.buildFragmentTypeName(fragmentName, fragmentSuffix)
+          : this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
       if (possibleFields.length === 0) {
         return [];
@@ -969,13 +981,7 @@ export class SelectionSetToObject<
   }
 
   protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
-    // In compact mode, omit typeName from fragment type names
-    let fragmentSuffix: string;
-    if (this._config.extractAllFieldsToTypesCompact) {
-      fragmentSuffix = suffix;
-    } else {
-      fragmentSuffix = typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix;
-    }
+    const fragmentSuffix = typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix;
 
     return this._convertName(name, {
       useTypesPrefix: true,
@@ -984,15 +990,32 @@ export class SelectionSetToObject<
   }
 
   protected buildParentFieldName(typeName: string, parentName: string): string {
+    // Sample input:
+    //   typeName = User             <-- last field type
+    //   parentName = GetFoo_user    <-- full field name
+
     // queries/mutations/fragments are guaranteed to be unique type names,
     // so we can skip affixing the field names with typeName
     if (operationTypes.includes(typeName)) {
       return parentName;
     }
 
-    // When compact mode is enabled, skip appending typeName
+    // When compact mode is enabled, skip appending typeName initially
+    // but check for conflicts
     if (this._config.extractAllFieldsToTypesCompact) {
-      return parentName;
+      const existingTypeName = this._seenFieldNames.get(parentName);
+      if (!existingTypeName) {
+        // First time seeing this field name, record it's type
+        this._seenFieldNames.set(parentName, typeName);
+        return parentName;
+      } if (existingTypeName !== typeName) {
+        // Conflict detected: same field name but different type
+        // Return field name with type suffix
+        return `${parentName}_${typeName}`;
+      } 
+        // Same field name and same type, just return the plain name
+        return parentName;
+      
     }
 
     const schemaType = this._schema.getType(typeName);
