@@ -76,6 +76,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
   protected _needsExactUtilityType: boolean = false;
   private _outputPath: string;
+  private _inputMaybeValueSuffix: string;
 
   constructor(
     schema: GraphQLSchema,
@@ -156,6 +157,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config
       )
     );
+
+    this._inputMaybeValueSuffix = this.config.inputMaybeValue.replace('T', ''); // e.g. turns `T | null | undefined` to ` | null | undefined`
+
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
@@ -166,6 +170,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           avoidOptionals: this.config.avoidOptionals,
           immutableTypes: this.config.immutableTypes,
           inputMaybeValue: this.config.inputMaybeValue,
+          inputMaybeValueSuffix: this._inputMaybeValueSuffix,
         },
         this.scalars,
         this.convertName.bind(this),
@@ -272,7 +277,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
         if (!typeNode.isNonNullable) {
-          typePart += ' | null | undefined';
+          typePart += this._inputMaybeValueSuffix;
         }
         continue;
       }
@@ -280,7 +285,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       if (typeNode.type === 'ListType') {
         typePart = `Array<${typePart}>`;
         if (!typeNode.isNonNullable) {
-          typePart += ' | null | undefined';
+          typePart += this._inputMaybeValueSuffix;
         }
       }
     }

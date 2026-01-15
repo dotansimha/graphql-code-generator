@@ -257,12 +257,12 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   maybeValue?: string;
 
   /**
-   * @description Allows overriding the type value of Input nullable types.
+   * @description Allows overriding the type of Input and Variables nullable types.
    * @default T | null | undefined
    *
    * @exampleMarkdown
    * ## Disallow `undefined`
-   * This is useful if you want to force explicit null to be passed in as Variables to the server.
+   * Disallowing `undefined` is useful if you want to force explicit null to be passed in as Variables to the server. Use `inputMaybeValue: 'T | null'` with `avoidOptionals.inputValue: true` to achieve this.
    *
    * ```ts filename="codegen.ts"
    * import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -273,6 +273,9 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *     'path/to/file.ts': {
    *       plugins: ['typescript-operations'],
    *       config: {
+   *         avoidOptionals: {
+   *           inputValue: true,
+   *         },
    *         inputMaybeValue: 'T | null'
    *       }
    *     }

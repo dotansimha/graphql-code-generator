@@ -16,17 +16,12 @@ export const SCALARS = {
 };
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
-  private _config: {
-    avoidOptionals: NormalizedAvoidOptionalsConfig;
-    immutableTypes: boolean;
-    inputMaybeValue: string;
-    inputMaybeValueSuffix: string;
-  };
   constructor(
-    rawConfig: {
+    private _config: {
       avoidOptionals: NormalizedAvoidOptionalsConfig;
       immutableTypes: boolean;
       inputMaybeValue: string;
+      inputMaybeValueSuffix: string;
     },
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
@@ -48,13 +43,6 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       _applyCoercion,
       {}
     );
-
-    this._config = {
-      avoidOptionals: rawConfig.avoidOptionals,
-      immutableTypes: rawConfig.immutableTypes,
-      inputMaybeValue: rawConfig.inputMaybeValue,
-      inputMaybeValueSuffix: this._config.inputMaybeValue.replace('T', ''), // e.g. turns `T | null | undefined` to `| null | undefined`
-    };
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
