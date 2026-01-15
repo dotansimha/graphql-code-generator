@@ -84,13 +84,13 @@ describe('extractAllFieldsToTypes: true', () => {
       "type UserFragment_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       type UserFragment_ActiveUser = {
         __typename: 'ActiveUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type UserFragment =
@@ -101,13 +101,13 @@ describe('extractAllFieldsToTypes: true', () => {
       export type MeFragment_ActiveUser_parentUser_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type MeFragment_ActiveUser_parentUser_ActiveUser = {
         __typename: 'ActiveUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type MeFragment_ActiveUser_parentUser =
@@ -118,14 +118,14 @@ describe('extractAllFieldsToTypes: true', () => {
       type Me_DummyUser_Fragment = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       type Me_ActiveUser_Fragment = {
         __typename: 'ActiveUser',
         isActive: boolean,
         id: string,
-        joinDate: any,
+        joinDate: unknown,
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
@@ -137,14 +137,14 @@ describe('extractAllFieldsToTypes: true', () => {
       export type OverlappingFieldsMergingTestQuery_me_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type OverlappingFieldsMergingTestQuery_me_ActiveUser = {
         __typename: 'ActiveUser',
         id: string,
         isActive: boolean,
-        joinDate: any,
+        joinDate: unknown,
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
@@ -167,14 +167,14 @@ describe('extractAllFieldsToTypes: true', () => {
       export type NestedOverlappingFieldsMergingTestQuery_me_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type NestedOverlappingFieldsMergingTestQuery_me_ActiveUser = {
         __typename: 'ActiveUser',
         isActive: boolean,
         id: string,
-        joinDate: any,
+        joinDate: unknown,
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
