@@ -54,6 +54,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   immutableTypes: boolean;
   noExport: boolean;
   maybeValue: string;
+  inputMaybeValue: string;
   allowUndefinedQueryVariables: boolean;
   enumType: ConvertSchemaEnumToDeclarationBlockString['outputType'];
   enumValues: ParsedEnumValuesMap;
@@ -73,7 +74,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsParsedConfig
 > {
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
+  protected _needsExactUtilityType: boolean = false;
   private _outputPath: string;
+  private _inputMaybeValueSuffix: string;
 
   constructor(
     schema: GraphQLSchema,
@@ -99,15 +102,14 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         }),
         ignoreEnumValuesFromSchema: getConfigValue(config.ignoreEnumValuesFromSchema, false),
         futureProofEnums: getConfigValue(config.futureProofEnums, false),
+        maybeValue: getConfigValue(config.maybeValue, 'T | null'),
+        inputMaybeValue: getConfigValue(config.inputMaybeValue, 'T | null | undefined'),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
 
     this._outputPath = outputPath;
     autoBind(this);
-
-    const defaultMaybeValue = 'T | null';
-    const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
 
     const allFragments: LoadedFragment[] = [
       ...(documentNode.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
@@ -143,7 +145,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       wrapTypeWithModifiers: (baseType, type) => {
         return wrapTypeWithModifiers(baseType, type, {
-          wrapOptional: type => maybeValue.replace('T', type),
+          wrapOptional: type => this.config.maybeValue.replace('T', type),
           wrapArray: type => {
             const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
             return `${listModifier}<${type}>`;
@@ -164,24 +166,29 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config
       )
     );
+
+    this._inputMaybeValueSuffix = this.config.inputMaybeValue.replace('T', ''); // e.g. turns `T | null | undefined` to ` | null | undefined`
+
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
+        {
+          // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
+          // It's also being used for Variables so people could already be using it.
+          // Maybe it's better to deprecate and remove, to see what users think.
+          avoidOptionals: this.config.avoidOptionals,
+          immutableTypes: this.config.immutableTypes,
+          inputMaybeValue: this.config.inputMaybeValue,
+          inputMaybeValueSuffix: this._inputMaybeValueSuffix,
+        },
         this.scalars,
         this.convertName.bind(this),
-        // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
-        // It's also being used for Variables so people could already be using it.
-        // Maybe it's better to deprecate and remove, to see what users think.
-        this.config.avoidOptionals,
-        this.config.immutableTypes,
         this.config.namespacedImportName,
         enumsNames,
         this.config.enumPrefix,
         this.config.enumSuffix,
         this.config.enumValues,
-        this.config.arrayInputCoercion,
-        undefined,
-        undefined
+        this.config.arrayInputCoercion
       )
     );
     this._declarationBlockConfig = {
@@ -278,8 +285,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         }
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
-        if (usedInputType.tsType !== 'any' && !typeNode.isNonNullable) {
-          typePart += ' | null | undefined';
+        if (!typeNode.isNonNullable) {
+          typePart += this._inputMaybeValueSuffix;
         }
         continue;
       }
@@ -287,7 +294,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       if (typeNode.type === 'ListType') {
         typePart = `Array<${typePart}>`;
         if (!typeNode.isNonNullable) {
-          typePart += ' | null | undefined';
+          typePart += this._inputMaybeValueSuffix;
         }
       }
     }
@@ -395,7 +402,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   protected applyVariablesWrapper(variablesBlock: string, operationType: string): string {
     const extraType = this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
-
+    this._needsExactUtilityType = true;
     return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
@@ -417,7 +424,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       usedInputTypes[node.name] = {
         type: 'GraphQLScalarType',
         node,
-        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'any',
+        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'unknown',
       };
       return;
     }
@@ -510,7 +517,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   getExactUtilityType(): string | null {
-    if (!this.config.generatesOperationTypes) {
+    if (
+      !this.config.generatesOperationTypes || // 1. If we don't generate operation types, definitely do not need `Exact`
+      !this._needsExactUtilityType // 2. Even if we generate operation types, we may not need `Exact` if there's no operations in the documents i.e. only fragments found
+    ) {
       return null;
     }
 

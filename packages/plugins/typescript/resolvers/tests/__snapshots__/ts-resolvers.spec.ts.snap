@@ -13,7 +13,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  MyScalar: { input: any; output: any; }
+  MyScalar: { input: unknown; output: unknown; }
 };
 
 export type MyType = {
@@ -628,7 +628,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  MyScalar: { input: any; output: any; }
+  MyScalar: { input: unknown; output: unknown; }
 };
 
 export type MyType = {

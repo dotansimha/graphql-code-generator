@@ -8,7 +8,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  _FieldSet: { input: any; output: any };
+  _FieldSet: { input: unknown; output: unknown };
 };
 
 export type Address = {

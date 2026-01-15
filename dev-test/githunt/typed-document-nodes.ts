@@ -16,8 +16,8 @@ export type OnCommentAddedSubscription = {
 
 export type CommentQueryVariables = Exact<{
   repoFullName: string;
-  limit?: number | null;
-  offset?: number | null;
+  limit?: number | null | undefined;
+  offset?: number | null | undefined;
 }>;
 
 export type CommentQuery = {
@@ -73,8 +73,8 @@ export type FeedEntryFragment = {
 
 export type FeedQueryVariables = Exact<{
   type: FeedType;
-  offset?: number | null;
-  limit?: number | null;
+  offset?: number | null | undefined;
+  limit?: number | null | undefined;
 }>;
 
 export type FeedQuery = {

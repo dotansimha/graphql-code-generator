@@ -11,6 +11,14 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         users(input: UsersInput!): UsersResponse!
       }
 
+      type Mutation {
+        makeUserAdmin(id: ID!): User!
+      }
+
+      type Subscription {
+        userChanges(id: ID!): User!
+      }
+
       type ResponseError {
         error: ResponseErrorType!
       }
@@ -90,6 +98,23 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           }
         }
       }
+
+      mutation MakeAdmin {
+        makeUserAdmin(id: "100") {
+          ...UserFragment
+        }
+      }
+
+      subscription UserChanges {
+        makeUserAdmin(id: "100") {
+          ...UserFragment
+        }
+      }
+
+      fragment UserFragment on User {
+        id
+        role
+      }
     `);
 
     const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
@@ -113,9 +138,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: any;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: any;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
 
@@ -124,7 +149,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, name: string, role: UserRole, createdAt: any, nickname: string | null } | null };
+      export type UserQuery = { user: { id: string, name: string, role: UserRole, createdAt: unknown, nickname: string | null } | null };
 
       export type UsersQueryVariables = Exact<{
         input: UsersInput;
@@ -137,9 +162,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
-        from: any;
-        to?: any | null;
-        role?: UserRole | null;
+        from: unknown;
+        to?: unknown | null | undefined;
+        role?: UserRole | null | undefined;
       }>;
 
 
@@ -147,6 +172,18 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           | { result: Array<{ __typename: 'User' }> }
           | { __typename: 'ResponseError' }
          };
+
+      export type MakeAdminMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type MakeAdminMutation = { makeUserAdmin: { id: string, role: UserRole } };
+
+      export type UserChangesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type UserChangesSubscription = Record<PropertyKey, never>;
+
+      export type UserFragmentFragment = { id: string, role: UserRole };
       "
     `);
 
@@ -617,9 +654,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: any;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: any;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
       "
@@ -712,17 +749,6 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         user(id: ID!): User
       }
 
-      type ResponseError {
-        error: ResponseErrorType!
-      }
-
-      enum ResponseErrorType {
-        NOT_FOUND
-        INPUT_VALIDATION_ERROR
-        FORBIDDEN_ERROR
-        UNEXPECTED_ERROR
-      }
-
       type User {
         id: ID!
         name: String!
@@ -776,7 +802,48 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }>;
 
 
-      export type UserQuery = { user: { __typename: 'User', id: string, name: string, createdAt: any, bestFriend: { __typename: 'User', name: string } | null, goodFriends: Array<{ __typename: 'User', id: string }> } | null };
+      export type UserQuery = { user: { __typename: 'User', id: string, name: string, createdAt: unknown, bestFriend: { __typename: 'User', name: string } | null, goodFriends: Array<{ __typename: 'User', id: string }> } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('does not generate Exact utility type if there are only fragments', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+        bestFriend: User
+        goodFriends: [User!]!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      fragment UserPart on User {
+        id
+        name
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserPartFragment = { id: string, name: string };
       "
     `);
 
