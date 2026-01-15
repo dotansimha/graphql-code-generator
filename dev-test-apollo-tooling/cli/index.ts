@@ -18,9 +18,7 @@ export const TS_GENERATED_FILE_HEADER = `\
  * @see https://github.com/apollographql/apollo-tooling/issues/2053
  * */
 const GRAPHQL_CODEGEN_CONFIG = {
-  skipTypename: false,
   useTypeImports: true,
-  preResolveTypes: true, // Simplifies the generated types
   namingConvention: 'keep', // Keeps naming as-is
   avoidOptionals: false, // Allow '?' on variables fields
   nonOptionalTypename: true, // Forces `__typename` on all selection sets
@@ -32,9 +30,6 @@ const GRAPHQL_CODEGEN_CONFIG = {
   importTypesNamespace: '', // Disable namespace prefix on imported types (preset config)
   enumType: 'native',
   generatesOperationTypes: true,
-  defaultScalarType: 'any',
-  maybeValue: 'T | null',
-  inputMaybeValue: 'T | null',
 };
 
 export const main = async () => {
