@@ -15,12 +15,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
   '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n': typeof types.FooDocument;
-  '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n': typeof types.LelFragmentDoc;
+  '\n  fragment Lel on Tweet {\n    id\n    body\n    date\n  }\n': typeof types.LelFragmentDoc;
   '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n': typeof types.BarDocument;
 };
 const documents: Documents = {
   '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n': types.FooDocument,
-  '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n': types.LelFragmentDoc,
+  '\n  fragment Lel on Tweet {\n    id\n    body\n    date\n  }\n': types.LelFragmentDoc,
   '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n': types.BarDocument,
 };
 
@@ -48,8 +48,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n'
-): (typeof documents)['\n  fragment Lel on Tweet {\n    id\n    body\n  }\n'];
+  source: '\n  fragment Lel on Tweet {\n    id\n    body\n    date\n  }\n'
+): (typeof documents)['\n  fragment Lel on Tweet {\n    id\n    body\n    date\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

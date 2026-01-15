@@ -7,7 +7,7 @@ describe('TypeScript Operations Plugin - Input', () => {
   it('generates nested input correctly', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
-        users(input: UsersInput!): [User!]!
+        users(input: UsersInput!, ageRange1: [Int], ageRange2: [Int]!, ageRange3: [Int!], ageRange4: [Int!]!): [User!]!
       }
 
       type ResponseError {
@@ -61,8 +61,21 @@ describe('TypeScript Operations Plugin - Input', () => {
       scalar TimeZone
     `);
     const document = parse(/* GraphQL */ `
-      query UsersWithScalarInput($inputNonNullable: UsersInput!, $inputNullable: UsersInput) {
-        users(input: $inputNonNullable) {
+      query UsersWithScalarInput(
+        $inputNonNullable: UsersInput!
+        $inputNullable: UsersInput
+        $ageRange1: [Int]
+        $ageRange2: [Int]!
+        $ageRange3: [Int!]
+        $ageRange4: [Int!]!
+      ) {
+        users(
+          input: $inputNonNullable
+          ageRange1: $ageRange1
+          ageRange2: $ageRange2
+          ageRange3: $ageRange3
+          ageRange4: $ageRange4
+        ) {
           ageRange1
           ageRange2
           ageRange3
@@ -100,7 +113,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         from?: Date | null | undefined;
         /** UsersInput to */
         to?: Date | null | undefined;
-        timezone?: any;
+        timezone?: unknown | null | undefined;
         role?: UserRole | null | undefined;
         ageRange1?: Array<number | null | undefined> | null | undefined;
         ageRange2: Array<number | null | undefined>;
@@ -117,6 +130,10 @@ describe('TypeScript Operations Plugin - Input', () => {
       export type UsersWithScalarInputQueryVariables = Exact<{
         inputNonNullable: UsersInput;
         inputNullable?: UsersInput | null;
+        ageRange1?: Array<number | null> | number | null;
+        ageRange2: Array<number | null> | number;
+        ageRange3?: Array<number> | number | null;
+        ageRange4: Array<number> | number;
       }>;
 
 
@@ -224,7 +241,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         readonly from?: Date | null | undefined;
         /** UsersInput to */
         readonly to?: Date | null | undefined;
-        readonly timezone?: any;
+        readonly timezone?: unknown | null | undefined;
         readonly role?: UserRole | null | undefined;
         readonly ageRange1?: Array<number | null | undefined> | null | undefined;
         readonly ageRange2: Array<number | null | undefined>;
@@ -344,7 +361,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         from: Date; to?: never; timezone?: never; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never;   /** UsersInput to */
         to: Date; timezone?: never; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
-        |  { from?: never; to?: never;   timezone: any; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
+        |  { from?: never; to?: never;   timezone: unknown; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never; to?: never; timezone?: never;   role: UserRole; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never; to?: never; timezone?: never; role?: never;   ageRange1: Array<number | null | undefined>; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never; to?: never; timezone?: never; role?: never; ageRange1?: never;   ageRange3: Array<number>; bestFriend?: never; nestedInput?: never; }
