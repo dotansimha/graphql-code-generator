@@ -10,17 +10,6 @@ describe('TypeScript Operations Plugin - Input', () => {
         users(input: UsersInput!, ageRange1: [Int], ageRange2: [Int]!, ageRange3: [Int!], ageRange4: [Int!]!): [User!]!
       }
 
-      type ResponseError {
-        error: ResponseErrorType!
-      }
-
-      enum ResponseErrorType {
-        NOT_FOUND
-        INPUT_VALIDATION_ERROR
-        FORBIDDEN_ERROR
-        UNEXPECTED_ERROR
-      }
-
       type User {
         id: ID!
         ageRange1: [Int]
@@ -129,10 +118,10 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         inputNonNullable: UsersInput;
-        inputNullable?: UsersInput | null;
-        ageRange1?: Array<number | null> | number | null;
-        ageRange2: Array<number | null> | number;
-        ageRange3?: Array<number> | number | null;
+        inputNullable?: UsersInput | null | undefined;
+        ageRange1?: Array<number | null | undefined> | number | null | undefined;
+        ageRange2: Array<number | null | undefined> | number;
+        ageRange3?: Array<number> | number | null | undefined;
         ageRange4: Array<number> | number;
       }>;
 
@@ -148,17 +137,6 @@ describe('TypeScript Operations Plugin - Input', () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         users(input: UsersInput!): [User!]!
-      }
-
-      type ResponseError {
-        error: ResponseErrorType!
-      }
-
-      enum ResponseErrorType {
-        NOT_FOUND
-        INPUT_VALIDATION_ERROR
-        FORBIDDEN_ERROR
-        UNEXPECTED_ERROR
       }
 
       type User {
@@ -257,7 +235,7 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         inputNonNullable: UsersInput;
-        inputNullable?: UsersInput | null;
+        inputNullable?: UsersInput | null | undefined;
       }>;
 
 
@@ -274,17 +252,6 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       type Query {
         users(input: UsersInput!): [User!]!
-      }
-
-      type ResponseError {
-        error: ResponseErrorType!
-      }
-
-      enum ResponseErrorType {
-        NOT_FOUND
-        INPUT_VALIDATION_ERROR
-        FORBIDDEN_ERROR
-        UNEXPECTED_ERROR
       }
 
       type User {
@@ -374,11 +341,108 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       export type UsersQueryVariables = Exact<{
         inputNonNullable: UsersInput;
-        inputNullable?: UsersInput | null;
+        inputNullable?: UsersInput | null | undefined;
       }>;
 
 
       export type UsersQuery = { users: Array<{ __typename: 'User' }> };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('generates with custom inputMaybeValue', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(input: UserInput!): User
+      }
+
+      type User {
+        id: ID!
+      }
+
+      input UserInput {
+        dateRange1: [DateTime]
+        dateRange2: [DateTime]!
+        dateRange3: [DateTime!]
+        dateRange4: [DateTime!]!
+        bestFriend: UserBestFriendInput
+        nestedInput: UserInput
+      }
+
+      input UserBestFriendInput {
+        name: String
+        bestFriendDateRange1: [DateTime]
+        bestFriendDateRange2: [DateTime]!
+        bestFriendDateRange3: [DateTime!]
+        bestFriendDateRange4: [DateTime!]!
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Users(
+        $input: UserInput
+        $dateTime1: DateTime
+        $dateTime2: DateTime!
+        $dateTimeArray1: [DateTime]
+        $dateTimeArray2: [DateTime]!
+        $dateTimeArray3: [DateTime!]
+        $dateTimeArray4: [DateTime!]!
+      ) {
+        user {
+          __typename
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          inputMaybeValue: 'T | null',
+          scalars: {
+            DateTime: 'Date',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      type UserInput = {
+        dateRange1?: Array<Date | null> | null;
+        dateRange2: Array<Date | null>;
+        dateRange3?: Array<Date> | null;
+        dateRange4: Array<Date>;
+        bestFriend?: UserBestFriendInput | null;
+        nestedInput?: UserInput | null;
+      };
+
+      type UserBestFriendInput = {
+        name?: string | null;
+        bestFriendDateRange1?: Array<Date | null> | null;
+        bestFriendDateRange2: Array<Date | null>;
+        bestFriendDateRange3?: Array<Date> | null;
+        bestFriendDateRange4: Array<Date>;
+      };
+
+      export type UsersQueryVariables = Exact<{
+        input?: UserInput | null;
+        dateTime1?: Date | null;
+        dateTime2: Date;
+        dateTimeArray1?: Array<Date | null> | Date | null;
+        dateTimeArray2: Array<Date | null> | Date;
+        dateTimeArray3?: Array<Date> | Date | null;
+        dateTimeArray4: Array<Date> | Date;
+      }>;
+
+
+      export type UsersQuery = { user: { __typename: 'User' } | null };
       "
     `);
 
