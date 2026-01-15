@@ -70,7 +70,7 @@ export interface RawConfig {
   strictScalars?: boolean;
   /**
    * @description Allows you to override the type that unknown scalars will have.
-   * @default any
+   * @default unknown
    *
    * @exampleMarkdown
    * ```ts filename="codegen.ts"
@@ -82,7 +82,7 @@ export interface RawConfig {
    *      'path/to/file': {
    *        // plugins...
    *        config: {
-   *          defaultScalarType: 'unknown'
+   *          defaultScalarType: 'any'
    *        },
    *      },
    *    },

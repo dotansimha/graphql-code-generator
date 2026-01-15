@@ -110,9 +110,9 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: any;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: any;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
 
@@ -121,7 +121,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
+      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: unknown } | null };
 
       export type UsersQueryVariables = Exact<{
         input: TypeImport.UsersInput;
@@ -134,8 +134,8 @@ describe('TypeScript Operations Plugin - Import Types', () => {
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
-        from: any;
-        to?: any | null;
+        from: unknown;
+        to?: unknown | null;
         role?: TypeImport.UserRole | null;
       }>;
 
@@ -254,9 +254,9 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: any;
+        from?: unknown | null | undefined;
         /** UsersInput to */
-        to?: any;
+        to?: unknown | null | undefined;
         role?: UserRole | null | undefined;
       };
 
@@ -265,7 +265,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: any } | null };
+      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: unknown } | null };
 
       export type UsersQueryVariables = Exact<{
         input: TypeImport.UsersInput;
@@ -278,8 +278,8 @@ describe('TypeScript Operations Plugin - Import Types', () => {
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
-        from: any;
-        to?: any | null;
+        from: unknown;
+        to?: unknown | null;
         role?: TypeImport.UserRole | null;
       }>;
 
