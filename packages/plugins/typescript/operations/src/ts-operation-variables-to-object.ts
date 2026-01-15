@@ -15,13 +15,19 @@ export const SCALARS = {
   Boolean: 'boolean',
 };
 
-const MAYBE_SUFFIX = ' | null';
-
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
+  private _config: {
+    avoidOptionals: NormalizedAvoidOptionalsConfig;
+    immutableTypes: boolean;
+    inputMaybeValue: string;
+    inputMaybeValueSuffix: string;
+  };
   constructor(
-    private _avoidOptionals: NormalizedAvoidOptionalsConfig,
-    private _immutableTypes: boolean,
-    private _inputMaybeValue: string,
+    rawConfig: {
+      avoidOptionals: NormalizedAvoidOptionalsConfig;
+      immutableTypes: boolean;
+      inputMaybeValue: string;
+    },
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
     _namespacedImportName: string | null,
@@ -42,6 +48,13 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       _applyCoercion,
       {}
     );
+
+    this._config = {
+      avoidOptionals: rawConfig.avoidOptionals,
+      immutableTypes: rawConfig.immutableTypes,
+      inputMaybeValue: rawConfig.inputMaybeValue,
+      inputMaybeValueSuffix: this._config.inputMaybeValue.replace('T', ''), // e.g. turns `T | null | undefined` to `| null | undefined`
+    };
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
@@ -53,15 +66,17 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected clearOptional(str: string): string {
-    if (str.endsWith(MAYBE_SUFFIX)) {
-      return (str = str.substring(0, str.length - MAYBE_SUFFIX.length));
+    const maybeSuffix = this._config.inputMaybeValueSuffix;
+
+    if (str.endsWith(maybeSuffix)) {
+      return (str = str.substring(0, str.length - maybeSuffix.length));
     }
 
     return str;
   }
 
   protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean): boolean {
-    const options = this._avoidOptionals;
+    const options = this._config.avoidOptionals;
     return ((options.object || !options.defaultValue) && hasDefaultValue) || (!options.object && !isNonNullType);
   }
 
@@ -84,13 +99,15 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       const listInputCoercionExtension = applyCoercion ? ` | ${innerType}` : '';
 
       return this.wrapMaybe(
-        `${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`
+        `${this._config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`
       );
     }
     return this.wrapMaybe(baseType);
   }
 
   protected wrapMaybe(type: string): string {
-    return type.endsWith(MAYBE_SUFFIX) ? type : `${type}${MAYBE_SUFFIX}`;
+    const maybeSuffix = this._config.inputMaybeValueSuffix;
+
+    return type.endsWith(maybeSuffix) ? type : `${type}${maybeSuffix}`;
   }
 }

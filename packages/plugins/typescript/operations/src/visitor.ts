@@ -159,12 +159,14 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
-        // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
-        // It's also being used for Variables so people could already be using it.
-        // Maybe it's better to deprecate and remove, to see what users think.
-        this.config.avoidOptionals,
-        this.config.immutableTypes,
-        this.config.inputMaybeValue,
+        {
+          // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
+          // It's also being used for Variables so people could already be using it.
+          // Maybe it's better to deprecate and remove, to see what users think.
+          avoidOptionals: this.config.avoidOptionals,
+          immutableTypes: this.config.immutableTypes,
+          inputMaybeValue: this.config.inputMaybeValue,
+        },
         this.scalars,
         this.convertName.bind(this),
         this.config.namespacedImportName,
