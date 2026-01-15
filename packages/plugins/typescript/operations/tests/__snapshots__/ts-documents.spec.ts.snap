@@ -18,10 +18,10 @@ exports[`TypeScript Operations Plugin > Issues > #2699 - Issues with multiple in
 
 
 export type GetEntityBrandDataQuery = { node:
-    | { __typename: 'Company', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
-    | { __typename: 'Theater', active: boolean, id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
-    | { __typename: 'Movie', id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
-    | { __typename: 'User', id: string, createdAt: any, updatedAt: any, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
+    | { __typename: 'Company', active: boolean, id: string, createdAt: unknown, updatedAt: unknown, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
+    | { __typename: 'Theater', active: boolean, id: string, createdAt: unknown, updatedAt: unknown, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
+    | { __typename: 'Movie', id: string, createdAt: unknown, updatedAt: unknown, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
+    | { __typename: 'User', id: string, createdAt: unknown, updatedAt: unknown, brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null }
    };
 
 type EntityBrandData_Company_Fragment = { brandData: { active: boolean, browsable: boolean, title: string, alternateTitle: string | null, description: string } | null };
@@ -39,13 +39,13 @@ export type EntityBrandDataFragment =
   | EntityBrandData_User_Fragment
 ;
 
-type ElementMetadata_Company_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
+type ElementMetadata_Company_Fragment = { createdAt: unknown, updatedAt: unknown, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
-type ElementMetadata_Theater_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
+type ElementMetadata_Theater_Fragment = { createdAt: unknown, updatedAt: unknown, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
-type ElementMetadata_Movie_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
+type ElementMetadata_Movie_Fragment = { createdAt: unknown, updatedAt: unknown, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
-type ElementMetadata_User_Fragment = { createdAt: any, updatedAt: any, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
+type ElementMetadata_User_Fragment = { createdAt: unknown, updatedAt: unknown, createdBy: { id: string, name: string } | null, updatedBy: { id: string, name: string } | null };
 
 export type ElementMetadataFragment =
   | ElementMetadata_Company_Fragment
@@ -155,9 +155,9 @@ export type AaaQuery = { user:
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 1`] = `
-"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null };
+"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null };
 
-type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null };
+type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null };
 
 export type NetRouteFragment =
   | NetRoute_Ipv4Route_Fragment
@@ -168,30 +168,30 @@ export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = { routes: Array<
-    | { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null }
-    | { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null }
+    | { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null }
+    | { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null }
   > };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 2`] = `
-"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null };
+"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null };
 
-type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null };
+type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null };
 
 export type NetRouteFragment =
   | NetRoute_Ipv4Route_Fragment
   | NetRoute_Ipv6Route_Fragment
 ;
 
-export type TestFragment = { ipv6Address: any | null, ipv6Gateway: any | null };
+export type TestFragment = { ipv6Address: unknown | null, ipv6Gateway: unknown | null };
 
 export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = { routes: Array<
-    | { __typename: 'IPV4Route', ipv4Address: any | null, ipv4Gateway: any | null }
-    | { __typename: 'IPV6Route', ipv6Address: any | null, ipv6Gateway: any | null }
+    | { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null }
+    | { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null }
   > };
 "
 `;
