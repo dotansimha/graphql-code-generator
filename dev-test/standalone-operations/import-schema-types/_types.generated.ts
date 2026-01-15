@@ -5,7 +5,7 @@ export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type WithVariablesQueryVariables = Exact<{
-  role?: Types.UserRole | null;
+  role?: Types.UserRole | null | undefined;
 }>;
 
 export type WithVariablesQuery = { user: { id: string; name: string } | null };
