@@ -21,19 +21,19 @@ type CreateReviewForEpisodeMutation = {
 };
 
 type ExcludeQueryAlphaQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type ExcludeQueryAlphaQuery = { hero: { name: string } | { name: string } | null };
 
 type ExcludeQueryBetaQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type ExcludeQueryBetaQuery = { hero: { name: string } | { name: string } | null };
 
 type HeroAndFriendsNamesQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type HeroAndFriendsNamesQuery = {
@@ -53,7 +53,7 @@ type HeroAppearsInQuery = {
 };
 
 type HeroDetailsQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type HeroDetailsQuery = {
@@ -70,7 +70,7 @@ type HeroDetails_Human_Fragment = { height: number | null; name: string };
 type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
 type HeroDetailsWithFragmentQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type HeroDetailsWithFragmentQuery = {
@@ -81,27 +81,27 @@ type HeroDetailsWithFragmentQuery = {
 };
 
 type HeroNameQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type HeroNameQuery = { hero: { name: string } | { name: string } | null };
 
 type HeroNameConditionalInclusionQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
   includeName: boolean;
 }>;
 
 type HeroNameConditionalInclusionQuery = { hero: { name?: string } | { name?: string } | null };
 
 type HeroNameConditionalExclusionQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
   skipName: boolean;
 }>;
 
 type HeroNameConditionalExclusionQuery = { hero: { name?: string } | { name?: string } | null };
 
 type HeroParentTypeDependentFieldQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type HeroParentTypeDependentFieldQuery = {
@@ -118,7 +118,7 @@ type HeroParentTypeDependentFieldQuery = {
 };
 
 type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
-  episode?: Episode | null;
+  episode?: Episode | null | undefined;
 }>;
 
 type HeroTypeDependentAliasedFieldQuery = {

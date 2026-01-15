@@ -57,6 +57,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   immutableTypes: boolean;
   noExport: boolean;
   maybeValue: string;
+  inputMaybeValue: string;
   allowUndefinedQueryVariables: boolean;
   enumType: ConvertSchemaEnumToDeclarationBlockString['outputType'];
   enumValues: ParsedEnumValuesMap;
@@ -78,6 +79,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
   protected _needsExactUtilityType: boolean = false;
   private _outputPath: string;
+  private _inputMaybeValueSuffix: string;
 
   constructor(
     schema: GraphQLSchema,
@@ -104,6 +106,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         ignoreEnumValuesFromSchema: getConfigValue(config.ignoreEnumValuesFromSchema, false),
         futureProofEnums: getConfigValue(config.futureProofEnums, false),
         maybeValue: getConfigValue(config.maybeValue, 'T | null'),
+        inputMaybeValue: getConfigValue(config.inputMaybeValue, 'T | null | undefined'),
       } as TypeScriptDocumentsParsedConfig,
       schema,
     );
@@ -159,18 +162,25 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config,
       ),
     );
+
+    this._inputMaybeValueSuffix = this.config.inputMaybeValue.replace('T', ''); // e.g. turns `T | null | undefined` to ` | null | undefined`
+
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName =>
       isEnumType(schema.getType(typeName)),
     );
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
+        {
+          // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
+          // It's also being used for Variables so people could already be using it.
+          // Maybe it's better to deprecate and remove, to see what users think.
+          avoidOptionals: this.config.avoidOptionals,
+          immutableTypes: this.config.immutableTypes,
+          inputMaybeValue: this.config.inputMaybeValue,
+          inputMaybeValueSuffix: this._inputMaybeValueSuffix,
+        },
         this.scalars,
         this.convertName.bind(this),
-        // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
-        // It's also being used for Variables so people could already be using it.
-        // Maybe it's better to deprecate and remove, to see what users think.
-        this.config.avoidOptionals,
-        this.config.immutableTypes,
         this.config.namespacedImportName,
         enumsNames,
         this.config.enumPrefix,
@@ -274,7 +284,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
         if (!typeNode.isNonNullable) {
-          typePart += ' | null | undefined';
+          typePart += this._inputMaybeValueSuffix;
         }
         continue;
       }
@@ -282,7 +292,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       if (typeNode.type === 'ListType') {
         typePart = `Array<${typePart}>`;
         if (!typeNode.isNonNullable) {
-          typePart += ' | null | undefined';
+          typePart += this._inputMaybeValueSuffix;
         }
       }
     }
