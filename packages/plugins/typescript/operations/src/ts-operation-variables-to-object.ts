@@ -15,14 +15,16 @@ export const SCALARS = {
   Boolean: 'boolean',
 };
 
-const MAYBE_SUFFIX = ' | null';
-
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
   constructor(
+    private _config: {
+      avoidOptionals: NormalizedAvoidOptionalsConfig;
+      immutableTypes: boolean;
+      inputMaybeValue: string;
+      inputMaybeValueSuffix: string;
+    },
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
-    private _avoidOptionals: NormalizedAvoidOptionalsConfig,
-    private _immutableTypes: boolean,
     _namespacedImportName: string | null,
     _enumNames: string[],
     _enumPrefix: boolean,
@@ -52,16 +54,26 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected clearOptional(str: string): string {
-    if (str?.endsWith(MAYBE_SUFFIX)) {
-      return (str = str.substring(0, str.length - MAYBE_SUFFIX.length));
+    const maybeSuffix = this._config.inputMaybeValueSuffix;
+
+    if (str.endsWith(maybeSuffix)) {
+      return (str = str.substring(0, str.length - maybeSuffix.length));
     }
 
     return str;
   }
 
-  protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean) {
-    const options = this._avoidOptionals;
+  protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean): boolean {
+    const options = this._config.avoidOptionals;
     return ((options.object || !options.defaultValue) && hasDefaultValue) || (!options.object && !isNonNullType);
+  }
+
+  protected getScalar(name: string): string {
+    return this._scalars[name]?.input ?? SCALARS[name] ?? 'unknown';
+  }
+
+  protected getPunctuation(): string {
+    return ';';
   }
 
   public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode, applyCoercion = false): string {
@@ -75,21 +87,15 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       const listInputCoercionExtension = applyCoercion ? ` | ${innerType}` : '';
 
       return this.wrapMaybe(
-        `${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`
+        `${this._config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`
       );
     }
     return this.wrapMaybe(baseType);
   }
 
   protected wrapMaybe(type: string): string {
-    return type?.endsWith(MAYBE_SUFFIX) ? type : `${type}${MAYBE_SUFFIX}`;
-  }
+    const maybeSuffix = this._config.inputMaybeValueSuffix;
 
-  protected getScalar(name: string): string {
-    return this._scalars?.[name]?.input ?? SCALARS[name] ?? 'unknown';
-  }
-
-  protected getPunctuation(): string {
-    return ';';
+    return type.endsWith(maybeSuffix) ? type : `${type}${maybeSuffix}`;
   }
 }

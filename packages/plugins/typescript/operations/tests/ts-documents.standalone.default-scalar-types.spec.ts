@@ -79,10 +79,10 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
 
       export type UserQueryVariables = Exact<{
         nonNullableDate: unknown;
-        nullableDate?: unknown | null;
-        dateArray1?: Array<unknown | null> | unknown | null;
-        dateArray2: Array<unknown | null> | unknown;
-        dateArray3?: Array<unknown> | unknown | null;
+        nullableDate?: unknown | null | undefined;
+        dateArray1?: Array<unknown | null | undefined> | unknown | null | undefined;
+        dateArray2: Array<unknown | null | undefined> | unknown;
+        dateArray3?: Array<unknown> | unknown | null | undefined;
         dateArray4: Array<unknown> | unknown;
         input: UserInput;
       }>;
@@ -172,10 +172,10 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
 
       export type UserQueryVariables = Exact<{
         nonNullableDate: any;
-        nullableDate?: any | null;
-        dateArray1?: Array<any | null> | any | null;
-        dateArray2: Array<any | null> | any;
-        dateArray3?: Array<any> | any | null;
+        nullableDate?: any | null | undefined;
+        dateArray1?: Array<any | null | undefined> | any | null | undefined;
+        dateArray2: Array<any | null | undefined> | any;
+        dateArray3?: Array<any> | any | null | undefined;
         dateArray4: Array<any> | any;
         input: UserInput;
       }>;
@@ -265,10 +265,10 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
 
       export type UserQueryVariables = Exact<{
         nonNullableDate: Date;
-        nullableDate?: Date | null;
-        dateArray1?: Array<Date | null> | Date | null;
-        dateArray2: Array<Date | null> | Date;
-        dateArray3?: Array<Date> | Date | null;
+        nullableDate?: Date | null | undefined;
+        dateArray1?: Array<Date | null | undefined> | Date | null | undefined;
+        dateArray2: Array<Date | null | undefined> | Date;
+        dateArray3?: Array<Date> | Date | null | undefined;
         dateArray4: Array<Date> | Date;
         input: UserInput;
       }>;
