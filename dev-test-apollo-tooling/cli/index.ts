@@ -2,7 +2,6 @@
 
 import { generate } from '@graphql-codegen/cli';
 import type { Types } from '@graphql-codegen/plugin-helpers';
-import deleteAsync from 'del';
 
 export const GENERATED = '__generated__';
 export const GLOBAL_TYPES_FILE = 'globalTypes.ts';
@@ -30,7 +29,7 @@ const GRAPHQL_CODEGEN_CONFIG = {
   fragmentSuffix: '', // Don't add 'Fragment' suffix to fragment result types
   extractAllFieldsToTypesCompact: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
   printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
-  importTypesNamespace: '', // Disable namespace prefix on imported types
+  importTypesNamespace: '', // Disable namespace prefix on imported types (preset config)
   enumType: 'native',
   generatesOperationTypes: true,
   defaultScalarType: 'any',
@@ -40,8 +39,6 @@ const GRAPHQL_CODEGEN_CONFIG = {
 
 export const main = async () => {
   const cwd = process.cwd();
-
-  await deleteAsync([`src/**/${GENERATED}`], { cwd });
 
   const localSchemaFilePath = `${cwd}/schema.graphql`;
 
@@ -83,7 +80,9 @@ export const main = async () => {
       ],
       config: GRAPHQL_CODEGEN_CONFIG,
       generates: generateFiles,
-      silent: true,
+      silent: false,
+      debug: true,
+      verbose: true,
     },
     true // overwrite existing files
   );

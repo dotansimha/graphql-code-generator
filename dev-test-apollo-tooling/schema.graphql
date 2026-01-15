@@ -76,6 +76,11 @@ type User {
   profilePhoto: UserProfilePhoto @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
 }
 
+type AdminUser {
+  id: ID!
+  profilePhoto: UserProfilePhoto @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
 type UserProfilePhoto @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
   id: ID!
   photoUrl: UserPhotoUrl
