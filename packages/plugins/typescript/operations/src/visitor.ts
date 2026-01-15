@@ -169,9 +169,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config.enumPrefix,
         this.config.enumSuffix,
         this.config.enumValues,
-        this.config.arrayInputCoercion,
-        undefined,
-        undefined
+        this.config.arrayInputCoercion
       )
     );
     this._declarationBlockConfig = {
