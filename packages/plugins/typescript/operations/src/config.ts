@@ -230,11 +230,13 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    */
   addOperationExport?: boolean;
   /**
-   * @description Allow to override the type value of `Maybe`.
+   * @description Allows overriding the type value of nullable fields to match GraphQL client's runtime behaviour.
    * @default T | null
    *
    * @exampleMarkdown
    * ## Allow undefined
+   * By default, a GraphQL server will return either the expected type or `null` for a nullable field.
+   * `maybeValue` option could be used to change this behaviour if your GraphQL client does something different such as returning `undefined`.
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';
    *
@@ -242,7 +244,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          maybeValue: 'T | null | undefined'
    *        },
@@ -251,26 +253,35 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *  };
    *  export default config;
    * ```
-   *
-   * ## Allow `null` in resolvers:
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
-   *        config: {
-   *          maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
    */
   maybeValue?: string;
+
+  /**
+   * @description Allows overriding the type value of Input nullable types.
+   * @default T | null | undefined
+   *
+   * @exampleMarkdown
+   * ## Disallow `undefined`
+   * This is useful if you want to force explicit null to be passed in as Variables to the server.
+   *
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript-operations'],
+   *       config: {
+   *         inputMaybeValue: 'T | null'
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   * ```
+   */
+  inputMaybeValue?: string;
 
   /**
    * @description Adds undefined as a possible type for query variables

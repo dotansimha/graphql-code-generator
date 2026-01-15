@@ -19,10 +19,11 @@ const MAYBE_SUFFIX = ' | null';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
   constructor(
-    _scalars: NormalizedScalarsMap,
-    _convertName: ConvertNameFn,
     private _avoidOptionals: NormalizedAvoidOptionalsConfig,
     private _immutableTypes: boolean,
+    private _inputMaybeValue: string,
+    _scalars: NormalizedScalarsMap,
+    _convertName: ConvertNameFn,
     _namespacedImportName: string | null,
     _enumNames: string[],
     _enumPrefix: boolean,
