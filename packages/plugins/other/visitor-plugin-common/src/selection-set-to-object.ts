@@ -982,7 +982,6 @@ export class SelectionSetToObject<
 
   protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
     const fragmentSuffix = typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix;
-
     return this._convertName(name, {
       useTypesPrefix: true,
       suffix: fragmentSuffix,
@@ -1008,14 +1007,14 @@ export class SelectionSetToObject<
         // First time seeing this field name, record it's type
         this._seenFieldNames.set(parentName, typeName);
         return parentName;
-      } if (existingTypeName !== typeName) {
+      }
+      if (existingTypeName !== typeName) {
         // Conflict detected: same field name but different type
         // Return field name with type suffix
         return `${parentName}_${typeName}`;
-      } 
-        // Same field name and same type, just return the plain name
-        return parentName;
-      
+      }
+      // Same field name and same type, just return the plain name
+      return parentName;
     }
 
     const schemaType = this._schema.getType(typeName);
