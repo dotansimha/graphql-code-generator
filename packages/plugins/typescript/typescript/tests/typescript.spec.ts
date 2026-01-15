@@ -29,7 +29,7 @@ describe('TypeScript', () => {
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
           /** My custom scalar */
-          A: { input: any; output: any; }
+          A: { input: unknown; output: unknown; }
         };
       `);
     });
@@ -354,12 +354,12 @@ describe('TypeScript', () => {
       expect(result.content).not.toBeSimilarStringTo(`/** My custom scalar */`);
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
-          ID: { input: string; output: string;   }
-          String: { input: string; output: string;   }
-          Boolean: { input: boolean; output: boolean;   }
-          Int: { input: number; output: number;   }
-          Float: { input: number; output: number;   }
-          A: { input: any; output: any;   }
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+          A: { input: unknown; output: unknown; }
         };
       `);
     });
@@ -2193,7 +2193,7 @@ describe('TypeScript', () => {
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-          MyScalar: { input: any; output: any; }
+          MyScalar: { input: unknown; output: unknown; }
         };`);
 
       expect(result.content).toBeSimilarStringTo(`
@@ -2322,7 +2322,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { defaultScalarType: 'unknown' },
+        { defaultScalarType: 'any' },
         { outputFile: '' },
       )) as Types.ComplexPluginOutput;
 
@@ -2333,7 +2333,7 @@ describe('TypeScript', () => {
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-          MyScalar: { input: unknown; output: unknown; }
+          MyScalar: { input: any; output: any; }
         };`);
 
       expect(result.content).toBeSimilarStringTo(`

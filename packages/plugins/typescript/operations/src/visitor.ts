@@ -103,15 +103,13 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         }),
         ignoreEnumValuesFromSchema: getConfigValue(config.ignoreEnumValuesFromSchema, false),
         futureProofEnums: getConfigValue(config.futureProofEnums, false),
+        maybeValue: getConfigValue(config.maybeValue, 'T | null'),
       } as TypeScriptDocumentsParsedConfig,
       schema,
     );
 
     this._outputPath = outputPath;
     autoBind(this);
-
-    const defaultMaybeValue = 'T | null';
-    const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
 
     const allFragments: LoadedFragment[] = [
       ...(
@@ -140,7 +138,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       wrapTypeWithModifiers: (baseType, type) => {
         return wrapTypeWithModifiers(baseType, type, {
-          wrapOptional: type => maybeValue.replace('T', type),
+          wrapOptional: type => this.config.maybeValue.replace('T', type),
           wrapArray: type => {
             const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
             return `${listModifier}<${type}>`;
@@ -277,7 +275,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         }
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
-        if (usedInputType.tsType !== 'any' && !typeNode.isNonNullable) {
+        if (!typeNode.isNonNullable) {
           typePart += ' | null | undefined';
         }
         continue;
@@ -422,7 +420,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       usedInputTypes[node.name] = {
         type: 'GraphQLScalarType',
         node,
-        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'any',
+        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'unknown',
       };
       return;
     }

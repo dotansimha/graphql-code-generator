@@ -32,6 +32,6 @@ export class TypeScriptOperationVariablesToObject extends TSOperationVariablesTo
   }
 
   protected getScalar(name: string): string {
-    return this._scalars?.[name]?.input ?? SCALARS[name] ?? 'any';
+    return this._scalars?.[name]?.input ?? SCALARS[name] ?? 'unknown';
   }
 }
