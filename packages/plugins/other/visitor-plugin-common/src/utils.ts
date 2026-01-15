@@ -291,7 +291,7 @@ export function buildScalarsFromConfig(
   schema: GraphQLSchema | undefined,
   config: RawConfig,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType = 'any',
+  defaultScalarType = 'unknown',
 ): ParsedScalarsMap {
   return buildScalars(
     schema,
@@ -305,7 +305,7 @@ export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType: string | null = 'any',
+  defaultScalarType: string | null = 'unknown',
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
