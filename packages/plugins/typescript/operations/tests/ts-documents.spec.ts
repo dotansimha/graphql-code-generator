@@ -2749,7 +2749,7 @@ export type Q2Query = { search: Array<
       expect(content).toMatchInlineSnapshot(
         `
         "export type TestQueryQueryVariables = Exact<{
-          test?: any | null;
+          test?: unknown | null;
         }>;
 
 
