@@ -77,7 +77,7 @@ describe('client-preset - Enum', () => {
         | 'SQUARE';
 
       export type ShapeQueryVariables = Exact<{
-        shape?: Shape | null;
+        shape?: Shape | null | undefined;
       }>;
 
 
@@ -198,7 +198,7 @@ describe('client-preset - Enum', () => {
 
       export type Shape = typeof Shape[keyof typeof Shape];
       export type ShapeQueryVariables = Exact<{
-        shape?: Shape | null;
+        shape?: Shape | null | undefined;
       }>;
 
 
