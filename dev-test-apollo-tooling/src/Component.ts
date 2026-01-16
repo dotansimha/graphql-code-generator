@@ -1,3 +1,8 @@
+/**
+ * This file tests generating enum from external fragement from another file.
+ * Check that UserManagerRoleType enum is generated in __generated__/Component.ts
+ */
+
 import { useQuery, gql } from '@apollo/client';
 import Helper from './Helper';
 
