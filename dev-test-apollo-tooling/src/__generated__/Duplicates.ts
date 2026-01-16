@@ -153,9 +153,9 @@ export type GetFeedbackData = {
 
 export type GetFeedbackDataVariables = Exact<{
   organizationId: string;
-  first?: number | null;
-  after?: string | null;
-  scoreFilter?: Array<number | null> | number | null;
-  sortBy?: ProcessableFeedbackSortBy | null;
-  sortOrder?: ProcessableFeedbackSortOrder | null;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  scoreFilter?: Array<number | null | undefined> | number | null | undefined;
+  sortBy?: ProcessableFeedbackSortBy | null | undefined;
+  sortOrder?: ProcessableFeedbackSortOrder | null | undefined;
 }>;

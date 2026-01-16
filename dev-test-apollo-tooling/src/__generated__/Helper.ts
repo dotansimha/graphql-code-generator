@@ -3,7 +3,6 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export enum UserManagerRoleType {
   ROLE_TYPE_1 = 'ROLE_TYPE_1',

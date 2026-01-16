@@ -79,6 +79,7 @@
     "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
     ],
+    "**/__generated__/**": [],
     "yarn.lock": [
       "npx yarn-deduplicate"
     ]
