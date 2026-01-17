@@ -102,7 +102,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         from?: Date | null | undefined;
         /** UsersInput to */
         to?: Date | null | undefined;
-        timezone?: unknown | null | undefined;
+        timezone?: unknown;
         role?: UserRole | null | undefined;
         ageRange1?: Array<number | null | undefined> | null | undefined;
         ageRange2: Array<number | null | undefined>;
@@ -219,7 +219,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         readonly from?: Date | null | undefined;
         /** UsersInput to */
         readonly to?: Date | null | undefined;
-        readonly timezone?: unknown | null | undefined;
+        readonly timezone?: unknown;
         readonly role?: UserRole | null | undefined;
         readonly ageRange1?: Array<number | null | undefined> | null | undefined;
         readonly ageRange2: Array<number | null | undefined>;
