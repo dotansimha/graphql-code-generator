@@ -22,6 +22,7 @@ import {
   SelectionSetToObject,
   getNodeComment,
   wrapTypeWithModifiers,
+  printTypeScriptType,
 } from '@graphql-codegen/visitor-plugin-common';
 import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
@@ -277,7 +278,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
         if (!typeNode.isNonNullable) {
-          typePart += this._inputMaybeValueSuffix;
+          typePart = printTypeScriptType({
+            type: typePart,
+            isNullable: true,
+            nullableSuffix: this._inputMaybeValueSuffix,
+          });
         }
         continue;
       }
@@ -285,7 +290,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       if (typeNode.type === 'ListType') {
         typePart = `Array<${typePart}>`;
         if (!typeNode.isNonNullable) {
-          typePart += this._inputMaybeValueSuffix;
+          typePart = printTypeScriptType({
+            type: typePart,
+            isNullable: true,
+            nullableSuffix: this._inputMaybeValueSuffix,
+          });
         }
       }
     }

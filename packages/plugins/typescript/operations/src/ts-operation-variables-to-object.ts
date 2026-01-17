@@ -4,6 +4,7 @@ import {
   NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
+  printTypeScriptType,
 } from '@graphql-codegen/visitor-plugin-common';
 import { Kind, TypeNode } from 'graphql';
 
@@ -96,6 +97,8 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   protected wrapMaybe(type: string): string {
     const maybeSuffix = this._config.inputMaybeValueSuffix;
 
-    return type.endsWith(maybeSuffix) ? type : `${type}${maybeSuffix}`;
+    return type.endsWith(maybeSuffix)
+      ? type
+      : printTypeScriptType({ type, isNullable: true, nullableSuffix: maybeSuffix });
   }
 }

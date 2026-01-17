@@ -687,3 +687,31 @@ const getDeprecationReason = (directive: DirectiveNode): string | void => {
     return reason;
   }
 };
+
+/**
+ * @description Utility function to print a TypeScript type.
+ * We need this since some TypeScript types have special handling.
+ * e.g. `unknown | null | undefined` is treated as `unknown`
+ *
+ * Note: we currently have two types of handling nullable: `Maybe<T>` or `T | null | undefined`
+ * This function only handles the latter case at the moment, but could be extended if needed.
+ */
+export const printTypeScriptType = ({
+  type,
+  isNullable,
+  nullableSuffix,
+}: {
+  type: string;
+  nullableSuffix: string;
+  isNullable: boolean;
+}): string => {
+  if (type === 'any' || type === 'unknown') {
+    return type;
+  }
+
+  if (isNullable) {
+    return `${type}${nullableSuffix}`;
+  }
+
+  return type;
+};
