@@ -110,9 +110,9 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: unknown | null | undefined;
+        from?: unknown;
         /** UsersInput to */
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: UserRole | null | undefined;
       };
 
@@ -135,7 +135,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: TypeImport.UserRole | null | undefined;
       }>;
 
@@ -254,9 +254,9 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       /** UsersInput Description */
       type UsersInput = {
         /** UsersInput from */
-        from?: unknown | null | undefined;
+        from?: unknown;
         /** UsersInput to */
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: UserRole | null | undefined;
       };
 
@@ -279,7 +279,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: TypeImport.UserRole | null | undefined;
       }>;
 
