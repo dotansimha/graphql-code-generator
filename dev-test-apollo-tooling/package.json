@@ -1,6 +1,6 @@
 {
   "name": "dev-test-apollo-tooling",
-  "description": "A setup which mimics Apollo tooling as close as possible",
+  "description": "A setup which mimics Apollo tooling generation as close as possible",
   "version": "0.0.1",
   "type": "module",
   "dependencies": {

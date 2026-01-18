@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import type * as Types from '../unused';
+
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export enum UserManagerRoleType {
   ROLE_TYPE_1 = 'ROLE_TYPE_1',
@@ -27,6 +29,6 @@ export type HelperFields_fooUser = {
 
 export type HelperFields = {
   __typename: 'UserManager';
-  roleType: UserManagerRoleType;
+  roleType: Types.UserManagerRoleType;
   fooUser: HelperFields_fooUser;
 };

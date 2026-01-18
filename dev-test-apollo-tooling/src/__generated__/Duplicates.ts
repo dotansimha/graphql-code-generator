@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import type * as Types from '../unused';
+
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export enum ProcessableFeedbackSortBy {
@@ -156,6 +158,6 @@ export type GetFeedbackDataVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
   scoreFilter?: Array<number | null | undefined> | number | null | undefined;
-  sortBy?: ProcessableFeedbackSortBy | null | undefined;
-  sortOrder?: ProcessableFeedbackSortOrder | null | undefined;
+  sortBy?: Types.ProcessableFeedbackSortBy | null | undefined;
+  sortOrder?: Types.ProcessableFeedbackSortOrder | null | undefined;
 }>;
