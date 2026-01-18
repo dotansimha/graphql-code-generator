@@ -10328,7 +10328,7 @@ graphql-yoga@5.7.0:
     lru-cache "^10.0.0"
     tslib "^2.5.2"
 
-graphql@16.9.0, graphql@^16.6.0, graphql@^16.9.0:
+graphql@16.9.0, graphql@^16.6.0:
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.9.0.tgz#1c310e63f16a49ce1fbb230bd0a000e99f6f115f"
   integrity sha512-GGTKBX4SD7Wdb8mqeDLni2oaRGYQWjWHGKPQ24ZMnUtKfcsVoiv4uX8+LJr1K6U5VW2Lu1BwJnj7uiori0YtRw==
