@@ -2714,7 +2714,7 @@ export type Q2Query = { search: Array<
 
       expect(content).toMatchInlineSnapshot(
         `
-        "type InputType = {
+        "export type InputType = {
           t?: string | null | undefined;
         };
 
@@ -2979,7 +2979,7 @@ export type Q2Query = { search: Array<
           | 'Write'
           | 'All';
 
-        type PREFIX_Filter = {
+        export type PREFIX_Filter = {
           match: string;
         };
 

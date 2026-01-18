@@ -256,7 +256,7 @@ const config: CodegenConfig = {
       },
     },
 
-    // standalone-operations
+    // standalone-operations/import-schema-types
     './dev-test/standalone-operations/import-schema-types/_base.generated.ts': {
       schema: './dev-test/standalone-operations/schema.graphql',
       documents: ['./dev-test/standalone-operations/import-schema-types/*.graphql'],
@@ -271,6 +271,21 @@ const config: CodegenConfig = {
       plugins: ['typescript-operations'],
       config: {
         importSchemaTypesFrom: './dev-test/standalone-operations/import-schema-types/_base.generated.ts',
+        namespacedImportName: 'Types',
+      },
+    },
+
+    // standalone-operations/with-typescript-plugin
+    './dev-test/standalone-operations/with-typescript-plugin/_base.generated.ts': {
+      schema: './dev-test/standalone-operations/schema.graphql',
+      plugins: ['typescript'],
+    },
+    './dev-test/standalone-operations/with-typescript-plugin/_types.generated.ts': {
+      schema: './dev-test/standalone-operations/schema.graphql',
+      documents: ['./dev-test/standalone-operations/with-typescript-plugin/*.graphql'],
+      plugins: ['typescript-operations'],
+      config: {
+        importSchemaTypesFrom: './dev-test/standalone-operations/with-typescript-plugin/_base.generated.ts',
         namespacedImportName: 'Types',
       },
     },
