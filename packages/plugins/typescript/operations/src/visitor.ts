@@ -191,8 +191,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
-    if (!this._usedNamedInputTypes[enumName] || this.config.importSchemaTypesFrom) {
-      return null;
+    if (
+      !this._usedNamedInputTypes[enumName] || // If not used...
+      this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
+    ) {
+      return null; // ... then, don't generate in this file
     }
 
     return convertSchemaEnumToDeclarationBlockString({
@@ -216,12 +219,20 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {
     const inputTypeName = node.name.value;
-    if (!this._usedNamedInputTypes[inputTypeName]) {
-      return null;
+    if (
+      !this._usedNamedInputTypes[inputTypeName] || // If not used...
+      this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
+    ) {
+      return null; // ... then, don't generate in this file
     }
+
+    // Note: we usually don't need to export this type,
+    // however, it's not possible to know if another file is using this type e.g. using `importSchemaTypesFrom`,
+    // so it's better export the types.
 
     if (isOneOfInputObjectType(this._schema.getType(inputTypeName))) {
       return new DeclarationBlock(this._declarationBlockConfig)
+        .export()
         .asKind('type')
         .withName(this.convertName(node))
         .withComment(node.description?.value)
@@ -229,6 +240,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
       .asKind('type')
       .withName(this.convertName(node))
       .withComment(node.description?.value)
