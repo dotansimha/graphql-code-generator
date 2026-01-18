@@ -22,6 +22,9 @@ import {
   StringValueNode,
   TypeNode,
   DirectiveNode,
+  FieldDefinitionNode,
+  EnumValueDefinitionNode,
+  InputValueDefinitionNode,
 } from 'graphql';
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
@@ -266,7 +269,7 @@ export function buildScalarsFromConfig(
   schema: GraphQLSchema | undefined,
   config: RawConfig,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType = 'any'
+  defaultScalarType = 'unknown'
 ): ParsedScalarsMap {
   return buildScalars(
     schema,
@@ -280,7 +283,7 @@ export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType: string | null = 'any'
+  defaultScalarType: string | null = 'unknown'
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
@@ -413,13 +416,6 @@ export function buildScalars(
 
 function isStringValueNode(node: any): node is StringValueNode {
   return node && typeof node === 'object' && node.kind === Kind.STRING;
-}
-
-// will be removed on next release because tools already has it
-export function getRootTypeNames(schema: GraphQLSchema): string[] {
-  return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()]
-    .filter(t => t)
-    .map(t => t.name);
 }
 
 export function stripMapperTypeInterpolation(identifier: string): string {
@@ -666,4 +662,50 @@ export const getFieldNames = ({
     }
   }
   return fieldNames;
+};
+
+export const getNodeComment = (
+  node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode
+): string => {
+  let commentText = node.description?.value;
+  const deprecationDirective = node.directives.find(v => v.name.value === 'deprecated');
+  if (deprecationDirective) {
+    const deprecationReason = getDeprecationReason(deprecationDirective);
+    commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
+  }
+  const comment = transformComment(commentText, 1);
+  return comment;
+};
+
+const getDeprecationReason = (directive: DirectiveNode): string | void => {
+  if (directive.name.value === 'deprecated') {
+    let reason = 'Field no longer supported';
+    const deprecatedReason = directive.arguments[0];
+    if (deprecatedReason && deprecatedReason.value.kind === Kind.STRING) {
+      reason = deprecatedReason.value.value;
+    }
+    return reason;
+  }
+};
+
+/**
+ * @description Utility function to print a TypeScript type that is `Maybe`.
+ * We need this since some TypeScript types have special handling.
+ * e.g. `unknown | null | undefined` is treated as `unknown`
+ *
+ * Note: we currently have two types of handling nullable: `Maybe<T>` or `T | null | undefined`
+ * This function only handles the latter case at the moment, but could be extended if needed.
+ *
+ * @param {Object} params
+ * @param {string} params.type - The TypeScript type e.g. `any`, `unknown`, `string`, `Something`
+ * @param {string} params.pattern - The pattern of the Maybe type. This is usually `T | null | undefined` or `T | null`
+ * @returns {string} The TypeScript type as string
+ */
+export const printTypeScriptMaybeType = ({ type, pattern }: { type: string; pattern: string }): string => {
+  if (type === 'any' || type === 'unknown') {
+    return type;
+  }
+
+  const nullableSuffix = pattern.replace('T', '');
+  return type.endsWith(nullableSuffix) ? type : `${type}${nullableSuffix}`;
 };

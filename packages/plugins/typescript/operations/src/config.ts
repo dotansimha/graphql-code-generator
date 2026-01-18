@@ -1,4 +1,9 @@
-import { AvoidOptionalsConfig, RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
+import {
+  AvoidOptionalsConfig,
+  type ConvertSchemaEnumToDeclarationBlockString,
+  type EnumValuesMap,
+  RawDocumentsConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.
@@ -181,7 +186,6 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   noExport?: boolean;
-  globalNamespace?: boolean;
   /**
    * @name addOperationExport
    * @type boolean
@@ -226,11 +230,13 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    */
   addOperationExport?: boolean;
   /**
-   * @description Allow to override the type value of `Maybe`.
+   * @description Allows overriding the type value of nullable fields to match GraphQL client's runtime behaviour.
    * @default T | null
    *
    * @exampleMarkdown
    * ## Allow undefined
+   * By default, a GraphQL server will return either the expected type or `null` for a nullable field.
+   * `maybeValue` option could be used to change this behaviour if your GraphQL client does something different such as returning `undefined`.
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';
    *
@@ -238,7 +244,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          maybeValue: 'T | null | undefined'
    *        },
@@ -247,26 +253,38 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *  };
    *  export default config;
    * ```
-   *
-   * ## Allow `null` in resolvers:
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
-   *        config: {
-   *          maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
    */
   maybeValue?: string;
+
+  /**
+   * @description Allows overriding the type of Input and Variables nullable types.
+   * @default T | null | undefined
+   *
+   * @exampleMarkdown
+   * ## Disallow `undefined`
+   * Disallowing `undefined` is useful if you want to force explicit null to be passed in as Variables to the server. Use `inputMaybeValue: 'T | null'` with `avoidOptionals.inputValue: true` to achieve this.
+   *
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript-operations'],
+   *       config: {
+   *         avoidOptionals: {
+   *           inputValue: true,
+   *         },
+   *         inputMaybeValue: 'T | null'
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   * ```
+   */
+  inputMaybeValue?: string;
 
   /**
    * @description Adds undefined as a possible type for query variables
@@ -336,4 +354,144 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   nullability?: {
     errorHandlingClient: boolean;
   };
+
+  /**
+   * @description Controls the enum output type. Options: `string-literal` | `native-numeric` | `const` | `native-const` | `native`;
+   * @default `string-literal`
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript-operations'],
+   *       config: {
+   *         enumType: 'string-literal',
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   */
+  enumType?: ConvertSchemaEnumToDeclarationBlockString['outputType'];
+  /**
+   * @description Overrides the default value of enum values declared in your GraphQL schema.
+   * You can also map the entire enum to an external type by providing a string that of `module#type`.
+   *
+   * @exampleMarkdown
+   * ## With Custom Values
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          enumValues: {
+   *            MyEnum: {
+   *              A: 'foo'
+   *            }
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## With External Enum
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          enumValues: {
+   *            MyEnum: './my-file#MyCustomEnum',
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## Import All Enums from a file
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          enumValues: {
+   *            MyEnum: './my-file',
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  enumValues?: EnumValuesMap;
+  /**
+   * @description This will cause the generator to ignore enum values defined in GraphQLSchema
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Ignore enum values from schema
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          ignoreEnumValuesFromSchema: true,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  ignoreEnumValuesFromSchema?: boolean;
+  /**
+   * @description This option controls whether or not a catch-all entry is added to enum type definitions for values that may be added in the future.
+   * This is useful if you are using `relay`.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript-operations'],
+   *       config: {
+   *         futureProofEnums: true
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   * ```
+   */
+  futureProofEnums?: boolean;
 }

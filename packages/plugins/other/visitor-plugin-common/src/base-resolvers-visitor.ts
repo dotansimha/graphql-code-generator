@@ -69,8 +69,6 @@ export interface ParsedResolversConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
   federation: boolean;
-  enumPrefix: boolean;
-  enumSuffix: boolean;
   optionalResolveType: boolean;
   immutableTypes: boolean;
   namespacedImportName: string;
@@ -509,59 +507,7 @@ export interface RawResolversConfig extends RawConfig {
    * @description Supports Apollo Federation
    */
   federation?: boolean;
-  /**
-   * @default true
-   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum prefixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
-   *        config: {
-   *          typesPrefix: 'I',
-   *          enumPrefix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumPrefix?: boolean;
 
-  /**
-   * @default true
-   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum suffixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
-   *        config: {
-   *          typesSuffix: 'I',
-   *          enumSuffix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumSuffix?: boolean;
   /**
    * @description Configures behavior for custom directives from various GraphQL libraries.
    * @exampleMarkdown
@@ -795,8 +741,6 @@ export class BaseResolversVisitor<
     super(rawConfig, {
       immutableTypes: getConfigValue(rawConfig.immutableTypes, false),
       optionalResolveType: getConfigValue(rawConfig.optionalResolveType, false),
-      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       federation: getConfigValue(rawConfig.federation, false),
       resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
       enumValues: parseEnumValues({

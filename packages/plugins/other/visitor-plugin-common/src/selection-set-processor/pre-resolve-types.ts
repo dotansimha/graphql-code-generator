@@ -1,5 +1,5 @@
-import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
-import { GraphQLInterfaceType, GraphQLObjectType, isEnumType, isNonNullType } from 'graphql';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { GraphQLInterfaceType, GraphQLObjectType, isEnumType } from 'graphql';
 import {
   BaseSelectionSetProcessor,
   LinkField,
@@ -34,15 +34,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       const baseType = getBaseType(fieldObj.type);
       let typeToUse = baseType.name;
 
-      const useInnerType = field.isConditional && isNonNullType(fieldObj.type);
-      const innerType = useInnerType ? removeNonNullWrapper(fieldObj.type) : undefined;
-
-      const name = this.config.formatNamedField(
-        field.fieldName,
-        useInnerType ? innerType : fieldObj.type,
-        field.isConditional,
-        unsetTypes
-      );
+      const name = this.config.formatNamedField({
+        name: field.fieldName,
+        isOptional: field.isConditional || unsetTypes,
+      });
 
       if (unsetTypes) {
         return {
@@ -82,7 +77,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
 
     return fields.map(aliasedField => {
       if (aliasedField.fieldName === '__typename') {
-        const name = this.config.formatNamedField(aliasedField.alias, null);
+        const name = this.config.formatNamedField({ name: aliasedField.alias });
         return {
           name,
           type: `'${schemaType.name}'`,
@@ -101,12 +96,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
           });
       }
 
-      const name = this.config.formatNamedField(
-        aliasedField.alias,
-        fieldObj.type,
-        aliasedField.isConditional,
-        unsetTypes
-      );
+      const name = this.config.formatNamedField({
+        name: aliasedField.alias,
+        isOptional: aliasedField.isConditional || unsetTypes,
+      });
       if (unsetTypes) {
         return {
           type: 'never',

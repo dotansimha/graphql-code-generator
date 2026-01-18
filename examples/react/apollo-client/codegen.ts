@@ -6,6 +6,10 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
+      config: {
+        skipTypeNameForRoot: true,
+        nonOptionalTypename: true,
+      },
     },
   },
   hooks: { afterAllFileWrite: ['prettier --write'] },
