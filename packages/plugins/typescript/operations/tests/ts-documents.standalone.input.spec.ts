@@ -97,7 +97,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      type UsersInput = {
+      export type UsersInput = {
         /** UsersInput from */
         from?: Date | null | undefined;
         /** UsersInput to */
@@ -112,7 +112,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         nestedInput?: UsersInput | null | undefined;
       };
 
-      type UsersBestFriendInput = {
+      export type UsersBestFriendInput = {
         name?: string | null | undefined;
       };
 
@@ -214,7 +214,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      type UsersInput = {
+      export type UsersInput = {
         /** UsersInput from */
         readonly from?: Date | null | undefined;
         /** UsersInput to */
@@ -229,7 +229,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         readonly nestedInput?: UsersInput | null | undefined;
       };
 
-      type UsersBestFriendInput = {
+      export type UsersBestFriendInput = {
         readonly name?: string | null | undefined;
       };
 
@@ -323,7 +323,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      type UsersInput =
+      export type UsersInput =
         {   /** UsersInput from */
         from: Date; to?: never; timezone?: never; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never; nestedInput?: never; }
         |  { from?: never;   /** UsersInput to */
@@ -335,7 +335,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         |  { from?: never; to?: never; timezone?: never; role?: never; ageRange1?: never; ageRange3?: never;   bestFriend: UsersBestFriendInput; nestedInput?: never; }
         |  { from?: never; to?: never; timezone?: never; role?: never; ageRange1?: never; ageRange3?: never; bestFriend?: never;   nestedInput: UsersInput; };
 
-      type UsersBestFriendInput = {
+      export type UsersBestFriendInput = {
         name?: string | null | undefined;
       };
 
@@ -414,7 +414,7 @@ describe('TypeScript Operations Plugin - Input', () => {
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      type UserInput = {
+      export type UserInput = {
         dateRange1?: Array<Date | null> | null;
         dateRange2: Array<Date | null>;
         dateRange3?: Array<Date> | null;
@@ -423,7 +423,7 @@ describe('TypeScript Operations Plugin - Input', () => {
         nestedInput?: UserInput | null;
       };
 
-      type UserBestFriendInput = {
+      export type UserBestFriendInput = {
         name?: string | null;
         bestFriendDateRange1?: Array<Date | null> | null;
         bestFriendDateRange2: Array<Date | null>;
