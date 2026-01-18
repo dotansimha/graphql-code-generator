@@ -689,29 +689,23 @@ const getDeprecationReason = (directive: DirectiveNode): string | void => {
 };
 
 /**
- * @description Utility function to print a TypeScript type.
+ * @description Utility function to print a TypeScript type that is `Maybe`.
  * We need this since some TypeScript types have special handling.
  * e.g. `unknown | null | undefined` is treated as `unknown`
  *
  * Note: we currently have two types of handling nullable: `Maybe<T>` or `T | null | undefined`
  * This function only handles the latter case at the moment, but could be extended if needed.
+ *
+ * @param {Object} params
+ * @param {string} params.type - The TypeScript type e.g. `any`, `unknown`, `string`, `Something`
+ * @param {string} params.pattern - The pattern of the Maybe type. This is usually `T | null | undefined` or `T | null`
+ * @returns {string} The TypeScript type as string
  */
-export const printTypeScriptType = ({
-  type,
-  isNullable,
-  nullableSuffix,
-}: {
-  type: string;
-  nullableSuffix: string;
-  isNullable: boolean;
-}): string => {
+export const printTypeScriptMaybeType = ({ type, pattern }: { type: string; pattern: string }): string => {
   if (type === 'any' || type === 'unknown') {
     return type;
   }
 
-  if (isNullable) {
-    return `${type}${nullableSuffix}`;
-  }
-
-  return type;
+  const nullableSuffix = pattern.replace('T', '');
+  return type.endsWith(nullableSuffix) ? type : `${type}${nullableSuffix}`;
 };
