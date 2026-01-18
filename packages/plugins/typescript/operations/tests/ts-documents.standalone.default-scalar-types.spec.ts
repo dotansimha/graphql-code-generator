@@ -68,7 +68,7 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      type UserInput = {
+      export type UserInput = {
         nonNullableDate: unknown;
         nullableDate?: unknown;
         dateArray1?: Array<unknown> | null | undefined;
@@ -161,7 +161,7 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      type UserInput = {
+      export type UserInput = {
         nonNullableDate: any;
         nullableDate?: any;
         dateArray1?: Array<any> | null | undefined;
@@ -254,7 +254,7 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
     expect(result).toMatchInlineSnapshot(`
       "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      type UserInput = {
+      export type UserInput = {
         nonNullableDate: Date;
         nullableDate?: Date | null | undefined;
         dateArray1?: Array<Date | null | undefined> | null | undefined;
