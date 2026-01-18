@@ -5,6 +5,7 @@ import {
   NormalizedScalarsMap,
   OperationVariablesToObject,
   ParsedEnumValuesMap,
+  printTypeScriptMaybeType,
 } from '@graphql-codegen/visitor-plugin-common';
 
 export const SCALARS = {
@@ -21,7 +22,6 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       avoidOptionals: NormalizedAvoidOptionalsConfig;
       immutableTypes: boolean;
       inputMaybeValue: string;
-      inputMaybeValueSuffix: string;
     },
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
@@ -62,7 +62,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected clearOptional(str: string): string {
-    const maybeSuffix = this._config.inputMaybeValueSuffix;
+    const maybeSuffix = this._config.inputMaybeValue.replace('T', ''); // e.g. turns `T | null | undefined` to ` | null | undefined`
 
     if (str.endsWith(maybeSuffix)) {
       return (str = str.substring(0, str.length - maybeSuffix.length));
@@ -109,8 +109,9 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected wrapMaybe(type: string): string {
-    const maybeSuffix = this._config.inputMaybeValueSuffix;
-
-    return type.endsWith(maybeSuffix) ? type : `${type}${maybeSuffix}`;
+    return printTypeScriptMaybeType({
+      type,
+      pattern: this._config.inputMaybeValue,
+    });
   }
 }
