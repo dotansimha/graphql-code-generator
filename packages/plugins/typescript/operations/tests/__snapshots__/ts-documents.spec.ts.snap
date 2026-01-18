@@ -155,9 +155,9 @@ export type AaaQuery = { user:
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 1`] = `
-"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null };
+"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown };
 
-type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null };
+type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown, ipv6Gateway: unknown };
 
 export type NetRouteFragment =
   | NetRoute_Ipv4Route_Fragment
@@ -168,30 +168,30 @@ export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = { routes: Array<
-    | { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null }
-    | { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null }
+    | { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown }
+    | { __typename: 'IPV6Route', ipv6Address: unknown, ipv6Gateway: unknown }
   > };
 "
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 2`] = `
-"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null };
+"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown };
 
-type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null };
+type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown, ipv6Gateway: unknown };
 
 export type NetRouteFragment =
   | NetRoute_Ipv4Route_Fragment
   | NetRoute_Ipv6Route_Fragment
 ;
 
-export type TestFragment = { ipv6Address: unknown | null, ipv6Gateway: unknown | null };
+export type TestFragment = { ipv6Address: unknown, ipv6Gateway: unknown };
 
 export type QqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type QqQuery = { routes: Array<
-    | { __typename: 'IPV4Route', ipv4Address: unknown | null, ipv4Gateway: unknown | null }
-    | { __typename: 'IPV6Route', ipv6Address: unknown | null, ipv6Gateway: unknown | null }
+    | { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown }
+    | { __typename: 'IPV6Route', ipv6Address: unknown, ipv6Gateway: unknown }
   > };
 "
 `;
