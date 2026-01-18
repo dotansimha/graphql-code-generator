@@ -88,7 +88,7 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, nonNullableDate: unknown, nullableDate: unknown | null } | null };
+      export type UserQuery = { user: { id: string, nonNullableDate: unknown, nullableDate: unknown } | null };
       "
     `);
 
@@ -181,7 +181,7 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, nonNullableDate: any, nullableDate: any | null } | null };
+      export type UserQuery = { user: { id: string, nonNullableDate: any, nullableDate: any } | null };
       "
     `);
 

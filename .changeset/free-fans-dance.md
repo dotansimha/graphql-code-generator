@@ -3,4 +3,4 @@
 '@graphql-codegen/typescript-operations': patch
 ---
 
-Add printTypeScriptType to handle printing TS types, as there are special cases like `any` and `unknown`
+Add `printTypeScriptMaybeType` to handle printing TS types, as there are special cases like `any` and `unknown`
