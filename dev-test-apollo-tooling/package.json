@@ -9,9 +9,7 @@
     "@graphql-codegen/plugin-helpers": "*",
     "@graphql-codegen/typescript-operations": "*",
     "@graphql-codegen/visitor-plugin-common": "*",
-    "@graphql-codegen/typed-document-node": "*",
-    "del": "^6.1.1",
-    "lodash-es": "^4.17.15"
+    "@graphql-codegen/typed-document-node": "*"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
