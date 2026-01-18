@@ -12,7 +12,6 @@
     "@graphql-codegen/typed-document-node": "*"
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.6",
     "@types/node": "^25.0.3",
     "tsx": "4.7.0",
     "typescript": "^5.9.3",
