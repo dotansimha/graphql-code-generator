@@ -136,7 +136,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      type UsersInput = {
+      export type UsersInput = {
         /** UsersInput from */
         from?: unknown;
         /** UsersInput to */
@@ -251,11 +251,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'ENUM_E'
         | 'ENUM_F';
 
-      type EnumsInner = {
+      export type EnumsInner = {
         enumsDeep: Array<EnumInnerArray>;
       };
 
-      type UsersInput = {
+      export type UsersInput = {
         enum: EnumRoot;
         enums: Array<EnumRootArray>;
         innerEnums: EnumsInner;
@@ -652,7 +652,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      type UsersInput = {
+      export type UsersInput = {
         /** UsersInput from */
         from?: unknown;
         /** UsersInput to */
