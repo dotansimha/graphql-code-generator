@@ -6,9 +6,7 @@ export type FooQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FooQuery = { Tweets: Array<{ id: string } | null> | null };
 
-export type LelFragment = { id: string; body: string | null; date: unknown | null } & {
-  ' $fragmentName'?: 'LelFragment';
-};
+export type LelFragment = { id: string; body: string | null; date: unknown } & { ' $fragmentName'?: 'LelFragment' };
 
 export type BarQueryVariables = Exact<{ [key: string]: never }>;
 
