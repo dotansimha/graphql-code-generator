@@ -70,25 +70,25 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type UserInput = {
         nonNullableDate: unknown;
-        nullableDate?: unknown | null | undefined;
-        dateArray1?: Array<unknown | null | undefined> | null | undefined;
-        dateArray2: Array<unknown | null | undefined>;
+        nullableDate?: unknown;
+        dateArray1?: Array<unknown> | null | undefined;
+        dateArray2: Array<unknown>;
         dateArray3?: Array<unknown> | null | undefined;
         dateArray4: Array<unknown>;
       };
 
       export type UserQueryVariables = Exact<{
         nonNullableDate: unknown;
-        nullableDate?: unknown | null | undefined;
-        dateArray1?: Array<unknown | null | undefined> | unknown | null | undefined;
-        dateArray2: Array<unknown | null | undefined> | unknown;
+        nullableDate?: unknown;
+        dateArray1?: Array<unknown> | unknown | null | undefined;
+        dateArray2: Array<unknown> | unknown;
         dateArray3?: Array<unknown> | unknown | null | undefined;
         dateArray4: Array<unknown> | unknown;
         input: UserInput;
       }>;
 
 
-      export type UserQuery = { user: { id: string, nonNullableDate: unknown, nullableDate: unknown | null } | null };
+      export type UserQuery = { user: { id: string, nonNullableDate: unknown, nullableDate: unknown } | null };
       "
     `);
 
@@ -163,25 +163,25 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       type UserInput = {
         nonNullableDate: any;
-        nullableDate?: any | null | undefined;
-        dateArray1?: Array<any | null | undefined> | null | undefined;
-        dateArray2: Array<any | null | undefined>;
+        nullableDate?: any;
+        dateArray1?: Array<any> | null | undefined;
+        dateArray2: Array<any>;
         dateArray3?: Array<any> | null | undefined;
         dateArray4: Array<any>;
       };
 
       export type UserQueryVariables = Exact<{
         nonNullableDate: any;
-        nullableDate?: any | null | undefined;
-        dateArray1?: Array<any | null | undefined> | any | null | undefined;
-        dateArray2: Array<any | null | undefined> | any;
+        nullableDate?: any;
+        dateArray1?: Array<any> | any | null | undefined;
+        dateArray2: Array<any> | any;
         dateArray3?: Array<any> | any | null | undefined;
         dateArray4: Array<any> | any;
         input: UserInput;
       }>;
 
 
-      export type UserQuery = { user: { id: string, nonNullableDate: any, nullableDate: any | null } | null };
+      export type UserQuery = { user: { id: string, nonNullableDate: any, nullableDate: any } | null };
       "
     `);
 
