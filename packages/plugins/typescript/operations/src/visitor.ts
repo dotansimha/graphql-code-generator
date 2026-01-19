@@ -22,6 +22,7 @@ import {
   SelectionSetToObject,
   getNodeComment,
   wrapTypeWithModifiers,
+  printTypeScriptMaybeType,
 } from '@graphql-codegen/visitor-plugin-common';
 import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
@@ -76,7 +77,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   protected _usedNamedInputTypes: UsedNamedInputTypes = {};
   protected _needsExactUtilityType: boolean = false;
   private _outputPath: string;
-  private _inputMaybeValueSuffix: string;
 
   constructor(
     schema: GraphQLSchema,
@@ -145,7 +145,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
       wrapTypeWithModifiers: (baseType, type) => {
         return wrapTypeWithModifiers(baseType, type, {
-          wrapOptional: type => this.config.maybeValue.replace('T', type),
+          wrapOptional: type =>
+            printTypeScriptMaybeType({
+              type,
+              pattern: this.config.maybeValue,
+            }),
           wrapArray: type => {
             const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
             return `${listModifier}<${type}>`;
@@ -167,8 +171,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       )
     );
 
-    this._inputMaybeValueSuffix = this.config.inputMaybeValue.replace('T', ''); // e.g. turns `T | null | undefined` to ` | null | undefined`
-
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
@@ -179,7 +181,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           avoidOptionals: this.config.avoidOptionals,
           immutableTypes: this.config.immutableTypes,
           inputMaybeValue: this.config.inputMaybeValue,
-          inputMaybeValueSuffix: this._inputMaybeValueSuffix,
         },
         this.scalars,
         this.convertName.bind(this),
@@ -199,8 +200,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
-    if (!this._usedNamedInputTypes[enumName] || this.config.importSchemaTypesFrom) {
-      return null;
+    if (
+      !this._usedNamedInputTypes[enumName] || // If not used...
+      this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
+    ) {
+      return null; // ... then, don't generate in this file
     }
 
     return convertSchemaEnumToDeclarationBlockString({
@@ -224,12 +228,20 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {
     const inputTypeName = node.name.value;
-    if (!this._usedNamedInputTypes[inputTypeName]) {
-      return null;
+    if (
+      !this._usedNamedInputTypes[inputTypeName] || // If not used...
+      this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
+    ) {
+      return null; // ... then, don't generate in this file
     }
+
+    // Note: we usually don't need to export this type,
+    // however, it's not possible to know if another file is using this type e.g. using `importSchemaTypesFrom`,
+    // so it's better export the types.
 
     if (isOneOfInputObjectType(this._schema.getType(inputTypeName))) {
       return new DeclarationBlock(this._declarationBlockConfig)
+        .export()
         .asKind('type')
         .withName(this.convertName(node))
         .withComment(node.description?.value)
@@ -237,6 +249,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
       .asKind('type')
       .withName(this.convertName(node))
       .withComment(node.description?.value)
@@ -286,7 +299,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
         if (!typeNode.isNonNullable) {
-          typePart += this._inputMaybeValueSuffix;
+          typePart = printTypeScriptMaybeType({
+            type: typePart,
+            pattern: this.config.inputMaybeValue,
+          });
         }
         continue;
       }
@@ -294,7 +310,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       if (typeNode.type === 'ListType') {
         typePart = `Array<${typePart}>`;
         if (!typeNode.isNonNullable) {
-          typePart += this._inputMaybeValueSuffix;
+          typePart = printTypeScriptMaybeType({
+            type: typePart,
+            pattern: this.config.inputMaybeValue,
+          });
         }
       }
     }

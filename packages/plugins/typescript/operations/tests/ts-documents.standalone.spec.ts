@@ -136,11 +136,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      type UsersInput = {
+      export type UsersInput = {
         /** UsersInput from */
-        from?: unknown | null | undefined;
+        from?: unknown;
         /** UsersInput to */
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: UserRole | null | undefined;
       };
 
@@ -163,7 +163,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: UserRole | null | undefined;
       }>;
 
@@ -251,11 +251,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'ENUM_E'
         | 'ENUM_F';
 
-      type EnumsInner = {
+      export type EnumsInner = {
         enumsDeep: Array<EnumInnerArray>;
       };
 
-      type UsersInput = {
+      export type UsersInput = {
         enum: EnumRoot;
         enums: Array<EnumRootArray>;
         innerEnums: EnumsInner;
@@ -652,11 +652,11 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         | 'CUSTOMER';
 
       /** UsersInput Description */
-      type UsersInput = {
+      export type UsersInput = {
         /** UsersInput from */
-        from?: unknown | null | undefined;
+        from?: unknown;
         /** UsersInput to */
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: UserRole | null | undefined;
       };
       "

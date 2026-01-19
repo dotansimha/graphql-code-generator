@@ -107,15 +107,6 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      /** UsersInput Description */
-      type UsersInput = {
-        /** UsersInput from */
-        from?: unknown | null | undefined;
-        /** UsersInput to */
-        to?: unknown | null | undefined;
-        role?: UserRole | null | undefined;
-      };
-
       export type UserQueryVariables = Exact<{
         id: string;
       }>;
@@ -135,7 +126,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: TypeImport.UserRole | null | undefined;
       }>;
 
@@ -251,15 +242,6 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      /** UsersInput Description */
-      type UsersInput = {
-        /** UsersInput from */
-        from?: unknown | null | undefined;
-        /** UsersInput to */
-        to?: unknown | null | undefined;
-        role?: UserRole | null | undefined;
-      };
-
       export type UserQueryVariables = Exact<{
         id: string;
       }>;
@@ -279,7 +261,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
-        to?: unknown | null | undefined;
+        to?: unknown;
         role?: TypeImport.UserRole | null | undefined;
       }>;
 
