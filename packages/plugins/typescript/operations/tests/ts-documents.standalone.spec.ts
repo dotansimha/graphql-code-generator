@@ -187,8 +187,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
 
-    // FIXME: enable this to ensure type correctness
-    // validateTs(content, undefined, undefined, undefined, undefined, true);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
   it('test generating input types enums in lists and inner field', async () => {
