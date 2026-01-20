@@ -187,8 +187,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       "
     `);
 
-    // FIXME: enable this to ensure type correctness
-    // validateTs(content, undefined, undefined, undefined, undefined, true);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
   it('test generating input types enums in lists and inner field', async () => {
@@ -845,6 +844,66 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserPartFragment = { id: string, name: string };
       "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('generates correctly with `globalNamespace: true`', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+        nickname: String
+      }
+
+      "UserRole Description"
+      enum UserRole {
+        "UserRole ADMIN"
+        ADMIN
+        "UserRole CUSTOMER"
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($id: ID!) {
+        user(id: $id) {
+          id
+          role
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], { globalNamespace: true }, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+
+          declare global {
+            /** UserRole Description */
+      export type UserRole =
+        /** UserRole ADMIN */
+        | 'ADMIN'
+        /** UserRole CUSTOMER */
+        | 'CUSTOMER';
+
+      export type UserQueryVariables = Exact<{
+        id: string;
+      }>;
+
+
+      export type UserQuery = { user: { id: string, role: UserRole } | null };
+
+          }"
     `);
 
     validateTs(result, undefined, undefined, undefined, undefined, true);

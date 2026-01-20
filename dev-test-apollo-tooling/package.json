@@ -1,5 +1,6 @@
 {
   "name": "dev-test-apollo-tooling",
+  "private": true,
   "description": "A setup which mimics Apollo tooling generation as close as possible",
   "version": "0.0.1",
   "type": "module",
