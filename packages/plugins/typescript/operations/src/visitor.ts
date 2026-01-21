@@ -34,8 +34,6 @@ import {
   isNativeNamedType,
   isOneOfInputObjectType,
   LoadedFragment,
-  normalizeAvoidOptionals,
-  NormalizedAvoidOptionalsConfig,
   ParsedDocumentsConfig,
   parseEnumValues,
   PreResolveTypesProcessor,
@@ -46,7 +44,11 @@ import {
   type ConvertSchemaEnumToDeclarationBlockString,
   type ParsedEnumValuesMap,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptDocumentsPluginConfig } from './config.js';
+import {
+  normalizeAvoidOptionals,
+  NormalizedAvoidOptionalsConfig,
+} from './config.avoidOptionals.js';
+import type { TypeScriptDocumentsPluginConfig } from './config.js';
 import {
   SCALARS,
   TypeScriptOperationVariablesToObject,
@@ -137,7 +139,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       ],
     };
 
-    this._usedNamedInputTypes = this.collectUsedInputTypes({ schema, documentNode: documentWithAllFragments });
+    this._usedNamedInputTypes = this.collectUsedInputTypes({
+      schema,
+      documentNode: documentWithAllFragments,
+    });
 
     const processorConfig: SelectionSetProcessorConfig = {
       namespacedImportName: this.config.namespacedImportName,
@@ -182,9 +187,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
         {
-          // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
-          // It's also being used for Variables so people could already be using it.
-          // Maybe it's better to deprecate and remove, to see what users think.
           avoidOptionals: this.config.avoidOptionals,
           immutableTypes: this.config.immutableTypes,
           inputMaybeValue: this.config.inputMaybeValue,
