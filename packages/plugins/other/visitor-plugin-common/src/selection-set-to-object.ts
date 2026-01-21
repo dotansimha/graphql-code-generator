@@ -964,17 +964,36 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     const schemaType = this._schema.getType(typeName);
 
-    // Check if current selection set has fragments (e.g., "... AppNotificationFragment" or "... on AppNotification")
-    const hasFragment =
-      this._selectionSet?.selections?.some(
-        selection => selection.kind === Kind.INLINE_FRAGMENT || selection.kind === Kind.FRAGMENT_SPREAD
-      ) ?? false;
+    // Check if current selection set has type-narrowing fragments.
+    // - Inline fragments are always type-narrowing
+    // - Fragment spreads are only type-narrowing if they are on a different type than the current parent schema type
+    //   (e.g. spreading `fragment Foo on Pet` while processing `Pet` is not type-narrowing).
+    const hasTypeNarrowingFragments =
+      this._selectionSet?.selections?.some(selection => {
+        if (selection.kind === Kind.INLINE_FRAGMENT) {
+          return true;
+        }
+
+        if (selection.kind === Kind.FRAGMENT_SPREAD) {
+          const spreadFragment = this._loadedFragments.find(lf => lf.name === selection.name.value);
+          // If we can't resolve fragment metadata (or the current parent type), treat it as type-narrowing.
+          // This avoids incorrectly using interface-rooted names in cases that are actually concrete-targeting.
+          return !spreadFragment || !this._parentSchemaType || spreadFragment.onType !== this._parentSchemaType.name;
+        }
+
+        return false;
+      }) ?? false;
 
     // When the parent schema type is an interface:
     // - If we're processing inline fragments, use the concrete type name
     // - If we're processing the interface directly, use the interface name
     // - If we're in a named fragment, always use the concrete type name
-    if (isObjectType(schemaType) && this._parentSchemaType && isInterfaceType(this._parentSchemaType) && !hasFragment) {
+    if (
+      isObjectType(schemaType) &&
+      this._parentSchemaType &&
+      isInterfaceType(this._parentSchemaType) &&
+      !hasTypeNarrowingFragments
+    ) {
       return `${parentName}_${this._parentSchemaType.name}`;
     }
 
