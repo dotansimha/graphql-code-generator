@@ -8,6 +8,7 @@
   "ignore": [
     "website",
     "example-*",
+    "dev-test*",
     "@graphql-codegen/client-preset-swc-plugin",
     "example-apollo-client-swc-plugin",
     "example-react-nextjs-swr"
