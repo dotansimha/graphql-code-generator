@@ -1,12 +1,12 @@
 import {
   OperationVariablesToObject,
   ConvertNameFn,
-  NormalizedAvoidOptionalsConfig,
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
   printTypeScriptMaybeType,
 } from '@graphql-codegen/visitor-plugin-common';
 import { Kind, TypeNode } from 'graphql';
+import type { NormalizedAvoidOptionalsConfig } from './config.avoidOptionals';
 
 export const SCALARS = {
   ID: 'string | number',

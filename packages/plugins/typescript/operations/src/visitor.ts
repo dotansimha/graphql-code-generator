@@ -12,8 +12,6 @@ import {
   getEnumsImports,
   isNativeNamedType,
   LoadedFragment,
-  normalizeAvoidOptionals,
-  NormalizedAvoidOptionalsConfig,
   ParsedDocumentsConfig,
   type ParsedEnumValuesMap,
   parseEnumValues,
@@ -46,8 +44,9 @@ import {
   visit,
   visitWithTypeInfo,
 } from 'graphql';
-import { TypeScriptDocumentsPluginConfig } from './config.js';
+import type { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject, SCALARS } from './ts-operation-variables-to-object.js';
+import { normalizeAvoidOptionals, NormalizedAvoidOptionalsConfig } from './config.avoidOptionals.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;
@@ -175,9 +174,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
         {
-          // FIXME: this is the legacy avoidOptionals which was used to make Result fields non-optional. This use case is no longer valid.
-          // It's also being used for Variables so people could already be using it.
-          // Maybe it's better to deprecate and remove, to see what users think.
           avoidOptionals: this.config.avoidOptionals,
           immutableTypes: this.config.immutableTypes,
           inputMaybeValue: this.config.inputMaybeValue,
