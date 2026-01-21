@@ -1,15 +1,13 @@
 import {
-  AvoidOptionalsConfig,
   type ConvertSchemaEnumToDeclarationBlockString,
   type EnumValuesMap,
   RawDocumentsConfig,
 } from '@graphql-codegen/visitor-plugin-common';
+import type { AvoidOptionalsConfig } from './config.avoidOptionals';
 
 /**
  * @description This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.
  * It generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.
- *
- * Note: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.
  */
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
@@ -28,7 +26,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          arrayInputCoercion: false
    *        },
@@ -55,7 +53,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          avoidOptionals: true
    *        },
@@ -74,13 +72,12 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          avoidOptionals: {
-   *            field: true
-   *            inputValue: true
-   *            object: true
-   *            defaultValue: true
+   *            inputValue: true,
+   *            object: true,
+   *            defaultValue: true,
    *          }
    *        },
    *      },
@@ -102,7 +99,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          immutableTypes: true
    *        },
@@ -125,7 +122,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript', 'typescript-operations'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          flattenGeneratedTypes: true
    *        },
@@ -149,7 +146,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript', 'typescript-operations'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          flattenGeneratedTypes: true,
    *          flattenGeneratedTypesIncludeFragments: true
@@ -175,7 +172,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          noExport: true
    *        },
@@ -206,23 +203,19 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *  const config: CodegenConfig = {
    *    // ...
    *    generates: {
-   *      "./typings/api.ts": {
-   *        "plugins": [
-   *            "typescript"
-   *        ]
-   *    },
-   *    "./": {
+   *      "./": {
    *        "preset": "near-operation-file",
    *        "presetConfig": {
-   *            "baseTypesPath": "./typings/api.ts",
-   *            "extension": ".gql.d.ts"
+   *          "baseTypesPath": "./typings/api.ts",
+   *          "extension": ".gql.d.ts"
    *        },
    *        "plugins": [
-   *            "@graphql-codegen/typescript-operations"
+   *          "typescript-operations"
    *        ],
    *        "config": {
-   *            "addOperationExport": true
+   *          "addOperationExport": true
    *        }
+   *      }
    *    }
    *  };
    *  export default config;
@@ -298,7 +291,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *    // ...
    *    generates: {
    *      'path/to/file.ts': {
-   *        plugins: ['typescript'],
+   *        plugins: ['typescript-operations'],
    *        config: {
    *          allowUndefinedQueryVariables: true
    *        },
@@ -339,7 +332,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *   // ...
    *   generates: {
    *     'path/to/file.ts': {
-   *       plugins: ['typescript', 'typescript-operations'],
+   *       plugins: ['typescript-operations'],
    *       config: {
    *         nullability: {
    *           errorHandlingClient: true
