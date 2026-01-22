@@ -74,8 +74,8 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean): boolean {
     const options = this._config.avoidOptionals;
     return (
-      ((options.object || !options.defaultValue) && hasDefaultValue) ||
-      (!options.object && !isNonNullType)
+      ((options.variableValue || !options.defaultValue) && hasDefaultValue) ||
+      (!options.variableValue && !isNonNullType)
     );
   }
 
