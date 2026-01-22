@@ -65,7 +65,10 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
 
   protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean): boolean {
     const options = this._config.avoidOptionals;
-    return ((options.object || !options.defaultValue) && hasDefaultValue) || (!options.object && !isNonNullType);
+    return (
+      ((options.variableValue || !options.defaultValue) && hasDefaultValue) ||
+      (!options.variableValue && !isNonNullType)
+    );
   }
 
   protected getScalar(name: string): string {
