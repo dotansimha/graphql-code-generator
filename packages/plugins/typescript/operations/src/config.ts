@@ -75,8 +75,8 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *        plugins: ['typescript-operations'],
    *        config: {
    *          avoidOptionals: {
+   *            variableValue: true,
    *            inputValue: true,
-   *            object: true,
    *            defaultValue: true,
    *          }
    *        },
