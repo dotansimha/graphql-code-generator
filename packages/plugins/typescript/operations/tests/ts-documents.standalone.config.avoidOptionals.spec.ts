@@ -12,7 +12,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
 
       input UserInput {
         id: ID!
+        id2: ID! = "default-id"
         legacyId: ID
+        legacyId2: ID = "default-legacy-id"
       }
 
       type User {
@@ -50,7 +52,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         id: string | number;
+        id2?: string | number;
         legacyId?: string | number | null | undefined;
+        legacyId2?: string | number | null | undefined;
       };
 
       export type UserQueryVariables = Exact<{
@@ -76,7 +80,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
 
       input UserInput {
         id: ID!
+        id2: ID! = "default-id"
         legacyId: ID
+        legacyId2: ID = "default-legacy-id"
       }
 
       type User {
@@ -114,7 +120,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         id: string | number;
+        id2: string | number;
         legacyId: string | number | null | undefined;
+        legacyId2: string | number | null | undefined;
       };
 
       export type UserQueryVariables = Exact<{
@@ -140,7 +148,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
 
       input UserInput {
         id: ID!
+        id2: ID! = "default-id"
         legacyId: ID
+        legacyId2: ID = "default-legacy-id"
       }
 
       type User {
@@ -189,7 +199,86 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         id: string | number;
+        id2: string | number;
         legacyId: string | number | null | undefined;
+        legacyId2: string | number | null | undefined;
+      };
+
+      export type UserQueryVariables = Exact<{
+        test?: string | null | undefined;
+        input?: UserInput | null | undefined;
+      }>;
+
+
+      export type UserQuery = { user: { id: string, name: string, nickname: string | null } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('generates non-optional Input with defaults when `avoidOptionals.defaultValue:true`', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(input: UserInput): User
+      }
+
+      input UserInput {
+        id: ID!
+        id2: ID! = "default-id"
+        legacyId: ID
+        legacyId2: ID = "default-legacy-id"
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+        nickname: String
+      }
+
+      "UserRole Description"
+      enum UserRole {
+        "UserRole ADMIN"
+        ADMIN
+        "UserRole CUSTOMER"
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($test: ID, $input: UserInput) {
+        user {
+          id
+          name
+          nickname
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          avoidOptionals: {
+            defaultValue: true,
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserInput = {
+        id: string | number;
+        id2: string | number;
+        legacyId?: string | number | null | undefined;
+        legacyId2?: string | number | null | undefined;
       };
 
       export type UserQueryVariables = Exact<{
@@ -213,7 +302,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
 
       input UserInput {
         id: ID!
+        id2: ID! = "default-id"
         legacyId: ID
+        legacyId2: ID = "default-legacy-id"
       }
 
       type User {
@@ -262,7 +353,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         id: string | number;
+        id2?: string | number;
         legacyId?: string | number | null | undefined;
+        legacyId2?: string | number | null | undefined;
       };
 
       export type UserQueryVariables = Exact<{
@@ -286,7 +379,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
 
       input UserInput {
         id: ID!
+        id2: ID! = "default-id"
         legacyId: ID
+        legacyId2: ID = "default-legacy-id"
       }
 
       type User {
@@ -341,7 +436,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         id: string | number;
+        id2?: string | number;
         legacyId?: string | number | null | undefined;
+        legacyId2?: string | number | null | undefined;
       };
 
       export type UserQueryVariables = Exact<{
