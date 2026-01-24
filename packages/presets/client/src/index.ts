@@ -134,6 +134,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       enumsAsConst: options.config.enumsAsConst,
       enumValues: options.config.enumValues,
       futureProofEnums: options.config.futureProofEnums,
+      futureProofUnions: options.config.futureProofUnions,
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
