@@ -56,6 +56,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
       ...visitor.getImports(),
       ...visitor.getExternalSchemaTypeImports(),
       ...visitor.getEnumsImports(),
+      ...visitor.getScalarsImports(),
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
       visitor.getExactUtilityType(),
       visitor.getIncrementalUtilityType(),

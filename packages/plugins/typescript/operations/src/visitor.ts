@@ -21,6 +21,7 @@ import {
   getNodeComment,
   wrapTypeWithModifiers,
   printTypeScriptMaybeType,
+  buildTypeImport,
 } from '@graphql-codegen/visitor-plugin-common';
 import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
@@ -64,7 +65,12 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
 
 type UsedNamedInputTypes = Record<
   string,
-  | { type: 'GraphQLScalarType'; node: GraphQLScalarType; tsType: string }
+  | {
+      type: 'GraphQLScalarType';
+      node: GraphQLScalarType;
+      tsType: string;
+      useCases: { input: boolean; output: boolean };
+    }
   | { type: 'GraphQLEnumType'; node: GraphQLEnumType; tsType: string }
   | { type: 'GraphQLInputObjectType'; node: GraphQLInputObjectType; tsType: string }
 >;
@@ -424,6 +430,75 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       useTypeImports: this.config.useTypeImports,
     });
   }
+
+  public getScalarsImports(): string[] {
+    const imports: {
+      [source: string]: // `source` is where to import from e.g. './relative-import', 'package-import', '@org/package'
+      {
+        identifiers: {
+          [identifier: string]: // `identifier` is the name of import, this could be used for named or default imports
+          { asDefault: boolean };
+        };
+      };
+    } = {};
+    for (const [scalarName, parsedScalar] of Object.entries(this.config.scalars)) {
+      const usedScalar = this._usedNamedInputTypes[scalarName];
+      if (!usedScalar || usedScalar.type !== 'GraphQLScalarType') {
+        continue;
+      }
+
+      if (parsedScalar.input.isExternal && usedScalar.useCases.input) {
+        imports[parsedScalar.input.source] ||= { identifiers: {} };
+        imports[parsedScalar.input.source].identifiers[parsedScalar.input.import] = {
+          asDefault: parsedScalar.input.default,
+        };
+      }
+
+      if (parsedScalar.output.isExternal && usedScalar.useCases.output) {
+        imports[parsedScalar.output.source] ||= { identifiers: {} };
+        imports[parsedScalar.output.source].identifiers[parsedScalar.output.import] = {
+          asDefault: parsedScalar.output.default,
+        };
+      }
+    }
+
+    return Object.entries(imports).reduce<string[]>((res, [importSource, importParams]) => {
+      // One import statement cannot have multiple defaults.
+      // So:
+      // - split each defaults into its own statements
+      // - the named imports can all go together, tracked by `namedImports`
+      const namedImports = [];
+      for (const [identifier, identifierMetadata] of Object.entries(importParams.identifiers)) {
+        if (identifierMetadata.asDefault) {
+          res.push(
+            buildTypeImport({
+              identifier,
+              source: importSource,
+              asDefault: true,
+              useTypeImports: this.config.useTypeImports,
+            })
+          );
+          continue;
+        }
+
+        namedImports.push(identifier);
+      }
+
+      if (namedImports.length > 0) {
+        res.push(
+          buildTypeImport({
+            identifier: namedImports.join(', '),
+            source: importSource,
+            asDefault: false,
+            useTypeImports: this.config.useTypeImports,
+          })
+        );
+      }
+
+      return res;
+    }, []);
+  }
+
   protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
@@ -435,11 +510,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   private collectInnerTypesRecursively(node: GraphQLNamedInputType, usedInputTypes: UsedNamedInputTypes): void {
-    if (usedInputTypes[node.name]) {
-      return;
-    }
-
     if (node instanceof GraphQLEnumType) {
+      if (usedInputTypes[node.name]) {
+        return;
+      }
+
       usedInputTypes[node.name] = {
         type: 'GraphQLEnumType',
         node,
@@ -449,15 +524,29 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     if (node instanceof GraphQLScalarType) {
-      usedInputTypes[node.name] = {
+      const scalarType = usedInputTypes[node.name] || {
         type: 'GraphQLScalarType',
         node,
         tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'unknown',
+        useCases: { input: true, output: false },
       };
+
+      if (scalarType.type !== 'GraphQLScalarType') {
+        throw new Error(`${node.name} has been incorrectly parsed as Scalar. This should not happen.`);
+      }
+
+      // ensure scalar's useCases is updated to have output true,
+      // if the scalar has been parsed previously, it may only have useCases `input:true`, and not `output:true`
+      scalarType.useCases.input = true;
+
+      usedInputTypes[node.name] = scalarType;
       return;
     }
 
     // GraphQLInputObjectType
+    if (usedInputTypes[node.name]) {
+      return;
+    }
     usedInputTypes[node.name] = {
       type: 'GraphQLInputObjectType',
       node,
@@ -471,6 +560,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
   }
 
+  /**
+   * FIXME: This function is called `collectUsedInputTypes`, but it collects the types used in Result (SelectionSet) as well:
+   * - used Enums for Variables
+   * - used Scalars for Variables
+   * - used Input for Variables
+   *
+   * - used Enums for Result
+   * - used Scalars for Result
+   */
   private collectUsedInputTypes({
     schema,
     documentNode,
@@ -521,6 +619,26 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 node: namedType,
                 tsType: this.convertName(namedType.name),
               };
+              return;
+            }
+
+            if (namedType instanceof GraphQLScalarType) {
+              const scalarType = usedInputTypes[namedType.name] || {
+                type: 'GraphQLScalarType',
+                node: namedType,
+                tsType: this.convertName(namedType.name),
+                useCases: { input: false, output: true },
+              };
+
+              if (scalarType.type !== 'GraphQLScalarType') {
+                throw new Error(`${namedType.name} has been incorrectly parsed as Scalar. This should not happen.`);
+              }
+
+              // ensure scalar's useCases is updated to have output true,
+              // if the scalar has been parsed previously, it may only have useCases `input:true`, and not `output:true`
+              scalarType.useCases.output = true;
+
+              usedInputTypes[namedType.name] = scalarType;
             }
           }
         },
