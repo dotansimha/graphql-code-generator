@@ -95,6 +95,7 @@ export const plugin: PluginFunction<
       ...visitor.getImports(),
       ...visitor.getExternalSchemaTypeImports(),
       ...visitor.getEnumsImports(),
+      ...visitor.getScalarsImports(),
       ...visitor.getGlobalDeclarations(visitor.config.noExport),
       visitor.getExactUtilityType(),
       visitor.getIncrementalUtilityType(),
