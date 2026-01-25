@@ -69,7 +69,7 @@ type UsedNamedInputTypes = Record<
       type: 'GraphQLScalarType';
       node: GraphQLScalarType;
       tsType: string;
-      useCases: { input: boolean; output: boolean };
+      useCases: { input: boolean; output: boolean; variables: boolean };
     }
   | { type: 'GraphQLEnumType'; node: GraphQLEnumType; tsType: string }
   | { type: 'GraphQLInputObjectType'; node: GraphQLInputObjectType; tsType: string }
@@ -435,6 +435,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getScalarsImports(): string[] {
+    const fileType: 'shared-type-file' | 'operation-file' =
+      this.config.importSchemaTypesFrom || // For output use cases, generates it when it an operation file i.e. import schema types...
+      this.config.generatesOperationTypes
+        ? 'operation-file'
+        : 'shared-type-file';
     const imports: {
       [source: string]: // `source` is where to import from e.g. './relative-import', 'package-import', '@org/package'
       {
@@ -450,14 +455,18 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         continue;
       }
 
-      if (parsedScalar.input.isExternal && usedScalar.useCases.input) {
+      if (
+        parsedScalar.input.isExternal &&
+        ((usedScalar.useCases.input && fileType === 'shared-type-file') ||
+          (usedScalar.useCases.variables && fileType === 'operation-file'))
+      ) {
         imports[parsedScalar.input.source] ||= { identifiers: {} };
         imports[parsedScalar.input.source].identifiers[parsedScalar.input.import] = {
           asDefault: parsedScalar.input.default,
         };
       }
 
-      if (parsedScalar.output.isExternal && usedScalar.useCases.output) {
+      if (parsedScalar.output.isExternal && usedScalar.useCases.output && fileType === 'operation-file') {
         imports[parsedScalar.output.source] ||= { identifiers: {} };
         imports[parsedScalar.output.source].identifiers[parsedScalar.output.import] = {
           asDefault: parsedScalar.output.default,
@@ -512,7 +521,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
-  private collectInnerTypesRecursively(node: GraphQLNamedInputType, usedInputTypes: UsedNamedInputTypes): void {
+  private collectInnerTypesRecursively({
+    node,
+    usedInputTypes,
+    location,
+  }: {
+    node: GraphQLNamedInputType;
+    usedInputTypes: UsedNamedInputTypes;
+    location: 'variables' | 'input'; // the location where the node was found. This is useful for nested input. Note: Since it starts at the variable, it first iteration is 'variables' and the rest will be `input`
+  }): void {
     if (node instanceof GraphQLEnumType) {
       if (usedInputTypes[node.name]) {
         return;
@@ -531,16 +548,25 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         type: 'GraphQLScalarType',
         node,
         tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'unknown',
-        useCases: { input: true, output: false },
+        useCases: {
+          variables: location === 'variables',
+          input: location === 'input',
+          output: false,
+        },
       };
 
       if (scalarType.type !== 'GraphQLScalarType') {
         throw new Error(`${node.name} has been incorrectly parsed as Scalar. This should not happen.`);
       }
 
-      // ensure scalar's useCases is updated to have output true,
-      // if the scalar has been parsed previously, it may only have useCases `input:true`, and not `output:true`
-      scalarType.useCases.input = true;
+      // ensure scalar's useCases is updated to have `useCases.input:true` or `useCases.variables:true`, depending on the use case
+      // this is required because if the scalar has been parsed previously, it may only have `useCases.output:true`, and not `useCases.input:true` or `useCases.variables:true`
+      if (location === 'input') {
+        scalarType.useCases.input = true;
+      }
+      if (location === 'variables') {
+        scalarType.useCases.variables = true;
+      }
 
       usedInputTypes[node.name] = scalarType;
       return;
@@ -559,7 +585,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const fields = node.getFields();
     for (const field of Object.values(fields)) {
       const fieldType = getNamedType(field.type);
-      this.collectInnerTypesRecursively(fieldType, usedInputTypes);
+      this.collectInnerTypesRecursively({
+        node: fieldType,
+        usedInputTypes,
+        location: 'input',
+      });
     }
   }
 
@@ -596,7 +626,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 foundInputType instanceof GraphQLEnumType) &&
               !isNativeNamedType(foundInputType)
             ) {
-              this.collectInnerTypesRecursively(foundInputType, usedInputTypes);
+              this.collectInnerTypesRecursively({
+                node: foundInputType,
+                usedInputTypes,
+                location: 'variables',
+              });
             }
           },
         });
@@ -630,15 +664,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 type: 'GraphQLScalarType',
                 node: namedType,
                 tsType: this.convertName(namedType.name),
-                useCases: { input: false, output: true },
+                useCases: { variables: false, input: false, output: true },
               };
 
               if (scalarType.type !== 'GraphQLScalarType') {
                 throw new Error(`${namedType.name} has been incorrectly parsed as Scalar. This should not happen.`);
               }
 
-              // ensure scalar's useCases is updated to have output true,
-              // if the scalar has been parsed previously, it may only have useCases `input:true`, and not `output:true`
+              // ensure scalar's useCases is updated to have `useCases.output:true`
+              // this is required because if the scalar has been parsed previously, it may only have `useCases.input:true` or `useCases.variables:true`, not `useCases.output:true`
               scalarType.useCases.output = true;
 
               usedInputTypes[namedType.name] = scalarType;
