@@ -435,10 +435,13 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getScalarsImports(): string[] {
-    const fileType: 'shared-type-file' | 'operation-file' =
-      this.config.importSchemaTypesFrom || this.config.generatesOperationTypes
-        ? 'operation-file' // For `operation-file` here means either (1) operation file in a multiple file setup or (2) the main file in a single file setup
-        : 'shared-type-file';
+    const fileType: 'multi-file-shared-type-file' | 'multi-file-operation-file' | 'single-file-operation-file' = this
+      .config.importSchemaTypesFrom
+      ? 'multi-file-operation-file'
+      : this.config.generatesOperationTypes
+      ? 'single-file-operation-file'
+      : 'multi-file-shared-type-file';
+
     const imports: {
       [source: string]: // `source` is where to import from e.g. './relative-import', 'package-import', '@org/package'
       {
@@ -456,8 +459,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
       if (
         parsedScalar.input.isExternal &&
-        ((usedScalar.useCases.input && fileType === 'shared-type-file') ||
-          (usedScalar.useCases.variables && fileType === 'operation-file'))
+        (((usedScalar.useCases.input || usedScalar.useCases.variables) && fileType === 'single-file-operation-file') ||
+          (usedScalar.useCases.input && fileType === 'multi-file-shared-type-file') ||
+          (usedScalar.useCases.variables && fileType === 'multi-file-operation-file'))
       ) {
         imports[parsedScalar.input.source] ||= { identifiers: {} };
         imports[parsedScalar.input.source].identifiers[parsedScalar.input.import] = {
@@ -465,7 +469,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         };
       }
 
-      if (parsedScalar.output.isExternal && usedScalar.useCases.output && fileType === 'operation-file') {
+      if (
+        parsedScalar.output.isExternal &&
+        usedScalar.useCases.output &&
+        (fileType === 'single-file-operation-file' || fileType === 'multi-file-operation-file')
+      ) {
         imports[parsedScalar.output.source] ||= { identifiers: {} };
         imports[parsedScalar.output.source].identifiers[parsedScalar.output.import] = {
           asDefault: parsedScalar.output.default,
