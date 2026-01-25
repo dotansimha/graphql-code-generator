@@ -21,6 +21,7 @@ import {
   getNodeComment,
   wrapTypeWithModifiers,
   printTypeScriptMaybeType,
+  buildTypeImport,
 } from '@graphql-codegen/visitor-plugin-common';
 import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import autoBind from 'auto-bind';
@@ -64,7 +65,12 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
 
 type UsedNamedInputTypes = Record<
   string,
-  | { type: 'GraphQLScalarType'; node: GraphQLScalarType; tsType: string }
+  | {
+      type: 'GraphQLScalarType';
+      node: GraphQLScalarType;
+      tsType: string;
+      useCases: { input: boolean; output: boolean; variables: boolean };
+    }
   | { type: 'GraphQLEnumType'; node: GraphQLEnumType; tsType: string }
   | { type: 'GraphQLInputObjectType'; node: GraphQLInputObjectType; tsType: string }
 >;
@@ -385,7 +391,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       return [];
     }
 
-    const hasTypesToImport = Object.keys(this._usedNamedInputTypes).length > 0;
+    const hasTypesToImport =
+      Object.values(this._usedNamedInputTypes).filter(
+        value => value.type === 'GraphQLEnumType' || value.type === 'GraphQLInputObjectType' // Only Enums and Inputs are stored in the shared type file (never Scalar), so we should only print import line if Enums and Inputs are used.
+      ).length > 0;
 
     if (!hasTypesToImport) {
       return [];
@@ -411,6 +420,104 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     ];
   }
 
+  public getEnumsImports(): string[] {
+    const usedEnumMap: ParsedEnumValuesMap = {};
+    for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
+      if (this._usedNamedInputTypes[enumName]) {
+        usedEnumMap[enumName] = enumDetails;
+      }
+    }
+
+    return getEnumsImports({
+      enumValues: usedEnumMap,
+      useTypeImports: this.config.useTypeImports,
+    });
+  }
+
+  public getScalarsImports(): string[] {
+    const fileType: 'multi-file-shared-type-file' | 'multi-file-operation-file' | 'single-file-operation-file' = this
+      .config.importSchemaTypesFrom
+      ? 'multi-file-operation-file'
+      : this.config.generatesOperationTypes
+      ? 'single-file-operation-file'
+      : 'multi-file-shared-type-file';
+
+    const imports: {
+      [source: string]: // `source` is where to import from e.g. './relative-import', 'package-import', '@org/package'
+      {
+        identifiers: {
+          [identifier: string]: // `identifier` is the name of import, this could be used for named or default imports
+          { asDefault: boolean };
+        };
+      };
+    } = {};
+    for (const [scalarName, parsedScalar] of Object.entries(this.config.scalars)) {
+      const usedScalar = this._usedNamedInputTypes[scalarName];
+      if (!usedScalar || usedScalar.type !== 'GraphQLScalarType') {
+        continue;
+      }
+
+      if (
+        parsedScalar.input.isExternal &&
+        (((usedScalar.useCases.input || usedScalar.useCases.variables) && fileType === 'single-file-operation-file') ||
+          (usedScalar.useCases.input && fileType === 'multi-file-shared-type-file') ||
+          (usedScalar.useCases.variables && fileType === 'multi-file-operation-file'))
+      ) {
+        imports[parsedScalar.input.source] ||= { identifiers: {} };
+        imports[parsedScalar.input.source].identifiers[parsedScalar.input.import] = {
+          asDefault: parsedScalar.input.default,
+        };
+      }
+
+      if (
+        parsedScalar.output.isExternal &&
+        usedScalar.useCases.output &&
+        (fileType === 'single-file-operation-file' || fileType === 'multi-file-operation-file')
+      ) {
+        imports[parsedScalar.output.source] ||= { identifiers: {} };
+        imports[parsedScalar.output.source].identifiers[parsedScalar.output.import] = {
+          asDefault: parsedScalar.output.default,
+        };
+      }
+    }
+
+    return Object.entries(imports).reduce<string[]>((res, [importSource, importParams]) => {
+      // One import statement cannot have multiple defaults.
+      // So:
+      // - split each defaults into its own statements
+      // - the named imports can all go together, tracked by `namedImports`
+      const namedImports = [];
+      for (const [identifier, identifierMetadata] of Object.entries(importParams.identifiers)) {
+        if (identifierMetadata.asDefault) {
+          res.push(
+            buildTypeImport({
+              identifier,
+              source: importSource,
+              asDefault: true,
+              useTypeImports: this.config.useTypeImports,
+            })
+          );
+          continue;
+        }
+
+        namedImports.push(identifier);
+      }
+
+      if (namedImports.length > 0) {
+        res.push(
+          buildTypeImport({
+            identifier: namedImports.join(', '),
+            source: importSource,
+            asDefault: false,
+            useTypeImports: this.config.useTypeImports,
+          })
+        );
+      }
+
+      return res;
+    }, []);
+  }
+
   protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
@@ -421,12 +528,20 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     return `Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
   }
 
-  private collectInnerTypesRecursively(node: GraphQLNamedInputType, usedInputTypes: UsedNamedInputTypes): void {
-    if (usedInputTypes[node.name]) {
-      return;
-    }
-
+  private collectInnerTypesRecursively({
+    node,
+    usedInputTypes,
+    location,
+  }: {
+    node: GraphQLNamedInputType;
+    usedInputTypes: UsedNamedInputTypes;
+    location: 'variables' | 'input'; // the location where the node was found. This is useful for nested input. Note: Since it starts at the variable, it first iteration is 'variables' and the rest will be `input`
+  }): void {
     if (node instanceof GraphQLEnumType) {
+      if (usedInputTypes[node.name]) {
+        return;
+      }
+
       usedInputTypes[node.name] = {
         type: 'GraphQLEnumType',
         node,
@@ -436,15 +551,38 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     if (node instanceof GraphQLScalarType) {
-      usedInputTypes[node.name] = {
+      const scalarType = usedInputTypes[node.name] || {
         type: 'GraphQLScalarType',
         node,
         tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'unknown',
+        useCases: {
+          variables: location === 'variables',
+          input: location === 'input',
+          output: false,
+        },
       };
+
+      if (scalarType.type !== 'GraphQLScalarType') {
+        throw new Error(`${node.name} has been incorrectly parsed as Scalar. This should not happen.`);
+      }
+
+      // ensure scalar's useCases is updated to have `useCases.input:true` or `useCases.variables:true`, depending on the use case
+      // this is required because if the scalar has been parsed previously, it may only have `useCases.output:true`, and not `useCases.input:true` or `useCases.variables:true`
+      if (location === 'input') {
+        scalarType.useCases.input = true;
+      }
+      if (location === 'variables') {
+        scalarType.useCases.variables = true;
+      }
+
+      usedInputTypes[node.name] = scalarType;
       return;
     }
 
     // GraphQLInputObjectType
+    if (usedInputTypes[node.name]) {
+      return;
+    }
     usedInputTypes[node.name] = {
       type: 'GraphQLInputObjectType',
       node,
@@ -454,10 +592,23 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const fields = node.getFields();
     for (const field of Object.values(fields)) {
       const fieldType = getNamedType(field.type);
-      this.collectInnerTypesRecursively(fieldType, usedInputTypes);
+      this.collectInnerTypesRecursively({
+        node: fieldType,
+        usedInputTypes,
+        location: 'input',
+      });
     }
   }
 
+  /**
+   * FIXME: This function is called `collectUsedInputTypes`, but it collects the types used in Result (SelectionSet) as well:
+   * - used Enums for Variables
+   * - used Scalars for Variables
+   * - used Input for Variables
+   *
+   * - used Enums for Result
+   * - used Scalars for Result
+   */
   private collectUsedInputTypes({
     schema,
     documentNode,
@@ -482,7 +633,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 foundInputType instanceof GraphQLEnumType) &&
               !isNativeNamedType(foundInputType)
             ) {
-              this.collectInnerTypesRecursively(foundInputType, usedInputTypes);
+              this.collectInnerTypesRecursively({
+                node: foundInputType,
+                usedInputTypes,
+                location: 'variables',
+              });
             }
           },
         });
@@ -508,6 +663,26 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 node: namedType,
                 tsType: this.convertName(namedType.name),
               };
+              return;
+            }
+
+            if (namedType instanceof GraphQLScalarType) {
+              const scalarType = usedInputTypes[namedType.name] || {
+                type: 'GraphQLScalarType',
+                node: namedType,
+                tsType: this.convertName(namedType.name),
+                useCases: { variables: false, input: false, output: true },
+              };
+
+              if (scalarType.type !== 'GraphQLScalarType') {
+                throw new Error(`${namedType.name} has been incorrectly parsed as Scalar. This should not happen.`);
+              }
+
+              // ensure scalar's useCases is updated to have `useCases.output:true`
+              // this is required because if the scalar has been parsed previously, it may only have `useCases.input:true` or `useCases.variables:true`, not `useCases.output:true`
+              scalarType.useCases.output = true;
+
+              usedInputTypes[namedType.name] = scalarType;
             }
           }
         },
@@ -515,20 +690,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     );
 
     return usedInputTypes;
-  }
-
-  public getEnumsImports(): string[] {
-    const usedEnumMap: ParsedEnumValuesMap = {};
-    for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
-      if (this._usedNamedInputTypes[enumName]) {
-        usedEnumMap[enumName] = enumDetails;
-      }
-    }
-
-    return getEnumsImports({
-      enumValues: usedEnumMap,
-      useTypeImports: this.config.useTypeImports,
-    });
   }
 
   getExactUtilityType(): string | null {

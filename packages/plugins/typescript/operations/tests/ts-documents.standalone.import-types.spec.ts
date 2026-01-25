@@ -372,3 +372,224 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 });
+
+describe('TypeScript Operations Plugin - Import Types with external custom Scalars', () => {
+  it('imports external custom scalar in shared type file when said scalar is used in relevant Input', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(input: UserInput): User
+      }
+
+      input UserInput {
+        id: ID!
+        scalar1: Scalar1
+      }
+
+      type User {
+        id: ID!
+      }
+
+      scalar Scalar1
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($input: UserInput) {
+        user(input: $input) {
+          id
+        }
+      }
+    `);
+
+    const sharedTypeFileResult = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          generatesOperationTypes: false,
+          scalars: {
+            Scalar1: '@org/scalars#Scalar1',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+    expect(sharedTypeFileResult).toMatchInlineSnapshot(`
+      "import { Scalar1 } from '@org/scalars';
+
+
+      export type UserInput = {
+        id: string | number;
+        scalar1?: Scalar1 | null | undefined;
+      };
+      "
+    `);
+    validateTs(sharedTypeFileResult, undefined, undefined, undefined, undefined, true);
+
+    const operationFileResult = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './path-to-other-file',
+          namespacedImportName: 'TypeImport',
+          scalars: {
+            Scalar1: '@org/scalars#Scalar1',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+    expect(operationFileResult).toMatchInlineSnapshot(`
+      "import type * as TypeImport from './graphql-code-generator/path-to-other-file';
+
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
+        input?: TypeImport.UserInput | null | undefined;
+      }>;
+
+
+      export type UserQuery = { user: { id: string } | null };
+      "
+    `);
+    validateTs(operationFileResult, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('imports external custom scalar in operation file when said scalar is used in Variables', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        scalar1: Scalar1
+      }
+
+      scalar Scalar1
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($scalar1: Scalar1) {
+        user(id: "100") {
+          id
+        }
+      }
+    `);
+
+    const sharedTypeFileResult = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          generatesOperationTypes: false,
+          scalars: {
+            Scalar1: '@org/scalars#Scalar1',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+    expect(sharedTypeFileResult).toMatchInlineSnapshot(`
+      "
+
+      "
+    `);
+    validateTs(sharedTypeFileResult, undefined, undefined, undefined, undefined, true);
+
+    const operationFileResult = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './path-to-other-file',
+          namespacedImportName: 'TypeImport',
+          scalars: {
+            Scalar1: '@org/scalars#Scalar1',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+    expect(operationFileResult).toMatchInlineSnapshot(`
+      "import { Scalar1 } from '@org/scalars';
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
+        scalar1?: Scalar1 | null | undefined;
+      }>;
+
+
+      export type UserQuery = { user: { id: string } | null };
+      "
+    `);
+    validateTs(operationFileResult, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('imports external custom scalar in operation file when said scalar is used in Result SelectionSet', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        scalar1: Scalar1
+      }
+
+      scalar Scalar1
+    `);
+    const document = parse(/* GraphQL */ `
+      query User {
+        user(id: "100") {
+          id
+          scalar1
+        }
+      }
+    `);
+
+    const sharedTypeFileResult = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          generatesOperationTypes: false,
+          scalars: {
+            Scalar1: '@org/scalars#Scalar1',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+    expect(sharedTypeFileResult).toMatchInlineSnapshot(`
+      "
+
+      "
+    `);
+    validateTs(sharedTypeFileResult, undefined, undefined, undefined, undefined, true);
+
+    const operationFileResult = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './path-to-other-file',
+          namespacedImportName: 'TypeImport',
+          scalars: {
+            Scalar1: '@org/scalars#Scalar1',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+    expect(operationFileResult).toMatchInlineSnapshot(`
+      "import { Scalar1 } from '@org/scalars';
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type UserQuery = { user: { id: string, scalar1: Scalar1 | null } | null };
+      "
+    `);
+    validateTs(operationFileResult, undefined, undefined, undefined, undefined, true);
+  });
+});
