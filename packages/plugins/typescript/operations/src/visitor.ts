@@ -411,6 +411,19 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     ];
   }
 
+  public getEnumsImports(): string[] {
+    const usedEnumMap: ParsedEnumValuesMap = {};
+    for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
+      if (this._usedNamedInputTypes[enumName]) {
+        usedEnumMap[enumName] = enumDetails;
+      }
+    }
+
+    return getEnumsImports({
+      enumValues: usedEnumMap,
+      useTypeImports: this.config.useTypeImports,
+    });
+  }
   protected getPunctuation(_declarationKind: DeclarationKind): string {
     return ';';
   }
@@ -515,20 +528,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     );
 
     return usedInputTypes;
-  }
-
-  public getEnumsImports(): string[] {
-    const usedEnumMap: ParsedEnumValuesMap = {};
-    for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
-      if (this._usedNamedInputTypes[enumName]) {
-        usedEnumMap[enumName] = enumDetails;
-      }
-    }
-
-    return getEnumsImports({
-      enumValues: usedEnumMap,
-      useTypeImports: this.config.useTypeImports,
-    });
   }
 
   getExactUtilityType(): string | null {
