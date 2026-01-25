@@ -1,0 +1,338 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.4", for: EXECUTION)
+  @link(url: "https://specs.apollo.dev/tag/v0.3") {
+  query: Query
+}
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(
+  graph: join__Graph
+  requires: join__FieldSet
+  provides: join__FieldSet
+  type: String
+  external: Boolean
+  override: String
+  usedOverridden: Boolean
+  overrideLabel: String
+) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(
+  graph: join__Graph!
+  key: join__FieldSet
+  extension: Boolean! = false
+  resolvable: Boolean! = true
+  isInterfaceObject: Boolean! = false
+) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+directive @tag(
+  name: String!
+) repeatable on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION | SCHEMA
+
+scalar join__FieldSet
+
+scalar link__Import
+
+enum link__Purpose {
+  EXECUTION
+}
+
+enum join__Graph {
+  SUPER_USER_MANAGER @join__graph(name: "super_user_management", url: "http://i.am.not.used.example.com")
+  GRAPHQL_MAIN__SHARD__BASE @join__graph(name: "graphql_main__shard__base", url: "http://i.am.not.used.example.com")
+  GRAPHQL_MAIN__SHARD__INTERNAL_TESTING
+    @join__graph(name: "graphql_main__shard__internal_testing", url: "http://i.am.not.used.example.com")
+}
+
+type Query {
+  superUser: SuperUser! @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+  organization(id: String!): Organization @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
+enum UserManagerRoleType @join__type(graph: SUPER_USER_MANAGER) {
+  ROLE_TYPE_1 @join__enumValue(graph: SUPER_USER_MANAGER)
+
+  ROLE_TYPE_2 @join__enumValue(graph: SUPER_USER_MANAGER)
+
+  ROLE_TYPE_3 @join__enumValue(graph: SUPER_USER_MANAGER)
+}
+
+type UserManager @join__type(graph: SUPER_USER_MANAGER) {
+  fooUser: User!
+
+  roleType: UserManagerRoleType!
+}
+
+type User {
+  id: ID!
+  profilePhoto: UserProfilePhoto @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
+type AdminUser {
+  id: ID!
+  profilePhoto: UserProfilePhoto @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
+type UserProfilePhoto @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  id: ID!
+  photoUrl: UserPhotoUrl
+}
+
+type UserPhotoUrl @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  url(size: UserPhotoSize!): String
+}
+
+enum UserPhotoSize
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
+  @join__type(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING) {
+  SQUARE_300
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+}
+
+type SuperUser @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  groupFromAlias(alias: String!): SuperUserGroup!
+}
+
+type SuperUserGroup
+  @join__type(graph: SUPER_USER_MANAGER, key: "id")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE, key: "id") {
+  id: ID!
+
+  managers(onlyPublic: Boolean! = false): [UserManager!] @join__field(graph: SUPER_USER_MANAGER)
+}
+
+# Schema definitions for Duplicates.ts examples
+
+interface ConfigTypeDefinition @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  identifier: String!
+}
+
+type ConfigActionId implements ConfigTypeDefinition
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "ConfigTypeDefinition")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  identifier: String!
+}
+
+type ConfigString implements ConfigTypeDefinition
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "ConfigTypeDefinition")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  identifier: String!
+  supportedHtmlTags: [String!]
+}
+
+type ConfigEnum implements ConfigTypeDefinition
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "ConfigTypeDefinition")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  identifier: String!
+  values: [String!]!
+}
+
+type ConfigIconResource implements ConfigTypeDefinition
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "ConfigTypeDefinition")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  identifier: String!
+  parameters: [ConfigParameterDefinition!]!
+}
+
+type ConfigIllustrationResource implements ConfigTypeDefinition
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "ConfigTypeDefinition")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  identifier: String!
+  parameters: [ConfigParameterDefinition!]!
+}
+
+type ConfigStruct implements ConfigTypeDefinition
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "ConfigTypeDefinition")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  identifier: String!
+  parameters: [ConfigParameterDefinition!]!
+}
+
+type ConfigParameterDefinition @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  name: String!
+  typeId: String!
+  isRequired: Boolean!
+  defaultValue: String
+}
+
+type Organization implements Node
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Node")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE, key: "id") {
+  id: ID!
+  internalOrgData: InternalOrgData @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
+type InternalOrgData @join__type(graph: GRAPHQL_MAIN__SHARD__BASE, key: "id") {
+  id: ID!
+  processableFeedback(
+    first: Int
+    after: String
+    sortBy: ProcessableFeedbackSortBy
+    sortOrder: ProcessableFeedbackSortOrder
+    scoreFilter: [Int]
+  ): FeedbackConnection @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
+enum ProcessableFeedbackSortBy
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
+  @join__type(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING) {
+  OPTION_1
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  OPTION_2
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  OPTION_3
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  OPTION_4
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+}
+
+enum ProcessableFeedbackSortOrder
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
+  @join__type(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING) {
+  ASC @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE) @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  DESC @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE) @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+}
+
+type FeedbackConnection @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  edges: [FeedbackEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type FeedbackEdge @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  cursor: String!
+  node: Feedback
+}
+
+type Feedback implements Node
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Node")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE, key: "id") {
+  id: ID!
+  orgMemberThread: Thread @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
+type Thread implements Node
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Node")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  id: ID!
+  posts(after: String, first: Int): ThreadPostConnection @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+}
+
+type ThreadPostConnection @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  edges: [ThreadPostEdge]
+  pageInfo: PageInfo!
+}
+
+type ThreadPostEdge @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  cursor: String!
+  node: ThreadPost
+}
+
+type ThreadPost @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  id: ID!
+  creator: ThreadPostCreator
+  text: String
+  createdAt: DateTime
+}
+
+union ThreadPostCreator
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
+  @join__unionMember(graph: GRAPHQL_MAIN__SHARD__BASE, member: "OrgMember")
+  @join__unionMember(graph: GRAPHQL_MAIN__SHARD__BASE, member: "EndUser") =
+    OrgMember
+  | EndUser
+
+type OrgMember @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  id: ID!
+  fullName: String
+  avatar: OrgMemberAvatar
+}
+
+type EndUser @join__type(graph: GRAPHQL_MAIN__SHARD__BASE, key: "id") {
+  id: ID!
+  fullName: String
+  avatar: EndUserAvatar
+}
+
+type OrgMemberAvatar implements Photo & Node
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Photo")
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Node")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  id: ID!
+  imageUrl: OrgMemberImageUrl
+}
+
+type OrgMemberImageUrl @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  url(size: OrgMemberImageSize!): String
+}
+
+enum OrgMemberImageSize
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
+  @join__type(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING) {
+  LARGE
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  MEDIUM
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  SMALL
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+}
+
+type EndUserAvatar implements Photo & Node
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Photo")
+  @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Node")
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  id: ID!
+  imageUrl: EndUserImageUrl
+}
+
+type EndUserImageUrl @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
+  url(size: EndUserImageSize!): String
+}
+
+enum EndUserImageSize
+  @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
+  @join__type(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING) {
+  LARGE
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  MEDIUM
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  SMALL
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+}
+
+interface Photo {
+  id: ID!
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+scalar DateTime

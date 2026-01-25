@@ -40,7 +40,8 @@
     "packages/plugins/other/*",
     "packages/presets/*",
     "website",
-    "examples/**/*"
+    "examples/**/*",
+    "dev-test-apollo-tooling"
   ],
   "devDependencies": {
     "@babel/core": "7.25.2",
@@ -78,6 +79,7 @@
     "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
     ],
+    "**/__generated__/**": [],
     "yarn.lock": [
       "npx yarn-deduplicate"
     ]

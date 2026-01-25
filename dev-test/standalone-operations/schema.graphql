@@ -1,0 +1,29 @@
+type Query {
+  user(id: ID!, role: UserRole): User
+  users(input: UsersInput!): [User!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  role: UserRole!
+}
+
+"UserRole Description"
+enum UserRole {
+  "UserRole ADMIN"
+  ADMIN
+  "UserRole CUSTOMER"
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+input UsersInput {
+  name: String
+  role: UserRole
+  nestedInput: UsersInput
+}

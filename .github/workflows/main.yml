@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - master
+      - master-next # FIXME:eddeee888 Remove once done
   pull_request:
     branches:
       - master
+      - master-next # FIXME:eddeee888 Remove once released
 
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
