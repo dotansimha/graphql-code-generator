@@ -354,9 +354,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "import type * as TypeImport from './graphql-code-generator/path-to-other-file';
-
-      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id?: string | null | undefined;
@@ -514,9 +512,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
       ),
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
-      "import type * as TypeImport from './graphql-code-generator/path-to-other-file';
-
-      import { Scalar1 } from '@org/scalars';
+      "import { Scalar1 } from '@org/scalars';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
@@ -588,9 +584,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
       ),
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
-      "import type * as TypeImport from './graphql-code-generator/path-to-other-file';
-
-      import { Scalar1 } from '@org/scalars';
+      "import { Scalar1 } from '@org/scalars';
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{ [key: string]: never; }>;

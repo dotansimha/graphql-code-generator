@@ -391,7 +391,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       return [];
     }
 
-    const hasTypesToImport = Object.keys(this._usedNamedInputTypes).length > 0;
+    const hasTypesToImport =
+      Object.values(this._usedNamedInputTypes).filter(
+        value => value.type === 'GraphQLEnumType' || value.type === 'GraphQLInputObjectType' // Only Enums and Inputs are stored in the shared type file (never Scalar), so we should only print import line if Enums and Inputs are used.
+      ).length > 0;
 
     if (!hasTypesToImport) {
       return [];
