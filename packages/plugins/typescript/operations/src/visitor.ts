@@ -436,9 +436,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   public getScalarsImports(): string[] {
     const fileType: 'shared-type-file' | 'operation-file' =
-      this.config.importSchemaTypesFrom || // For output use cases, generates it when it an operation file i.e. import schema types...
-      this.config.generatesOperationTypes
-        ? 'operation-file'
+      this.config.importSchemaTypesFrom || this.config.generatesOperationTypes
+        ? 'operation-file' // For `operation-file` here means either (1) operation file in a multiple file setup or (2) the main file in a single file setup
         : 'shared-type-file';
     const imports: {
       [source: string]: // `source` is where to import from e.g. './relative-import', 'package-import', '@org/package'
