@@ -9,8 +9,10 @@ index a0636cb..17ebece 100644
 -        const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
 +        const importTypesNamespace = options.presetConfig.importTypesNamespace ?? 'Types';
          const importAllFragmentsFrom = options.presetConfig.importAllFragmentsFrom || null;
-         const { baseTypesPath } = options.presetConfig;
-         if (!baseTypesPath) {
+-        const { baseTypesPath } = options.presetConfig;
+-        if (!baseTypesPath) {
++        const baseTypesPath = options.presetConfig.baseTypesPath || '';
++        if (!baseTypesPath && importTypesNamespace) {
 diff --git a/node_modules/@graphql-codegen/near-operation-file-preset/cjs/resolve-document-imports.js b/node_modules/@graphql-codegen/near-operation-file-preset/cjs/resolve-document-imports.js
 index f8dae4c..50fde90 100644
 --- a/node_modules/@graphql-codegen/near-operation-file-preset/cjs/resolve-document-imports.js
@@ -35,8 +37,10 @@ index 6c71580..4747c07 100644
 -        const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
 +        const importTypesNamespace = options.presetConfig.importTypesNamespace ?? 'Types';
          const importAllFragmentsFrom = options.presetConfig.importAllFragmentsFrom || null;
-         const { baseTypesPath } = options.presetConfig;
-         if (!baseTypesPath) {
+-        const { baseTypesPath } = options.presetConfig;
+-        if (!baseTypesPath) {
++        const baseTypesPath = options.presetConfig.baseTypesPath || '';
++        if (!baseTypesPath && importTypesNamespace) {
 diff --git a/node_modules/@graphql-codegen/near-operation-file-preset/esm/resolve-document-imports.js b/node_modules/@graphql-codegen/near-operation-file-preset/esm/resolve-document-imports.js
 index e8796cb..4332e0f 100644
 --- a/node_modules/@graphql-codegen/near-operation-file-preset/esm/resolve-document-imports.js
