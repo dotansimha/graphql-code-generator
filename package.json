@@ -67,7 +67,7 @@
     "tslib": "2.6.3",
     "tsx": "4.17.0",
     "typescript": "5.5.4",
-    "vite-tsconfig-paths": "5.1.4",
+    "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.0.4",
     "wrangler": "4.1.0"
   },
