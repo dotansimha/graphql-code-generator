@@ -21,7 +21,7 @@
     "@graphql-tools/schema": "10.0.6",
     "graphql": "16.9.0",
     "graphql-tag": "2.12.6",
-    "prettier": "2.8.8"
+    "prettier": "3.8.1"
   },
   "devDependencies": {
     "@types/node": "22.10.7",
