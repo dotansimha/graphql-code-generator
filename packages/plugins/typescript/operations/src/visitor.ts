@@ -648,7 +648,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const typeInfo = new TypeInfo(schema);
     visit(
       documentNode,
-      // AST doesn’t include field types (they are defined in schema) - only names.
+      // AST doesn’t include field types (they are defined in the schema) - only names.
       // TypeInfo is a stateful helper that tracks typing context while walking the AST
       // visitWithTypeInfo wires that context into a visitor.
       visitWithTypeInfo(typeInfo, {
