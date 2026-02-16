@@ -27,7 +27,6 @@ const GRAPHQL_CODEGEN_CONFIG = {
   fragmentSuffix: '', // Don't add 'Fragment' suffix to fragment result types
   extractAllFieldsToTypesCompact: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
   printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
-  importTypesNamespace: '', // Disable namespace prefix on imported types (preset config)
   enumType: 'native',
   generatesOperationTypes: true,
 };
@@ -39,17 +38,14 @@ export const main = async () => {
 
   const includes = ['src'];
 
-  const generateFiles: { [scanPath: string]: Types.ConfiguredOutput } = {};
+  const generatePaths: { [scanPath: string]: Types.ConfiguredOutput } = {};
 
   // Prepare the required structure for GraphQL Codegen
   includes.forEach((include: string) => {
-    generateFiles[include] = {
+    generatePaths[include] = {
       preset: 'near-operation-file', // This preset tells the codegen to generate multiple files instead of one
       presetConfig: {
-        extension: '.ts', //  Matches the existing Apollo-Codegen file naming
-        // FIXME: The following config is required, but it is not needed with the recent version of typescript-operations.
-        // So - when the new version of near-operation-file' is available - fix this.
-        baseTypesPath: 'unused',
+        extension: '.ts',
         folder: GENERATED, // Output folder for generated files
         importTypesNamespace: '', // Disable namespace prefix on imported types
       },
@@ -64,23 +60,16 @@ export const main = async () => {
     };
   });
 
-  await generate(
-    {
-      schema: localSchemaFilePath,
-      documents: [
-        // matching js extensins as well - there are cases where js files are not converted to typescript yet
-        // (but the package is typescript)
-        ...includes.map((include: any) => `${include}/**/*.{js,jsx,ts,tsx}`),
-        `!**/${GENERATED}/**`,
-      ],
-      config: GRAPHQL_CODEGEN_CONFIG,
-      generates: generateFiles,
-      silent: false,
-      debug: true,
-      verbose: true,
-    },
-    true // overwrite existing files
-  );
+  await generate({
+    schema: localSchemaFilePath,
+    documents: [...includes.map((include: any) => `${include}/**/*.{js,jsx,ts,tsx}`), `!**/${GENERATED}/**`],
+    config: GRAPHQL_CODEGEN_CONFIG,
+    generates: generatePaths,
+    silent: false,
+    overwrite: true,
+    debug: false,
+    verbose: false,
+  });
 };
 
 if (import.meta.url === process.argv[1] || import.meta.url === `file://${process.argv[1]}`) {

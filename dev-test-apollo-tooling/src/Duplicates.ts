@@ -1,6 +1,6 @@
 /**
  * This file tests handing duplicates when using extractAllFieldsToTypesCompact: true
- * Check the resultring __generated__/Duplicates.ts file  - it should not contain any duplicate names.
+ * Check the `__generated__/Duplicates.ts` file: it should not contain any duplicate names.
  */
 
 import { gql } from '@apollo/client';
