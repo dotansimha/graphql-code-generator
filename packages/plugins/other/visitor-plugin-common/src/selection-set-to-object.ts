@@ -92,7 +92,7 @@ export class SelectionSetToObject<
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
   protected _queriedForTypename = false;
-  // Enables resolving conflics in extractAllFieldsToTypesCompact mode:
+  // Enables resolving conflicting type names in extractAllFieldsToTypesCompact mode:
   //   key === GetFoo_user    <-- full field name
   //   value === User         <-- last field type
   protected _seenFieldNames: Map<string, string> = new Map();
@@ -920,7 +920,7 @@ export class SelectionSetToObject<
       .map(typeName => {
         const relevant = grouped[typeName].filter(Boolean);
         return relevant.map(objDefinition => {
-          // In compact mode, we still need to keep the final concrete type name for union/interface types
+          // In extractAllFieldsToTypesCompact mode, we still need to keep the final concrete type name for union/interface types
           // to distinguish between different implementations, but we skip it for simple object types
           const hasMultipleTypes = Object.keys(grouped).length > 1;
           let name: string;
@@ -987,7 +987,7 @@ export class SelectionSetToObject<
 
     const subTypes: DependentType[] = Object.keys(grouped).flatMap(typeName => {
       const possibleFields = grouped[typeName].filter(Boolean);
-      // In compact mode, pass typeName only when there are multiple types
+      // In extractAllFieldsToTypesCompact mode, pass typeName only when there are multiple types
       const declarationName =
         this._config.extractAllFieldsToTypesCompact && !hasMultipleTypes
           ? this.buildFragmentTypeName(fragmentName, fragmentSuffix)
@@ -1080,7 +1080,7 @@ export class SelectionSetToObject<
   }
 
   protected buildParentFieldName(typeName: string, parentName: string): string {
-    // Sample input:
+    // Sample args:
     //   typeName = User             <-- last field type
     //   parentName = GetFoo_user    <-- full field name
 
@@ -1090,7 +1090,7 @@ export class SelectionSetToObject<
       return parentName;
     }
 
-    // When compact mode is enabled, skip appending typeName initially
+    // When extractAllFieldsToTypesCompact mode is enabled, skip appending typeName initially
     // but check for conflicts
     if (this._config.extractAllFieldsToTypesCompact) {
       const existingTypeName = this._seenFieldNames.get(parentName);
