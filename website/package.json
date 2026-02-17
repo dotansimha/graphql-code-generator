@@ -81,7 +81,7 @@
     "dedent": "1.5.3",
     "graphql": "16.9.0",
     "js-yaml": "4.1.0",
-    "next": "14.2.35",
+    "next": "16.1.6",
     "next-mdx-remote": "5.0.0",
     "next-sitemap": "4.2.3",
     "postcss-nesting": "^13.0.1",
