@@ -320,15 +320,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       }
     }
 
-    // TODO: eddeee888 check if we want to support `directiveArgumentAndInputFieldMappings` for operations
-    // if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
-    //   typePart =
-    //     getDirectiveOverrideType({
-    //       directives: node.directives,
-    //       directiveArgumentAndInputFieldMappings: this.config.directiveArgumentAndInputFieldMappings,
-    //     }) || typePart;
-    // }
-
     const addOptionalSign =
       !oneOfDetails.isOneOfInputValue &&
       !this.config.avoidOptionals.inputValue &&
