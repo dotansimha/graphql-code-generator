@@ -351,15 +351,13 @@ describe('generate-and-save', () => {
           false
         );
       } catch {
-        const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
-
         // Note: cannot use toMatchInlineSnapshot here because spacing in the snapshot gets formatted by prettier.
         expect(outputErrorSpy.mock.calls[0][0]).toContain(
           '[FAILED] Failed to load documents from ./tests/test-files/error-document-error-keyword.graphql.*.ts,!src/gql/:'
         );
         expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] Syntax Error: Unexpected Name "qu".');
         expect(outputErrorSpy.mock.calls[0][0]).toContain(
-          `[FAILED] ${cwd}/tests/test-files/error-document-error-keyword.graphql.1.ts:2:3`
+          `[FAILED] ${process.cwd()}/tests/test-files/error-document-error-keyword.graphql.1.ts:2:3`
         );
         expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] 2 |   qu ery Test {');
         expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED]   |   ^');
