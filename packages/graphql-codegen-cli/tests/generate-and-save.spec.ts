@@ -333,6 +333,38 @@ describe('generate-and-save', () => {
       }
     });
 
+    test('Document syntax error - when `*` is used in documents filename pattern, and some failed but some passed, should report error by default (noSilentErrors: true)', async () => {
+      expect.assertions(6);
+      outputErrorSpy.mockImplementation(() => true);
+      try {
+        await generate(
+          {
+            verbose: true,
+            schema: './tests/test-files/schema-dir/schema.ts',
+            documents: './tests/test-files/error-document-error-keyword.graphql.*.ts', // Should find `error-document-error-keyword.graphql.1.ts` (failed) and `error-document-error-keyword.graphql.2.ts` (passed)
+            generates: {
+              'src/gql/': {
+                preset: 'client-preset',
+              },
+            },
+          },
+          false
+        );
+      } catch {
+        // Note: cannot use toMatchInlineSnapshot here because spacing in the snapshot gets formatted by prettier.
+        expect(outputErrorSpy.mock.calls[0][0]).toContain(
+          '[FAILED] Failed to load documents from ./tests/test-files/error-document-error-keyword.graphql.*.ts,!src/gql/:'
+        );
+        expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] Syntax Error: Unexpected Name "qu".');
+        expect(outputErrorSpy.mock.calls[0][0]).toContain(
+          `[FAILED] ${process.cwd()}/tests/test-files/error-document-error-keyword.graphql.1.ts:2:3`
+        );
+        expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] 2 |   qu ery Test {');
+        expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED]   |   ^');
+        expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] 3 |     user {');
+      }
+    });
+
     test('No documents found - should throw error by default', async () => {
       expect.assertions(1);
       outputErrorSpy.mockImplementation(() => true);
