@@ -405,6 +405,7 @@ export class CodegenContext {
     }
 
     return {
+      noSilentErrors: true, // When a `documents` pattern matches multiple files e.g. `*` exists in filename like `src/something.*.ts`, and some files fail but some pass syntax error check, the failed files will silently fail if `noSilentErrors: false`. So, `noSilentErrors: true` is turned on by default to help users detect errors faster.
       ...extraConfig,
       ...this.config,
     };
