@@ -1,5 +1,12 @@
 # @graphql-codegen/cli
 
+## 6.1.2
+
+### Patch Changes
+
+- [#10590](https://github.com/dotansimha/graphql-code-generator/pull/10590) [`e173e11`](https://github.com/dotansimha/graphql-code-generator/commit/e173e113331cd279fb9dec51203d8c5a34915999) Thanks [@ya2s](https://github.com/ya2s)! - Fix GraphQL Config loading to forward nested `extensions.codegen.config` options
+  when loading schemas/documents, matching `codegen.ts` behavior.
+
 ## 6.1.1
 
 ### Patch Changes
