@@ -444,7 +444,9 @@ export class CodegenContext {
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
       return addHashToSchema(
-        this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config)
+        this._graphqlConfig
+          .getProject(this._project)
+          .loadSchema(pointer, 'GraphQLSchema', { ...config, ...config.config })
       );
     }
     return addHashToSchema(loadSchema(pointer, config));
@@ -454,7 +456,9 @@ export class CodegenContext {
     const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
-      return addHashToDocumentFiles(this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config));
+      return addHashToDocumentFiles(
+        this._graphqlConfig.getProject(this._project).loadDocuments(pointer, { ...config, ...config.config })
+      );
     }
 
     return addHashToDocumentFiles(loadDocuments(pointer, config));
