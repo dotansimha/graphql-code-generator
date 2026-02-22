@@ -1,3 +1,4 @@
+---
 "@graphql-codegen/cli": patch
 ---
 
