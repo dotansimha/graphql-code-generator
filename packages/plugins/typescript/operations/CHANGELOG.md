@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-operations
 
+## 5.0.8
+
+### Patch Changes
+
+- [#10580](https://github.com/dotansimha/graphql-code-generator/pull/10580) [`6038634`](https://github.com/dotansimha/graphql-code-generator/commit/60386344081917f2884db933309821603a2be2bf) Thanks [@Georgegriff](https://github.com/Georgegriff)! - fixed invalid extracted concrete type name on shared interface
+
+- Updated dependencies [[`6038634`](https://github.com/dotansimha/graphql-code-generator/commit/60386344081917f2884db933309821603a2be2bf)]:
+  - @graphql-codegen/visitor-plugin-common@6.2.3
+  - @graphql-codegen/typescript@5.0.8
+
 ## 5.0.7
 
 ### Patch Changes
