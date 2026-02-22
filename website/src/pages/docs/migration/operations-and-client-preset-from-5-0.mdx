@@ -3,11 +3,11 @@ description: Migrating `typescript-operations` and `client-preset` from v5 to v6
 ---
 
 <style global jsx>
-{`
-  [data-highlighted-line-id="lineremoved"] {
-    background: #7f1d1d4d;
-  }
-`}
+  {`
+    [data-highlighted-line-id='lineremoved'] {
+      background: #7f1d1d4d;
+    }
+  `}
 </style>
 
 import { Callout } from '@theguild/components'
@@ -19,19 +19,10 @@ import { Callout } from '@theguild/components'
 `typescript-operations` and `client-preset` v6.0 come with a major overhaul of type generation and config for better DX.
 
 1. Type generation and usage changes
-- Object and Args types are no longer generated
-- Scalar types are no longer generated as re-useable type
-- Input and Enum types are only generated if used in documents
-- Document field types are generated to correctly match runtime expectation
-
 2. Configuration and dependency changes
-- No longer depends on `typescript` plugin
-- New way to generate and share types between generated types without extra depedencies
-- Consolidation, deletion and simplification of config options such as `avoidOptionals`, `enumsAsTypes` and many more.
-
 3. Other bug fixes and quality of life improvements
 
-For more details on this change, read the [Breaking changes](#breaking-changes) section.
+For the most important changes, read the [Breaking changes](#breaking-changes) section.
 For a full list of changes, see the CHANGELOG.
 
 ## Installation
@@ -43,7 +34,9 @@ npm i -D @graphql-codegen/cli@latest @graphql-codegen/typescript-operations@late
 ```
 
 <Callout type="warning">
-GraphQL Codegen packages share a lot of code internally, so if you have installed other official packages (such as `@graphql-codegen/visitor-plugin-common` or `@graphql-codegen/typescript-resolvers`) explicitly in the same repo, be sure to update them at the same time to avoid unexpected issues.
+  GraphQL Codegen packages share a lot of code internally, so if you have installed other official packages (such as
+  `@graphql-codegen/visitor-plugin-common` or `@graphql-codegen/typescript-resolvers`) explicitly in the same repo, be
+  sure to update them at the same time to avoid unexpected issues.
 </Callout>
 
 ## Migration
@@ -56,7 +49,7 @@ GraphQL Codegen packages share a lot of code internally, so if you have installe
 const config: CodegenConfig = {
   generates: {
     'src/gql/': {
-      preset: 'client',
+      preset: 'client'
     }
   }
 }
@@ -75,7 +68,7 @@ const config: CodegenConfig = {
   generates: {
     'src/graphql/types.generated.ts': {
       plugins: ['typescript', 'typescript-operations'],
-      plugins: ['typescript-operations'],
+      plugins: ['typescript-operations']
     }
   }
 }
@@ -89,7 +82,7 @@ Some repos may have multiple Codegen projects, each generating types for operati
 const config: CodegenConfig = {
   generates: {
     'src/shared/base-types.generated.ts': {
-      plugins: ['typescript'],
+      plugins: ['typescript']
     },
     'src/project-1/types.generated.ts': {
       documents: 'src/project-1/**/*.graphql.ts',
@@ -97,7 +90,7 @@ const config: CodegenConfig = {
       plugins: ['typescript-operations'],
       presetConfig: {
         typesPath: '../shared/base-types.generated.ts'
-      },
+      }
     },
     'src/project-2/types.generated.ts': {
       documents: 'src/project-2/**/*.graphql.ts',
@@ -105,7 +98,7 @@ const config: CodegenConfig = {
       plugins: ['typescript-operations'],
       presetConfig: {
         typesPath: 'src/shared/base-types.generated.ts'
-      },
+      }
     }
   }
 }
@@ -150,14 +143,16 @@ Previously, Object types from the schema are generated (via the `typescript` plu
 ```ts
 // Example schemna type generated from a User Object type
 export type User = {
-  __typename?: 'User';
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-};
+  __typename?: 'User'
+  id: Scalars['ID']['output']
+  name: Scalars['String']['output']
+}
 ```
 
-These types contain _all_ the fields from the schema and are often accidentally used in application code. It's expected in GraphQL operations to _not_ fetch all fields in practice so these types should never be used. Now, these types are no longer generated.
-Operation types (Variables and Result) are generated based on fields in the documents so these should always be used for client types.
+These types contain _all_ the fields from the schema. It's expected in GraphQL operations to _not_ fetch all fields in practice so these types should never be used. However, they are often accidentally used in application code because they are generated.
+
+Now, Object types are no longer generated. Operation types (Variables and Result) are generated based on fields in the documents so these should always be used for client types.
+
 If you need these for any reasons, please generate them using `typescript` plugin into a separate file.
 
 2. Args types are no longer generated
@@ -171,19 +166,141 @@ Previously, Scalar types from the schema are generated into an object and re-use
 ```typescript
 // All native+custom scalars found in the schema
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-};
+  ID: { input: string | number; output: string }
+  String: { input: string; output: string }
+  Boolean: { input: boolean; output: boolean }
+  Int: { input: number; output: number }
+  Float: { input: number; output: number }
+}
 ```
 
-Now, scalars in Variables types are inlined (similar to Result types) to avoid using this utility types:
+Now, scalars in Input and Variables types are inlined (similar to Result types) to avoid using this utility types:
 
-```typescript filename="types.generated.ts" {2}#lineremoved {3}
+```typescript filename="types.generated.ts" {1-7}#lineremoved {10}#lineremoved {11} {15}#lineremoved {16}
+export type Scalars = {
+  ID: { input: string | number; output: string }
+  String: { input: string; output: string }
+  Boolean: { input: boolean; output: boolean }
+  Int: { input: number; output: number }
+  Float: { input: number; output: number }
+}
+
+export type UserInput = {
+  id: Scalars['ID']['input']
+  id: string | number
+}
+
 export type UserVariables = Exact<{
-  id: Scalars['ID']['input'];
-  id: string;
-}>;
+  id: Scalars['ID']['input']
+  id: string | number
+}>
 ```
+
+4. Input and Enum types are only generated if used in documents
+
+Previously, all Input and Enum types are generated even if they are not used. This could increase bundle size when Enums that incur runtime are used e.g. when native TypeScript enum or const enum are used.
+Now, only Input and Enum types used in operations are generated.
+
+5. `__typename` is only generated if used in documents
+
+Previously, `__typename` in Results is generated as optional by default, even when it is not requested:
+
+```graphql
+query User {
+  user {
+    # Note: __typename is not in the selection set
+    id
+  }
+}
+```
+
+Previously, the above operation resulted in a type with optional `__typename`:
+
+```typescript {3}
+export type UserQuery = {
+  user: {
+    __typename?: 'User'
+    id: string
+  }
+}
+```
+
+Now, `__typename` will not be generated by default, if it is not in the selection set:
+
+```typescript {3}#lineremoved
+export type UserQuery = {
+  user: {
+    __typename?: 'User'
+    id: string
+  }
+}
+```
+
+<Callout>
+  Some clients, such as Apollo Client, automatically request `__typename`. To achieve the same behaviour you can use
+  `skipTypeNameForRoot` and `nonOptionalTypename` options to configure type behaviours.
+</Callout>
+
+6. Document field types are generated to correctly match runtime expectation
+
+Previously, nullable fields in Results are generated as optional by default:
+
+```typescript {3}
+export type UserQuery = {
+  user: {
+    age?: string | null
+  }
+}
+```
+
+Now, nullable fields in Results are never optional (except in some cases e.g. when `@defer`, `@skip` or `@include` are used)
+
+```typescript {3}#lineremoved {4}
+export type UserQuery = {
+  user: {
+    age?: string | null
+    age: string | null
+  }
+}
+```
+
+7. Enum config options are consolidated and change of default value
+
+Previously, there were 4 boolean options to set which Enum variant to generate. However, when used together, the options override one other, so the behaviour is unexpected and confusing for both users and maintainers. In the new version, `enumType` is the only config option to use. The default has also been changed to `string-literal` since that is the option which does not incur runtime cost.
+
+| Enum type      | Examples                                                                     | Previous config              | New config                            |
+| -------------- | ---------------------------------------------------------------------------- | ---------------------------- | ------------------------------------- |
+| String literal | `type UserRole = 'Admin' \| 'Customer'`                                      | `{enumsAsTypes:true}`        | `{}` or `{enumType:'string-literal'}` |
+| Const          | `export const UserRole = { Admin: 'ADMIN', Customer: 'CUSTOMER' } as const;` | `{enumsAsConst:true}`        | `{enumType:'const'}`                  |
+| Native         | `export enum UserRole { Admin = 'ADMIN', Customer = 'CUSTOMER' };`           | `{}` or `{constEnums:false}` | `{enumType:'native'}`                 |
+| Native const   | `export const enum UserRole { Admin = 'ADMIN', Customer = 'CUSTOMER' };`     | `{constEnums:true}`          | `{enumType:'native-const'}`           |
+| Native numeric | `export enum UserRole { Admin = 0, Customer = 1 }`                           | `{numericEnums:true}`        | `{enumType:'native-numeric'}`         |
+
+8. `avoidOptionals` option is updated to handle operation types
+
+Previously, `avoidOptionals` is shared with [typescript plugin](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript#avoidoptionals). As the result, some inner options do not affect operation types (such as `avoidOptionals.resolvers`, `avoidOptionals.query`, `avoidOptionals.mutation`, `avoidOptionals.subscription`).
+Now, there are only 3 inner options, and when turned on, each forces the respective use case to pass in non-optional value.
+
+- `avoidOptionals.variableValue`
+- `avoidOptionals.inputValue`
+- `avoidOptionals.defaultValue`
+
+Note that the default is `false`, and you can still use `avoidOptionals:true` to turn on all options, without having to set each one individually.
+
+9. `preResolveTypes` option is removed
+
+`preResolveTypes` option is used to generate Result types inline (`preResolveTypes:false`) or use the ones generated by the `typescript` plugin (`preResolveTypes:true`). This is bad because (1) it adds dependency to the `typescript` plugin, (2) `true` and `false` have no functional difference to users, therefore (3) keeping this option doubles the maintenance overhead with no real benefits.
+
+`preResolveTypes:true` is the default (and very stable) for a long time and should be used by majority of users by now. So, removing this option makes sense for us, but if you are seeing problems, please create an issue [here](https://github.com/dotansimha/graphql-code-generator/issues).
+
+10. Legacy utility types are removed
+
+The following utility types have been removed:
+
+- `Maybe`: used to handle nullability types of fields in Result. However, field types have been pre-resolved and inlined for a long time, so this option is no longer needed.
+- `InputMaybe`: used to handle nullability types of Input. Input types are now inlined, so this option is longer needed.
+- `MakeOptional`, `MakeMaybe` and `MakeEmpty`: used to handle `preResolveTypes:false`. However, `preResolveTypes` has been removed, so these options are no longer needed.
+
+11. Make `unknown` the default type instead of `any` for custom scalars
+
+Previously, custom Scalars default type was `any` which bypasses typecheck. We are making the default type `unknown` to ensure data is handled carefully by users.
