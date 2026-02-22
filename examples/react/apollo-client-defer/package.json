@@ -11,7 +11,7 @@
     "graphql-yoga": "5.7.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^6.1.1",
+    "@graphql-codegen/cli": "^6.1.2",
     "@types/node": "^22.0.0",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.10",
