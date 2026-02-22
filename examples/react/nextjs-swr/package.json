@@ -14,8 +14,8 @@
   "dependencies": {
     "@graphql-tools/executor-http": "^3.0.0",
     "next": "13.5.11",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "swr": "^2.0.0"
   },
   "devDependencies": {
@@ -23,8 +23,8 @@
     "@graphql-codegen/schema-ast": "5.0.0",
     "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
     "@types/node": "^22.0.0",
-    "@types/react": "^18.0.17",
-    "@types/react-dom": "^18.0.10",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^13.0.0",
     "typescript": "5.5.4"
