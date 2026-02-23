@@ -1,4 +1,5 @@
-import { createContext, ensureContext } from '../src/index.js';
+import { buildSchema } from 'graphql';
+import { createContext, ensureContext, CodegenContext } from '../src/index.js';
 
 describe('Codegen config - Context', () => {
   it('loads and merge multiple schemas when using GraphQL config', async () => {
@@ -85,5 +86,37 @@ describe('Codegen config - Context', () => {
     expect(typeMap['Mutation']).toBeDefined();
     expect(typeMap['DateTime']).toBeDefined();
     expect(typeMap['User']).toBeDefined();
+  });
+
+  it('passes nested config values to graphql-config schema loader', async () => {
+    const loadSchemaSpy = vi.fn().mockResolvedValue(buildSchema('type Query { _: Boolean }'));
+    const project = {
+      extension: vi.fn().mockReturnValue({
+        generates: {},
+        config: {
+          inputValueDeprecation: true,
+        },
+      }),
+      schema: ['http://example.com/graphql'],
+      documents: [],
+      loadSchema: loadSchemaSpy,
+      loadDocuments: vi.fn(),
+    };
+    const graphqlConfig = {
+      filepath: '/tmp/graphql.config.ts',
+      dirpath: '/tmp',
+      getProject: vi.fn().mockReturnValue(project),
+    } as any;
+
+    const context = new CodegenContext({ graphqlConfig });
+    await context.loadSchema(['http://example.com/graphql']);
+
+    expect(loadSchemaSpy).toHaveBeenCalledWith(
+      ['http://example.com/graphql'],
+      'GraphQLSchema',
+      expect.objectContaining({
+        inputValueDeprecation: true,
+      })
+    );
   });
 });
