@@ -211,7 +211,8 @@ export namespace Types {
     | LocalSchemaPathWithOptions
     | SchemaGlobPath
     | SchemaWithLoader
-    | SchemaFromCodeFile;
+    | SchemaFromCodeFile
+    | GraphQLSchema;
 
   /* Document Definitions */
   export type OperationDocumentGlobPath = string;
