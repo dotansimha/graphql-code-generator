@@ -289,7 +289,6 @@ const config: CodegenConfig = {
       config: {
         importSchemaTypesFrom:
           './dev-test/standalone-operations/import-schema-types/_base.generated.ts',
-        namespacedImportName: 'Types',
       },
     },
 
@@ -303,8 +302,8 @@ const config: CodegenConfig = {
       documents: ['./dev-test/standalone-operations/with-typescript-plugin/*.graphql'],
       plugins: ['typescript-operations'],
       config: {
-        importSchemaTypesFrom: './dev-test/standalone-operations/with-typescript-plugin/_base.generated.ts',
-        namespacedImportName: 'Types',
+        importSchemaTypesFrom:
+          './dev-test/standalone-operations/with-typescript-plugin/_base.generated.ts',
       },
     },
   },
