@@ -103,7 +103,7 @@ const config: CodegenConfig = {
       preset: 'import-types',
       plugins: ['typescript-operations'],
       presetConfig: {
-        typesPath: 'src/shared/base-types.generated.ts'
+        typesPath: '../shared/base-types.generated.ts'
       }
     }
   }
@@ -126,7 +126,7 @@ const config: CodegenConfig = {
       documents: 'src/project-1/**/*.graphql.ts', // Only parses GraphQL documents within project-1's scope
       plugins: ['typescript-operations'],
       config: {
-        importSchemaTypesFrom: 'src/shared/base-types.generated.ts',
+        importSchemaTypesFrom: 'src/shared/base-types.generated.ts', // this path is relative to Codegen config location (unlike the old config)
       }
     },
     'src/project-2/types.generated.ts': {
@@ -147,7 +147,7 @@ const config: CodegenConfig = {
 Previously, Object types from the schema are generated (via the `typescript` plugin), for example:
 
 ```ts
-// Example schemna type generated from a User Object type
+// Example of a schema User Object type being previously generated
 export type User = {
   __typename?: 'User'
   id: Scalars['ID']['output']
@@ -159,7 +159,7 @@ These types contain _all_ the fields from the schema. It's expected in GraphQL o
 
 Now, Object types are no longer generated. Operation types (Variables and Result) are generated based on fields in the documents so these should always be used for client types.
 
-If you need these for any reasons, please generate them using `typescript` plugin into a separate file.
+If you need schema types for any reasons, please generate them using `typescript` plugin into a separate file.
 
 2. Args types are no longer generated
 
@@ -170,7 +170,7 @@ Args types are only used for server use cases, so they are no longer generated f
 Previously, Scalar types from the schema are generated into an object and re-used in Variables types:
 
 ```typescript
-// All native+custom scalars found in the schema
+// All native and custom scalars found in the schema were previously generated
 export type Scalars = {
   ID: { input: string | number; output: string }
   String: { input: string; output: string }
@@ -180,7 +180,7 @@ export type Scalars = {
 }
 ```
 
-Now, scalars in Input and Variables types are inlined (similar to Result types) to avoid using this utility types:
+Now, scalars in Input and Variables types are inlined (similar to Result types) to avoid using `Scalar` utility type:
 
 ```typescript filename="types.generated.ts" {1-7}#lineremoved {10}#lineremoved {11} {15}#lineremoved {16}
 export type Scalars = {
@@ -282,7 +282,7 @@ Previously, there were 4 boolean options to set which Enum variant to generate. 
 | Native const   | `export const enum UserRole { Admin = 'ADMIN', Customer = 'CUSTOMER' };`     | `{constEnums:true}`          | `{enumType:'native-const'}`           |
 | Native numeric | `export enum UserRole { Admin = 0, Customer = 1 }`                           | `{numericEnums:true}`        | `{enumType:'native-numeric'}`         |
 
-8. `avoidOptionals` option is updated to handle operation types
+8. `avoidOptionals` option is updated to only handle operation types
 
 Previously, `avoidOptionals` is shared with [typescript plugin](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript#avoidoptionals). As the result, some inner options do not affect operation types (such as `avoidOptionals.resolvers`, `avoidOptionals.query`, `avoidOptionals.mutation`, `avoidOptionals.subscription`).
 Now, there are only 3 inner options, and when turned on, each forces the respective use case to pass in non-optional value.
