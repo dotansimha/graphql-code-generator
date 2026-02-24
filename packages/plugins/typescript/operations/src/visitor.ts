@@ -26,6 +26,7 @@ import {
   convertSchemaEnumToDeclarationBlockString,
   DeclarationBlock,
   DeclarationKind,
+  DEFAULT_INPUT_SCALARS,
   generateFragmentImportStatement,
   generateImportStatement,
   getConfigValue,
@@ -50,10 +51,7 @@ import {
   NormalizedAvoidOptionalsConfig,
 } from './config.avoidOptionals.js';
 import type { TypeScriptDocumentsPluginConfig } from './config.js';
-import {
-  SCALARS,
-  TypeScriptOperationVariablesToObject,
-} from './ts-operation-variables-to-object.js';
+import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;
@@ -568,7 +566,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       const scalarType = usedInputTypes[node.name] || {
         type: 'GraphQLScalarType',
         node,
-        tsType: (SCALARS[node.name] || this.config.scalars?.[node.name]?.input.type) ?? 'unknown',
+        tsType:
+          (DEFAULT_INPUT_SCALARS[node.name]?.input ||
+            this.config.scalars?.[node.name]?.input.type) ??
+          'unknown',
         useCases: {
           variables: location === 'variables',
           input: location === 'input',
@@ -617,7 +618,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   /**
-   * FIXME: This function is called `collectUsedInputTypes`, but it collects the types used in Result (SelectionSet) as well:
+   * FIXME: eddeee888 This function is called `collectUsedInputTypes`, but it collects the types used in Result (SelectionSet) as well:
    * - used Enums for Variables
    * - used Scalars for Variables
    * - used Input for Variables

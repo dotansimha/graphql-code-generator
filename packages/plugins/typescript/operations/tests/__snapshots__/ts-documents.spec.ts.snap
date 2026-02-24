@@ -12,8 +12,8 @@ export type TextNotificationFragmentFragmentVariables = Exact<{
 
 exports[`TypeScript Operations Plugin > Issues > #2699 - Issues with multiple interfaces and unions 1`] = `
 "export type GetEntityBrandDataQueryVariables = Exact<{
-  gid: string;
-  brand: string;
+  gid: string | number;
+  brand: string | number;
 }>;
 
 
