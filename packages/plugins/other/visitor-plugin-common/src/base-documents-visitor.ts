@@ -33,7 +33,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
   customDirectives: CustomDirectivesConfig;
-  generatesOperationTypes: boolean;
+  generateOperationTypes: boolean;
   importSchemaTypesFrom: string;
 }
 
@@ -184,7 +184,7 @@ export interface RawDocumentsConfig extends RawConfig {
    *      'path/to/file.ts': {
    *        plugins: ['typescript-operations'],
    *        config: {
-   *          generatesOperationTypes: false,
+   *          generateOperationTypes: false,
    *        },
    *      },
    *    },
@@ -192,10 +192,10 @@ export interface RawDocumentsConfig extends RawConfig {
    *  export default config;
    * ```
    */
-  generatesOperationTypes?: boolean;
+  generateOperationTypes?: boolean;
 
   /**
-   * @description The absolute (prefixed with `~`) or relative path from `cwd` to the shared used Enums and Input (See `generatesOperationTypes`).
+   * @description The absolute (prefixed with `~`) or relative path from `cwd` to the shared used Enums and Input (See `generateOperationTypes`).
    * @default true
    * @exampleMarkdown
    * ```ts filename="codegen.ts"
@@ -263,10 +263,8 @@ export class BaseDocumentsVisitor<
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
-      customDirectives: getConfigValue(rawConfig.customDirectives, {
-        apolloUnmask: false,
-      }),
-      generatesOperationTypes: getConfigValue(rawConfig.generatesOperationTypes, true),
+      customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
+      generateOperationTypes: getConfigValue(rawConfig.generateOperationTypes, true),
       importSchemaTypesFrom: getConfigValue(rawConfig.importSchemaTypesFrom, ''),
       extractAllFieldsToTypes:
         getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
@@ -325,7 +323,7 @@ export class BaseDocumentsVisitor<
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
-    if (!this.config.generatesOperationTypes) {
+    if (!this.config.generateOperationTypes) {
       return null;
     }
 
@@ -362,7 +360,7 @@ export class BaseDocumentsVisitor<
   }
 
   OperationDefinition(node: OperationDefinitionNode): string | null {
-    if (!this.config.generatesOperationTypes) {
+    if (!this.config.generateOperationTypes) {
       return null;
     }
 
