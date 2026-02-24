@@ -404,7 +404,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         schema,
         [{ document }],
         {
-          generatesOperationTypes: false,
+          generateOperationTypes: false,
           scalars: {
             Scalar1: '@org/scalars#Scalar1',
           },
@@ -480,7 +480,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         schema,
         [{ document }],
         {
-          generatesOperationTypes: false,
+          generateOperationTypes: false,
           scalars: {
             Scalar1: '@org/scalars#Scalar1',
           },
@@ -551,7 +551,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         schema,
         [{ document }],
         {
-          generatesOperationTypes: false,
+          generateOperationTypes: false,
           scalars: {
             Scalar1: '@org/scalars#Scalar1',
           },
