@@ -28,7 +28,7 @@ const GRAPHQL_CODEGEN_CONFIG = {
   extractAllFieldsToTypesCompact: true, // Extracts all fields to separate types (similar to apollo-codegen behavior)
   printFieldsOnNewLines: true, // Prints each field on a new line (similar to apollo-codegen behavior)
   enumType: 'native',
-  generatesOperationTypes: true,
+  generateOperationTypes: true,
 };
 
 export const main = async () => {
