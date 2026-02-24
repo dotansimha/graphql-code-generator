@@ -446,7 +446,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       | 'multi-file-operation-file'
       | 'single-file-operation-file' = this.config.importSchemaTypesFrom
       ? 'multi-file-operation-file'
-      : this.config.generatesOperationTypes
+      : this.config.generateOperationTypes
         ? 'single-file-operation-file'
         : 'multi-file-shared-type-file';
 
@@ -712,7 +712,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   getExactUtilityType(): string | null {
     if (
-      !this.config.generatesOperationTypes || // 1. If we don't generate operation types, definitely do not need `Exact`
+      !this.config.generateOperationTypes || // 1. If we don't generate operation types, definitely do not need `Exact`
       !this._needsExactUtilityType // 2. Even if we generate operation types, we may not need `Exact` if there's no operations in the documents i.e. only fragments found
     ) {
       return null;
@@ -722,7 +722,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   getIncrementalUtilityType(): string | null {
-    if (!this.config.generatesOperationTypes) {
+    if (!this.config.generateOperationTypes) {
       return null;
     }
 
