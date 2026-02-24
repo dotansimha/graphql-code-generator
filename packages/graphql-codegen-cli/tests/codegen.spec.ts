@@ -700,6 +700,125 @@ describe('Codegen Executor', () => {
     });
   });
 
+  describe('Parsed GraphQLSchema input', () => {
+    it('should accept a GraphQLSchema instance as root schema', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema,
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+    });
+
+    it('should accept a GraphQLSchema instance in an array', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema: [schema],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+    });
+
+    it('should merge a GraphQLSchema instance with an SDL string', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema: [schema, `type Post { id: ID! }`],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+      expect(result[0].content).toContain('Post');
+    });
+
+    it('should merge two GraphQLSchema instances', async () => {
+      const schemaA = buildSchema(SIMPLE_TEST_SCHEMA);
+      const schemaB = buildSchema(`type Post { id: ID! } type Query { posts: [Post] }`);
+      const { result } = await executeCodegen({
+        schema: [schemaA, schemaB],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+      expect(result[0].content).toContain('Post');
+    });
+
+    it('should accept a GraphQLSchema instance as output-level schema', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        generates: {
+          'out1.ts': {
+            schema,
+            plugins: ['typescript'],
+          },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+    });
+
+    it('should merge root SDL string with output-level GraphQLSchema instance', async () => {
+      const outputSchema = buildSchema(`type Post { id: ID! } type Query { posts: [Post] }`);
+      const { result } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': {
+            schema: outputSchema,
+            plugins: ['typescript'],
+          },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+      expect(result[0].content).toContain('Post');
+    });
+
+    it('should work with documents when schema is a GraphQLSchema instance', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': { plugins: ['typescript', 'typescript-operations'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('RootQuery');
+    });
+
+    it('should preserve custom scalars from a GraphQLSchema instance', async () => {
+      const schema = buildSchema(`
+        scalar DateTime
+        type Query { now: DateTime }
+      `);
+      const { result } = await executeCodegen({
+        schema,
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('DateTime');
+    });
+  });
+
   describe('Custom schema loader', () => {
     it('Should allow custom loaders to load schema on root level', async () => {
       await executeCodegen({

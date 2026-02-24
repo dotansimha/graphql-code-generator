@@ -13,7 +13,8 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import { NoTypeDefinitionsFound } from '@graphql-tools/load';
-import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
+import { buildASTSchema, DocumentNode, GraphQLError, GraphQLSchema, isSchema } from 'graphql';
+import { mergeTypeDefs } from '@graphql-tools/merge';
 import { Listr, ListrTask } from 'listr2';
 import { CodegenContext, ensureContext } from './config.js';
 import { getPluginByName } from './plugins.js';
@@ -84,6 +85,19 @@ export async function executeCodegen(
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   const cache = createCache();
+
+  // We need a simple unique ID to identify the provided GraphQLSchema objects for the above cache.
+  // Because JavaScript does not provide access to its internal object ids, we need a workaround.
+  // Below is a common way to get unique ids for objects in JavaScript,
+  // by using a WeakMap and autoincrementing the id.
+  const jsObjectIds = new WeakMap<GraphQLSchema, number>();
+  let jsObjectIdCounter = 0;
+  function getJsObjectId(schema: GraphQLSchema): number {
+    if (!jsObjectIds.has(schema)) {
+      jsObjectIds.set(schema, jsObjectIdCounter++);
+    }
+    return jsObjectIds.get(schema)!;
+  }
 
   function wrapTask(task: () => void | Promise<void>, source: string, taskName: string, ctx: Ctx) {
     return () =>
@@ -232,19 +246,30 @@ export async function executeCodegen(
                         async () => {
                           debugLog(`[CLI] Loading Schemas`);
                           const schemaPointerMap: any = {};
+                          const parsedSchemas: GraphQLSchema[] = [];
                           const allSchemaDenormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
 
                           for (const denormalizedPtr of allSchemaDenormalizedPointers) {
-                            if (typeof denormalizedPtr === 'string') {
+                            if (isSchema(denormalizedPtr)) {
+                              parsedSchemas.push(denormalizedPtr);
+                            } else if (typeof denormalizedPtr === 'string') {
                               schemaPointerMap[denormalizedPtr] = {};
                             } else if (typeof denormalizedPtr === 'object') {
                               Object.assign(schemaPointerMap, denormalizedPtr);
                             }
                           }
 
-                          const hash = JSON.stringify(schemaPointerMap);
+                          const hash = JSON.stringify(schemaPointerMap) + parsedSchemas.map(getJsObjectId).join(',');
                           const result = await cache('schema', hash, async () => {
-                            const outputSchemaAst = await context.loadSchema(schemaPointerMap);
+                            const schemasToMerge: GraphQLSchema[] = [...parsedSchemas];
+                            if (Object.keys(schemaPointerMap).length) {
+                              schemasToMerge.push(await context.loadSchema(schemaPointerMap));
+                            }
+                            // merge all collected schemas into one
+                            const outputSchemaAst =
+                              schemasToMerge.length === 1
+                                ? schemasToMerge[0]
+                                : buildASTSchema(mergeTypeDefs(schemasToMerge));
                             const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
                             return {
                               outputSchemaAst,
