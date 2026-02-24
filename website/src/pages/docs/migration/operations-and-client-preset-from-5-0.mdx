@@ -116,17 +116,17 @@ Now, it is simpler to do this with `typescript-operations` as it supports this a
 const config: CodegenConfig = {
   generates: {
     'src/shared/base-types.generated.ts': {
-      documents: 'src/**/*.graphql.ts' // Parses all files with GraphQL documents to generate Enum+Input types that are used by every project.
+      documents: 'src/**/*.graphql.ts' // Parses all files with GraphQL documents to generate Enum+Input types that are used by every project
       plugins: ['typescript-operations'],
       config: {
-        generatesOperationTypes: false,
+        generateOperationTypes: false, // `generateOperationTypes:false` means only Input, Enum and shared utility types are generated
       }
     },
     'src/project-1/types.generated.ts': {
       documents: 'src/project-1/**/*.graphql.ts', // Only parses GraphQL documents within project-1's scope
       plugins: ['typescript-operations'],
       config: {
-        importSchemaTypesFrom: 'src/shared/base-types.generated.ts', // this path is relative to Codegen config location (unlike the old config)
+        importSchemaTypesFrom: 'src/shared/base-types.generated.ts', // this path is relative to Codegen config location (unlike `typesPath` in the old setup)
       }
     },
     'src/project-2/types.generated.ts': {
