@@ -20,7 +20,6 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
   omitOperationSuffix: boolean;
-  namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
   skipTypeNameForRoot: boolean;
   nonOptionalTypename: boolean;
@@ -30,6 +29,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   customDirectives: CustomDirectivesConfig;
   generateOperationTypes: boolean;
   importSchemaTypesFrom: string;
+  namespacedImportName: string | null;
 }
 
 export interface RawDocumentsConfig extends RawConfig {
@@ -134,9 +134,27 @@ export interface RawDocumentsConfig extends RawConfig {
    */
   mergeFragmentTypes?: boolean;
 
-  // The following are internal, and used by presets
   /**
-   * @ignore
+   * @description Prefixes all GraphQL related generated types with that value, as namespaces import.
+   * You can use this feature to allow separation of plugins to different files (See `importSchemaTypesFrom`)
+   * @default 'Types' (if `importSchemaTypesFrom` is set)
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-operations'],
+   *        config: {
+   *          importSchemaTypesFrom: './path/to/shared-types.ts',
+   *          namespacedImportName: 'Types'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
    */
   namespacedImportName?: string;
 
@@ -247,20 +265,22 @@ export class BaseDocumentsVisitor<
     protected _schema: GraphQLSchema,
     defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
   ) {
+    const importSchemaTypesFrom = getConfigValue(rawConfig.importSchemaTypesFrom, '');
+
     super(rawConfig, {
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       skipTypeNameForRoot: getConfigValue(rawConfig.skipTypeNameForRoot, false),
       nonOptionalTypename: getConfigValue(rawConfig.nonOptionalTypename, false),
-      namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
       generateOperationTypes: getConfigValue(rawConfig.generateOperationTypes, true),
-      importSchemaTypesFrom: getConfigValue(rawConfig.importSchemaTypesFrom, ''),
+      importSchemaTypesFrom,
+      namespacedImportName: getConfigValue(rawConfig.namespacedImportName, importSchemaTypesFrom ? 'Types' : null),
       extractAllFieldsToTypes:
         getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
         getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false),

@@ -94,16 +94,13 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       await plugin(
         schema,
         [{ document }],
-        {
-          importSchemaTypesFrom: './base-dir/path-to-other-file.generated.ts',
-          namespacedImportName: 'TypeImport',
-        },
+        { importSchemaTypesFrom: './base-dir/path-to-other-file.generated.ts' },
         { outputFile: './base-dir/this-file.ts' }
       ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "import type * as TypeImport from './path-to-other-file.generated';
+      "import type * as Types from './path-to-other-file.generated';
 
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
@@ -112,22 +109,22 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: unknown } | null };
+      export type UserQuery = { user: { id: string, name: string, role: Types.UserRole, createdAt: unknown } | null };
 
       export type UsersQueryVariables = Exact<{
-        input: TypeImport.UsersInput;
+        input: Types.UsersInput;
       }>;
 
 
       export type UsersQuery = { users:
           | { result: Array<{ id: string }> }
-          | { error: TypeImport.ResponseErrorType }
+          | { error: Types.ResponseErrorType }
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
         to?: unknown;
-        role?: TypeImport.UserRole | null | undefined;
+        role?: Types.UserRole | null | undefined;
       }>;
 
 
@@ -229,16 +226,13 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       await plugin(
         schema,
         [{ document }],
-        {
-          importSchemaTypesFrom: '~@my-company/package/types',
-          namespacedImportName: 'TypeImport',
-        },
+        { importSchemaTypesFrom: '~@my-company/package/types' },
         { outputFile: './base-dir/this-file.ts' }
       ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "import type * as TypeImport from '@my-company/package/types';
+      "import type * as Types from '@my-company/package/types';
 
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
@@ -247,22 +241,22 @@ describe('TypeScript Operations Plugin - Import Types', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: unknown } | null };
+      export type UserQuery = { user: { id: string, name: string, role: Types.UserRole, createdAt: unknown } | null };
 
       export type UsersQueryVariables = Exact<{
-        input: TypeImport.UsersInput;
+        input: Types.UsersInput;
       }>;
 
 
       export type UsersQuery = { users:
           | { result: Array<{ id: string }> }
-          | { error: TypeImport.ResponseErrorType }
+          | { error: Types.ResponseErrorType }
          };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
         from: unknown;
         to?: unknown;
-        role?: TypeImport.UserRole | null | undefined;
+        role?: Types.UserRole | null | undefined;
       }>;
 
 
@@ -342,15 +336,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(
-        schema,
-        [{ document }],
-        {
-          importSchemaTypesFrom: './path-to-other-file',
-          namespacedImportName: 'TypeImport',
-        },
-        { outputFile: '' }
-      ),
+      await plugin(schema, [{ document }], { importSchemaTypesFrom: './path-to-other-file' }, { outputFile: '' }),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -430,7 +416,6 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         [{ document }],
         {
           importSchemaTypesFrom: './path-to-other-file',
-          namespacedImportName: 'TypeImport',
           scalars: {
             Scalar1: '@org/scalars#Scalar1',
           },
@@ -439,12 +424,12 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
       ),
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
-      "import type * as TypeImport from './graphql-code-generator/path-to-other-file';
+      "import type * as Types from './graphql-code-generator/path-to-other-file';
 
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
-        input?: TypeImport.UserInput | null | undefined;
+        input?: Types.UserInput | null | undefined;
       }>;
 
 
@@ -501,7 +486,6 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         [{ document }],
         {
           importSchemaTypesFrom: './path-to-other-file',
-          namespacedImportName: 'TypeImport',
           scalars: {
             Scalar1: '@org/scalars#Scalar1',
           },
@@ -572,7 +556,6 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         [{ document }],
         {
           importSchemaTypesFrom: './path-to-other-file',
-          namespacedImportName: 'TypeImport',
           scalars: {
             Scalar1: '@org/scalars#Scalar1',
           },
@@ -591,5 +574,63 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
       "
     `);
     validateTs(operationFileResult, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('uses `namespacedImportName` correctly to name the import type', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query User($id: ID!) {
+        user(id: $id) {
+          id
+          name
+          role
+          createdAt
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          importSchemaTypesFrom: './base-dir/path-to-other-file.generated.ts',
+          namespacedImportName: 'TypeImport',
+        },
+        { outputFile: './base-dir/this-file.ts' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "import type * as TypeImport from './path-to-other-file.generated';
+
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
+        id: string;
+      }>;
+
+
+      export type UserQuery = { user: { id: string, name: string, role: TypeImport.UserRole, createdAt: unknown } | null };
+      "
+    `);
   });
 });
