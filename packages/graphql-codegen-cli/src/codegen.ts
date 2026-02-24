@@ -86,7 +86,7 @@ export async function executeCodegen(
 
   const cache = createCache();
 
-  // We need a simple string to uniqually identify the provided GraphQLSchema objects for the above cache.
+  // We need a simple unique ID to identify the provided GraphQLSchema objects for the above cache.
   // Because JavaScript does not provide access to its internal object ids, we need a workaround.
   // Below is a common way to get unique ids for objects in JavaScript,
   // by using a WeakMap and autoincrementing the id.
@@ -261,9 +261,7 @@ export async function executeCodegen(
 
                           const hash = JSON.stringify(schemaPointerMap) + parsedSchemas.map(getJsObjectId).join(',');
                           const result = await cache('schema', hash, async () => {
-                            // collect parsed schemas
                             const schemasToMerge: GraphQLSchema[] = [...parsedSchemas];
-                            // collect schemas, provided by pointers
                             if (Object.keys(schemaPointerMap).length) {
                               schemasToMerge.push(await context.loadSchema(schemaPointerMap));
                             }
