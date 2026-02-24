@@ -271,7 +271,6 @@ const config: CodegenConfig = {
       plugins: ['typescript-operations'],
       config: {
         importSchemaTypesFrom: './dev-test/standalone-operations/import-schema-types/_base.generated.ts',
-        namespacedImportName: 'Types',
       },
     },
 
@@ -286,7 +285,6 @@ const config: CodegenConfig = {
       plugins: ['typescript-operations'],
       config: {
         importSchemaTypesFrom: './dev-test/standalone-operations/with-typescript-plugin/_base.generated.ts',
-        namespacedImportName: 'Types',
       },
     },
   },
