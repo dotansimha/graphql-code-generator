@@ -80,7 +80,7 @@ const config: CodegenConfig = {
     './dev-test/githunt/types.onlyEnums.ts': {
       schema: './dev-test/githunt/schema.json',
       documents: './dev-test/githunt/**/*.graphql',
-      config: { generatesOperationTypes: false },
+      config: { generateOperationTypes: false },
       plugins: ['typescript-operations'],
     },
     './dev-test/githunt/types.preResolveTypes.onlyOperationTypes.ts': {
@@ -262,7 +262,7 @@ const config: CodegenConfig = {
       documents: ['./dev-test/standalone-operations/import-schema-types/*.graphql'],
       plugins: ['typescript-operations'],
       config: {
-        generatesOperationTypes: false,
+        generateOperationTypes: false,
       },
     },
     './dev-test/standalone-operations/import-schema-types/_types.generated.ts': {

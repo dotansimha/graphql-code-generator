@@ -519,7 +519,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
   });
 
-  it('does not generate Variables, Result or Fragments when generatesOperationTypes is false', async () => {
+  it('does not generate Variables, Result or Fragments when generateOperationTypes:false', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(id: ID!): User
@@ -631,7 +631,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+      await plugin(schema, [{ document }], { generateOperationTypes: false }, { outputFile: '' }),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -730,7 +730,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { generatesOperationTypes: false }, { outputFile: '' }),
+      await plugin(schema, [{ document }], { generateOperationTypes: false }, { outputFile: '' }),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
