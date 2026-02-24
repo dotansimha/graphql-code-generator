@@ -8,7 +8,7 @@ import {
   VariableDefinitionNode,
 } from 'graphql';
 import { BaseVisitor, type ParsedConfig, type RawConfig } from './base-visitor.js';
-import { DEFAULT_SCALARS } from './scalars.js';
+import { DEFAULT_INPUT_SCALARS } from './scalars.js';
 import { SelectionSetToObject } from './selection-set-to-object.js';
 import { CustomDirectivesConfig, NormalizedScalarsMap } from './types.js';
 import {
@@ -268,7 +268,7 @@ export class BaseDocumentsVisitor<
     rawConfig: TRawConfig,
     additionalConfig: TPluginConfig,
     protected _schema: GraphQLSchema,
-    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS,
+    defaultScalars: NormalizedScalarsMap = DEFAULT_INPUT_SCALARS,
   ) {
     const importSchemaTypesFrom = getConfigValue(rawConfig.importSchemaTypesFrom, '');
 
@@ -285,7 +285,10 @@ export class BaseDocumentsVisitor<
       customDirectives: getConfigValue(rawConfig.customDirectives, { apolloUnmask: false }),
       generateOperationTypes: getConfigValue(rawConfig.generateOperationTypes, true),
       importSchemaTypesFrom,
-      namespacedImportName: getConfigValue(rawConfig.namespacedImportName, importSchemaTypesFrom ? 'Types' : null),
+      namespacedImportName: getConfigValue(
+        rawConfig.namespacedImportName,
+        importSchemaTypesFrom ? 'Types' : null,
+      ),
       extractAllFieldsToTypes:
         getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
         getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false),
