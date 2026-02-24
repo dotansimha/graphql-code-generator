@@ -285,6 +285,7 @@ Previously, there were 4 boolean options to set which Enum variant to generate. 
 8. `avoidOptionals` option is updated to only handle operation types
 
 Previously, `avoidOptionals` is shared with [typescript plugin](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript#avoidoptionals). As the result, some inner options do not affect operation types (such as `avoidOptionals.resolvers`, `avoidOptionals.query`, `avoidOptionals.mutation`, `avoidOptionals.subscription`).
+
 Now, there are only 3 inner options, and when turned on, each forces the respective use case to pass in non-optional value.
 
 - `avoidOptionals.variableValue`
@@ -309,4 +310,12 @@ The following utility types have been removed:
 
 11. Make `unknown` the default type instead of `any` for custom scalars
 
-Previously, custom Scalars default type was `any` which bypasses typecheck. We are making the default type `unknown` to ensure data is handled carefully by users.
+Previously, custom Scalars default type was `any` which bypasses typecheck.
+
+Now, We are making the default type `unknown` to ensure data is handled carefully by users.
+
+12. Make `string | number` the default type for the native `ID` scalar
+
+Previously, default Scalar type was being shared between client and server plugins (via the `typescript` plugin dependency). This means it was not possible to set the default for client as it would complicate the server config, and vice versa. See this [PR for more details](https://github.com/dotansimha/graphql-code-generator/pull/9497).
+
+Now, there is no longer a dependency. So, we can set the default type as `string | number` which is the correct type for the client use case. For more details on how Scalar coercion works here, please read [The Complete GraphQL Scalar Guide](https://the-guild.dev/graphql/hive/blog/the-complete-graphql-scalar-guide#scalar-value-coercion).
