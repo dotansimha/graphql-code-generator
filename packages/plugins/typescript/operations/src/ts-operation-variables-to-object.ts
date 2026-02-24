@@ -4,17 +4,10 @@ import {
   NormalizedScalarsMap,
   ParsedEnumValuesMap,
   printTypeScriptMaybeType,
+  DEFAULT_INPUT_SCALARS,
 } from '@graphql-codegen/visitor-plugin-common';
 import { Kind, TypeNode } from 'graphql';
 import type { NormalizedAvoidOptionalsConfig } from './config.avoidOptionals';
-
-export const SCALARS = {
-  ID: 'string | number',
-  String: 'string',
-  Int: 'number',
-  Float: 'number',
-  Boolean: 'boolean',
-};
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
   constructor(
@@ -72,7 +65,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected getScalar(name: string): string {
-    return this._scalars[name]?.input ?? SCALARS[name] ?? 'unknown';
+    return this._scalars[name]?.input ?? DEFAULT_INPUT_SCALARS[name].input ?? 'unknown';
   }
 
   protected getPunctuation(): string {
