@@ -130,7 +130,7 @@ const config: CodegenConfig = {
       }
     },
     'src/project-2/types.generated.ts': {
-      documents: 'src/project-2/**/*.graphql.ts', // Only parses GraphQL documents within project-1's scope
+      documents: 'src/project-2/**/*.graphql.ts', // Only parses GraphQL documents within project-2's scope
       plugins: ['typescript-operations'],
       config: {
         importSchemaTypesFrom: 'src/shared/base-types.generated.ts',
