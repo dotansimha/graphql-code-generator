@@ -1560,7 +1560,7 @@ describe('extractAllFieldsToTypesCompact: true', () => {
 
 
       export type GetCompanyInfoVariables = Exact<{
-        id: string;
+        id: string | number;
       }>;
       "
     `);

@@ -28,6 +28,8 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       "UsersInput Description"
       input UsersInput {
+        idNonNullable: ID!
+        idNullable: ID
         "UsersInput from"
         from: DateTime
         "UsersInput to"
@@ -51,6 +53,8 @@ describe('TypeScript Operations Plugin - Input', () => {
     `);
     const document = parse(/* GraphQL */ `
       query UsersWithScalarInput(
+        $idNonNullable: ID!
+        $idNullable: ID
         $inputNonNullable: UsersInput!
         $inputNullable: UsersInput
         $ageRange1: [Int]
@@ -59,6 +63,8 @@ describe('TypeScript Operations Plugin - Input', () => {
         $ageRange4: [Int!]!
       ) {
         users(
+          idNonNullable: $idNonNullable
+          idNullable: $idNullable
           input: $inputNonNullable
           ageRange1: $ageRange1
           ageRange2: $ageRange2
@@ -98,6 +104,8 @@ describe('TypeScript Operations Plugin - Input', () => {
 
       /** UsersInput Description */
       export type UsersInput = {
+        idNonNullable: string | number;
+        idNullable?: string | number | null | undefined;
         /** UsersInput from */
         from?: Date | null | undefined;
         /** UsersInput to */
@@ -117,6 +125,8 @@ describe('TypeScript Operations Plugin - Input', () => {
       };
 
       export type UsersWithScalarInputQueryVariables = Exact<{
+        idNonNullable: string | number;
+        idNullable?: string | number | null | undefined;
         inputNonNullable: UsersInput;
         inputNullable?: UsersInput | null | undefined;
         ageRange1?: Array<number | null | undefined> | number | null | undefined;
