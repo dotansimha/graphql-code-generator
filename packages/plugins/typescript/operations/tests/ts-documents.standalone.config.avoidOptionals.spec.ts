@@ -58,8 +58,8 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       };
 
       export type UserQueryVariables = Exact<{
-        testNullable?: string | null | undefined;
-        testNonNullable: string;
+        testNullable?: string | number | null | undefined;
+        testNonNullable: string | number;
         inputNullable?: UserInput | null | undefined;
         inputNonNullable: UserInput;
       }>;
@@ -126,8 +126,8 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       };
 
       export type UserQueryVariables = Exact<{
-        testNullable: string | null | undefined;
-        testNonNullable: string;
+        testNullable: string | number | null | undefined;
+        testNonNullable: string | number;
         inputNullable: UserInput | null | undefined;
         inputNonNullable: UserInput;
       }>;
@@ -205,7 +205,7 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       };
 
       export type UserQueryVariables = Exact<{
-        test?: string | null | undefined;
+        test?: string | number | null | undefined;
         input?: UserInput | null | undefined;
       }>;
 
@@ -282,7 +282,7 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       };
 
       export type UserQueryVariables = Exact<{
-        test?: string | null | undefined;
+        test?: string | number | null | undefined;
         input?: UserInput | null | undefined;
       }>;
 
@@ -359,7 +359,7 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       };
 
       export type UserQueryVariables = Exact<{
-        test: string | null | undefined;
+        test: string | number | null | undefined;
         input: UserInput | null | undefined;
       }>;
 
@@ -442,8 +442,8 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       };
 
       export type UserQueryVariables = Exact<{
-        test: string | null | undefined;
-        testWithDefault?: string | null | undefined;
+        test: string | number | null | undefined;
+        testWithDefault?: string | number | null | undefined;
         input: UserInput | null | undefined;
         inputWithDefault?: UserInput | null | undefined;
       }>;
