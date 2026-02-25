@@ -41,6 +41,7 @@ export const main = async () => {
   const generatePaths: { [scanPath: string]: Types.ConfiguredOutput } = {};
 
   // Prepare the required structure for GraphQL Codegen
+  // eslint-disable-next-line unicorn/no-array-for-each
   includes.forEach((include: string) => {
     generatePaths[include] = {
       preset: 'near-operation-file', // This preset tells the codegen to generate multiple files instead of one
@@ -74,6 +75,7 @@ export const main = async () => {
 
 if (import.meta.url === process.argv[1] || import.meta.url === `file://${process.argv[1]}`) {
   main().catch(e => {
+    // eslint-disable-next-line no-console
     console.error(e);
     process.exit(1);
   });
