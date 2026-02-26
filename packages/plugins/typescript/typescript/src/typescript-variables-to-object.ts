@@ -36,7 +36,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     );
   }
 
-  private clearOptional(str: string): string {
+  protected clearOptional(str: string): string {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
     const rgx = new RegExp(`^${this.wrapMaybe(`(.*?)`)}$`, 'i');
 

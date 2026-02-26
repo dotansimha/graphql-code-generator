@@ -33,6 +33,7 @@ import {
   PrimitiveAliasedFields,
   PrimitiveField,
   ProcessResult,
+  type SelectionSetProcessorConfig as BaseSelectionSetProcessorConfig,
 } from './selection-set-processor/base.js';
 import {
   ConvertNameFn,
@@ -81,14 +82,21 @@ const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
   __type: TypeMetaFieldDef,
 };
 
-export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedDocumentsConfig> {
+export class SelectionSetToObject<
+  Config extends ParsedDocumentsConfig = ParsedDocumentsConfig,
+  SelectionSetProcessorConfig extends BaseSelectionSetProcessorConfig = BaseSelectionSetProcessorConfig
+> {
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
   protected _queriedForTypename = false;
+  // Enables resolving conflicting type names in extractAllFieldsToTypesCompact mode:
+  //   key === GetFoo_user    <-- full field name
+  //   value === User         <-- last field type
+  protected _seenFieldNames: Map<string, string> = new Map();
 
   constructor(
-    protected _processor: BaseSelectionSetProcessor<any>,
+    protected _processor: BaseSelectionSetProcessor<SelectionSetProcessorConfig>,
     protected _scalars: NormalizedScalarsMap,
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
@@ -102,7 +110,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new SelectionSetToObject(
+    const next = new SelectionSetToObject(
       this._processor,
       this._scalars,
       this._schema,
@@ -113,6 +121,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       parentSchemaType,
       selectionSet
     );
+    next._seenFieldNames = this._seenFieldNames;
+    return next;
   }
 
   /**
@@ -399,6 +409,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         }
 
         for (const incrementalNode of incrementalNodes) {
+          // 1. fragment masking
           if (this._config.inlineFragmentTypes === 'mask' && 'fragmentName' in incrementalNode) {
             const { fields: incrementalFields, dependentTypes: incrementalDependentTypes } = this.buildSelectionSet(
               schemaType,
@@ -411,6 +422,8 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
             continue;
           }
+
+          // 2. @defer
           const { fields: initialFields, dependentTypes: initialDependentTypes } = this.buildSelectionSet(
             schemaType,
             [incrementalNode],
@@ -495,9 +508,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         // The keys here will be used to generate intermediary
         // fragment names. To avoid blowing up the type name on large
         // unions, calculate a stable hash here instead.
-        //
-        // Also use fragment hashing if skipTypename is true, since we
-        // then don't have a typename for naming the fragment.
         acc[
           selectedTypes.length <= 3
             ? // Remove quote marks to produce a valid type name
@@ -650,7 +660,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const linkFields: LinkField[] = [];
     const linkFieldsInterfaces: DependentType[] = [];
     for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
-      const realSelectedFieldType = getBaseType(selectedFieldType as any);
+      const realSelectedFieldType = getBaseType(selectedFieldType);
       const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
       const fieldName = field.alias?.value ?? field.name.value;
       const selectionSetObjects = selectionSet.transformSelectionSet(
@@ -659,12 +669,17 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
       linkFieldsInterfaces.push(...selectionSetObjects.dependentTypes);
       const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
-      const isOptional = options.unsetTypes;
       linkFields.push({
         alias: field.alias
-          ? this._processor.config.formatNamedField(field.alias.value, selectedFieldType, isConditional, isOptional)
+          ? this._processor.config.formatNamedField({
+              name: field.alias.value,
+              isOptional: isConditional || options.unsetTypes,
+            })
           : undefined,
-        name: this._processor.config.formatNamedField(field.name.value, selectedFieldType, isConditional, isOptional),
+        name: this._processor.config.formatNamedField({
+          name: field.name.value,
+          isOptional: isConditional || options.unsetTypes,
+        }),
         type: realSelectedFieldType.name,
         selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSetObjects.mergedTypeString.split(`\n`).join(`\n  `),
@@ -676,7 +691,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const typeInfoField = this.buildTypeNameField(
       parentSchemaType,
       this._config.nonOptionalTypename,
-      this._config.addTypename,
       requireTypename,
       this._config.skipTypeNameForRoot
     );
@@ -738,22 +752,26 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
   protected buildTypeNameField(
     type: GraphQLObjectType,
-    nonOptionalTypename: boolean = this._config.nonOptionalTypename,
-    addTypename: boolean = this._config.addTypename,
-    queriedForTypename: boolean = this._queriedForTypename,
-    skipTypeNameForRoot: boolean = this._config.skipTypeNameForRoot
-  ): { name: string; type: string } {
+    nonOptionalTypename: boolean,
+    queriedForTypename: boolean,
+    skipTypeNameForRoot: boolean
+  ): { name: string; type: string } | null {
+    const typenameField = {
+      name: this._processor.config.formatNamedField({ name: '__typename' }),
+      type: `'${type.name}'`,
+    };
+
+    if (queriedForTypename) {
+      return typenameField;
+    }
+
     const rootTypes = getRootTypes(this._schema);
-    if (rootTypes.has(type) && skipTypeNameForRoot && !queriedForTypename) {
+    if (rootTypes.has(type) && skipTypeNameForRoot) {
       return null;
     }
 
-    if (nonOptionalTypename || addTypename || queriedForTypename) {
-      const optionalTypename = !queriedForTypename && !nonOptionalTypename;
-      return {
-        name: `${this._processor.config.formatNamedField('__typename')}${optionalTypename ? '?' : ''}`,
-        type: `'${type.name}'`,
-      };
+    if (nonOptionalTypename) {
+      return typenameField;
     }
 
     return null;
@@ -822,7 +840,19 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       .map(typeName => {
         const relevant = grouped[typeName].filter(Boolean);
         return relevant.map(objDefinition => {
-          const name = fieldName ? `${fieldName}_${typeName}` : typeName;
+          // In extractAllFieldsToTypesCompact mode, we still need to keep the final concrete type name for union/interface types
+          // to distinguish between different implementations, but we skip it for simple object types
+          const hasMultipleTypes = Object.keys(grouped).length > 1;
+          let name: string;
+          if (fieldName) {
+            if (this._config.extractAllFieldsToTypesCompact && !hasMultipleTypes) {
+              name = fieldName;
+            } else {
+              name = `${fieldName}_${typeName}`;
+            }
+          } else {
+            name = typeName;
+          }
           return {
             name,
             content: typeof objDefinition === 'string' ? objDefinition : objDefinition.union.join(' | '),
@@ -872,15 +902,17 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const mergedTypeString = this.buildFragmentTypeName(fragmentName, fragmentSuffix);
     const { grouped, dependentTypes } = this._buildGroupedSelections(mergedTypeString);
 
+    const hasMultipleTypes = Object.keys(grouped).length > 1;
+
     const subTypes: DependentType[] = Object.keys(grouped).flatMap(typeName => {
       const possibleFields = grouped[typeName].filter(Boolean);
-      const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
+      // In extractAllFieldsToTypesCompact mode, pass typeName only when there are multiple types
+      const declarationName =
+        this._config.extractAllFieldsToTypesCompact && !hasMultipleTypes
+          ? this.buildFragmentTypeName(fragmentName, fragmentSuffix)
+          : this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
       if (possibleFields.length === 0) {
-        if (!this._config.addTypename) {
-          return [{ name: declarationName, content: this.getEmptyObjectType() }];
-        }
-
         return [];
       }
 
@@ -949,16 +981,39 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
+    const fragmentSuffix = typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix;
     return this._convertName(name, {
       useTypesPrefix: true,
-      suffix: typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix,
+      suffix: fragmentSuffix,
     });
   }
 
   protected buildParentFieldName(typeName: string, parentName: string): string {
+    // Sample args:
+    //   typeName = User             <-- last field type
+    //   parentName = GetFoo_user    <-- full field name
+
     // queries/mutations/fragments are guaranteed to be unique type names,
     // so we can skip affixing the field names with typeName
     if (operationTypes.includes(typeName)) {
+      return parentName;
+    }
+
+    // When extractAllFieldsToTypesCompact mode is enabled, skip appending typeName initially
+    // but check for conflicts
+    if (this._config.extractAllFieldsToTypesCompact) {
+      const existingTypeName = this._seenFieldNames.get(parentName);
+      if (!existingTypeName) {
+        // First time seeing this field name, record it's type
+        this._seenFieldNames.set(parentName, typeName);
+        return parentName;
+      }
+      if (existingTypeName !== typeName) {
+        // Conflict detected: same field name but different type
+        // Return field name with type suffix
+        return `${parentName}_${typeName}`;
+      }
+      // Same field name and same type, just return the plain name
       return parentName;
     }
 
