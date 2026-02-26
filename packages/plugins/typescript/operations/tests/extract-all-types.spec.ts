@@ -1376,9 +1376,9 @@ describe('extractAllFieldsToTypes: true', () => {
     expect(content).toMatchInlineSnapshot(`
       "export type GetFragmentPetFragment_Pet_home_House = { __typename: 'House', id: string };
 
-      type GetFragmentPet_Dog_Fragment = { __typename: 'Dog', id: string, home?: GetFragmentPetFragment_Pet_home_House | null };
+      type GetFragmentPet_Dog_Fragment = { __typename: 'Dog', id: string, home: GetFragmentPetFragment_Pet_home_House | null };
 
-      type GetFragmentPet_Cat_Fragment = { __typename: 'Cat', id: string, home?: GetFragmentPetFragment_Pet_home_House | null };
+      type GetFragmentPet_Cat_Fragment = { __typename: 'Cat', id: string, home: GetFragmentPetFragment_Pet_home_House | null };
 
       export type GetFragmentPetFragment =
         | GetFragmentPet_Dog_Fragment
@@ -1387,20 +1387,20 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type GetPetDataQuery_pet_Pet_home_House = { __typename: 'House', id: string };
 
-      export type GetPetDataQuery_pet_Dog = { __typename: 'Dog', id: string, home?: GetPetDataQuery_pet_Pet_home_House | null };
+      export type GetPetDataQuery_pet_Dog = { __typename: 'Dog', id: string, home: GetPetDataQuery_pet_Pet_home_House | null };
 
-      export type GetPetDataQuery_pet_Cat = { __typename: 'Cat', id: string, home?: GetPetDataQuery_pet_Pet_home_House | null };
+      export type GetPetDataQuery_pet_Cat = { __typename: 'Cat', id: string, home: GetPetDataQuery_pet_Pet_home_House | null };
 
       export type GetPetDataQuery_pet =
         | GetPetDataQuery_pet_Dog
         | GetPetDataQuery_pet_Cat
       ;
 
-      export type GetPetDataQuery_Query = { __typename: 'Query', pet?: GetPetDataQuery_pet | null };
+      export type GetPetDataQuery_Query = { __typename: 'Query', pet: GetPetDataQuery_pet | null };
 
 
       export type GetPetDataQueryVariables = Exact<{
-        petId: Scalars['ID']['input'];
+        petId: string | number;
       }>;
 
 
@@ -1408,7 +1408,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, interfaceFragmentSchema);
+    await validate(content);
   });
 
   // Exception case for Issue #10502 - shared schema for fragment tests
