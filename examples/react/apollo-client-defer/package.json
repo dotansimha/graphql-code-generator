@@ -15,7 +15,7 @@
     "@types/node": "^22.0.0",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
     "cypress": "15.7.1",
     "serve": "14.2.3",
     "start-server-and-test": "2.0.5",
