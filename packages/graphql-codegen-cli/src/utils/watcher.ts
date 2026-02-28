@@ -12,6 +12,7 @@ import { debugLog } from './debugging.js';
 import { getLogger } from './logger.js';
 import {
   allAffirmativePatternsFromPatternSets,
+  type PatternSet,
   makeGlobalPatternSet,
   makeLocalPatternSet,
   makeShouldRebuild,
@@ -48,10 +49,19 @@ export const createWatcher = (
   let config: Types.Config & { configFilePath?: string } = initialContext.getConfig();
 
   const globalPatternSet = makeGlobalPatternSet(initialContext);
-  const localPatternSets = Object.keys(config.generates)
-    .map(filename => normalizeOutputParam(config.generates[filename]))
-    .map(conf => makeLocalPatternSet(conf));
-  const allAffirmativePatterns = allAffirmativePatternsFromPatternSets([globalPatternSet, ...localPatternSets]);
+
+  const localPatternSetArray: PatternSet[] = [];
+  const localPatternSets = Object.entries(config.generates).reduce<Record<string, PatternSet>>(
+    (res, [filename, conf]) => {
+      const patternSet = makeLocalPatternSet(normalizeOutputParam(conf));
+      res[filename] = patternSet;
+      localPatternSetArray.push(patternSet);
+      return res;
+    },
+    {}
+  );
+
+  const allAffirmativePatterns = allAffirmativePatternsFromPatternSets([globalPatternSet, ...localPatternSetArray]);
 
   const shouldRebuild = makeShouldRebuild({ globalPatternSet, localPatternSets });
 
@@ -75,9 +85,9 @@ export const createWatcher = (
 
     let isShutdown = false;
 
-    const debouncedExec = debounce(() => {
+    const debouncedExec = debounce((generatesKeysToRebuild: Record<string, true>) => {
       if (!isShutdown) {
-        executeCodegen(initialContext)
+        executeCodegen(initialContext, { onlyGeneratesKeys: generatesKeysToRebuild })
           .then(
             ({ result, error }) => {
               // FIXME: this is a quick fix to stop `onNext` (writeOutput) from
@@ -123,11 +133,12 @@ export const createWatcher = (
     watcherSubscription = await parcelWatcher.subscribe(
       watchDirectory,
       async (_, events) => {
-        // it doesn't matter what has changed, need to run whole process anyway
         await Promise.all(
           // NOTE: @parcel/watcher always provides path as an absolute path
           events.map(async ({ type: eventName, path }) => {
-            if (!shouldRebuild({ path })) {
+            const generatesKeysToRebuild = shouldRebuild({ path });
+
+            if (Object.keys(generatesKeysToRebuild).length === 0) {
               return;
             }
 
@@ -151,7 +162,7 @@ export const createWatcher = (
               initialContext.updateConfig(config);
             }
 
-            debouncedExec();
+            debouncedExec(generatesKeysToRebuild);
           })
         );
       },
