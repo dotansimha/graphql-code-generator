@@ -3950,6 +3950,37 @@ describe('TypeScript', () => {
     `);
   });
 
+  it('should union concrete type names in interface __typename field - issue #10522', async () => {
+    debugger;
+    const testSchema = buildSchema(/* GraphQL */ `
+      interface TopLevel {
+        topLevelField: Boolean
+      }
+
+      type OneImplementation implements TopLevel {
+        topLevelField: Boolean
+        implementationField: String
+      }
+
+      type AnotherImplementation implements TopLevel {
+        topLevelField: Boolean
+        anotherImplementationField: Int
+      }
+    `);
+    const output = await plugin(
+      testSchema,
+      [],
+      {
+        addTypenameToInterfaces: true,
+      },
+      { outputFile: 'graphql.ts' }
+    );
+
+    expect(output.content).toBeSimilarStringTo(`
+      __typename?: 'OneImplementation' | 'AnotherImplementation'
+    `);
+  });
+
   it('should use implementing types as node type - issue #5126', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Matrix {
