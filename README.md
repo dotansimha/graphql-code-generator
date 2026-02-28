@@ -1,11 +1,12 @@
 <div>
     <img src="./logo.svg" width="150px" alt="GraphQL Code Generator logo"/>
     <a href="https://the-guild.dev">
-        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/> 
+        <img align="right" src="https://the-guild-org.github.io/press-kit/full-themed.svg" alt="Created by The Guild" style="width: 100px;align:right;"/> 
     </a>
 </div>
 
 [![npm version](https://badge.fury.io/js/%40graphql-codegen%2Fcli.svg)](https://badge.fury.io/js/%40graphql-codegen%2Fcli)
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/apollostack/apollo-ios/master/LICENSE)
 
 [https://the-guild.dev/graphql/codegen](https://the-guild.dev/graphql/codegen)
 
@@ -59,7 +60,5 @@ For a contribution guide specific to this project, please refer to: http://the-g
 Help us keep GraphQL Code Generator open and inclusive. Please read and follow our [Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://contributor-covenant.org)
 
 ## License
-
-[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/apollostack/apollo-ios/master/LICENSE)
 
 MIT
