@@ -22,7 +22,6 @@
     "@babel/template": "^7.20.7",
     "@graphql-codegen/add": "^6.0.0",
     "@graphql-codegen/typed-document-node": "^6.1.6",
-    "@graphql-codegen/typescript": "^5.0.8",
     "@graphql-codegen/typescript-operations": "^5.0.8",
     "@graphql-codegen/gql-tag-operations": "5.1.3",
     "@graphql-codegen/plugin-helpers": "^6.1.0",
