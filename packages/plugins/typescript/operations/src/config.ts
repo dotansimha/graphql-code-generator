@@ -368,8 +368,10 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *   }
    * }
    * export default config
+   * ```
    */
   enumType?: ConvertSchemaEnumToDeclarationBlockString['outputType'];
+
   /**
    * @description Overrides the default value of enum values declared in your GraphQL schema.
    * You can also map the entire enum to an external type by providing a string that of `module#type`.
