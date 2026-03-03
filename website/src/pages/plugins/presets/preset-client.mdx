@@ -44,24 +44,20 @@ For step-by-step instructions, please [refer to our dedicated guide](/docs/guide
 
 The `client` preset allows the following `config` options:
 
-- [`scalars`](/plugins/typescript/typescript#scalars): Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
-- [`defaultScalarType`](/plugins/typescript/typescript#defaultscalartype): Allows you to override the type that unknown `scalars` will have. Defaults to `any`.
-- [`strictScalars`](/plugins/typescript/typescript#strictscalars): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
-- [`namingConvention`](/plugins/typescript/typescript#namingconvention): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`.
-- [`useTypeImports`](/plugins/typescript/typescript#usetypeimports): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's [`"importsNotUsedAsValues": "error"`](https://www.typescriptlang.org/tsconfig#importsNotUsedAsValues) option.
-- [`immutableTypes`](/plugins/typescript/typescript#immutabletypes): Generates immutable types by adding `readonly` to properties and `ReadonlyArray` for lists.
-- [`skipTypename`](/plugins/typescript/typescript#skiptypename): Does not add `__typename` to the generated types, unless it was specified in the selection set.
+- [`scalars`](/plugins/typescript/typescript-operations#scalars): Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
+- [`defaultScalarType`](/plugins/typescript/typescript-operations#defaultscalartype): Allows you to override the type that unknown `scalars` will have. Defaults to `any`.
+- [`strictScalars`](/plugins/typescript/typescript-operations#strictscalars): If `scalars` are found in the schema that are not defined in scalars an error will be thrown during codegen.
+- [`namingConvention`](/plugins/typescript/typescript-operations#namingconvention): Available case functions in `change-case-all` are `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `sentenceCase`, `snakeCase`, `lowerCase`, `localeLowerCase`, `lowerCaseFirst`, `spongeCase`, `titleCase`, `upperCase`, `localeUpperCase` and `upperCaseFirst`.
+- [`useTypeImports`](/plugins/typescript/typescript-operations#usetypeimports): Will use `import type {}` rather than `import {}` when importing only types. This gives compatibility with TypeScript's [`"importsNotUsedAsValues": "error"`](https://www.typescriptlang.org/tsconfig#importsNotUsedAsValues) option.
+- [`immutableTypes`](/plugins/typescript/typescript-operations#immutabletypes): Generates immutable types by adding `readonly` to properties and `ReadonlyArray` for lists.
 - [`arrayInputCoercion`](/plugins/typescript/typescript-operations#arrayinputcoercion): The [GraphQL spec](https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d) allows arrays and a single primitive value for list input. This allows to deactivate that behavior to only accept arrays instead of single values.
-- [`enumsAsTypes`](/plugins/typescript/typescript#enumsastypes): Generates enum as TypeScript string union `type` instead of an `enum`. Useful if you wish to generate `.d.ts` declaration file instead of `.ts`, or if you want to avoid using TypeScript enums due to bundle size concerns.
-- [`enumsAsConst`](/plugins/typescript/typescript#enumsasconst): Generates enum as TypeScript const assertions instead of enum. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
-- [`enumValues`](/plugins/typescript/typescript#enumvalues): Overrides the default value of enum values declared in your GraphQL schema. You can also map the entire enum to an external type by providing a string that of module#type.
-- [`futureProofEnums`](/plugins/typescript/typescript#futureproofenums): Adds a catch-all entry to enum type definitions for values that may be added in the future.
-- [`nonOptionalTypename`](/plugins/typescript/typescript#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
-- [`avoidOptionals`](/plugins/typescript/typescript#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
+- [`enumType`](/plugins/typescript/typescript-operations#enumType): Changes how TypeScript enums are generated.
+- [`enumValues`](/plugins/typescript/typescript-operations#enumvalues): Overrides the default value of enum values declared in your GraphQL schema. You can also map the entire enum to an external type by providing a string that of module#type.
+- [`futureProofEnums`](/plugins/typescript/typescrip-operations#futureproofenums): Adds a catch-all entry to enum type definitions for values that may be added in the future.
+- [`nonOptionalTypename`](/plugins/typescript/typescript-operations#nonoptionaltypename): Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional.
+- [`avoidOptionals`](/plugins/typescript/typescript-operations#avoidoptionals): This will cause the generator to avoid using TypeScript optionals (`?`) on types.
 - [`documentMode`](#documentmode): Allows you to control how the documents are generated.
 - [`skipTypeNameForRoot`](/plugins/typescript/typescript-operations#skiptypenameforroot): Avoid adding `__typename` for root types. This is ignored when a selection explicitly specifies `__typename`.
-- [`onlyOperationTypes`](/plugins/typescript/typescript#onlyoperationtypes): This will cause the generator to emit types required for operations only i.e. only enums and scalars.
-- [`onlyEnums`](/plugins/typescript/typescript#onlyenums): This will cause the generator to emit types for enums only.
 - [`customDirectives`](/plugins/typescript/typescript-operations#customdirectives): Configures behavior for use with custom directives from various GraphQL libraries, such as Apollo Client's [@unmask](https://www.apollographql.com/docs/react/data/directives#unmask).
 - [`nullability`](/plugins/typescript/typescript-operations#nullability): Indicate the client capabilities to get stronger types with [semantic nullability](https://github.com/graphql/graphql-wg/blob/main/rfcs/SemanticNullability.md)-enabled schemas.
 
