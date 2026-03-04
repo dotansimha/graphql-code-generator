@@ -86,6 +86,8 @@ const config: CodegenConfig = {
         extension: '.ts',
         folder: '__generated__',
         importTypesNamespace: '',
+        filePerOperation: true,
+        inGeneratesOnly: true,
       },
       plugins: ['typescript-operations'],
     },
