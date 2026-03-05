@@ -61,7 +61,7 @@ export interface FragmentMatcherConfig {
    */
   module?: 'commonjs' | 'es2015';
   /**
-   * @description Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.
+   * @description Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo Client version. Note: `3` also works for version 4.
    * @default 3
    *
    * @exampleMarkdown
