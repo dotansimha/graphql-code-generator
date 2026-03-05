@@ -1,6 +1,6 @@
 import { dirname, join, resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { compressToEncodedURIComponent } from 'lz-string';
+import * as LZString from 'lz-string'; // lz-string is a package which has CJS/ESM issues. So, we cannot do `import { something } from 'lz-string'`
 import {
   CompilerOptions,
   createCompilerHost,
@@ -239,7 +239,7 @@ export function compileTs(
     }
   } catch (e) {
     if (openPlayground) {
-      const compressedCode = compressToEncodedURIComponent(contents);
+      const compressedCode = LZString.compressToEncodedURIComponent(contents);
       open('http://www.typescriptlang.org/play/#code/' + compressedCode);
     }
 
