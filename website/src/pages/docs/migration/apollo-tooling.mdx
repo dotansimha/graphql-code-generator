@@ -10,6 +10,10 @@ import { Callout, Tabs } from '@theguild/components'
 
 This guide explains how to replace it with [GraphQL Code Generator](https://the-guild.dev/graphql/codegen), which is actively maintained, more flexible, and supports a broader range of use cases.
 
+<Callout>
+  This setup is available in the next major version of `graphql-code-generator` and `graphql-code-generator-community`.
+</Callout>
+
 ## Installation
 
 Remove Apollo Tooling and install GraphQL Code Generator:
@@ -85,7 +89,6 @@ const config: CodegenConfig = {
       presetConfig: {
         extension: '.ts',
         folder: '__generated__',
-        importTypesNamespace: '',
         filePerOperation: true,
         inGeneratesOnly: true,
       },
@@ -115,11 +118,6 @@ Add a script to your `package.json` to run the code generator:
 
 ## Per-file generation with `near-operation-file`
 
-<Callout>
-  The setup below is using a new version of `near-operation-file` preset which is currently in development.
-  It will be released shortly.
-</Callout>
-
 Apollo Tooling's default behaviour is to generate one TypeScript file per graphql operation, placed in a `__generated__` folder next to the source.
 For example, given `src/Component.ts` containing a query `GetUser`, Apollo Tooling produces `src/__generated__/GetUser.ts`.
 
@@ -137,7 +135,6 @@ const config: CodegenConfig = {
       presetConfig: {
         extension: '.ts',      // Extension for generated files
         folder: '__generated__', // Generated files go into __generated__/ subfolder
-        importTypesNamespace: '', // Disable namespace prefix on imported types
         filePerOperation: true, // Generate type files per-operation (not per-component)
         inGeneratesOnly: true, // Only generate files defined in `generates` scan paths (don't generate for all `documents`)
       },
@@ -173,7 +170,6 @@ const config: CodegenConfig = {
       presetConfig: {
         extension: '.ts',
         folder: '__generated__',
-        importTypesNamespace: '',
         filePerOperation: true,
         inGeneratesOnly: true,
       },
@@ -215,7 +211,6 @@ const config: CodegenConfig = {
       presetConfig: {
         extension: '.ts',
         folder: '__generated__',
-        importTypesNamespace: '',
         filePerOperation: true,
         inGeneratesOnly: true,
       },
@@ -256,8 +251,6 @@ const config: CodegenConfig = {
       presetConfig: {
         extension: '.ts',
         folder: '__generated__',
-        // Disable namespace prefix on types imported from other generated files
-        importTypesNamespace: '',
         // Generate type files per-operation (not per-component)
         filePerOperation: true,
         // Only generate files defined in `generates` scan paths (don't generate for all `documents`)
