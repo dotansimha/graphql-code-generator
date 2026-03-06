@@ -259,6 +259,51 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('export type QQuery');
     });
 
+    it('Should honor per-output importExtension and emitLegacyCommonJSImports for client preset outputs', async () => {
+      const recordingPreset = {
+        buildGeneratesSection: ({ baseOutputDir, config }) => [
+          {
+            filename: `${baseOutputDir}recorded-config.ts`,
+            pluginMap: {
+              recorder: {
+                plugin: (_schema, _documents, pluginConfig) =>
+                  JSON.stringify({
+                    importExtension: pluginConfig.importExtension,
+                    emitLegacyCommonJSImports: pluginConfig.emitLegacyCommonJSImports,
+                  }),
+              },
+            },
+            plugins: [{ recorder: {} }],
+            schema: parse(SIMPLE_TEST_SCHEMA),
+            documents: [],
+            config,
+          },
+        ],
+      };
+
+      const { result } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        config: {
+          emitLegacyCommonJSImports: true,
+          importExtension: '',
+        },
+        generates: {
+          './src/gql/': {
+            preset: recordingPreset,
+            config: {
+              emitLegacyCommonJSImports: false,
+              importExtension: '.js',
+            },
+          },
+        },
+      });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].filename).toBe('./src/gql/recorded-config.ts');
+      expect(result[0].content).toBe(`{"importExtension":".js","emitLegacyCommonJSImports":false}`);
+    });
+
     it('Should return error on duplicated names', async () => {
       const { error } = await executeCodegen({
         schema: `
