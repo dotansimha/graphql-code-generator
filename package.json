@@ -83,7 +83,6 @@
     ]
   },
   "resolutions": {
-    "@graphql-codegen/visitor-plugin-common": "^6.2.3",
     "typescript": "5.5.4",
     "eslint-plugin-promise": "7.1.0"
   },
