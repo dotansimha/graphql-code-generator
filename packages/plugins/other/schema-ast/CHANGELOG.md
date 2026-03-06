@@ -1,5 +1,14 @@
 # @graphql-codegen/schema-ast
 
+## 5.0.1
+
+### Patch Changes
+
+- [#10619](https://github.com/dotansimha/graphql-code-generator/pull/10619) [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/utils@^11.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/11.0.0) (from `^10.0.0`, in `dependencies`)
+- Updated dependencies [[`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072)]:
+  - @graphql-codegen/plugin-helpers@6.1.1
+
 ## 5.0.0
 
 ### Major Changes
