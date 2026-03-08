@@ -48,7 +48,6 @@ export const main = async () => {
       presetConfig: {
         extension: '.ts',
         folder: GENERATED, // Output folder for generated files
-        importTypesNamespace: '', // Disable namespace prefix on imported types
       },
       plugins: [
         'typescript-operations',
