@@ -92,7 +92,7 @@ Some repos may have multiple Codegen projects, each generating types for operati
 const config: CodegenConfig = {
   // ...
   generates: {
-    'src/shared/base-types.generated.ts': {
+    'src/graphql/base-types.generated.ts': {
       plugins: ['typescript']
     },
     'src/project-1/types.generated.ts': {
@@ -100,7 +100,7 @@ const config: CodegenConfig = {
       preset: 'import-types',
       plugins: ['typescript-operations'],
       presetConfig: {
-        typesPath: '../shared/base-types.generated.ts'
+        typesPath: '../graphql/base-types.generated.ts'
       }
     },
     'src/project-2/types.generated.ts': {
@@ -108,7 +108,7 @@ const config: CodegenConfig = {
       preset: 'import-types',
       plugins: ['typescript-operations'],
       presetConfig: {
-        typesPath: '../shared/base-types.generated.ts'
+        typesPath: '../graphql/base-types.generated.ts'
       }
     }
   }
@@ -121,7 +121,7 @@ Now, it is possible to do this with just `typescript-operations`, as it supports
 const config: CodegenConfig = {
   // ...
   generates: {
-    'src/shared/base-types.generated.ts': {
+    'src/graphql/base-types.generated.ts': {
       documents: 'src/**/*.graphql.ts' // Parses all files with GraphQL documents to generate Enum and Input types that are used by every project
       plugins: ['typescript-operations'],
       config: {
@@ -141,6 +141,67 @@ const config: CodegenConfig = {
       config: {
         importSchemaTypesFrom: 'src/shared/base-types.generated.ts',
       },
+    }
+  }
+}
+```
+
+#### near-operation-file-preset setups
+
+[near-operation-file-preset](https://the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset) is commonly used to generate a file next to operation document a.k.a. near-operation file.
+
+Previously, shared types were always generated into a shared file using the `typescript` plugin, and reused in every near-operation file:
+
+```typescript filename="codegen.ts"
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'src/graphql/base-types.generated.ts': {
+      plugins: ['typescript']
+    },
+    'src/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        baseTypesPath: './graphql/base-types.generated.ts'
+      },
+      plugins: ['typescript-operations']
+    }
+  }
+}
+```
+
+Now, it is still possible to reuse shared types, but with the decoupling from the `typescript` plugin, we can just use `typescript-operations` for both base type and operation type generation.
+
+```typescript filename="codegen.ts"
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'src/graphql/base-types.generated.ts': {
+      plugins: ['typescript-operations'],
+      config: {
+        generateOperationTypes: false
+      }
+    },
+    'src/': {
+      preset: 'near-operation-file',
+      plugins: ['typescript-operations'],
+      config: {
+        importSchemaTypesFrom: 'src/graphql/base-types.generated.ts'
+      }
+    }
+  }
+}
+```
+
+Alternatively, base types and operation types can all be generated into every near-operation file:
+
+```typescript filename="codegen.ts"
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'src/': {
+      preset: 'near-operation-file',
+      plugins: ['typescript-operations']
     }
   }
 }
