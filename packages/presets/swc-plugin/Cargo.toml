@@ -27,7 +27,7 @@ graphql-parser = "0.4.0"
 pathdiff = "0.2.1"
 serde = "1"
 serde_json = "1.0.105"
-swc_core = { version = "0.75.*", features = ["ecma_plugin_transform", "ecma_visit", "ecma_utils", "ecma_parser", "common", "testing" ] }
+swc_core = { version = "0.109.*", features = ["ecma_plugin_transform", "ecma_visit", "ecma_utils", "ecma_parser", "common", "testing" ] }
 
 # .cargo/config defines few alias to build plugin.
 # cargo build-wasi generates wasm-wasi32 binary
