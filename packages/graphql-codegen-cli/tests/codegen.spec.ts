@@ -259,7 +259,7 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('export type QQuery');
     });
 
-    it('Should honor per-output importExtension and emitLegacyCommonJSImports for client preset outputs', async () => {
+    it('Should inherit root importExtension and emitLegacyCommonJSImports for preset outputs and allow per-output overrides', async () => {
       const recordingPreset = {
         buildGeneratesSection: ({ baseOutputDir, config }) => [
           {
@@ -284,24 +284,28 @@ describe('Codegen Executor', () => {
       const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
-        config: {
-          emitLegacyCommonJSImports: true,
-          importExtension: '',
-        },
+        emitLegacyCommonJSImports: false,
+        importExtension: '.mjs',
         generates: {
           './src/gql/': {
             preset: recordingPreset,
+          },
+          './src/gql-with-override/': {
+            preset: recordingPreset,
             config: {
-              emitLegacyCommonJSImports: false,
               importExtension: '.js',
             },
           },
         },
       });
 
-      expect(result).toHaveLength(1);
-      expect(result[0].filename).toBe('./src/gql/recorded-config.ts');
-      expect(result[0].content).toBe(`{"importExtension":".js","emitLegacyCommonJSImports":false}`);
+      expect(result).toHaveLength(2);
+
+      const inheritedOutput = result.find(file => file.filename === './src/gql/recorded-config.ts');
+      expect(inheritedOutput?.content).toBe(`{"importExtension":".mjs","emitLegacyCommonJSImports":false}`);
+
+      const overriddenOutput = result.find(file => file.filename === './src/gql-with-override/recorded-config.ts');
+      expect(overriddenOutput?.content).toBe(`{"importExtension":".js","emitLegacyCommonJSImports":false}`);
     });
 
     it('Should return error on duplicated names', async () => {

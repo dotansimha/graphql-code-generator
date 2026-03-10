@@ -324,6 +324,8 @@ export async function executeCodegen(
 
                           const rawMergedConfig = {
                             ...rootConfig,
+                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
+                            importExtension: config.importExtension,
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
