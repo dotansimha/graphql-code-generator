@@ -1,5 +1,19 @@
 # @graphql-codegen/client-preset
 
+## 5.2.4
+
+### Patch Changes
+
+- [#10619](https://github.com/dotansimha/graphql-code-generator/pull/10619) [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/utils@^11.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/11.0.0) (from `^10.0.0`, in `dependencies`)
+- Updated dependencies [[`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072), [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072), [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072), [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072), [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072), [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072)]:
+  - @graphql-codegen/gql-tag-operations@5.1.4
+  - @graphql-codegen/plugin-helpers@6.1.1
+  - @graphql-codegen/typed-document-node@6.1.7
+  - @graphql-codegen/typescript@5.0.9
+  - @graphql-codegen/typescript-operations@5.0.9
+  - @graphql-codegen/visitor-plugin-common@6.2.4
+
 ## 5.2.3
 
 ### Patch Changes
