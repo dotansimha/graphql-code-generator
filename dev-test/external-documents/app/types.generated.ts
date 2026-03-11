@@ -5,7 +5,7 @@ export type Incremental<T> =
 export type UserRole = 'ADMIN' | 'CUSTOMER';
 
 export type UserQueryVariables = Exact<{
-  id: string;
+  id: string | number;
 }>;
 
 export type UserQuery = { user: { id: string; name: string; role: UserRole } | null };
