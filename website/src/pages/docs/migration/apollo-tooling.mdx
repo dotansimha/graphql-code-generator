@@ -77,24 +77,37 @@ apollo client:codegen --target=typescript --outputFlat src/__generated__/types.t
 </Tabs.Tab>
 
 <Tabs.Tab>
+
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-schema: './schema.graphql',
-documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
-generates: {
-'./src/': {
-preset: 'near-operation-file',
-presetConfig: {
-extension: '.ts',
-folder: '**generated**',
-filePerOperation: true,
-inGeneratesOnly: true,
-},
-plugins: ['typescript-operations'],
-},
-},
+  schema: './schema.graphql',
+  documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
+  generates: {
+    './src/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        extension: '.ts',
+        folder: '__generated__',
+        filePerOperation: true,
+        inGeneratesOnly: true
+      },
+      plugins: ['typescript-operations'],
+      config: {
+        namingConvention: 'keep',
+        extractAllFieldsToTypesCompact: true,
+        printFieldsOnNewLines: true,
+        enumType: 'native',
+        nonOptionalTypename: true,
+        skipTypeNameForRoot: true,
+        omitOperationSuffix: true,
+        fragmentSuffix: '',
+        generatesOperationTypes: true,
+        defaultScalarType: 'any'
+      }
+    }
+  }
 }
 
 export default config
