@@ -1,5 +1,17 @@
 # @graphql-codegen/testing
 
+## 4.0.4
+
+### Patch Changes
+
+- [#10622](https://github.com/dotansimha/graphql-code-generator/pull/10622) [`369b2c1`](https://github.com/dotansimha/graphql-code-generator/commit/369b2c1934a74a3ca7f49d8972608f5ec341d17b) Thanks [@eddeee888](https://github.com/eddeee888)! - Force publish to fix failed publish 4.0.2
+
+## 4.0.2
+
+### Patch Changes
+
+- [#10614](https://github.com/dotansimha/graphql-code-generator/pull/10614) [`4780d57`](https://github.com/dotansimha/graphql-code-generator/commit/4780d57377392da71e3665f7b8cffe7cbcb98309) Thanks [@eddeee888](https://github.com/eddeee888)! - Fix usage issue due to ESM/CJS incompatibility
+
 ## 4.0.1
 
 ### Patch Changes
