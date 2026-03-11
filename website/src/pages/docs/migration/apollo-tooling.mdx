@@ -34,12 +34,11 @@ npm i -D @graphql-codegen/cli @graphql-codegen/typescript-operations @graphql-co
 
 ### Required packages
 
-| Package | Description |
-|---|---|
-| `@graphql-codegen/cli` | Core CLI that runs the code generator |
-| `@graphql-codegen/typescript-operations` | Plugin that generates TypeScript types for GraphQL operations |
+| Package                                       | Description                                                        |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| `@graphql-codegen/cli`                        | Core CLI that runs the code generator                              |
+| `@graphql-codegen/typescript-operations`      | Plugin that generates TypeScript types for GraphQL operations      |
 | `@graphql-codegen/near-operation-file-preset` | Preset that places generated files next to their source operations |
-
 
 ```json filename="package.json"
 {
@@ -74,6 +73,7 @@ module.exports = {
 ```sh
 apollo client:codegen --target=typescript --outputFlat src/__generated__/types.ts
 ```
+
 </Tabs.Tab>
 
 <Tabs.Tab>
@@ -81,20 +81,20 @@ apollo client:codegen --target=typescript --outputFlat src/__generated__/types.t
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: './schema.graphql',
-  documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
-  generates: {
-    './src/': {
-      preset: 'near-operation-file',
-      presetConfig: {
-        extension: '.ts',
-        folder: '__generated__',
-        filePerOperation: true,
-        inGeneratesOnly: true,
-      },
-      plugins: ['typescript-operations'],
-    },
-  },
+schema: './schema.graphql',
+documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
+generates: {
+'./src/': {
+preset: 'near-operation-file',
+presetConfig: {
+extension: '.ts',
+folder: '**generated**',
+filePerOperation: true,
+inGeneratesOnly: true,
+},
+plugins: ['typescript-operations'],
+},
+},
 }
 
 export default config
@@ -103,6 +103,7 @@ export default config
 ```sh
 graphql-codegen
 ```
+
 </Tabs.Tab>
 </Tabs>
 
@@ -133,14 +134,14 @@ const config: CodegenConfig = {
     './src/': {
       preset: 'near-operation-file',
       presetConfig: {
-        extension: '.ts',      // Extension for generated files
+        extension: '.ts', // Extension for generated files
         folder: '__generated__', // Generated files go into __generated__/ subfolder
         filePerOperation: true, // Generate type files per-operation (not per-component)
-        inGeneratesOnly: true, // Only generate files defined in `generates` scan paths (don't generate for all `documents`)
+        inGeneratesOnly: true // Only generate files defined in `generates` scan paths (don't generate for all `documents`)
       },
-      plugins: ['typescript-operations'],
-    },
-  },
+      plugins: ['typescript-operations']
+    }
+  }
 }
 
 export default config
@@ -171,14 +172,14 @@ const config: CodegenConfig = {
         extension: '.ts',
         folder: '__generated__',
         filePerOperation: true,
-        inGeneratesOnly: true,
+        inGeneratesOnly: true
       },
       plugins: ['typescript-operations'],
       config: {
-        extractAllFieldsToTypesCompact: true,
-      },
-    },
-  },
+        extractAllFieldsToTypesCompact: true
+      }
+    }
+  }
 }
 ```
 
@@ -191,12 +192,12 @@ Apollo Tooling generates enums as native TypeScript `enum` declarations and refe
 export enum UserManagerRoleType {
   ROLE_TYPE_1 = 'ROLE_TYPE_1',
   ROLE_TYPE_2 = 'ROLE_TYPE_2',
-  ROLE_TYPE_3 = 'ROLE_TYPE_3',
+  ROLE_TYPE_3 = 'ROLE_TYPE_3'
 }
 
 export type GetUserQuery_user_manager = {
-  roleType: UserManagerRoleType;
-};
+  roleType: UserManagerRoleType
+}
 ```
 
 GraphQL Code Generator generates string literal union types by default. To produce native `enum` declarations matching Apollo Tooling's output, set `enumType: 'native'`:
@@ -212,15 +213,15 @@ const config: CodegenConfig = {
         extension: '.ts',
         folder: '__generated__',
         filePerOperation: true,
-        inGeneratesOnly: true,
+        inGeneratesOnly: true
       },
       plugins: ['typescript-operations'],
       config: {
         extractAllFieldsToTypesCompact: true,
-        enumType: 'native',
-      },
-    },
-  },
+        enumType: 'native'
+      }
+    }
+  }
 }
 ```
 
@@ -228,11 +229,12 @@ const config: CodegenConfig = {
   Native TypeScript `enum` declarations incur a runtime cost (they compile to JavaScript objects). If you only need
   type-level checking, consider using the default `string-literal` enum type instead:
 
-  ```ts
-  type UserManagerRoleType = 'ROLE_TYPE_1' | 'ROLE_TYPE_2' | 'ROLE_TYPE_3';
-  ```
+```ts
+type UserManagerRoleType = 'ROLE_TYPE_1' | 'ROLE_TYPE_2' | 'ROLE_TYPE_3'
+```
 
-  See the [typescript-operations configuration reference](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-operations#enumtype) for all available enum type options.
+See the [typescript-operations configuration reference](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-operations#enumtype) for all available enum type options.
+
 </Callout>
 
 ## Recommended configuration
@@ -254,7 +256,7 @@ const config: CodegenConfig = {
         // Generate type files per-operation (not per-component)
         filePerOperation: true,
         // Only generate files defined in `generates` scan paths (don't generate for all `documents`)
-        inGeneratesOnly: true,
+        inGeneratesOnly: true
       },
       plugins: ['typescript-operations'],
       config: {
@@ -273,10 +275,10 @@ const config: CodegenConfig = {
         // Don't add 'Query'/'Mutation'/'Subscription' suffixes to operation result types
         omitOperationSuffix: true,
         // Don't add 'Fragment' suffix to fragment result types
-        fragmentSuffix: '',
-      },
-    },
-  },
+        fragmentSuffix: ''
+      }
+    }
+  }
 }
 
 export default config
@@ -294,10 +296,8 @@ The setup above closely mimics Apollo Tooling but isn’t an exact match. The fo
 
 4. Occasional `is possibly null` and `has any type` typecheck bugs.
 
-
 ## Further reading
 
 - [GraphQL Code Generator configuration reference](https://the-guild.dev/graphql/codegen/docs/config-reference/codegen-config)
 - [typescript-operations plugin documentation](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-operations)
 - [near-operation-file preset documentation](https://the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset)
-
