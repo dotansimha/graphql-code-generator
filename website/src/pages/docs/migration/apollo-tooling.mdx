@@ -283,7 +283,7 @@ const config: CodegenConfig = {
         fragmentSuffix: '',
         generatesOperationTypes: true,
         // Default is 'unknown'; to match Apollo tooling we need to put 'any'
-        defaultScalarType: 'any',
+        defaultScalarType: 'any'
       }
     }
   }
@@ -309,6 +309,7 @@ Occasionally, GraphQL Codegen places enums in a different file then Apollo Tooli
 These bugs has to be fixed.
 
 For `is possibly null` bug, asserting for not null or adding `!` will fix most cases:
+
 ```
   getUser.name -> getUser!.name
 ```
