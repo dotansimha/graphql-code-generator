@@ -1,16 +1,11 @@
 /** A list of options for the sort order of the feed */
-export enum FeedType {
+export type FeedType =
   /** Sort by a combination of freshness and score, using Reddit's algorithm */
-  Hot = 'HOT',
+  | 'HOT'
   /** Newest entries first */
-  New = 'NEW',
+  | 'NEW'
   /** Highest score entries first */
-  Top = 'TOP',
-}
+  | 'TOP';
 
 /** The type of vote to record, when submitting a vote */
-export enum VoteType {
-  Cancel = 'CANCEL',
-  Down = 'DOWN',
-  Up = 'UP',
-}
+export type VoteType = 'CANCEL' | 'DOWN' | 'UP';

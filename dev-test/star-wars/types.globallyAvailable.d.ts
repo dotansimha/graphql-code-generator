@@ -2,6 +2,13 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+/** The input object sent when passing a color */
+type ColorInput = {
+  blue: number;
+  green: number;
+  red: number;
+};
+
 /** The episodes in the Star Wars trilogy */
 type Episode =
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
@@ -10,6 +17,16 @@ type Episode =
   | 'JEDI'
   /** Star Wars Episode IV: A New Hope, released in 1977. */
   | 'NEWHOPE';
+
+/** The input object sent when someone is creating a new review */
+type ReviewInput = {
+  /** Comment about the movie, optional */
+  commentary?: string | null | undefined;
+  /** Favorite color, optional */
+  favoriteColor?: ColorInput | null | undefined;
+  /** 0-5 stars */
+  stars: number;
+};
 
 type CreateReviewForEpisodeMutationVariables = Exact<{
   episode: Episode;
