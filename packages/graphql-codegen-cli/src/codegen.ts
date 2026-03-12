@@ -349,18 +349,24 @@ export async function executeCodegen(
                             })
                           );
 
-                          const importExtension = normalizeImportExtension({
+                          const rawMergedConfig = {
+                            ...rootConfig,
                             emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
                             importExtension: config.importExtension,
-                          });
-
-                          const mergedConfig = {
-                            ...rootConfig,
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
+                          };
+
+                          const importExtension = normalizeImportExtension({
+                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports,
+                            importExtension: rawMergedConfig.importExtension,
+                          });
+
+                          const mergedConfig = {
+                            ...rawMergedConfig,
                             importExtension,
-                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports ?? true,
+                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -412,7 +418,7 @@ export async function executeCodegen(
                             const output = await codegen({
                               ...outputArgs,
                               importExtension,
-                              emitLegacyCommonJSImports: config.emitLegacyCommonJSImports ?? true,
+                              emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({
