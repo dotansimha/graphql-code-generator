@@ -102,7 +102,13 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     expect(result).toMatchInlineSnapshot(`
       "import type * as Types from './path-to-other-file.generated';
 
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id: string | number;
@@ -234,7 +240,13 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     expect(result).toMatchInlineSnapshot(`
       "import type * as Types from '@my-company/package/types';
 
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id: string | number;
@@ -340,7 +352,13 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id?: string | number | null | undefined;
@@ -426,7 +444,13 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
     expect(operationFileResult).toMatchInlineSnapshot(`
       "import type * as Types from './graphql-code-generator/path-to-other-file';
 
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         input?: Types.UserInput | null | undefined;
@@ -495,7 +519,13 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
       "import { Scalar1 } from '@org/scalars';
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         scalar1?: Scalar1 | null | undefined;
@@ -565,7 +595,13 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
       "import { Scalar1 } from '@org/scalars';
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -622,7 +658,13 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
     expect(result).toMatchInlineSnapshot(`
       "import type * as TypeImport from './path-to-other-file.generated';
 
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /**
+       * Internal type. DO NOT USE DIRECTLY.
+       */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id: string | number;
