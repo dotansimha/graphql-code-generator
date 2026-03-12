@@ -120,7 +120,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type ResponseErrorType =
         | 'NOT_FOUND'
@@ -236,7 +238,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type EnumRoot =
         | 'ENUM_A'
@@ -328,7 +332,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type EnumRoot =
         | 'ENUM_A'
@@ -392,7 +398,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id: string | number | boolean;
@@ -443,7 +451,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type RoleType =
         | 'ROLE_A'
@@ -503,7 +513,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type RoleType =
         | 'ROLE_A'
@@ -794,7 +806,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         id: string | number;
@@ -841,6 +855,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
 
     expect(result).toMatchInlineSnapshot(`
       "
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserPartFragment = { id: string, name: string };
       "
@@ -885,7 +900,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     const result = mergeOutputs([await plugin(schema, [{ document }], { globalNamespace: true }, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 
           declare global {
