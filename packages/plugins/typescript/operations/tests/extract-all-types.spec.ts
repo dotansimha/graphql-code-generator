@@ -1,12 +1,11 @@
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
-import { plugin as tsPlugin } from '../../typescript/src/index.js';
-import { plugin, TypeScriptDocumentsPluginConfig } from '../src/index.js';
+import { plugin, type TypeScriptDocumentsPluginConfig } from '../src/index.js';
 
 describe('extractAllFieldsToTypes: true', () => {
-  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema) => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]);
+  const validate = async (content: Types.PluginOutput) => {
+    const m = mergeOutputs([content]);
     validateTs(m, undefined, undefined, undefined, []);
 
     return m;
@@ -70,7 +69,6 @@ describe('extractAllFieldsToTypes: true', () => {
 
   it('should extract types from queries', async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       printFieldsOnNewLines: true,
       nonOptionalTypename: true,
@@ -86,13 +84,13 @@ describe('extractAllFieldsToTypes: true', () => {
       "type UserFragment_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       type UserFragment_ActiveUser = {
         __typename: 'ActiveUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type UserFragment =
@@ -103,13 +101,13 @@ describe('extractAllFieldsToTypes: true', () => {
       export type MeFragment_ActiveUser_parentUser_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type MeFragment_ActiveUser_parentUser_ActiveUser = {
         __typename: 'ActiveUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type MeFragment_ActiveUser_parentUser =
@@ -120,14 +118,14 @@ describe('extractAllFieldsToTypes: true', () => {
       type Me_DummyUser_Fragment = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       type Me_ActiveUser_Fragment = {
         __typename: 'ActiveUser',
         isActive: boolean,
         id: string,
-        joinDate: any,
+        joinDate: unknown,
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
@@ -139,14 +137,14 @@ describe('extractAllFieldsToTypes: true', () => {
       export type OverlappingFieldsMergingTestQuery_me_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type OverlappingFieldsMergingTestQuery_me_ActiveUser = {
         __typename: 'ActiveUser',
         id: string,
         isActive: boolean,
-        joinDate: any,
+        joinDate: unknown,
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
@@ -157,7 +155,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type OverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
-        me?: OverlappingFieldsMergingTestQuery_me | null
+        me: OverlappingFieldsMergingTestQuery_me | null
       };
 
 
@@ -169,14 +167,14 @@ describe('extractAllFieldsToTypes: true', () => {
       export type NestedOverlappingFieldsMergingTestQuery_me_DummyUser = {
         __typename: 'DummyUser',
         id: string,
-        joinDate: any
+        joinDate: unknown
       };
 
       export type NestedOverlappingFieldsMergingTestQuery_me_ActiveUser = {
         __typename: 'ActiveUser',
         isActive: boolean,
         id: string,
-        joinDate: any,
+        joinDate: unknown,
         parentUser: MeFragment_ActiveUser_parentUser
       };
 
@@ -187,7 +185,7 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type NestedOverlappingFieldsMergingTestQuery_Query = {
         __typename: 'Query',
-        me?: NestedOverlappingFieldsMergingTestQuery_me | null
+        me: NestedOverlappingFieldsMergingTestQuery_me | null
       };
 
 
@@ -198,7 +196,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, dummyUserTestSchema);
+    await validate(content);
   });
 
   const complexTestSchemaWithUnionsAndInterfaces = buildSchema(/* GraphQL */ `
@@ -389,7 +387,6 @@ describe('extractAllFieldsToTypes: true', () => {
 
   it('should extract types from multiple fragments', async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -401,7 +398,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = { __typename: 'EmailInteraction', originalEmailURLPath: string };
 
@@ -409,11 +412,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -439,11 +442,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
 
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -501,11 +504,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       type ConversationOriginatedFrom_TalkInteraction_Fragment = { __typename: 'TalkInteraction' };
 
-      type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      type ConversationOriginatedFrom_WeChatInteraction_Fragment = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      type ConversationOriginatedFrom_WeChatInteraction_Fragment = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       type ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -525,11 +528,11 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction', channel: string, type: CallType };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId?: string | null };
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction = { __typename: 'NativeMessagingInteraction', conversationId: string | null };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId?: string | null };
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction = { __typename: 'WhatsAppInteraction', conversationId: string | null };
 
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId?: string | null };
+      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction = { __typename: 'WeChatInteraction', conversationId: string | null };
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
 
@@ -547,12 +550,11 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
   it('should extract types from multiple fragments (mergeFragmentTypes: true)', async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -565,7 +567,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
         { id: string, htmlUrl: string, title: string, url: string }
         & { __typename: 'ArchivedArticle' }
       );
@@ -583,7 +591,7 @@ describe('extractAllFieldsToTypes: true', () => {
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom = { __typename: 'TalkInteraction' | 'NotImplementedOriginatedFrom' };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -622,7 +630,7 @@ describe('extractAllFieldsToTypes: true', () => {
       export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_TalkInteraction_NotImplementedOriginatedFrom = { __typename: 'TalkInteraction' | 'NotImplementedOriginatedFrom' };
 
       export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -668,7 +676,7 @@ describe('extractAllFieldsToTypes: true', () => {
       type ConversationOriginatedFrom_TalkInteraction_NotImplementedOriginatedFrom_Fragment = { __typename: 'TalkInteraction' | 'NotImplementedOriginatedFrom' };
 
       type ConversationOriginatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction_Fragment = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -695,7 +703,7 @@ describe('extractAllFieldsToTypes: true', () => {
       );
 
       export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction_WhatsAppInteraction_WeChatInteraction = (
-        { conversationId?: string | null }
+        { conversationId: string | null }
         & { __typename: 'NativeMessagingInteraction' | 'WhatsAppInteraction' | 'WeChatInteraction' }
       );
 
@@ -716,12 +724,11 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
   it("should extract types from multiple fragments (inlineFragmentTypes: 'combine')", async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -734,7 +741,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = (
         { __typename: 'EmailInteraction' }
@@ -890,17 +903,17 @@ describe('extractAllFieldsToTypes: true', () => {
       );
 
       type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = (
-        { __typename: 'NativeMessagingInteraction', conversationId?: string | null }
+        { __typename: 'NativeMessagingInteraction', conversationId: string | null }
         & MessageEnvelopeData_NativeMessagingInteraction_Fragment
       );
 
       type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = (
-        { __typename: 'WhatsAppInteraction', conversationId?: string | null }
+        { __typename: 'WhatsAppInteraction', conversationId: string | null }
         & MessageEnvelopeData_WhatsAppInteraction_Fragment
       );
 
       type ConversationOriginatedFrom_WeChatInteraction_Fragment = (
-        { __typename: 'WeChatInteraction', conversationId?: string | null }
+        { __typename: 'WeChatInteraction', conversationId: string | null }
         & MessageEnvelopeData_WeChatInteraction_Fragment
       );
 
@@ -954,12 +967,11 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
   it("should extract types from multiple fragments (inlineFragmentTypes: 'mask')", async () => {
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -972,7 +984,13 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' }
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
+      "export type CallType =
+        | 'OUTGOING'
+        | 'INCOMING'
+        | 'VOICEMAIL'
+        | 'UNKNOWN';
+
+      export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = { __typename: 'ArchivedArticle', id: string, htmlUrl: string, title: string, url: string };
 
       export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = (
         { __typename: 'EmailInteraction' }
@@ -1127,17 +1145,17 @@ describe('extractAllFieldsToTypes: true', () => {
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_TalkInteraction_Fragment' };
 
       type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = (
-        { __typename: 'NativeMessagingInteraction', conversationId?: string | null }
+        { __typename: 'NativeMessagingInteraction', conversationId: string | null }
         & { ' $fragmentRefs'?: { 'MessageEnvelopeData_NativeMessagingInteraction_Fragment': MessageEnvelopeData_NativeMessagingInteraction_Fragment } }
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_NativeMessagingInteraction_Fragment' };
 
       type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = (
-        { __typename: 'WhatsAppInteraction', conversationId?: string | null }
+        { __typename: 'WhatsAppInteraction', conversationId: string | null }
         & { ' $fragmentRefs'?: { 'MessageEnvelopeData_WhatsAppInteraction_Fragment': MessageEnvelopeData_WhatsAppInteraction_Fragment } }
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_WhatsAppInteraction_Fragment' };
 
       type ConversationOriginatedFrom_WeChatInteraction_Fragment = (
-        { __typename: 'WeChatInteraction', conversationId?: string | null }
+        { __typename: 'WeChatInteraction', conversationId: string | null }
         & { ' $fragmentRefs'?: { 'MessageEnvelopeData_WeChatInteraction_Fragment': MessageEnvelopeData_WeChatInteraction_Fragment } }
       ) & { ' $fragmentName'?: 'ConversationOriginatedFrom_WeChatInteraction_Fragment' };
 
@@ -1190,278 +1208,9 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
+    await validate(content);
   });
 
-  it('should extract types from multiple fragments (preResolveTypes: false)', async () => {
-    const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: false,
-      extractAllFieldsToTypes: true,
-      nonOptionalTypename: true,
-      dedupeOperationSuffix: true,
-    };
-    const { content } = await plugin(
-      complexTestSchemaWithUnionsAndInterfaces,
-      [{ location: 'test-file.ts', document: fragmentsOnComplexSchema }],
-      config,
-      { outputFile: '' }
-    );
-    expect(content).toMatchInlineSnapshot(`
-      "export type ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle = (
-        { __typename: 'ArchivedArticle' }
-        & Pick<
-          ArchivedArticle,
-          | 'id'
-          | 'htmlUrl'
-          | 'title'
-          | 'url'
-        >
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationBotSolutionFragment_BotSolution_originatedFrom =
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_EmailInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_CustomChannelInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_TalkInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NativeMessagingInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WhatsAppInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_WeChatInteraction
-        | ConversationBotSolutionFragment_BotSolution_originatedFrom_NotImplementedOriginatedFrom
-      ;
-
-      export type ConversationBotSolutionFragment = (
-        { __typename: 'BotSolution' }
-        & Pick<BotSolution, 'id' | 'timestamp'>
-        & {
-          article: ConversationBotSolutionFragment_BotSolution_article_ArchivedArticle,
-          originatedFrom: ConversationBotSolutionFragment_BotSolution_originatedFrom,
-        }
-      );
-
-      export type ConversationGenericCallSummaryFragment = (
-        { __typename: 'TalkPublicCallSummary' }
-        & Pick<TalkPublicCallSummary, 'id' | 'summary'>
-      );
-
-      export type ConversationTalkInteractionFragment = (
-        { __typename: 'TalkInteraction' }
-        & Pick<TalkInteraction, 'channel' | 'type'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_EmailInteraction = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_CustomChannelInteraction = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_TalkInteraction = { __typename: 'TalkInteraction' };
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NativeMessagingInteraction = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WhatsAppInteraction = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_WeChatInteraction = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationConversationEventFragment_ConversationEvent_originatedFrom =
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_EmailInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_CustomChannelInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_TalkInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_NativeMessagingInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_WhatsAppInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_WeChatInteraction
-        | ConversationConversationEventFragment_ConversationEvent_originatedFrom_NotImplementedOriginatedFrom
-      ;
-
-      type ConversationConversationEvent_BrokenConversationEvent_Fragment = (
-        { __typename: 'BrokenConversationEvent' }
-        & Pick<BrokenConversationEvent, 'id' | 'timestamp'>
-        & { originatedFrom: ConversationConversationEventFragment_ConversationEvent_originatedFrom }
-      );
-
-      type ConversationConversationEvent_BotSolution_Fragment = (
-        { __typename: 'BotSolution' }
-        & Pick<BotSolution, 'id' | 'timestamp'>
-        & { originatedFrom: ConversationConversationEventFragment_ConversationEvent_originatedFrom }
-      );
-
-      type ConversationConversationEvent_TalkPublicCallSummary_Fragment = (
-        { __typename: 'TalkPublicCallSummary' }
-        & Pick<TalkPublicCallSummary, 'id' | 'timestamp'>
-        & { originatedFrom: ConversationConversationEventFragment_ConversationEvent_originatedFrom }
-      );
-
-      export type ConversationConversationEventFragment =
-        | ConversationConversationEvent_BrokenConversationEvent_Fragment
-        | ConversationConversationEvent_BotSolution_Fragment
-        | ConversationConversationEvent_TalkPublicCallSummary_Fragment
-      ;
-
-      type MessageEnvelopeData_EmailInteraction_Fragment = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      type MessageEnvelopeData_CustomChannelInteraction_Fragment = { __typename: 'CustomChannelInteraction' };
-
-      type MessageEnvelopeData_TalkInteraction_Fragment = { __typename: 'TalkInteraction' };
-
-      type MessageEnvelopeData_NativeMessagingInteraction_Fragment = { __typename: 'NativeMessagingInteraction' };
-
-      type MessageEnvelopeData_WhatsAppInteraction_Fragment = { __typename: 'WhatsAppInteraction' };
-
-      type MessageEnvelopeData_WeChatInteraction_Fragment = { __typename: 'WeChatInteraction' };
-
-      type MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type MessageEnvelopeDataFragment =
-        | MessageEnvelopeData_EmailInteraction_Fragment
-        | MessageEnvelopeData_CustomChannelInteraction_Fragment
-        | MessageEnvelopeData_TalkInteraction_Fragment
-        | MessageEnvelopeData_NativeMessagingInteraction_Fragment
-        | MessageEnvelopeData_WhatsAppInteraction_Fragment
-        | MessageEnvelopeData_WeChatInteraction_Fragment
-        | MessageEnvelopeData_NotImplementedOriginatedFrom_Fragment
-      ;
-
-      export type AnyChannelOriginatedFromFragment = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      type ConversationOriginatedFrom_EmailInteraction_Fragment = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      type ConversationOriginatedFrom_CustomChannelInteraction_Fragment = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      type ConversationOriginatedFrom_TalkInteraction_Fragment = { __typename: 'TalkInteraction' };
-
-      type ConversationOriginatedFrom_NativeMessagingInteraction_Fragment = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      type ConversationOriginatedFrom_WhatsAppInteraction_Fragment = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      type ConversationOriginatedFrom_WeChatInteraction_Fragment = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      type ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationOriginatedFromFragment =
-        | ConversationOriginatedFrom_EmailInteraction_Fragment
-        | ConversationOriginatedFrom_CustomChannelInteraction_Fragment
-        | ConversationOriginatedFrom_TalkInteraction_Fragment
-        | ConversationOriginatedFrom_NativeMessagingInteraction_Fragment
-        | ConversationOriginatedFrom_WhatsAppInteraction_Fragment
-        | ConversationOriginatedFrom_WeChatInteraction_Fragment
-        | ConversationOriginatedFrom_NotImplementedOriginatedFrom_Fragment
-      ;
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction = (
-        { __typename: 'EmailInteraction' }
-        & Pick<EmailInteraction, 'originalEmailURLPath'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction = (
-        { __typename: 'CustomChannelInteraction' }
-        & Pick<CustomChannelInteraction, 'externalId' | 'timestamp' | 'resourceType'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction = (
-        { __typename: 'TalkInteraction' }
-        & Pick<TalkInteraction, 'channel' | 'type'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction = (
-        { __typename: 'NativeMessagingInteraction' }
-        & Pick<NativeMessagingInteraction, 'conversationId'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction = (
-        { __typename: 'WhatsAppInteraction' }
-        & Pick<WhatsAppInteraction, 'conversationId'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction = (
-        { __typename: 'WeChatInteraction' }
-        & Pick<WeChatInteraction, 'conversationId'>
-      );
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom = { __typename: 'NotImplementedOriginatedFrom' };
-
-      export type ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom =
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_EmailInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_CustomChannelInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_TalkInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NativeMessagingInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WhatsAppInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_WeChatInteraction
-        | ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom_NotImplementedOriginatedFrom
-      ;
-
-      export type ConversationTalkPublicCallSummaryFragment = (
-        { __typename: 'TalkPublicCallSummary' }
-        & Pick<TalkPublicCallSummary, 'id' | 'timestamp' | 'summary'>
-        & { originatedFrom: ConversationTalkPublicCallSummaryFragment_TalkPublicCallSummary_originatedFrom }
-      );
-      "
-    `);
-
-    await validate(content, config, complexTestSchemaWithUnionsAndInterfaces);
-  });
   it('fields with shared types and no fragments should use the shared type interface name', async () => {
     const nestedInterfacesSchema = buildSchema(/* GraphQL */ `
       type Query {
@@ -1508,7 +1257,6 @@ describe('extractAllFieldsToTypes: true', () => {
     `);
 
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -1543,7 +1291,7 @@ describe('extractAllFieldsToTypes: true', () => {
         | GetAnimalsQuery_animals_Dog
       ;
 
-      export type GetAnimalsQuery_Query = { __typename: 'Query', animals?: Array<GetAnimalsQuery_animals> | null };
+      export type GetAnimalsQuery_Query = { __typename: 'Query', animals: Array<GetAnimalsQuery_animals> | null };
 
 
       export type GetAnimalsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1553,7 +1301,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, nestedInterfacesSchema);
+    await validate(content);
   });
 
   it('fragment spreads on the same interface should not force concrete parent type names (regression #10502)', async () => {
@@ -1628,9 +1376,9 @@ describe('extractAllFieldsToTypes: true', () => {
     expect(content).toMatchInlineSnapshot(`
       "export type GetFragmentPetFragment_Pet_home_House = { __typename: 'House', id: string };
 
-      type GetFragmentPet_Dog_Fragment = { __typename: 'Dog', id: string, home?: GetFragmentPetFragment_Pet_home_House | null };
+      type GetFragmentPet_Dog_Fragment = { __typename: 'Dog', id: string, home: GetFragmentPetFragment_Pet_home_House | null };
 
-      type GetFragmentPet_Cat_Fragment = { __typename: 'Cat', id: string, home?: GetFragmentPetFragment_Pet_home_House | null };
+      type GetFragmentPet_Cat_Fragment = { __typename: 'Cat', id: string, home: GetFragmentPetFragment_Pet_home_House | null };
 
       export type GetFragmentPetFragment =
         | GetFragmentPet_Dog_Fragment
@@ -1639,20 +1387,20 @@ describe('extractAllFieldsToTypes: true', () => {
 
       export type GetPetDataQuery_pet_Pet_home_House = { __typename: 'House', id: string };
 
-      export type GetPetDataQuery_pet_Dog = { __typename: 'Dog', id: string, home?: GetPetDataQuery_pet_Pet_home_House | null };
+      export type GetPetDataQuery_pet_Dog = { __typename: 'Dog', id: string, home: GetPetDataQuery_pet_Pet_home_House | null };
 
-      export type GetPetDataQuery_pet_Cat = { __typename: 'Cat', id: string, home?: GetPetDataQuery_pet_Pet_home_House | null };
+      export type GetPetDataQuery_pet_Cat = { __typename: 'Cat', id: string, home: GetPetDataQuery_pet_Pet_home_House | null };
 
       export type GetPetDataQuery_pet =
         | GetPetDataQuery_pet_Dog
         | GetPetDataQuery_pet_Cat
       ;
 
-      export type GetPetDataQuery_Query = { __typename: 'Query', pet?: GetPetDataQuery_pet | null };
+      export type GetPetDataQuery_Query = { __typename: 'Query', pet: GetPetDataQuery_pet | null };
 
 
       export type GetPetDataQueryVariables = Exact<{
-        petId: Scalars['ID']['input'];
+        petId: string | number;
       }>;
 
 
@@ -1660,7 +1408,7 @@ describe('extractAllFieldsToTypes: true', () => {
       "
     `);
 
-    await validate(content, config, interfaceFragmentSchema);
+    await validate(content);
   });
 
   // Exception case for Issue #10502 - shared schema for fragment tests
@@ -1720,7 +1468,6 @@ describe('extractAllFieldsToTypes: true', () => {
     `);
 
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -1752,9 +1499,9 @@ describe('extractAllFieldsToTypes: true', () => {
         | GetNotificationsQuery_notifications_SystemNotification_content_ImageContent
       ;
 
-      export type GetNotificationsQuery_notifications_AppNotification = { __typename: 'AppNotification', id: string, content?: GetNotificationsQuery_notifications_AppNotification_content | null };
+      export type GetNotificationsQuery_notifications_AppNotification = { __typename: 'AppNotification', id: string, content: GetNotificationsQuery_notifications_AppNotification_content | null };
 
-      export type GetNotificationsQuery_notifications_SystemNotification = { __typename: 'SystemNotification', id: string, content?: GetNotificationsQuery_notifications_SystemNotification_content | null };
+      export type GetNotificationsQuery_notifications_SystemNotification = { __typename: 'SystemNotification', id: string, content: GetNotificationsQuery_notifications_SystemNotification_content | null };
 
       export type GetNotificationsQuery_notifications =
         | GetNotificationsQuery_notifications_AppNotification
@@ -1770,7 +1517,7 @@ describe('extractAllFieldsToTypes: true', () => {
       export type GetNotificationsQuery = GetNotificationsQuery_Query;
       "
     `);
-    await validate(content, config, notificationSchema);
+    await validate(content);
   });
 
   it('named fragments should use their name and not parent type name', async () => {
@@ -1798,7 +1545,6 @@ describe('extractAllFieldsToTypes: true', () => {
     `);
 
     const config: TypeScriptDocumentsPluginConfig = {
-      preResolveTypes: true,
       extractAllFieldsToTypes: true,
       nonOptionalTypename: true,
       dedupeOperationSuffix: true,
@@ -1821,7 +1567,7 @@ describe('extractAllFieldsToTypes: true', () => {
         | AppNotificationFragment_AppNotification_content_ImageContent
       ;
 
-      export type AppNotificationFragment = { __typename: 'AppNotification', content?: AppNotificationFragment_AppNotification_content | null };
+      export type AppNotificationFragment = { __typename: 'AppNotification', content: AppNotificationFragment_AppNotification_content | null };
 
       export type SystemNotificationFragment_SystemNotification_content_TextContent = { __typename: 'TextContent', id: string };
 
@@ -1832,11 +1578,11 @@ describe('extractAllFieldsToTypes: true', () => {
         | SystemNotificationFragment_SystemNotification_content_ImageContent
       ;
 
-      export type SystemNotificationFragment = { __typename: 'SystemNotification', content?: SystemNotificationFragment_SystemNotification_content | null };
+      export type SystemNotificationFragment = { __typename: 'SystemNotification', content: SystemNotificationFragment_SystemNotification_content | null };
 
-      export type GetNotificationsQuery_notifications_AppNotification = { __typename: 'AppNotification', id: string, title: string, content?: AppNotificationFragment_AppNotification_content | null };
+      export type GetNotificationsQuery_notifications_AppNotification = { __typename: 'AppNotification', id: string, title: string, content: AppNotificationFragment_AppNotification_content | null };
 
-      export type GetNotificationsQuery_notifications_SystemNotification = { __typename: 'SystemNotification', id: string, title: string, content?: SystemNotificationFragment_SystemNotification_content | null };
+      export type GetNotificationsQuery_notifications_SystemNotification = { __typename: 'SystemNotification', id: string, title: string, content: SystemNotificationFragment_SystemNotification_content | null };
 
       export type GetNotificationsQuery_notifications =
         | GetNotificationsQuery_notifications_AppNotification
@@ -1852,6 +1598,229 @@ describe('extractAllFieldsToTypes: true', () => {
       export type GetNotificationsQuery = GetNotificationsQuery_Query;
       "
     `);
-    await validate(content, config, notificationSchema);
+    await validate(content);
+  });
+});
+
+describe('extractAllFieldsToTypesCompact: true', () => {
+  const validate = async (content: Types.PluginOutput) => {
+    const m = mergeOutputs([content]);
+    validateTs(m, undefined, undefined, undefined, []);
+
+    return m;
+  };
+
+  const companySchema = buildSchema(/* GraphQL */ `
+    type Query {
+      company(id: ID!): Company
+    }
+    type Company {
+      id: ID!
+      name: String!
+      score: Float
+      reviewCount: Int
+      office: Office
+    }
+    type Office {
+      id: ID!
+      location: Location
+    }
+    type Location {
+      formatted: String
+    }
+  `);
+
+  const companyDoc = parse(/* GraphQL */ `
+    query GetCompanyInfo($id: ID!) {
+      company(id: $id) {
+        id
+        name
+        score
+        reviewCount
+        office {
+          id
+          location {
+            formatted
+          }
+        }
+      }
+    }
+  `);
+
+  it('should generate compact type names without GraphQL type names (Apollo Tooling style)', async () => {
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(companySchema, [{ location: 'test-file.ts', document: companyDoc }], config, {
+      outputFile: '',
+    });
+    expect(content).toMatchInlineSnapshot(`
+      "export type GetCompanyInfo_company_office_location = { __typename: 'Location', formatted: string | null };
+
+      export type GetCompanyInfo_company_office = { __typename: 'Office', id: string, location: GetCompanyInfo_company_office_location | null };
+
+      export type GetCompanyInfo_company = { __typename: 'Company', id: string, name: string, score: number | null, reviewCount: number | null, office: GetCompanyInfo_company_office | null };
+
+      export type GetCompanyInfo = { __typename: 'Query', company: GetCompanyInfo_company | null };
+
+
+      export type GetCompanyInfoVariables = Exact<{
+        id: string | number;
+      }>;
+      "
+    `);
+
+    await validate(content);
+  });
+
+  it('should work with unions and interfaces in compact mode', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        animals: [Animal!]!
+      }
+      interface Animal {
+        name: String!
+        owner: Person!
+      }
+      type Cat implements Animal {
+        name: String!
+        owner: Person!
+      }
+      type Dog implements Animal {
+        name: String!
+        owner: Person!
+      }
+      union Person = Trainer | Veterinarian
+      type Trainer {
+        name: String!
+      }
+      type Veterinarian {
+        name: String!
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      query GetAnimals {
+        animals {
+          name
+          owner {
+            ... on Trainer {
+              name
+            }
+            ... on Veterinarian {
+              name
+            }
+          }
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document: doc }], config, { outputFile: '' });
+
+    // Verify the naming follows Apollo Tooling style (field names only, no intermediate type names)
+    expect(content).toContain('GetAnimals_animals_owner_Trainer');
+    expect(content).toContain('GetAnimals_animals_owner_Veterinarian');
+    expect(content).toContain('GetAnimals_animals_owner');
+    expect(content).toContain('GetAnimals_animals_Cat');
+    expect(content).toContain('GetAnimals_animals_Dog');
+    expect(content).toContain('GetAnimals_animals');
+
+    // Should NOT contain intermediate type names in the field paths (like Animal between animals and owner)
+    expect(content).not.toContain('GetAnimals_animals_Animal_owner');
+
+    await validate(content);
+  });
+
+  it('should automatically enable extractAllFieldsToTypes when extractAllFieldsToTypesCompact is true', async () => {
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypes: false,
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(companySchema, [{ location: 'test-file.ts', document: companyDoc }], config, {
+      outputFile: '',
+    });
+
+    // When extractAllFieldsToTypesCompact is true, extractAllFieldsToTypes should be automatically enabled
+    // So types should be extracted, not inlined
+    expect(content).toContain('GetCompanyInfo_company_office_location');
+    expect(content).toContain('GetCompanyInfo_company_office');
+    expect(content).toContain('GetCompanyInfo_company');
+    expect(content).toContain('export type GetCompanyInfo');
+
+    await validate(content);
+  });
+
+  it('should apply compact naming to fragments', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User
+      }
+      interface User {
+        id: ID!
+        profile: Profile
+      }
+      type AdminUser implements User {
+        id: ID!
+        profile: Profile
+        permissions: [String!]!
+      }
+      type RegularUser implements User {
+        id: ID!
+        profile: Profile
+      }
+      type Profile {
+        name: String!
+        contact: Contact
+      }
+      type Contact {
+        email: String
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      fragment UserProfile on User {
+        id
+        profile {
+          name
+          contact {
+            email
+          }
+        }
+      }
+      query GetUser($id: ID!) {
+        user(id: $id) {
+          ...UserProfile
+          ... on AdminUser {
+            permissions
+          }
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      nonOptionalTypename: true,
+      omitOperationSuffix: true,
+    };
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document: doc }], config, { outputFile: '' });
+
+    // Fragment types should use compact naming (no intermediate type names)
+    expect(content).toContain('UserProfile_profile_contact');
+    expect(content).toContain('UserProfile_profile');
+
+    // Should NOT contain type names in fragment paths
+    expect(content).not.toContain('UserProfile_profile_Profile_contact');
+    expect(content).not.toContain('UserProfile_profile_Profile_contact_Contact');
+
+    await validate(content);
   });
 });

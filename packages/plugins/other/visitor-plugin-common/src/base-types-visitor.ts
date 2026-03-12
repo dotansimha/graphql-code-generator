@@ -2,9 +2,7 @@ import {
   DirectiveDefinitionNode,
   DirectiveNode,
   EnumTypeDefinitionNode,
-  EnumValueDefinitionNode,
   FieldDefinitionNode,
-  GraphQLEnumType,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
@@ -18,12 +16,12 @@ import {
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
+import { BaseVisitor, type ParsedConfig, type RawConfig } from './base-visitor.js';
 import { normalizeDeclarationKind } from './declaration-kinds.js';
 import { parseEnumValues } from './enum-values.js';
 import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import {
+import type {
   DeclarationKind,
   DeclarationKindConfig,
   DirectiveArgumentAndInputFieldMappings,
@@ -40,24 +38,27 @@ import {
   indent,
   isOneOfInputObjectType,
   transformComment,
+  getNodeComment,
   wrapWithSingleQuotes,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
+import { buildEnumValuesBlock } from './convert-schema-enum-to-declaration-block-string.js';
+import { buildTypeImport, getEnumsImports } from './imports.js';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
+  ignoreEnumValuesFromSchema: boolean;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
   onlyEnums: boolean;
   onlyOperationTypes: boolean;
-  enumPrefix: boolean;
-  enumSuffix: boolean;
   fieldWrapperValue: string;
   wrapFieldDefinitions: boolean;
   entireFieldWrapperValue: string;
   wrapEntireDefinitions: boolean;
-  ignoreEnumValuesFromSchema: boolean;
   directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings;
+  addTypename: boolean;
+  nonOptionalTypename: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -154,6 +155,31 @@ export interface RawTypesConfig extends RawConfig {
    */
   enumValues?: EnumValuesMap;
   /**
+   * @description This will cause the generator to ignore enum values defined in GraphQLSchema
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Ignore enum values from schema
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          ignoreEnumValuesFromSchema: true,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  ignoreEnumValuesFromSchema?: boolean;
+  /**
    * @description Overrides the default output for various GraphQL elements.
    *
    * @exampleMarkdown
@@ -199,58 +225,6 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   declarationKind?: DeclarationKind | DeclarationKindConfig;
-  /**
-   * @default true
-   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum prefixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        // plugins...
-   *        config: {
-   *          typesPrefix: 'I',
-   *          enumPrefix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumPrefix?: boolean;
-  /**
-   * @default true
-   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum suffixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        // plugins...
-   *        config: {
-   *          typesSuffix: 'I',
-   *          enumSuffix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumSuffix?: boolean;
   /**
    * @description Allow you to add wrapper for field type, use T as the generic value. Make sure to set `wrapFieldDefinitions` to `true` in order to make this flag work.
    * @default T
@@ -353,31 +327,6 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   onlyOperationTypes?: boolean;
-  /**
-   * @description This will cause the generator to ignore enum values defined in GraphQLSchema
-   * @default false
-   *
-   * @exampleMarkdown
-   * ## Ignore enum values from schema
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        // plugins...
-   *        config: {
-   *          ignoreEnumValuesFromSchema: true,
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  ignoreEnumValuesFromSchema?: boolean;
   /**
    * @name wrapEntireFieldDefinitions
    * @type boolean
@@ -491,9 +440,54 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   directiveArgumentAndInputFieldMappingTypeSuffix?: string;
+  /**
+   * @default false
+   * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          skipTypename: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  skipTypename?: boolean;
+  /**
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set, and makes it non-optional
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          nonOptionalTypename: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  nonOptionalTypename?: boolean;
 }
-
-const onlyUnderscoresPattern = /^_+$/;
 
 export class BaseTypesVisitor<
   TRawConfig extends RawTypesConfig = RawTypesConfig,
@@ -508,8 +502,6 @@ export class BaseTypesVisitor<
     defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
   ) {
     super(rawConfig, {
-      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       onlyEnums: getConfigValue(rawConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
@@ -518,17 +510,19 @@ export class BaseTypesVisitor<
         mapOrStr: rawConfig.enumValues,
         ignoreEnumValuesFromSchema: rawConfig.ignoreEnumValuesFromSchema,
       }),
+      ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
       fieldWrapperValue: getConfigValue(rawConfig.fieldWrapperValue, 'T'),
       wrapFieldDefinitions: getConfigValue(rawConfig.wrapFieldDefinitions, false),
       entireFieldWrapperValue: getConfigValue(rawConfig.entireFieldWrapperValue, 'T'),
       wrapEntireDefinitions: getConfigValue(rawConfig.wrapEntireFieldDefinitions, false),
-      ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       directiveArgumentAndInputFieldMappings: transformDirectiveArgumentAndInputFieldMappings(
         rawConfig.directiveArgumentAndInputFieldMappings ?? {},
         rawConfig.directiveArgumentAndInputFieldMappingTypeSuffix
       ),
+      addTypename: !rawConfig.skipTypename,
+      nonOptionalTypename: getConfigValue(rawConfig.nonOptionalTypename, false),
       ...additionalConfig,
     });
 
@@ -561,12 +555,24 @@ export class BaseTypesVisitor<
       const mappedValue = this.config.scalars[enumName];
 
       if (mappedValue.input.isExternal) {
-        res.push(this._buildTypeImport(mappedValue.input.import, mappedValue.input.source, mappedValue.input.default));
+        res.push(
+          buildTypeImport({
+            identifier: mappedValue.input.import,
+            source: mappedValue.input.source,
+            asDefault: mappedValue.input.default,
+            useTypeImports: this.config.useTypeImports,
+          })
+        );
       }
 
       if (mappedValue.output.isExternal) {
         res.push(
-          this._buildTypeImport(mappedValue.output.import, mappedValue.output.source, mappedValue.output.default)
+          buildTypeImport({
+            identifier: mappedValue.output.import,
+            source: mappedValue.output.source,
+            asDefault: mappedValue.output.default,
+            useTypeImports: this.config.useTypeImports,
+          })
         );
       }
 
@@ -580,7 +586,12 @@ export class BaseTypesVisitor<
         const mappedValue = this.config.directiveArgumentAndInputFieldMappings[directive];
 
         if (mappedValue.isExternal) {
-          return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
+          return buildTypeImport({
+            identifier: mappedValue.import,
+            source: mappedValue.source,
+            asDefault: mappedValue.default,
+            useTypeImports: this.config.useTypeImports,
+          });
         }
 
         return null;
@@ -703,7 +714,7 @@ export class BaseTypesVisitor<
 
     const typeString = node.type as any as string;
     const { type } = this._parsedConfig.declarationKind;
-    const comment = this.getNodeComment(node);
+    const comment = getNodeComment(node);
 
     return comment + indent(`${node.name.value}: ${typeString}${this.getPunctuation(type)}`);
   }
@@ -813,58 +824,11 @@ export class BaseTypesVisitor<
     return '';
   }
 
-  protected _buildTypeImport(identifier: string, source: string, asDefault = false): string {
-    const { useTypeImports } = this.config;
-    if (asDefault) {
-      if (useTypeImports) {
-        return `import type { default as ${identifier} } from '${source}';`;
-      }
-      return `import ${identifier} from '${source}';`;
-    }
-    return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
-  }
-
-  protected handleEnumValueMapper(
-    typeIdentifier: string,
-    importIdentifier: string | null,
-    sourceIdentifier: string | null,
-    sourceFile: string | null
-  ): string[] {
-    if (importIdentifier !== sourceIdentifier) {
-      // use namespace import to dereference nested enum
-      // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
-      return [
-        this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile),
-        `import ${typeIdentifier} = ${sourceIdentifier};`,
-      ];
-    }
-    if (sourceIdentifier !== typeIdentifier) {
-      return [this._buildTypeImport(`${sourceIdentifier} as ${typeIdentifier}`, sourceFile)];
-    }
-    return [this._buildTypeImport(importIdentifier || sourceIdentifier, sourceFile)];
-  }
-
   public getEnumsImports(): string[] {
-    return Object.keys(this.config.enumValues)
-      .flatMap(enumName => {
-        const mappedValue = this.config.enumValues[enumName];
-
-        if (mappedValue.sourceFile) {
-          if (mappedValue.isDefault) {
-            return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
-          }
-
-          return this.handleEnumValueMapper(
-            mappedValue.typeIdentifier,
-            mappedValue.importIdentifier,
-            mappedValue.sourceIdentifier,
-            mappedValue.sourceFile
-          );
-        }
-
-        return [];
-      })
-      .filter(Boolean);
+    return getEnumsImports({
+      enumValues: this.config.enumValues,
+      useTypeImports: this.config.useTypeImports,
+    });
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -885,7 +849,23 @@ export class BaseTypesVisitor<
         })
       )
       .withComment(node.description.value)
-      .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
+      .withBlock(
+        buildEnumValuesBlock({
+          typeName: enumName,
+          values: node.values,
+          schema: this._schema,
+          naming: {
+            convert: this.config.convert,
+            typesPrefix: this.config.typesPrefix,
+            useTypesPrefix: this.config.enumPrefix,
+            typesSuffix: this.config.typesSuffix,
+            useTypesSuffix: this.config.enumSuffix,
+          },
+          ignoreEnumValuesFromSchema: this.config.ignoreEnumValuesFromSchema,
+          declarationBlockConfig: this._declarationBlockConfig,
+          enumValues: this.config.enumValues,
+        })
+      ).string;
   }
 
   protected makeValidEnumIdentifier(identifier: string): string {
@@ -893,46 +873,6 @@ export class BaseTypesVisitor<
       return wrapWithSingleQuotes(identifier, true);
     }
     return identifier;
-  }
-
-  protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
-    const schemaEnumType: GraphQLEnumType | undefined = this._schema
-      ? (this._schema.getType(typeName) as GraphQLEnumType)
-      : undefined;
-
-    return values
-      .map(enumOption => {
-        const optionName = this.makeValidEnumIdentifier(
-          this.convertName(enumOption, {
-            useTypesPrefix: false,
-            // We can only strip out the underscores if the value contains other
-            // characters. Otherwise we'll generate syntactically invalid code.
-            transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
-          })
-        );
-        const comment = this.getNodeComment(enumOption);
-        const schemaEnumValue =
-          schemaEnumType && !this.config.ignoreEnumValuesFromSchema
-            ? schemaEnumType.getValue(enumOption.name.value).value
-            : undefined;
-        let enumValue: string | number =
-          typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
-
-        if (typeof this.config.enumValues[typeName]?.mappedValues?.[enumValue] !== 'undefined') {
-          enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
-        }
-
-        return (
-          comment +
-          indent(
-            `${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
-              enumValue,
-              typeof schemaEnumValue !== 'undefined'
-            )}`
-          )
-        );
-      })
-      .join(',\n');
   }
 
   DirectiveDefinition(_node: DirectiveDefinitionNode): string {
@@ -1048,28 +988,6 @@ export class BaseTypesVisitor<
 
   SchemaExtension() {
     return null;
-  }
-
-  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
-    let commentText = node.description?.value;
-    const deprecationDirective = node.directives.find(v => v.name.value === 'deprecated');
-    if (deprecationDirective) {
-      const deprecationReason = this.getDeprecationReason(deprecationDirective);
-      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
-    }
-    const comment = transformComment(commentText, 1);
-    return comment;
-  }
-
-  protected getDeprecationReason(directive: DirectiveNode): string | void {
-    if (directive.name.value === 'deprecated') {
-      let reason = 'Field no longer supported';
-      const deprecatedReason = directive.arguments[0];
-      if (deprecatedReason && deprecatedReason.value.kind === Kind.STRING) {
-        reason = deprecatedReason.value.value;
-      }
-      return reason;
-    }
   }
 
   protected wrapWithListType(str: string): string {
