@@ -1,5 +1,11 @@
 # @graphql-codegen/cli
 
+## 6.2.1
+
+### Patch Changes
+
+- [#10618](https://github.com/dotansimha/graphql-code-generator/pull/10618) [`e804925`](https://github.com/dotansimha/graphql-code-generator/commit/e804925361f326fe2fc7a2ee3f6db950bcd79dab) Thanks [@PalmerTurley34](https://github.com/PalmerTurley34)! - Honor per-output preset `importExtension` and `emitLegacyCommonJSImports` config instead of always using the root config values.
+
 ## 6.2.0
 
 ### Minor Changes
