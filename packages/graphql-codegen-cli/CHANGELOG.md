@@ -1,5 +1,16 @@
 # @graphql-codegen/cli
 
+## 6.2.0
+
+### Minor Changes
+
+- [#10617](https://github.com/dotansimha/graphql-code-generator/pull/10617) [`8c4db2a`](https://github.com/dotansimha/graphql-code-generator/commit/8c4db2abd0578d7b1c9b4197dfa41dae3ef6252b) Thanks [@ikusakov2](https://github.com/ikusakov2)! - Allow GraphQLSchema to be passed directly to generate({schema: ...}) function
+
+### Patch Changes
+
+- Updated dependencies [[`8c4db2a`](https://github.com/dotansimha/graphql-code-generator/commit/8c4db2abd0578d7b1c9b4197dfa41dae3ef6252b)]:
+  - @graphql-codegen/plugin-helpers@6.2.0
+
 ## 6.1.3
 
 ### Patch Changes
