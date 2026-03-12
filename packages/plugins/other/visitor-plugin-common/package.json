@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@graphql-tools/optimize": "^2.0.0",
-    "@graphql-codegen/plugin-helpers": "^6.1.0",
-    "@graphql-tools/relay-operation-optimizer": "^7.0.0",
-    "@graphql-tools/utils": "^10.0.0",
+    "@graphql-codegen/plugin-helpers": "^6.1.1",
+    "@graphql-tools/relay-operation-optimizer": "^7.1.1",
+    "@graphql-tools/utils": "^11.0.0",
     "auto-bind": "~4.0.0",
     "dependency-graph": "^1.0.0",
     "graphql-tag": "^2.11.0",
