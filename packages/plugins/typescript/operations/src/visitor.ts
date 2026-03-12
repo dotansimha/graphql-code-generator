@@ -67,7 +67,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   futureProofEnums: boolean;
 }
 
-type UsedNamedInputTypes = Record<
+type UsedSchemaTypes = Record<
   string,
   | {
       type: 'GraphQLScalarType';
@@ -83,7 +83,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsPluginConfig,
   TypeScriptDocumentsParsedConfig
 > {
-  protected _usedNamedInputTypes: UsedNamedInputTypes = {};
+  protected _usedSchemaTypes: UsedSchemaTypes = {};
   protected _needsExactUtilityType: boolean = false;
   private _outputPath: string;
 
@@ -143,7 +143,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       ],
     };
 
-    this._usedNamedInputTypes = this.collectUsedInputTypes({
+    this._usedSchemaTypes = this.collectUsedSchemaTypesToGenerate({
       schema,
       documentNode: documentWithAllFragments,
     });
@@ -214,7 +214,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
     if (
-      !this._usedNamedInputTypes[enumName] || // If not used...
+      !this._usedSchemaTypes[enumName] || // If not used...
       this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
     ) {
       return null; // ... then, don't generate in this file
@@ -242,7 +242,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {
     const inputTypeName = node.name.value;
     if (
-      !this._usedNamedInputTypes[inputTypeName] || // If not used...
+      !this._usedSchemaTypes[inputTypeName] || // If not used...
       this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
     ) {
       return null; // ... then, don't generate in this file
@@ -305,7 +305,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     // We call `.reverse()` here to get the base type node first
     for (const typeNode of typeNodes.reverse()) {
       if (typeNode.type === 'NamedType') {
-        const usedInputType = this._usedNamedInputTypes[typeNode.name];
+        const usedInputType = this._usedSchemaTypes[typeNode.name];
         if (!usedInputType) {
           continue;
         }
@@ -396,7 +396,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     const hasTypesToImport =
-      Object.values(this._usedNamedInputTypes).filter(
+      Object.values(this._usedSchemaTypes).filter(
         value => value.type === 'GraphQLEnumType' || value.type === 'GraphQLInputObjectType', // Only Enums and Inputs are stored in the shared type file (never Scalar), so we should only print import line if Enums and Inputs are used.
       ).length > 0;
 
@@ -427,7 +427,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   public getEnumsImports(): string[] {
     const usedEnumMap: ParsedEnumValuesMap = {};
     for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
-      if (this._usedNamedInputTypes[enumName]) {
+      if (this._usedSchemaTypes[enumName]) {
         usedEnumMap[enumName] = enumDetails;
       }
     }
@@ -462,7 +462,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       };
     } = {};
     for (const [scalarName, parsedScalar] of Object.entries(this.config.scalars)) {
-      const usedScalar = this._usedNamedInputTypes[scalarName];
+      const usedScalar = this._usedSchemaTypes[scalarName];
       if (!usedScalar || usedScalar.type !== 'GraphQLScalarType') {
         continue;
       }
@@ -542,19 +542,19 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   private collectInnerTypesRecursively({
     node,
-    usedInputTypes,
+    usedSchemaTypes,
     location,
   }: {
     node: GraphQLNamedInputType;
-    usedInputTypes: UsedNamedInputTypes;
+    usedSchemaTypes: UsedSchemaTypes;
     location: 'variables' | 'input'; // the location where the node was found. This is useful for nested input. Note: Since it starts at the variable, it first iteration is 'variables' and the rest will be `input`
   }): void {
     if (node instanceof GraphQLEnumType) {
-      if (usedInputTypes[node.name]) {
+      if (usedSchemaTypes[node.name]) {
         return;
       }
 
-      usedInputTypes[node.name] = {
+      usedSchemaTypes[node.name] = {
         type: 'GraphQLEnumType',
         node,
         tsType: this.convertName(node.name),
@@ -563,7 +563,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     if (node instanceof GraphQLScalarType) {
-      const scalarType = usedInputTypes[node.name] || {
+      const scalarType = usedSchemaTypes[node.name] || {
         type: 'GraphQLScalarType',
         node,
         tsType:
@@ -592,15 +592,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         scalarType.useCases.variables = true;
       }
 
-      usedInputTypes[node.name] = scalarType;
+      usedSchemaTypes[node.name] = scalarType;
       return;
     }
 
     // GraphQLInputObjectType
-    if (usedInputTypes[node.name]) {
+    if (usedSchemaTypes[node.name]) {
       return;
     }
-    usedInputTypes[node.name] = {
+    usedSchemaTypes[node.name] = {
       type: 'GraphQLInputObjectType',
       node,
       tsType: this.convertName(node.name),
@@ -611,31 +611,31 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       const fieldType = getNamedType(field.type);
       this.collectInnerTypesRecursively({
         node: fieldType,
-        usedInputTypes,
+        usedSchemaTypes,
         location: 'input',
       });
     }
   }
 
   /**
-   * FIXME: eddeee888 This function is called `collectUsedInputTypes`, but it collects the types used in Result (SelectionSet) as well:
+   * @description collects schema types used in operations:
    * - used Enums for Variables
    * - used Scalars for Variables
-   * - used Input for Variables
+   * - used Input for Variables (recursively)
    *
    * - used Enums for Result
    * - used Scalars for Result
    */
-  private collectUsedInputTypes({
+  private collectUsedSchemaTypesToGenerate({
     schema,
     documentNode,
   }: {
     schema: GraphQLSchema;
     documentNode: DocumentNode;
-  }): UsedNamedInputTypes {
+  }): UsedSchemaTypes {
     const schemaTypes = schema.getTypeMap();
 
-    const usedInputTypes: UsedNamedInputTypes = {};
+    const usedSchemaTypes: UsedSchemaTypes = {};
 
     // Collect input enums and input types
     visit(documentNode, {
@@ -652,7 +652,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
             ) {
               this.collectInnerTypesRecursively({
                 node: foundInputType,
-                usedInputTypes,
+                usedSchemaTypes,
                 location: 'variables',
               });
             }
@@ -675,7 +675,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
             const namedType = getNamedType(fieldType);
 
             if (namedType instanceof GraphQLEnumType) {
-              usedInputTypes[namedType.name] = {
+              usedSchemaTypes[namedType.name] = {
                 type: 'GraphQLEnumType',
                 node: namedType,
                 tsType: this.convertName(namedType.name),
@@ -684,7 +684,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
             }
 
             if (namedType instanceof GraphQLScalarType) {
-              const scalarType = usedInputTypes[namedType.name] || {
+              const scalarType = usedSchemaTypes[namedType.name] || {
                 type: 'GraphQLScalarType',
                 node: namedType,
                 tsType: this.convertName(namedType.name),
@@ -701,14 +701,14 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
               // this is required because if the scalar has been parsed previously, it may only have `useCases.input:true` or `useCases.variables:true`, not `useCases.output:true`
               scalarType.useCases.output = true;
 
-              usedInputTypes[namedType.name] = scalarType;
+              usedSchemaTypes[namedType.name] = scalarType;
             }
           }
         },
       }),
     );
 
-    return usedInputTypes;
+    return usedSchemaTypes;
   }
 
   getExactUtilityType(): string | null {
