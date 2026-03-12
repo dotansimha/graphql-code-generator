@@ -66,7 +66,9 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
     const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         nonNullableDate: unknown;
@@ -159,7 +161,9 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         nonNullableDate: any;
@@ -252,7 +256,9 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         nonNullableDate: Date;
@@ -354,7 +360,9 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
       import Scalar4 from '@org/scalars';
       import { MyScalar5, MyScalar6 as AliasedScalar6 } from '@org/scalars';
       import { Scalar7Output } from '@org/input-output';
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -428,7 +436,9 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
       import Scalar4 from '@org/scalars';
       import { MyScalar5, MyScalar6 as AliasedScalar6 } from '@org/scalars';
       import { Scalar7Input } from '@org/input-output';
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserInput = {
         scalar1?: Scalar1 | null | undefined;
@@ -545,7 +555,9 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
       import DefaultScalar8 from '@org/scalars';
       import { Scalar9, Scalar10 as MyScalar10 } from '@org/scalars';
       import { Scalar11 as Scalar11Input, Scalar11 as Scalar11Output, Scalar12 } from '@org/input-output';
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         scalar1?: Scalar1 | null | undefined;
@@ -666,7 +678,9 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
       import type { default as DefaultScalar8 } from '@org/scalars';
       import type { Scalar9, Scalar10 as MyScalar10 } from '@org/scalars';
       import type { Scalar11 as Scalar11Input, Scalar11 as Scalar11Output, Scalar12 } from '@org/input-output';
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserQueryVariables = Exact<{
         scalar1?: Scalar1 | null | undefined;
