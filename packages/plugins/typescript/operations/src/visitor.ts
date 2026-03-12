@@ -710,7 +710,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 }
 
-const internalUtilityTypeWarning = '/**\n * Internal type. DO NOT USE DIRECTLY.\n */\n';
+const internalUtilityTypeWarning = '/** Internal type. DO NOT USE DIRECTLY. */\n';
 
 function parseOneOfInputValue({
   node,

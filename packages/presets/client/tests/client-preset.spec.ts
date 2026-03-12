@@ -362,13 +362,9 @@ export * from "./gql";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -483,13 +479,9 @@ export * from "./gql";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -555,13 +547,9 @@ export * from "./gql";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -652,13 +640,9 @@ export * from "./gql";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1496,13 +1480,9 @@ export * from "./gql.cjs";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type BbbQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1559,13 +1539,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1625,13 +1601,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1691,13 +1663,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1759,13 +1727,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1823,13 +1787,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1893,13 +1853,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1964,13 +1920,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2035,13 +1987,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type AQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2112,13 +2060,9 @@ export * from "./gql.cjs";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type AbFragment = (
@@ -2196,13 +2140,9 @@ export * from "./gql.cjs";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type AcFragment = { __typename: 'A', b: string } & { ' $fragmentName'?: 'AcFragment' };
@@ -2256,13 +2196,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2324,13 +2260,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2392,13 +2324,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2533,13 +2461,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2672,13 +2596,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type FooQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2944,13 +2864,9 @@ export * from "./gql.cjs";`);
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        /**
-         * Internal type. DO NOT USE DIRECTLY.
-         */
+        /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
         export type OnRegionCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
@@ -3027,13 +2943,9 @@ export * from "./gql.cjs";`);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Test_UserQueryVariables = Exact<{ [key: string]: never; }>;

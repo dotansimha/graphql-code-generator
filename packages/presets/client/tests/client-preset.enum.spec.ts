@@ -23,9 +23,7 @@ describe('client-preset - Enum', () => {
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };"
     `);
   });
@@ -72,13 +70,9 @@ describe('client-preset - Enum', () => {
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Shape =
@@ -140,13 +134,9 @@ describe('client-preset - Enum', () => {
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export type Shape =
@@ -203,13 +193,9 @@ describe('client-preset - Enum', () => {
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      /**
-       * Internal type. DO NOT USE DIRECTLY.
-       */
+      /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
       export const Shape = {
