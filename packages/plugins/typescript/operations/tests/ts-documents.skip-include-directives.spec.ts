@@ -391,6 +391,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
         name: String!
         nickName: String!
         age: Int!
+        createdAt: String!
       }
     `);
 

@@ -130,7 +130,7 @@ export class SelectionSetToObject<
    */
   _collectInlineFragments(
     parentType: GraphQLNamedType,
-    nodes: Array<InlineFragmentNode & FragmentDirectives>,
+    nodes: Array<InlineFragmentNode>,
     types: Map<string, Array<CollectedFragmentNode>>
   ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
@@ -232,27 +232,6 @@ export class SelectionSetToObject<
     }
   }
 
-  protected _createInlineFragmentForFieldNodes(
-    parentType: GraphQLNamedType,
-    fieldNodes: FieldNode[]
-  ): InlineFragmentNode {
-    return {
-      kind: Kind.INLINE_FRAGMENT,
-      typeCondition: {
-        kind: Kind.NAMED_TYPE,
-        name: {
-          kind: Kind.NAME,
-          value: parentType.name,
-        },
-      },
-      directives: [],
-      selectionSet: {
-        kind: Kind.SELECTION_SET,
-        selections: fieldNodes,
-      },
-    };
-  }
-
   /**
    * The `buildFragmentSpreadsUsage` method is used to collect fields from fragment spreads in the selection set.
    * It creates a record of fragment spread usages, which includes the fragment name, type name, and the selection nodes
@@ -314,11 +293,27 @@ export class SelectionSetToObject<
       }
     }
 
+    // Turn field nodes into one inline fragments to simplify collecting fields from selections using _collectInlineFragments
     if (fieldNodes.length) {
-      inlineFragmentSelections.push(
-        this._createInlineFragmentForFieldNodes(parentSchemaType ?? this._parentSchemaType, fieldNodes)
-      );
+      inlineFragmentSelections.push({
+        kind: Kind.INLINE_FRAGMENT,
+        typeCondition: {
+          kind: Kind.NAMED_TYPE,
+          name: {
+            kind: Kind.NAME,
+            value: (parentSchemaType ?? this._parentSchemaType).name,
+          },
+        },
+        directives: [],
+        selectionSet: {
+          kind: Kind.SELECTION_SET,
+          selections: fieldNodes,
+        },
+      });
     }
+
+    // FIXME: do not flatten all selection set
+    // we need conditional ones in its own selection set so we can handle their optionality
 
     this._collectInlineFragments(
       parentSchemaType ?? this._parentSchemaType,
@@ -334,10 +329,10 @@ export class SelectionSetToObject<
     return selectionNodesByTypeName;
   }
 
-  private _appendToTypeMap<T = CollectedFragmentNode>(
-    types: Map<string, Array<T>>,
+  private _appendToTypeMap(
+    types: Map<string, Array<CollectedFragmentNode>>,
     typeName: string,
-    nodes: Array<T>
+    nodes: Array<CollectedFragmentNode>
   ): void {
     if (!types.has(typeName)) {
       types.set(typeName, []);
@@ -560,7 +555,7 @@ export class SelectionSetToObject<
     for (const selectionNode of selectionNodes) {
       // 1. Handle Field or Directtives selection nodes
       if ('kind' in selectionNode) {
-        if (selectionNode.kind === 'Field') {
+        if (selectionNode.kind === Kind.FIELD) {
           if (selectionNode.selectionSet) {
             let selectedField: GraphQLField<any, any, any> = null;
 
@@ -599,7 +594,7 @@ export class SelectionSetToObject<
           } else {
             primitiveFields.set(selectionNode.name.value, selectionNode);
           }
-        } else if (selectionNode.kind === 'Directive') {
+        } else if (selectionNode.kind === Kind.DIRECTIVE) {
           if (['skip', 'include'].includes(selectionNode?.name?.value)) {
             inlineFragmentConditional = true;
           }
