@@ -378,6 +378,68 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       "
     `);
   });
+
+  it('generates optional object when @include is used on an inline fragment', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        nickName: String!
+        age: Int!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query User($included: Boolean!) {
+        user {
+          id
+          ... @include(if: $included) {
+            name
+            nickName
+          }
+          ... on User @include(if: $included) {
+            age
+          }
+        }
+      }
+      query GetUsers($included: Boolean!) {
+        users {
+          id
+          ... @include(if: $included) {
+            name
+            nickName
+          }
+          ... on User @include(if: $included) {
+            age
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type UserQueryVariables = Exact<{
+        included: boolean;
+      }>;
+
+
+      export type UserQuery = { user: { id: string } & { name?: string, nickName?: string } & { age?: number } | null };
+
+      export type GetUsersQueryVariables = Exact<{
+        included: boolean;
+      }>;
+
+
+      export type GetUsersQuery = { users: Array<{ id: string } & { name?: string, nickName?: string } & { age?: number }> };
+      "
+    `);
+  });
 });
 
 describe('TypeScript Operations Plugin - @skip directive', () => {
