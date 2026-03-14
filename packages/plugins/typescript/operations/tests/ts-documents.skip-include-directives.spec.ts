@@ -340,6 +340,44 @@ describe('TypeScript Operations Plugin - @include directives', () => {
         "
       `);
   });
+
+  it('generates optional field when @include is used on an aliased field', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query GetUsers($included: Boolean!) {
+        aliasedUsers: users @include(if: $included) {
+          id
+          userName: name @include(if: $included)
+        }
+        users {
+          id
+          userName: name @include(if: $included)
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type GetUsersQueryVariables = Exact<{
+        included: boolean;
+      }>;
+
+
+      export type GetUsersQuery = { aliasedUsers?: Array<{ id: string, userName?: string }>, users: Array<{ id: string, userName?: string }> };
+      "
+    `);
+  });
 });
 
 describe('TypeScript Operations Plugin - @skip directive', () => {
@@ -407,6 +445,40 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       export type TextNotificationFragmentFragmentVariables = Exact<{
         skip: boolean;
       }>;
+      "
+    `);
+  });
+
+  it('generates optional field when @skip is used on an aliased field', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query GetUsers($skipName: Boolean!) {
+        users {
+          id
+          userName: name @skip(if: $skipName)
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type GetUsersQueryVariables = Exact<{
+        skipName: boolean;
+      }>;
+
+
+      export type GetUsersQuery = { users: Array<{ id: string, userName?: string }> };
       "
     `);
   });
