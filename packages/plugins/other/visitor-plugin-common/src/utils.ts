@@ -29,7 +29,7 @@ import {
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives, LoadedFragment } from './types.js';
+import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, LoadedFragment } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -474,7 +474,7 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
 };
 
 export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
-  fields: (FieldNode & FragmentDirectives)[];
+  fields: FieldNode[];
   spreads: FragmentSpreadNode[];
   inlines: InlineFragmentNode[];
 } {
@@ -499,9 +499,12 @@ export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType):
   return [];
 }
 
-export function hasConditionalDirectives(field: FieldNode): boolean {
+/**
+ * Check if any of the directives are conditional i.e. `@skip` and `@include`
+ */
+export function hasConditionalDirectives(directives: readonly DirectiveNode[] = []): boolean {
   const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
-  return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
+  return directives.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }
 
 export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {

@@ -116,14 +116,17 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     const { content } = await plugin(schema, [{ location: '', document: fragment }], {}, { outputFile: 'graphql.ts' });
 
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
-          withUser?: boolean;
-        }>;
+      "export type UserQueryVariables = Exact<{
+        withUser?: boolean;
+      }>;
 
 
-        export type UserQuery = { user?: { name: string | null } | null };
-        "
-      `);
+      export type UserQuery =
+        | { user?: { name: string | null } | null }
+        | Record<PropertyKey, never>
+      ;
+      "
+    `);
   });
 
   it('fields with @include should pre resolve into optional', async () => {
@@ -287,14 +290,17 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     const { content } = await plugin(schema, [{ location: '', document: fragment }], {}, { outputFile: 'graphql.ts' });
 
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
-          withUser?: boolean;
-        }>;
+      "export type UserQueryVariables = Exact<{
+        withUser?: boolean;
+      }>;
 
 
-        export type UserQuery = { user?: { name: string | null } | null, group?: { id: number } };
-        "
-      `);
+      export type UserQuery =
+        | { user?: { name: string | null } | null, group?: { id: number } }
+        | Record<PropertyKey, never>
+      ;
+      "
+    `);
   });
 
   it('resolve optionals according to maybeValue and conditional directives', async () => {
@@ -401,10 +407,13 @@ describe('TypeScript Operations Plugin - @include directives', () => {
           id
           ... @include(if: $included) {
             name
-            nickName
+            niName: nickName
           }
           ... on User @include(if: $included) {
             age
+          }
+          ... {
+            createdAt
           }
         }
       }
@@ -413,7 +422,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
           id
           ... @include(if: $included) {
             name
-            nickName
+            niName: nickName
           }
           ... on User @include(if: $included) {
             age
@@ -430,14 +439,14 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string } & { name?: string, nickName?: string } & { age?: number } | null };
+      export type UserQuery = { user: { createdAt: string, id: string } & { name?: string, niName?: string } & { age?: number } | null };
 
       export type GetUsersQueryVariables = Exact<{
         included: boolean;
       }>;
 
 
-      export type GetUsersQuery = { users: Array<{ id: string } & { name?: string, nickName?: string } & { age?: number }> };
+      export type GetUsersQuery = { users: Array<{ id: string } & { name?: string, niName?: string } & { age?: number }> };
       "
     `);
   });
