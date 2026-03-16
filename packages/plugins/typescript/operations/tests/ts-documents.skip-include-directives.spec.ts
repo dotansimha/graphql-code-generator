@@ -554,4 +554,70 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       "
     `);
   });
+
+  it('generates optional object when @skip is used on an inline fragment', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        nickName: String!
+        age: Int!
+        createdAt: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query User($skip: Boolean!) {
+        user {
+          id
+          ... @skip(if: $skip) {
+            name
+            niName: nickName
+          }
+          ... on User @skip(if: $included) {
+            age
+          }
+          ... {
+            createdAt
+          }
+        }
+      }
+      query GetUsers($skip: Boolean!) {
+        users {
+          id
+          ... @skip(if: $skip) {
+            name
+            niName: nickName
+          }
+          ... on User @skip(if: $skip) {
+            age
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type UserQueryVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type UserQuery = { user: { createdAt: string, id: string } & { name?: string, niName?: string } & { age?: number } | null };
+
+      export type GetUsersQueryVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type GetUsersQuery = { users: Array<{ id: string } & { name?: string, niName?: string } & { age?: number }> };
+      "
+    `);
+  });
 });
