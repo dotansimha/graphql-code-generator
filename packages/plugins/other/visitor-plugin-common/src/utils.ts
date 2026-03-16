@@ -29,13 +29,7 @@ import {
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import {
-  FragmentDirectives,
-  LoadedFragment,
-  NormalizedScalarsMap,
-  ParsedScalarsMap,
-  ScalarsMap,
-} from './types.js';
+import { LoadedFragment, NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -508,7 +502,7 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
 };
 
 export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
-  fields: (FieldNode & FragmentDirectives)[];
+  fields: FieldNode[];
   spreads: FragmentSpreadNode[];
   inlines: InlineFragmentNode[];
 } {
@@ -536,9 +530,12 @@ export function getPossibleTypes(
   return [];
 }
 
-export function hasConditionalDirectives(field: FieldNode): boolean {
+/**
+ * Check if any of the directives are conditional i.e. `@skip` and `@include`
+ */
+export function hasConditionalDirectives(directives: readonly DirectiveNode[] = []): boolean {
   const CONDITIONAL_DIRECTIVES = ['skip', 'include'];
-  return field.directives?.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
+  return directives.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }
 
 export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {
@@ -755,7 +752,13 @@ const getDeprecationReason = (directive: DirectiveNode): string | void => {
  * @param {string} params.pattern - The pattern of the Maybe type. This is usually `T | null | undefined` or `T | null`
  * @returns {string} The TypeScript type as string
  */
-export const printTypeScriptMaybeType = ({ type, pattern }: { type: string; pattern: string }): string => {
+export const printTypeScriptMaybeType = ({
+  type,
+  pattern,
+}: {
+  type: string;
+  pattern: string;
+}): string => {
   if (type === 'any' || type === 'unknown') {
     return type;
   }

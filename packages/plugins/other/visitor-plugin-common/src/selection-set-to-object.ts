@@ -35,9 +35,8 @@ import {
   ProcessResult,
   type SelectionSetProcessorConfig as BaseSelectionSetProcessorConfig,
 } from './selection-set-processor/base.js';
-import {
+import type {
   ConvertNameFn,
-  FragmentDirectives,
   GetFragmentSuffixFn,
   LoadedFragment,
   NormalizedScalarsMap,
@@ -59,6 +58,17 @@ type FragmentSpreadUsage = {
   typeName: string;
   onType: string;
   selectionNodes: Array<SelectionNode>;
+  fragmentDirectives: DirectiveNode[];
+};
+
+/**
+ * @description EnrichedFieldNode are field nodes enriched with Codegen metadata for subsequent processing
+ */
+type EnrichedFieldNode = FieldNode & {
+  /**
+   * A field node may implicitly inherit fragment directives from parents
+   * For example, if the field's parent is marked with `@skip`, the field is implicitly marked with `@skip` as well
+   */
   fragmentDirectives?: DirectiveNode[];
 };
 
@@ -68,8 +78,17 @@ interface DependentType {
   isUnionType?: boolean;
 }
 
-type CollectedFragmentNode = (SelectionNode | FragmentSpreadUsage | DirectiveNode) &
-  FragmentDirectives;
+/**
+ * Each grouped TypeName has an array of nodes.
+ * These are collected when parsing the selection set,
+ * then turned into TypeScript strings
+ */
+type GroupedTypeNameNode =
+  | EnrichedFieldNode
+  | FragmentSpreadNode
+  | InlineFragmentNode
+  | FragmentSpreadUsage
+  | DirectiveNode;
 type GroupedStringifiedTypes = Record<string, Array<string | { union: string[] }>>;
 
 const operationTypes: string[] = ['Query', 'Mutation', 'Subscription'];
@@ -135,9 +154,9 @@ export class SelectionSetToObject<
    */
   _collectInlineFragments(
     parentType: GraphQLNamedType,
-    nodes: Array<InlineFragmentNode & FragmentDirectives>,
-    types: Map<string, Array<CollectedFragmentNode>>,
-  ) {
+    nodes: Array<InlineFragmentNode>,
+    types: Map<string, Array<GroupedTypeNameNode>>,
+  ): void {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
     }
@@ -155,9 +174,9 @@ export class SelectionSetToObject<
         // that can be associated back to the fields in the fragment, to
         // support things like making those fields optional when deferring a
         // fragment (using @defer).
-        const fieldsWithFragmentDirectives: CollectedFragmentNode[] = fields.map(field => ({
+        const fieldsWithFragmentDirectives: EnrichedFieldNode[] = fields.map(field => ({
           ...field,
-          fragmentDirectives: field.fragmentDirectives || directives,
+          fragmentDirectives: directives,
         }));
 
         if (isObjectType(typeOnSchema)) {
@@ -256,27 +275,6 @@ export class SelectionSetToObject<
     }
   }
 
-  protected _createInlineFragmentForFieldNodes(
-    parentType: GraphQLNamedType,
-    fieldNodes: FieldNode[],
-  ): InlineFragmentNode {
-    return {
-      kind: Kind.INLINE_FRAGMENT,
-      typeCondition: {
-        kind: Kind.NAMED_TYPE,
-        name: {
-          kind: Kind.NAME,
-          value: parentType.name,
-        },
-      },
-      directives: [],
-      selectionSet: {
-        kind: Kind.SELECTION_SET,
-        selections: fieldNodes,
-      },
-    };
-  }
-
   /**
    * The `buildFragmentSpreadsUsage` method is used to collect fields from fragment spreads in the selection set.
    * It creates a record of fragment spread usages, which includes the fragment name, type name, and the selection nodes
@@ -321,9 +319,20 @@ export class SelectionSetToObject<
   protected flattenSelectionSet(
     selections: ReadonlyArray<SelectionNode>,
     parentSchemaType?: GraphQLObjectType<any, any>,
-  ): Map<string, Array<SelectionNode | FragmentSpreadUsage>> {
-    const selectionNodesByTypeName = new Map<string, Array<SelectionNode | FragmentSpreadUsage>>();
+  ): {
+    selectionNodesByTypeName: Map<string, Array<GroupedTypeNameNode>>;
+    selectionNodesByTypeNameConditional: Array<Map<string, Array<GroupedTypeNameNode>>>;
+  } {
+    const result: ReturnType<typeof this.flattenSelectionSet> = {
+      selectionNodesByTypeName: new Map<string, Array<GroupedTypeNameNode>>(),
+      selectionNodesByTypeNameConditional: [],
+    };
+
     const inlineFragmentSelections: InlineFragmentNode[] = [];
+    /**
+     * Inline fragments marked with `@skip` or `@include`
+     */
+    const inlineFragmentConditionalSelections: InlineFragmentNode[] = [];
     const fieldNodes: FieldNode[] = [];
     const fragmentSpreads: FragmentSpreadNode[] = [];
     for (const selection of selections) {
@@ -332,6 +341,10 @@ export class SelectionSetToObject<
           fieldNodes.push(selection);
           break;
         case Kind.INLINE_FRAGMENT:
+          if (hasConditionalDirectives(selection.directives)) {
+            inlineFragmentConditionalSelections.push(selection);
+            break;
+          }
           inlineFragmentSelections.push(selection);
           break;
         case Kind.FRAGMENT_SPREAD:
@@ -340,33 +353,61 @@ export class SelectionSetToObject<
       }
     }
 
-    if (fieldNodes.length) {
-      inlineFragmentSelections.push(
-        this._createInlineFragmentForFieldNodes(
-          parentSchemaType ?? this._parentSchemaType,
-          fieldNodes,
-        ),
-      );
-    }
+    // 1. Merge all selection sets that are mergable into one object. This includes:
+    // - field
+    // - field with conditional directives
+    // - inline fragment without conditional directives
+    // - fragment spreads
 
+    // Turn field nodes into one inline fragments to simplify collecting fields from selections using _collectInlineFragments
+    if (fieldNodes.length) {
+      inlineFragmentSelections.push({
+        kind: Kind.INLINE_FRAGMENT,
+        typeCondition: {
+          kind: Kind.NAMED_TYPE,
+          name: {
+            kind: Kind.NAME,
+            value: (parentSchemaType ?? this._parentSchemaType).name,
+          },
+        },
+        directives: [],
+        selectionSet: {
+          kind: Kind.SELECTION_SET,
+          selections: fieldNodes,
+        },
+      });
+    }
     this._collectInlineFragments(
       parentSchemaType ?? this._parentSchemaType,
       inlineFragmentSelections,
-      selectionNodesByTypeName,
+      result.selectionNodesByTypeName,
     );
     const fragmentsUsage = this.buildFragmentSpreadsUsage(fragmentSpreads);
 
     for (const [typeName, records] of Object.entries(fragmentsUsage)) {
-      this._appendToTypeMap(selectionNodesByTypeName, typeName, records);
+      this._appendToTypeMap(result.selectionNodesByTypeName, typeName, records);
     }
 
-    return selectionNodesByTypeName;
+    // 2. Push conditional inline fragments into the result.selectionNodesByTypeNameConditional
+    // This is treated differently from result.selectionNodesByTypeName
+    // because every field in result.selectionNodesByTypeNameConditional is optional
+    for (const inlineFragmentConditionalSelection of inlineFragmentConditionalSelections) {
+      const selectionNodes = new Map<string, Array<GroupedTypeNameNode>>();
+      this._collectInlineFragments(
+        parentSchemaType ?? this._parentSchemaType,
+        [inlineFragmentConditionalSelection],
+        selectionNodes,
+      );
+      result.selectionNodesByTypeNameConditional.push(selectionNodes);
+    }
+
+    return result;
   }
 
-  private _appendToTypeMap<T = CollectedFragmentNode>(
-    types: Map<string, Array<T>>,
+  private _appendToTypeMap(
+    types: Map<string, Array<GroupedTypeNameNode>>,
     typeName: string,
-    nodes: Array<T>,
+    nodes: Array<GroupedTypeNameNode>,
   ): void {
     if (!types.has(typeName)) {
       types.set(typeName, []);
@@ -386,7 +427,8 @@ export class SelectionSetToObject<
       return { grouped: {}, mustAddEmptyObject: true, dependentTypes: [] };
     }
 
-    const selectionNodesByTypeName = this.flattenSelectionSet(this._selectionSet.selections);
+    const { selectionNodesByTypeName, selectionNodesByTypeNameConditional } =
+      this.flattenSelectionSet(this._selectionSet.selections);
 
     // in case there is not a selection for each type, we need to add a empty type.
     let mustAddEmptyObject = false;
@@ -395,6 +437,17 @@ export class SelectionSetToObject<
 
     const dependentTypes: DependentType[] = [];
     if (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask') {
+      // Each grouped type contains an array of stringified objects to be merged.
+      // Once merged, the type would be the TypeScript representative of the GraphQL selection set
+      // For example:
+      // const grouped = {
+      //   User: [
+      //     '{ createdAt: string, id: string }',
+      //     '{ name?: string, nickName?: string }',
+      //     '{ age?: number }'
+      //   ]
+      // }
+      // type merged = { createdAt: string, id: string } & { name?: string, nickName?: string } & { age?: number }
       const grouped = possibleTypes.reduce<GroupedStringifiedTypes>((prev, type) => {
         const typeName = type.name;
         const schemaType = this._schema.getType(typeName);
@@ -405,76 +458,85 @@ export class SelectionSetToObject<
           );
         }
 
-        const allNodes = selectionNodesByTypeName.get(typeName) || [];
-
         prev[typeName] ||= [];
 
-        // incrementalNodes are the ones flagged with @defer, meaning they become nullable
-        const { incrementalNodes, selectionNodes, fragmentSpreads } = allNodes.reduce<{
-          selectionNodes: (SelectionNode | FragmentSpreadUsage)[];
-          incrementalNodes: FragmentSpreadUsage[];
-          fragmentSpreads: string[];
-        }>(
-          (acc, node) => {
-            if (
-              'fragmentDirectives' in node &&
-              hasIncrementalDeliveryDirectives(node.fragmentDirectives)
-            ) {
-              acc.incrementalNodes.push(node);
-            } else {
-              acc.selectionNodes.push(node);
+        const collectGrouped = (nodes: GroupedTypeNameNode[]): void => {
+          // incrementalNodes are the ones flagged with @defer, meaning they become nullable
+          const { selectionNodes, incrementalNodes, fragmentSpreads } = nodes.reduce<{
+            selectionNodes: GroupedTypeNameNode[];
+            incrementalNodes: FragmentSpreadUsage[];
+            fragmentSpreads: string[];
+          }>(
+            (acc, node) => {
+              if (
+                'fragmentDirectives' in node &&
+                hasIncrementalDeliveryDirectives(node.fragmentDirectives)
+              ) {
+                acc.incrementalNodes.push(node as FragmentSpreadUsage); // FIXME: check whether @defer would pick up EnrichedFieldNode here too?
+              } else {
+                acc.selectionNodes.push(node);
+              }
+              return acc;
+            },
+            { selectionNodes: [], incrementalNodes: [], fragmentSpreads: [] },
+          );
+
+          const { fields, dependentTypes: subDependentTypes } = this.buildSelectionSet(
+            schemaType,
+            selectionNodes,
+            {
+              parentFieldName: this.buildParentFieldName(typeName, parentName),
+            },
+          );
+          const transformedSet = this.selectionSetStringFromFields(fields);
+
+          if (transformedSet) {
+            prev[typeName].push(transformedSet);
+          }
+          dependentTypes.push(...subDependentTypes);
+          if (!transformedSet && !fragmentSpreads.length) {
+            mustAddEmptyObject = true;
+          }
+
+          for (const incrementalNode of incrementalNodes) {
+            // 1. fragment masking
+            if (this._config.inlineFragmentTypes === 'mask' && 'fragmentName' in incrementalNode) {
+              const { fields: incrementalFields, dependentTypes: incrementalDependentTypes } =
+                this.buildSelectionSet(schemaType, [incrementalNode], {
+                  unsetTypes: true,
+                  parentFieldName: parentName,
+                });
+              const incrementalSet = this.selectionSetStringFromFields(incrementalFields);
+              prev[typeName].push(incrementalSet);
+              dependentTypes.push(...incrementalDependentTypes);
+
+              continue;
             }
-            return acc;
-          },
-          { selectionNodes: [], incrementalNodes: [], fragmentSpreads: [] },
-        );
 
-        const { fields, dependentTypes: subDependentTypes } = this.buildSelectionSet(
-          schemaType,
-          selectionNodes,
-          {
-            parentFieldName: this.buildParentFieldName(typeName, parentName),
-          },
-        );
-        const transformedSet = this.selectionSetStringFromFields(fields);
+            // 2. @defer
+            const { fields: initialFields, dependentTypes: initialDependentTypes } =
+              this.buildSelectionSet(schemaType, [incrementalNode], {
+                parentFieldName: parentName,
+              });
 
-        if (transformedSet) {
-          prev[typeName].push(transformedSet);
-        }
-        dependentTypes.push(...subDependentTypes);
-        if (!transformedSet && !fragmentSpreads.length) {
-          mustAddEmptyObject = true;
-        }
-
-        for (const incrementalNode of incrementalNodes) {
-          // 1. fragment masking
-          if (this._config.inlineFragmentTypes === 'mask' && 'fragmentName' in incrementalNode) {
-            const { fields: incrementalFields, dependentTypes: incrementalDependentTypes } =
+            const { fields: subsequentFields, dependentTypes: subsequentDependentTypes } =
               this.buildSelectionSet(schemaType, [incrementalNode], {
                 unsetTypes: true,
                 parentFieldName: parentName,
               });
-            const incrementalSet = this.selectionSetStringFromFields(incrementalFields);
-            prev[typeName].push(incrementalSet);
-            dependentTypes.push(...incrementalDependentTypes);
 
-            continue;
+            const initialSet = this.selectionSetStringFromFields(initialFields);
+            const subsequentSet = this.selectionSetStringFromFields(subsequentFields);
+            dependentTypes.push(...initialDependentTypes, ...subsequentDependentTypes);
+            prev[typeName].push({ union: [initialSet, subsequentSet] });
           }
+        };
 
-          // 2. @defer
-          const { fields: initialFields, dependentTypes: initialDependentTypes } =
-            this.buildSelectionSet(schemaType, [incrementalNode], { parentFieldName: parentName });
+        const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
+        collectGrouped(selectionNodes);
 
-          const { fields: subsequentFields, dependentTypes: subsequentDependentTypes } =
-            this.buildSelectionSet(schemaType, [incrementalNode], {
-              unsetTypes: true,
-              parentFieldName: parentName,
-            });
-
-          const initialSet = this.selectionSetStringFromFields(initialFields);
-          const subsequentSet = this.selectionSetStringFromFields(subsequentFields);
-          dependentTypes.push(...initialDependentTypes, ...subsequentDependentTypes);
-          prev[typeName].push({ union: [initialSet, subsequentSet] });
+        for (const conditionalNodes of selectionNodesByTypeNameConditional) {
+          collectGrouped(conditionalNodes.get(typeName) || []);
         }
 
         return prev;
@@ -594,11 +656,11 @@ export class SelectionSetToObject<
 
   protected buildSelectionSet(
     parentSchemaType: GraphQLObjectType,
-    selectionNodes: Array<SelectionNode | FragmentSpreadUsage | DirectiveNode>,
+    selectionNodes: Array<GroupedTypeNameNode>,
     options: { unsetTypes?: boolean; parentFieldName?: string },
   ) {
-    const primitiveFields = new Map<string, FieldNode>();
-    const primitiveAliasFields = new Map<string, FieldNode>();
+    const primitiveFields = new Map<string, EnrichedFieldNode>();
+    const primitiveAliasFields = new Map<string, EnrichedFieldNode>();
     const linkFieldSelectionSets = new Map<
       string,
       {
@@ -617,7 +679,7 @@ export class SelectionSetToObject<
     for (const selectionNode of selectionNodes) {
       // 1. Handle Field or Directtives selection nodes
       if ('kind' in selectionNode) {
-        if (selectionNode.kind === 'Field') {
+        if (selectionNode.kind === Kind.FIELD) {
           if (selectionNode.selectionSet) {
             let selectedField: GraphQLField<any, any, any> = null;
 
@@ -659,8 +721,8 @@ export class SelectionSetToObject<
           } else {
             primitiveFields.set(selectionNode.name.value, selectionNode);
           }
-        } else if (selectionNode.kind === 'Directive') {
-          if (['skip', 'include'].includes(selectionNode?.name?.value)) {
+        } else if (selectionNode.kind === Kind.DIRECTIVE) {
+          if (hasConditionalDirectives([selectionNode])) {
             inlineFragmentConditional = true;
           }
         } else {
@@ -714,11 +776,14 @@ export class SelectionSetToObject<
           fragmentType.getTypes().find(objectType => objectType.name === parentSchemaType.name))
       ) {
         // also process fields from fragment that apply for this parentType
-        const flatten = this.flattenSelectionSet(selectionNode.selectionNodes, parentSchemaType);
-        const typeNodes = flatten.get(parentSchemaType.name) ?? [];
+        const { selectionNodesByTypeName } = this.flattenSelectionSet(
+          selectionNode.selectionNodes,
+          parentSchemaType,
+        );
+        const typeNodes = selectionNodesByTypeName.get(parentSchemaType.name) ?? [];
         selectionNodes.push(...typeNodes);
         for (const iinterface of parentSchemaType.getInterfaces()) {
-          const typeNodes = flatten.get(iinterface.name) ?? [];
+          const typeNodes = selectionNodesByTypeName.get(iinterface.name) ?? [];
           selectionNodes.push(...typeNodes);
         }
       }
@@ -735,7 +800,7 @@ export class SelectionSetToObject<
       );
 
       linkFieldsInterfaces.push(...selectionSetObjects.dependentTypes);
-      const isConditional = hasConditionalDirectives(field) || inlineFragmentConditional;
+      const isConditional = hasConditionalDirectives(field.directives) || inlineFragmentConditional;
       linkFields.push({
         alias: field.alias
           ? this._processor.config.formatNamedField({
@@ -772,7 +837,9 @@ export class SelectionSetToObject<
       ...this._processor.transformPrimitiveFields(
         parentSchemaType,
         Array.from(primitiveFields.values()).map(field => ({
-          isConditional: hasConditionalDirectives(field),
+          isConditional:
+            hasConditionalDirectives(field.directives) ||
+            hasConditionalDirectives(field.fragmentDirectives),
           fieldName: field.name.value,
         })),
         options.unsetTypes,
@@ -782,7 +849,9 @@ export class SelectionSetToObject<
         Array.from(primitiveAliasFields.values()).map(field => ({
           alias: field.alias.value,
           fieldName: field.name.value,
-          isConditional: hasConditionalDirectives(field),
+          isConditional:
+            hasConditionalDirectives(field.directives) ||
+            hasConditionalDirectives(field.fragmentDirectives),
         })),
         options.unsetTypes,
       ),
