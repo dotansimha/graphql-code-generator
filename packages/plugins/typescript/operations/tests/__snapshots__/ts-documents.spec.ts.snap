@@ -1,15 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TypeScript Operations Plugin > Config > should include fragment variable definitions when experimentalFragmentVariables is set 1`] = `
-"export type TextNotificationFragmentFragment = { text?: string };
-
-
-export type TextNotificationFragmentFragmentVariables = Exact<{
-  skip: boolean;
-}>;
-"
-`;
-
 exports[`TypeScript Operations Plugin > Issues > #2699 - Issues with multiple interfaces and unions 1`] = `
 "export type GetEntityBrandDataQueryVariables = Exact<{
   gid: string | number;
