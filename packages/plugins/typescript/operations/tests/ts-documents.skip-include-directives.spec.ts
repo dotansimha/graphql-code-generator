@@ -450,6 +450,72 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       "
     `);
   });
+
+  it('generates optional object when @include is used on a fragment spread', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        nickName: String!
+        age: Int!
+        createdAt: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query User($included: Boolean!) {
+        user {
+          id
+          ...User_Name @include(if: $included)
+          ...User_Age @include(if: $included)
+        }
+      }
+      query GetUsers($included: Boolean!) {
+        users {
+          id
+          ...User_Name @include(if: $included)
+          ...User_Age @include(if: $included)
+        }
+      }
+
+      fragment User_Name on User {
+        name
+        niName: nickName
+      }
+
+      fragment User_Age on User {
+        age
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type UserQueryVariables = Exact<{
+        included: boolean;
+      }>;
+
+
+      export type UserQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number } | null };
+
+      export type GetUsersQueryVariables = Exact<{
+        included: boolean;
+      }>;
+
+
+      export type GetUsersQuery = { users: Array<{ id: string } & { name?: string, niName?: string } & { age?: number }> };
+
+      export type User_NameFragment = { name: string, niName: string };
+
+      export type User_AgeFragment = { age: number };
+      "
+    `);
+  });
 });
 
 describe('TypeScript Operations Plugin - @skip directive', () => {
