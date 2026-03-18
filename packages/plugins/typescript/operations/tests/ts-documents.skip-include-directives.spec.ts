@@ -754,7 +754,7 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       export type UserQuery = { user: { id: string, createdAt: string } & { name?: string, niName?: string } & { age?: number } | null };
 
       export type GetUsersQueryVariables = Exact<{
-        included: boolean;
+        skip: boolean;
       }>;
 
 
