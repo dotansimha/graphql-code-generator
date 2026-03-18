@@ -472,7 +472,8 @@ describe('TypeScript Operations Plugin - @include directives', () => {
         user {
           id
           ...User_Name @include(if: $included)
-          ...User_Age @include(if: $included)
+          ...User_Age @include
+          ...User_CreatedAt # This is not conditional, so it should be merged with base selection set that includes the id field
         }
       }
       query GetUsers($included: Boolean!) {
@@ -480,6 +481,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
           id
           ...User_Name @include(if: $included)
           ...User_Age @include(if: $included)
+          ...User_CreatedAt
         }
       }
 
@@ -491,6 +493,10 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       fragment User_Age on User {
         age
       }
+
+      fragment User_CreatedAt on User {
+        createdAt
+      }
     `);
 
     const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
@@ -501,18 +507,20 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }>;
 
 
-      export type UserQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number } | null };
+      export type UserQuery = { user: { id: string, createdAt: string } & { name?: string, niName?: string } & { age?: number } | null };
 
       export type GetUsersQueryVariables = Exact<{
         included: boolean;
       }>;
 
 
-      export type GetUsersQuery = { users: Array<{ id: string } & { name?: string, niName?: string } & { age?: number }> };
+      export type GetUsersQuery = { users: Array<{ id: string, createdAt: string } & { name?: string, niName?: string } & { age?: number }> };
 
       export type User_NameFragment = { name: string, niName: string };
 
       export type User_AgeFragment = { age: number };
+
+      export type User_CreatedAtFragment = { createdAt: string };
       "
     `);
   });
@@ -683,6 +691,80 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
 
 
       export type GetUsersQuery = { users: Array<{ id: string } & { name?: string, niName?: string } & { age?: number }> };
+      "
+    `);
+  });
+
+  it('generates optional object when @skip is used on a fragment spread', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        nickName: String!
+        age: Int!
+        createdAt: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query User($skip: Boolean!) {
+        user {
+          id
+          ...User_Name @skip(if: $included)
+          ...User_Age @skip
+          ...User_CreatedAt # This is not conditional, so it should be merged with base selection set that includes the id field
+        }
+      }
+      query GetUsers($included: Boolean!) {
+        users {
+          id
+          ...User_Name @skip(if: $included)
+          ...User_Age @skip(if: $included)
+          ...User_CreatedAt
+        }
+      }
+
+      fragment User_Name on User {
+        name
+        niName: nickName
+      }
+
+      fragment User_Age on User {
+        age
+      }
+
+      fragment User_CreatedAt on User {
+        createdAt
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type UserQueryVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type UserQuery = { user: { id: string, createdAt: string } & { name?: string, niName?: string } & { age?: number } | null };
+
+      export type GetUsersQueryVariables = Exact<{
+        included: boolean;
+      }>;
+
+
+      export type GetUsersQuery = { users: Array<{ id: string, createdAt: string } & { name?: string, niName?: string } & { age?: number }> };
+
+      export type User_NameFragment = { name: string, niName: string };
+
+      export type User_AgeFragment = { age: number };
+
+      export type User_CreatedAtFragment = { createdAt: string };
       "
     `);
   });
