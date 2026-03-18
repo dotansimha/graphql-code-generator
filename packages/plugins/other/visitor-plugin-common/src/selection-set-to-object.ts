@@ -312,13 +312,13 @@ export class SelectionSetToObject<
 
     const inlineFragmentSelections: InlineFragmentNode[] = [];
     /**
-     * Inline fragments marked with `@skip` or `@include`
+     * Inline fragments marked with `@skip`, `@include` or `@defer`
      */
     const inlineFragmentConditionalSelections: InlineFragmentNode[] = [];
     const fieldNodes: FieldNode[] = [];
     const fragmentSpreads: FragmentSpreadNode[] = [];
     /**
-     * Fragment spreads marked with `@skip` or `@include`
+     * Fragment spreads marked with `@skip` or `@include` or `@defer`
      */
     const fragmentSpreadsConditionalSelections: FragmentSpreadNode[] = [];
 
@@ -353,8 +353,8 @@ export class SelectionSetToObject<
     // 1. Merge all selection sets that are mergable into one object. This includes:
     // - field
     // - field with conditional directives
-    // - inline fragment without conditional directives
-    // - fragment spreads
+    // - inline fragment without conditional/incremental directives
+    // - fragment spreads without conditional/incremental directives
 
     // Turn field nodes into one inline fragments to simplify collecting fields from selections using _collectInlineFragments
     if (fieldNodes.length) {
@@ -388,7 +388,7 @@ export class SelectionSetToObject<
 
     // 2. Push conditional inline fragments into the result.selectionNodesByTypeNameConditional
     // This is treated differently from result.selectionNodesByTypeName
-    // because every field in result.selectionNodesByTypeNameConditional is optional
+    // because fields in result.selectionNodesByTypeNameConditional are optional
     for (const inlineFragmentConditionalSelection of inlineFragmentConditionalSelections) {
       const selectionNodes = new Map<string, Array<GroupedTypeNameNode>>();
       this._collectInlineFragments(
