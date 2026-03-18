@@ -715,16 +715,16 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       query User($skip: Boolean!) {
         user {
           id
-          ...User_Name @skip(if: $included)
+          ...User_Name @skip(if: $skip)
           ...User_Age @skip
           ...User_CreatedAt # This is not conditional, so it should be merged with base selection set that includes the id field
         }
       }
-      query GetUsers($included: Boolean!) {
+      query GetUsers($skip: Boolean!) {
         users {
           id
-          ...User_Name @skip(if: $included)
-          ...User_Age @skip(if: $included)
+          ...User_Name @skip(if: $skip)
+          ...User_Age @skip(if: $skip)
           ...User_CreatedAt
         }
       }
@@ -765,6 +765,72 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       export type User_AgeFragment = { age: number };
 
       export type User_CreatedAtFragment = { createdAt: string };
+      "
+    `);
+  });
+});
+
+describe('TypeScript Operations Plugin - @include and @skip with @defer', () => {
+  it('generates conditional object with defer fields when @skip and @include are used with defer', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+        users: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        nickName: String!
+        age: Int!
+        createdAt: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query UserSkip {
+        user {
+          id
+          ...User_Name @skip
+          ...User_Age @skip @defer
+        }
+      }
+
+      query UserInclude {
+        user {
+          id
+          ...User_Name @include
+          ...User_Age @include @defer
+        }
+      }
+
+      fragment User_Name on User {
+        name
+        niName: nickName
+      }
+
+      fragment User_Age on User {
+        age
+        createdAt
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type UserSkipQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+
+      export type UserIncludeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type UserIncludeQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+
+      export type User_NameFragment = { name: string, niName: string };
+
+      export type User_AgeFragment = { age: number, createdAt: string };
       "
     `);
   });
