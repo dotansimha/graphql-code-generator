@@ -441,13 +441,13 @@ export class SelectionSetToObject<
       this._selectionSet.selections
     );
 
-    // in case there is not a selection for each type, we need to add a empty type.
-    const mustAddEmptyObject = false;
-
     const possibleTypes = getPossibleTypes(this._schema, this._parentSchemaType);
 
     const dependentTypes: DependentType[] = [];
     if (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask') {
+      // in case there is not a selection for each type, we need to add a empty type.
+      let mustAddEmptyObject = false;
+
       // Each grouped type contains an array of stringified objects to be merged.
       // Once merged, the type would be the TypeScript representative of the GraphQL selection set
       // For example:
@@ -469,12 +469,7 @@ export class SelectionSetToObject<
 
         prev[typeName] ||= [];
 
-        // FIXME: when to add empty objects?
-        // if (!transformedSet) {
-        //   mustAddEmptyObject = true;
-        // }
-
-        const collectGrouped = (selectionNodes: GroupedTypeNameNode[]): void => {
+        const collectGrouped = (selectionNodes: GroupedTypeNameNode[]): { hasTransformedSelectionSet: boolean } => {
           const { fields, dependentTypes: subDependentTypes } = this.buildSelectionSet(schemaType, selectionNodes, {
             parentFieldName: this.buildParentFieldName(typeName, parentName),
           });
@@ -484,9 +479,16 @@ export class SelectionSetToObject<
             prev[typeName].push(transformedSet);
           }
           dependentTypes.push(...subDependentTypes);
+
+          return {
+            hasTransformedSelectionSet: !!transformedSet,
+          };
         };
 
-        collectGrouped(selectionNodesByTypeName.get(typeName) || []);
+        const { hasTransformedSelectionSet } = collectGrouped(selectionNodesByTypeName.get(typeName) || []);
+        if (!hasTransformedSelectionSet) {
+          mustAddEmptyObject = true;
+        }
 
         for (const conditionalNodes of selectionNodesByTypeNameConditional) {
           const selectionNodes = (conditionalNodes.get(typeName) || []).filter(
@@ -569,6 +571,7 @@ export class SelectionSetToObject<
 
       return { grouped, mustAddEmptyObject, dependentTypes };
     }
+
     // Accumulate a map of selected fields to the typenames that
     // share the exact same selected fields. When we find multiple
     // typenames with the same set of fields, we can collapse the
@@ -644,7 +647,7 @@ export class SelectionSetToObject<
       return acc;
     }, {});
 
-    return { grouped: compacted, mustAddEmptyObject, dependentTypes };
+    return { grouped: compacted, mustAddEmptyObject: false, dependentTypes };
   }
 
   protected selectionSetStringFromFields(fields: (string | NameAndType)[]): string | null {
@@ -668,7 +671,7 @@ export class SelectionSetToObject<
       string,
       {
         selectedFieldType: GraphQLOutputType;
-        field: FieldNode;
+        field: EnrichedFieldNode;
       }
     >();
     let requireTypename = false;
@@ -790,7 +793,10 @@ export class SelectionSetToObject<
       );
 
       linkFieldsInterfaces.push(...selectionSetObjects.dependentTypes);
-      const isConditional = hasConditionalDirectives(field.directives) || inlineFragmentConditional;
+      const isConditional =
+        hasConditionalDirectives(field.directives) ||
+        hasConditionalDirectives(field.fragmentDirectives) ||
+        inlineFragmentConditional;
       linkFields.push({
         alias: field.alias
           ? this._processor.config.formatNamedField({
