@@ -538,7 +538,10 @@ export function hasConditionalDirectives(directives: readonly DirectiveNode[] = 
   return directives.some(directive => CONDITIONAL_DIRECTIVES.includes(directive.name.value));
 }
 
-export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {
+/**
+ * Check if any of the directives are incremental i.e. `@defer`
+ */
+export function hasIncrementalDeliveryDirectives(directives: readonly DirectiveNode[] = []): boolean {
   const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
   return directives?.some(directive =>
     INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value),
