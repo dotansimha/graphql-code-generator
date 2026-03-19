@@ -129,6 +129,51 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     `);
   });
 
+  it('#10616 - @include on fragment with inlineFragmentTypes:combine should generate optional fragment', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+      }
+
+      type User {
+        name: String
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      fragment Name on User {
+        name
+      }
+      query user($withName: Boolean! = false) {
+        user {
+          ...Name @include(if: $withName)
+        }
+      }
+    `);
+
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      { inlineFragmentTypes: 'combine' },
+      { outputFile: '' }
+    );
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type NameFragment = { name: string | null };
+
+      export type UserQueryVariables = Exact<{
+        withName?: boolean;
+      }>;
+
+
+      export type UserQuery = { user:
+          | { name?: string | null }
+          | Record<PropertyKey, never>
+         | null };
+      "
+    `);
+  });
+
   it('fields with @include should pre resolve into optional', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
