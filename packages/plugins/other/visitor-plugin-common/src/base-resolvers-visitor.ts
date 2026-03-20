@@ -405,7 +405,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver', { add: { content: "import { DeepPartial } from 'utility-types';" } }],
+   *        plugins: ['typescript', 'typescript-resolvers', { add: { content: "import { DeepPartial } from 'utility-types';" } }],
    *        config: {
    *          defaultMapper: 'DeepPartial<{T}>',
    *          avoidCheckingAbstractTypesRecursively: true // required if you have complex nested abstract types
@@ -432,7 +432,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
+   *        plugins: ['typescript', 'typescript-resolvers'],
    *        config: {
    *          avoidOptionals: true
    *        },
@@ -451,7 +451,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
+   *        plugins: ['typescript', 'typescript-resolvers'],
    *        config: {
    *          avoidOptionals: {
    *            field: true,
@@ -482,7 +482,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
+   *        plugins: ['typescript', 'typescript-resolvers'],
    *        config: {
    *          showUnusedMappers: true,
    *        },
@@ -523,7 +523,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
+   *        plugins: ['typescript', 'typescript-resolvers'],
    *        config: {
    *          typesPrefix: 'I',
    *          enumPrefix: false
@@ -550,7 +550,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
+   *        plugins: ['typescript', 'typescript-resolvers'],
    *        config: {
    *          typesSuffix: 'I',
    *          enumSuffix: false
@@ -643,7 +643,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
+   *        plugins: ['typescript', 'typescript-resolvers'],
    *        config: {
    *          resolversNonOptionalTypename: true // or { unionMember: true, interfaceImplementingType: true }
    *        },
@@ -662,7 +662,7 @@ export interface RawResolversConfig extends RawConfig {
    *    // ...
    *    generates: {
    *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
+   *        plugins: ['typescript', 'typescript-resolvers'],
    *        config: {
    *          resolversNonOptionalTypename: {
    *            unionMember: true,
@@ -704,7 +704,7 @@ export interface RawResolversConfig extends RawConfig {
    *   // ...
    *   generates: {
    *     'path/to/file': {
-   *       plugins: ['typescript', 'typescript-resolver'],
+   *       plugins: ['typescript', 'typescript-resolvers'],
    *       config: {
    *         addInterfaceFieldResolverTypes: true,
    *       },
