@@ -3442,6 +3442,15 @@
     "@inquirer/figures" "^2.0.4"
     "@inquirer/type" "^4.0.4"
 
+"@inquirer/testing@3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@inquirer/testing/-/testing-3.3.2.tgz#8f111529276ba88bd99d81133d1b2aa374818c3b"
+  integrity sha512-kR5fSmr6eV0sz6bonnDrW8PDdVC2D15Ftv0Y4+y081fidr+4XhruPezz5/GqUHYRCvQXcBG8w1UhWGIU0zy+Vg==
+  dependencies:
+    "@inquirer/type" "^4.0.4"
+    "@xterm/headless" "^6.0.0"
+    mute-stream "^3.0.0"
+
 "@inquirer/type@^4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@inquirer/type/-/type-4.0.4.tgz#ef66cf0ee6af7d240d5aa462dd7697be010a1837"
@@ -5567,6 +5576,11 @@
   dependencies:
     tslib "^2.3.0"
 
+"@xterm/headless@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@xterm/headless/-/headless-6.0.0.tgz#a839dee397c49834bb220fa5951d60f4b7f0aa11"
+  integrity sha512-5Yj1QINYCyzrZtf8OFIHi47iQtI+0qYFPHmouEfG8dHNxbZ9Tb9YGSuLcsEwj9Z+OL75GJqPyJbyoFer80a2Hw==
+
 "@yarnpkg/lockfile@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
@@ -6026,13 +6040,6 @@ bcrypt-pbkdf@^1.0.0:
   integrity sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w==
   dependencies:
     tweetnacl "^0.14.3"
-
-bdd-stdin@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/bdd-stdin/-/bdd-stdin-0.2.0.tgz#04e66aa480e0e0df861e288a4062fb8557db2441"
-  integrity sha512-PH3Xlt0JkiIgxknpZrW4Ato1ZPkMSp1JdfKnKiDDWVMVntoKJhyTwSV9Hk0K0gTMhsaQJMFCcyazg3EsXt+9jg==
-  dependencies:
-    mock-stdin "0.3.0"
 
 better-path-resolve@1.0.0:
   version "1.0.0"
@@ -11644,11 +11651,6 @@ mlly@^1.4.2, mlly@^1.7.1, mlly@^1.7.2:
     pathe "^1.1.2"
     pkg-types "^1.2.0"
     ufo "^1.5.4"
-
-mock-stdin@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/mock-stdin/-/mock-stdin-0.3.0.tgz#f40d2a513a114e6d547480625b5ef5190744bd4d"
-  integrity sha512-RgODIm+s+lEFH+BUlJbLFm2m7oeuNQNFyUU3Bvviqp14bhPJZhzIv4ovN3pdejqK/GyNqdKENLKxR55rDPDnXw==
 
 moment@~2.30.0:
   version "2.30.1"
