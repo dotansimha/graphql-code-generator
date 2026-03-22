@@ -56,7 +56,7 @@
     "@graphql-tools/url-loader": "^9.0.6",
     "@graphql-tools/merge": "^9.0.6",
     "@graphql-tools/utils": "^11.0.0",
-    "@inquirer/prompts": "^7.8.2",
+    "@inquirer/prompts": "^8.3.2",
     "@whatwg-node/fetch": "^0.10.0",
     "chalk": "^5.6.0",
     "cosmiconfig": "^9.0.0",
@@ -77,12 +77,12 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
+    "@inquirer/testing": "3.3.2",
     "@parcel/watcher": "^2.1.0",
     "@types/is-glob": "4.0.4",
     "@types/js-yaml": "4.0.9",
     "@types/micromatch": "^4.0.2",
     "@types/shell-quote": "1.7.5",
-    "bdd-stdin": "0.2.0",
     "change-case-all": "2.1.0",
     "js-yaml": "4.1.0",
     "make-dir": "4.0.0",

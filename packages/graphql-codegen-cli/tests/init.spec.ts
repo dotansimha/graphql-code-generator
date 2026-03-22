@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import bddStdin from 'bdd-stdin';
+import { screen } from '@inquirer/testing/vitest';
 import { fs, vol } from 'memfs';
 import { bold } from '../src/init/helpers.js';
 import { init } from '../src/init/index.js';
@@ -12,11 +12,7 @@ vi.mock('../src/utils/get-latest-version.ts', () => {
 });
 
 vi.mock('fs', () => require('./__mocks__/fs.cjs'));
-const { version } = require('../package.json');
-
-const SELECT = ' '; // checkbox
-const ENTER = '\n';
-// const DOWN = bddStdin.keys.down;
+const version = '888.888.888'; // Mocked CLI version, not important
 
 const packageJson = {
   withAngular: JSON.stringify({
@@ -87,45 +83,45 @@ describe('init', () => {
   });
 
   describe('guessTargets()', () => {
-    it('should guess angular projects', async () => {
+    it('should guess angular projects', () => {
       vol.fromJSON({ ['package.json']: packageJson.withAngular }, process.cwd());
-      const targets = await guessTargets();
+      const targets = guessTargets();
       expect(targets.Angular).toEqual(true);
     });
 
-    it('should guess typescript projects', async () => {
+    it('should guess typescript projects', () => {
       vol.fromJSON({ ['package.json']: packageJson.withTypescript }, process.cwd());
-      const targets = await guessTargets();
+      const targets = guessTargets();
       expect(targets.TypeScript).toEqual(true);
     });
 
-    it('should guess react projects', async () => {
+    it('should guess react projects', () => {
       vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
-      const targets = await guessTargets();
+      const targets = guessTargets();
       expect(targets.React).toEqual(true);
     });
 
-    it('should guess stencil projects', async () => {
+    it('should guess stencil projects', () => {
       vol.fromJSON({ ['package.json']: packageJson.withStencil }, process.cwd());
-      const targets = await guessTargets();
+      const targets = guessTargets();
       expect(targets.Stencil).toEqual(true);
     });
 
-    it('should guess flow projects', async () => {
+    it('should guess flow projects', () => {
       vol.fromJSON({ ['package.json']: packageJson.withFlow }, process.cwd());
-      const targets = await guessTargets();
+      const targets = guessTargets();
       expect(targets.Flow).toEqual(true);
     });
 
-    it('should guess vue projects', async () => {
+    it('should guess vue projects', () => {
       vol.fromJSON({ ['package.json']: packageJson.withVue }, process.cwd());
-      const targets = await guessTargets();
+      const targets = guessTargets();
       expect(targets.Vue).toEqual(true);
     });
 
-    it('should guess graphql-request projects', async () => {
+    it('should guess graphql-request projects', () => {
       vol.fromJSON({ ['package.json']: packageJson.withGraphqlRequest }, process.cwd());
-      const targets = await guessTargets();
+      const targets = guessTargets();
       expect(targets.graphqlRequest).toEqual(true);
     });
   });
@@ -134,100 +130,378 @@ describe('init', () => {
     it('should use angular related plugins when @angular/core is found', async () => {
       vol.fromJSON({ ['package.json']: packageJson.withAngular }, process.cwd());
       const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
-      // silent
-      vi.spyOn(console, 'log').mockImplementation(() => {});
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {}); // silent
 
-      useInputs({
-        onTarget: [ENTER], // confirm target
-        onSchema: [ENTER], // use default
-        onDocuments: [ENTER],
-        onPlugins: [ENTER], // use selected packages
-        onOutput: [ENTER], // use default output path
-        onIntrospection: ['n', ENTER], // no introspection,
-        onConfig: [ENTER], // use default config path
-        onScript: ['graphql', ENTER], // use custom npm script
-      });
+      const result = init();
 
-      await init();
+      // targets
+      expect(screen.getScreen()).toMatchInlineSnapshot(`
+      "? What type of application are you building?
+        Backend - API or server
+      ❯ Application built with Angular
+        Application built with React
+        Application built with Stencil
+        Application built with Vue
+        Application using graphql-request
+        Application built with other framework or vanilla JS
+
+      ↑↓ navigate • ⏎ select"
+    `);
+      screen.keypress('enter');
+      await screen.next();
+
+      // schema
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? Where is your schema?: (path or url) (http://localhost:4000)"`
+      );
+      screen.keypress('enter');
+      await screen.next();
+
+      // documents
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where are your operations and fragments?: (src/**/*.ts)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // plugins
+      expect(screen.getScreen()).toMatchInlineSnapshot(`
+      "? Pick plugins:
+      ❯◯ Introspection Fragment Matcher (for Apollo Client)
+       ◉ TypeScript Apollo Angular (typed GQL services)
+
+      ↑↓ navigate • space select • a all • i invert • ⏎ submit"
+    `);
+      screen.keypress('enter');
+      await screen.next();
+
+      // output
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where to write the output: (src/generated/graphql.ts)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // introspection
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Do you want to generate an introspection file? (y/N)"`);
+      screen.keypress('n');
+      screen.keypress('enter');
+      await screen.next();
+
+      // config
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? How to name the config file? (codegen.ts)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // script
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? What script in package.json should run the codegen? (codegen)"`
+      );
+      screen.keypress('enter');
+      await result;
+
+      expect(await screen.getFullOutput()).toMatchInlineSnapshot(
+        `
+      "✔ What type of application are you building? Application built with Angular
+      ✔ Where is your schema?: (path or url) http://localhost:4000
+      ✔ Where are your operations and fragments?: src/**/*.ts
+      ✔ Pick plugins: TypeScript Apollo Angular (typed GQL services)
+      ✔ Where to write the output: src/generated/graphql.ts
+      ✔ Do you want to generate an introspection file? No
+      ✔ How to name the config file? codegen.ts
+      ✔ What script in package.json should run the codegen? codegen"
+    `
+      );
+
+      expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold('codegen.ts')}`);
 
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
+      expect(pkg).toMatchInlineSnapshot(`
+        {
+          "dependencies": {
+            "@angular/core": "x.x.x",
+          },
+          "devDependencies": {
+            "@graphql-codegen/cli": "1.0.0",
+            "@graphql-codegen/typescript-apollo-angular": "1.0.0",
+          },
+          "scripts": {
+            "codegen": "graphql-codegen --config codegen.ts",
+          },
+          "version": "888.888.888",
+        }
+      `);
+
+      const configFile = writeFileSpy.mock.calls[0][0] as string;
       const config = writeFileSpy.mock.calls[0][1] as string;
+      expect(config).toMatchInlineSnapshot(`
+        "
+        import type { CodegenConfig } from '@graphql-codegen/cli';
 
-      expect(config).toMatchSnapshot();
+        const config: CodegenConfig = {
+          overwrite: true,
+          schema: "http://localhost:4000",
+          documents: "src/**/*.ts",
+          generates: {
+            "src/generated/graphql.ts": {
+              plugins: ["typescript-apollo-angular"]
+            }
+          }
+        };
 
-      // expected plugins
-      expect(pkg.devDependencies).toEqual({
-        '@graphql-codegen/cli': '1.0.0',
-        '@graphql-codegen/typescript-apollo-angular': '1.0.0',
-      });
+        export default config;
+        "
+      `);
+      expect(configFile).toEqual(resolve(process.cwd(), 'codegen.ts'));
     });
 
     it('should use react related plugins when react is found', async () => {
       vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
       const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
-      // silent
-      vi.spyOn(console, 'log').mockImplementation(() => {});
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
-      useInputs({
-        onTarget: [ENTER], // confirm react target
-        onSchema: [ENTER], // use default
-        onDocuments: [ENTER],
-        onOutput: [ENTER], // use default output path
-        onIntrospection: ['n', ENTER], // no introspection,
-        onConfig: [ENTER], // use default config path
-        onScript: ['graphql', ENTER], // use custom npm script
-      });
+      const result = init();
 
-      await init();
+      // targets
+      expect(screen.getScreen()).toMatchInlineSnapshot(`
+      "? What type of application are you building?
+        Backend - API or server
+        Application built with Angular
+      ❯ Application built with React
+        Application built with Stencil
+        Application built with Vue
+        Application using graphql-request
+        Application built with other framework or vanilla JS
+
+      ↑↓ navigate • ⏎ select"
+    `);
+      screen.keypress('enter');
+      await screen.next();
+
+      // schema
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? Where is your schema?: (path or url) (http://localhost:4000)"`
+      );
+      screen.keypress('enter');
+      await screen.next();
+
+      // documents
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where are your operations and fragments?: (src/**/*.tsx)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // output
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where to write the output: (src/gql/)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // introspection
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Do you want to generate an introspection file? (y/N)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // config
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? How to name the config file? (codegen.ts)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // script
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? What script in package.json should run the codegen? (codegen)"`
+      );
+      screen.keypress('enter');
+      await result;
+
+      expect(await screen.getFullOutput()).toMatchInlineSnapshot(
+        `
+      "✔ What type of application are you building? Application built with React
+      ✔ Where is your schema?: (path or url) http://localhost:4000
+      ✔ Where are your operations and fragments?: src/**/*.tsx
+      ✔ Where to write the output: src/gql/
+      ✔ Do you want to generate an introspection file? No
+      ✔ How to name the config file? codegen.ts
+      ✔ What script in package.json should run the codegen? codegen"
+    `
+      );
+
+      expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at codegen.ts`);
 
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
+      expect(pkg).toMatchInlineSnapshot(`
+        {
+          "dependencies": {
+            "react": "x.x.x",
+          },
+          "devDependencies": {
+            "@graphql-codegen/cli": "1.0.0",
+            "@graphql-codegen/client-preset": "1.0.0",
+          },
+          "scripts": {
+            "codegen": "graphql-codegen --config codegen.ts",
+          },
+          "version": "888.888.888",
+        }
+      `);
+
+      const configFile = writeFileSpy.mock.calls[0][0] as string;
       const config = writeFileSpy.mock.calls[0][1] as string;
+      expect(configFile).toEqual(resolve(process.cwd(), 'codegen.ts'));
+      expect(config).toMatchInlineSnapshot(`
+        "
+        import type { CodegenConfig } from '@graphql-codegen/cli';
 
-      expect(config).toMatchSnapshot();
+        const config: CodegenConfig = {
+          overwrite: true,
+          schema: "http://localhost:4000",
+          documents: "src/**/*.tsx",
+          generates: {
+            "src/gql/": {
+              preset: "client",
+              plugins: []
+            }
+          }
+        };
 
-      // expected plugins
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/cli');
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/client-preset');
-      // should not have other plugins
-      expect(Object.keys(pkg.devDependencies)).toHaveLength(2);
+        export default config;
+        "
+      `);
     });
 
     it('should use stencil related plugins when @stencil/core is found', async () => {
       vol.fromJSON({ ['package.json']: packageJson.withStencil }, process.cwd());
       const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
-      // silent
-      vi.spyOn(console, 'log').mockImplementation(() => {});
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {}); // silent
 
-      useInputs({
-        onTarget: [ENTER], // confirm stencil target
-        onSchema: [ENTER], // use default
-        onDocuments: [ENTER],
-        onPlugins: [ENTER], // use selected packages
-        onOutput: [ENTER], // use default output path
-        onIntrospection: ['n', ENTER], // no introspection,
-        onConfig: [ENTER], // use default config path
-        onScript: ['graphql', ENTER], // use custom npm script
-      });
+      const result = init();
 
-      await init();
+      // targets
+      expect(screen.getScreen()).toMatchInlineSnapshot(`
+      "? What type of application are you building?
+        Backend - API or server
+        Application built with Angular
+        Application built with React
+      ❯ Application built with Stencil
+        Application built with Vue
+        Application using graphql-request
+        Application built with other framework or vanilla JS
+
+      ↑↓ navigate • ⏎ select"
+    `);
+      screen.keypress('enter');
+      await screen.next();
+
+      // schema
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? Where is your schema?: (path or url) (http://localhost:4000)"`
+      );
+      screen.keypress('enter');
+      await screen.next();
+
+      // documents
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? Where are your operations and fragments?: (src/**/*.graphql)"`
+      );
+      screen.keypress('enter');
+      await screen.next();
+
+      // plugins
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `
+      "? Pick plugins:
+      ❯◉ TypeScript (required by other typescript plugins)
+       ◉ TypeScript Operations (operations and fragments)
+       ◉ TypeScript Stencil Apollo (typed components)
+       ◯ TypeScript GraphQL files modules (declarations for .graphql files)
+       ◯ TypeScript GraphQL document nodes (embedded GraphQL document)
+       ◯ Introspection Fragment Matcher (for Apollo Client)
+       ◯ Urql Introspection (for Urql Client)
+
+      ↑↓ navigate • space select • a all • i invert • ⏎ submit"
+    `
+      );
+      screen.keypress('enter');
+      await screen.next();
+
+      // output
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where to write the output: (src/generated/graphql.tsx)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // introspection
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Do you want to generate an introspection file? (y/N)"`);
+      screen.keypress('n');
+      screen.keypress('enter');
+      await screen.next();
+
+      // config
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? How to name the config file? (codegen.ts)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // script
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? What script in package.json should run the codegen? (codegen)"`
+      );
+      screen.keypress('enter');
+      await result;
+
+      expect(await screen.getFullOutput()).toMatchInlineSnapshot(
+        `
+        "✔ What type of application are you building? Application built with Stencil
+        ✔ Where is your schema?: (path or url) http://localhost:4000
+        ✔ Where are your operations and fragments?: src/**/*.graphql
+        ✔ Pick plugins: TypeScript (required by other typescript plugins), TypeScript Operations (operations and fragments), TypeScript Stencil Apollo (typed components)
+        ✔ Where to write the output: src/generated/graphql.tsx
+        ✔ Do you want to generate an introspection file? No
+        ✔ How to name the config file? codegen.ts
+        ✔ What script in package.json should run the codegen? codegen"
+      `
+      );
+
+      expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at codegen.ts`);
 
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
+      expect(pkg).toMatchInlineSnapshot(`
+        {
+          "dependencies": {
+            "@stencil/core": "x.x.x",
+          },
+          "devDependencies": {
+            "@graphql-codegen/cli": "1.0.0",
+            "@graphql-codegen/typescript": "1.0.0",
+            "@graphql-codegen/typescript-operations": "1.0.0",
+            "@graphql-codegen/typescript-stencil-apollo": "1.0.0",
+          },
+          "scripts": {
+            "codegen": "graphql-codegen --config codegen.ts",
+          },
+          "version": "888.888.888",
+        }
+      `);
+
+      const configFile = writeFileSpy.mock.calls[0][0] as string;
       const config = writeFileSpy.mock.calls[0][1] as string;
+      expect(configFile).toEqual(resolve(process.cwd(), 'codegen.ts'));
+      expect(config).toMatchInlineSnapshot(`
+        "
+        import type { CodegenConfig } from '@graphql-codegen/cli';
 
-      expect(config).toMatchSnapshot();
+        const config: CodegenConfig = {
+          overwrite: true,
+          schema: "http://localhost:4000",
+          documents: "src/**/*.graphql",
+          generates: {
+            "src/generated/graphql.tsx": {
+              plugins: ["typescript", "typescript-operations", "typescript-stencil-apollo"]
+            }
+          }
+        };
 
-      // expected plugins
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-operations');
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-stencil-apollo');
-      // should not have other plugins
-      expect(Object.keys(pkg.devDependencies)).toHaveLength(4);
+        export default config;
+        "
+      `);
     });
   });
 
@@ -235,144 +509,263 @@ describe('init', () => {
     it('should use typescript related plugins when typescript is found (node)', async () => {
       vol.fromJSON({ ['package.json']: packageJson.withTypescript }, process.cwd());
       const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
-      // silent
-      vi.spyOn(console, 'log').mockImplementation(() => {});
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {}); // silent
 
-      useInputs({
-        onTarget: [SELECT, ENTER], // confirm api target
-        onSchema: [ENTER], // use default
-        onPlugins: [ENTER], // use selected packages
-        onOutput: [ENTER], // use default output path
-        onIntrospection: ['n', ENTER], // no introspection,
-        onConfig: [ENTER], // use default config path
-        onScript: ['graphql', ENTER], // use custom npm script
-      });
+      const result = init();
 
-      await init();
+      // targets
+      expect(screen.getScreen()).toMatchInlineSnapshot(`
+        "? What type of application are you building?
+        ❯ Backend - API or server
+          Application built with Angular
+          Application built with React
+          Application built with Stencil
+          Application built with Vue
+          Application using graphql-request
+          Application built with other framework or vanilla JS
+
+        ↑↓ navigate • ⏎ select"
+      `);
+      screen.keypress('enter');
+      await screen.next();
+
+      // schema
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? Where is your schema?: (path or url) (http://localhost:4000)"`
+      );
+      screen.keypress('enter');
+      await screen.next();
+
+      // documents
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `
+        "? Pick plugins:
+        ❯◉ TypeScript (required by other typescript plugins)
+         ◉ TypeScript Resolvers (strongly typed resolve functions)
+         ◯ TypeScript MongoDB (typed MongoDB objects)
+         ◯ TypeScript GraphQL document nodes (embedded GraphQL document)
+
+        ↑↓ navigate • space select • a all • i invert • ⏎ submit"
+      `
+      );
+      screen.keypress('enter');
+      await screen.next();
+
+      // output
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where to write the output: (src/generated/graphql.ts)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // introspection
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? Do you want to generate an introspection file? (y/N)"`);
+      screen.keypress('n');
+      screen.keypress('enter');
+      await screen.next();
+
+      // config
+      expect(screen.getScreen()).toMatchInlineSnapshot(`"? How to name the config file? (codegen.ts)"`);
+      screen.keypress('enter');
+      await screen.next();
+
+      // script
+      expect(screen.getScreen()).toMatchInlineSnapshot(
+        `"? What script in package.json should run the codegen? (codegen)"`
+      );
+      screen.keypress('enter');
+
+      await result;
+
+      expect(await screen.getFullOutput()).toMatchInlineSnapshot(
+        `
+        "✔ What type of application are you building? Backend - API or server
+        ✔ Where is your schema?: (path or url) http://localhost:4000
+        ✔ Pick plugins: TypeScript (required by other typescript plugins), TypeScript Resolvers (strongly typed resolve functions)
+        ✔ Where to write the output: src/generated/graphql.ts
+        ✔ Do you want to generate an introspection file? No
+        ✔ How to name the config file? codegen.ts
+        ✔ What script in package.json should run the codegen? codegen"
+      `
+      );
+
+      expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at codegen.ts`);
 
       expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
       const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
+      expect(pkg).toMatchInlineSnapshot(`
+        {
+          "devDependencies": {
+            "@graphql-codegen/cli": "1.0.0",
+            "@graphql-codegen/typescript": "1.0.0",
+            "@graphql-codegen/typescript-resolvers": "1.0.0",
+            "typescript": "x.x.x",
+          },
+          "scripts": {
+            "codegen": "graphql-codegen --config codegen.ts",
+          },
+          "version": "888.888.888",
+        }
+      `);
+
+      const configFile = writeFileSpy.mock.calls[0][0] as string;
       const config = writeFileSpy.mock.calls[0][1] as string;
+      expect(configFile).toEqual(resolve(process.cwd(), 'codegen.ts'));
+      expect(config).toMatchInlineSnapshot(`
+        "
+        import type { CodegenConfig } from '@graphql-codegen/cli';
 
-      expect(config).toMatchSnapshot();
+        const config: CodegenConfig = {
+          overwrite: true,
+          schema: "http://localhost:4000",
+          generates: {
+            "src/generated/graphql.ts": {
+              plugins: ["typescript", "typescript-resolvers"]
+            }
+          }
+        };
 
-      // expected plugins
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript');
-      expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/typescript-resolvers');
-      // should not have other plugins
-      expect(Object.keys(pkg.devDependencies)).toHaveLength(4); // 3 - because we have typescript package in devDeps
+        export default config;
+        "
+      `);
     });
-  });
-
-  it('should have few default values for Angular', async () => {
-    vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
-    const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const defaults = {
-      config: 'codegen.ts',
-    };
-
-    useInputs({
-      onTarget: [ENTER], // confirm angular target
-      onSchema: [ENTER], // use default
-      onDocuments: [ENTER],
-      onOutput: [ENTER], // use default output path
-      onIntrospection: [ENTER], // no introspection,
-      onConfig: [ENTER], // use default config path
-      onScript: ['graphql', ENTER], // use custom npm script
-    });
-
-    await init();
-
-    const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = writeFileSpy.mock.calls[0][1] as string;
-    const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-
-    expect(pkg.scripts.graphql).toEqual(`graphql-codegen --config codegen.ts`);
-    expect(configFile).toEqual(resolve(process.cwd(), defaults.config));
-    expect(config).toMatchSnapshot();
-    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(defaults.config)}`);
-  });
-
-  it('should have few default values for React', async () => {
-    vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
-    const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const options = {
-      script: 'graphql',
-      schema: './schema.ts',
-      documents: 'graphql/**/*.graphql',
-      output: 'graphql/index.ts',
-      config: 'app-codegen.yml',
-    };
-
-    useInputs({
-      onTarget: [ENTER], // confirm target
-      onSchema: [options.schema, ENTER], // use default
-      onDocuments: [options.documents, ENTER],
-      onOutput: [options.output, ENTER], // use default output path
-      onIntrospection: ['y', ENTER], // with introspection,
-      onConfig: [options.config, ENTER], // use default config path
-      onScript: [options.script, ENTER], // use custom npm script
-    });
-
-    await init();
-
-    const configFile = writeFileSpy.mock.calls[0][0] as string;
-    const config = writeFileSpy.mock.calls[0][1] as string;
-    const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
-
-    expect(pkg.scripts[options.script]).toEqual(`graphql-codegen --config ${options.config}`);
-    expect(configFile).toEqual(resolve(process.cwd(), options.config));
-    expect(config).toMatchSnapshot();
-    expect(logSpy.mock.calls[2][0]).toContain(`Config file generated at ${bold(options.config)}`);
   });
 
   it('custom setup', async () => {
     vol.fromJSON({ ['package.json']: packageJson.withReact }, process.cwd());
-
-    const { init } = await import('../src/init/index.js');
     const writeFileSpy = vi.spyOn(fs, 'writeFileSync');
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const documents = 'graphql/*.ts';
-    const script = 'generate:types';
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {}); // silent
 
-    useInputs({
-      onTarget: [ENTER], // confirm target
-      onSchema: [ENTER], // use default
-      onDocuments: [documents, ENTER],
-      onOutput: [ENTER], // use default output path
-      onIntrospection: ['y', ENTER], // no introspection,
-      onConfig: [ENTER], // use default config path
-      onScript: [script, ENTER], // use custom npm script
-    });
+    const result = init();
 
-    await init();
+    // targets
+    expect(screen.getScreen()).toMatchInlineSnapshot(`
+      "? What type of application are you building?
+        Backend - API or server
+        Application built with Angular
+      ❯ Application built with React
+        Application built with Stencil
+        Application built with Vue
+        Application using graphql-request
+        Application built with other framework or vanilla JS
+
+      ↑↓ navigate • ⏎ select"
+    `);
+    screen.keypress('enter');
+    await screen.next();
+
+    // schema
+    expect(screen.getScreen()).toMatchInlineSnapshot(
+      `"? Where is your schema?: (path or url) (http://localhost:4000)"`
+    );
+    screen.type('./schema.ts');
+    screen.keypress('enter');
+    await screen.next();
+
+    // documents
+    expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where are your operations and fragments?: (src/**/*.tsx)"`);
+    screen.type('graphql/*.ts');
+    screen.keypress('enter');
+    await screen.next();
+
+    // output
+    expect(screen.getScreen()).toMatchInlineSnapshot(`"? Where to write the output: (src/gql/)"`);
+    screen.type('graphql/index.ts');
+    screen.keypress('enter');
+    await screen.next();
+
+    // introspection
+    expect(screen.getScreen()).toMatchInlineSnapshot(`"? Do you want to generate an introspection file? (y/N)"`);
+    screen.type('y');
+    screen.keypress('enter');
+    await screen.next();
+
+    // config
+    expect(screen.getScreen()).toMatchInlineSnapshot(`"? How to name the config file? (codegen.ts)"`);
+    screen.type('app-codegen.yml');
+    screen.keypress('enter');
+    await screen.next();
+
+    // script
+    expect(screen.getScreen()).toMatchInlineSnapshot(
+      `"? What script in package.json should run the codegen? (codegen)"`
+    );
+    screen.type('generate:types');
+    screen.keypress('enter');
+    await result;
+
+    expect(await screen.getFullOutput()).toMatchInlineSnapshot(
+      `
+      "✔ What type of application are you building? Application built with React
+      ✔ Where is your schema?: (path or url) ./schema.ts
+      ✔ Where are your operations and fragments?: graphql/*.ts
+      ✔ Where to write the output: graphql/index.ts
+      ✔ Do you want to generate an introspection file? Yes
+      ✔ How to name the config file? app-codegen.yml
+      ✔ What script in package.json should run the codegen? generate:types"
+    `
+    );
+
+    await result;
 
     expect(writeFileSpy).toHaveBeenCalledTimes(2);
 
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
+    expect(pkg).toMatchInlineSnapshot(`
+      {
+        "dependencies": {
+          "react": "x.x.x",
+        },
+        "devDependencies": {
+          "@graphql-codegen/cli": "1.0.0",
+          "@graphql-codegen/client-preset": "1.0.0",
+          "@graphql-codegen/introspection": "1.0.0",
+        },
+        "scripts": {
+          "generate:types": "graphql-codegen --config app-codegen.yml",
+        },
+        "version": "888.888.888",
+      }
+    `);
+
+    const configFile = writeFileSpy.mock.calls[0][0] as string;
     const config = writeFileSpy.mock.calls[0][1] as string;
-
-    // config
-    expect(config).toMatchSnapshot();
-
-    // script name should match what we provided
-    expect(pkg.scripts[script]).toEqual('graphql-codegen --config codegen.ts');
-    // expected plugins
-    expect(pkg.devDependencies).toHaveProperty('@graphql-codegen/introspection');
-    // should not have these plugins
-    expect(pkg.devDependencies).not.toHaveProperty('@graphql-codegen/typescript-resolvers');
+    expect(configFile).toEqual(resolve(process.cwd(), 'app-codegen.yml'));
+    expect(config).toMatchInlineSnapshot(`
+      "overwrite: true
+      schema: "./schema.ts"
+      documents: "graphql/*.ts"
+      generates:
+        graphql/index.ts:
+          preset: "client"
+          plugins: []
+        ./graphql.schema.json:
+          plugins:
+            - "introspection"
+      "
+    `);
 
     // logs
     const welcomeMsg = logSpy.mock.calls[0][0];
     const doneMsg = logSpy.mock.calls[2][0];
+    expect(welcomeMsg).toMatchInlineSnapshot(`
+      "
+          Welcome to GraphQL Code Generator!
+          Answer few questions and we will setup everything for you.
+        "
+    `);
+    expect(doneMsg).toMatchInlineSnapshot(`
+      "
+          Config file generated at app-codegen.yml
 
-    expect(welcomeMsg).toContain(`Welcome to ${bold('GraphQL Code Generator')}`);
-    expect(doneMsg).toContain(`Config file generated at ${bold('codegen.ts')}`);
-    expect(doneMsg).toContain(bold('$ npm install'));
-    expect(doneMsg).toContain(bold(`$ npm run ${script}`));
+            $ npm install
+
+          To install the plugins.
+
+            $ npm run generate:types
+
+          To run GraphQL Code Generator.
+        "
+    `);
   });
 
   describe('plugin choices', () => {
@@ -505,27 +898,3 @@ describe('init', () => {
     });
   });
 });
-
-function useInputs(inputs: {
-  onTarget: string[];
-  onSchema: string[];
-  onDocuments?: string[];
-  onPlugins?: string[];
-  onOutput: string[];
-  onIntrospection: string[];
-  onConfig: string[];
-  onScript: string[];
-}) {
-  bddStdin(
-    [].concat(
-      inputs.onTarget,
-      inputs.onSchema,
-      inputs.onDocuments || [],
-      inputs.onPlugins || [],
-      inputs.onOutput,
-      inputs.onIntrospection,
-      inputs.onConfig,
-      inputs.onScript
-    )
-  );
-}
