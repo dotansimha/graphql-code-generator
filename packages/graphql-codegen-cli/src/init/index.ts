@@ -15,7 +15,7 @@ export async function init() {
     Answer few questions and we will setup everything for you.
   `);
 
-  const possibleTargets = await guessTargets();
+  const possibleTargets = guessTargets();
   const answers = await getAnswers(possibleTargets);
 
   // define config
