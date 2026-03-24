@@ -1531,8 +1531,8 @@ export * from "./gql.cjs";`);
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
-          "b61b879c1eb0040bce65d70c8adfb1ae9360f52f": "query A { a }",
-          "c3ea9f3f937d47d72c70055ea55c7cf88a35e608": "query B { b }"
+          "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
+          "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
         }"
       `);
 
@@ -1557,8 +1557,8 @@ export * from "./gql.cjs";`);
         export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
-        export const ADocument = {"__meta__":{"hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
-        export const BDocument = {"__meta__":{"hash":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+        export const ADocument = {"__meta__":{"hash":"sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
 
@@ -1593,8 +1593,8 @@ export * from "./gql.cjs";`);
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
-          "b61b879c1eb0040bce65d70c8adfb1ae9360f52f": "query A { a }",
-          "c3ea9f3f937d47d72c70055ea55c7cf88a35e608": "query B { b }"
+          "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
+          "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
         }"
       `);
 
@@ -1619,8 +1619,8 @@ export * from "./gql.cjs";`);
         export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
-        export const ADocument = {"__meta__":{"hash":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"}} as unknown as DocumentNode<AQuery, AQueryVariables>;
-        export const BDocument = {"__meta__":{"hash":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"}} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+        export const ADocument = {"__meta__":{"hash":"sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"}} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"}} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
 
@@ -1655,8 +1655,8 @@ export * from "./gql.cjs";`);
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
-          "b61b879c1eb0040bce65d70c8adfb1ae9360f52f": "query A { a }",
-          "c3ea9f3f937d47d72c70055ea55c7cf88a35e608": "query B { b }"
+          "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
+          "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
         }"
       `);
 
@@ -1681,8 +1681,8 @@ export * from "./gql.cjs";`);
         export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
-        export const ADocument = {"__meta__":{"custom_property_name":"b61b879c1eb0040bce65d70c8adfb1ae9360f52f"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
-        export const BDocument = {"__meta__":{"custom_property_name":"c3ea9f3f937d47d72c70055ea55c7cf88a35e608"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+        export const ADocument = {"__meta__":{"custom_property_name":"sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"custom_property_name":"sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
 
@@ -1743,8 +1743,8 @@ export * from "./gql.cjs";`);
         export type BbbQuery = { b: string | null };
 
 
-        export const AaaDocument = {"__meta__":{"cacheKeys":["aaa"],"hash":"682f60dea844320c05fcb4fb6c4118015902c9a8"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"aaa"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AaaQuery, AaaQueryVariables>;
-        export const BbbDocument = {"__meta__":{"cacheKeys":["bbb"],"hash":"2a8e0849914b13ebc13b112ba5a502678d757511"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"bbb"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BbbQuery, BbbQueryVariables>;"
+        export const AaaDocument = {"__meta__":{"cacheKeys":["aaa"],"hash":"sha256:a3728239db824c94acc4e31d248e0f05d527606cc8a1bdc4c31307564cd713a1"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"aaa"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AaaQuery, AaaQueryVariables>;
+        export const BbbDocument = {"__meta__":{"cacheKeys":["bbb"],"hash":"sha256:a8badf5c61adc3e65b5c8602e35a138657025aba92b30ece37dab989e7b1264b"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"bbb"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BbbQuery, BbbQueryVariables>;"
       `);
     });
 
@@ -1779,8 +1779,8 @@ export * from "./gql.cjs";`);
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
-          "7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
-          "a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
+          "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
+          "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
         }"
       `);
 
@@ -1805,8 +1805,8 @@ export * from "./gql.cjs";`);
         export type CFragment = { c: string | null } & { ' $fragmentName'?: 'CFragment' };
 
         export const CFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"C"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Query"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"c"}}]}}]} as unknown as DocumentNode<CFragment, unknown>;
-        export const ADocument = {"__meta__":{"hash":"7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
-        export const BDocument = {"__meta__":{"hash":"a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
+        export const ADocument = {"__meta__":{"hash":"sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"A"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;
+        export const BDocument = {"__meta__":{"hash":"sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410"},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
       `);
     });
 
@@ -2290,8 +2290,8 @@ export * from "./gql.cjs";`);
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooFragment, unknown>;
         export const FooNestedFragmentDoc = {"__meta__":{"deferredFields":{"foo":["id"]}},"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"fooNested"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<FooNestedFragment, unknown>;
-        export const FooDocument = {"__meta__":{"hash":"39c47d2da0fb0e6867abbe2ec942d9858f2d76c7","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
-        export const FoosDocument = {"__meta__":{"hash":"8aba765173b2302b9857334e9959d97a2168dbc8","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
+        export const FooDocument = {"__meta__":{"hash":"sha256:07e5ff4a0a8921816acb51a2e854243b3a43554586f1e0a0d0b53f06126bccb6","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FooQuery, FooQueryVariables>;
+        export const FoosDocument = {"__meta__":{"hash":"sha256:f467ac02b2476a740fba9d4fb05ecf4d3660d4d073e3ab45ed274ea65865c30a","deferredFields":{"Foo":["value"]}},"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Foo"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"defer"}}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Foo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Foo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FoosQuery, FoosQueryVariables>;"
       `);
     });
 
@@ -2547,7 +2547,7 @@ export * from "./gql.cjs";`);
           ... on Foo @defer {
             value
           }
-        }\`, {"hash":"2687841b00fe0b3b4fd0dfa2e943f80936594f58","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
+        }\`, {"hash":"sha256:7d1874b8f21095f92812369eeb5557f9eff46319f70d6f69a4cb11eba6c3b215","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FooQuery, FooQueryVariables>;
         export const FoosDocument = new TypedDocumentString(\`
             query Foos {
           foos {
@@ -2562,7 +2562,7 @@ export * from "./gql.cjs";`);
           ... on Foo @defer {
             value
           }
-        }\`, {"hash":"8db613cc1f12f64dbde9cd6fef167fd12246330d","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
+        }\`, {"hash":"sha256:3daba53c1f6375961bee04d12a5e3528532479e152c01462918f3c11187ba0aa","deferredFields":{"Foo":["value"]}}) as unknown as TypedDocumentString<FoosQuery, FoosQueryVariables>;"
       `);
     });
   });

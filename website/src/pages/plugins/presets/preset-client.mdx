@@ -496,7 +496,7 @@ console.log(await response.json())
 
 ### Hashing algorithm
 
-To override the default hash algorithm of sha1 set `persistedDocuments.hashAlgorithm`
+To override the default hash algorithm of sha256 set `persistedDocuments.hashAlgorithm`
 
 ```ts filename="codegen.ts" {10-12}
 import { type CodegenConfig } from '@graphql-codegen/cli'
@@ -509,7 +509,7 @@ const config: CodegenConfig = {
       preset: 'client',
       presetConfig: {
         persistedDocuments: {
-          hashAlgorithm: 'sha256'
+          hashAlgorithm: 'sha1'
         }
       }
     }

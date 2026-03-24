@@ -90,7 +90,7 @@ export type ClientPresetConfig = {
          * The algorithm parameter is typed with known algorithms and as a string rather than a union because it solely depends on Crypto's algorithms supported
          * by the version of OpenSSL on the platform.
          *
-         * @default `sha1`
+         * @default `sha256`
          */
         hashAlgorithm?: 'sha1' | 'sha256' | (string & {}) | ((operation: string) => string);
       };
@@ -164,7 +164,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           hashAlgorithm:
             (typeof options.presetConfig.persistedDocuments === 'object' &&
               options.presetConfig.persistedDocuments.hashAlgorithm) ||
-            'sha1',
+            'sha256',
         }
       : null;
 

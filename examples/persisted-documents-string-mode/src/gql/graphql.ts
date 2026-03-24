@@ -33,5 +33,5 @@ export const HelloQueryDocument = new TypedDocumentString(
   hello
 }
     `,
-  { hash: '86f01e23de1c770cabbc35b2d87f2e5fd7557b6f' }
+  { hash: 'sha256:4c3f5d98b02279859b4c0c4efdba9553ac7acf89b9b0785eb24be68d5a67e6e8' }
 ) as unknown as TypedDocumentString<HelloQueryQuery, HelloQueryQueryVariables>;

@@ -9,7 +9,7 @@ export type HelloQueryQueryVariables = Exact<{ [key: string]: never }>;
 export type HelloQueryQuery = { hello: string };
 
 export const HelloQueryDocument = {
-  __meta__: { hash: '86f01e23de1c770cabbc35b2d87f2e5fd7557b6f' },
+  __meta__: { hash: 'sha256:4c3f5d98b02279859b4c0c4efdba9553ac7acf89b9b0785eb24be68d5a67e6e8' },
   kind: 'Document',
   definitions: [
     {

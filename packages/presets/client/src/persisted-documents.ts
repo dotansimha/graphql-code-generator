@@ -7,6 +7,8 @@ const CONNECTION_DIRECTIVE_NAME = 'connection';
 
 /**
  * This function generates a hash from a document node.
+ * When `sha256` algorithm is used, the hash should be prefixed with `sha256:`
+ * https://github.com/graphql/graphql-over-http/blob/52d56fb36d51c17e08a920510a23bdc2f6a720be/spec/Appendix%20A%20--%20Persisted%20Documents.md#sha256-hex-document-identifier
  */
 export function generateDocumentHash(
   operation: string,
@@ -17,7 +19,10 @@ export function generateDocumentHash(
   }
   const shasum = crypto.createHash(algorithm);
   shasum.update(operation);
-  return shasum.digest('hex');
+
+  const algorithmPrefix = algorithm === 'sha256' ? 'sha256:' : '';
+
+  return algorithmPrefix + shasum.digest('hex');
 }
 
 /**
