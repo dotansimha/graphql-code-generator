@@ -386,13 +386,13 @@ The following utility types have been removed:
 - `InputMaybe`: used to handle nullability types of Input. Input types are now inlined, so this type is no longer needed.
 - `MakeOptional`, `MakeMaybe` and `MakeEmpty`: used to handle `preResolveTypes:false`. However, `preResolveTypes` has been removed, so these types are no longer needed.
 
-### 11. Make `unknown` the default type for custom scalars instead of `any`
+### 11. `unknown` is the default type for custom scalars instead of `any`
 
 Previously, the default custom Scalars type was `any`, which bypassed typechecking.
 
 Now, the default type is `unknown` to ensure data is handled carefully by users.
 
-### 12. Make `string | number` the default type for the native `ID` scalar
+### 12. `string | number` is the default type for the native `ID` scalar
 
 Previously, one set of default Scalar types was shared between client and server plugins via the `typescript` plugin dependency. This meant it was not possible to set the default for client, as it would complicate the server config, and vice versa. See this [PR for more details](https://github.com/dotansimha/graphql-code-generator/pull/9497).
 
