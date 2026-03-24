@@ -5,6 +5,7 @@ import {
   EnumValueDefinitionNode,
   FieldDefinitionNode,
   GraphQLEnumType,
+  GraphQLInterfaceType,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
@@ -713,7 +714,7 @@ export class BaseTypesVisitor<
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
       .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t)))
-      .join(' | ');
+      .join(this.typeUnionOperator);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -732,22 +733,20 @@ export class BaseTypesVisitor<
     block.withBlock(this.mergeAllFields(fields, interfaces.length > 0));
   }
 
+  getTypenameField(type: DeclarationKind, typeNames: string[]) {
+    const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
+    return `${this.config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: ${typeNames
+      .map(typeName => `'${typeName}'`)
+      .join(this.typeUnionOperator)}${this.getPunctuation(type)}`;
+  }
+
   getObjectTypeDeclarationBlock(
     node: ObjectTypeDefinitionNode,
     originalNode: ObjectTypeDefinitionNode
   ): DeclarationBlock {
-    const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type, interface: interfacesType } = this._parsedConfig.declarationKind;
     const allFields = [
-      ...(this.config.addTypename
-        ? [
-            indent(
-              `${this.config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${
-                node.name.value
-              }'${this.getPunctuation(type)}`
-            ),
-          ]
-        : []),
+      ...(this.config.addTypename ? [indent(this.getTypenameField(type, [node.name.value]))] : []),
       ...node.fields,
     ] as string[];
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
@@ -790,13 +789,28 @@ export class BaseTypesVisitor<
     node: InterfaceTypeDefinitionNode,
     _originalNode: InterfaceTypeDefinitionNode
   ): DeclarationBlock {
+    const { type, interface: interfacesType } = this._parsedConfig.declarationKind;
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind(this._parsedConfig.declarationKind.interface)
+      .asKind(interfacesType)
       .withName(this.convertName(node))
       .withComment(node.description?.value);
 
-    return declarationBlock.withBlock(node.fields.join('\n'));
+    const schemaType = this._schema.getType(node.name.value);
+    const { objects: concreteTypes } = this._schema.getImplementations(schemaType as GraphQLInterfaceType);
+    const allFields = [
+      ...node.fields,
+      ...(this.config.addTypenameToInterfaces && concreteTypes.length > 0
+        ? [
+            this.getTypenameField(
+              type,
+              concreteTypes.map(({ name }) => name)
+            ),
+          ]
+        : []),
+    ];
+
+    return declarationBlock.withBlock(allFields.join('\n'));
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
