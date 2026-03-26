@@ -9,6 +9,9 @@ export interface AvoidOptionalsConfig {
 }
 export type NormalizedAvoidOptionalsConfig = Required<AvoidOptionalsConfig>;
 
+// FIXME:
+// 1. bring this to visitor-plugin-common
+// 2. param should not be optional
 export const normalizeAvoidOptionals = (
   avoidOptionals?: boolean | AvoidOptionalsConfig
 ): NormalizedAvoidOptionalsConfig => {
