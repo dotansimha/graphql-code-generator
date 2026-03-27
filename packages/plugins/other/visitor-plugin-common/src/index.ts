@@ -5,6 +5,7 @@ export * from './base-types-visitor.js';
 export * from './base-visitor.js';
 export * from './client-side-base-visitor.js';
 export * from './declaration-kinds.js';
+export * from './operation-declaration-kinds.js';
 export * from './enum-values.js';
 export * from './imports.js';
 export * from './mappers.js';
