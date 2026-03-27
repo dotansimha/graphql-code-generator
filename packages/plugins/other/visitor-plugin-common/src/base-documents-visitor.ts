@@ -22,6 +22,7 @@ import {
   normalizeOperationDeclarationKind,
   type OperationDeclarationKind,
   type OperationDeclarationKindConfig,
+  type NormalizedOperationDeclarationKindConfig,
 } from './operation-declaration-kinds.js';
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
@@ -40,7 +41,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   generateOperationTypes: boolean;
   importSchemaTypesFrom: string;
   namespacedImportName: string | null;
-  declarationKind: OperationDeclarationKindConfig;
+  declarationKind: NormalizedOperationDeclarationKindConfig;
   avoidOptionals: NormalizedOperationAvoidOptionalsConfig;
 }
 
@@ -355,7 +356,7 @@ export interface RawDocumentsConfig extends RawConfig {
    *  export default config;
    * ```
    */
-  declarationKind?: OperationDeclarationKind | Partial<OperationDeclarationKindConfig>;
+  declarationKind?: OperationDeclarationKind | OperationDeclarationKindConfig;
 }
 
 export class BaseDocumentsVisitor<
