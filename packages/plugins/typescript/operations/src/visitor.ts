@@ -55,7 +55,6 @@ import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-t
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   arrayInputCoercion: boolean;
-  avoidOptionals: NormalizedAvoidOptionalsConfig;
   immutableTypes: boolean;
   noExport: boolean;
   maybeValue: string;
@@ -98,7 +97,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       {
         arrayInputCoercion: getConfigValue(config.arrayInputCoercion, true),
         noExport: getConfigValue(config.noExport, false),
-        avoidOptionals: normalizeAvoidOptionals(getConfigValue(config.avoidOptionals, false)),
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),

@@ -3,7 +3,6 @@ import {
   type EnumValuesMap,
   RawDocumentsConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import type { AvoidOptionalsConfig } from './config.avoidOptionals';
 
 /**
  * @description This plugin generates TypeScript types based on your GraphQLSchema _and_ your GraphQL operations and fragments.
@@ -37,56 +36,6 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   arrayInputCoercion?: boolean;
-  /**
-   * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
-   * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
-   * instead of `myField?: Maybe<string>`.
-   * @default false
-   *
-   * @exampleMarkdown
-   * ## Override all definition types
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file.ts': {
-   *        plugins: ['typescript-operations'],
-   *        config: {
-   *          avoidOptionals: true
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   *
-   * ## Override only specific definition types
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file.ts': {
-   *        plugins: ['typescript-operations'],
-   *        config: {
-   *          avoidOptionals: {
-   *            variableValue: true,
-   *            inputValue: true,
-   *            defaultValue: true,
-   *          }
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
    * @default false

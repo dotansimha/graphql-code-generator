@@ -100,6 +100,7 @@ describe('TypeScript Operations Plugin - config.declarationKind', () => {
       export interface UserUpdatesSubscription { userUpdates: { id: string, name: string } | null }
       "
     `);
+    expect(warnSpy).not.toHaveBeenCalled();
 
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
@@ -202,6 +203,9 @@ describe('TypeScript Operations Plugin - config.declarationKind', () => {
       export interface UserUpdatesSubscription { userUpdates: { id: string, name: string } | null }
       "
     `);
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
   it('generates type for Result when declarationKind.result:interface but extractAllFieldsToTypes:true, but warns user', async () => {
