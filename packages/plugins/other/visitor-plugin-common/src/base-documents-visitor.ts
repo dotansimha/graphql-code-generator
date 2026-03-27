@@ -379,7 +379,7 @@ export class BaseDocumentsVisitor<
       getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
       getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false);
     const declarationKind = normalizeOperationDeclarationKind(getConfigValue(rawConfig.declarationKind, 'type'));
-    if (extractAllFieldsToTypes) {
+    if (extractAllFieldsToTypes && declarationKind.result === 'interface') {
       // eslint-disable-next-line no-console
       console.warn(
         "`declarationKind.result` has been set to `'type'` because `extractAllFieldsToTypes` or `extractAllFieldsToTypesCompact` is true"
