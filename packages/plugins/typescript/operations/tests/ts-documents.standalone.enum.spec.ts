@@ -1551,4 +1551,60 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
 
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
+
+  it('#10471 - `enumValues` as file import', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        license: License
+      }
+
+      type License {
+        id: ID!
+        sku: LicenseSKU!
+      }
+
+      enum LicenseSKU {
+        BASIC
+        ADVANCED
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query License {
+        license {
+          sku
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumValues: {
+            LicenseSKU: './my-file#LicenseSku',
+          },
+        },
+        { outputFile: '' }
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "import { LicenseSku as LicenseSKU } from './my-file';
+      /** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export { LicenseSKU };
+
+      export type LicenseQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+      export type LicenseQuery = { license: { sku: LicenseSKU } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
 });
