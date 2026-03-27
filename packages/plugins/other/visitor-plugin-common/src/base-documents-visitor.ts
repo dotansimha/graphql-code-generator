@@ -14,9 +14,15 @@ import { NormalizedScalarsMap, CustomDirectivesConfig } from './types.js';
 import { buildScalarsFromConfig, DeclarationBlock, DeclarationBlockConfig, getConfigValue } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 import {
+  NormalizedOperationAvoidOptionalsConfig,
+  normalizeOperationAvoidOptionals,
+  type OperationAvoidOptionalsConfig,
+} from './operation-avoid-optionals.js';
+import {
   normalizeOperationDeclarationKind,
   type OperationDeclarationKind,
   type OperationDeclarationKindConfig,
+  type NormalizedOperationDeclarationKindConfig,
 } from './operation-declaration-kinds.js';
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
@@ -35,10 +41,61 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   generateOperationTypes: boolean;
   importSchemaTypesFrom: string;
   namespacedImportName: string | null;
-  declarationKind: OperationDeclarationKindConfig;
+  declarationKind: NormalizedOperationDeclarationKindConfig;
+  avoidOptionals: NormalizedOperationAvoidOptionalsConfig;
 }
 
 export interface RawDocumentsConfig extends RawConfig {
+  /**
+   * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
+   * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
+   * instead of `myField?: Maybe<string>`.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Override all definition types
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-operations'],
+   *        config: {
+   *          avoidOptionals: true
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## Override only specific definition types
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript-operations'],
+   *        config: {
+   *          avoidOptionals: {
+   *            variableValue: true,
+   *            inputValue: true,
+   *            defaultValue: true,
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  avoidOptionals?: boolean | OperationAvoidOptionalsConfig;
   /**
    * @default false
    * @description Avoid adding `__typename` for root types. This is ignored when a selection explicitly specifies `__typename`.
@@ -299,7 +356,7 @@ export interface RawDocumentsConfig extends RawConfig {
    *  export default config;
    * ```
    */
-  declarationKind?: OperationDeclarationKind | Partial<OperationDeclarationKindConfig>;
+  declarationKind?: OperationDeclarationKind | OperationDeclarationKindConfig;
 }
 
 export class BaseDocumentsVisitor<
@@ -322,7 +379,7 @@ export class BaseDocumentsVisitor<
       getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
       getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false);
     const declarationKind = normalizeOperationDeclarationKind(getConfigValue(rawConfig.declarationKind, 'type'));
-    if (extractAllFieldsToTypes) {
+    if (extractAllFieldsToTypes && declarationKind.result === 'interface') {
       // eslint-disable-next-line no-console
       console.warn(
         "`declarationKind.result` has been set to `'type'` because `extractAllFieldsToTypes` or `extractAllFieldsToTypesCompact` is true"
@@ -331,6 +388,7 @@ export class BaseDocumentsVisitor<
     }
 
     super(rawConfig, {
+      avoidOptionals: normalizeOperationAvoidOptionals(getConfigValue(rawConfig.avoidOptionals, false)),
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
