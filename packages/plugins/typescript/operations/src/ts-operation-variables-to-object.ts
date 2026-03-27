@@ -1,18 +1,18 @@
 import { Kind, TypeNode } from 'graphql';
 import {
   ConvertNameFn,
+  DEFAULT_INPUT_SCALARS,
   NormalizedScalarsMap,
   OperationVariablesToObject,
   ParsedEnumValuesMap,
   printTypeScriptMaybeType,
-  DEFAULT_INPUT_SCALARS,
+  type NormalizedOperationAvoidOptionalsConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import type { NormalizedAvoidOptionalsConfig } from './config.avoidOptionals';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
   constructor(
     private _config: {
-      avoidOptionals: NormalizedAvoidOptionalsConfig;
+      avoidOptionals: NormalizedOperationAvoidOptionalsConfig;
       immutableTypes: boolean;
       inputMaybeValue: string;
     },
