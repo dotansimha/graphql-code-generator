@@ -255,7 +255,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     if (isOneOfInputObjectType(this._schema.getType(inputTypeName))) {
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
-        .asKind('type')
+        .asKind(this.config.declarationKind.input)
         .withName(this.convertName(node))
         .withComment(node.description?.value)
         .withContent(`\n` + (node.fields || []).join('\n  |')).string;
@@ -263,7 +263,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(this.config.declarationKind.input)
       .withName(this.convertName(node))
       .withComment(node.description?.value)
       .withBlock((node.fields || []).join('\n')).string;

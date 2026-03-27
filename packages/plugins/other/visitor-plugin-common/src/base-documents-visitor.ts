@@ -8,6 +8,11 @@ import {
   VariableDefinitionNode,
 } from 'graphql';
 import { BaseVisitor, type ParsedConfig, type RawConfig } from './base-visitor.js';
+import {
+  normalizeOperationDeclarationKind,
+  type OperationDeclarationKind,
+  type OperationDeclarationKindConfig,
+} from './operation-declaration-kinds.js';
 import { DEFAULT_INPUT_SCALARS } from './scalars.js';
 import { SelectionSetToObject } from './selection-set-to-object.js';
 import { CustomDirectivesConfig, NormalizedScalarsMap } from './types.js';
@@ -35,6 +40,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   generateOperationTypes: boolean;
   importSchemaTypesFrom: string;
   namespacedImportName: string | null;
+  declarationKind: OperationDeclarationKindConfig;
 }
 
 export interface RawDocumentsConfig extends RawConfig {
@@ -253,6 +259,52 @@ export interface RawDocumentsConfig extends RawConfig {
    * When this option is enabled, `extractAllFieldsToTypes` is automatically enabled as well.
    */
   extractAllFieldsToTypesCompact?: boolean;
+  /**
+   * @description Overrides the default output for various GraphQL types.
+   * @default 'type'
+   * @exampleMarkdown
+   * ## Override all declarations
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          declarationKind: 'interface'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   *
+   * ## Override only specific declarations
+   *
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          declarationKind: {
+   *            input: 'interface',
+   *            result: 'type'
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  declarationKind?: OperationDeclarationKind | Partial<OperationDeclarationKindConfig>;
 }
 
 export class BaseDocumentsVisitor<
@@ -271,6 +323,19 @@ export class BaseDocumentsVisitor<
     defaultScalars: NormalizedScalarsMap = DEFAULT_INPUT_SCALARS,
   ) {
     const importSchemaTypesFrom = getConfigValue(rawConfig.importSchemaTypesFrom, '');
+    const extractAllFieldsToTypes =
+      getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
+      getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false);
+    const declarationKind = normalizeOperationDeclarationKind(
+      getConfigValue(rawConfig.declarationKind, 'type'),
+    );
+    if (extractAllFieldsToTypes) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "`declarationKind.result` has been set to `'type'` because `extractAllFieldsToTypes` or `extractAllFieldsToTypesCompact` is true",
+      );
+      declarationKind.result = 'type';
+    }
 
     super(rawConfig, {
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
@@ -289,13 +354,12 @@ export class BaseDocumentsVisitor<
         rawConfig.namespacedImportName,
         importSchemaTypesFrom ? 'Types' : null,
       ),
-      extractAllFieldsToTypes:
-        getConfigValue(rawConfig.extractAllFieldsToTypes, false) ||
-        getConfigValue(rawConfig.extractAllFieldsToTypesCompact, false),
+      extractAllFieldsToTypes,
       extractAllFieldsToTypesCompact: getConfigValue(
         rawConfig.extractAllFieldsToTypesCompact,
         false,
       ),
+      declarationKind,
       ...((additionalConfig || {}) as any),
     });
 
@@ -423,7 +487,7 @@ export class BaseDocumentsVisitor<
       ? ''
       : new DeclarationBlock(this._declarationBlockConfig)
           .export()
-          .asKind('type')
+          .asKind(this.config.declarationKind.result)
           .withName(operationResultName)
           .withContent(selectionSetObjects.mergedTypeString).string;
 
@@ -432,7 +496,7 @@ export class BaseDocumentsVisitor<
       blockTransformer: t => this.applyVariablesWrapper(t, operationType),
     })
       .export()
-      .asKind('type')
+      .asKind('type') // Variables must always be `'type'` because it is an alias of `Exact<Something>`
       .withName(
         this.convertName(name, {
           suffix: operationTypeSuffix + 'Variables',
@@ -445,7 +509,7 @@ export class BaseDocumentsVisitor<
           i =>
             new DeclarationBlock(this._declarationBlockConfig)
               .export()
-              .asKind('type')
+              .asKind('type') // dependentTypes must always be `'type'` because they are alias types
               .withName(i.name)
               .withContent(i.content).string,
         )
