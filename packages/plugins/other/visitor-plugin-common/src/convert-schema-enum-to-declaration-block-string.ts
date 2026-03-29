@@ -43,7 +43,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
   naming,
 }: ConvertSchemaEnumToDeclarationBlockString): string => {
   if (enumValues[enumName]?.sourceFile) {
-    return `export { ${enumValues[enumName].typeIdentifier} };\n`;
+    return `export { ${enumValues[enumName].typeIdentifierConverted} };\n`;
   }
 
   const getValueFromConfig = (enumValue: string | number) => {

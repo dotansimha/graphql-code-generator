@@ -1591,17 +1591,17 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "import { LicenseSku as LicenseSKU } from './my-file';
+      "import { LicenseSku } from './my-file';
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      export { LicenseSKU };
+      export { LicenseSku };
 
       export type LicenseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type LicenseQuery = { license: { sku: LicenseSKU } | null };
+      export type LicenseQuery = { license: { sku: LicenseSku } | null };
       "
     `);
 
