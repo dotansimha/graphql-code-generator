@@ -115,13 +115,13 @@ export function getEnumsImports({
   useTypeImports: boolean;
 }): string[] {
   function handleEnumValueMapper({
-    typeIdentifier,
+    typeIdentifierConverted,
     importIdentifier,
     sourceIdentifier,
     sourceFile,
     useTypeImports,
   }: {
-    typeIdentifier: string;
+    typeIdentifierConverted: string;
     importIdentifier: string | null;
     sourceIdentifier: string | null;
     sourceFile: string | null;
@@ -132,12 +132,16 @@ export function getEnumsImports({
       // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
       return [
         buildTypeImport({ identifier: importIdentifier || sourceIdentifier, source: sourceFile, useTypeImports }),
-        `import ${typeIdentifier} = ${sourceIdentifier};`,
+        `import ${typeIdentifierConverted} = ${sourceIdentifier};`,
       ];
     }
-    if (sourceIdentifier !== typeIdentifier) {
+    if (sourceIdentifier !== typeIdentifierConverted) {
       return [
-        buildTypeImport({ identifier: `${sourceIdentifier} as ${typeIdentifier}`, source: sourceFile, useTypeImports }),
+        buildTypeImport({
+          identifier: `${sourceIdentifier} as ${typeIdentifierConverted}`,
+          source: sourceFile,
+          useTypeImports,
+        }),
       ];
     }
     return [buildTypeImport({ identifier: importIdentifier || sourceIdentifier, source: sourceFile, useTypeImports })];
@@ -159,7 +163,7 @@ export function getEnumsImports({
         }
 
         return handleEnumValueMapper({
-          typeIdentifier: mappedValue.typeIdentifier,
+          typeIdentifierConverted: mappedValue.typeIdentifierConverted,
           importIdentifier: mappedValue.importIdentifier,
           sourceIdentifier: mappedValue.sourceIdentifier,
           sourceFile: mappedValue.sourceFile,
