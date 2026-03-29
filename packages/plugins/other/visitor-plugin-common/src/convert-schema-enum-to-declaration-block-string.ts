@@ -8,6 +8,7 @@ import {
   getNodeComment,
   wrapWithSingleQuotes,
 } from './utils.js';
+import { convertName } from './naming.js';
 
 export interface ConvertSchemaEnumToDeclarationBlockString {
   schema: GraphQLSchema;
@@ -18,10 +19,12 @@ export interface ConvertSchemaEnumToDeclarationBlockString {
   ignoreEnumValuesFromSchema: boolean;
   naming: {
     convert: ConvertFn;
-    typesPrefix: string;
-    typesSuffix: string;
-    useTypesPrefix?: boolean;
-    useTypesSuffix?: boolean;
+    options: {
+      typesPrefix: string;
+      typesSuffix: string;
+      useTypesPrefix?: boolean;
+      useTypesSuffix?: boolean;
+    };
   };
 
   outputType: 'string-literal' | 'native-numeric' | 'const' | 'native-const' | 'native';
@@ -53,13 +56,8 @@ export const convertSchemaEnumToDeclarationBlockString = ({
   const withFutureAddedValue = [futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []];
 
   const enumTypeName = convertName({
-    options: {
-      typesPrefix: naming.typesPrefix,
-      typesSuffix: naming.typesSuffix,
-      useTypesPrefix: naming.useTypesPrefix,
-      useTypesSuffix: naming.useTypesSuffix,
-    },
     convert: () => naming.convert(node),
+    options: naming.options,
   });
 
   if (outputType === 'string-literal') {
@@ -98,8 +96,8 @@ export const convertSchemaEnumToDeclarationBlockString = ({
             const optionName = makeValidEnumIdentifier(
               convertName({
                 options: {
-                  typesPrefix: naming.typesPrefix,
-                  typesSuffix: naming.typesSuffix,
+                  typesPrefix: naming.options.typesPrefix,
+                  typesSuffix: naming.options.typesSuffix,
                   useTypesPrefix: false,
                 },
                 convert: () => naming.convert(enumOption, { transformUnderscore: true }),
@@ -130,8 +128,8 @@ export const convertSchemaEnumToDeclarationBlockString = ({
             const optionName = makeValidEnumIdentifier(
               convertName({
                 options: {
-                  typesPrefix: naming.typesPrefix,
-                  typesSuffix: naming.typesPrefix,
+                  typesPrefix: naming.options.typesPrefix,
+                  typesSuffix: naming.options.typesPrefix,
                 },
                 convert: () =>
                   naming.convert(enumOption, {
@@ -195,8 +193,8 @@ export const buildEnumValuesBlock = ({
         convertName({
           options: {
             useTypesPrefix: false,
-            typesPrefix: naming.typesPrefix,
-            typesSuffix: naming.typesSuffix,
+            typesPrefix: naming.options.typesPrefix,
+            typesSuffix: naming.options.typesSuffix,
           },
           convert: () =>
             naming.convert(enumOption, {
@@ -235,34 +233,4 @@ const makeValidEnumIdentifier = (identifier: string): string => {
     return wrapWithSingleQuotes(identifier, true);
   }
   return identifier;
-};
-
-const convertName = ({
-  convert,
-  options,
-}: {
-  options: {
-    typesPrefix: string;
-    useTypesPrefix?: boolean;
-    typesSuffix: string;
-    useTypesSuffix?: boolean;
-  };
-  convert: () => string;
-}): string => {
-  const useTypesPrefix = typeof options.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
-  const useTypesSuffix = typeof options.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
-
-  let convertedName = '';
-
-  if (useTypesPrefix) {
-    convertedName += options.typesPrefix;
-  }
-
-  convertedName += convert();
-
-  if (useTypesSuffix) {
-    convertedName += options.typesSuffix;
-  }
-
-  return convertedName;
 };
