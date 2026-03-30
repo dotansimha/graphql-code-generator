@@ -266,21 +266,6 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function convertNameParts(
-  str: string,
-  func: (str: string) => string,
-  removeUnderscore = false,
-): string {
-  if (removeUnderscore) {
-    return func(str);
-  }
-
-  return str
-    .split('_')
-    .map(s => func(s))
-    .join('_');
-}
-
 export function buildScalarsFromConfig(
   schema: GraphQLSchema | undefined,
   config: RawConfig,
@@ -541,7 +526,9 @@ export function hasConditionalDirectives(directives: readonly DirectiveNode[] = 
 /**
  * Check if any of the directives are incremental i.e. `@defer`
  */
-export function hasIncrementalDeliveryDirectives(directives: readonly DirectiveNode[] = []): boolean {
+export function hasIncrementalDeliveryDirectives(
+  directives: readonly DirectiveNode[] = [],
+): boolean {
   const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
   return directives?.some(directive =>
     INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value),

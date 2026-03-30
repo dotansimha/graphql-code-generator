@@ -762,10 +762,6 @@ export class BaseResolversVisitor<
         rawConfig.resolverTypeWrapperSignature,
         'Promise<T> | T',
       ),
-      enumValues: parseEnumValues({
-        schema: _schema,
-        mapOrStr: rawConfig.enumValues,
-      }),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       addInterfaceFieldResolverTypes: getConfigValue(
         rawConfig.addInterfaceFieldResolverTypes,
@@ -798,6 +794,20 @@ export class BaseResolversVisitor<
       ),
       ...additionalConfig,
     } as TPluginConfig);
+
+    this.config.enumValues = parseEnumValues({
+      schema: _schema,
+      mapOrStr: rawConfig.enumValues,
+      naming: {
+        convert: this.config.convert,
+        options: {
+          typesPrefix: this.config.typesPrefix,
+          typesSuffix: this.config.typesSuffix,
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        },
+      },
+    });
 
     autoBind(this);
     this._federation = new ApolloFederation({
