@@ -98,11 +98,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
         allowUndefinedQueryVariables: getConfigValue(config.allowUndefinedQueryVariables, false),
         enumType: getConfigValue(config.enumType, 'string-literal'),
-        enumValues: parseEnumValues({
-          schema,
-          mapOrStr: config.enumValues,
-          ignoreEnumValuesFromSchema: config.ignoreEnumValuesFromSchema,
-        }),
         ignoreEnumValuesFromSchema: getConfigValue(config.ignoreEnumValuesFromSchema, false),
         futureProofEnums: getConfigValue(config.futureProofEnums, false),
         maybeValue: getConfigValue(config.maybeValue, 'T | null'),
@@ -110,6 +105,21 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
+
+    this.config.enumValues = parseEnumValues({
+      schema,
+      mapOrStr: config.enumValues,
+      ignoreEnumValuesFromSchema: config.ignoreEnumValuesFromSchema,
+      naming: {
+        convert: this.config.convert,
+        options: {
+          typesPrefix: this.config.typesPrefix,
+          typesSuffix: this.config.typesSuffix,
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        },
+      },
+    });
 
     this._outputPath = outputPath;
     autoBind(this);
@@ -221,10 +231,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       outputType: this.config.enumType,
       naming: {
         convert: this.config.convert,
-        typesPrefix: this.config.typesPrefix,
-        typesSuffix: this.config.typesSuffix,
-        useTypesPrefix: this.config.enumPrefix,
-        useTypesSuffix: this.config.enumSuffix,
+        options: {
+          typesPrefix: this.config.typesPrefix,
+          typesSuffix: this.config.typesSuffix,
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        },
       },
     });
   }

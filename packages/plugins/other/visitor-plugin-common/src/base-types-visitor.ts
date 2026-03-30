@@ -505,11 +505,6 @@ export class BaseTypesVisitor<
       onlyEnums: getConfigValue(rawConfig.onlyEnums, false),
       onlyOperationTypes: getConfigValue(rawConfig.onlyOperationTypes, false),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-      enumValues: parseEnumValues({
-        schema: _schema,
-        mapOrStr: rawConfig.enumValues,
-        ignoreEnumValuesFromSchema: rawConfig.ignoreEnumValuesFromSchema,
-      }),
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
@@ -524,6 +519,21 @@ export class BaseTypesVisitor<
       addTypename: !rawConfig.skipTypename,
       nonOptionalTypename: getConfigValue(rawConfig.nonOptionalTypename, false),
       ...additionalConfig,
+    });
+
+    this.config.enumValues = parseEnumValues({
+      schema: _schema,
+      mapOrStr: rawConfig.enumValues,
+      ignoreEnumValuesFromSchema: this.config.ignoreEnumValuesFromSchema,
+      naming: {
+        convert: this.config.convert,
+        options: {
+          typesPrefix: this.config.typesPrefix,
+          typesSuffix: this.config.typesSuffix,
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        },
+      },
     });
 
     // Note: Missing directive mappers but not a problem since always overriden by implementors
@@ -856,10 +866,12 @@ export class BaseTypesVisitor<
           schema: this._schema,
           naming: {
             convert: this.config.convert,
-            typesPrefix: this.config.typesPrefix,
-            useTypesPrefix: this.config.enumPrefix,
-            typesSuffix: this.config.typesSuffix,
-            useTypesSuffix: this.config.enumSuffix,
+            options: {
+              typesPrefix: this.config.typesPrefix,
+              useTypesPrefix: this.config.enumPrefix,
+              typesSuffix: this.config.typesSuffix,
+              useTypesSuffix: this.config.enumSuffix,
+            },
           },
           ignoreEnumValuesFromSchema: this.config.ignoreEnumValuesFromSchema,
           declarationBlockConfig: this._declarationBlockConfig,

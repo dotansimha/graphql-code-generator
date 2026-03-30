@@ -49,6 +49,8 @@ export type ParsedEnumValuesMap = {
     mappedValues?: { [valueName: string]: string | number };
     // The GraphQL enum name
     typeIdentifier: string;
+    // The GraphQL enum name after namingConvention conversion
+    typeIdentifierConverted: string;
     // The actual identifier that you should use in the code (original or aliased)
     sourceIdentifier?: string;
     // In case of external enum, this will contain the source file path

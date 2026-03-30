@@ -1,6 +1,7 @@
 import { GraphQLEnumType, GraphQLSchema, isEnumType } from 'graphql';
 import { parseMapper } from './mappers.js';
-import { EnumValuesMap, ParsedEnumValuesMap } from './types.js';
+import type { ConvertFn, EnumValuesMap, ParsedEnumValuesMap } from './types.js';
+import { convertName } from './naming.js';
 
 function escapeString(str: string) {
   return str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/'/g, "\\'");
@@ -10,10 +11,20 @@ export function parseEnumValues({
   schema,
   mapOrStr = {},
   ignoreEnumValuesFromSchema,
+  naming,
 }: {
   schema: GraphQLSchema;
   mapOrStr: EnumValuesMap;
   ignoreEnumValuesFromSchema?: boolean;
+  naming: {
+    convert: ConvertFn;
+    options: {
+      typesPrefix: string;
+      typesSuffix: string;
+      useTypesPrefix?: boolean;
+      useTypesSuffix?: boolean;
+    };
+  };
 }): ParsedEnumValuesMap {
   const allTypes = schema.getTypeMap();
   const allEnums = Object.keys(allTypes).filter(t => isEnumType(allTypes[t]));
@@ -42,7 +53,7 @@ export function parseEnumValues({
       );
     }
 
-    return Object.keys(mapOrStr).reduce((prev, gqlIdentifier) => {
+    return Object.keys(mapOrStr).reduce<ParsedEnumValuesMap>((prev, gqlIdentifier) => {
       const pointer = mapOrStr[gqlIdentifier];
 
       if (typeof pointer === 'string') {
@@ -53,6 +64,10 @@ export function parseEnumValues({
           [gqlIdentifier]: {
             isDefault: mapper.isExternal && mapper.default,
             typeIdentifier: gqlIdentifier,
+            typeIdentifierConverted: convertName({
+              convert: () => naming.convert(gqlIdentifier),
+              options: naming.options,
+            }),
             sourceFile: mapper.isExternal ? mapper.source : null,
             sourceIdentifier: mapper.type,
             importIdentifier: mapper.isExternal ? mapper.import : null,
@@ -66,6 +81,10 @@ export function parseEnumValues({
           [gqlIdentifier]: {
             isDefault: false,
             typeIdentifier: gqlIdentifier,
+            typeIdentifierConverted: convertName({
+              convert: () => naming.convert(gqlIdentifier),
+              options: naming.options,
+            }),
             sourceFile: null,
             sourceIdentifier: null,
             importIdentifier: null,
@@ -77,24 +96,28 @@ export function parseEnumValues({
         `Invalid "enumValues" configuration \n
         Enum "${gqlIdentifier}": expected string or object (with enum values mapping)`
       );
-    }, {} as ParsedEnumValuesMap);
+    }, {});
   }
   if (typeof mapOrStr === 'string') {
     return allEnums
       .filter(enumName => !enumName.startsWith('__'))
-      .reduce((prev, enumName) => {
+      .reduce<ParsedEnumValuesMap>((prev, enumName) => {
         return {
           ...prev,
           [enumName]: {
             isDefault: false,
             typeIdentifier: enumName,
+            typeIdentifierConverted: convertName({
+              convert: () => naming.convert(enumName),
+              options: naming.options,
+            }),
             sourceFile: mapOrStr,
             sourceIdentifier: enumName,
             importIdentifier: enumName,
             mappedValues: null,
           },
         };
-      }, {} as ParsedEnumValuesMap);
+      }, {});
   }
 
   return {};

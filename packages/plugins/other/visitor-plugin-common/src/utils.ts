@@ -254,17 +254,6 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function convertNameParts(str: string, func: (str: string) => string, removeUnderscore = false): string {
-  if (removeUnderscore) {
-    return func(str);
-  }
-
-  return str
-    .split('_')
-    .map(s => func(s))
-    .join('_');
-}
-
 export function buildScalarsFromConfig(
   schema: GraphQLSchema | undefined,
   config: RawConfig,
