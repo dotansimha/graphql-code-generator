@@ -369,10 +369,12 @@ export class TsVisitor<
       outputType,
       naming: {
         convert: this.config.convert,
-        typesPrefix: this.config.typesPrefix,
-        typesSuffix: this.config.typesSuffix,
-        useTypesPrefix: this.config.enumPrefix,
-        useTypesSuffix: this.config.enumSuffix,
+        options: {
+          typesPrefix: this.config.typesPrefix,
+          typesSuffix: this.config.typesSuffix,
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        },
       },
     });
   }
