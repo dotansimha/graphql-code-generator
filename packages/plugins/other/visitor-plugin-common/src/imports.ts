@@ -154,7 +154,7 @@ export function getEnumsImports({
         if (mappedValue.isDefault) {
           return [
             buildTypeImport({
-              identifier: mappedValue.typeIdentifier,
+              identifier: mappedValue.typeIdentifierConverted,
               source: mappedValue.sourceFile,
               asDefault: true,
               useTypeImports,

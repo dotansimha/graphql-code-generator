@@ -1525,7 +1525,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
           typesPrefix: 'I',
           namingConvention: { enumValues: 'change-case-all#constantCase' },
           enumValues: {
-            UserRole: './files#default as UserRole',
+            UserRole: './files#default as IUserRole',
           },
         },
         { outputFile: '' }
@@ -1533,7 +1533,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "import UserRole from './files';
+      "import IUserRole from './files';
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
@@ -1546,7 +1546,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
 
       export type IMeQueryVariables = Exact<{
         input: IUserRoleInput;
-        role: UserRole;
+        role: IUserRole;
       }>;
 
 
