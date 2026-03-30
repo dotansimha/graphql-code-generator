@@ -286,6 +286,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         A_B_C
         X_Y_Z
@@ -296,9 +300,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
       scalar DateTime
     `);
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -327,6 +332,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export type UserRole =
         | 0
         | 'Foo'
@@ -334,11 +343,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
         | 1;
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -358,6 +368,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         A_B_C
         X_Y_Z
@@ -368,9 +382,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
       scalar DateTime
     `);
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -399,6 +414,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export const UserRole = {
         ABC: 0,
         XYZ: 'Foo',
@@ -408,11 +427,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
 
       export type UserRole = typeof UserRole[keyof typeof UserRole];
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -432,6 +452,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -440,9 +464,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
       scalar DateTime
     `);
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -469,17 +494,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export enum UserRole {
         Admin = 0,
         Customer = 'test'
       }
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -499,6 +529,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -508,9 +542,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -534,14 +569,19 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export { UserRole };
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -618,6 +658,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -627,9 +671,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -654,14 +699,19 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export { UserRole };
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -681,6 +731,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -690,9 +744,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -717,14 +772,19 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export { UserRole };
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -744,6 +804,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -758,9 +822,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!, $status: UserStatus!) {
+      query Me($input: UserRoleInput!, $role: UserRole!, $status: UserStatus!) {
         me {
           id
+          role
         }
       }
     `);
@@ -784,17 +849,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export { UserRole };
 
       export { UserStatus };
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
         status: UserStatus;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -814,6 +884,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -828,9 +902,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!, $status: UserStatus!) {
+      query Me($input: UserRoleInput!, $role: UserRole!, $status: UserStatus!) {
         me {
           id
+          role
         }
       }
     `);
@@ -854,17 +929,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export { UserRole };
 
       export { UserStatus };
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
         status: UserStatus;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -1208,6 +1288,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -1217,9 +1301,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -1242,16 +1327,21 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type userroleinput = {
+        role: userrole;
+      };
+
       export type userrole =
         | 'ADMIN'
         | 'CUSTOMER';
 
       export type mequeryvariables = Exact<{
+        input: userroleinput;
         role: userrole;
       }>;
 
 
-      export type mequery = { me: { id: string } | null };
+      export type mequery = { me: { id: string, role: userrole } | null };
       "
     `);
 
@@ -1271,6 +1361,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         createdAt: DateTime!
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       enum UserRole {
         ADMIN
         CUSTOMER
@@ -1280,9 +1374,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -1306,17 +1401,22 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserRoleInput = {
+        role: UserRole;
+      };
+
       export enum UserRole {
         admin = 'ADMIN',
         customer = 'CUSTOMER'
       }
 
       export type MeQueryVariables = Exact<{
+        input: UserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type MeQuery = { me: { id: string } | null };
+      export type MeQuery = { me: { id: string, role: UserRole } | null };
       "
     `);
 
@@ -1389,6 +1489,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
         me: User
       }
 
+      input UserRoleInput {
+        role: UserRole!
+      }
+
       type User {
         id: ID!
         name: String!
@@ -1405,9 +1509,10 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const document = parse(/* GraphQL */ `
-      query Me($role: UserRole!) {
+      query Me($input: UserRoleInput!, $role: UserRole!) {
         me {
           id
+          role
         }
       }
     `);
@@ -1433,16 +1538,23 @@ describe('TypeScript Operations Plugin - Enum', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      export { UserRole };
+      export type IUserRoleInput = {
+        role: IUserRole;
+      };
+
+      export { IUserRole };
 
       export type IMeQueryVariables = Exact<{
+        input: IUserRoleInput;
         role: UserRole;
       }>;
 
 
-      export type IMeQuery = { me: { id: string } | null };
+      export type IMeQuery = { me: { id: string, role: IUserRole } | null };
       "
     `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
   it('enum members should be quoted if numeric when enumType is native', async () => {
@@ -1551,7 +1663,9 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
 
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
+});
 
+describe('TypeScript Operations Plugin - Enum Issues', () => {
   it('#10471 - `enumValues` as file import', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
