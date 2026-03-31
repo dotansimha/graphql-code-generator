@@ -895,7 +895,7 @@ describe('TypeScript', () => {
           typesPrefix: 'I',
           namingConvention: { enumValues: 'change-case-all#constantCase' },
           enumValues: {
-            MyEnum: './files#default as MyEnum',
+            MyEnum: './files#default as MyEnum', // NOTE: `as MyEnum` doesn't do anything, this is here to demonstrate that it's the same as './files#default'
           },
         },
         { outputFile: '' }
