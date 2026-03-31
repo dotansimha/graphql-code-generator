@@ -1486,6 +1486,167 @@ describe('Codegen Executor', () => {
     });
   });
 
+  describe('documentsReadOnly', () => {
+    it('should pass documentsReadOnly to preset buildGeneratesSection', async () => {
+      let capturedDocumentsReadOnly: Types.DocumentFile[] | undefined;
+
+      const capturePreset: Types.OutputPreset = {
+        buildGeneratesSection: options => {
+          capturedDocumentsReadOnly = options.documentsReadOnly;
+          return [
+            {
+              filename: 'out1/result.ts',
+              pluginMap: { typescript: require('@graphql-codegen/typescript') },
+              plugins: [{ typescript: {} }],
+              schema: options.schema,
+              documents: options.documents,
+              config: options.config,
+            },
+          ];
+        },
+      };
+
+      await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        documentsReadOnly: `fragment Frag on MyType { f }`,
+        generates: {
+          'out1/': { preset: capturePreset },
+        },
+      });
+
+      expect(capturedDocumentsReadOnly).toBeDefined();
+      expect(capturedDocumentsReadOnly).toHaveLength(1);
+    });
+
+    it('should not include documentsReadOnly content in regular documents', async () => {
+      let capturedDocuments: Types.DocumentFile[] | undefined;
+      let capturedDocumentsReadOnly: Types.DocumentFile[] | undefined;
+
+      const capturePreset: Types.OutputPreset = {
+        buildGeneratesSection: options => {
+          capturedDocuments = options.documents;
+          capturedDocumentsReadOnly = options.documentsReadOnly;
+          return [
+            {
+              filename: 'out1/result.ts',
+              pluginMap: { typescript: require('@graphql-codegen/typescript') },
+              plugins: [{ typescript: {} }],
+              schema: options.schema,
+              documents: options.documents,
+              config: options.config,
+            },
+          ];
+        },
+      };
+
+      await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        documentsReadOnly: `query readOnlyQuery { f }`,
+        generates: {
+          'out1/': { preset: capturePreset },
+        },
+      });
+
+      expect(capturedDocuments).toHaveLength(1);
+      expect(capturedDocumentsReadOnly).toHaveLength(1);
+
+      const documentNames = capturedDocuments.flatMap(
+        d => d.document?.definitions.map((def: any) => def.name?.value) ?? []
+      );
+      const readOnlyNames = capturedDocumentsReadOnly.flatMap(
+        d => d.document?.definitions.map((def: any) => def.name?.value) ?? []
+      );
+
+      expect(documentNames).toContain('root');
+      expect(documentNames).not.toContain('readOnlyQuery');
+      expect(readOnlyNames).toContain('readOnlyQuery');
+      expect(readOnlyNames).not.toContain('root');
+    });
+
+    it('should not include documentsReadOnly operations in non-preset plugin output', async () => {
+      const { result } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        documentsReadOnly: `query readOnlyQuery { f }`,
+        generates: {
+          'out1.ts': { plugins: ['typescript-operations'] },
+        },
+      });
+
+      expect(result).toHaveLength(1);
+      // Only the regular document operation should be generated
+      expect(result[0].content).toContain('RootQuery');
+      expect(result[0].content).not.toContain('ReadOnlyQuery');
+    });
+
+    it('should support output-level documentsReadOnly', async () => {
+      let capturedDocumentsReadOnly: Types.DocumentFile[] | undefined;
+
+      const capturePreset: Types.OutputPreset = {
+        buildGeneratesSection: options => {
+          capturedDocumentsReadOnly = options.documentsReadOnly;
+          return [
+            {
+              filename: 'out1/result.ts',
+              pluginMap: { typescript: require('@graphql-codegen/typescript') },
+              plugins: [{ typescript: {} }],
+              schema: options.schema,
+              documents: options.documents,
+              config: options.config,
+            },
+          ];
+        },
+      };
+
+      await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1/': {
+            preset: capturePreset,
+            documentsReadOnly: `fragment Frag on MyType { f }`,
+          },
+        },
+      });
+
+      expect(capturedDocumentsReadOnly).toHaveLength(1);
+    });
+
+    it('should merge root and output-level documentsReadOnly', async () => {
+      let capturedDocumentsReadOnly: Types.DocumentFile[] | undefined;
+
+      const capturePreset: Types.OutputPreset = {
+        buildGeneratesSection: options => {
+          capturedDocumentsReadOnly = options.documentsReadOnly;
+          return [
+            {
+              filename: 'out1/result.ts',
+              pluginMap: { typescript: require('@graphql-codegen/typescript') },
+              plugins: [{ typescript: {} }],
+              schema: options.schema,
+              documents: options.documents,
+              config: options.config,
+            },
+          ];
+        },
+      };
+
+      await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documentsReadOnly: `fragment RootFrag on MyType { f }`,
+        generates: {
+          'out1/': {
+            preset: capturePreset,
+            documentsReadOnly: `fragment OutputFrag on MyType { f }`,
+          },
+        },
+      });
+
+      expect(capturedDocumentsReadOnly).toHaveLength(2);
+    });
+  });
+
   it('should not run out of memory when generating very complex types (issue #7720)', async () => {
     const { result } = await executeCodegen({
       schema: ['../../dev-test/gatsby/schema.graphql'],

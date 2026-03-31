@@ -11,6 +11,10 @@ export namespace Types {
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
+    /**
+     * @description Documents that are loaded for reading (e.g. to resolve fragment types) but will not have type files generated for them.
+     */
+    documentsReadOnly?: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
       [name: string]: CodegenPlugin;
@@ -304,6 +308,12 @@ export namespace Types {
      */
     documents?: InstanceOrArray<OperationDocument>;
     /**
+     * @description A pointer(s) to your GraphQL documents that will be read but will not have type files generated for them.
+     * These documents are available to plugins for type resolution (e.g. fragment types), but no output files will be generated based on them.
+     * Accepts the same formats as `documents`.
+     */
+    documentsReadOnly?: InstanceOrArray<OperationDocument>;
+    /**
      * @description A pointer(s) to your GraphQL schema. This schema will be available only for this specific `generates` record.
      * You can use one of the following:
      *
@@ -358,6 +368,10 @@ export namespace Types {
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
+    /**
+     * @description Documents that are loaded for reading (e.g. to resolve fragment types) but will not have type files generated for them.
+     */
+    documentsReadOnly: Types.DocumentFile[];
     config: PluginConfig;
     pluginMap: {
       [name: string]: CodegenPlugin;
@@ -434,6 +448,12 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field
      */
     documents?: InstanceOrArray<OperationDocument>;
+    /**
+     * @description A pointer(s) to your GraphQL documents that will be read but will not have type files generated for them.
+     * These documents are available to plugins for type resolution (e.g. fragment types), but no output files will be generated based on them.
+     * Accepts the same formats as `documents`.
+     */
+    documentsReadOnly?: InstanceOrArray<OperationDocument>;
     /**
      * @type object
      * @additionalProperties true

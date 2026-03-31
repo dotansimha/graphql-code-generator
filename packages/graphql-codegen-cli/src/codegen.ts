@@ -52,11 +52,7 @@ const makeDefaultLoader = (from: string) => {
 
 type Ctx = { errors: Error[] };
 
-function createCache(): <T>(
-  namespace: string,
-  key: string,
-  factory: () => Promise<T>,
-) => Promise<T> {
+function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
   const cache = new Map<string, Promise<unknown>>();
 
   return function ensure<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T> {
@@ -86,6 +82,7 @@ export async function executeCodegen(
   let rootConfig: { [key: string]: any } = {};
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
+  let rootDocumentsReadOnly: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   const cache = createCache();
@@ -136,6 +133,9 @@ export async function executeCodegen(
     /* Normalize root "documents" field */
     rootDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
+    /* Normalize root "documentsReadOnly" field */
+    rootDocumentsReadOnly = normalizeInstanceOrArray<Types.OperationDocument>(config.documentsReadOnly);
+
     /* Normalize "generators" field */
     const generateKeys = Object.keys(config.generates || {});
 
@@ -181,7 +181,7 @@ export async function executeCodegen(
     if (
       rootSchemas.length === 0 &&
       Object.keys(generates).some(
-        filename =>
+        (filename) =>
           !generates[filename].schema ||
           (Array.isArray(generates[filename].schema === 'object') &&
             (generates[filename].schema as unknown as any[]).length === 0),
@@ -216,7 +216,7 @@ export async function executeCodegen(
       {
         title: 'Generate outputs',
         task: (ctx, task) => {
-          const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
+          const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map((filename) => {
             const outputConfig = generates[filename];
             const hasPreset = !!outputConfig.preset;
 
@@ -229,11 +229,13 @@ export async function executeCodegen(
                 let outputSchema: DocumentNode;
                 const outputFileTemplateConfig = outputConfig.config || {};
                 let outputDocuments: Types.DocumentFile[] = [];
-                const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(
-                  outputConfig.schema,
-                );
+                let outputDocumentsReadOnly: Types.DocumentFile[] = [];
+                const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
                 let outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
                   outputConfig.documents,
+                );
+                const outputSpecificDocumentsReadOnly = normalizeInstanceOrArray<Types.OperationDocument>(
+                  outputConfig.documentsReadOnly,
                 );
 
                 const preset: Types.OutputPreset | null = hasPreset
@@ -243,10 +245,7 @@ export async function executeCodegen(
                   : null;
 
                 if (preset?.prepareDocuments) {
-                  outputSpecificDocuments = await preset.prepareDocuments(
-                    filename,
-                    outputSpecificDocuments,
-                  );
+                  outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
                 }
 
                 return subTask.newListr(
@@ -258,10 +257,7 @@ export async function executeCodegen(
                           debugLog(`[CLI] Loading Schemas`);
                           const schemaPointerMap: any = {};
                           const parsedSchemas: GraphQLSchema[] = [];
-                          const allSchemaDenormalizedPointers = [
-                            ...rootSchemas,
-                            ...outputSpecificSchemas,
-                          ];
+                          const allSchemaDenormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
 
                           for (const denormalizedPtr of allSchemaDenormalizedPointers) {
                             if (isSchema(denormalizedPtr)) {
@@ -274,8 +270,7 @@ export async function executeCodegen(
                           }
 
                           const hash =
-                            JSON.stringify(schemaPointerMap) +
-                            parsedSchemas.map(getJsObjectId).join(',');
+                            JSON.stringify(schemaPointerMap) + parsedSchemas.map(getJsObjectId).join(',');
                           const result = await cache('schema', hash, async () => {
                             // collect parsed schemas
                             const schemasToMerge: GraphQLSchema[] = [...parsedSchemas];
@@ -329,10 +324,7 @@ export async function executeCodegen(
                                 documents,
                               };
                             } catch (error) {
-                              if (
-                                error instanceof NoTypeDefinitionsFound &&
-                                config.ignoreNoDocuments
-                              ) {
+                              if (error instanceof NoTypeDefinitionsFound && config.ignoreNoDocuments) {
                                 return {
                                   documents: [],
                                 };
@@ -343,6 +335,41 @@ export async function executeCodegen(
                           });
 
                           outputDocuments = result.documents;
+
+                          const allReadOnlyDenormalizedPointers = [
+                            ...rootDocumentsReadOnly,
+                            ...outputSpecificDocumentsReadOnly,
+                          ];
+
+                          if (allReadOnlyDenormalizedPointers.length > 0) {
+                            const readOnlyPointerMap: any = {};
+                            for (const denormalizedPtr of allReadOnlyDenormalizedPointers) {
+                              if (typeof denormalizedPtr === 'string') {
+                                readOnlyPointerMap[denormalizedPtr] = {};
+                              } else if (typeof denormalizedPtr === 'object') {
+                                Object.assign(readOnlyPointerMap, denormalizedPtr);
+                              }
+                            }
+
+                            const readOnlyHash = JSON.stringify(readOnlyPointerMap);
+                            const readOnlyResult = await cache(
+                              'documents-read-only',
+                              readOnlyHash,
+                              async () => {
+                                try {
+                                  const documents = await context.loadDocuments(readOnlyPointerMap);
+                                  return { documents };
+                                } catch (error) {
+                                  if (error instanceof NoTypeDefinitionsFound && config.ignoreNoDocuments) {
+                                    return { documents: [] };
+                                  }
+                                  throw error;
+                                }
+                              },
+                            );
+
+                            outputDocumentsReadOnly = readOnlyResult.documents;
+                          }
                         },
                         filename,
                         `Load GraphQL documents: ${filename}`,
@@ -356,10 +383,9 @@ export async function executeCodegen(
                           debugLog(`[CLI] Generating output`);
                           const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
 
-                          const pluginLoader =
-                            config.pluginLoader || makeDefaultLoader(context.cwd);
+                          const pluginLoader = config.pluginLoader || makeDefaultLoader(context.cwd);
                           const pluginPackages = await Promise.all(
-                            normalizedPluginsArray.map(plugin =>
+                            normalizedPluginsArray.map((plugin) =>
                               getPluginByName(Object.keys(plugin)[0], pluginLoader),
                             ),
                           );
@@ -391,8 +417,7 @@ export async function executeCodegen(
                           const mergedConfig = {
                             ...rawMergedConfig,
                             importExtension,
-                            emitLegacyCommonJSImports:
-                              rawMergedConfig.emitLegacyCommonJSImports ?? true,
+                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -417,6 +442,7 @@ export async function executeCodegen(
                                     schema: outputSchema,
                                     schemaAst: outputSchemaAst,
                                     documents: outputDocuments,
+                                    documentsReadOnly: outputDocumentsReadOnly,
                                     config: mergedConfig,
                                     pluginMap,
                                     pluginContext,
@@ -432,6 +458,7 @@ export async function executeCodegen(
                                   schema: outputSchema,
                                   schemaAst: outputSchemaAst,
                                   documents: outputDocuments,
+                                  documentsReadOnly: outputDocumentsReadOnly,
                                   config: mergedConfig,
                                   pluginMap,
                                   pluginContext,
@@ -444,8 +471,7 @@ export async function executeCodegen(
                             const output = await codegen({
                               ...outputArgs,
                               importExtension,
-                              emitLegacyCommonJSImports:
-                                rawMergedConfig.emitLegacyCommonJSImports ?? true,
+                              emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({
@@ -516,12 +542,10 @@ export async function executeCodegen(
 
   let error: Error | null = null;
   if (executedContext.errors.length > 0) {
-    const errors = executedContext.errors.map(subErr => subErr.message || subErr.toString());
+    const errors = executedContext.errors.map((subErr) => subErr.message || subErr.toString());
     error = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
     // Best-effort to all stack traces for debugging
-    error.stack = `${error.stack}\n\n${executedContext.errors
-      .map(subErr => subErr.stack)
-      .join('\n\n')}`;
+    error.stack = `${error.stack}\n\n${executedContext.errors.map((subErr) => subErr.stack).join('\n\n')}`;
   }
 
   return { result, error };
