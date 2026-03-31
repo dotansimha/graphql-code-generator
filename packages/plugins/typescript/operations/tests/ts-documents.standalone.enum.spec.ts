@@ -847,7 +847,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
           typesPrefix: 'I',
           namingConvention: { enumValues: 'change-case-all#constantCase' },
           enumValues: {
-            UserRole: './files#default as IUserRole',
+            UserRole: './files#default as UserRole', // NOTE: `as UserRole` doesn't do anything here, this is here to demonstrate that it's the same as './files#default'
           },
         },
         { outputFile: '' }

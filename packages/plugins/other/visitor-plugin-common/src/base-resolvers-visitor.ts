@@ -975,10 +975,7 @@ export class BaseResolversVisitor<
       if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
         const isExternalFile = !!this.config.enumValues[typeName].sourceFile;
         prev[typeName] = isExternalFile
-          ? this.convertName(this.config.enumValues[typeName].typeIdentifier, {
-              useTypesPrefix: false,
-              useTypesSuffix: false,
-            })
+          ? this.config.enumValues[typeName].typeIdentifierConverted
           : this.config.enumValues[typeName].sourceIdentifier;
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
@@ -1436,7 +1433,7 @@ export class BaseResolversVisitor<
       : false;
     const existsFromEnums = !!Object.keys(this.config.enumValues)
       .map(key => this.config.enumValues[key])
-      .find(o => o.sourceFile === source && o.typeIdentifier === identifier);
+      .find(o => o.sourceFile === source && o.typeIdentifierConverted === identifier);
 
     return exists || existsFromEnums;
   }

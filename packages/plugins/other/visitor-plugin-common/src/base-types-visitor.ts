@@ -997,7 +997,7 @@ export class BaseTypesVisitor<
       return this._getScalar(typeAsString, isVisitingInputType ? 'input' : 'output');
     }
     if (this.config.enumValues[typeAsString]) {
-      return this.config.enumValues[typeAsString].typeIdentifier;
+      return this.config.enumValues[typeAsString].typeIdentifierConverted;
     }
 
     const schemaType = this._schema.getType(typeAsString);
