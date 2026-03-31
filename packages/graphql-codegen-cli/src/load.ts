@@ -1,5 +1,6 @@
 import { extname, join } from 'path';
 import { GraphQLError, GraphQLSchema } from 'graphql';
+import type { Source } from 'graphql-config';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { CodeFileLoader } from '@graphql-tools/code-file-loader';
@@ -69,7 +70,7 @@ export async function loadSchema(
 export async function loadDocuments(
   documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
   config: Types.Config,
-): Promise<Types.DocumentFile[]> {
+): Promise<Source[]> {
   const loaders = [
     new CodeFileLoader({
       pluckConfig: {

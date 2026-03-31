@@ -4,7 +4,7 @@ import { createRequire } from 'module';
 import { resolve } from 'path';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
-import { GraphQLConfig } from 'graphql-config';
+import { GraphQLConfig, type Source } from 'graphql-config';
 import { createJiti } from 'jiti';
 import { env } from 'string-env-interpolation';
 import yaml from 'yaml';
@@ -16,6 +16,7 @@ import {
   Profiler,
   Types,
 } from '@graphql-codegen/plugin-helpers';
+import type { UnnormalizedTypeDefPointer } from '@graphql-tools/load';
 import { findAndLoadGraphQLConfig } from './graphql-config.js';
 import {
   defaultDocumentsLoadOptions,
@@ -464,7 +465,10 @@ export class CodegenContext {
     return addHashToSchema(loadSchema(pointer, config));
   }
 
-  async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
+  async loadDocuments(
+    pointer: UnnormalizedTypeDefPointer,
+    type: 'standard' | 'read-only',
+  ): Promise<Types.DocumentFile[]> {
     const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
@@ -472,10 +476,11 @@ export class CodegenContext {
         this._graphqlConfig
           .getProject(this._project)
           .loadDocuments(pointer, { ...config, ...config.config }),
+        type,
       );
     }
 
-    return addHashToDocumentFiles(loadDocuments(pointer, config));
+    return addHashToDocumentFiles(loadDocuments(pointer, config), type);
   }
 }
 
@@ -502,24 +507,27 @@ function addHashToSchema(schemaPromise: Promise<GraphQLSchema>): Promise<GraphQL
   });
 }
 
-function hashDocument(doc: Types.DocumentFile) {
-  if (doc.rawSDL) {
-    return hashContent(doc.rawSDL);
-  }
-
-  if (doc.document) {
-    return hashContent(print(doc.document));
-  }
-
-  return null;
-}
-
-function addHashToDocumentFiles(
-  documentFilesPromise: Promise<Types.DocumentFile[]>,
+async function addHashToDocumentFiles(
+  documentFilesPromise: Promise<Source[]>,
+  type: 'standard' | 'read-only',
 ): Promise<Types.DocumentFile[]> {
+  function hashDocument(doc: Source) {
+    if (doc.rawSDL) {
+      return hashContent(doc.rawSDL);
+    }
+
+    if (doc.document) {
+      return hashContent(print(doc.document));
+    }
+
+    return null;
+  }
+
   return documentFilesPromise.then(documentFiles =>
-    documentFiles.map(doc => {
+    // Note: `doc` here is technically `Source`, but by the end of the funciton it's `Types.DocumentFile`. This re-declaration makes TypeScript happy.
+    documentFiles.map((doc: Types.DocumentFile): Types.DocumentFile => {
       doc.hash = hashDocument(doc);
+      doc.type = type;
 
       return doc;
     }),

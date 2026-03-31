@@ -1,4 +1,4 @@
-import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
+import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind, type DocumentNode } from 'graphql';
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
@@ -23,11 +23,40 @@ export const plugin: PluginFunction<
         includeFragments: config.flattenGeneratedTypesIncludeFragments,
       })
     : rawDocuments;
-  const allAst = concatAST(documents.map(v => v.document));
 
+  const parsedDocuments = documents.reduce<{
+    all: {
+      documentFiles: Types.DocumentFile[];
+      documentNodes: DocumentNode[];
+    };
+    standard: {
+      documentFiles: Types.DocumentFile[];
+      documentNodes: DocumentNode[];
+    };
+  }>(
+    (prev, document) => {
+      prev.all.documentFiles.push(document);
+      prev.all.documentNodes.push(document.document);
+
+      if (document.type === 'standard') {
+        prev.standard.documentFiles.push(document);
+        prev.standard.documentNodes.push(document.document);
+      }
+
+      return prev;
+    },
+    {
+      all: { documentFiles: [], documentNodes: [] },
+      standard: { documentFiles: [], documentNodes: [] },
+    },
+  );
+
+  // For Fragment types to resolve correctly, we must get read all docs (`standard` and `read-only`)
+  // Fragment types are usually (but not always) in `read-only` files in certain setup, like a monorepo.
+  const allDocumentsAST = concatAST(parsedDocuments.all.documentNodes);
   const allFragments: LoadedFragment[] = [
     ...(
-      allAst.definitions.filter(
+      allDocumentsAST.definitions.filter(
         d => d.kind === Kind.FRAGMENT_DEFINITION,
       ) as FragmentDefinitionNode[]
     ).map(fragmentDef => ({
@@ -41,7 +70,10 @@ export const plugin: PluginFunction<
 
   const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
 
-  const visitorResult = oldVisit(allAst, {
+  // We only visit `standard` documents to generate types.
+  // `read-only` documents are included as references for typechecking and completeness i.e. only used for reading purposes, no writing.
+  const documentsToVisitAST = concatAST(parsedDocuments.standard.documentNodes);
+  const visitorResult = oldVisit(documentsToVisitAST, {
     leave: visitor,
   });
 
@@ -50,7 +82,7 @@ export const plugin: PluginFunction<
   if (config.addOperationExport) {
     const exportConsts = [];
 
-    for (const d of allAst.definitions) {
+    for (const d of allDocumentsAST.definitions) {
       if ('name' in d) {
         exportConsts.push(`export declare const ${d.name.value}: import("graphql").DocumentNode;`);
       }

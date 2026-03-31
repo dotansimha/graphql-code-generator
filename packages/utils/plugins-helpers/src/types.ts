@@ -11,10 +11,6 @@ export namespace Types {
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
-    /**
-     * @description Documents that are loaded for reading (e.g. to resolve fragment types) but will not have type files generated for them.
-     */
-    documentsReadOnly?: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
       [name: string]: CodegenPlugin;
@@ -38,7 +34,8 @@ export namespace Types {
   };
 
   export interface DocumentFile extends Source {
-    hash?: string;
+    hash: string;
+    type: 'standard' | 'read-only';
   }
 
   /* Utils */
@@ -368,10 +365,6 @@ export namespace Types {
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
-    /**
-     * @description Documents that are loaded for reading (e.g. to resolve fragment types) but will not have type files generated for them.
-     */
-    documentsReadOnly: Types.DocumentFile[];
     config: PluginConfig;
     pluginMap: {
       [name: string]: CodegenPlugin;

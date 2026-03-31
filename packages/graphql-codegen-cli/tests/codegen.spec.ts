@@ -1553,10 +1553,10 @@ describe('Codegen Executor', () => {
       expect(capturedDocumentsReadOnly).toHaveLength(1);
 
       const documentNames = capturedDocuments.flatMap(
-        d => d.document?.definitions.map((def: any) => def.name?.value) ?? []
+        d => d.document?.definitions.map((def: any) => def.name?.value) ?? [],
       );
       const readOnlyNames = capturedDocumentsReadOnly.flatMap(
-        d => d.document?.definitions.map((def: any) => def.name?.value) ?? []
+        d => d.document?.definitions.map((def: any) => def.name?.value) ?? [],
       );
 
       expect(documentNames).toContain('root');

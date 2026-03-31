@@ -265,6 +265,19 @@ const config: CodegenConfig = {
         },
       },
     },
+    // #region documentsReadOnly
+    './dev-test/documents-readonly/app/types.generated.ts': {
+      schema: './dev-test/documents-readonly/schema.graphqls',
+      documents: ['./dev-test/documents-readonly/app/*.graphql.ts'],
+      documentsReadOnly: ['./dev-test/documents-readonly/lib/*.graphql.ts'],
+      plugins: ['typescript-operations'],
+    },
+    './dev-test/documents-readonly/lib/types.generated.ts': {
+      schema: './dev-test/documents-readonly/schema.graphqls',
+      documents: ['./dev-test/documents-readonly/lib/*.graphql.ts'],
+      plugins: ['typescript-operations'],
+    },
+    // #endregion
   },
 };
 
