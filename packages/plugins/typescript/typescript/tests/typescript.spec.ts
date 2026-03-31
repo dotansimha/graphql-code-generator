@@ -901,7 +901,7 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
+      expect(result.prepend[0]).toBe(`import IMyEnum from './files';`);
     });
 
     it('#4834 - enum members should be quoted if numeric', async () => {
@@ -948,14 +948,21 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
+      expect(result.prepend).toMatchInlineSnapshot(`
+        [
+          "import { MyEnum as IMyEnum } from './files';",
+          "export type Maybe<T> = T | null;",
+          "export type InputMaybe<T> = Maybe<T>;",
+        ]
+      `);
       expect(result.content).toBeSimilarStringTo(`export type ITest = {
         __typename?: 'Test';
-       t?: Maybe<MyEnum>;
+       t?: Maybe<IMyEnum>;
        test?: Maybe<Scalars['String']['output']>;
      };`);
 
       expect(result.content).toBeSimilarStringTo(`export type ITestTestArgs = {
-      a?: InputMaybe<MyEnum>;
+      a?: InputMaybe<IMyEnum>;
     };`);
     });
 
@@ -987,9 +994,9 @@ describe('TypeScript', () => {
         },
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
-      expect(result.prepend).toContain(`import { MyEnum } from './files';`);
+      expect(result.prepend).toContain(`import { MyEnum as GQL_MyEnum } from './files';`);
       expect(result.content).toContain(`enum GQL_OtherEnum {`);
-      expect(result.content).toContain(`a?: Maybe<MyEnum>;`);
+      expect(result.content).toContain(`a?: Maybe<GQL_MyEnum>;`);
       expect(result.content).toContain(`b?: Maybe<GQL_OtherEnum>`);
     });
 
