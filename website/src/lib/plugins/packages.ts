@@ -237,12 +237,6 @@ export const PACKAGES: Record<
     icon: 'apollo',
     tags: ['plugin', 'typescript', 'react', 'apollo'],
   },
-  'typescript-react-query': {
-    title: 'TypeScript React-Query',
-    npmPackage: '@graphql-codegen/typescript-react-query',
-    icon: 'react_query',
-    tags: ['plugin', 'typescript', 'react'],
-  },
   'typescript-resolvers': {
     title: 'TypeScript Resolvers',
     npmPackage: '@graphql-codegen/typescript-resolvers',
