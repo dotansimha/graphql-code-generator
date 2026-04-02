@@ -16,7 +16,7 @@
     "typescript": "5.5.4",
     "serve": "14.2.3",
     "cypress": "15.7.1",
-    "start-server-and-test": "2.0.5",
+    "start-server-and-test": "3.0.0",
     "vite": "^6.0.0"
   },
   "scripts": {
