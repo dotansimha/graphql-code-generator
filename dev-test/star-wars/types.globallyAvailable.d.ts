@@ -1,20 +1,12 @@
 type Maybe<T> = T | null;
 type InputMaybe<T> = Maybe<T>;
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
-  [_ in K]?: never;
-};
+type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 type Scalars = {
   ID: { input: string; output: string };
@@ -255,11 +247,7 @@ type CreateReviewForEpisodeMutationVariables = Exact<{
 
 type CreateReviewForEpisodeMutation = {
   __typename?: 'Mutation';
-  createReview?: {
-    __typename?: 'Review';
-    stars: number;
-    commentary?: string | null;
-  } | null;
+  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
 };
 
 type ExcludeQueryAlphaQueryVariables = Exact<{
@@ -332,11 +320,7 @@ type HeroDetails_Droid_Fragment = {
   name: string;
 };
 
-type HeroDetails_Human_Fragment = {
-  __typename?: 'Human';
-  height?: number | null;
-  name: string;
-};
+type HeroDetails_Human_Fragment = { __typename?: 'Human'; height?: number | null; name: string };
 
 type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
@@ -421,11 +405,7 @@ type HeroTypeDependentAliasedFieldQuery = {
     | null;
 };
 
-type HumanFieldsFragment = {
-  __typename?: 'Human';
-  name: string;
-  mass?: number | null;
-};
+type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: number | null };
 
 type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 

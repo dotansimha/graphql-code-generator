@@ -1,22 +1,14 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
   [_ in K]?: never;
 };
 export type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -256,9 +248,7 @@ export type CommentsPageCommentFragment = {
   };
 };
 
-export type CurrentUserForProfileQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = {
   readonly __typename?: 'Query';
@@ -282,10 +272,7 @@ export type FeedEntryFragment = {
     readonly description?: string | null;
     readonly stargazers_count: number;
     readonly open_issues_count?: number | null;
-    readonly owner?: {
-      readonly __typename?: 'User';
-      readonly avatar_url: string;
-    } | null;
+    readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
   };
   readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
   readonly postedBy: {
@@ -303,10 +290,7 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = {
   readonly __typename?: 'Query';
-  readonly currentUser?: {
-    readonly __typename?: 'User';
-    readonly login: string;
-  } | null;
+  readonly currentUser?: { readonly __typename?: 'User'; readonly login: string } | null;
   readonly feed?: ReadonlyArray<{
     readonly __typename?: 'Entry';
     readonly id: number;
@@ -320,15 +304,9 @@ export type FeedQuery = {
       readonly description?: string | null;
       readonly stargazers_count: number;
       readonly open_issues_count?: number | null;
-      readonly owner?: {
-        readonly __typename?: 'User';
-        readonly avatar_url: string;
-      } | null;
+      readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
     };
-    readonly vote: {
-      readonly __typename?: 'Vote';
-      readonly vote_value: number;
-    };
+    readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
     readonly postedBy: {
       readonly __typename?: 'User';
       readonly html_url: string;
@@ -343,10 +321,7 @@ export type SubmitRepositoryMutationVariables = Exact<{
 
 export type SubmitRepositoryMutation = {
   readonly __typename?: 'Mutation';
-  readonly submitRepository?: {
-    readonly __typename?: 'Entry';
-    readonly createdAt: number;
-  } | null;
+  readonly submitRepository?: { readonly __typename?: 'Entry'; readonly createdAt: number } | null;
 };
 
 export type RepoInfoFragment = {
@@ -402,9 +377,6 @@ export type VoteMutation = {
     readonly __typename?: 'Entry';
     readonly score: number;
     readonly id: number;
-    readonly vote: {
-      readonly __typename?: 'Vote';
-      readonly vote_value: number;
-    };
+    readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
   } | null;
 };

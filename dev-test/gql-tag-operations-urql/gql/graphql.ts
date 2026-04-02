@@ -3,23 +3,15 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = T | null | undefined;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
   [_ in K]?: never;
 };
 export type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -127,11 +119,7 @@ export type FooQuery = {
   Tweets?: Array<{ __typename?: 'Tweet'; id: string } | null> | null;
 };
 
-export type LelFragment = {
-  __typename?: 'Tweet';
-  id: string;
-  body?: string | null;
-} & {
+export type LelFragment = { __typename?: 'Tweet'; id: string; body?: string | null } & {
   ' $fragmentName'?: 'LelFragment';
 };
 
@@ -140,10 +128,7 @@ export type BarQueryVariables = Exact<{ [key: string]: never }>;
 export type BarQuery = {
   __typename?: 'Query';
   Tweets?: Array<
-    | ({ __typename?: 'Tweet' } & {
-        ' $fragmentRefs'?: { LelFragment: LelFragment };
-      })
-    | null
+    ({ __typename?: 'Tweet' } & { ' $fragmentRefs'?: { LelFragment: LelFragment } }) | null
   > | null;
 };
 
@@ -153,10 +138,7 @@ export const LelFragmentDoc = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'Lel' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Tweet' },
-      },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -205,12 +187,7 @@ export const BarDocument = {
             name: { kind: 'Name', value: 'Tweets' },
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'Lel' },
-                },
-              ],
+              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'Lel' } }],
             },
           },
         ],
@@ -219,10 +196,7 @@ export const BarDocument = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'Lel' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Tweet' },
-      },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Tweet' } },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [

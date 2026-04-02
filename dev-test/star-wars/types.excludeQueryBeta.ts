@@ -1,22 +1,14 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
   [_ in K]?: never;
 };
 export type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -259,11 +251,7 @@ export type CreateReviewForEpisodeMutationVariables = Exact<{
 
 export type CreateReviewForEpisodeMutation = {
   __typename?: 'Mutation';
-  createReview?: {
-    __typename?: 'Review';
-    stars: number;
-    commentary?: string | null;
-  } | null;
+  createReview?: { __typename?: 'Review'; stars: number; commentary?: string | null } | null;
 };
 
 export type ExcludeQueryAlphaQueryVariables = Exact<{
@@ -327,11 +315,7 @@ type HeroDetails_Droid_Fragment = {
   name: string;
 };
 
-type HeroDetails_Human_Fragment = {
-  __typename?: 'Human';
-  height?: number | null;
-  name: string;
-};
+type HeroDetails_Human_Fragment = { __typename?: 'Human'; height?: number | null; name: string };
 
 export type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
 
@@ -416,11 +400,7 @@ export type HeroTypeDependentAliasedFieldQuery = {
     | null;
 };
 
-export type HumanFieldsFragment = {
-  __typename?: 'Human';
-  name: string;
-  mass?: number | null;
-};
+export type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: number | null };
 
 export type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
 
