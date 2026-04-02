@@ -19,7 +19,7 @@ env:
 jobs:
   lint:
     name: Linting Check
-    uses: the-guild-org/shared-config/.github/workflows/lint.yml@main
+    uses: the-guild-org/shared-config/.github/workflows/lint.yml@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
     with:
       script: yarn ci:lint
     secrets:
@@ -31,7 +31,7 @@ jobs:
       - name: Checkout Master
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
       - name: Prettier Check
         run: yarn prettier:check
   dev-tests-old:
@@ -46,7 +46,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
       - name: Build
         run: yarn build
         env:
@@ -62,7 +62,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
       - name: Build
         run: yarn build
         env:
@@ -118,7 +118,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
       - name: Build
         run: yarn build
         env:
@@ -147,7 +147,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
         with:
           nodeVersion: ${{matrix.node_version}}
       - name: Use GraphQL v${{matrix.graphql_version}}
@@ -184,7 +184,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
         with:
           nodeVersion: ${{matrix.node_version}}
       - name: Use GraphQL v${{matrix.graphql_version}}
