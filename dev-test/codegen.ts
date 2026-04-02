@@ -265,6 +265,14 @@ const config: CodegenConfig = {
         },
       },
     },
+    // #region externalDocuments option
+    './dev-test/external-documents/app/types.generated.ts': {
+      schema: './dev-test/external-documents/schema.graphqls',
+      documents: ['./dev-test/external-documents/app/*.graphql.ts'],
+      externalDocuments: ['./dev-test/external-documents/lib/*.graphql.ts'],
+      plugins: ['typescript-operations'],
+    },
+    // #endregion
   },
 };
 
