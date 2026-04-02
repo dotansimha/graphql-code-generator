@@ -34,7 +34,8 @@ export namespace Types {
   };
 
   export interface DocumentFile extends Source {
-    hash?: string;
+    hash?: string | null;
+    type?: 'standard' | 'external';
   }
 
   /* Utils */
@@ -304,6 +305,12 @@ export namespace Types {
      */
     documents?: InstanceOrArray<OperationDocument>;
     /**
+     * @description A pointer(s) to your GraphQL documents that will be read but will not have type files generated for them.
+     * These documents are available to plugins for type resolution (e.g. fragment types), but no output files will be generated based on them.
+     * Accepts the same formats as `documents`.
+     */
+    externalDocuments?: InstanceOrArray<OperationDocument>;
+    /**
      * @description A pointer(s) to your GraphQL schema. This schema will be available only for this specific `generates` record.
      * You can use one of the following:
      *
@@ -434,6 +441,12 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/documents-field
      */
     documents?: InstanceOrArray<OperationDocument>;
+    /**
+     * @description A pointer(s) to your GraphQL documents that will be read but will not have type files generated for them.
+     * These documents are available to plugins for type resolution (e.g. fragment types), but no output files will be generated based on them.
+     * Accepts the same formats as `documents`.
+     */
+    externalDocuments?: InstanceOrArray<OperationDocument>;
     /**
      * @type object
      * @additionalProperties true

@@ -86,7 +86,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   const schemaDocumentNode =
     mergeNeeded || !options.schema
-      ? getCachedDocumentNodeFromSchema(schemaInstance!)
+      ? getCachedDocumentNodeFromSchema(schemaInstance)
       : options.schema;
 
   const documentTransforms = Array.isArray(options.documentTransforms)

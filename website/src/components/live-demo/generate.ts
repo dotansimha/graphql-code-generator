@@ -53,7 +53,7 @@ export async function generate(
           try {
             pluginMap[pluginName as string] =
               await pluginLoaderMap[pluginName as keyof typeof pluginLoaderMap]();
-          } catch (e: any) {
+          } catch (e) {
             console.error(e);
           }
         }),

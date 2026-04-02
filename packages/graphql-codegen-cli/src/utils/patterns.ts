@@ -136,11 +136,11 @@ export const makeGlobalPatternSet = (initialContext: CodegenContext) => {
       relative(process.cwd(), initialContext.filepath),
     ]),
     schemas: sortPatterns(
-      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(config.schema!)),
+      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(config.schema)),
     ),
     documents: sortPatterns(
       makePatternsFromDocuments(
-        normalizeInstanceOrArray<Types.OperationDocument>(config.documents!),
+        normalizeInstanceOrArray<Types.OperationDocument>(config.documents),
       ),
     ),
   };
@@ -158,10 +158,10 @@ export const makeLocalPatternSet = (conf: Types.ConfiguredOutput) => {
   return {
     watch: sortPatterns(normalizeInstanceOrArray(conf.watchPattern!)),
     documents: sortPatterns(
-      makePatternsFromDocuments(normalizeInstanceOrArray<Types.OperationDocument>(conf.documents!)),
+      makePatternsFromDocuments(normalizeInstanceOrArray<Types.OperationDocument>(conf.documents)),
     ),
     schemas: sortPatterns(
-      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(conf.schema!)),
+      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(conf.schema)),
     ),
   };
 };

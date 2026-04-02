@@ -1,7 +1,7 @@
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { normalizeImportExtension, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { Source } from '@graphql-tools/utils';
 
 export type OperationOrFragment = {
   initialName: string;
@@ -9,7 +9,7 @@ export type OperationOrFragment = {
 };
 
 export type SourceWithOperations = {
-  source: Source;
+  source: Types.DocumentFile;
   operations: Array<OperationOrFragment>;
 };
 
