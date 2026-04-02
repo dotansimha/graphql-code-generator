@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'client-preset',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

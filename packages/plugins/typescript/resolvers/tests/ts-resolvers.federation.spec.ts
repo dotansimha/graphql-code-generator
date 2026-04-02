@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
-import { codegen } from '@graphql-codegen/core';
 import { buildSchema, parse } from 'graphql';
+import { codegen } from '@graphql-codegen/core';
 import { TypeScriptResolversPluginConfig } from '../src/config.js';
 import { plugin } from '../src/index.js';
 
@@ -941,7 +941,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         }
       `;
 
-      const result = await plugin(buildSchema(federatedSchema), [], { federation: true }, { outputFile: '' });
+      const result = await plugin(
+        buildSchema(federatedSchema),
+        [],
+        { federation: true },
+        { outputFile: '' },
+      );
 
       expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
         {

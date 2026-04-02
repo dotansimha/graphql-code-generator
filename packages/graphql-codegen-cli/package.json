@@ -1,22 +1,47 @@
 {
   "name": "@graphql-codegen/cli",
   "version": "6.2.1",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/graphql-codegen-cli"
+  },
+  "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-codegen/issues"
+  },
+  "author": "Dotan Simha <dotansimha@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
   "bin": {
     "gql-gen": "dist/cjs/bin.js",
     "graphql-codegen": "dist/cjs/bin.js",
     "graphql-code-generator": "dist/cjs/bin.js",
     "graphql-codegen-esm": "dist/esm/bin.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dotansimha/graphql-code-generator.git",
-    "directory": "packages/graphql-codegen-cli"
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
-  "scripts": {
-    "lint": "eslint **/*.ts",
-    "test": "vitest --no-watch"
-  },
+  "typings": "dist/typings/index.d.ts",
   "keywords": [
     "gql",
     "generator",
@@ -34,11 +59,19 @@
     "d.ts",
     "typings"
   ],
-  "author": "Dotan Simha <dotansimha@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/dotansimha/graphql-codegen/issues"
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "vitest --no-watch"
   },
-  "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
+  "peerDependencies": {
+    "@parcel/watcher": "^2.1.0",
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@parcel/watcher": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "@babel/generator": "^7.18.13",
     "@babel/template": "^7.18.10",
@@ -53,8 +86,8 @@
     "@graphql-tools/graphql-file-loader": "^8.1.11",
     "@graphql-tools/json-file-loader": "^8.0.26",
     "@graphql-tools/load": "^8.1.8",
-    "@graphql-tools/url-loader": "^9.0.6",
     "@graphql-tools/merge": "^9.0.6",
+    "@graphql-tools/url-loader": "^9.0.6",
     "@graphql-tools/utils": "^11.0.0",
     "@inquirer/prompts": "^7.8.2",
     "@whatwg-node/fetch": "^0.10.0",
@@ -88,44 +121,11 @@
     "make-dir": "4.0.0",
     "prettier": "3.8.1"
   },
-  "peerDependencies": {
-    "@parcel/watcher": "^2.1.0",
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@parcel/watcher": {
-      "optional": true
-    }
-  },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "exports": {
-    ".": {
-      "require": {
-        "types": "./dist/typings/index.d.cts",
-        "default": "./dist/cjs/index.js"
-      },
-      "import": {
-        "types": "./dist/typings/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "default": {
-        "types": "./dist/typings/index.d.ts",
-        "default": "./dist/esm/index.js"
-      }
-    },
-    "./package.json": "./package.json"
-  },
-  "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "type": "module",
-  "engines": {
-    "node": ">=16"
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
   }
 }

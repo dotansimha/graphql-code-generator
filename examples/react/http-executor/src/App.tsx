@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { buildHTTPExecutor } from '@graphql-tools/executor-http';
 import './App.css';
 import Film from './Film';
-import { graphql, DocumentType } from './gql';
+import { DocumentType, graphql } from './gql';
 
 const executor = buildHTTPExecutor({
   endpoint: 'https://graphql.org/graphql/',
@@ -43,7 +43,13 @@ function App() {
 
   return (
     <div className="App">
-      {data && <ul>{data.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>}
+      {data && (
+        <ul>
+          {data.allFilms?.edges?.map(
+            (e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />,
+          )}
+        </ul>
+      )}
     </div>
   );
 }

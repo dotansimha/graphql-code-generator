@@ -1,7 +1,12 @@
 import { extname } from 'path';
-import { PluginFunction, PluginValidateFn, removeFederation, Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, introspectionFromSchema } from 'graphql';
+import {
+  PluginFunction,
+  PluginValidateFn,
+  removeFederation,
+  Types,
+} from '@graphql-codegen/plugin-helpers';
+import { getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
 /**
  * @description This plugin generates a GraphQL introspection file based on your GraphQL schema.
@@ -63,7 +68,7 @@ export interface IntrospectionPluginConfig {
 export const plugin: PluginFunction<IntrospectionPluginConfig> = async (
   schema: GraphQLSchema,
   _documents,
-  pluginConfig: IntrospectionPluginConfig
+  pluginConfig: IntrospectionPluginConfig,
 ): Promise<string> => {
   const cleanSchema = pluginConfig.federation ? removeFederation(schema) : schema;
   const descriptions = getConfigValue(pluginConfig.descriptions, true);
@@ -78,14 +83,16 @@ export const plugin: PluginFunction<IntrospectionPluginConfig> = async (
     specifiedByUrl,
   });
 
-  return pluginConfig.minify ? JSON.stringify(introspection) : JSON.stringify(introspection, null, 2);
+  return pluginConfig.minify
+    ? JSON.stringify(introspection)
+    : JSON.stringify(introspection, null, 2);
 };
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: any,
-  outputFile: string
+  outputFile: string,
 ) => {
   if (extname(outputFile) !== '.json') {
     throw new Error(`Plugin "introspection" requires extension to be ".json"!`);

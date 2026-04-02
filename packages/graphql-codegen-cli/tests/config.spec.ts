@@ -1,5 +1,5 @@
 import { buildSchema } from 'graphql';
-import { createContext, ensureContext, CodegenContext } from '../src/index.js';
+import { CodegenContext, createContext, ensureContext } from '../src/index.js';
 
 describe('Codegen config - Context', () => {
   it('loads and merge multiple schemas when using GraphQL config', async () => {
@@ -116,7 +116,7 @@ describe('Codegen config - Context', () => {
       'GraphQLSchema',
       expect.objectContaining({
         inputValueDeprecation: true,
-      })
+      }),
     );
   });
 });

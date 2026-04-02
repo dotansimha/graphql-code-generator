@@ -1,11 +1,24 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -225,11 +238,17 @@ export type CommentsPageCommentFragment = {
   postedBy: { __typename?: 'User'; login: string; html_url: string };
 };
 
-export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
+export type CurrentUserForProfileQueryVariables = Exact<{
+  [key: string]: never;
+}>;
 
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
-  currentUser?: { __typename?: 'User'; login: string; avatar_url: string } | null;
+  currentUser?: {
+    __typename?: 'User';
+    login: string;
+    avatar_url: string;
+  } | null;
 };
 
 export type FeedEntryFragment = {
@@ -330,7 +349,12 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = {
   __typename?: 'Mutation';
-  vote?: { __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } } | null;
+  vote?: {
+    __typename?: 'Entry';
+    score: number;
+    id: number;
+    vote: { __typename?: 'Vote'; vote_value: number };
+  } | null;
 };
 
 export const CommentsPageCommentFragmentDoc = {
@@ -339,7 +363,10 @@ export const CommentsPageCommentFragmentDoc = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CommentsPageComment' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Comment' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -368,7 +395,10 @@ export const VoteButtonsFragmentDoc = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'VoteButtons' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -392,7 +422,10 @@ export const RepoInfoFragmentDoc = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'RepoInfo' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -404,8 +437,14 @@ export const RepoInfoFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'stargazers_count' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'open_issues_count' },
+                },
               ],
             },
           },
@@ -431,7 +470,10 @@ export const FeedEntryFragmentDoc = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'FeedEntry' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -450,13 +492,21 @@ export const FeedEntryFragmentDoc = {
                   name: { kind: 'Name', value: 'owner' },
                   selectionSet: {
                     kind: 'SelectionSet',
-                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'avatar_url' } }],
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar_url' },
+                      },
+                    ],
                   },
                 },
               ],
             },
           },
-          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'VoteButtons' } },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'VoteButtons' },
+          },
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RepoInfo' } },
         ],
       },
@@ -464,7 +514,10 @@ export const FeedEntryFragmentDoc = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'VoteButtons' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -483,7 +536,10 @@ export const FeedEntryFragmentDoc = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'RepoInfo' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -495,8 +551,14 @@ export const FeedEntryFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'stargazers_count' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'open_issues_count' },
+                },
               ],
             },
           },
@@ -526,8 +588,17 @@ export const OnCommentAddedDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'repoFullName' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
         },
       ],
       selectionSet: {
@@ -540,7 +611,10 @@ export const OnCommentAddedDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'repoFullName' },
+                },
               },
             ],
             selectionSet: {
@@ -554,7 +628,10 @@ export const OnCommentAddedDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'login' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'html_url' },
+                      },
                     ],
                   },
                 },
@@ -578,17 +655,32 @@ export const CommentDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'repoFullName' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
       ],
@@ -613,7 +705,10 @@ export const CommentDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'repoFullName' },
+                },
               },
             ],
             selectionSet: {
@@ -627,7 +722,10 @@ export const CommentDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'login' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'html_url' },
+                      },
                     ],
                   },
                 },
@@ -639,37 +737,72 @@ export const CommentDocument = {
                     {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
                     },
                     {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'offset' },
-                      value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'offset' },
+                      },
                     },
                   ],
                   selectionSet: {
                     kind: 'SelectionSet',
-                    selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentsPageComment' } }],
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CommentsPageComment' },
+                      },
+                    ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'commentCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'commentCount' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'repository' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'full_name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'html_url' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'full_name' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'html_url' },
+                      },
                       {
                         kind: 'InlineFragment',
-                        typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Repository' } },
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Repository' },
+                        },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'open_issues_count',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'stargazers_count' },
+                            },
                           ],
                         },
                       },
@@ -685,7 +818,10 @@ export const CommentDocument = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CommentsPageComment' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Comment' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -745,16 +881,28 @@ export const FeedDocument = {
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'FeedType' } } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'FeedType' },
+            },
+          },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
       ],
@@ -776,22 +924,36 @@ export const FeedDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'type' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'type' },
+                },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'offset' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'offset' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'limit' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
               },
             ],
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'FeedEntry' } }],
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FeedEntry' },
+                },
+              ],
             },
           },
         ],
@@ -800,7 +962,10 @@ export const FeedDocument = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'VoteButtons' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -819,7 +984,10 @@ export const FeedDocument = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'RepoInfo' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -831,8 +999,14 @@ export const FeedDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'stargazers_count' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'open_issues_count' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'stargazers_count' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'open_issues_count' },
+                },
               ],
             },
           },
@@ -853,7 +1027,10 @@ export const FeedDocument = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'FeedEntry' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Entry' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Entry' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -872,13 +1049,21 @@ export const FeedDocument = {
                   name: { kind: 'Name', value: 'owner' },
                   selectionSet: {
                     kind: 'SelectionSet',
-                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'avatar_url' } }],
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar_url' },
+                      },
+                    ],
                   },
                 },
               ],
             },
           },
-          { kind: 'FragmentSpread', name: { kind: 'Name', value: 'VoteButtons' } },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'VoteButtons' },
+          },
           { kind: 'FragmentSpread', name: { kind: 'Name', value: 'RepoInfo' } },
         ],
       },
@@ -895,8 +1080,17 @@ export const SubmitRepositoryDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'repoFullName' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
         },
       ],
       selectionSet: {
@@ -909,7 +1103,10 @@ export const SubmitRepositoryDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'repoFullName' },
+                },
               },
             ],
             selectionSet: {
@@ -932,13 +1129,31 @@ export const SubmitCommentDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'repoFullName' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'commentContent' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'commentContent' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
         },
       ],
       selectionSet: {
@@ -951,17 +1166,28 @@ export const SubmitCommentDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'repoFullName' },
+                },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'commentContent' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'commentContent' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'commentContent' },
+                },
               },
             ],
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [{ kind: 'FragmentSpread', name: { kind: 'Name', value: 'CommentsPageComment' } }],
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CommentsPageComment' },
+                },
+              ],
             },
           },
         ],
@@ -970,7 +1196,10 @@ export const SubmitCommentDocument = {
     {
       kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'CommentsPageComment' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Comment' } },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Comment' },
+      },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -1003,13 +1232,28 @@ export const VoteDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'repoFullName' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
         },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'VoteType' } } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'VoteType' },
+            },
+          },
         },
       ],
       selectionSet: {
@@ -1022,12 +1266,18 @@ export const VoteDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'repoFullName' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'repoFullName' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'repoFullName' },
+                },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'type' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'type' },
+                },
               },
             ],
             selectionSet: {
@@ -1040,7 +1290,12 @@ export const VoteDocument = {
                   name: { kind: 'Name', value: 'vote' },
                   selectionSet: {
                     kind: 'SelectionSet',
-                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'vote_value' } }],
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vote_value' },
+                      },
+                    ],
                   },
                 },
               ],

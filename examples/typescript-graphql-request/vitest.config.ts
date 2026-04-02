@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'examples-typescript-graphql-request',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

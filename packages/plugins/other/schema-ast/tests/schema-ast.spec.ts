@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
+import { buildSchema, parse, versionInfo } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { buildSchema, parse, versionInfo } from 'graphql';
 import { plugin, validate } from '../src/index.js';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
@@ -22,7 +22,9 @@ describe('Schema AST', () => {
         throw new Error(SHOULD_THROW_ERROR);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_THROW_ERROR);
-        expect(e.message).toBe('Plugin "schema-ast" requires extension to be ".graphql" or ".gql" or ".graphqls"!');
+        expect(e.message).toBe(
+          'Plugin "schema-ast" requires extension to be ".graphql" or ".gql" or ".graphqls"!',
+        );
       }
     });
 
@@ -122,7 +124,9 @@ describe('Schema AST', () => {
           fieldTest: String
         }
       `);
-      const content = await plugin(testSchema, [], { includeDirectives: false });
+      const content = await plugin(testSchema, [], {
+        includeDirectives: false,
+      });
 
       expect(content).toBeSimilarStringTo(`
         type Query {
@@ -142,7 +146,10 @@ describe('Schema AST', () => {
             fieldTest: String
           }
         `);
-        const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
+        const content = await plugin(testSchema, [], {
+          commentDescriptions: true,
+          includeDirectives: false,
+        });
 
         expect(content).toBeSimilarStringTo(`
         type Query {
@@ -167,7 +174,9 @@ describe('Schema AST', () => {
     });
 
     it('Should print schema with introspection when "includeIntrospectionTypes" is set', async () => {
-      const content = await plugin(schema, [], { includeIntrospectionTypes: true });
+      const content = await plugin(schema, [], {
+        includeIntrospectionTypes: true,
+      });
 
       expect(content).toBeSimilarStringTo(`
         type __Schema
@@ -183,7 +192,9 @@ describe('Schema AST', () => {
     });
 
     it('Should print schema without introspection when "includeIntrospectionTypes" is unset', async () => {
-      const content = await plugin(schema, [], { includeIntrospectionTypes: false });
+      const content = await plugin(schema, [], {
+        includeIntrospectionTypes: false,
+      });
 
       expect(content).not.toBeSimilarStringTo(`
         type __Schema

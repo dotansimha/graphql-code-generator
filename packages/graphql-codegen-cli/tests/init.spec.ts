@@ -525,7 +525,7 @@ function useInputs(inputs: {
       inputs.onOutput,
       inputs.onIntrospection,
       inputs.onConfig,
-      inputs.onScript
-    )
+      inputs.onScript,
+    ),
   );
 }

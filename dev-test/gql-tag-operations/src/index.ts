@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { graphql, DocumentType } from '../gql/gql.js';
+import { DocumentType, graphql } from '../gql/gql.js';
 
 const FooQuery = graphql(/* GraphQL */ `
   query Foo {

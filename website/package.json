@@ -1,29 +1,14 @@
 {
   "name": "website",
   "version": "1.17.7",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
-    "start": "next start",
     "build": "yarn generate-packages-info && yarn generate-json-config && next build && next-sitemap",
     "dev": "next",
     "generate-json-config": "tsx scripts/generate-config-json-schema.ts",
-    "generate-packages-info": "tsx scripts/generate-packages-info.ts"
-  },
-  "devDependencies": {
-    "@theguild/tailwind-config": "0.6.4",
-    "@types/dedent": "0.7.2",
-    "@types/jsonpath": "0.2.4",
-    "@types/node": "22.10.7",
-    "@types/react": "19.2.14",
-    "fast-xml-parser": "5.4.2",
-    "jsonpath": "1.1.1",
-    "postcss-import": "^16.1.0",
-    "postcss-lightningcss": "^1.0.1",
-    "prettier-plugin-tailwindcss": "0.2.8",
-    "tailwindcss": "^3.4.14",
-    "semver": "7.7.3",
-    "@types/semver": "7.7.1"
+    "generate-packages-info": "tsx scripts/generate-packages-info.ts",
+    "start": "next start"
   },
   "dependencies": {
     "@graphql-codegen/add": "6.0.0",
@@ -90,6 +75,21 @@
     "react-markdown": "9.0.3",
     "react-select": "5.8.0",
     "typescript-json-schema": "0.56.0"
+  },
+  "devDependencies": {
+    "@theguild/tailwind-config": "0.6.4",
+    "@types/dedent": "0.7.2",
+    "@types/jsonpath": "0.2.4",
+    "@types/node": "22.10.7",
+    "@types/react": "19.2.14",
+    "@types/semver": "7.7.1",
+    "fast-xml-parser": "5.4.2",
+    "jsonpath": "1.1.1",
+    "postcss-import": "^16.1.0",
+    "postcss-lightningcss": "^1.0.1",
+    "prettier-plugin-tailwindcss": "0.7.2",
+    "semver": "7.7.3",
+    "tailwindcss": "^3.4.14"
   },
   "browserslist": {
     "production": [

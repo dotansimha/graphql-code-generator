@@ -1,38 +1,7 @@
 {
   "name": "graphql-code-generator",
+  "version": "0.0.0",
   "private": true,
-  "engines": {
-    "node": ">= 16.0.0"
-  },
-  "packageManager": "yarn@1.22.22",
-  "scripts": {
-    "postinstall": "patch-package && husky install",
-    "fix-bins": "node scripts/fix-bin.js",
-    "clean": "rimraf node_modules/",
-    "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
-    "build": "bob build",
-    "postbuild": "yarn fix-bins",
-    "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
-    "rebuild": "bob build --incremental",
-    "test": "vitest",
-    "lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore .",
-    "prettier": "prettier --cache --write --list-different .",
-    "prettier:check": "prettier --cache --check .",
-    "types:check": "tsc --noEmit",
-    "test-and-build": "yarn build && yarn test",
-    "ci:lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
-    "prerelease": "yarn build",
-    "release": "changeset publish",
-    "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
-    "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
-    "generate:examples": "yarn generate:examples:cjs",
-    "watch:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
-    "watch:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
-    "watch:examples": "yarn watch:examples:cjs",
-    "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
-    "examples:build": "set -o xtrace && eval $(node scripts/print-example-ci-command.js build)",
-    "examples:test:end2end": "set -o xtrace && eval $(node scripts/print-example-ci-command.js test:end2end)"
-  },
   "workspaces": [
     "packages/*",
     "packages/utils/*",
@@ -42,6 +11,38 @@
     "website",
     "examples/**/*"
   ],
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">= 16.0.0"
+  },
+  "scripts": {
+    "build": "bob build",
+    "ci:lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
+    "clean": "rimraf node_modules/",
+    "examples:build": "set -o xtrace && eval $(node scripts/print-example-ci-command.js build)",
+    "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
+    "examples:test:end2end": "set -o xtrace && eval $(node scripts/print-example-ci-command.js test:end2end)",
+    "fix-bins": "node scripts/fix-bin.js",
+    "generate:examples": "yarn generate:examples:cjs",
+    "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
+    "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
+    "lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore .",
+    "postbuild": "yarn fix-bins",
+    "postinstall": "patch-package && husky install",
+    "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
+    "prerelease": "yarn build",
+    "prettier": "prettier --cache --write --list-different .",
+    "prettier:check": "prettier --cache --check .",
+    "rebuild": "bob build --incremental",
+    "release": "changeset publish",
+    "test": "vitest",
+    "test-and-build": "yarn build && yarn test",
+    "types:check": "tsc --noEmit",
+    "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
+    "watch:examples": "yarn watch:examples:cjs",
+    "watch:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
+    "watch:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env"
+  },
   "devDependencies": {
     "@babel/core": "7.25.2",
     "@babel/preset-env": "7.25.3",
@@ -61,8 +62,9 @@
     "memfs": "4.36.3",
     "patch-package": "8.0.0",
     "prettier": "3.8.1",
-    "prettier-plugin-svelte": "2.10.1",
+    "prettier-plugin-svelte": "3.5.1",
     "rimraf": "6.0.1",
+    "svelte": "5.55.1",
     "ts-node": "10.9.2",
     "tslib": "2.6.3",
     "tsx": "4.17.0",
@@ -70,6 +72,10 @@
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.0.4",
     "wrangler": "4.1.0"
+  },
+  "resolutions": {
+    "eslint-plugin-promise": "7.1.0",
+    "typescript": "5.5.4"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
@@ -81,10 +87,5 @@
     "yarn.lock": [
       "npx yarn-deduplicate"
     ]
-  },
-  "resolutions": {
-    "typescript": "5.5.4",
-    "eslint-plugin-promise": "7.1.0"
-  },
-  "version": "0.0.0"
+  }
 }

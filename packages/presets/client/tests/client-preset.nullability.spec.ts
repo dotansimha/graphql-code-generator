@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
-import { executeCodegen } from '@graphql-codegen/cli';
 import * as prettier from 'prettier';
+import { executeCodegen } from '@graphql-codegen/cli';
 import { preset } from '../src/index.js';
 
 const schema = /* GraphQL */ `
@@ -79,7 +79,9 @@ describe('client-preset - nullability', () => {
     });
 
     const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
-    const formattedContent = prettier.format(graphqlFile.content, { parser: 'typescript' });
+    const formattedContent = prettier.format(graphqlFile.content, {
+      parser: 'typescript',
+    });
 
     expect(formattedContent).toBeSimilarStringTo(`
       export type TestQuery = {
@@ -128,7 +130,9 @@ describe('client-preset - nullability', () => {
     });
 
     const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
-    const formattedContent = prettier.format(graphqlFile.content, { parser: 'typescript' });
+    const formattedContent = prettier.format(graphqlFile.content, {
+      parser: 'typescript',
+    });
 
     expect(formattedContent).toBeSimilarStringTo(`
       export type TestQuery = {

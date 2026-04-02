@@ -1,10 +1,10 @@
+import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
 import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import {
   LoadedFragment,
   NamingConvention,
   RawClientSideBasePluginConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
 import { TypeScriptDocumentNodesVisitor } from './visitor.js';
 
 /**
@@ -165,19 +165,21 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
 export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: TypeScriptDocumentNodesRawPluginConfig
+  config: TypeScriptDocumentNodesRawPluginConfig,
 ) => {
   const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-      fragmentDef => ({
-        node: fragmentDef,
-        name: fragmentDef.name.value,
-        onType: fragmentDef.typeCondition.name.value,
-        isExternal: false,
-      })
-    ),
+    ...(
+      allAst.definitions.filter(
+        d => d.kind === Kind.FRAGMENT_DEFINITION,
+      ) as FragmentDefinitionNode[]
+    ).map(fragmentDef => ({
+      node: fragmentDef,
+      name: fragmentDef.name.value,
+      onType: fragmentDef.typeCondition.name.value,
+      isExternal: false,
+    })),
     ...(config.externalFragments || []),
   ];
 
@@ -186,7 +188,10 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
 
   return {
     prepend: visitor.getImports(),
-    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+    content: [
+      visitor.fragments,
+      ...visitorResult.definitions.filter(t => typeof t === 'string'),
+    ].join('\n'),
   };
 };
 
@@ -194,7 +199,7 @@ export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: any,
-  outputFile: string
+  outputFile: string,
 ) => {
   if (!outputFile.endsWith('.ts')) {
     throw new Error(`Plugin "typescript-document-nodes" requires extension to be ".ts"!`);

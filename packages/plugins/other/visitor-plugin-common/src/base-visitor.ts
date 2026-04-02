@@ -1,5 +1,6 @@
 import autoBind from 'auto-bind';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import { FragmentImport, ImportDeclaration } from './imports.js';
 import { convertFactory } from './naming.js';
 import {
@@ -13,7 +14,6 @@ import {
   ScalarsMap,
 } from './types.js';
 import { DeclarationBlockConfig } from './utils.js';
-import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -399,7 +399,10 @@ export interface RawConfig {
   includeExternalFragments?: boolean;
 }
 
-export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
+export class BaseVisitor<
+  TRawConfig extends RawConfig = RawConfig,
+  TPluginConfig extends ParsedConfig = ParsedConfig,
+> {
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   public readonly scalars: NormalizedScalarsMap;
@@ -451,9 +454,14 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     return this._parsedConfig;
   }
 
-  public convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
-    const useTypesPrefix = typeof options?.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
-    const useTypesSuffix = typeof options?.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
+  public convertName(
+    node: ASTNode | string,
+    options?: BaseVisitorConvertOptions & ConvertOptions,
+  ): string {
+    const useTypesPrefix =
+      typeof options?.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+    const useTypesSuffix =
+      typeof options?.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
 
     let convertedName = '';
 
@@ -472,15 +480,17 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
   public getOperationSuffix(
     node: FragmentDefinitionNode | OperationDefinitionNode | string,
-    operationType: string
+    operationType: string,
   ): string {
-    const { omitOperationSuffix = false, dedupeOperationSuffix = false } = this.config as { [key: string]: any };
+    const { omitOperationSuffix = false, dedupeOperationSuffix = false } = this.config as {
+      [key: string]: any;
+    };
     const operationName = typeof node === 'string' ? node : node.name ? node.name.value : '';
     return omitOperationSuffix
       ? ''
       : dedupeOperationSuffix && operationName.toLowerCase().endsWith(operationType.toLowerCase())
-      ? ''
-      : operationType;
+        ? ''
+        : operationType;
   }
 
   public getFragmentSuffix(node: FragmentDefinitionNode | string): string {
@@ -506,10 +516,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     const suffix = omitOperationSuffix
       ? ''
       : dedupeOperationSuffix &&
-        fragmentName.toLowerCase().endsWith('fragment') &&
-        fragmentVariableSuffix.toLowerCase().startsWith('fragment')
-      ? fragmentVariableSuffix.substring('fragment'.length)
-      : fragmentVariableSuffix;
+          fragmentName.toLowerCase().endsWith('fragment') &&
+          fragmentVariableSuffix.toLowerCase().startsWith('fragment')
+        ? fragmentVariableSuffix.substring('fragment'.length)
+        : fragmentVariableSuffix;
 
     return this.convertName(node, {
       prefix: fragmentVariablePrefix,

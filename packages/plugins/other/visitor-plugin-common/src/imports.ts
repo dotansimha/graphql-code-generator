@@ -34,7 +34,7 @@ export type FragmentImport = {
 
 export function generateFragmentImportStatement(
   statement: ImportDeclaration<FragmentImport>,
-  kind: 'type' | 'document' | 'both'
+  kind: 'type' | 'document' | 'both',
 ): string {
   const { importSource: fragmentImportSource, ...rest } = statement;
   const { identifiers, path, namespace } = fragmentImportSource;

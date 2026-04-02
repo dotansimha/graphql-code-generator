@@ -1,11 +1,11 @@
 import * as path from 'path';
+import { buildSchema, parse } from 'graphql';
 import type { PluginObj, PluginPass } from '@babel/core';
 import { declare } from '@babel/helper-plugin-utils';
 import template from '@babel/template';
 import type { NodePath } from '@babel/traverse';
 import type { Program } from '@babel/types';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import { buildSchema, parse } from 'graphql';
 
 const noopSchema = buildSchema(`type Query { _: Int }`);
 
@@ -43,7 +43,10 @@ export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
 
         const [firstDefinition] = ast.definitions;
 
-        if (firstDefinition.kind !== 'FragmentDefinition' && firstDefinition.kind !== 'OperationDefinition') {
+        if (
+          firstDefinition.kind !== 'FragmentDefinition' &&
+          firstDefinition.kind !== 'OperationDefinition'
+        ) {
           return;
         }
 
@@ -66,7 +69,7 @@ export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
           importDeclaration({
             importName: api.types.identifier(operationOrFragmentName),
             importPath: api.types.stringLiteral(importPath),
-          })
+          }),
         );
         path.replaceWith(api.types.identifier(operationOrFragmentName));
       },
@@ -74,7 +77,11 @@ export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
   };
 });
 
-function getRelativeImportPath(state: PluginPass, artifactDirectory: string, fileToRequire = 'graphql'): string {
+function getRelativeImportPath(
+  state: PluginPass,
+  artifactDirectory: string,
+  fileToRequire = 'graphql',
+): string {
   if (state.file == null) {
     throw new Error('Babel state is missing expected file name');
   }

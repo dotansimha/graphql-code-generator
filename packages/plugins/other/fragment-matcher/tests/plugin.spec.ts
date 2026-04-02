@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
-import { codegen } from '@graphql-codegen/core';
 import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
+import { codegen } from '@graphql-codegen/core';
 import { plugin, validate } from '../src/index.js';
 
 const schema = buildASTSchema(gql`
@@ -48,7 +48,7 @@ const introspection = JSON.stringify(
     },
   },
   null,
-  2
+  2,
 );
 
 const apolloClient3Result = JSON.stringify(
@@ -58,7 +58,7 @@ const apolloClient3Result = JSON.stringify(
     },
   },
   null,
-  2
+  2,
 );
 
 describe('Fragment Matcher Plugin', () => {
@@ -106,7 +106,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.json',
-        }
+        },
       );
 
       expect(content).toEqual(introspection);
@@ -123,7 +123,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.js',
-        }
+        },
       );
       const jsxContent = await plugin(
         schema,
@@ -133,7 +133,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.jsx',
-        }
+        },
       );
       const output = `
         export default ${introspection}
@@ -153,7 +153,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.js',
-        }
+        },
       );
       const jsxContent = await plugin(
         schema,
@@ -164,7 +164,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.jsx',
-        }
+        },
       );
       const output = `
         module.exports = ${introspection}
@@ -185,7 +185,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.ts',
-        }
+        },
       );
       const tsxContent = await plugin(
         schema,
@@ -195,7 +195,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.tsx',
-        }
+        },
       );
       const output = `
         export interface IntrospectionResultData {
@@ -226,7 +226,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.ts',
-        }
+        },
       );
       const tsxContent = await plugin(
         schema,
@@ -236,7 +236,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.tsx',
-        }
+        },
       );
       const output = `
       export interface PossibleTypesResultData {
@@ -263,7 +263,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.ts',
-        }
+        },
       );
       const tsxContent = await plugin(
         schema,
@@ -273,7 +273,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.tsx',
-        }
+        },
       );
       const output = `
         export default result;
@@ -293,7 +293,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.ts',
-        }
+        },
       );
       const tsxContent = await plugin(
         schema,
@@ -304,7 +304,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.tsx',
-        }
+        },
       );
       const output = `
         export type IntrospectionResultData = ${introspection};
@@ -326,7 +326,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.ts',
-        }
+        },
       );
       const tsxContent = await plugin(
         schema,
@@ -337,7 +337,7 @@ describe('Fragment Matcher Plugin', () => {
         },
         {
           outputFile: 'foo.tsx',
-        }
+        },
       );
       const output = `
         export type PossibleTypesResultData = ${apolloClient3Result};
@@ -496,7 +496,7 @@ describe('Fragment Matcher Plugin', () => {
       },
       {
         outputFile: 'foo.json',
-      }
+      },
     );
     const contentB = await plugin(
       reorderedComplexSchema,
@@ -507,7 +507,7 @@ describe('Fragment Matcher Plugin', () => {
       },
       {
         outputFile: 'foo.json',
-      }
+      },
     );
 
     expect(contentA).toEqual(contentB);

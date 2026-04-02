@@ -1,6 +1,6 @@
+import { buildClientSchema, buildSchema, parse } from 'graphql';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildClientSchema, buildSchema, parse } from 'graphql';
 import { plugin as tsPlugin } from '../../typescript/src/index.js';
 import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
@@ -13,9 +13,13 @@ describe('TypeScript Operations Plugin', () => {
     config: any = {},
     pluginSchema = schema,
     usage = '',
-    suspenseErrors = []
+    suspenseErrors = [],
   ) => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
+    const m = mergeOutputs([
+      await tsPlugin(pluginSchema, [], config, { outputFile: '' }),
+      content,
+      usage,
+    ]);
     validateTs(m, undefined, undefined, undefined, suspenseErrors);
 
     return m;
@@ -42,9 +46,14 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
       const config = { noExport: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).not.toContain('export');
       await validate(content, config);
@@ -75,9 +84,14 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
       const config = { preResolveTypes: false, namespacedImportName: 'Types' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type NotificationsQuery = (
@@ -148,7 +162,7 @@ describe('TypeScript Operations Plugin', () => {
         {},
         {
           outputFile: '',
-        }
+        },
       );
       expect(content).toBeSimilarStringTo(`
         export type PostFragment = { __typename?: 'Post', id: string, comments: Array<{ __typename?: 'TextComment', text: string } | { __typename?: 'ImageComment' }> };
@@ -188,12 +202,17 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
       const config = { namespacedImportName: 'Types', preResolveTypes: true };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
-        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null, user: { __typename?: 'User', id: string, f?: Types.E | null, j?: any | null } };`
+        `export type TestQuery = { __typename?: 'Query', f?: Types.E | null, user: { __typename?: 'User', id: string, f?: Types.E | null, j?: any | null } };`,
       );
 
       await validate(content, config, schema, '', [`Cannot find namespace 'Types'.`]);
@@ -218,10 +237,19 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: false, namingConvention: 'change-case-all#lowerCase', immutableTypes: true };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: false,
+        namingConvention: 'change-case-all#lowerCase',
+        immutableTypes: true,
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type notificationsquery = (
@@ -250,12 +278,20 @@ describe('TypeScript Operations Plugin', () => {
           }
         `,
         // < v15 compatibility
-        { experimentalFragmentVariables: true, allowLegacyFragmentVariables: true } as any
+        {
+          experimentalFragmentVariables: true,
+          allowLegacyFragmentVariables: true,
+        } as any,
       );
       const config = { experimentalFragmentVariables: true };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toMatchSnapshot();
     });
 
@@ -295,7 +331,7 @@ describe('TypeScript Operations Plugin', () => {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
       expect(content).toBeSimilarStringTo(`
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age?: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
@@ -338,7 +374,7 @@ describe('TypeScript Operations Plugin', () => {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -371,9 +407,14 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: doc }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: doc }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toContain(`Pick<User, 'id' | 'joinDate'>`);
       await validate(content, config, testSchema);
     });
@@ -399,13 +440,21 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { operationResultSuffix: 'Result', preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        operationResultSuffix: 'Result',
+        preResolveTypes: false,
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
-        `export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;`
+        `export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;`,
       );
       expect(content).toBeSimilarStringTo(`
         export type NotificationsQueryResult = (
@@ -448,10 +497,18 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { preResolveTypes: false, namingConvention: 'change-case-all#lowerCase' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: false,
+        namingConvention: 'change-case-all#lowerCase',
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type notificationsquery = (
@@ -492,13 +549,22 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
 
-      const config = { preResolveTypes: false, typesPrefix: 'i', namingConvention: 'change-case-all#lowerCase' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: false,
+        typesPrefix: 'i',
+        namingConvention: 'change-case-all#lowerCase',
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
-        `export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;`
+        `export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;`,
       );
       expect(content).toBeSimilarStringTo(`
         export type inotificationsquery = (
@@ -559,10 +625,24 @@ describe('TypeScript Operations Plugin', () => {
       `);
 
       expect(
-        (await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })).content
+        (
+          await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            {},
+            { outputFile: '' },
+          )
+        ).content,
       ).toContain('export type NotificationsQueryQuery =');
       expect(
-        (await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })).content
+        (
+          await plugin(
+            schema,
+            [{ location: 'test-file.ts', document: ast }],
+            {},
+            { outputFile: '' },
+          )
+        ).content,
       ).toContain('export type MyFragmentFragment =');
       expect(
         (
@@ -570,9 +650,9 @@ describe('TypeScript Operations Plugin', () => {
             schema,
             [{ location: 'test-file.ts', document: ast }],
             { dedupeOperationSuffix: false },
-            { outputFile: '' }
+            { outputFile: '' },
           )
-        ).content
+        ).content,
       ).toContain('export type NotificationsQueryQuery =');
       expect(
         (
@@ -580,9 +660,9 @@ describe('TypeScript Operations Plugin', () => {
             schema,
             [{ location: 'test-file.ts', document: ast }],
             { dedupeOperationSuffix: true },
-            { outputFile: '' }
+            { outputFile: '' },
           )
-        ).content
+        ).content,
       ).toContain('export type NotificationsQuery =');
       expect(
         (
@@ -590,9 +670,9 @@ describe('TypeScript Operations Plugin', () => {
             schema,
             [{ location: 'test-file.ts', document: ast }],
             { dedupeOperationSuffix: true },
-            { outputFile: '' }
+            { outputFile: '' },
           )
-        ).content
+        ).content,
       ).toContain('export type MyFragment =');
       expect(
         (
@@ -600,9 +680,9 @@ describe('TypeScript Operations Plugin', () => {
             schema,
             [{ location: 'test-file.ts', document: ast2 }],
             { dedupeOperationSuffix: true },
-            { outputFile: '' }
+            { outputFile: '' },
           )
-        ).content
+        ).content,
       ).toContain('export type NotificationsQuery =');
       expect(
         (
@@ -610,9 +690,9 @@ describe('TypeScript Operations Plugin', () => {
             schema,
             [{ location: 'test-file.ts', document: ast2 }],
             { dedupeOperationSuffix: false },
-            { outputFile: '' }
+            { outputFile: '' },
           )
-        ).content
+        ).content,
       ).toContain('export type NotificationsQuery =');
       expect(
         (
@@ -620,9 +700,9 @@ describe('TypeScript Operations Plugin', () => {
             schema,
             [{ location: 'test-file.ts', document: ast2 }],
             { dedupeOperationSuffix: false },
-            { outputFile: '' }
+            { outputFile: '' },
           )
-        ).content
+        ).content,
       ).toContain('export type MyFragment =');
 
       const withUsage = (
@@ -630,7 +710,7 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast3 }],
           { dedupeOperationSuffix: true, preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
       ).content;
       expect(withUsage).toBeSimilarStringTo(`
@@ -705,9 +785,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast }],
           { preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type NotificationsQueryQuery =');
     expect(
       (
@@ -715,9 +795,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast }],
           { preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type MyFragmentFragment =');
     expect(
       (
@@ -725,9 +805,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast }],
           { omitOperationSuffix: true, preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type NotificationsQuery =');
     expect(
       (
@@ -735,9 +815,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast }],
           { omitOperationSuffix: true, preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type MyFragment =');
     expect(
       (
@@ -745,9 +825,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
           { omitOperationSuffix: true, preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type Notifications =');
     expect(
       (
@@ -755,9 +835,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
           { omitOperationSuffix: true, preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type My =');
     expect(
       (
@@ -765,9 +845,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
           { omitOperationSuffix: false, preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type NotificationsQuery =');
     expect(
       (
@@ -775,9 +855,9 @@ describe('TypeScript Operations Plugin', () => {
           schema,
           [{ location: 'test-file.ts', document: ast2 }],
           { omitOperationSuffix: false, preResolveTypes: false },
-          { outputFile: '' }
+          { outputFile: '' },
         )
-      ).content
+      ).content,
     ).toContain('export type MyFragment =');
 
     const withUsage = (
@@ -785,7 +865,7 @@ describe('TypeScript Operations Plugin', () => {
         schema,
         [{ location: 'test-file.ts', document: ast3 }],
         { omitOperationSuffix: true, preResolveTypes: false },
-        { outputFile: '' }
+        { outputFile: '' },
       )
     ).content;
     expect(withUsage).toBeSimilarStringTo(`
@@ -836,15 +916,20 @@ describe('TypeScript Operations Plugin', () => {
         skipTypeNameForRoot: true,
         preResolveTypes: false,
       };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
         `export type Q1Query = { test?: Maybe<(
           { __typename?: 'Test' }
           & Pick<Test, 'foo'>
-        )> };`
+        )> };`,
       );
       await validate(content, config, testSchema);
     });
@@ -871,15 +956,20 @@ describe('TypeScript Operations Plugin', () => {
         skipTypeNameForRoot: true,
         preResolveTypes: false,
       };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
         `export type Q1Query = { test?: Maybe<(
           { __typename: 'Test' }
           & Pick<Test, 'foo'>
-        )> };`
+        )> };`,
       );
       await validate(content, config, testSchema);
     });
@@ -907,9 +997,14 @@ describe('TypeScript Operations Plugin', () => {
         skipTypeNameForRoot: true,
         preResolveTypes: false,
       };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
         `export type Q1Query = (
@@ -918,7 +1013,7 @@ describe('TypeScript Operations Plugin', () => {
             { __typename: 'Test' }
             & Pick<Test, 'foo'>
           )> }
-        );`
+        );`,
       );
       await validate(content, config, testSchema);
     });
@@ -978,23 +1073,28 @@ describe('TypeScript Operations Plugin', () => {
         nonOptionalTypename: false,
         skipTypename: true,
       };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toContain(
         `\
 export type Q1Query = { search: Array<
     | { __typename: 'Movie', id: string, title: string }
     | { __typename: 'Person', id: string, name: string }
-  > };`
+  > };`,
       );
       expect(content).toContain(
         `\
 export type Q2Query = { search: Array<
     | { __typename: 'Movie', id: string, title: string }
     | { __typename: 'Person', id: string, name: string }
-  > };`
+  > };`,
       );
       await validate(content, config, testSchema);
     });
@@ -1006,9 +1106,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).not.toContain(`__typename`);
       await validate(content, config);
@@ -1047,9 +1152,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
       export type TestQuery = (
         { __typename?: 'Query' }
@@ -1073,9 +1183,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
       export type Unnamed_1_Query = (
         { __typename?: 'Query' }
@@ -1094,9 +1209,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: true };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_Query = { __typename?: 'Query', dummy?: string | null, type: 'Query' };
       `);
@@ -1111,9 +1231,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_Query = (
           { __typename: 'Query' }
@@ -1130,9 +1255,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { nonOptionalTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_Query = (
           { __typename: 'Query' }
@@ -1149,9 +1279,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_Query = (
           { __typename?: 'Query' }
@@ -1169,9 +1304,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_Query = (
@@ -1197,9 +1337,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type UnionTestQuery = (
           { __typename?: 'Query' }
@@ -1235,9 +1380,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type NotificationsQuery = (
           { __typename?: 'Query' }
@@ -1271,9 +1421,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type NotificationsQuery = (
           { __typename?: 'Query' }
@@ -1303,9 +1458,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
       { __typename?: 'Query' }
       & { unionTest?: Maybe<(
@@ -1329,9 +1489,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
       `);
@@ -1352,9 +1517,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type Unnamed_1_Query = Pick<Query, 'dummy'>;
@@ -1390,7 +1560,7 @@ export type Q2Query = { search: Array<
           `),
           [{ location: 'test-file.ts', document: ast }],
           config,
-          { outputFile: '' }
+          { outputFile: '' },
         );
         expect(true).toBeFalsy();
       } catch (e) {
@@ -1439,9 +1609,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       const usage = `
       type Route = QqQuery['routes'][0];
@@ -1481,9 +1656,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       await validate(content, config, testSchema);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
@@ -1514,9 +1694,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       await validate(content, config, testSchema);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
@@ -1545,9 +1730,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       await validate(content, config, testSchema);
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
@@ -1579,9 +1769,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       await validate(
         content,
         config,
@@ -1589,7 +1784,7 @@ export type Q2Query = { search: Array<
         `function test(q: AaaQuery) {
         console.log(q.user.__typename === 'User' ? q.user.id : null);
         console.log(q.user.__typename === 'Error' ? q.user.__typename : null);
-      }`
+      }`,
       );
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
@@ -1637,9 +1832,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       await validate(
         content,
@@ -1652,7 +1852,7 @@ export type Q2Query = { search: Array<
               } else if (a.__typename === 'Jerry') {
                   console.log(a.bar);
               }
-          }`
+          }`,
       );
       expect(mergeOutputs([content])).toMatchSnapshot();
     });
@@ -1700,9 +1900,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       const usage = `
       type Route = QqQuery['routes'][0];
@@ -1738,9 +1943,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type MeQuery = { me?: Maybe<(
             Pick<User, 'id' | 'username' | 'role'>
@@ -1767,9 +1977,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
       export type MeQuery = { me?: Maybe<(
@@ -1801,9 +2016,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: false, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
       export type MeQuery = (
@@ -1876,9 +2096,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
       export type Unnamed_1_Query = (
@@ -1948,9 +2173,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
       export type Unnamed_1_Query = (
         { __typename?: 'Query' }
@@ -2001,9 +2231,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
       export type Unnamed_1_Query = (
@@ -2049,9 +2284,14 @@ export type Q2Query = { search: Array<
       `);
 
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type NotificationsQuery = (
           { __typename?: 'Query' }
@@ -2086,9 +2326,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type UnionTestQuery = (
@@ -2124,9 +2369,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type UnionTestQuery = (
@@ -2166,9 +2416,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type UnionTestQuery = (
@@ -2200,10 +2455,19 @@ export type Q2Query = { search: Array<
           id
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        mergeFragmentTypes: true,
+        namingConvention: 'keep',
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type testQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2233,10 +2497,19 @@ export type Q2Query = { search: Array<
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        mergeFragmentTypes: true,
+        namingConvention: 'keep',
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         type N_TextNotification_Fragment = (
@@ -2294,10 +2567,19 @@ export type Q2Query = { search: Array<
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        mergeFragmentTypes: true,
+        namingConvention: 'keep',
+      };
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
          type N_A_Fragment = (
@@ -2325,10 +2607,19 @@ export type Q2Query = { search: Array<
           }
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true, namingConvention: 'keep' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        mergeFragmentTypes: true,
+        namingConvention: 'keep',
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
        export type NFragment = (
@@ -2354,10 +2645,20 @@ export type Q2Query = { search: Array<
           id
         }
       `);
-      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        skipTypename: true,
+        mergeFragmentTypes: true,
+        namingConvention: 'keep',
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type testQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2376,10 +2677,20 @@ export type Q2Query = { search: Array<
           }
         }
       `);
-      const config = { preResolveTypes: true, skipTypename: true, mergeFragmentTypes: true, namingConvention: 'keep' };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        skipTypename: true,
+        mergeFragmentTypes: true,
+        namingConvention: 'keep',
+      };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
        type N_TextNotification_Fragment = { text: string, id: string };
@@ -2403,10 +2714,19 @@ export type Q2Query = { search: Array<
           id
         }
       `);
-      const config = { preResolveTypes: true, mergeFragmentTypes: true, inlineFragmentTypes: 'mask' } as const;
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        mergeFragmentTypes: true,
+        inlineFragmentTypes: 'mask',
+      } as const;
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2444,9 +2764,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
       expect(content).toBeSimilarStringTo(`
         export type CurrentUserQuery = { me?: Maybe<(
             Pick<User, 'username' | 'id'>
@@ -2475,14 +2800,19 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(gitHuntSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        gitHuntSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
         `export type MeQueryVariables = Exact<{
           repoFullName: Scalars['String']['input'];
-        }>;`
+        }>;`,
       );
       expect(content).toBeSimilarStringTo(`
         export type MeQuery = { currentUser?: Maybe<Pick<User, 'login' | 'html_url'>>, entry?: Maybe<(
@@ -2511,9 +2841,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: true };
-      const { content } = await plugin(gitHuntSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        gitHuntSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type MeQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', login: string, html_url: string } | null, entry?: { __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } } | null };
@@ -2556,9 +2891,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { preResolveTypes: true };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       const o = await validate(content, config, testSchema);
       expect(o).toContain(`export enum Information_EntryType {`);
@@ -2603,10 +2943,19 @@ export type Q2Query = { search: Array<
           info: Information
         }
       `);
-      const config = { preResolveTypes: true, typesPrefix: 'I', enumPrefix: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        typesPrefix: 'I',
+        enumPrefix: false,
+      };
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       const o = await validate(content, config, testSchema);
       expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = Exact<{
@@ -2655,10 +3004,19 @@ export type Q2Query = { search: Array<
           info: Information
         }
       `);
-      const config = { preResolveTypes: true, typesSuffix: 'I', enumSuffix: false };
-      const { content } = await plugin(testSchema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const config = {
+        preResolveTypes: true,
+        typesSuffix: 'I',
+        enumSuffix: false,
+      };
+      const { content } = await plugin(
+        testSchema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       const o = await validate(content, config, testSchema);
       expect(o).toBeSimilarStringTo(` export type TestQueryVariablesI = Exact<{
@@ -2676,9 +3034,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type DummyQuery = Pick<Query, 'dummy'>;
@@ -2696,9 +3059,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type DummyQuery = (
@@ -2723,9 +3091,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type CurrentUserQuery = { me?: Maybe<(
@@ -2749,9 +3122,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type UserFieldsFragment = (
@@ -2777,9 +3155,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type LoginMutation = { login?: Maybe<(
@@ -2797,9 +3180,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type TestQuery = Pick<Query, 'dummy'>;
@@ -2816,9 +3204,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true, preResolveTypes: false };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(`
         export type TestSubscription = { userCreated?: Maybe<Pick<User, 'id'>> };
@@ -2842,9 +3235,14 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
@@ -2856,7 +3254,7 @@ export type Q2Query = { search: Array<
           testArray?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
           requireString: Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>;
           innerRequired: Array<Scalars['String']['input']> | Scalars['String']['input'];
-        }>;`
+        }>;`,
       );
       await validate(content, config, schema);
     });
@@ -2868,14 +3266,19 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
       expect(content).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = Exact<{
           test?: InputMaybe<Scalars['DateTime']['input']>;
-        }>;`
+        }>;`,
       );
       await validate(content, config);
     });
@@ -2887,11 +3290,18 @@ export type Q2Query = { search: Array<
         }
       `);
       const config = { skipTypename: true };
-      const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-        outputFile: '',
-      });
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
 
-      expect(content).toBeSimilarStringTo(`export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;`);
+      expect(content).toBeSimilarStringTo(
+        `export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;`,
+      );
       await validate(content, config);
     });
 
@@ -2930,7 +3340,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -2972,7 +3382,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3010,7 +3420,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3059,7 +3469,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3111,7 +3521,7 @@ export type Q2Query = { search: Array<
         {},
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       const pluginContent = await plugin(
@@ -3120,7 +3530,7 @@ export type Q2Query = { search: Array<
         {},
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       const content = mergeOutputs([coreContent, pluginContent]);
@@ -3181,7 +3591,7 @@ export type Q2Query = { search: Array<
         { typesPrefix: 'PREFIX_', preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3223,7 +3633,7 @@ export type Q2Query = { search: Array<
         {},
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3288,7 +3698,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
       expect(content).toBeSimilarStringTo(`
       export type FieldQuery = (
@@ -3363,7 +3773,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
       expect(content).toBeSimilarStringTo(`
         export type FieldQuery = (
@@ -3425,7 +3835,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3495,7 +3905,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3588,7 +3998,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -3644,7 +4054,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       const o = await validate(content, {}, testSchema);
@@ -3694,7 +4104,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       const o = await validate(content, {}, testSchema);
@@ -3793,7 +4203,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       const output = await validate(
@@ -3817,7 +4227,7 @@ export type Q2Query = { search: Array<
                     }
                 }
             }
-        }`
+        }`,
       );
       expect(mergeOutputs([content])).toMatchSnapshot();
 
@@ -3981,7 +4391,7 @@ export type Q2Query = { search: Array<
                     }
                 }
             }
-        }`
+        }`,
       );
       expect(mergeOutputs([output])).toMatchSnapshot();
 
@@ -4173,7 +4583,7 @@ export type Q2Query = { search: Array<
         config,
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       const output = await validate(content, config, testSchema);
@@ -4261,7 +4671,7 @@ export type Q2Query = { search: Array<
         config,
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       const output = await validate(content, config, testSchema);
@@ -4468,7 +4878,7 @@ export type Q2Query = { search: Array<
                     }
                 }
             }
-        }`
+        }`,
       );
       expect(mergeOutputs([output])).toMatchSnapshot();
 
@@ -4542,7 +4952,7 @@ export type Q2Query = { search: Array<
         {},
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       await validate(
@@ -4555,7 +4965,7 @@ export type Q2Query = { search: Array<
               console.log(item.id, item.name, item.__typename);
             }
           }
-      `
+      `,
       );
     });
 
@@ -4584,7 +4994,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).not.toContain(`Maybe<>`);
@@ -4629,7 +5039,7 @@ export type Q2Query = { search: Array<
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
       expect(content).toContain(`{ foo?: Maybe<{ __typename?: 'C' }> }`);
     });
@@ -4746,7 +5156,7 @@ export type Q2Query = { search: Array<
         if (q.transport) {
             const t2 = q.transport.id;
         }
-    }`
+    }`,
       );
       expect(mergeOutputs([result])).toMatchSnapshot();
     });
@@ -4919,7 +5329,7 @@ export type Q2Query = { search: Array<
         {},
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(mergeOutputs([content])).toMatchSnapshot();
@@ -4943,7 +5353,7 @@ function test(q: GetEntityBrandDataQuery): void {
   } else if (q.node.__typename === 'Movie') {
     console.log('Movie:', q.node.id);
   }
-}`
+}`,
       );
     });
 
@@ -4987,7 +5397,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -5062,7 +5472,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -5109,7 +5519,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -5176,7 +5586,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -5254,7 +5664,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -5327,7 +5737,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toMatchInlineSnapshot(`
@@ -5406,7 +5816,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toMatchInlineSnapshot(`
@@ -5476,7 +5886,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -5497,7 +5907,11 @@ function test(q: GetEntityBrandDataQuery): void {
 
       const ast = parse(/* GraphQL */ `
         query user($testArray: [String], $requireString: [String]!, $innerRequired: [String!]!) {
-          search(testArray: $testArray, requireString: $requireString, innerRequired: $innerRequired) {
+          search(
+            testArray: $testArray
+            requireString: $requireString
+            innerRequired: $innerRequired
+          ) {
             id
           }
         }
@@ -5529,7 +5943,11 @@ function test(q: GetEntityBrandDataQuery): void {
 
       const ast = parse(/* GraphQL */ `
         query user($testArray: [String], $requireString: [String]!, $innerRequired: [String!]!) {
-          search(testArray: $testArray, requireString: $requireString, innerRequired: $innerRequired) {
+          search(
+            testArray: $testArray
+            requireString: $requireString
+            innerRequired: $innerRequired
+          ) {
             id
           }
         }
@@ -5591,7 +6009,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -5645,7 +6063,7 @@ function test(q: GetEntityBrandDataQuery): void {
           { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
-          }
+          },
         );
 
         expect(content).toBeSimilarStringTo(`
@@ -5693,7 +6111,7 @@ function test(q: GetEntityBrandDataQuery): void {
           { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
-          }
+          },
         );
 
         expect(content).toBeSimilarStringTo(`
@@ -5761,7 +6179,7 @@ function test(q: GetEntityBrandDataQuery): void {
           { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
-          }
+          },
         );
 
         expect(content).toBeSimilarStringTo(`
@@ -5818,7 +6236,7 @@ function test(q: GetEntityBrandDataQuery): void {
           { preResolveTypes: false },
           {
             outputFile: 'graphql.ts',
-          }
+          },
         );
 
         expect(content).toBeSimilarStringTo(`
@@ -5903,7 +6321,7 @@ function test(q: GetEntityBrandDataQuery): void {
           { location: '', document: fragment },
         ],
         { inlineFragmentTypes: 'mask' },
-        { outputFile: 'graphql.ts' }
+        { outputFile: 'graphql.ts' },
       );
 
       expect(content).toMatchInlineSnapshot(`
@@ -6143,7 +6561,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6196,7 +6614,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6244,7 +6662,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6301,7 +6719,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6344,7 +6762,7 @@ function test(q: GetEntityBrandDataQuery): void {
       });
 
       expect(content).toBeSimilarStringTo(
-        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`
+        `export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email: string | null } }`,
       );
     });
 
@@ -6383,7 +6801,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6435,7 +6853,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: true, avoidOptionals: true },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6489,7 +6907,7 @@ function test(q: GetEntityBrandDataQuery): void {
         },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
       expect(content).toBeSimilarStringTo(`
       export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', name: string, age: number | 'specialType', address?: string, nicknames?: Array<string> | 'specialType', parents?: Array<User> } };
@@ -6531,7 +6949,7 @@ function test(q: GetEntityBrandDataQuery): void {
         { preResolveTypes: false, avoidOptionals: true },
         {
           outputFile: 'graphql.ts',
-        }
+        },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6635,7 +7053,7 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: '', document: fragment }],
         { preResolveTypes: true },
-        { outputFile: 'graphql.ts' }
+        { outputFile: 'graphql.ts' },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6739,7 +7157,7 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: '', document: fragment }],
         { preResolveTypes: false },
-        { outputFile: 'graphql.ts' }
+        { outputFile: 'graphql.ts' },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -6878,7 +7296,7 @@ function test(q: GetEntityBrandDataQuery): void {
           avoidOptionals: true,
           preResolveTypes: false,
         },
-        { outputFile: 'graphql.ts' }
+        { outputFile: 'graphql.ts' },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -7015,7 +7433,7 @@ function test(q: GetEntityBrandDataQuery): void {
           avoidOptionals: true,
           preResolveTypes: true,
         },
-        { outputFile: 'graphql.ts' }
+        { outputFile: 'graphql.ts' },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -7118,7 +7536,7 @@ function test(q: GetEntityBrandDataQuery): void {
           maybeValue: "T | 'specialType'",
           avoidOptionals: true,
         },
-        { outputFile: 'graphql.ts' }
+        { outputFile: 'graphql.ts' },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -7227,7 +7645,7 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: '', document: fragment }],
         { preResolveTypes: true, inlineFragmentTypes: 'mask' },
-        { outputFile: 'graphql.ts' }
+        { outputFile: 'graphql.ts' },
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -7272,7 +7690,7 @@ function test(q: GetEntityBrandDataQuery): void {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { preResolveTypes: false },
-      { outputFile: '' }
+      { outputFile: '' },
     );
     expect(result.content).toBeSimilarStringTo(`
       export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
@@ -7306,7 +7724,7 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: 'test-file.ts', document: ast }],
         { inlineFragmentTypes: 'combine' },
-        { outputFile: '' }
+        { outputFile: '' },
       );
       expect(result.content).toBeSimilarStringTo(`
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
@@ -7336,7 +7754,7 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: 'test-file.ts', document: ast }],
         { inlineFragmentTypes: 'inline' },
-        { outputFile: '' }
+        { outputFile: '' },
       );
       expect(result.content).toBeSimilarStringTo(`
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
@@ -7363,7 +7781,7 @@ function test(q: GetEntityBrandDataQuery): void {
         schema,
         [{ location: 'test-file.ts', document: ast }],
         { inlineFragmentTypes: 'mask' },
-        { outputFile: '' }
+        { outputFile: '' },
       );
       expect(result.content).toBeSimilarStringTo(`
         export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;

@@ -1,3 +1,11 @@
+import autoBind from 'auto-bind';
+import {
+  GraphQLNamedType,
+  GraphQLOutputType,
+  GraphQLSchema,
+  isEnumType,
+  isNonNullType,
+} from 'graphql';
 import {
   BaseDocumentsVisitor,
   DeclarationKind,
@@ -12,8 +20,6 @@ import {
   SelectionSetToObject,
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
-import autoBind from 'auto-bind';
-import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema, isEnumType, isNonNullType } from 'graphql';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object.js';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor.js';
@@ -31,7 +37,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsPluginConfig,
   TypeScriptDocumentsParsedConfig
 > {
-  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, allFragments: LoadedFragment[]) {
+  constructor(
+    schema: GraphQLSchema,
+    config: TypeScriptDocumentsPluginConfig,
+    allFragments: LoadedFragment[],
+  ) {
     super(
       config,
       {
@@ -44,7 +54,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         mergeFragmentTypes: getConfigValue(config.mergeFragmentTypes, false),
         allowUndefinedQueryVariables: getConfigValue(config.allowUndefinedQueryVariables, false),
       } as TypeScriptDocumentsParsedConfig,
-      schema
+      schema,
     );
 
     autoBind(this);
@@ -69,10 +79,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       name: string,
       type: GraphQLOutputType | GraphQLNamedType | null,
       isConditional = false,
-      isOptional = false
+      isOptional = false,
     ): string => {
       const optional =
-        isOptional || isConditional || (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
+        isOptional ||
+        isConditional ||
+        (!this.config.avoidOptionals.field && !!type && !isNonNullType(type));
       return (this.config.immutableTypes ? `readonly ${name}` : name) + (optional ? '?' : '');
     };
 
@@ -84,14 +96,17 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       scalars: this.scalars,
       formatNamedField,
       wrapTypeWithModifiers(baseType, type) {
-        return wrapTypeWithModifiers(baseType, type, { wrapOptional, wrapArray });
+        return wrapTypeWithModifiers(baseType, type, {
+          wrapOptional,
+          wrapArray,
+        });
       },
       avoidOptionals: this.config.avoidOptionals,
       printFieldsOnNewLines: this.config.printFieldsOnNewLines,
     };
-    const processor = new (preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
-      processorConfig
-    );
+    const processor = new (
+      preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor
+    )(processorConfig);
     this.setSelectionSetHandler(
       new SelectionSetToObject(
         processor,
@@ -100,10 +115,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.convertName.bind(this),
         this.getFragmentSuffix.bind(this),
         allFragments,
-        this.config
-      )
+        this.config,
+      ),
     );
-    const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
+    const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName =>
+      isEnumType(schema.getType(typeName)),
+    );
     this.setVariablesTransformer(
       new TypeScriptOperationVariablesToObject(
         this.scalars,
@@ -117,8 +134,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.config.enumValues,
         this.config.arrayInputCoercion,
         undefined,
-        'InputMaybe'
-      )
+        'InputMaybe',
+      ),
     );
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
@@ -128,7 +145,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   public getImports(): Array<string> {
     return !this.config.globalNamespace &&
       (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
-      ? this.config.fragmentImports.map(fragmentImport => generateFragmentImportStatement(fragmentImport, 'type'))
+      ? this.config.fragmentImports.map(fragmentImport =>
+          generateFragmentImportStatement(fragmentImport, 'type'),
+        )
       : [];
   }
 
@@ -138,8 +157,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   protected applyVariablesWrapper(variablesBlock: string, operationType: string): string {
     const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
-    const extraType = this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
+    const extraType =
+      this.config.allowUndefinedQueryVariables && operationType === 'Query' ? ' | undefined' : '';
 
-    return `${prefix}Exact<${variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock}>${extraType}`;
+    return `${prefix}Exact<${
+      variablesBlock === '{}' ? `{ [key: string]: never; }` : variablesBlock
+    }>${extraType}`;
   }
 }

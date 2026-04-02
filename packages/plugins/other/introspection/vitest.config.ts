@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'introspection',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

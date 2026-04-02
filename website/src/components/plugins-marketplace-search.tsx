@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { IMarketplaceSearchProps, MarketplaceSearch } from '@theguild/components';
 import { compareDesc } from 'date-fns';
 import { CategoryToPackages } from '@/category-to-packages.mjs';
-import { ALL_TAGS, Icon, icons, PACKAGES } from '@/lib/plugins';
 import { packagesInfo } from '@/lib/packages-info.generated';
+import { ALL_TAGS, Icon, icons, PACKAGES } from '@/lib/plugins';
+import { IMarketplaceSearchProps, MarketplaceSearch } from '@theguild/components';
 
 export type Plugin = {
   title: string;
@@ -28,7 +28,8 @@ export const getPluginsStaticProps = async () => {
 
     const { readme, createdAt, updatedAt, description, weeklyNPMDownloads = 0 } = packageInfo;
 
-    const [category] = categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || [];
+    const [category] =
+      categoryEntries.find(([, pluginName]) => pluginName.includes(identifier)) || [];
 
     return {
       title,
@@ -83,12 +84,12 @@ export function PluginsMarketplaceSearch({
           weeklyNPMDownloads: plugin.weeklyNPMDownloads,
         };
       }),
-    [plugins]
+    [plugins],
   );
 
   const recentlyUpdatedItems = useMemo(
     () => [...marketplaceItems].sort((a, b) => compareDesc(new Date(a.update), new Date(b.update))),
-    [marketplaceItems]
+    [marketplaceItems],
   );
 
   const trendingItems = useMemo(
@@ -101,7 +102,7 @@ export function PluginsMarketplaceSearch({
 
           return bMonthlyDownloads - aMonthlyDownloads;
         }),
-    [marketplaceItems]
+    [marketplaceItems],
   );
 
   return (

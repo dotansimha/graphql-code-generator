@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'graphql-codegen-testing',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

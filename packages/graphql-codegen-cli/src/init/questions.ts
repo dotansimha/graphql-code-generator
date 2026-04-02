@@ -1,7 +1,7 @@
-import { checkbox, input, select, confirm } from '@inquirer/prompts';
+import { checkbox, confirm, input, select } from '@inquirer/prompts';
 import { grey } from './helpers.js';
 import { plugins } from './plugins.js';
-import { type Answers, type PluginOption, Tags } from './types.js';
+import { Tags, type Answers, type PluginOption } from './types.js';
 
 export async function getAnswers(possibleTargets: Record<Tags, boolean>): Promise<Answers> {
   try {
@@ -19,7 +19,11 @@ export async function getAnswers(possibleTargets: Record<Tags, boolean>): Promis
     });
 
     let documents: string | undefined;
-    if (targets.includes(Tags.client) || targets.includes(Tags.angular) || targets.includes(Tags.stencil))
+    if (
+      targets.includes(Tags.client) ||
+      targets.includes(Tags.angular) ||
+      targets.includes(Tags.stencil)
+    )
       documents = await input({
         message: 'Where are your operations and fragments?:',
         default: getDocumentsDefaultValue(targets),
@@ -49,13 +53,15 @@ export async function getAnswers(possibleTargets: Record<Tags, boolean>): Promis
     const config = await input({
       message: 'How to name the config file?',
       default: (() =>
-        targets.includes(Tags.client) || targets.includes(Tags.typescript) || targets.includes(Tags.angular)
+        targets.includes(Tags.client) ||
+        targets.includes(Tags.typescript) ||
+        targets.includes(Tags.angular)
           ? 'codegen.ts'
           : 'codegen.yml')(),
       validate: str => {
         const isNotEmpty = str.length > 0;
         const hasCorrectExtension = ['json', 'yml', 'yaml', 'js', 'ts'].some(ext =>
-          str.toLocaleLowerCase().endsWith(`.${ext}`)
+          str.toLocaleLowerCase().endsWith(`.${ext}`),
         );
 
         return isNotEmpty && hasCorrectExtension;
@@ -143,7 +149,10 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
       key: 'client',
       value: [Tags.typescript, Tags.flow],
       checked:
-        possibleTargets.Browser && !possibleTargets.Angular && !possibleTargets.React && !possibleTargets.Stencil,
+        possibleTargets.Browser &&
+        !possibleTargets.Angular &&
+        !possibleTargets.React &&
+        !possibleTargets.Stencil,
     },
   ];
 }

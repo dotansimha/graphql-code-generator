@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import { promises } from 'node:fs';
+import gql from 'graphql-tag';
+import prettier from 'prettier';
 import { codegen } from '@graphql-codegen/core';
 import { getCachedDocumentNodeFromSchema } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNode from '@graphql-codegen/typed-document-node';
@@ -9,8 +11,6 @@ import * as typescriptResolvers from '@graphql-codegen/typescript-resolvers';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { loadDocuments } from '@graphql-tools/load';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import gql from 'graphql-tag';
-import prettier from 'prettier';
 import type { Resolvers } from './gql.generated.js';
 
 const schema = makeExecutableSchema({
@@ -76,7 +76,7 @@ const schema = makeExecutableSchema({
       ...(await prettier.resolveConfig(process.cwd())),
       parser: 'typescript',
     }),
-    'utf8'
+    'utf8',
   );
   console.log('done generating.');
 })().catch(err => {

@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'examples-yoga-tests',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

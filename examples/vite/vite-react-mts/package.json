@@ -1,13 +1,13 @@
 {
   "name": "example-vite-react-mts",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
+  "private": true,
   "scripts": {
-    "dev": "vite",
     "build": "tsc && vite build",
-    "start": "vite preview --port 3000",
     "codegen": "graphql-codegen --config codegen.mts",
+    "dev": "vite",
+    "start": "vite preview --port 3000",
     "test": "cypress run",
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },

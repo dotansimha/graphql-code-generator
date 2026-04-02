@@ -1,6 +1,6 @@
+import { buildSchema } from 'graphql';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { resolversTestingSchema, resolversTestingValidate } from '@graphql-codegen/testing';
-import { buildSchema } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Resolvers Plugin - Mapping', () => {
@@ -80,7 +80,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           String: 'number',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -173,7 +173,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           Movie: 'MovieEntity',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
     const content = mergeOutputs([result]);
 
@@ -243,7 +243,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           Movie: 'MovieEntity',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
     const content = mergeOutputs([result]);
 
@@ -304,7 +304,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         },
         noSchemaStitching: true,
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
     const content = mergeOutputs([result]);
 
@@ -345,7 +345,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           Chat: 'number',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     const usage = `
@@ -375,7 +375,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           ID: 'number',
         },
       },
-      testSchema
+      testSchema,
     );
   });
 
@@ -387,7 +387,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         noSchemaStitching: true,
         defaultMapper: 'Partial<{T}>',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -459,7 +459,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         noSchemaStitching: true,
         defaultMapper: './my-wrapper#CustomPartial<{T}>',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
@@ -535,7 +535,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           AnotherNodeWithChild: './my-wrapper#CustomPartial<{T}>',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
@@ -684,12 +684,12 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           AnotherNodeWithChild: './my-interface#AnotherNodeWithChild as AnotherNodeWithChildMapper',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyType as DatabaseMyType } from './my-type';`);
     expect(result.prepend).toContain(
-      `import { AnotherNodeWithChild as AnotherNodeWithChildMapper } from './my-interface';`
+      `import { AnotherNodeWithChild as AnotherNodeWithChildMapper } from './my-interface';`,
     );
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
@@ -765,10 +765,12 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           AnotherNodeWithAll: './my-interface#AnotherNodeWithAll as AnotherNodeWithAllMapper',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import DatabaseMyOtherType, { MyType as DatabaseMyType } from './my-type';`);
+    expect(result.prepend).toContain(
+      `import DatabaseMyOtherType, { MyType as DatabaseMyType } from './my-type';`,
+    );
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
         ChildUnion: ( Omit<Child, 'parent'> & { parent?: Maybe<_RefType['MyType']> } ) | ( DatabaseMyOtherType );
@@ -844,14 +846,14 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         },
         useTypeImports: true,
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(
-      `import type { default as DatabaseMyOtherType, MyType as DatabaseMyType } from './my-type';`
+      `import type { default as DatabaseMyOtherType, MyType as DatabaseMyType } from './my-type';`,
     );
     expect(result.prepend).toContain(
-      `import type { default as AnotherNodeWithChildMapper, AnotherNodeWithAll as AnotherNodeWithAllMapper } from './my-interface';`
+      `import type { default as AnotherNodeWithChildMapper, AnotherNodeWithAll as AnotherNodeWithAllMapper } from './my-interface';`,
     );
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
@@ -926,7 +928,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         },
         defaultMapper: 'any',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).not.toBeSimilarStringTo(`export type ResolversUnionTypes`);
@@ -990,7 +992,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           AnotherNodeWithAll: 'AnotherNodeWithAllMapper',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1065,7 +1067,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           AnotherNodeWithChild: 'ExtraPartial<{T}>',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1162,7 +1164,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       },
       {
         outputFile: 'graphql.ts',
-      }
+      },
     );
 
     expect(spy).toHaveBeenCalledWith('Unused mappers: Post');
@@ -1201,7 +1203,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       },
       {
         outputFile: 'graphql.ts',
-      }
+      },
     );
 
     expect(spy).not.toHaveBeenCalled();
@@ -1218,7 +1220,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           MyOtherType: './my-file#MyCustomOtherType',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
@@ -1300,7 +1302,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           MyOtherType: './my-file#MyCustomOtherType',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyCustomOtherType } from './my-file';`);
@@ -1382,7 +1384,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           Node: 'MyNodeType',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1461,7 +1463,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         noSchemaStitching: true,
         defaultMapper: 'any',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1528,7 +1530,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         noSchemaStitching: true,
         defaultMapper: './my-file#MyBaseType',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyBaseType } from './my-file';`);
@@ -1599,7 +1601,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           MyOtherType: 'MyOtherTypeCustom',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1675,7 +1677,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           MyType: 'MyTypeCustom',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1737,7 +1739,9 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         Boolean: Scalars['Boolean']['output'];
       };
     `);
-    await resolversTestingValidate(mergeOutputs([result, `type MyTypeCustom = {}; type MyOtherTypeCustom = {};`]));
+    await resolversTestingValidate(
+      mergeOutputs([result, `type MyTypeCustom = {}; type MyOtherTypeCustom = {};`]),
+    );
   });
 
   it('should support namespaces', async () => {
@@ -1751,7 +1755,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           AnotherNodeWithChild: './my-interface#InterfaceNamespace#AnotherNodeWithChildMapper',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
@@ -1827,7 +1831,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         noSchemaStitching: true,
         contextType: './my-file#MyNamespace#MyContextType',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
@@ -1844,7 +1848,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
       {
         defaultMapper: './my-file#MyNamespace#MyDefaultMapper',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
@@ -1908,7 +1912,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
         noSchemaStitching: true,
         rootValueType: './my-file#MyNamespace#MyRootType',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);
@@ -1986,7 +1990,7 @@ describe('TypeScript Resolvers Plugin - Mapping', () => {
           AnotherNodeWithChild: './my-inteface#InterfaceNamespace#MyInterface<{T}>',
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     )) as Types.ComplexPluginOutput;
 
     expect(result.prepend).toContain(`import { MyNamespace } from './my-file';`);

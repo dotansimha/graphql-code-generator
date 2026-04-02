@@ -141,13 +141,15 @@ export const plugin: PluginFunction<{
     importExtension,
     isStringDocumentMode,
   },
-  _info
+  _info,
 ) => {
   const appendedImportExtension = normalizeImportExtension({
     emitLegacyCommonJSImports,
     importExtension,
   });
-  const documentNodeImport = `${useTypeImports ? 'import type' : 'import'} { ResultOf, DocumentTypeDecoration${
+  const documentNodeImport = `${
+    useTypeImports ? 'import type' : 'import'
+  } { ResultOf, DocumentTypeDecoration${
     isStringDocumentMode ? '' : ', TypedDocumentNode'
   } } from '@graphql-typed-document-node/core';\n`;
 

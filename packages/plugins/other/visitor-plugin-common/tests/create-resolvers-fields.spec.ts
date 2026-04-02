@@ -1,5 +1,8 @@
-import { BaseResolversVisitor, ParsedResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 import { buildSchema } from 'graphql';
+import {
+  BaseResolversVisitor,
+  ParsedResolversConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 
 describe('BaseResolversVisitor.createResolversFields', () => {
   const schema = buildSchema(/* GraphQL */ `
@@ -34,7 +37,7 @@ describe('BaseResolversVisitor.createResolversFields', () => {
         },
       },
       {} as ParsedResolversConfig,
-      schema
+      schema,
     );
 
     expect(visitor.buildResolversParentTypes()).toEqual(
@@ -45,7 +48,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   String: Scalars['String']['output']
 };
-`
+`,
     );
   });
 
@@ -69,7 +72,7 @@ export type ResolversParentTypes = {
         enumPrefix: false,
       },
       {} as ParsedResolversConfig,
-      schema
+      schema,
     );
 
     expect(visitor.buildResolversParentTypes()).toEqual(
@@ -80,7 +83,7 @@ export type IResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   String: Scalars['String']['output']
 };
-`
+`,
     );
   });
 
@@ -94,7 +97,7 @@ export type IResolversParentTypes = {
         enumSuffix: false,
       },
       {} as ParsedResolversConfig,
-      schema
+      schema,
     );
 
     expect(visitor.buildResolversParentTypes()).toEqual(
@@ -105,7 +108,7 @@ export type ResolversParentTypesI = {
   Boolean: Scalars['Boolean']['output']
   String: Scalars['String']['output']
 };
-`
+`,
     );
   });
 });

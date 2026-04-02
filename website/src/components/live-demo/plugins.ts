@@ -26,9 +26,11 @@ export const pluginLoaderMap = {
   'typed-document-node': () => import('@graphql-codegen/typed-document-node'),
   typescript: () => import('@graphql-codegen/typescript'),
   'typescript-apollo-angular': () => import('@graphql-codegen/typescript-apollo-angular'),
-  'typescript-apollo-client-helpers': () => import('@graphql-codegen/typescript-apollo-client-helpers'),
+  'typescript-apollo-client-helpers': () =>
+    import('@graphql-codegen/typescript-apollo-client-helpers'),
   'typescript-generic-sdk': () => import('@graphql-codegen/typescript-generic-sdk'),
-  'typescript-graphql-files-modules': () => import('@graphql-codegen/typescript-graphql-files-modules'),
+  'typescript-graphql-files-modules': () =>
+    import('@graphql-codegen/typescript-graphql-files-modules'),
   'typescript-graphql-request': () => import('@graphql-codegen/typescript-graphql-request'),
   'typescript-mongodb': () => import('@graphql-codegen/typescript-mongodb'),
   'typescript-operations': () => import('@graphql-codegen/typescript-operations'),
@@ -40,6 +42,7 @@ export const pluginLoaderMap = {
   'typescript-type-graphql': () => import('@graphql-codegen/typescript-type-graphql'),
   'typescript-urql': () => import('@graphql-codegen/typescript-urql'),
   'typescript-vue-apollo': () => import('@graphql-codegen/typescript-vue-apollo'),
-  'typescript-vue-apollo-smart-ops': () => import('@graphql-codegen/typescript-vue-apollo-smart-ops'),
+  'typescript-vue-apollo-smart-ops': () =>
+    import('@graphql-codegen/typescript-vue-apollo-smart-ops'),
   'typescript-vue-urql': () => import('@graphql-codegen/typescript-vue-urql'),
 };

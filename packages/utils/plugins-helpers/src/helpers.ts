@@ -29,7 +29,7 @@ export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
 }
 
 export function normalizeOutputParam(
-  config: Types.OutputConfig | Types.ConfiguredPlugin[] | Types.ConfiguredOutput
+  config: Types.OutputConfig | Types.ConfiguredPlugin[] | Types.ConfiguredOutput,
 ): Types.ConfiguredOutput {
   // In case of direct array with a list of plugins
   if (isOutputConfigArray(config)) {
@@ -56,7 +56,9 @@ export function normalizeInstanceOrArray<T>(type: T | T[]): T[] {
   return [type];
 }
 
-export function normalizeConfig(config: Types.OutputConfig | Types.OutputConfig[]): Types.ConfiguredPlugin[] {
+export function normalizeConfig(
+  config: Types.OutputConfig | Types.OutputConfig[],
+): Types.ConfiguredPlugin[] {
   if (typeof config === 'string') {
     return [{ [config]: {} }];
   }
@@ -64,7 +66,10 @@ export function normalizeConfig(config: Types.OutputConfig | Types.OutputConfig[
     return config.map(plugin => (typeof plugin === 'string' ? { [plugin]: {} } : plugin));
   }
   if (typeof config === 'object') {
-    return Object.keys(config).reduce((prev, pluginName) => [...prev, { [pluginName]: config[pluginName] }], []);
+    return Object.keys(config).reduce(
+      (prev, pluginName) => [...prev, { [pluginName]: config[pluginName] }],
+      [],
+    );
   }
   return [];
 }
@@ -81,7 +86,11 @@ export function hasNullableTypeRecursively(type: GraphQLOutputType): boolean {
   return false;
 }
 
-export function isUsingTypes(document: DocumentNode, externalFragments: string[], schema?: GraphQLSchema): boolean {
+export function isUsingTypes(
+  document: DocumentNode,
+  externalFragments: string[],
+  schema?: GraphQLSchema,
+): boolean {
   let foundFields = 0;
   const typesStack: GraphQLObjectType[] = [];
 
@@ -91,10 +100,11 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         node: SelectionSetNode,
         key,
         parent: InlineFragmentNode | FragmentDefinitionNode | FieldNode | OperationDefinitionNode,
-        anscestors
+        anscestors,
       ) {
         const insideIgnoredFragment = (anscestors as any).find(
-          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+          (f: ASTNode) =>
+            f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value),
         );
 
         if (insideIgnoredFragment) {
@@ -112,12 +122,16 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               const lastType = typesStack[typesStack.length - 1];
 
               if (!lastType) {
-                throw new Error(`Unable to find parent type! Please make sure you operation passes validation`);
+                throw new Error(
+                  `Unable to find parent type! Please make sure you operation passes validation`,
+                );
               }
               const field = lastType.getFields()[parent.name.value];
 
               if (!field) {
-                throw new Error(`Unable to find field "${parent.name.value}" on type "${lastType}"!`);
+                throw new Error(
+                  `Unable to find field "${parent.name.value}" on type "${lastType}"!`,
+                );
               }
 
               return getBaseType(field.type).name;
@@ -160,7 +174,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
 
         const insideIgnoredFragment = (anscestors as any).find(
-          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+          (f: ASTNode) =>
+            f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value),
         );
 
         if (insideIgnoredFragment) {
@@ -169,7 +184,7 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
 
         const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
         const relevantFragmentSpreads = selections.filter(
-          s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value)
+          s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value),
         );
 
         if (selections.length === 0 || relevantFragmentSpreads.length > 0) {
@@ -199,7 +214,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
     VariableDefinition: {
       enter: (node: VariableDefinitionNode, key, parent, path, anscestors) => {
         const insideIgnoredFragment = (anscestors as any).find(
-          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+          (f: ASTNode) =>
+            f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value),
         );
 
         if (insideIgnoredFragment) {
@@ -211,7 +227,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
     InputValueDefinition: {
       enter: (node: InputValueDefinitionNode, key, parent, path, anscestors) => {
         const insideIgnoredFragment = (anscestors as any).find(
-          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+          (f: ASTNode) =>
+            f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value),
         );
 
         if (insideIgnoredFragment) {

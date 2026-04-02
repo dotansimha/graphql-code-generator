@@ -1,21 +1,24 @@
 import { ReactElement, useEffect, useLayoutEffect } from 'react';
 import {
-  ToolsAndLibrariesCards,
-  Heading,
-  CheckIcon,
-  CallToAction,
-  GitHubIcon,
-  cn,
-  InfoCard,
   Anchor,
-  useData,
+  CallToAction,
+  CheckIcon,
+  cn,
   ExploreMainProductCards,
+  GitHubIcon,
+  Heading,
+  InfoCard,
+  ToolsAndLibrariesCards,
+  useData,
 } from '@theguild/components';
-
 import { DevExCards } from './dev-ex-cards';
-import { Page } from './page';
 import { Hero, HeroFeatures, HeroLinks } from './hero';
-import { PluginsMarketplaceSearch, Plugin, getPluginsStaticProps } from './plugins-marketplace-search';
+import { Page } from './page';
+import {
+  getPluginsStaticProps,
+  Plugin,
+  PluginsMarketplaceSearch,
+} from './plugins-marketplace-search';
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
@@ -59,8 +62,8 @@ export function IndexPage(): ReactElement {
           GraphQL Codegen
         </Heading>
         <p className="mx-auto w-[512px] max-w-[80%] text-balance text-center leading-6 text-green-800">
-          Effortlessly generate comprehensive code from GraphQL schemas and operations, streamlining development across
-          your tech stack.
+          Effortlessly generate comprehensive code from GraphQL schemas and operations, streamlining
+          development across your tech stack.
         </p>
         <HeroFeatures>
           <li>
@@ -80,7 +83,10 @@ export function IndexPage(): ReactElement {
           <CallToAction variant="primary-inverted" href="/docs/getting-started">
             Get started
           </CallToAction>
-          <CallToAction variant="secondary-inverted" href="https://github.com/dotansimha/graphql-code-generator">
+          <CallToAction
+            variant="secondary-inverted"
+            href="https://github.com/dotansimha/graphql-code-generator"
+          >
             <GitHubIcon className="size-6" />
             GitHub
           </CallToAction>
@@ -97,15 +103,17 @@ export function IndexPage(): ReactElement {
 
 function TypeSafeCards({ className }: { className?: string }) {
   return (
-    <section className={cn('rounded-3xl bg-beige-100 p-4 pt-6 sm:py-24 md:px-6 md:py-[120px]', className)}>
+    <section
+      className={cn('rounded-3xl bg-beige-100 p-4 pt-6 sm:py-24 md:px-6 md:py-[120px]', className)}
+    >
       <div className="flex flex-wrap justify-center md:px-6 xl:px-16">
         <div className="w-full sm:mb-12 sm:px-8 xl:mb-0 xl:w-[400px] xl:px-0">
           <Heading as="h3" size="sm" className="text-balance">
             Generate Type-Safe GraphQL Client and Server Code
           </Heading>
           <p className="mt-6 text-green-800">
-            Codegen enhances your GraphQL development with fully typed client and server code, generating robust,
-            error-resistant solutions in seconds
+            Codegen enhances your GraphQL development with fully typed client and server code,
+            generating robust, error-resistant solutions in seconds
           </p>
         </div>
         <InfoCard
@@ -136,7 +144,14 @@ function TypeSafeCards({ className }: { className?: string }) {
 
 function ChevronsIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...props}
+    >
       <path d="M23 12L15.929 19.071L14.515 17.657L20.172 12L14.515 6.34302L15.929 4.92902L23 12ZM3.828 12L9.485 17.657L8.071 19.071L1 12L8.071 4.92902L9.485 6.34302L3.828 12Z" />
     </svg>
   );
@@ -144,7 +159,14 @@ function ChevronsIcon(props: React.SVGProps<SVGSVGElement>) {
 
 function WritingIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="currentColor" {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="25"
+      viewBox="0 0 24 25"
+      fill="currentColor"
+      {...props}
+    >
       <path d="M6.414 15.9398L16.556 5.79778L15.142 4.38378L5 14.5258V15.9398H6.414ZM7.243 17.9398H3V13.6968L14.435 2.26178C14.6225 2.07431 14.8768 1.96899 15.142 1.96899C15.4072 1.96899 15.6615 2.07431 15.849 2.26178L18.678 5.09078C18.8655 5.27831 18.9708 5.53262 18.9708 5.79778C18.9708 6.06294 18.8655 6.31725 18.678 6.50478L7.243 17.9398ZM3 19.9398H21V21.9398H3V19.9398Z" />
     </svg>
   );

@@ -197,7 +197,12 @@ describe('TypeScript Resolvers Plugin - Union', () => {
       union PostsPayload = PostsResult | StandardError
     `);
 
-    const result = await plugin(schema, [], { avoidCheckingAbstractTypesRecursively: true }, { outputFile: '' });
+    const result = await plugin(
+      schema,
+      [],
+      { avoidCheckingAbstractTypesRecursively: true },
+      { outputFile: '' },
+    );
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {

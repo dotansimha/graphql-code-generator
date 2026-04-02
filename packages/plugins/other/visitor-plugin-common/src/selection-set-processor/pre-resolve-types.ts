@@ -1,5 +1,5 @@
-import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 import { GraphQLInterfaceType, GraphQLObjectType, isEnumType, isNonNullType } from 'graphql';
+import { getBaseType, removeNonNullWrapper } from '@graphql-codegen/plugin-helpers';
 import {
   BaseSelectionSetProcessor,
   LinkField,
@@ -22,7 +22,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[],
-    unsetTypes?: boolean
+    unsetTypes?: boolean,
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -41,7 +41,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         field.fieldName,
         useInnerType ? innerType : fieldObj.type,
         field.isConditional,
-        unsetTypes
+        unsetTypes,
       );
 
       if (unsetTypes) {
@@ -74,7 +74,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
   transformAliasesPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveAliasedFields[],
-    unsetTypes?: boolean
+    unsetTypes?: boolean,
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -105,7 +105,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         aliasedField.alias,
         fieldObj.type,
         aliasedField.isConditional,
-        unsetTypes
+        unsetTypes,
       );
       if (unsetTypes) {
         return {

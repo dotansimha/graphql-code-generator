@@ -1,3 +1,4 @@
+import { GraphQLSchema } from 'graphql';
 import {
   addFederationReferencesToSchema,
   getCachedDocumentNodeFromSchema,
@@ -6,7 +7,6 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import { parseMapper, type RootResolver } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLSchema } from 'graphql';
 import { TypeScriptResolversPluginConfig } from './config.js';
 import { TypeScriptResolversVisitor } from './visitor.js';
 
@@ -17,13 +17,19 @@ export const plugin: PluginFunction<
   Types.ComplexPluginOutput<{
     generatedResolverTypes: RootResolver['generatedResolverTypes'];
   }>
-> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
+> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TypeScriptResolversPluginConfig,
+) => {
   const imports = [];
   if (!config.customResolveInfo) {
     imports.push('GraphQLResolveInfo');
   }
-  const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
-  const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : true;
+  const showUnusedMappers =
+    typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
+  const noSchemaStitching =
+    typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : true;
 
   const indexSignature = config.useIndexSignature
     ? [
@@ -58,18 +64,23 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
           prepend.push(
             `${importType} { ${parsedMapper.import} ${
               parsedMapper.import === resolverFnName ? '' : `as ${resolverFnName} `
-            }} from '${parsedMapper.source}';`
+            }} from '${parsedMapper.source}';`,
           );
         }
         prepend.push(`export${config.useTypeImports ? ' type' : ''} { ${resolverFnName} };`);
       } else {
-        defsToInclude.push(`export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
+        defsToInclude.push(
+          `export type ${resolverFnName}<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`,
+        );
       }
 
       if (config.makeResolverTypeCallable) {
         defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
       } else {
-        defsToInclude.push(resolverWithResolve, `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`);
+        defsToInclude.push(
+          resolverWithResolve,
+          `${resolverType} ${resolverFnUsage} | ${resolverWithResolveUsage};`,
+        );
       }
 
       directiveResolverMappings[directiveName] = resolverTypeName;
@@ -87,10 +98,12 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   const visitor = new TypeScriptResolversVisitor(
     { ...config, directiveResolverMappings },
     transformedSchema,
-    federationMeta
+    federationMeta,
   );
 
-  const namespacedImportPrefix = visitor.config.namespacedImportName ? `${visitor.config.namespacedImportName}.` : '';
+  const namespacedImportPrefix = visitor.config.namespacedImportName
+    ? `${visitor.config.namespacedImportName}.`
+    : '';
 
   const astNode = getCachedDocumentNodeFromSchema(transformedSchema);
 
@@ -130,7 +143,7 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
       type NullableCheck<T, S> = ${namespacedImportPrefix}Maybe<T> extends T ? ${namespacedImportPrefix}Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
       type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
       export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
-    `
+    `,
     );
   }
 
@@ -160,7 +173,7 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         `  | ${resolverFnUsage}`,
         config.makeResolverTypeCallable ? `` : `  | ${resolverWithResolveUsage}`,
         `  | ${stitchingResolverUsage};`,
-      ].join('\n')
+      ].join('\n'),
     );
     imports.push('SelectionSetNode', 'FieldNode');
   }
@@ -174,12 +187,14 @@ export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         prepend.push(
           `${importType} { ${parsedMapper.import} ${
             parsedMapper.import === 'ResolverFn' ? '' : 'as ResolverFn '
-          }} from '${parsedMapper.source}';`
+          }} from '${parsedMapper.source}';`,
         );
       }
       prepend.push(`export${config.useTypeImports ? ' type' : ''} { ResolverFn };`);
     } else {
-      prepend.push(`export type ResolverFn<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
+      prepend.push(
+        `export type ResolverFn<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`,
+      );
     }
   } else {
     const defaultResolverFn = `
@@ -256,7 +271,8 @@ export type DirectiveResolverFn<TResult = ${emptyObjectType}, TParent = ${emptyO
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const resolversUnionTypesMapping = visitor.buildResolversUnionTypes();
   const resolversInterfaceTypesMapping = visitor.buildResolversInterfaceTypes();
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } =
+    visitor;
 
   if (hasScalars()) {
     imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
@@ -280,7 +296,7 @@ export type DirectiveResolverFn<TResult = ${emptyObjectType}, TParent = ${emptyO
       prepend.push(
         `${importType} { ${parsedMapper.import} ${
           parsedMapper.import === 'GraphQLResolveInfo' ? '' : 'as GraphQLResolveInfo'
-        } } from '${parsedMapper.source}';`
+        } } from '${parsedMapper.source}';`,
       );
     } else {
       prepend.push(`type GraphQLResolveInfo = ${parsedMapper.type}`);
@@ -319,7 +335,7 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
     return sock.semanticToStrict(schema);
   } catch {
     throw new Error(
-      "To use the `customDirective.semanticNonNull` option, you must install the 'graphql-sock' package."
+      "To use the `customDirective.semanticNonNull` option, you must install the 'graphql-sock' package.",
     );
   }
 };

@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'gql-tag-operations',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

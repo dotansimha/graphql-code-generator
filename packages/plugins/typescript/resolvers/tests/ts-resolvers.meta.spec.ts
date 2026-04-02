@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
-import { plugin } from '../src/index.js';
 import { buildSchema } from 'graphql';
+import { plugin } from '../src/index.js';
 
 describe('TypeScript Resolvers Plugin - Meta', () => {
   it('generates meta correctly', async () => {
@@ -56,7 +56,7 @@ describe('TypeScript Resolvers Plugin - Meta', () => {
           },
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`

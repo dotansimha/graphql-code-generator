@@ -1,14 +1,18 @@
 ---
-description: Generate typed code for SvelteKit and Apollo. GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit _native_, and other clients.
+description:
+  Generate typed code for SvelteKit and Apollo. GraphQL Code Generator and the community provide
+  typed code generation for Apollo, SvelteKit _native_, and other clients.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Guide: Svelte / Kit
 
-GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit _native_, and other clients.
+GraphQL Code Generator and the community provide typed code generation for Apollo, SvelteKit
+_native_, and other clients.
 
-Plugins and available options vary depending on the selected codegen; for this reason, you will find guides for each of them below:
+Plugins and available options vary depending on the selected codegen; for this reason, you will find
+guides for each of them below:
 
 - [Svelte Apollo](#svelte-apollo)
 - [SvelteKit Native](#sveltekit-native)
@@ -36,7 +40,10 @@ type Query {
 
 ## Svelte Apollo
 
-Thank to the [community-built plugin](https://github.com/ticruz38/graphql-codegen-svelte-apollo#readme) `graphql-codegen-svelte-apollo`, GraphQL Code Generator generates full-typed Apollo GraphQL services for Svelte.
+Thank to the
+[community-built plugin](https://github.com/ticruz38/graphql-codegen-svelte-apollo#readme)
+`graphql-codegen-svelte-apollo`, GraphQL Code Generator generates full-typed Apollo GraphQL services
+for Svelte.
 
 and the following reference script:
 
@@ -65,7 +72,8 @@ and the following reference script:
 {posts.data}
 ```
 
-Just a few configuration steps are required to get observable Apollo queries with Typescript typings:
+Just a few configuration steps are required to get observable Apollo queries with Typescript
+typings:
 
 **1. Install the `graphql-codegen-svelte-apollo` plugin**
 
@@ -136,17 +144,22 @@ We can now update our code as follows:
 {$posts.data}
 ```
 
-For more advanced configuration (ex: async queries), please refer to the [plugin documentation](/plugins/typescript-svelte-apollo) and the [GitHub repository README](https://github.com/ticruz38/graphql-codegen-svelte-apollo).
+For more advanced configuration (ex: async queries), please refer to the
+[plugin documentation](/plugins/typescript-svelte-apollo) and the
+[GitHub repository README](https://github.com/ticruz38/graphql-codegen-svelte-apollo).
 
-For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
+For a different organization of the generated files, please refer to the
+["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
 
 ## SvelteKit Native
 
 ![logoKitQL](https://raw.githubusercontent.com/jycouet/kitql/main/logo.svg)
 
-With [KitQL Codegen](https://github.com/jycouet/kitql/tree/main/packages/graphql-codegen), you get SSR (Server Side Rendering) & Caching out-of-the-box with svelte stores.
+With [KitQL Codegen](https://github.com/jycouet/kitql/tree/main/packages/graphql-codegen), you get
+SSR (Server Side Rendering) & Caching out-of-the-box with svelte stores.
 
-Just a few configuration steps are required to get SvelteKit stores fully typed + All Operations fully typed:
+Just a few configuration steps are required to get SvelteKit stores fully typed + All Operations
+fully typed:
 
 **1. Install the plugin**
 
@@ -167,7 +180,12 @@ const config: CodegenConfig = {
   documents: './src/**/*.gql',
   generates: {
     './graphql/generated.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typed-document-node', '@kitql/graphql-codegen']
+      plugins: [
+        'typescript',
+        'typescript-operations',
+        'typed-document-node',
+        '@kitql/graphql-codegen'
+      ]
     }
   }
 }
@@ -209,6 +227,8 @@ We can now update our code as follows:
 {$PostsQueryStore.data}
 ```
 
-For more advanced configuration, please refer to the [KitQL documentation](https://github.com/jycouet/kitql/tree/main/packages/graphql-codegen).
+For more advanced configuration, please refer to the
+[KitQL documentation](https://github.com/jycouet/kitql/tree/main/packages/graphql-codegen).
 
-For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
+For a different organization of the generated files, please refer to the
+["Generated files colocation"](/docs/advanced/generated-files-colocation) page.

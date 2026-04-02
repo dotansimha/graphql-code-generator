@@ -7,14 +7,14 @@ import { CodegenContext, ensureContext } from './config.js';
 import { lifecycleHooks } from './hooks.js';
 import { debugLog } from './utils/debugging.js';
 import { mkdirp, readFile, unlinkFile, writeFile } from './utils/file-system.js';
-import { createWatcher } from './utils/watcher.js';
 import { getLogger } from './utils/logger.js';
+import { createWatcher } from './utils/watcher.js';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 
 export async function generate(
   input: CodegenContext | (Types.Config & { cwd?: string }),
-  saveToFile = true
+  saveToFile = true,
 ): Promise<
   | Types.FileOutput[]
   /**
@@ -25,7 +25,10 @@ export async function generate(
 > {
   const context = ensureContext(input);
   const config = context.getConfig();
-  await context.profiler.run(() => lifecycleHooks(config.hooks).afterStart(), 'Lifecycle: afterStart');
+  await context.profiler.run(
+    () => lifecycleHooks(config.hooks).afterStart(),
+    'Lifecycle: afterStart',
+  );
 
   let previouslyGeneratedFilenames: string[] = [];
 
@@ -67,7 +70,8 @@ export async function generate(
       () =>
         Promise.all(
           generationResult.map(async (result: Types.FileOutput) => {
-            const previousHash = recentOutputHash.get(result.filename) || (await hashFile(result.filename));
+            const previousHash =
+              recentOutputHash.get(result.filename) || (await hashFile(result.filename));
             const exists = previousHash !== null;
 
             // Store previous hash to avoid reading from disk again
@@ -112,7 +116,9 @@ export async function generate(
               // compare the prettified content with the previous hash
               // to compare the content with an existing prettified file
               if (hash(content) === previousHash) {
-                debugLog(`Skipping file (${result.filename}) writing due to indentical hash after prettier...`);
+                debugLog(
+                  `Skipping file (${result.filename}) writing due to indentical hash after prettier...`,
+                );
                 // the modified content is NOT stored in recentOutputHash
                 // so a diff can already be detected before executing the hook
                 return;
@@ -124,14 +130,14 @@ export async function generate(
 
             await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
             await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
-          })
+          }),
         ),
-      'Write files'
+      'Write files',
     );
 
     await context.profiler.run(
       () => lifecycleHooks(config.hooks).afterAllFileWrite(generationResult.map(r => r.filename)),
-      'Lifecycle: afterAllFileWrite'
+      'Lifecycle: afterAllFileWrite',
     );
 
     return generationResult;
@@ -142,7 +148,10 @@ export async function generate(
     return createWatcher(context, writeOutput).runningWatcher;
   }
 
-  const { result: outputFiles, error } = await context.profiler.run(() => executeCodegen(context), 'executeCodegen');
+  const { result: outputFiles, error } = await context.profiler.run(
+    () => executeCodegen(context),
+    'executeCodegen',
+  );
 
   if (error) {
     // If all generation failed, just throw to return non-zero code.
@@ -153,22 +162,28 @@ export async function generate(
     // If partial success, but partial output is not allowed, throw to return non-zero code.
     if (!config.allowPartialOutputs) {
       getLogger().error(
-        `  ${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`
+        `  ${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`,
       );
       throw error;
     }
 
     // If partial success, and partial output is allowed, warn and proceed to write to files.
     getLogger().warn(
-      `  ${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`
+      `  ${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`,
     );
   }
 
   await context.profiler.run(() => writeOutput(outputFiles), 'writeOutput');
-  await context.profiler.run(() => lifecycleHooks(config.hooks).beforeDone(), 'Lifecycle: beforeDone');
+  await context.profiler.run(
+    () => lifecycleHooks(config.hooks).beforeDone(),
+    'Lifecycle: beforeDone',
+  );
 
   if (context.profilerOutput) {
-    await writeFile(join(context.cwd, context.profilerOutput), JSON.stringify(context.profiler.collect()));
+    await writeFile(
+      join(context.cwd, context.profilerOutput),
+      JSON.stringify(context.profiler.collect()),
+    );
   }
 
   return outputFiles;

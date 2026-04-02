@@ -1,6 +1,6 @@
+import { DocumentNode, GraphQLSchema } from 'graphql';
 import type { ApolloEngineOptions } from '@graphql-tools/apollo-engine-loader';
 import { Source } from '@graphql-tools/utils';
-import { DocumentNode, GraphQLSchema } from 'graphql';
 import type { Profiler } from './profiler.js';
 
 export namespace Types {
@@ -350,7 +350,7 @@ export namespace Types {
     Config = any,
     PluginConfig = {
       [key: string]: any;
-    }
+    },
   > = {
     presetConfig: Config;
     baseOutputDir: string;
@@ -374,7 +374,7 @@ export namespace Types {
     buildGeneratesSection: (options: PresetFnArgs<TPresetConfig>) => Promisable<GenerateOptions[]>;
     prepareDocuments?: (
       outputFilePath: string,
-      outputSpecificDocuments: Types.OperationDocument[]
+      outputSpecificDocuments: Types.OperationDocument[],
     ) => Promisable<Types.OperationDocument[]>;
   };
 
@@ -658,10 +658,14 @@ export namespace Types {
   };
 
   export type DocumentTransformFileName = string;
-  export type DocumentTransformFileConfig<T = object> = { [name: DocumentTransformFileName]: T };
+  export type DocumentTransformFileConfig<T = object> = {
+    [name: DocumentTransformFileName]: T;
+  };
   export type DocumentTransformFile<T> = DocumentTransformFileName | DocumentTransformFileConfig<T>;
 
-  export type OutputDocumentTransform<T = object> = DocumentTransformObject<T> | DocumentTransformFile<T>;
+  export type OutputDocumentTransform<T = object> =
+    | DocumentTransformObject<T>
+    | DocumentTransformFile<T>;
   export type ConfiguredDocumentTransform<T = object> = {
     name: string;
     transformObject: DocumentTransformObject<T>;
@@ -682,7 +686,7 @@ export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.P
     allPlugins?: Types.ConfiguredPlugin[];
     pluginContext?: { [key: string]: any };
     [key: string]: any;
-  }
+  },
 ) => Types.Promisable<TOutput>;
 
 export type PluginValidateFn<T = any> = (
@@ -691,7 +695,7 @@ export type PluginValidateFn<T = any> = (
   config: T,
   outputFile: string,
   allPlugins: Types.ConfiguredPlugin[],
-  pluginContext?: { [key: string]: any }
+  pluginContext?: { [key: string]: any },
 ) => Types.Promisable<void>;
 
 export type AddToSchemaResult = string | DocumentNode | undefined;

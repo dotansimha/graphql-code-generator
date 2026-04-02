@@ -1,4 +1,5 @@
 import {
+  DirectiveNode,
   FieldNode,
   FragmentSpreadNode,
   GraphQLInputObjectType,
@@ -21,12 +22,17 @@ import {
   SelectionSetNode,
   StringValueNode,
   TypeNode,
-  DirectiveNode,
 } from 'graphql';
 import { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap, FragmentDirectives, LoadedFragment } from './types.js';
+import {
+  FragmentDirectives,
+  LoadedFragment,
+  NormalizedScalarsMap,
+  ParsedScalarsMap,
+  ScalarsMap,
+} from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -50,7 +56,10 @@ export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
 }
 
-export function wrapWithSingleQuotes(value: string | number | NameNode, skipNumericCheck = false): string {
+export function wrapWithSingleQuotes(
+  value: string | number | NameNode,
+  skipNumericCheck = false,
+): string {
   if (skipNumericCheck) {
     if (typeof value === 'number') {
       return String(value);
@@ -60,7 +69,9 @@ export function wrapWithSingleQuotes(value: string | number | NameNode, skipNume
 
   if (
     typeof value === 'number' ||
-    (typeof value === 'string' && !Number.isNaN(parseInt(value)) && parseFloat(value).toString() === value)
+    (typeof value === 'string' &&
+      !Number.isNaN(parseInt(value)) &&
+      parseFloat(value).toString() === value)
   ) {
     return String(value);
   }
@@ -90,7 +101,11 @@ export interface DeclarationBlockConfig {
   ignoreExport?: boolean;
 }
 
-export function transformComment(comment: string | StringValueNode, indentLevel = 0, disabled = false): string {
+export function transformComment(
+  comment: string | StringValueNode,
+  indentLevel = 0,
+  disabled = false,
+): string {
   if (!comment || comment === '' || disabled) {
     return '';
   }
@@ -235,10 +250,13 @@ export class DeclarationBlock {
     return stripTrailingSpaces(
       (this._comment || '') +
         result +
-        (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' || this._kind === 'function'
+        (this._kind === 'interface' ||
+        this._kind === 'enum' ||
+        this._kind === 'namespace' ||
+        this._kind === 'function'
           ? ''
           : ';') +
-        '\n'
+        '\n',
     );
   }
 }
@@ -251,7 +269,11 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function convertNameParts(str: string, func: (str: string) => string, removeUnderscore = false): string {
+export function convertNameParts(
+  str: string,
+  func: (str: string) => string,
+  removeUnderscore = false,
+): string {
   if (removeUnderscore) {
     return func(str);
   }
@@ -266,13 +288,13 @@ export function buildScalarsFromConfig(
   schema: GraphQLSchema | undefined,
   config: RawConfig,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType = 'any'
+  defaultScalarType = 'any',
 ): ParsedScalarsMap {
   return buildScalars(
     schema,
     config.scalars,
     defaultScalarsMapping,
-    config.strictScalars ? null : config.defaultScalarType || defaultScalarType
+    config.strictScalars ? null : config.defaultScalarType || defaultScalarType,
   );
 }
 
@@ -280,11 +302,14 @@ export function buildScalars(
   schema: GraphQLSchema | undefined,
   scalarsMapping: ScalarsMap,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
-  defaultScalarType: string | null = 'any'
+  defaultScalarType: string | null = 'any',
 ): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
-  function normalizeScalarType(type: string | { input: string; output: string }): { input: string; output: string } {
+  function normalizeScalarType(type: string | { input: string; output: string }): {
+    input: string;
+    output: string;
+  } {
     if (typeof type === 'string') {
       return {
         input: type,
@@ -337,7 +362,11 @@ export function buildScalars(
               input: parseMapper(normalizedScalar.input, name),
               output: parseMapper(normalizedScalar.output, name),
             };
-          } else if (typeof mappedScalar === 'object' && mappedScalar.input && mappedScalar.output) {
+          } else if (
+            typeof mappedScalar === 'object' &&
+            mappedScalar.input &&
+            mappedScalar.output
+          ) {
             result[name] = {
               input: parseMapper(mappedScalar.input, name),
               output: parseMapper(mappedScalar.output, name),
@@ -367,7 +396,9 @@ export function buildScalars(
           };
         } else if (!defaultScalarsMapping[name]) {
           if (defaultScalarType === null) {
-            throw new Error(`Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`);
+            throw new Error(
+              `Unknown scalar type ${name}. Please override it using the "scalars" configuration field!`,
+            );
           }
           result[name] = {
             input: {
@@ -432,7 +463,10 @@ export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof
 /**
  * merge selection sets into a new selection set without mutating the inputs.
  */
-export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): SelectionSetNode {
+export function mergeSelectionSets(
+  selectionSet1: SelectionSetNode,
+  selectionSet2: SelectionSetNode,
+): SelectionSetNode {
   const newSelections = [...selectionSet1.selections];
 
   for (let selection2 of selectionSet2.selections) {
@@ -448,7 +482,7 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
     const match = newSelections.find(
       selection1 =>
         selection1.kind === 'Field' &&
-        getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2 as FieldNode)
+        getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2 as FieldNode),
     );
 
     if (
@@ -489,7 +523,10 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
   };
 }
 
-export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
+export function getPossibleTypes(
+  schema: GraphQLSchema,
+  type: GraphQLNamedType,
+): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
     return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
   }
@@ -510,7 +547,9 @@ export function hasConditionalDirectives(field: FieldNode): boolean {
 
 export function hasIncrementalDeliveryDirectives(directives: DirectiveNode[]): boolean {
   const INCREMENTAL_DELIVERY_DIRECTIVES = ['defer'];
-  return directives?.some(directive => INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value));
+  return directives?.some(directive =>
+    INCREMENTAL_DELIVERY_DIRECTIVES.includes(directive.name.value),
+  );
 }
 
 type WrapModifiersOptions = {
@@ -521,7 +560,7 @@ type WrapModifiersOptions = {
 export function wrapTypeWithModifiers(
   baseType: string,
   type: GraphQLOutputType | GraphQLNamedType,
-  options: WrapModifiersOptions
+  options: WrapModifiersOptions,
 ): string {
   let currentType = type;
   const modifiers: Array<(type: string) => string> = [];
@@ -543,7 +582,9 @@ export function wrapTypeWithModifiers(
   return modifiers.reduceRight((result, modifier) => modifier(result), baseType);
 }
 
-export function removeDescription<T extends { description?: StringValueNode }>(nodes: readonly T[]) {
+export function removeDescription<T extends { description?: StringValueNode }>(
+  nodes: readonly T[],
+) {
   return nodes.map(node => ({ ...node, description: undefined }));
 }
 
@@ -579,7 +620,7 @@ function stripTrailingSpaces(str: string): string {
 
 const isOneOfTypeCache = new WeakMap<GraphQLNamedType, boolean>();
 export function isOneOfInputObjectType(
-  namedType: GraphQLNamedType | null | undefined
+  namedType: GraphQLNamedType | null | undefined,
 ): namedType is GraphQLInputObjectType {
   if (!namedType) {
     return false;
@@ -600,7 +641,10 @@ export function isOneOfInputObjectType(
   return isOneOfType;
 }
 
-export function groupBy<T>(array: Array<T>, key: (item: T) => string | number): { [key: string]: Array<T> } {
+export function groupBy<T>(
+  array: Array<T>,
+  key: (item: T) => string | number,
+): { [key: string]: Array<T> } {
   return array.reduce<{ [key: string]: Array<T> }>((acc, item) => {
     const group = (acc[key(item)] ??= []);
     group.push(item);
@@ -612,13 +656,18 @@ export function flatten<T>(array: Array<Array<T>>): Array<T> {
   return ([] as Array<T>).concat(...array);
 }
 
-export function unique<T>(array: Array<T>, key: (item: T) => string | number = item => item.toString()): Array<T> {
+export function unique<T>(
+  array: Array<T>,
+  key: (item: T) => string | number = item => item.toString(),
+): Array<T> {
   return Object.values(array.reduce((acc, item) => ({ [key(item)]: item, ...acc }), {}));
 }
 
 function getFullPathFieldName(selection: FieldNode, parentName: string) {
   const fullName =
-    'alias' in selection && selection.alias ? `${selection.alias.value}@${selection.name.value}` : selection.name.value;
+    'alias' in selection && selection.alias
+      ? `${selection.alias.value}@${selection.name.value}`
+      : selection.name.value;
   return parentName ? `${parentName}.${fullName}` : fullName;
 }
 
@@ -660,7 +709,12 @@ export const getFieldNames = ({
         break;
       }
       case Kind.INLINE_FRAGMENT: {
-        getFieldNames({ selections: selection.selectionSet.selections, fieldNames, parentName, loadedFragments });
+        getFieldNames({
+          selections: selection.selectionSet.selections,
+          fieldNames,
+          parentName,
+          loadedFragments,
+        });
         break;
       }
     }

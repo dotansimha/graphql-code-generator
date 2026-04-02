@@ -1,12 +1,15 @@
 ---
-description: GraphQL Code Generator provides the @graphql-codegen/typescript-apollo-angular plugin that generates full-typed Apollo GraphQL services.
+description:
+  GraphQL Code Generator provides the @graphql-codegen/typescript-apollo-angular plugin that
+  generates full-typed Apollo GraphQL services.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Guide: Angular
 
-GraphQL Code Generator provides the `@graphql-codegen/typescript-apollo-angular` plugin that generates full-typed Apollo GraphQL services.
+GraphQL Code Generator provides the `@graphql-codegen/typescript-apollo-angular` plugin that
+generates full-typed Apollo GraphQL services.
 
 Taking the following schema:
 
@@ -87,7 +90,8 @@ Not typing or manually maintaining the data-types can lead to many issues:
 
 - **partial typing** of data (not all Schema&apos;s fields has a corresponding type)
 
-For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-apollo-angular` plugin that generates typed Apollo services for each GraphQL operation.
+For this reason, GraphQL Code Generator provides a `@graphql-codegen/typescript-apollo-angular`
+plugin that generates typed Apollo services for each GraphQL operation.
 
 Just a few configuration steps are required to get those Apollo services:
 
@@ -151,10 +155,10 @@ npm run generate
 We can now update our code as follows:
 
 ```ts
-import { PostsGQL, PostsQuery } from './graphql'
 // BE SURE TO USE Observable from `rxjs` and not from `@apollo/client/core` when using map
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
+import { PostsGQL, PostsQuery } from './graphql'
 
 @Component({
   /* … */
@@ -168,6 +172,8 @@ export class PostsComponent {
 }
 ```
 
-For more advanced configuration, please refer to the [plugin documentation](/plugins/typescript-apollo-angular).
+For more advanced configuration, please refer to the
+[plugin documentation](/plugins/typescript-apollo-angular).
 
-For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
+For a different organization of the generated files, please refer to the
+["Generated files colocation"](/docs/advanced/generated-files-colocation) page.

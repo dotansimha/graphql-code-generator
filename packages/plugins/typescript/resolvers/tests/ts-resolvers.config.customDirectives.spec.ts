@@ -37,7 +37,7 @@ describe('customDirectives.sematicNonNull', () => {
       {
         customDirectives: { semanticNonNull: true },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`

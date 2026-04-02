@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { ASTNode, FragmentDefinitionNode, DirectiveNode } from 'graphql';
+import { ASTNode, DirectiveNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedMapper } from './mappers.js';
 
 /**
@@ -11,7 +11,9 @@ export type DirectiveArgumentAndInputFieldMappings = { [name: string]: string };
  * Parsed directives map - a mapping between GraphQL directive name and the parsed mapper object,
  * including all required information for generating code for that mapping.
  */
-export type ParsedDirectiveArgumentAndInputFieldMappings = { [name: string]: ParsedMapper };
+export type ParsedDirectiveArgumentAndInputFieldMappings = {
+  [name: string]: ParsedMapper;
+};
 
 /**
  * Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used
@@ -42,7 +44,9 @@ export type ParsedScalarsMap = {
  */
 export type EnumValuesMap<AdditionalProps = {}> =
   | string
-  | { [enumName: string]: string | ({ [key: string]: string | number } & AdditionalProps) };
+  | {
+      [enumName: string]: string | ({ [key: string]: string | number } & AdditionalProps);
+    };
 export type ParsedEnumValuesMap = {
   [enumName: string]: {
     // If values are explictly set, this will include the mapped values

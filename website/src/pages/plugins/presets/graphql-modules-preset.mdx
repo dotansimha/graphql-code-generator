@@ -1,25 +1,33 @@
 ---
 title: graphql-modules-preset
-description: GraphQL Code Generator preset for graphql-modules. It generates a single file with all the modules and their dependencies.
+description:
+  GraphQL Code Generator preset for graphql-modules. It generates a single file with all the modules
+  and their dependencies.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+import { Callout } from '@theguild/components'
+
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
 
-The `@graphql-codegen/graphql-modules-preset` generates `.ts` file with TypeScript types, per each directory that contains GraphQL SDL definitions.
+The `@graphql-codegen/graphql-modules-preset` generates `.ts` file with TypeScript types, per each
+directory that contains GraphQL SDL definitions.
 
-The generates files will be generated based on each module definition, and based on the GraphQL schema defined in that specific module, allowing you to write type-safe resolvers, while keeping modules types boundaries.
+The generates files will be generated based on each module definition, and based on the GraphQL
+schema defined in that specific module, allowing you to write type-safe resolvers, while keeping
+modules types boundaries.
 
 <Callout type="warning">
 **Usage Requirements**
 
-This preset generates code for `graphql-modules` @ `v1` / `v2` (previous versions are not supported) by default.
+This preset generates code for `graphql-modules` @ `v1` / `v2` (previous versions are not supported)
+by default.
 
-If you are not using `graphql-modules`, you can set `useGraphQLModules: false{:yaml}` to disable this behaviour.
+If you are not using `graphql-modules`, you can set `useGraphQLModules: false{:yaml}` to disable
+this behaviour.
 
 </Callout>
 
@@ -71,7 +79,8 @@ export default config
 
 This will generate a file called `module-types.ts` under each module you have.
 
-To use the generates resolvers, you can use `Resolvers` signature and apply it to your resolvers object within the module:
+To use the generates resolvers, you can use `Resolvers` signature and apply it to your resolvers
+object within the module:
 
 ```ts filename="src/modules/user/resolvers.ts"
 import { MyModule } from './generated-types/module-types'
@@ -88,6 +97,8 @@ export const resolvers: MyModule.Resolvers = {
 
 ## Using without GraphQL-Modules
 
-By default, this preset it generating code for `graphql-modules`, but if you are not using it, you can set `useGraphQLModules: false{:yaml}` in your preset configuration to generate fully agnostic types that are based on folder structure only.
+By default, this preset it generating code for `graphql-modules`, but if you are not using it, you
+can set `useGraphQLModules: false{:yaml}` in your preset configuration to generate fully agnostic
+types that are based on folder structure only.
 
 <PluginApiDocs />

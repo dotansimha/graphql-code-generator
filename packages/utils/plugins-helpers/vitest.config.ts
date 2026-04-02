@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'plugin-helpers',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

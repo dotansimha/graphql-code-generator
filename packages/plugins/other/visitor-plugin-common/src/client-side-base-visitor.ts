@@ -1,6 +1,4 @@
 import { basename, extname } from 'path';
-import { normalizeImportExtension, oldVisit, Types } from '@graphql-codegen/plugin-helpers';
-import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import autoBind from 'auto-bind';
 import { pascalCase } from 'change-case-all';
 import { DepGraph } from 'dependency-graph';
@@ -13,14 +11,16 @@ import {
   GraphQLSchema,
   Kind,
   OperationDefinitionNode,
-  SelectionNode,
   print,
+  SelectionNode,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
+import { normalizeImportExtension, oldVisit, Types } from '@graphql-codegen/plugin-helpers';
+import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
+import { FragmentImport, generateFragmentImportStatement, ImportDeclaration } from './imports.js';
 import { LoadedFragment, ParsedImport } from './types.js';
-import { buildScalarsFromConfig, unique, flatten, getConfigValue, groupBy } from './utils.js';
-import { FragmentImport, ImportDeclaration, generateFragmentImportStatement } from './imports.js';
+import { buildScalarsFromConfig, flatten, getConfigValue, groupBy, unique } from './utils.js';
 
 gqlTag.enableExperimentalFragmentVariables();
 
@@ -233,11 +233,13 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
 
 type ExecutableDocumentNodeMeta = Record<string, unknown>;
 
-type Unstable_OnExecutableDocumentNode = (documentNode: DocumentNode) => void | ExecutableDocumentNodeMeta;
+type Unstable_OnExecutableDocumentNode = (
+  documentNode: DocumentNode,
+) => void | ExecutableDocumentNodeMeta;
 
 export class ClientSideBaseVisitor<
   TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig,
-  TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig
+  TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig,
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _collectedOperations: OperationDefinitionNode[] = [];
   protected _documents: Types.DocumentFile[] = [];
@@ -254,7 +256,7 @@ export class ClientSideBaseVisitor<
     fragments: LoadedFragment[],
     rawConfig: TRawConfig,
     additionalConfig: Partial<TPluginConfig>,
-    documents?: Types.DocumentFile[]
+    documents?: Types.DocumentFile[],
   ) {
     super(rawConfig, {
       scalars: buildScalarsFromConfig(_schema, rawConfig),
@@ -271,7 +273,10 @@ export class ClientSideBaseVisitor<
       fragmentVariablePrefix: getConfigValue(rawConfig.fragmentVariablePrefix, ''),
       fragmentVariableSuffix: getConfigValue(rawConfig.fragmentVariableSuffix, 'FragmentDoc'),
       documentMode: getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag),
-      importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
+      importDocumentNodeExternallyFrom: getConfigValue(
+        rawConfig.importDocumentNodeExternallyFrom,
+        '',
+      ),
       pureMagicComment: getConfigValue(rawConfig.pureMagicComment, false),
       experimentalFragmentVariables: getConfigValue(rawConfig.experimentalFragmentVariables, false),
       ...additionalConfig,
@@ -286,7 +291,7 @@ export class ClientSideBaseVisitor<
 
   protected _extractFragments(
     document: FragmentDefinitionNode | OperationDefinitionNode,
-    withNested = false
+    withNested = false,
   ): string[] {
     if (!document) {
       return [];
@@ -325,7 +330,10 @@ export class ClientSideBaseVisitor<
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
-      if (this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.string) {
+      if (
+        this.config.documentMode === DocumentMode.documentNode ||
+        this.config.documentMode === DocumentMode.string
+      ) {
         return Array.from(this._fragments.values())
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))
@@ -346,7 +354,8 @@ export class ClientSideBaseVisitor<
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const includeNestedFragments =
-      this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.string;
+      this.config.documentMode === DocumentMode.documentNode ||
+      this.config.documentMode === DocumentMode.string;
     const fragmentNames = this._extractFragments(node, includeNestedFragments);
     const fragments = this._transformFragments(fragmentNames);
 
@@ -372,7 +381,7 @@ export class ClientSideBaseVisitor<
       // 2. duplicated fragments
 
       const fragmentDependencyNames = new Set(
-        fragmentNames.map(name => this.fragmentsGraph.dependenciesOf(name)).flatMap(item => item)
+        fragmentNames.map(name => this.fragmentsGraph.dependenciesOf(name)).flatMap(item => item),
       );
 
       for (const fragmentName of fragmentNames) {
@@ -417,7 +426,10 @@ export class ClientSideBaseVisitor<
       if (node.kind === Kind.FRAGMENT_DEFINITION) {
         const meta = this._getGraphQLCodegenMetadata(node, gqlTag([doc]).definitions);
 
-        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify({ fragmentName: node.name.value, ...meta })})`;
+        return `new TypedDocumentString(\`${doc}\`, ${JSON.stringify({
+          fragmentName: node.name.value,
+          ...meta,
+        })})`;
       }
 
       if (this._onExecutableDocumentNode && node.kind === Kind.OPERATION_DEFINITION) {
@@ -441,7 +453,7 @@ export class ClientSideBaseVisitor<
 
   protected _getGraphQLCodegenMetadata(
     node: OperationDefinitionNode | FragmentDefinitionNode,
-    definitions?: ReadonlyArray<DefinitionNode>
+    definitions?: ReadonlyArray<DefinitionNode>,
   ): Record<string, any> | void | undefined {
     let meta: Record<string, any> | void | undefined;
 
@@ -477,12 +489,15 @@ export class ClientSideBaseVisitor<
         const fragmentName = selection.name.value;
         const fragment = this.fragmentsGraph.getNodeData(fragmentName);
         if (fragment) {
-          const fields = fragment.node.selectionSet.selections.reduce<string[]>((acc, selection) => {
-            if (selection.kind === Kind.FIELD) {
-              acc.push(selection.name.value);
-            }
-            return acc;
-          }, []);
+          const fields = fragment.node.selectionSet.selections.reduce<string[]>(
+            (acc, selection) => {
+              if (selection.kind === Kind.FIELD) {
+                acc.push(selection.name.value);
+              }
+              return acc;
+            },
+            [],
+          );
 
           deferredFields[fragmentName] = fields;
         }
@@ -496,9 +511,9 @@ export class ClientSideBaseVisitor<
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this.getFragmentVariableName(fragmentDocument);
     const fragmentTypeSuffix = this.getFragmentSuffix(fragmentDocument);
-    return `export const ${name} =${this.config.pureMagicComment ? ' /*#__PURE__*/' : ''} ${this._gql(
-      fragmentDocument
-    )}${this.getDocumentNodeSignature(
+    return `export const ${name} =${
+      this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
+    } ${this._gql(fragmentDocument)}${this.getDocumentNodeSignature(
       this.convertName(fragmentDocument.name.value, {
         useTypesPrefix: true,
         suffix: fragmentTypeSuffix,
@@ -508,7 +523,7 @@ export class ClientSideBaseVisitor<
             suffix: fragmentTypeSuffix + 'Variables',
           })
         : 'unknown',
-      fragmentDocument
+      fragmentDocument,
     )};`;
   }
 
@@ -585,13 +600,15 @@ export class ClientSideBaseVisitor<
   protected _generateImport(
     { moduleName, propName }: ParsedImport,
     varName: string,
-    isTypeImport: boolean
+    isTypeImport: boolean,
   ): string | null {
     const typeImport = isTypeImport && this.config.useTypeImports ? 'import type' : 'import';
     const propAlias = propName === varName ? '' : ` as ${varName}`;
 
     if (moduleName) {
-      return `${typeImport} ${propName ? `{ ${propName}${propAlias} }` : varName} from '${moduleName}';`;
+      return `${typeImport} ${
+        propName ? `{ ${propName}${propAlias} }` : varName
+      } from '${moduleName}';`;
     }
 
     return null;
@@ -624,7 +641,9 @@ export class ClientSideBaseVisitor<
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
       case DocumentMode.documentNodeImportFragments: {
-        const documentNodeImport = this._parseImport(this.config.documentNodeImport || 'graphql#DocumentNode');
+        const documentNodeImport = this._parseImport(
+          this.config.documentNodeImport || 'graphql#DocumentNode',
+        );
         const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
 
         if (tagImport) {
@@ -645,7 +664,10 @@ export class ClientSideBaseVisitor<
       }
       case DocumentMode.external: {
         if (this._collectedOperations.length > 0) {
-          if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
+          if (
+            this.config.importDocumentNodeExternallyFrom === 'near-operation-file' &&
+            this._documents.length === 1
+          ) {
             let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
             documentPath += normalizeImportExtension({
               emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
@@ -656,11 +678,15 @@ export class ClientSideBaseVisitor<
           } else {
             if (!this.config.importDocumentNodeExternallyFrom) {
               // eslint-disable-next-line no-console
-              console.warn('importDocumentNodeExternallyFrom must be provided if documentMode=external');
+              console.warn(
+                'importDocumentNodeExternallyFrom must be provided if documentMode=external',
+              );
             }
 
             this._imports.add(
-              `import * as Operations from '${this.clearExtension(this.config.importDocumentNodeExternallyFrom)}';`
+              `import * as Operations from '${this.clearExtension(
+                this.config.importDocumentNodeExternallyFrom,
+              )}';`,
             );
           }
         }
@@ -671,14 +697,18 @@ export class ClientSideBaseVisitor<
     }
 
     const excludeFragments =
-      options.excludeFragments || this.config.globalNamespace || this.config.documentMode !== DocumentMode.graphQLTag;
+      options.excludeFragments ||
+      this.config.globalNamespace ||
+      this.config.documentMode !== DocumentMode.graphQLTag;
 
     if (!excludeFragments) {
       const importExtension = normalizeImportExtension({
         emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
         importExtension: this.config.importExtension,
       });
-      const deduplicatedImports = Object.values(groupBy(this.config.fragmentImports, fi => fi.importSource.path))
+      const deduplicatedImports = Object.values(
+        groupBy(this.config.fragmentImports, fi => fi.importSource.path),
+      )
         .map(
           (fragmentImports): ImportDeclaration<FragmentImport> => ({
             ...fragmentImports[0],
@@ -686,12 +716,12 @@ export class ClientSideBaseVisitor<
               ...fragmentImports[0].importSource,
               identifiers: unique(
                 flatten(fragmentImports.map(fi => fi.importSource.identifiers)),
-                identifier => identifier.name
+                identifier => identifier.name,
               ),
             },
             emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
             importExtension,
-          })
+          }),
         )
         .filter(fragmentImport => fragmentImport.outputPath !== fragmentImport.importSource.path);
 
@@ -709,7 +739,7 @@ export class ClientSideBaseVisitor<
     _operationType: string,
     _operationResultType: string,
     _operationVariablesTypes: string,
-    _hasRequiredVariables: boolean
+    _hasRequiredVariables: boolean,
   ): string {
     return null;
   }
@@ -717,7 +747,7 @@ export class ClientSideBaseVisitor<
   protected getDocumentNodeSignature(
     _resultType: string,
     _variablesTypes: string,
-    _node: FragmentDefinitionNode | OperationDefinitionNode
+    _node: FragmentDefinitionNode | OperationDefinitionNode,
   ): string {
     if (
       this.config.documentMode === DocumentMode.documentNode ||
@@ -741,7 +771,9 @@ export class ClientSideBaseVisitor<
       return false;
     }
 
-    return variables.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue);
+    return variables.some(
+      variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE && !variableDef.defaultValue,
+    );
   }
 
   public getOperationVariableName(node: OperationDefinitionNode) {
@@ -774,7 +806,11 @@ export class ClientSideBaseVisitor<
     ) {
       documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName} =${
         this.config.pureMagicComment ? ' /*#__PURE__*/' : ''
-      } ${this._gql(node)}${this.getDocumentNodeSignature(operationResultType, operationVariablesTypes, node)};`;
+      } ${this._gql(node)}${this.getDocumentNodeSignature(
+        operationResultType,
+        operationVariablesTypes,
+        node,
+      )};`;
     }
 
     const hasRequiredVariables = this.checkVariablesRequirements(node);
@@ -785,7 +821,7 @@ export class ClientSideBaseVisitor<
       operationType,
       operationResultType,
       operationVariablesTypes,
-      hasRequiredVariables
+      hasRequiredVariables,
     );
 
     return [documentString, additional].filter(a => a).join('\n');

@@ -47,7 +47,7 @@ describe('generate-and-save', () => {
           },
         },
       },
-      true
+      true,
     );
 
     expect(output.length).toBe(1);
@@ -74,7 +74,7 @@ describe('generate-and-save', () => {
           },
         },
       },
-      true
+      true,
     );
 
     expect(output.length).toBe(1);
@@ -101,7 +101,7 @@ describe('generate-and-save', () => {
           },
         },
       },
-      true
+      true,
     );
 
     expect(output.length).toBe(1);
@@ -127,7 +127,7 @@ describe('generate-and-save', () => {
           },
         },
       },
-      true
+      true,
     );
 
     expect(output.length).toBe(1);
@@ -157,7 +157,7 @@ describe('generate-and-save', () => {
           },
         },
       },
-      true
+      true,
     );
 
     expect(output.length).toBe(1);
@@ -179,7 +179,7 @@ describe('generate-and-save', () => {
     import gql from 'graphql-tag';
     const MyQuery = gql\`query MyQuery { f }\`;
   `,
-      'utf8'
+      'utf8',
     );
     const generateOnce: () => Promise<Types.FileOutput[]> = () =>
       generate(
@@ -192,7 +192,7 @@ describe('generate-and-save', () => {
             },
           },
         },
-        true
+        true,
       );
     const [firstOutput] = await generateOnce();
     fs.writeFileSync(firstOutput.filename, firstOutput.content);
@@ -211,7 +211,7 @@ describe('generate-and-save', () => {
           },
         },
       },
-      true
+      true,
     );
 
     expect(output.length).toBe(1);
@@ -235,7 +235,7 @@ describe('generate-and-save', () => {
           },
         },
       },
-      true
+      true,
     );
 
     expect(output.length).toBe(1);
@@ -272,7 +272,7 @@ describe('generate-and-save', () => {
               },
             },
           },
-          false
+          false,
         );
       } catch {
         const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
@@ -316,7 +316,7 @@ describe('generate-and-save', () => {
               },
             },
           },
-          false
+          false,
         );
       } catch {
         const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
@@ -348,7 +348,7 @@ describe('generate-and-save', () => {
               },
             },
           },
-          false
+          false,
         );
       } catch {
         expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
@@ -374,7 +374,7 @@ describe('generate-and-save', () => {
             },
           },
         },
-        false
+        false,
       );
       expect(outputErrorSpy).not.toHaveBeenCalled();
     });
@@ -461,13 +461,13 @@ describe('generate-and-save', () => {
             },
           },
         },
-        false
+        false,
       );
 
       expect(output.length).toBe(1);
       expect(output[0].filename).toBe('src/b.ts');
       expect(mockLogger.warn.mock.calls[0][0]).toBeSimilarStringTo(
-        `${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`
+        `${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`,
       );
     });
 
@@ -494,7 +494,7 @@ describe('generate-and-save', () => {
               },
             },
           },
-          false
+          false,
         );
       } catch {
         expect(mockLogger.warn).not.toHaveBeenCalled();
@@ -531,11 +531,11 @@ describe('generate-and-save', () => {
               },
             },
           },
-          false
+          false,
         );
       } catch {
         expect(mockLogger.error.mock.calls[0][0]).toBeSimilarStringTo(
-          `${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`
+          `${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`,
         );
       }
     });
@@ -563,7 +563,7 @@ describe('generate-and-save', () => {
               },
             },
           },
-          false
+          false,
         );
       } catch {
         expect(mockLogger.warn).not.toHaveBeenCalled();

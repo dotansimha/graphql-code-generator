@@ -1,4 +1,4 @@
-import { buildSchema, FragmentDefinitionNode, OperationDefinitionNode, parse, Kind } from 'graphql';
+import { buildSchema, FragmentDefinitionNode, Kind, OperationDefinitionNode, parse } from 'graphql';
 import { ClientSideBaseVisitor, DocumentMode } from '../src/client-side-base-visitor.js';
 
 describe('getImports', () => {
@@ -26,7 +26,7 @@ describe('getImports', () => {
               bar
             }
           }
-        `
+        `,
         );
 
         const visitor = new ClientSideBaseVisitor(
@@ -38,7 +38,7 @@ describe('getImports', () => {
             documentMode: DocumentMode.external,
           },
           {},
-          [{ document, location: importPath }]
+          [{ document, location: importPath }],
         );
 
         visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -60,7 +60,7 @@ describe('getImports', () => {
               bar
             }
           }
-        `
+        `,
         );
 
         const visitor = new ClientSideBaseVisitor(
@@ -72,7 +72,7 @@ describe('getImports', () => {
             documentMode: DocumentMode.external,
           },
           {},
-          [{ document, location: importPath }]
+          [{ document, location: importPath }],
         );
 
         visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -94,7 +94,7 @@ describe('getImports', () => {
               bar
             }
           }
-        `
+        `,
         );
 
         const visitor = new ClientSideBaseVisitor(
@@ -106,7 +106,7 @@ describe('getImports', () => {
             documentMode: DocumentMode.external,
           },
           {},
-          [{ document, location: importPath }]
+          [{ document, location: importPath }],
         );
 
         visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -128,7 +128,7 @@ describe('getImports', () => {
               bar
             }
           }
-        `
+        `,
         );
 
         const visitor = new ClientSideBaseVisitor(
@@ -140,7 +140,7 @@ describe('getImports', () => {
             documentMode: DocumentMode.external,
           },
           {},
-          [{ document, location: importPath }]
+          [{ document, location: importPath }],
         );
 
         visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -162,7 +162,7 @@ describe('getImports', () => {
               bar
             }
           }
-        `
+        `,
         );
 
         const visitor = new ClientSideBaseVisitor(
@@ -175,7 +175,7 @@ describe('getImports', () => {
             documentMode: DocumentMode.external,
           },
           {},
-          [{ document, location: importPath }]
+          [{ document, location: importPath }],
         );
 
         visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -195,7 +195,7 @@ describe('getImports', () => {
               bar
             }
           }
-        `
+        `,
         );
 
         const visitor = new ClientSideBaseVisitor(
@@ -208,7 +208,7 @@ describe('getImports', () => {
             documentMode: DocumentMode.external,
           },
           {},
-          [{ document, location: importPath }]
+          [{ document, location: importPath }],
         );
 
         visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -243,7 +243,7 @@ describe('getImports', () => {
               bar
             }
           }
-        `
+        `,
         );
 
         const visitor = new ClientSideBaseVisitor(
@@ -255,7 +255,7 @@ describe('getImports', () => {
             documentMode: DocumentMode.external,
           },
           {},
-          [{ document, location: importPath }]
+          [{ document, location: importPath }],
         );
 
         visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -292,19 +292,21 @@ describe('getImports', () => {
           foo
           bar
         }
-      `
+      `,
       );
 
       const visitor = new ClientSideBaseVisitor(
         schema,
-        (document.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-          fragmentDef => ({
-            node: fragmentDef,
-            name: fragmentDef.name.value,
-            onType: fragmentDef.typeCondition.name.value,
-            isExternal: false,
-          })
-        ),
+        (
+          document.definitions.filter(
+            d => d.kind === Kind.FRAGMENT_DEFINITION,
+          ) as FragmentDefinitionNode[]
+        ).map(fragmentDef => ({
+          node: fragmentDef,
+          name: fragmentDef.name.value,
+          onType: fragmentDef.typeCondition.name.value,
+          isExternal: false,
+        })),
         {
           emitLegacyCommonJSImports: true,
           importDocumentNodeExternallyFrom: 'near-operation-file',
@@ -327,7 +329,7 @@ describe('getImports', () => {
           ],
         },
         {},
-        [{ document, location: importPath }]
+        [{ document, location: importPath }],
       );
 
       visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -365,19 +367,21 @@ describe('getImports', () => {
           foo
           bar
         }
-      `
+      `,
       );
 
       const visitor = new ClientSideBaseVisitor(
         schema,
-        (document.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
-          fragmentDef => ({
-            node: fragmentDef,
-            name: fragmentDef.name.value,
-            onType: fragmentDef.typeCondition.name.value,
-            isExternal: false,
-          })
-        ),
+        (
+          document.definitions.filter(
+            d => d.kind === Kind.FRAGMENT_DEFINITION,
+          ) as FragmentDefinitionNode[]
+        ).map(fragmentDef => ({
+          node: fragmentDef,
+          name: fragmentDef.name.value,
+          onType: fragmentDef.typeCondition.name.value,
+          isExternal: false,
+        })),
         {
           emitLegacyCommonJSImports: true,
           importDocumentNodeExternallyFrom: 'near-operation-file',
@@ -400,7 +404,7 @@ describe('getImports', () => {
           ],
         },
         {},
-        [{ document, location: importPath }]
+        [{ document, location: importPath }],
       );
 
       visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
@@ -460,7 +464,7 @@ describe('includeExternalFragments', () => {
       {
         includeExternalFragments: true,
       },
-      {}
+      {},
     );
 
     expect(visitor.fragments).toContain('ExternalAFragment');

@@ -1,6 +1,6 @@
+import { createServer } from 'node:http';
 import { createSchema, createYoga } from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
-import { createServer } from 'node:http';
 
 const typeDefs = /* GraphQL */ `
   type Query {

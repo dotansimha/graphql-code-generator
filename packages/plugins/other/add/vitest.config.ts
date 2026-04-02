@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'add',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

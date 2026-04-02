@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'examples-persisted-documents',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

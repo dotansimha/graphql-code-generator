@@ -13,7 +13,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
           excludeTypes: ['ChildUnion', 'AnotherNode', 'Node'],
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -34,7 +34,12 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
   });
 
   it('adds non-optional typenames to implemented types', async () => {
-    const result = await plugin(resolversTestingSchema, [], { resolversNonOptionalTypename: true }, { outputFile: '' });
+    const result = await plugin(
+      resolversTestingSchema,
+      [],
+      { resolversNonOptionalTypename: true },
+      { outputFile: '' },
+    );
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
@@ -57,7 +62,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
       resolversTestingSchema,
       [],
       { resolversNonOptionalTypename: { unionMember: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -76,7 +81,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { unionMember: true },
         mappers: { Child: 'ChildMapper', MyType: 'MyTypeMapper' },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -95,7 +100,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { unionMember: true },
         mappers: { Child: 'Wrapper<{T}>', MyType: 'MyWrapper<{T}>' },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -114,7 +119,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { unionMember: true },
         defaultMapper: 'Partial<{T}>',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -133,7 +138,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { unionMember: true },
         defaultMapper: '{}',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).not.toBeSimilarStringTo('export type ResolversUnionTypes');
@@ -145,7 +150,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
       resolversTestingSchema,
       [],
       { resolversNonOptionalTypename: { interfaceImplementingType: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -166,7 +171,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { interfaceImplementingType: true },
         mappers: { AnotherNodeWithChild: 'AnotherNodeWithChildMapper' },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -187,7 +192,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { interfaceImplementingType: true },
         mappers: { AnotherNodeWithChild: 'Wrapper<{T}>' },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -208,7 +213,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { interfaceImplementingType: true },
         defaultMapper: 'Partial<{T}>',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -229,7 +234,7 @@ describe('TypeScript Resolvers Plugin - config.resolversNonOptionalTypename', ()
         resolversNonOptionalTypename: { interfaceImplementingType: true },
         defaultMapper: 'unknown',
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).not.toBeSimilarStringTo('export type ResolversInterfaceTypes');

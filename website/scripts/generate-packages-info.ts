@@ -21,7 +21,9 @@ const fetchPackageInfo = async (packageName: string): Promise<PackageInfo> => {
   console.debug(`Loading NPM package info: ${packageName}`);
   const [packageInfo, { downloads }] = await Promise.all([
     fetch(`https://registry.npmjs.org/${encodedName}`).then(response => response.json()),
-    fetch(`https://api.npmjs.org/downloads/point/last-week/${encodedName}`).then(response => response.json()),
+    fetch(`https://api.npmjs.org/downloads/point/last-week/${encodedName}`).then(response =>
+      response.json(),
+    ),
   ]);
   const { readme, time, description } = packageInfo;
   const latestVersion = packageInfo['dist-tags'].latest;
@@ -50,7 +52,13 @@ for (let [identifier, pkg] of Object.entries(PACKAGES)) {
   const packageInfo = await fetchPackageInfo(pkg.npmPackage);
   result[identifier] = packageInfo;
 
-  await (async function randomSleep({ minMs, maxMs }: { minMs: number; maxMs: number }): Promise<void> {
+  await (async function randomSleep({
+    minMs,
+    maxMs,
+  }: {
+    minMs: number;
+    maxMs: number;
+  }): Promise<void> {
     function sleep(ms: number): Promise<void> {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -65,5 +73,5 @@ writeFileSync(
   `export const packagesInfo= ${JSON.stringify(result)}`,
   {
     encoding: 'utf8',
-  }
+  },
 );

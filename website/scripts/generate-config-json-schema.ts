@@ -28,7 +28,10 @@ async function generate(): Promise<void> {
     }
     return v;
   });
-  const prettifiedSchema = prettier.format(JSON.stringify(schema), { ...prettierOptions, parser: 'json' });
+  const prettifiedSchema = prettier.format(JSON.stringify(schema), {
+    ...prettierOptions,
+    parser: 'json',
+  });
   await writeFile(OUT_PATH, prettifiedSchema);
 }
 

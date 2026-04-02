@@ -1,20 +1,20 @@
 {
   "name": "example-typescript-esm",
   "version": "0.0.0",
+  "type": "module",
   "private": true,
-  "devDependencies": {
-    "@graphql-codegen/cli": "6.2.1"
+  "scripts": {
+    "build": "tsc",
+    "codegen": "graphql-codegen-esm --config codegen.cjs",
+    "start": "node dist/main.js",
+    "test:end2end": "yarn start"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.2.0",
     "graphql": "16.9.0"
   },
-  "scripts": {
-    "codegen": "graphql-codegen-esm --config codegen.cjs",
-    "build": "tsc",
-    "start": "node dist/main.js",
-    "test:end2end": "yarn start"
+  "devDependencies": {
+    "@graphql-codegen/cli": "6.2.1"
   },
-  "type": "module",
   "bob": false
 }

@@ -1,6 +1,6 @@
-import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
-import { AnyVariables, OperationContext, RequestPolicy, useQuery, UseQueryResponse } from 'urql';
 import type { DocumentNode } from 'graphql';
+import { AnyVariables, OperationContext, RequestPolicy, useQuery, UseQueryResponse } from 'urql';
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 import './App.css';
 import Film from './Film';
 import { graphql } from './gql';
@@ -29,17 +29,17 @@ declare module 'urql' {
         variables?: Variables;
       }
     : Variables extends {
-        [P in keyof Variables]: Variables[P] | null;
-      }
-    ? {
-        variables?: Variables;
-      }
-    : {
-        variables: Variables;
-      });
+          [P in keyof Variables]: Variables[P] | null;
+        }
+      ? {
+          variables?: Variables;
+        }
+      : {
+          variables: Variables;
+        });
 
   export function useQuery<Data = any, Variables extends AnyVariables = AnyVariables>(
-    args: UseQueryArgs<Variables, Data>
+    args: UseQueryArgs<Variables, Data>,
   ): UseQueryResponse<Data, Variables>;
 }
 
@@ -53,7 +53,13 @@ function App() {
 
   return (
     <div className="App">
-      {data && <ul>{data.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>}
+      {data && (
+        <ul>
+          {data.allFilms?.edges?.map(
+            (e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />,
+          )}
+        </ul>
+      )}
     </div>
   );
 }

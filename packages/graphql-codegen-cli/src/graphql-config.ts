@@ -1,8 +1,8 @@
+import { GraphQLConfig, GraphQLExtensionDeclaration, loadConfig } from 'graphql-config';
 import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { CodeFileLoader } from '@graphql-tools/code-file-loader';
 import { GitLoader } from '@graphql-tools/git-loader';
 import { GithubLoader } from '@graphql-tools/github-loader';
-import { GraphQLConfig, GraphQLExtensionDeclaration, loadConfig } from 'graphql-config';
 
 export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
   // Schema
@@ -11,7 +11,7 @@ export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
       pluckConfig: {
         skipIndent: true,
       },
-    })
+    }),
   );
   api.loaders.schema.register(new GitLoader());
   api.loaders.schema.register(new GithubLoader());
@@ -22,7 +22,7 @@ export const CodegenExtension: GraphQLExtensionDeclaration = (api: any) => {
       pluckConfig: {
         skipIndent: true,
       },
-    })
+    }),
   );
   api.loaders.documents.register(new GitLoader());
   api.loaders.documents.register(new GithubLoader());
