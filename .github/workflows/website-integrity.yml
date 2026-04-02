@@ -3,6 +3,11 @@ on:
   pull_request:
     paths:
       - 'website/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   website-check:
     runs-on: ubuntu-latest
