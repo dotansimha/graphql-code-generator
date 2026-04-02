@@ -1,3 +1,4 @@
+import { GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 import {
   BaseSelectionSetProcessor,
   LinkField,
@@ -6,13 +7,12 @@ import {
   ProcessResult,
   SelectionSetProcessorConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 
 export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[],
-    unsetTypes?: boolean
+    unsetTypes?: boolean,
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -63,7 +63,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 
   transformAliasesPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveAliasedFields[]
+    fields: PrimitiveAliasedFields[],
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -77,7 +77,9 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 
     const selections = fields.map(aliasedField => {
       const value =
-        aliasedField.fieldName === '__typename' ? `'${schemaType.name}'` : `${parentName}['${aliasedField.fieldName}']`;
+        aliasedField.fieldName === '__typename'
+          ? `'${schemaType.name}'`
+          : `${parentName}['${aliasedField.fieldName}']`;
 
       return `${aliasedField.alias}: ${value}`;
     });
@@ -96,7 +98,11 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 }
 
 /** Equivalent to `${transformName}<${target}, ${unionElements.join(' | ')}>`, but with line feeds if necessary */
-function formattedUnionTransform(transformName: string, target: string, unionElements: string[]): string {
+function formattedUnionTransform(
+  transformName: string,
+  target: string,
+  unionElements: string[],
+): string {
   if (unionElements.length > 3) {
     return `${transformName}<\n    ${target},\n    | ${unionElements.join('\n    | ')}\n  >`;
   }

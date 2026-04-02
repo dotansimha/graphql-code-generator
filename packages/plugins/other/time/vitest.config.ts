@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'time',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

@@ -1,4 +1,3 @@
-import { Source } from '@graphql-tools/utils';
 import {
   DefinitionNode,
   DocumentNode,
@@ -9,6 +8,7 @@ import {
   TypeNode,
 } from 'graphql';
 import parse from 'parse-filepath';
+import { Source } from '@graphql-tools/utils';
 
 const sep = '/';
 
@@ -26,7 +26,9 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
     pushUnique(used, type);
   }
 
-  function findRelated(node: DefinitionNode | FieldDefinitionNode | InputValueDefinitionNode | NamedTypeNode) {
+  function findRelated(
+    node: DefinitionNode | FieldDefinitionNode | InputValueDefinitionNode | NamedTypeNode,
+  ) {
     if (node.kind === Kind.OBJECT_TYPE_DEFINITION || node.kind === Kind.OBJECT_TYPE_EXTENSION) {
       // Object
       markAsUsed(node.name.value);
@@ -42,7 +44,10 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
           findRelated(n);
         }
       }
-    } else if (node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION || node.kind === Kind.INPUT_OBJECT_TYPE_EXTENSION) {
+    } else if (
+      node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION ||
+      node.kind === Kind.INPUT_OBJECT_TYPE_EXTENSION
+    ) {
       // Input
       markAsUsed(node.name.value);
 
@@ -51,7 +56,10 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
           findRelated(n);
         }
       }
-    } else if (node.kind === Kind.INTERFACE_TYPE_DEFINITION || node.kind === Kind.INTERFACE_TYPE_EXTENSION) {
+    } else if (
+      node.kind === Kind.INTERFACE_TYPE_DEFINITION ||
+      node.kind === Kind.INTERFACE_TYPE_EXTENSION
+    ) {
       // Interface
       markAsUsed(node.name.value);
 
@@ -66,7 +74,10 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
           findRelated(n);
         }
       }
-    } else if (node.kind === Kind.UNION_TYPE_DEFINITION || node.kind === Kind.UNION_TYPE_EXTENSION) {
+    } else if (
+      node.kind === Kind.UNION_TYPE_DEFINITION ||
+      node.kind === Kind.UNION_TYPE_EXTENSION
+    ) {
       // Union
       markAsUsed(node.name.value);
 
@@ -78,7 +89,10 @@ export function collectUsedTypes(doc: DocumentNode): string[] {
     } else if (node.kind === Kind.ENUM_TYPE_DEFINITION || node.kind === Kind.ENUM_TYPE_EXTENSION) {
       // Enum
       markAsUsed(node.name.value);
-    } else if (node.kind === Kind.SCALAR_TYPE_DEFINITION || node.kind === Kind.SCALAR_TYPE_EXTENSION) {
+    } else if (
+      node.kind === Kind.SCALAR_TYPE_DEFINITION ||
+      node.kind === Kind.SCALAR_TYPE_EXTENSION
+    ) {
       // Scalar
       if (!isGraphQLPrimitive(node.name.value)) {
         markAsUsed(node.name.value);
@@ -154,12 +168,17 @@ export function buildBlock({ name, lines }: { name: string; lines: string[] }): 
 
 const getRelativePath = function (filepath: string, basePath: string) {
   const normalizedFilepath = normalize(filepath);
-  const normalizedBasePath = ensureStartsWithSeparator(normalize(ensureEndsWithSeparator(basePath)));
+  const normalizedBasePath = ensureStartsWithSeparator(
+    normalize(ensureEndsWithSeparator(basePath)),
+  );
   const [, relativePath] = normalizedFilepath.split(normalizedBasePath);
   return relativePath;
 };
 
-export function groupSourcesByModule(sources: Source[], basePath: string): Record<string, Source[]> {
+export function groupSourcesByModule(
+  sources: Source[],
+  basePath: string,
+): Record<string, Source[]> {
   const grouped: Record<string, Source[]> = {};
 
   for (const source of sources) {
@@ -200,7 +219,11 @@ function ensureEndsWithSeparator(path: string) {
 }
 
 function ensureStartsWithSeparator(path: string) {
-  return path.startsWith('.') ? path.replace(/^(..\/)|(.\/)/, '/') : path.startsWith('/') ? path : '/' + path;
+  return path.startsWith('.')
+    ? path.replace(/^(..\/)|(.\/)/, '/')
+    : path.startsWith('/')
+      ? path
+      : '/' + path;
 }
 
 /**
@@ -212,12 +235,20 @@ export function pushUnique<T>(list: T[], item: T): void {
   }
 }
 
-export function concatByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {
+export function concatByKey<T extends Record<string, any[]>, K extends keyof T>(
+  left: T,
+  right: T,
+  key: K,
+) {
   // Remove duplicate, if an element is in right & left, it will be only once in the returned array.
   return [...new Set([...left[key], ...right[key]])];
 }
 
-export function uniqueByKey<T extends Record<string, any[]>, K extends keyof T>(left: T, right: T, key: K) {
+export function uniqueByKey<T extends Record<string, any[]>, K extends keyof T>(
+  left: T,
+  right: T,
+  key: K,
+) {
   return left[key].filter(item => !right[key].includes(item));
 }
 

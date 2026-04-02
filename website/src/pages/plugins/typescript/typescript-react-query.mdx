@@ -1,16 +1,21 @@
 ---
 title: typescript-react-query
-description: GraphQL Code Generator plugin for generating React Query hooks. Supports TypeScript and Flow.
+description:
+  GraphQL Code Generator plugin for generating React Query hooks. Supports TypeScript and Flow.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <Callout type="info">
 
-We now recommend using the `client-preset` package for a **better developer experience** and smaller impact on bundle size.
+We now recommend using the `client-preset` package for a **better developer experience** and smaller
+impact on bundle size.
 
 **Get started on [our "React/Vue" guide](/docs/guides/react-vue).**
 
@@ -22,13 +27,15 @@ We now recommend using the `client-preset` package for a **better developer expe
 ## Usage Examples
 
 <Callout>
-  Note: all generated hooks are just wrappers around `react-query` original functions. This codegen plugin just burns
-  the generated TypeScript types into the operation, and provides flexibility to choose your `fetcher`.
+  Note: all generated hooks are just wrappers around `react-query` original functions. This codegen
+  plugin just burns the generated TypeScript types into the operation, and provides flexibility to
+  choose your `fetcher`.
 </Callout>
 
 ### Using default `fetch`
 
-By default, this plugin will generate a `fetcher` based on the environment global `fetch` definition.
+By default, this plugin will generate a `fetcher` based on the environment global `fetch`
+definition.
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -67,7 +74,8 @@ export const MyComponent = () => {
 
 ### Using `fetch` with Codegen configuration
 
-If you wish to avoid specifying `endpoint` and `fetchParams` on each hook usage, you can specify those in the `codegen.yml` file:
+If you wish to avoid specifying `endpoint` and `fetchParams` on each hook usage, you can specify
+those in the `codegen.yml` file:
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -94,7 +102,8 @@ const config: CodegenConfig = {
 export default config
 ```
 
-And if you wish to have more control over the value, or even provide it in runtime, you can use environment variables:
+And if you wish to have more control over the value, or even provide it in runtime, you can use
+environment variables:
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -160,7 +169,9 @@ export const MyComponent = () => {
 
 ### Using `graphql-request`
 
-If you are using `graphql-request`, you can set `fetcher` to `graphql-request`, and then the generated React Hook will expect you to pass the `GraphQLClient` instance (created by `graphql-request` library).
+If you are using `graphql-request`, you can set `fetcher` to `graphql-request`, and then the
+generated React Hook will expect you to pass the `GraphQLClient` instance (created by
+`graphql-request` library).
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -193,7 +204,8 @@ export const MyComponent = () => {
 
 ### Using Custom Fetcher
 
-If you wish to create a custom fetcher, you can provide your own function as a Mapper string (`file#identifier`). Codegen will take care of importing it and use it as a fetcher.
+If you wish to create a custom fetcher, you can provide your own function as a Mapper string
+(`file#identifier`). Codegen will take care of importing it and use it as a fetcher.
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -315,12 +327,15 @@ export const useFetchData = <TData, TVariables>(
 ```
 
 <Callout>
-  Note: The return value is an async function, with no params, that returns a `Promise` with the actual data.
+  Note: The return value is an async function, with no params, that returns a `Promise` with the
+  actual data.
 </Callout>
 
 ### Using Infinite Query
 
-If you wish to use infinite query for pagination or infinite scroll you can with the `addInfiniteQuery` config setting. This will however setup an infinite query for every request whether in reality it can do it or not.
+If you wish to use infinite query for pagination or infinite scroll you can with the
+`addInfiniteQuery` config setting. This will however setup an infinite query for every request
+whether in reality it can do it or not.
 
 To use this you need to return an object of new queries, and it blends them in to the query.
 

@@ -1,7 +1,7 @@
 import * as TJS from 'typescript-json-schema';
+import tsConfig from '../../tsconfig.json';
 import { generateDocs } from './docs-generator';
 import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
-import tsConfig from '../../tsconfig.json';
 
 const ROOT_FILE = '../packages/utils/plugins-helpers/src/types.ts';
 const ROOT_IDENTIFIER = 'Types.Config';
@@ -26,7 +26,10 @@ export function transformDocs() {
     throw new Error(`Config-transform: failed to build TS generator...`);
   }
 
-  const schema = generator.getSchemaForSymbols([ROOT_IDENTIFIER, ...pluginsAndPresets.map(f => f.identifier)]);
+  const schema = generator.getSchemaForSymbols([
+    ROOT_IDENTIFIER,
+    ...pluginsAndPresets.map(f => f.identifier),
+  ]);
 
   if (!schema.definitions) {
     throw new Error('Config-transform: "schema.definitions" is not defined');
@@ -88,7 +91,10 @@ export function transformDocs() {
   const configuredPlugin = schema.definitions['Types.ConfiguredPlugin'] as TJS.Definition;
 
   configuredPlugin.properties = Object.fromEntries(
-    pluginsConfigurations.map(pluginConfig => [pluginConfig.name, { $ref: `#/definitions/${pluginConfig.identifier}` }])
+    pluginsConfigurations.map(pluginConfig => [
+      pluginConfig.name,
+      { $ref: `#/definitions/${pluginConfig.identifier}` },
+    ]),
   );
 
   configuredOutput.properties!.config = {

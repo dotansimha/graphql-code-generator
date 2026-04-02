@@ -1,6 +1,6 @@
-import { expect } from 'vitest';
 import { oneLine, stripIndent } from 'common-tags';
 import { diff } from 'jest-diff';
+import { expect } from 'vitest';
 
 interface CustomMatchers<R = unknown> {
   /**

@@ -1,11 +1,16 @@
 import { GraphQLResolveInfo } from 'graphql';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -103,31 +108,39 @@ export type Resolver<
   TResult,
   TParent = Record<PropertyKey, never>,
   TContext = Record<PropertyKey, never>,
-  TArgs = Record<PropertyKey, never>
-> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+  TArgs = Record<PropertyKey, never>,
+> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+export interface SubscriptionSubscriberObject<
+  TResult,
+  TKey extends string,
+  TParent,
+  TContext,
+  TArgs,
+> {
   subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
   resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
@@ -146,22 +159,25 @@ export type SubscriptionResolver<
   TKey extends string,
   TParent = Record<PropertyKey, never>,
   TContext = Record<PropertyKey, never>,
-  TArgs = Record<PropertyKey, never>
+  TArgs = Record<PropertyKey, never>,
 > =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
-  obj: T,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -169,13 +185,13 @@ export type DirectiveResolverFn<
   TResult = Record<PropertyKey, never>,
   TParent = Record<PropertyKey, never>,
   TContext = Record<PropertyKey, never>,
-  TArgs = Record<PropertyKey, never>
+  TArgs = Record<PropertyKey, never>,
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
@@ -189,7 +205,10 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreditCard: ResolverTypeWrapper<CreditCard>;
   Donation: ResolverTypeWrapper<
-    Omit<Donation, 'recipient' | 'sender'> & { recipient: ResolversTypes['User']; sender: ResolversTypes['User'] }
+    Omit<Donation, 'recipient' | 'sender'> & {
+      recipient: ResolversTypes['User'];
+      sender: ResolversTypes['User'];
+    }
   >;
   DonationInput: DonationInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
@@ -201,7 +220,9 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<
-    Omit<User, 'paymentOptions'> & { paymentOptions?: Maybe<Array<ResolversTypes['PaymentOption']>> }
+    Omit<User, 'paymentOptions'> & {
+      paymentOptions?: Maybe<Array<ResolversTypes['PaymentOption']>>;
+    }
   >;
 };
 
@@ -223,12 +244,14 @@ export type ResolversParentTypes = {
   Paypal: Paypal;
   Query: Record<PropertyKey, never>;
   String: Scalars['String']['output'];
-  User: Omit<User, 'paymentOptions'> & { paymentOptions?: Maybe<Array<ResolversParentTypes['PaymentOption']>> };
+  User: Omit<User, 'paymentOptions'> & {
+    paymentOptions?: Maybe<Array<ResolversParentTypes['PaymentOption']>>;
+  };
 };
 
 export type ArticleResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article']
+  ParentType extends ResolversParentTypes['Article'] = ResolversParentTypes['Article'],
 > = {
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -238,7 +261,7 @@ export type ArticleResolvers<
 
 export type CreditCardResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['CreditCard'] = ResolversParentTypes['CreditCard']
+  ParentType extends ResolversParentTypes['CreditCard'] = ResolversParentTypes['CreditCard'],
 > = {
   cardNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   cardOwner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -248,7 +271,7 @@ export type CreditCardResolvers<
 
 export type DonationResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['Donation'] = ResolversParentTypes['Donation']
+  ParentType extends ResolversParentTypes['Donation'] = ResolversParentTypes['Donation'],
 > = {
   amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -258,22 +281,27 @@ export type DonationResolvers<
 
 export type MutationResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
-  donate?: Resolver<Maybe<ResolversTypes['Donation']>, ParentType, ContextType, Partial<MutationDonateArgs>>;
+  donate?: Resolver<
+    Maybe<ResolversTypes['Donation']>,
+    ParentType,
+    ContextType,
+    Partial<MutationDonateArgs>
+  >;
   pong?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
 };
 
 export type PaymentOptionResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['PaymentOption'] = ResolversParentTypes['PaymentOption']
+  ParentType extends ResolversParentTypes['PaymentOption'] = ResolversParentTypes['PaymentOption'],
 > = {
   __resolveType: TypeResolveFn<'CreditCard' | 'Paypal', ParentType, ContextType>;
 };
 
 export type PaypalResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['Paypal'] = ResolversParentTypes['Paypal']
+  ParentType extends ResolversParentTypes['Paypal'] = ResolversParentTypes['Paypal'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -282,7 +310,7 @@ export type PaypalResolvers<
 
 export type QueryResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
+  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   articleById?: Resolver<
     Maybe<ResolversTypes['Article']>,
@@ -298,13 +326,18 @@ export type QueryResolvers<
     RequireFields<QueryArticlesByUserArgs, 'userId'>
   >;
   ping?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
+  userById?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserByIdArgs, 'id'>
+  >;
   users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
 export type UserResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

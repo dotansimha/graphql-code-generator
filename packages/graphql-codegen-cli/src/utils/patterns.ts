@@ -1,8 +1,8 @@
 import { isAbsolute, relative } from 'path';
-import { isValidPath } from '@graphql-tools/utils';
-import { normalizeInstanceOrArray, Types } from '@graphql-codegen/plugin-helpers';
 import isGlob from 'is-glob';
 import mm from 'micromatch';
+import { normalizeInstanceOrArray, Types } from '@graphql-codegen/plugin-helpers';
+import { isValidPath } from '@graphql-tools/utils';
 import { CodegenContext } from '../config.js';
 import { isURL } from './helpers.js';
 
@@ -50,7 +50,12 @@ export const makeShouldRebuild = ({
   const localMatchers = localPatternSets.map(localPatternSet => {
     return (path: string) => {
       // Is path negated by any negating watch pattern?
-      if (matchesAnyNegatedPattern(path, [...globalPatternSet.watch.negated, ...localPatternSet.watch.negated])) {
+      if (
+        matchesAnyNegatedPattern(path, [
+          ...globalPatternSet.watch.negated,
+          ...localPatternSet.watch.negated,
+        ])
+      ) {
         // Short circut: negations in watch patterns take priority
         return false;
       }
@@ -72,7 +77,10 @@ export const makeShouldRebuild = ({
           ...globalPatternSet.documents.affirmative,
           ...localPatternSet.documents.affirmative,
         ]) &&
-        !matchesAnyNegatedPattern(path, [...globalPatternSet.documents.negated, ...localPatternSet.documents.negated])
+        !matchesAnyNegatedPattern(path, [
+          ...globalPatternSet.documents.negated,
+          ...localPatternSet.documents.negated,
+        ])
       ) {
         return true;
       }
@@ -83,7 +91,10 @@ export const makeShouldRebuild = ({
           ...globalPatternSet.schemas.affirmative,
           ...localPatternSet.schemas.affirmative,
         ]) &&
-        !matchesAnyNegatedPattern(path, [...globalPatternSet.schemas.negated, ...localPatternSet.schemas.negated])
+        !matchesAnyNegatedPattern(path, [
+          ...globalPatternSet.schemas.negated,
+          ...localPatternSet.schemas.negated,
+        ])
       ) {
         return true;
       }
@@ -119,12 +130,18 @@ export const makeGlobalPatternSet = (initialContext: CodegenContext) => {
 
   return {
     watch: sortPatterns([
-      ...(typeof config.watch === 'boolean' ? [] : normalizeInstanceOrArray<string>(config.watch ?? [])),
+      ...(typeof config.watch === 'boolean'
+        ? []
+        : normalizeInstanceOrArray<string>(config.watch ?? [])),
       relative(process.cwd(), initialContext.filepath),
     ]),
-    schemas: sortPatterns(makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(config.schema))),
+    schemas: sortPatterns(
+      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(config.schema)),
+    ),
     documents: sortPatterns(
-      makePatternsFromDocuments(normalizeInstanceOrArray<Types.OperationDocument>(config.documents))
+      makePatternsFromDocuments(
+        normalizeInstanceOrArray<Types.OperationDocument>(config.documents),
+      ),
     ),
   };
 };
@@ -141,9 +158,11 @@ export const makeLocalPatternSet = (conf: Types.ConfiguredOutput) => {
   return {
     watch: sortPatterns(normalizeInstanceOrArray(conf.watchPattern)),
     documents: sortPatterns(
-      makePatternsFromDocuments(normalizeInstanceOrArray<Types.OperationDocument>(conf.documents))
+      makePatternsFromDocuments(normalizeInstanceOrArray<Types.OperationDocument>(conf.documents)),
     ),
-    schemas: sortPatterns(makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(conf.schema))),
+    schemas: sortPatterns(
+      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(conf.schema)),
+    ),
   };
 };
 
@@ -190,7 +209,9 @@ const makePatternsFromSchemas = (schemas: Types.Schema[]): string[] => {
  *
  * @param patterns List of micromatch patterns
  */
-export const sortPatterns = <P extends string | NegatedPattern>(patterns: P[]): SortedPatterns<P> => ({
+export const sortPatterns = <P extends string | NegatedPattern>(
+  patterns: P[],
+): SortedPatterns<P> => ({
   patterns,
   affirmative: onlyAffirmativePatterns(patterns) as P[],
   negated: onlyNegatedPatterns(patterns) as Extract<P, NegatedPattern>[],
@@ -267,7 +288,10 @@ const invertNegatedPatterns = (patterns: string[]) => {
  * @param relativeCandidatePath A relative path to evaluate against the supplied affirmativePatterns
  * @param affirmativePatterns A list of patterns, containing no negated patterns, to evaluate
  */
-const matchesAnyAffirmativePattern = (relativeCandidatePath: string, affirmativePatterns: string[]) => {
+const matchesAnyAffirmativePattern = (
+  relativeCandidatePath: string,
+  affirmativePatterns: string[],
+) => {
   if (isAbsolute(relativeCandidatePath)) {
     throw new Error('matchesAny should only be called with relative candidate path');
   }
@@ -292,5 +316,8 @@ const matchesAnyAffirmativePattern = (relativeCandidatePath: string, affirmative
  */
 const matchesAnyNegatedPattern = (relativeCandidatePath: string, negatedPatterns: string[]) => {
   // NOTE: No safety check that negatedPatterns contains only negated, because that will happen in invertedNegatedPatterns
-  return matchesAnyAffirmativePattern(relativeCandidatePath, invertNegatedPatterns(negatedPatterns));
+  return matchesAnyAffirmativePattern(
+    relativeCandidatePath,
+    invertNegatedPatterns(negatedPatterns),
+  );
 };

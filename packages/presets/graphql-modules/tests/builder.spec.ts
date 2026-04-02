@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { parse } from 'graphql';
+import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { buildModule } from '../src/builder.js';
 
 const ROOT_TYPES = ['Query'];
@@ -75,12 +75,16 @@ test('should generate interface field resolvers', () => {
       rootTypes: ROOT_TYPES,
       baseVisitor,
       useGraphQLModules: true,
-    }
+    },
   );
 
   expect(output).toContain(`BaseUser: 'id' | 'email';`);
-  expect(output).toContain(`export type BaseUser = Pick<core.BaseUser, DefinedFields['BaseUser']>;`);
-  expect(output).toContain(`export type BaseUserResolvers = Pick<core.BaseUserResolvers, DefinedFields['BaseUser']>;`);
+  expect(output).toContain(
+    `export type BaseUser = Pick<core.BaseUser, DefinedFields['BaseUser']>;`,
+  );
+  expect(output).toContain(
+    `export type BaseUserResolvers = Pick<core.BaseUserResolvers, DefinedFields['BaseUser']>;`,
+  );
 });
 
 test('should not generate graphql-modules code when useGraphQLModules=false', () => {
@@ -110,7 +114,7 @@ test('should not generate graphql-modules code when useGraphQLModules=false', ()
       baseVisitor,
       useGraphQLModules: false,
       requireRootResolvers: false,
-    }
+    },
   );
 
   expect(output).not.toContain(`graphql-modules`);
@@ -138,12 +142,14 @@ test('should generate interface extensions field resolvers ', () => {
       rootTypes: ROOT_TYPES,
       baseVisitor,
       useGraphQLModules: true,
-    }
+    },
   );
 
   expect(output).toContain(`BaseUser: 'newField';`);
   expect(output).toContain(`export type BaseUser = core.BaseUser`);
-  expect(output).toContain(`export type BaseUserResolvers = Pick<core.BaseUserResolvers, DefinedFields['BaseUser']>;`);
+  expect(output).toContain(
+    `export type BaseUserResolvers = Pick<core.BaseUserResolvers, DefinedFields['BaseUser']>;`,
+  );
 });
 
 test('should include import statement', () => {
@@ -182,16 +188,20 @@ test('should include import type statement', () => {
 });
 
 test('should work with naming conventions', () => {
-  const output = buildModule('test', parse(`type query_root { test: ID! } schema { query: query_root }`), {
-    importPath: '../types',
-    importNamespace: 'core',
-    encapsulate: 'none',
-    requireRootResolvers: false,
-    shouldDeclare: false,
-    rootTypes: ROOT_TYPES,
-    baseVisitor,
-    useGraphQLModules: true,
-  });
+  const output = buildModule(
+    'test',
+    parse(`type query_root { test: ID! } schema { query: query_root }`),
+    {
+      importPath: '../types',
+      importNamespace: 'core',
+      encapsulate: 'none',
+      requireRootResolvers: false,
+      shouldDeclare: false,
+      rootTypes: ROOT_TYPES,
+      baseVisitor,
+      useGraphQLModules: true,
+    },
+  );
 
   expect(output).toContain(`Pick<core.Query_RootResolvers, `);
   expect(output).toContain(`Pick<core.Query_Root,`);
@@ -536,7 +546,7 @@ test('only picks __isTypeOf from implementing types (of Interfaces) and union me
       rootTypes: ROOT_TYPES,
       baseVisitor,
       useGraphQLModules: true,
-    }
+    },
   );
 
   // User does not pick `__isTypeOf` because it is not a union member, or implementing types

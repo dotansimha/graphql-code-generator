@@ -1,10 +1,10 @@
+import * as crypto from 'crypto';
+import * as fs from 'fs';
+import path from 'path';
+import { print } from 'graphql';
 import { executeCodegen } from '@graphql-codegen/cli';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import * as crypto from 'crypto';
-import * as fs from 'fs';
-import { print } from 'graphql';
-import path from 'path';
 import { addTypenameSelectionDocumentTransform, preset } from '../src/index.js';
 
 describe('client-preset', () => {
@@ -404,10 +404,10 @@ export * from "./gql";`);
     `);
 
     expect(graphqlFile.content).toContain(
-      "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'"
+      "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'",
     );
     expect(gqlFile.content).toContain(
-      "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'"
+      "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'",
     );
   });
 
@@ -1627,7 +1627,9 @@ export * from "./gql.cjs";`);
 
       expect(result).toHaveLength(5);
 
-      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+      const persistedDocuments = result.find(
+        file => file.filename === 'out1/persisted-documents.json',
+      );
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
@@ -1708,7 +1710,9 @@ export * from "./gql.cjs";`);
 
       expect(result).toHaveLength(5);
 
-      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+      const persistedDocuments = result.find(
+        file => file.filename === 'out1/persisted-documents.json',
+      );
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
@@ -1789,7 +1793,9 @@ export * from "./gql.cjs";`);
 
       expect(result).toHaveLength(5);
 
-      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+      const persistedDocuments = result.find(
+        file => file.filename === 'out1/persisted-documents.json',
+      );
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
@@ -1951,7 +1957,9 @@ export * from "./gql.cjs";`);
 
       expect(result).toHaveLength(5);
 
-      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+      const persistedDocuments = result.find(
+        file => file.filename === 'out1/persisted-documents.json',
+      );
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
@@ -2036,7 +2044,9 @@ export * from "./gql.cjs";`);
 
       expect(result).toHaveLength(5);
 
-      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+      const persistedDocuments = result.find(
+        file => file.filename === 'out1/persisted-documents.json',
+      );
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
@@ -2122,7 +2132,9 @@ export * from "./gql.cjs";`);
 
       expect(result).toHaveLength(5);
 
-      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+      const persistedDocuments = result.find(
+        file => file.filename === 'out1/persisted-documents.json',
+      );
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{
@@ -2208,7 +2220,9 @@ export * from "./gql.cjs";`);
 
       expect(result).toHaveLength(5);
 
-      const persistedDocuments = result.find(file => file.filename === 'out1/persisted-documents.json');
+      const persistedDocuments = result.find(
+        file => file.filename === 'out1/persisted-documents.json',
+      );
 
       expect(persistedDocuments.content).toMatchInlineSnapshot(`
         "{

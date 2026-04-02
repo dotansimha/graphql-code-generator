@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useClient, useQuery } from 'villus';
-import { graphql } from './gql';
-import FilmItem from './components/FilmItem.vue';
 import { computed } from 'vue';
+import FilmItem from './components/FilmItem.vue';
+import { graphql } from './gql';
 
 useClient({
   url: 'https://graphql.org/graphql/',

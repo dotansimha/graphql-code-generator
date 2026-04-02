@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
     "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start",
     "test": "cypress run",
     "test:end2end": "start-server-and-test start http://127.0.0.1:3000 test"
   },
@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^6.2.1",
-    "@graphql-codegen/schema-ast": "5.0.1",
     "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
+    "@graphql-codegen/schema-ast": "5.0.1",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

@@ -17,7 +17,9 @@ export async function runCli(cmd: string): Promise<number> {
     if (context.checkMode && context.checkModeStaleFiles.length > 0) {
       // eslint-disable-next-line no-console
       console.log(
-        `The following stale files were detected:\n${context.checkModeStaleFiles.map(file => `  - ${file}\n`)}`
+        `The following stale files were detected:\n${context.checkModeStaleFiles.map(
+          file => `  - ${file}\n`,
+        )}`,
       );
       return 1;
     }
@@ -37,7 +39,7 @@ export async function ensureGraphQlPackage() {
        To install "graphql", run:
          yarn add graphql
        Or, with NPM:
-         npm install --save graphql`
+         npm install --save graphql`,
     );
   }
 }

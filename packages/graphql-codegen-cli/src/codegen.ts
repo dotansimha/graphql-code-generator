@@ -2,6 +2,8 @@ import fs from 'fs';
 import { createRequire } from 'module';
 import { cpus } from 'os';
 import path from 'path';
+import { buildASTSchema, DocumentNode, GraphQLError, GraphQLSchema, isSchema } from 'graphql';
+import { Listr, ListrTask } from 'listr2';
 import { codegen } from '@graphql-codegen/core';
 import {
   CodegenPlugin,
@@ -13,14 +15,12 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import { NoTypeDefinitionsFound } from '@graphql-tools/load';
-import { buildASTSchema, DocumentNode, GraphQLError, GraphQLSchema, isSchema } from 'graphql';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { Listr, ListrTask } from 'listr2';
 import { CodegenContext, ensureContext } from './config.js';
+import { getDocumentTransform } from './documentTransforms.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
-import { getDocumentTransform } from './documentTransforms.js';
 
 /**
  * Poor mans ESM detection.
@@ -52,7 +52,11 @@ const makeDefaultLoader = (from: string) => {
 
 type Ctx = { errors: Error[] };
 
-function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
+function createCache(): <T>(
+  namespace: string,
+  key: string,
+  factory: () => Promise<T>,
+) => Promise<T> {
   const cache = new Map<string, Promise<unknown>>();
 
   return function ensure<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T> {
@@ -72,7 +76,7 @@ function createCache(): <T>(namespace: string, key: string, factory: () => Promi
 }
 
 export async function executeCodegen(
-  input: CodegenContext | Types.Config
+  input: CodegenContext | Types.Config,
 ): Promise<{ result: Types.FileOutput[]; error: Error | null }> {
   const context = ensureContext(input);
   const config = context.getConfig();
@@ -148,7 +152,7 @@ export async function executeCodegen(
           my-file.ts:
             - plugin1
             - plugin2
-            - plugin3`
+            - plugin3`,
       );
     }
 
@@ -169,7 +173,7 @@ export async function executeCodegen(
               - plugin1
               - plugin2
               - plugin3
-          `
+          `,
         );
       }
     }
@@ -180,7 +184,7 @@ export async function executeCodegen(
         filename =>
           !generates[filename].schema ||
           (Array.isArray(generates[filename].schema === 'object') &&
-            (generates[filename].schema as unknown as any[]).length === 0)
+            (generates[filename].schema as unknown as any[]).length === 0),
       )
     ) {
       throw new Error(
@@ -196,7 +200,7 @@ export async function executeCodegen(
         generates:
           path/to/output:
             schema: my-schema.graphql
-      `
+      `,
       );
     }
   }
@@ -225,8 +229,12 @@ export async function executeCodegen(
                 let outputSchema: DocumentNode;
                 const outputFileTemplateConfig = outputConfig.config || {};
                 let outputDocuments: Types.DocumentFile[] = [];
-                const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
-                let outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
+                const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(
+                  outputConfig.schema,
+                );
+                let outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
+                  outputConfig.documents,
+                );
 
                 const preset: Types.OutputPreset | null = hasPreset
                   ? typeof outputConfig.preset === 'string'
@@ -235,7 +243,10 @@ export async function executeCodegen(
                   : null;
 
                 if (preset?.prepareDocuments) {
-                  outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
+                  outputSpecificDocuments = await preset.prepareDocuments(
+                    filename,
+                    outputSpecificDocuments,
+                  );
                 }
 
                 return subTask.newListr(
@@ -247,7 +258,10 @@ export async function executeCodegen(
                           debugLog(`[CLI] Loading Schemas`);
                           const schemaPointerMap: any = {};
                           const parsedSchemas: GraphQLSchema[] = [];
-                          const allSchemaDenormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
+                          const allSchemaDenormalizedPointers = [
+                            ...rootSchemas,
+                            ...outputSpecificSchemas,
+                          ];
 
                           for (const denormalizedPtr of allSchemaDenormalizedPointers) {
                             if (isSchema(denormalizedPtr)) {
@@ -259,7 +273,9 @@ export async function executeCodegen(
                             }
                           }
 
-                          const hash = JSON.stringify(schemaPointerMap) + parsedSchemas.map(getJsObjectId).join(',');
+                          const hash =
+                            JSON.stringify(schemaPointerMap) +
+                            parsedSchemas.map(getJsObjectId).join(',');
                           const result = await cache('schema', hash, async () => {
                             // collect parsed schemas
                             const schemasToMerge: GraphQLSchema[] = [...parsedSchemas];
@@ -284,7 +300,7 @@ export async function executeCodegen(
                         },
                         filename,
                         `Load GraphQL schemas: ${filename}`,
-                        ctx
+                        ctx,
                       ),
                     },
                     {
@@ -293,7 +309,10 @@ export async function executeCodegen(
                         async () => {
                           debugLog(`[CLI] Loading Documents`);
                           const documentPointerMap: any = {};
-                          const allDocumentsDenormalizedPointers = [...rootDocuments, ...outputSpecificDocuments];
+                          const allDocumentsDenormalizedPointers = [
+                            ...rootDocuments,
+                            ...outputSpecificDocuments,
+                          ];
                           for (const denormalizedPtr of allDocumentsDenormalizedPointers) {
                             if (typeof denormalizedPtr === 'string') {
                               documentPointerMap[denormalizedPtr] = {};
@@ -310,7 +329,10 @@ export async function executeCodegen(
                                 documents,
                               };
                             } catch (error) {
-                              if (error instanceof NoTypeDefinitionsFound && config.ignoreNoDocuments) {
+                              if (
+                                error instanceof NoTypeDefinitionsFound &&
+                                config.ignoreNoDocuments
+                              ) {
                                 return {
                                   documents: [],
                                 };
@@ -324,7 +346,7 @@ export async function executeCodegen(
                         },
                         filename,
                         `Load GraphQL documents: ${filename}`,
-                        ctx
+                        ctx,
                       ),
                     },
                     {
@@ -334,9 +356,12 @@ export async function executeCodegen(
                           debugLog(`[CLI] Generating output`);
                           const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
 
-                          const pluginLoader = config.pluginLoader || makeDefaultLoader(context.cwd);
+                          const pluginLoader =
+                            config.pluginLoader || makeDefaultLoader(context.cwd);
                           const pluginPackages = await Promise.all(
-                            normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
+                            normalizedPluginsArray.map(plugin =>
+                              getPluginByName(Object.keys(plugin)[0], pluginLoader),
+                            ),
                           );
 
                           const pluginMap: {
@@ -346,7 +371,7 @@ export async function executeCodegen(
                               const plugin = normalizedPluginsArray[i];
                               const name = Object.keys(plugin)[0];
                               return [name, pkg];
-                            })
+                            }),
                           );
 
                           const rawMergedConfig = {
@@ -366,7 +391,8 @@ export async function executeCodegen(
                           const mergedConfig = {
                             ...rawMergedConfig,
                             importExtension,
-                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports ?? true,
+                            emitLegacyCommonJSImports:
+                              rawMergedConfig.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -375,9 +401,9 @@ export async function executeCodegen(
                                   return await getDocumentTransform(
                                     config,
                                     makeDefaultLoader(context.cwd),
-                                    `the element at index ${index} of the documentTransforms`
+                                    `the element at index ${index} of the documentTransforms`,
                                   );
-                                })
+                                }),
                               )
                             : [];
 
@@ -397,7 +423,7 @@ export async function executeCodegen(
                                     profiler: context.profiler,
                                     documentTransforms,
                                   }),
-                                `Build Generates Section: ${filename}`
+                                `Build Generates Section: ${filename}`,
                               )
                             : [
                                 {
@@ -418,7 +444,8 @@ export async function executeCodegen(
                             const output = await codegen({
                               ...outputArgs,
                               importExtension,
-                              emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports ?? true,
+                              emitLegacyCommonJSImports:
+                                rawMergedConfig.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({
@@ -428,11 +455,14 @@ export async function executeCodegen(
                             });
                           };
 
-                          await context.profiler.run(() => Promise.all(outputs.map(process)), `Codegen: ${filename}`);
+                          await context.profiler.run(
+                            () => Promise.all(outputs.map(process)),
+                            `Codegen: ${filename}`,
+                          );
                         },
                         filename,
                         `Generate: ${filename}`,
-                        ctx
+                        ctx,
                       ),
                     },
                   ],
@@ -448,7 +478,7 @@ export async function executeCodegen(
                      */
                     exitOnError: true,
                     concurrent: false,
-                  }
+                  },
                 );
               },
               // It doesn't stop when one of tasks failed, to finish at least some of outputs
@@ -456,7 +486,9 @@ export async function executeCodegen(
             };
           });
 
-          return task.newListr(generateTasks, { concurrent: cpus().length || 1 });
+          return task.newListr(generateTasks, {
+            concurrent: cpus().length || 1,
+          });
         },
       },
     ],
@@ -471,7 +503,7 @@ export async function executeCodegen(
       ctx: { errors: [] },
       silentRendererCondition: isTest || config.silent,
       exitOnError: true,
-    }
+    },
   );
 
   // All the errors throw in `listr2` are collected in context
@@ -487,7 +519,9 @@ export async function executeCodegen(
     const errors = executedContext.errors.map(subErr => subErr.message || subErr.toString());
     error = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
     // Best-effort to all stack traces for debugging
-    error.stack = `${error.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
+    error.stack = `${error.stack}\n\n${executedContext.errors
+      .map(subErr => subErr.stack)
+      .join('\n\n')}`;
   }
 
   return { result, error };

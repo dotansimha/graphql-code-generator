@@ -1,5 +1,5 @@
-import { FragmentType, useFragment } from './gql/fragment-masking';
 import { graphql } from './gql';
+import { FragmentType, useFragment } from './gql/fragment-masking';
 
 export const FilmFragment = graphql(/* GraphQL */ `
   fragment FilmItem on Film {

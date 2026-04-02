@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'typescript-resolvers',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

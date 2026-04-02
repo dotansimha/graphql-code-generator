@@ -1,16 +1,22 @@
 ---
 title: typescript-nhost
-description: GraphQL Code Generator plugin for Nhost Typescript SDK. It generates the schema for the Typescript Nhost SDK.
+description:
+  GraphQL Code Generator plugin for Nhost Typescript SDK. It generates the schema for the Typescript
+  Nhost SDK.
 ---
 
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <PluginHeader />
 <PluginApiDocs />
 
-This plugin generates the schema for the [`Typescript Nhost SDK`](https://docs.nhost.io/reference/javascript).
+This plugin generates the schema for the
+[`Typescript Nhost SDK`](https://docs.nhost.io/reference/javascript).
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -66,12 +72,14 @@ A GraphQL query named `todos` will then be accessible through:
 const todos = await nhost.graphql.query.todos({ select: { contents: true } })
 ```
 
-The `todos` object will be strongly typed based on the GraphQL schema, and the fields that would have been selected in the query.
+The `todos` object will be strongly typed based on the GraphQL schema, and the fields that would
+have been selected in the query.
 
 ## Custom scalars
 
-It is possible to customize the scalar types in adapting the configuration file.
-The following example illustrates how to specify some Hasura scalars. The `@graphql-codegen/add` plugin is necessary to be able to add the definition of the `JSONValue` type.
+It is possible to customize the scalar types in adapting the configuration file. The following
+example illustrates how to specify some Hasura scalars. The `@graphql-codegen/add` plugin is
+necessary to be able to add the definition of the `JSONValue` type.
 
 ```yaml filename="codegen.yaml"
 schema:
@@ -83,7 +91,9 @@ generates:
     plugins:
       - typescript-nhost
       - add:
-          content: 'export type JSONValue = string | number | boolean | { [x: string]: JSONValue } | Array<JSONValue>;'
+          content:
+            'export type JSONValue = string | number | boolean | { [x: string]: JSONValue } |
+            Array<JSONValue>;'
     config:
       scalars:
         uuid: 'string'

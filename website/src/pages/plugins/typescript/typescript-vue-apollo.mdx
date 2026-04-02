@@ -1,16 +1,23 @@
 ---
 title: typescript-vue-apollo
-description: GraphQL Code Generator plugin for Vue Apollo. It generates Vue Apollo hooks and TypeScript types. It also generates a Vue plugin that can be used to register the generated hooks as global components.
+description:
+  GraphQL Code Generator plugin for Vue Apollo. It generates Vue Apollo hooks and TypeScript types.
+  It also generates a Vue plugin that can be used to register the generated hooks as global
+  components.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <Callout type="info">
 
-We now recommend using the `client-preset` package for a **better developer experience** and smaller impact on bundle size.
+We now recommend using the `client-preset` package for a **better developer experience** and smaller
+impact on bundle size.
 
 **Get started on [our "React/Vue" guide](/docs/guides/react-vue).**
 
@@ -22,7 +29,8 @@ We now recommend using the `client-preset` package for a **better developer expe
 
 ## Examples
 
-The examples below use Vue 2 with the ([composition api plugin](https://github.com/vuejs/composition-api)).
+The examples below use Vue 2 with the
+([composition api plugin](https://github.com/vuejs/composition-api)).
 
 ### Queries
 
@@ -93,8 +101,8 @@ We can use the generated code with `useResult` like this:
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
 import { useResult } from '@vue/apollo-composable'
+import { defineComponent } from '@vue/composition-api'
 import { useAllAccountsQuery } from '../generated/graphqlOperations'
 
 export default defineComponent({
@@ -110,9 +118,15 @@ export default defineComponent({
 
 #### Use an options object
 
-Every `useXxxxQuery` can receive an [options object](https://v4.apollo.vuejs.org/guide-composable/query.html#options) to define query specific settings. To demonstrate the use of an options object we will try to only execute a query once a condition is met.
+Every `useXxxxQuery` can receive an
+[options object](https://v4.apollo.vuejs.org/guide-composable/query.html#options) to define query
+specific settings. To demonstrate the use of an options object we will try to only execute a query
+once a condition is met.
 
-The ref `isAuthenticated` represents a boolean value that is set to `true` once the user successfully logged in to the app. To retrieve the user's application settings we can only execute the graphql query once the user is logged on (and the ref `isAuthenticated` is set to `true`). Setting this ref is done in another part of the app and is used as a simple example.
+The ref `isAuthenticated` represents a boolean value that is set to `true` once the user
+successfully logged in to the app. To retrieve the user's application settings we can only execute
+the graphql query once the user is logged on (and the ref `isAuthenticated` is set to `true`).
+Setting this ref is done in another part of the app and is used as a simple example.
 
 For the given input:
 
@@ -127,13 +141,15 @@ query {
 }
 ```
 
-Within the options object is a property `enabled` that defines if a query is enabled or disabled. To only execute the query when `isAuthenticated` is `true` we set the property `enabled` equal to the ref `isAuthenticated`:
+Within the options object is a property `enabled` that defines if a query is enabled or disabled. To
+only execute the query when `isAuthenticated` is `true` we set the property `enabled` equal to the
+ref `isAuthenticated`:
 
 ```vue
 <script lang="ts">
+import { isAuthenticated } from 'src/store/authentication'
 import { defineComponent, watchEffect } from '@vue/composition-api'
 import { useViewerQuery } from '../generated/graphqlOperations'
-import { isAuthenticated } from 'src/store/authentication'
 
 export default defineComponent({
   setup(_, { root }) {

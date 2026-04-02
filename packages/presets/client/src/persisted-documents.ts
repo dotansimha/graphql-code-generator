@@ -1,6 +1,6 @@
-import { printExecutableGraphQLDocument } from '@graphql-tools/documents';
 import * as crypto from 'crypto';
 import { Kind, visit, type DocumentNode } from 'graphql';
+import { printExecutableGraphQLDocument } from '@graphql-tools/documents';
 
 const CLIENT_DIRECTIVE_NAME = 'client';
 const CONNECTION_DIRECTIVE_NAME = 'connection';
@@ -10,7 +10,7 @@ const CONNECTION_DIRECTIVE_NAME = 'connection';
  */
 export function generateDocumentHash(
   operation: string,
-  algorithm: 'sha1' | 'sha256' | (string & {}) | ((operation: string) => string)
+  algorithm: 'sha1' | 'sha256' | (string & {}) | ((operation: string) => string),
 ): string {
   if (typeof algorithm === 'function') {
     return algorithm(operation);

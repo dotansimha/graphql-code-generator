@@ -1,5 +1,5 @@
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
+import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { AddPluginConfig, VALID_PLACEMENTS } from './config.js';
 
 export * from './config.js';
@@ -7,7 +7,7 @@ export * from './config.js';
 export const plugin: PluginFunction<AddPluginConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: AddPluginConfig
+  config: AddPluginConfig,
 ): Promise<Types.PluginOutput> => {
   const placement: AddPluginConfig['placement'] = config.placement || 'prepend';
   const { content } = config;
@@ -15,8 +15,8 @@ export const plugin: PluginFunction<AddPluginConfig> = async (
   if (!VALID_PLACEMENTS.includes(placement)) {
     throw Error(
       `Configuration provided for 'add' plugin is invalid: value of 'placement' field is not valid (valid values are: ${VALID_PLACEMENTS.join(
-        ', '
-      )})`
+        ', ',
+      )})`,
     );
   }
 

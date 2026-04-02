@@ -1,8 +1,8 @@
-import type { Mock } from 'vitest';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'fs';
 import * as path from 'path';
-import { mkdtempSync, mkdirSync, writeFileSync } from 'fs';
-import { createWatcher } from '../src/utils/watcher.js';
+import type { Mock } from 'vitest';
 import { CodegenContext } from '../src/config.js';
+import { createWatcher } from '../src/utils/watcher.js';
 
 /**
  * waitForNextEvent
@@ -14,7 +14,11 @@ const waitForNextEvent = async () => {
 };
 
 type TestFilePaths = { absolute: string; relative: string };
-const setupTestFiles = (): { testDir: string; schemaFile: TestFilePaths; documentFile: TestFilePaths } => {
+const setupTestFiles = (): {
+  testDir: string;
+  schemaFile: TestFilePaths;
+  documentFile: TestFilePaths;
+} => {
   const tempDir = path.join(__dirname, '..', 'temp');
   mkdirSync(tempDir, { recursive: true });
 
@@ -43,7 +47,7 @@ const onNextMock = vi.fn();
 
 const setupMockWatcher = async (
   codegenContext: ConstructorParameters<typeof CodegenContext>[0],
-  onNext: Mock = vi.fn().mockResolvedValue([])
+  onNext: Mock = vi.fn().mockResolvedValue([]),
 ) => {
   const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
   // After creating watcher, wait for a tick for subscription to be completely set up
@@ -65,7 +69,7 @@ describe('Watch runs', () => {
           id: ID!
           name: String!
         }
-      `
+      `,
     );
     writeFileSync(
       documentFile.absolute,
@@ -75,7 +79,7 @@ describe('Watch runs', () => {
             id
           }
         }
-      `
+      `,
     );
     await waitForNextEvent();
     const { stopWatching } = await setupMockWatcher(
@@ -91,7 +95,7 @@ describe('Watch runs', () => {
           },
         },
       },
-      onNextMock
+      onNextMock,
     );
 
     // 1. Initial setup: onNext in initial run should be called because no errors
@@ -107,7 +111,7 @@ describe('Watch runs', () => {
             name
           }
         }
-      `
+      `,
     );
     await waitForNextEvent();
     expect(onNextMock).toHaveBeenCalledTimes(2);
@@ -123,7 +127,7 @@ describe('Watch runs', () => {
             zzzz # should throw error
           }
         }
-      `
+      `,
     );
     await waitForNextEvent();
     expect(onNextMock).toHaveBeenCalledTimes(2);

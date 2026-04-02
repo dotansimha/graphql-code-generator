@@ -68,7 +68,9 @@ describe('TypeScript Operations Plugin - nullability', () => {
       },
     });
 
-    const formattedContent = prettier.format(result.content, { parser: 'typescript' });
+    const formattedContent = await prettier.format(result.content, {
+      parser: 'typescript',
+    });
     expect(formattedContent).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
@@ -109,7 +111,9 @@ describe('TypeScript Operations Plugin - nullability', () => {
       },
     });
 
-    const formattedContent = prettier.format(result.content, { parser: 'typescript' });
+    const formattedContent = await prettier.format(result.content, {
+      parser: 'typescript',
+    });
     expect(formattedContent).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 

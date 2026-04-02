@@ -1,5 +1,7 @@
 ---
-description: Learn how to configure GraphQL Code Generator to fit your needs. The `config` field is used to pass configuration to Plugins.
+description:
+  Learn how to configure GraphQL Code Generator to fit your needs. The `config` field is used to
+  pass configuration to Plugins.
 ---
 
 import { Callout } from '@theguild/components'
@@ -12,7 +14,8 @@ The `config` field is used to pass configuration to Plugins.
 
 ### Root Level
 
-If you specify it in your root level, the options will be passed to every plugin for each output file:
+If you specify it in your root level, the options will be passed to every plugin for each output
+file:
 
 ```ts {5}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -27,7 +30,8 @@ export default config
 
 ### Output Level
 
-If you specify it at the output file level, every plugin for specific output will get the config value:
+If you specify it at the output file level, every plugin for specific output will get the config
+value:
 
 ```ts {7-9}
 import { CodegenConfig } from '@graphql-codegen/cli'

@@ -1,31 +1,34 @@
-import * as fs from '../src/utils/file-system.js';
-import type { SubscribeCallback } from '@parcel/watcher';
-import { assertBuildTriggers } from './watcher-test-helpers/assert-watcher-build-triggers.js';
 import { join } from 'path';
-import { createWatcher } from '../src/utils/watcher.js';
-import { CodegenContext } from '../src/config.js';
 import type { Mock } from 'vitest';
+import type { SubscribeCallback } from '@parcel/watcher';
+import { CodegenContext } from '../src/config.js';
+import * as fs from '../src/utils/file-system.js';
+import { createWatcher } from '../src/utils/watcher.js';
+import { assertBuildTriggers } from './watcher-test-helpers/assert-watcher-build-triggers.js';
 
 const unsubscribeMock = vi.fn();
 const subscribeMock = vi.fn();
 let subscribeCallbackMock: Mock<SubscribeCallback>;
 
 vi.mock('@parcel/watcher', () => ({
-  subscribe: subscribeMock.mockImplementation((watchDirectory: string, subscribeCallback: SubscribeCallback) => {
-    subscribeCallbackMock = vi.fn(subscribeCallback);
-    return {
-      unsubscribe: unsubscribeMock,
-    };
-  }),
+  subscribe: subscribeMock.mockImplementation(
+    (watchDirectory: string, subscribeCallback: SubscribeCallback) => {
+      subscribeCallbackMock = vi.fn(subscribeCallback);
+      return {
+        unsubscribe: unsubscribeMock,
+      };
+    },
+  ),
 }));
 
 const setupMockWatcher = async (
   codegenContext: ConstructorParameters<typeof CodegenContext>[0],
-  onNext: Mock = vi.fn().mockResolvedValue([])
+  onNext: Mock = vi.fn().mockResolvedValue([]),
 ) => {
   const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
 
-  const dispatchChange = async (path: string) => subscribeCallbackMock(undefined, [{ type: 'update', path }]);
+  const dispatchChange = async (path: string) =>
+    subscribeCallbackMock(undefined, [{ type: 'update', path }]);
 
   // createWatcher doesn't set up subscription immediately, so we wait for a tick before continuing
   await new Promise(resolve => setTimeout(resolve, 100));
@@ -135,7 +138,9 @@ describe('Watch patterns', () => {
     const shouldNotTriggerBuild = join(process.cwd(), './foo/bar/something.ts');
 
     await dispatchChange(shouldTriggerBuild);
-    expect(subscribeCallbackMock).toHaveBeenLastCalledWith(undefined, [{ path: shouldTriggerBuild, type: 'update' }]);
+    expect(subscribeCallbackMock).toHaveBeenLastCalledWith(undefined, [
+      { path: shouldTriggerBuild, type: 'update' },
+    ]);
     expect(onWatchTriggeredMock).toHaveBeenLastCalledWith('update', shouldTriggerBuild);
 
     await dispatchChange(shouldNotTriggerBuild);
@@ -224,7 +229,7 @@ describe('Watch patterns', () => {
           './foo/fizz/buzz/match-schema-everywhere.graphql',
           './foo/fizz/buzz/foobarbaz/match-schema-everywhere.graphql',
         ],
-      }
+      },
     );
   });
 
@@ -284,7 +289,7 @@ describe('Watch patterns', () => {
           'foo/global-beats-local/exclude-watch-doc-everywhere.graphql',
           'foo/global-beats-local/exclude-watch-schema-everywhere.graphql',
         ],
-      }
+      },
     );
   });
 
@@ -322,7 +327,7 @@ describe('Watch patterns', () => {
       {
         shouldTriggerBuild: ['./foo/bar/okay-doc.graphql'],
         shouldNotTriggerBuild: ['./foo/bar/never-watch.graphql'],
-      }
+      },
     );
   });
 
@@ -359,7 +364,7 @@ describe('Watch patterns', () => {
       {
         shouldTriggerBuild: ['./foo/bar/okay.graphql'],
         shouldNotTriggerBuild: ['./foo/bar/never.graphql'],
-      }
+      },
     );
   });
 
@@ -397,7 +402,7 @@ describe('Watch patterns', () => {
       {
         shouldTriggerBuild: ['./foo/bar/okay-doc.graphql'],
         shouldNotTriggerBuild: ['./foo/bar/never-watch.graphql'],
-      }
+      },
     );
   });
 
@@ -434,7 +439,7 @@ describe('Watch patterns', () => {
       {
         shouldTriggerBuild: ['./foo/bar/okay.graphql'],
         shouldNotTriggerBuild: ['./foo/bar/never.graphql'],
-      }
+      },
     );
   });
 
@@ -500,7 +505,7 @@ describe('Watch patterns', () => {
           './foo/alphabet/schema/sigma.graphql',
           './foo/alphabet/schema/delta.graphql',
         ],
-      }
+      },
     );
   });
 
@@ -563,7 +568,7 @@ describe('Watch patterns', () => {
           'some-preset-bar/**/*.generated.tsx',
           'some-preset-without-trailing-slash/**/*.fizzbuzz.tsx',
         ],
-      }
+      },
     );
   });
 
@@ -610,7 +615,7 @@ describe('Watch patterns', () => {
           './foo/some-output.ts', // output file
           'foo/some-output.ts', // output file
         ],
-      }
+      },
     );
   });
 
@@ -656,7 +661,10 @@ describe('Watch patterns', () => {
           ['./fuzz/some-other-output.ts']: {
             documents: './fuzz/some-other-bar/*.graphql',
             watchPattern: ['!fuzz/some-other-bar/schemas/never-watch-schema.graphql'],
-            schema: ['./fuzz/some-other-bar/schemas/*.graphql', '!fuzz/some-other-bar/schemas/never-schema.graphql'],
+            schema: [
+              './fuzz/some-other-bar/schemas/*.graphql',
+              '!fuzz/some-other-bar/schemas/never-schema.graphql',
+            ],
           },
           // match in one local group, negation in another local group, should still match
           ['./fuzz/alphabet/types-no-sigma.ts']: {
@@ -771,7 +779,7 @@ describe('Watch patterns', () => {
           //       so they should be specified relative from watchDirectory, _not_ cwd (see typedoc)
           'some-preset-bar/**/*.generated.tsx', // output of preset
         ],
-      }
+      },
     );
   });
 });

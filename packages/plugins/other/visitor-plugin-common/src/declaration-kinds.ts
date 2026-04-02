@@ -10,7 +10,7 @@ export const DEFAULT_DECLARATION_KINDS: DeclarationKindConfig = {
 };
 
 export function normalizeDeclarationKind(
-  declarationKind?: DeclarationKind | DeclarationKindConfig
+  declarationKind?: DeclarationKind | DeclarationKindConfig,
 ): DeclarationKindConfig {
   if (typeof declarationKind === 'string') {
     return {

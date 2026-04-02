@@ -1,13 +1,16 @@
 ---
-description: Document transform is a feature that allows you to modify documents before they are used by plugins.
+description:
+  Document transform is a feature that allows you to modify documents before they are used by
+  plugins.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Document Transform
 
-Document transform is a feature that allows you to modify `documents` before they are used by plugins.
-You can use functions passed to the `documentTransforms` option to make changes to GraphQL `documents`.
+Document transform is a feature that allows you to modify `documents` before they are used by
+plugins. You can use functions passed to the `documentTransforms` option to make changes to GraphQL
+`documents`.
 
 ## Basic Usage
 
@@ -38,11 +41,12 @@ const config: CodegenConfig = {
 export default config
 ```
 
-For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the following code:
+For instance, to remove a `@localOnlyDirective` directive from `documents`, you can write the
+following code:
 
 ```ts {2, 13-22}
-import type { CodegenConfig } from '@graphql-codegen/cli'
 import { visit } from 'graphql'
+import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'https://localhost:4000/graphql',
@@ -74,7 +78,8 @@ export default config
 
 ## How to specify by name
 
-The document transform can also be specified by file name. You can create a custom file and pass it to `documentTransforms`.
+The document transform can also be specified by file name. You can create a custom file and pass it
+to `documentTransforms`.
 
 Let's create a file named `./my-document-transform.js`:
 
@@ -107,12 +112,15 @@ export default config
 
 ## Configuration
 
-If you want to change the behavior of a document transform at runtime, you can simply prepare a function that generates the document transform and write the configuration in its argument.
+If you want to change the behavior of a document transform at runtime, you can simply prepare a
+function that generates the document transform and write the configuration in its argument.
 
 ```ts {3-10, 18}
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
-const generateDocumentTransform: (config: { queryName: string }) => Types.DocumentTransformObject = ({ queryName }) => {
+const generateDocumentTransform: (config: {
+  queryName: string
+}) => Types.DocumentTransformObject = ({ queryName }) => {
   return {
     transform: ({ documents }) => {
       // Modify something in documents using `queryName`.
@@ -158,7 +166,8 @@ const config: CodegenConfig = {
 export default config
 ```
 
-In this case, you can retrieve the `queryName` from the `config` argument of the `transform` function as follows:
+In this case, you can retrieve the `queryName` from the `config` argument of the `transform`
+function as follows:
 
 ```js
 module.exports = {

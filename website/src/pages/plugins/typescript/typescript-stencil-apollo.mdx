@@ -1,11 +1,16 @@
 ---
 title: typescript-stencil-apollo
-description: A Stencil plugin for generating TypeScript code from GraphQL queries. This plugin uses Apollo Client.
+description:
+  A Stencil plugin for generating TypeScript code from GraphQL queries. This plugin uses Apollo
+  Client.
 ---
 
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <PluginHeader />
 <PluginApiDocs />

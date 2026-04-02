@@ -1,5 +1,10 @@
-import { CodegenPlugin, createNoopProfiler, Profiler, Types } from '@graphql-codegen/plugin-helpers';
 import { buildASTSchema, DocumentNode, GraphQLSchema } from 'graphql';
+import {
+  CodegenPlugin,
+  createNoopProfiler,
+  Profiler,
+  Types,
+} from '@graphql-codegen/plugin-helpers';
 
 export interface ExecutePluginOptions {
   name: string;
@@ -15,7 +20,10 @@ export interface ExecutePluginOptions {
   profiler?: Profiler;
 }
 
-export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
+export async function executePlugin(
+  options: ExecutePluginOptions,
+  plugin: CodegenPlugin,
+): Promise<Types.PluginOutput> {
   if (!plugin?.plugin || typeof plugin.plugin !== 'function') {
     throw new Error(
       `Invalid Custom Plugin "${options.name}" \n
@@ -28,11 +36,12 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
             return 'my-custom-plugin-content';
           },
         };
-        `
+        `,
     );
   }
 
-  const outputSchema: GraphQLSchema = options.schemaAst || buildASTSchema(options.schema, options.config as any);
+  const outputSchema: GraphQLSchema =
+    options.schemaAst || buildASTSchema(options.schema, options.config as any);
   const documents = options.documents || [];
   const pluginContext = options.pluginContext || {};
   const profiler = options.profiler ?? createNoopProfiler();
@@ -48,15 +57,15 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
             options.config,
             options.outputFilename,
             options.allPlugins,
-            pluginContext
+            pluginContext,
           ),
-        `Plugin ${options.name} validate`
+        `Plugin ${options.name} validate`,
       );
     } catch (e) {
       throw new Error(
         `Plugin "${options.name}" validation failed: \n
             ${e.message}
-          `
+          `,
       );
     }
   }
@@ -72,9 +81,9 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
             outputFile: options.outputFilename,
             allPlugins: options.allPlugins,
             pluginContext,
-          }
-        )
+          },
+        ),
       ),
-    `Plugin ${options.name} execution`
+    `Plugin ${options.name} execution`,
   );
 }

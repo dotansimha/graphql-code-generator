@@ -16,7 +16,12 @@ directive @childOf(
 """
 Add date formatting options.
 """
-directive @dateformat(difference: String, formatString: String, fromNow: Boolean, locale: String) on FIELD_DEFINITION
+directive @dateformat(
+  difference: String
+  formatString: String
+  fromNow: Boolean
+  locale: String
+) on FIELD_DEFINITION
 
 """
 Do not infer field types from field values.
@@ -1665,9 +1670,19 @@ enum PotraceTurnPolicy {
 }
 
 type Query {
-  allDirectory(filter: DirectoryFilterInput, limit: Int, skip: Int, sort: DirectorySortInput): DirectoryConnection!
+  allDirectory(
+    filter: DirectoryFilterInput
+    limit: Int
+    skip: Int
+    sort: DirectorySortInput
+  ): DirectoryConnection!
   allFile(filter: FileFilterInput, limit: Int, skip: Int, sort: FileSortInput): FileConnection!
-  allImageSharp(filter: ImageSharpFilterInput, limit: Int, skip: Int, sort: ImageSharpSortInput): ImageSharpConnection!
+  allImageSharp(
+    filter: ImageSharpFilterInput
+    limit: Int
+    skip: Int
+    sort: ImageSharpSortInput
+  ): ImageSharpConnection!
   allInternalEvents(
     filter: internal__eventsFilterInput
     limit: Int
@@ -1687,8 +1702,18 @@ type Query {
     skip: Int
     sort: SiteFunctionSortInput
   ): SiteFunctionConnection!
-  allSitePage(filter: SitePageFilterInput, limit: Int, skip: Int, sort: SitePageSortInput): SitePageConnection!
-  allSitePlugin(filter: SitePluginFilterInput, limit: Int, skip: Int, sort: SitePluginSortInput): SitePluginConnection!
+  allSitePage(
+    filter: SitePageFilterInput
+    limit: Int
+    skip: Int
+    sort: SitePageSortInput
+  ): SitePageConnection!
+  allSitePlugin(
+    filter: SitePluginFilterInput
+    limit: Int
+    skip: Int
+    sort: SitePluginSortInput
+  ): SitePluginConnection!
   allWp(filter: WpFilterInput, limit: Int, skip: Int, sort: WpSortInput): WpConnection!
   allWpBlockEditorContentNode(
     filter: WpBlockEditorContentNodeFilterInput
@@ -1702,8 +1727,18 @@ type Query {
     skip: Int
     sort: WpBlockEditorPreviewSortInput
   ): WpBlockEditorPreviewConnection!
-  allWpCategory(filter: WpCategoryFilterInput, limit: Int, skip: Int, sort: WpCategorySortInput): WpCategoryConnection!
-  allWpComment(filter: WpCommentFilterInput, limit: Int, skip: Int, sort: WpCommentSortInput): WpCommentConnection!
+  allWpCategory(
+    filter: WpCategoryFilterInput
+    limit: Int
+    skip: Int
+    sort: WpCategorySortInput
+  ): WpCategoryConnection!
+  allWpComment(
+    filter: WpCommentFilterInput
+    limit: Int
+    skip: Int
+    sort: WpCommentSortInput
+  ): WpCommentConnection!
   allWpCommentAuthor(
     filter: WpCommentAuthorFilterInput
     limit: Int
@@ -1728,10 +1763,30 @@ type Query {
     skip: Int
     sort: WpMediaItemSortInput
   ): WpMediaItemConnection!
-  allWpMenu(filter: WpMenuFilterInput, limit: Int, skip: Int, sort: WpMenuSortInput): WpMenuConnection!
-  allWpMenuItem(filter: WpMenuItemFilterInput, limit: Int, skip: Int, sort: WpMenuItemSortInput): WpMenuItemConnection!
-  allWpPage(filter: WpPageFilterInput, limit: Int, skip: Int, sort: WpPageSortInput): WpPageConnection!
-  allWpPost(filter: WpPostFilterInput, limit: Int, skip: Int, sort: WpPostSortInput): WpPostConnection!
+  allWpMenu(
+    filter: WpMenuFilterInput
+    limit: Int
+    skip: Int
+    sort: WpMenuSortInput
+  ): WpMenuConnection!
+  allWpMenuItem(
+    filter: WpMenuItemFilterInput
+    limit: Int
+    skip: Int
+    sort: WpMenuItemSortInput
+  ): WpMenuItemConnection!
+  allWpPage(
+    filter: WpPageFilterInput
+    limit: Int
+    skip: Int
+    sort: WpPageSortInput
+  ): WpPageConnection!
+  allWpPost(
+    filter: WpPostFilterInput
+    limit: Int
+    skip: Int
+    sort: WpPostSortInput
+  ): WpPostConnection!
   allWpPostFormat(
     filter: WpPostFormatFilterInput
     limit: Int
@@ -1745,10 +1800,30 @@ type Query {
     sort: WpReusableBlockSortInput
   ): WpReusableBlockConnection!
   allWpTag(filter: WpTagFilterInput, limit: Int, skip: Int, sort: WpTagSortInput): WpTagConnection!
-  allWpTaxonomy(filter: WpTaxonomyFilterInput, limit: Int, skip: Int, sort: WpTaxonomySortInput): WpTaxonomyConnection!
-  allWpTermNode(filter: WpTermNodeFilterInput, limit: Int, skip: Int, sort: WpTermNodeSortInput): WpTermNodeConnection!
-  allWpUser(filter: WpUserFilterInput, limit: Int, skip: Int, sort: WpUserSortInput): WpUserConnection!
-  allWpUserRole(filter: WpUserRoleFilterInput, limit: Int, skip: Int, sort: WpUserRoleSortInput): WpUserRoleConnection!
+  allWpTaxonomy(
+    filter: WpTaxonomyFilterInput
+    limit: Int
+    skip: Int
+    sort: WpTaxonomySortInput
+  ): WpTaxonomyConnection!
+  allWpTermNode(
+    filter: WpTermNodeFilterInput
+    limit: Int
+    skip: Int
+    sort: WpTermNodeSortInput
+  ): WpTermNodeConnection!
+  allWpUser(
+    filter: WpUserFilterInput
+    limit: Int
+    skip: Int
+    sort: WpUserSortInput
+  ): WpUserConnection!
+  allWpUserRole(
+    filter: WpUserRoleFilterInput
+    limit: Int
+    skip: Int
+    sort: WpUserRoleSortInput
+  ): WpUserRoleConnection!
   directory(
     absolutePath: StringQueryOperatorInput
     accessTime: DateQueryOperatorInput
@@ -2676,7 +2751,11 @@ type SiteBuildMetadata implements Node {
 type SiteBuildMetadataConnection {
   distinct(field: SiteBuildMetadataFieldsEnum!): [String!]!
   edges: [SiteBuildMetadataEdge!]!
-  group(field: SiteBuildMetadataFieldsEnum!, limit: Int, skip: Int): [SiteBuildMetadataGroupConnection!]!
+  group(
+    field: SiteBuildMetadataFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [SiteBuildMetadataGroupConnection!]!
   max(field: SiteBuildMetadataFieldsEnum!): Float
   min(field: SiteBuildMetadataFieldsEnum!): Float
   nodes: [SiteBuildMetadata!]!
@@ -2794,7 +2873,11 @@ type SiteBuildMetadataGroupConnection {
   edges: [SiteBuildMetadataEdge!]!
   field: String!
   fieldValue: String
-  group(field: SiteBuildMetadataFieldsEnum!, limit: Int, skip: Int): [SiteBuildMetadataGroupConnection!]!
+  group(
+    field: SiteBuildMetadataFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [SiteBuildMetadataGroupConnection!]!
   max(field: SiteBuildMetadataFieldsEnum!): Float
   min(field: SiteBuildMetadataFieldsEnum!): Float
   nodes: [SiteBuildMetadata!]!
@@ -3720,7 +3803,11 @@ interface WpBlockEditorContentNode implements Node {
 type WpBlockEditorContentNodeConnection {
   distinct(field: WpBlockEditorContentNodeFieldsEnum!): [String!]!
   edges: [WpBlockEditorContentNodeEdge!]!
-  group(field: WpBlockEditorContentNodeFieldsEnum!, limit: Int, skip: Int): [WpBlockEditorContentNodeGroupConnection!]!
+  group(
+    field: WpBlockEditorContentNodeFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpBlockEditorContentNodeGroupConnection!]!
   max(field: WpBlockEditorContentNodeFieldsEnum!): Float
   min(field: WpBlockEditorContentNodeFieldsEnum!): Float
   nodes: [WpBlockEditorContentNode!]!
@@ -3904,7 +3991,11 @@ type WpBlockEditorContentNodeGroupConnection {
   edges: [WpBlockEditorContentNodeEdge!]!
   field: String!
   fieldValue: String
-  group(field: WpBlockEditorContentNodeFieldsEnum!, limit: Int, skip: Int): [WpBlockEditorContentNodeGroupConnection!]!
+  group(
+    field: WpBlockEditorContentNodeFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpBlockEditorContentNodeGroupConnection!]!
   max(field: WpBlockEditorContentNodeFieldsEnum!): Float
   min(field: WpBlockEditorContentNodeFieldsEnum!): Float
   nodes: [WpBlockEditorContentNode!]!
@@ -4132,7 +4223,11 @@ type WpBlockEditorPreview implements Node & WpContentNode & WpDatabaseIdentifier
 type WpBlockEditorPreviewConnection {
   distinct(field: WpBlockEditorPreviewFieldsEnum!): [String!]!
   edges: [WpBlockEditorPreviewEdge!]!
-  group(field: WpBlockEditorPreviewFieldsEnum!, limit: Int, skip: Int): [WpBlockEditorPreviewGroupConnection!]!
+  group(
+    field: WpBlockEditorPreviewFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpBlockEditorPreviewGroupConnection!]!
   max(field: WpBlockEditorPreviewFieldsEnum!): Float
   min(field: WpBlockEditorPreviewFieldsEnum!): Float
   nodes: [WpBlockEditorPreview!]!
@@ -4586,7 +4681,11 @@ type WpBlockEditorPreviewGroupConnection {
   edges: [WpBlockEditorPreviewEdge!]!
   field: String!
   fieldValue: String
-  group(field: WpBlockEditorPreviewFieldsEnum!, limit: Int, skip: Int): [WpBlockEditorPreviewGroupConnection!]!
+  group(
+    field: WpBlockEditorPreviewFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpBlockEditorPreviewGroupConnection!]!
   max(field: WpBlockEditorPreviewFieldsEnum!): Float
   min(field: WpBlockEditorPreviewFieldsEnum!): Float
   nodes: [WpBlockEditorPreview!]!
@@ -5387,7 +5486,11 @@ type WpCommentAuthor implements Node & WpCommenter & WpNode {
 type WpCommentAuthorConnection {
   distinct(field: WpCommentAuthorFieldsEnum!): [String!]!
   edges: [WpCommentAuthorEdge!]!
-  group(field: WpCommentAuthorFieldsEnum!, limit: Int, skip: Int): [WpCommentAuthorGroupConnection!]!
+  group(
+    field: WpCommentAuthorFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpCommentAuthorGroupConnection!]!
   max(field: WpCommentAuthorFieldsEnum!): Float
   min(field: WpCommentAuthorFieldsEnum!): Float
   nodes: [WpCommentAuthor!]!
@@ -5524,7 +5627,11 @@ type WpCommentAuthorGroupConnection {
   edges: [WpCommentAuthorEdge!]!
   field: String!
   fieldValue: String
-  group(field: WpCommentAuthorFieldsEnum!, limit: Int, skip: Int): [WpCommentAuthorGroupConnection!]!
+  group(
+    field: WpCommentAuthorFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpCommentAuthorGroupConnection!]!
   max(field: WpCommentAuthorFieldsEnum!): Float
   min(field: WpCommentAuthorFieldsEnum!): Float
   nodes: [WpCommentAuthor!]!
@@ -7047,7 +7154,9 @@ type WpCoreAudioBlockAttributes {
   src: String
 }
 
-union WpCoreAudioBlockAttributesUnion = WpCoreAudioBlockAttributes | WpCoreAudioBlockDeprecatedV1Attributes
+union WpCoreAudioBlockAttributesUnion =
+  | WpCoreAudioBlockAttributes
+  | WpCoreAudioBlockDeprecatedV1Attributes
 
 type WpCoreAudioBlockDeprecatedV1Attributes {
   align: String
@@ -7195,7 +7304,7 @@ type WpCoreButtonBlockAttributes {
 }
 
 union WpCoreButtonBlockAttributesUnion =
-    WpCoreButtonBlockAttributes
+  | WpCoreButtonBlockAttributes
   | WpCoreButtonBlockDeprecatedV1Attributes
   | WpCoreButtonBlockDeprecatedV2Attributes
   | WpCoreButtonBlockDeprecatedV3Attributes
@@ -7470,7 +7579,7 @@ type WpCoreButtonsBlockAttributes {
 }
 
 union WpCoreButtonsBlockAttributesUnion =
-    WpCoreButtonsBlockAttributes
+  | WpCoreButtonsBlockAttributes
   | WpCoreButtonsBlockDeprecatedV1Attributes
   | WpCoreButtonsBlockDeprecatedV2Attributes
 
@@ -7748,7 +7857,9 @@ type WpCoreColumnBlockAttributes {
   width: String
 }
 
-union WpCoreColumnBlockAttributesUnion = WpCoreColumnBlockAttributes | WpCoreColumnBlockDeprecatedV1Attributes
+union WpCoreColumnBlockAttributesUnion =
+  | WpCoreColumnBlockAttributes
+  | WpCoreColumnBlockDeprecatedV1Attributes
 
 type WpCoreColumnBlockDeprecatedV1Attributes {
   allowedBlocks: JSON
@@ -7830,7 +7941,7 @@ type WpCoreColumnsBlockAttributes {
 }
 
 union WpCoreColumnsBlockAttributesUnion =
-    WpCoreColumnsBlockAttributes
+  | WpCoreColumnsBlockAttributes
   | WpCoreColumnsBlockDeprecatedV1Attributes
   | WpCoreColumnsBlockDeprecatedV2Attributes
   | WpCoreColumnsBlockDeprecatedV3Attributes
@@ -7953,7 +8064,7 @@ type WpCoreCoverBlockAttributes {
 }
 
 union WpCoreCoverBlockAttributesUnion =
-    WpCoreCoverBlockAttributes
+  | WpCoreCoverBlockAttributes
   | WpCoreCoverBlockDeprecatedV1Attributes
   | WpCoreCoverBlockDeprecatedV2Attributes
   | WpCoreCoverBlockDeprecatedV3Attributes
@@ -8203,7 +8314,9 @@ type WpCoreEmbedBlockAttributes {
   url: String
 }
 
-union WpCoreEmbedBlockAttributesUnion = WpCoreEmbedBlockAttributes | WpCoreEmbedBlockDeprecatedV1Attributes
+union WpCoreEmbedBlockAttributesUnion =
+  | WpCoreEmbedBlockAttributes
+  | WpCoreEmbedBlockDeprecatedV1Attributes
 
 type WpCoreEmbedBlockDeprecatedV1Attributes {
   align: String
@@ -8288,7 +8401,9 @@ type WpCoreFileBlockAttributes {
   textLinkTarget: String
 }
 
-union WpCoreFileBlockAttributesUnion = WpCoreFileBlockAttributes | WpCoreFileBlockDeprecatedV1Attributes
+union WpCoreFileBlockAttributesUnion =
+  | WpCoreFileBlockAttributes
+  | WpCoreFileBlockDeprecatedV1Attributes
 
 type WpCoreFileBlockDeprecatedV1Attributes {
   align: String
@@ -8446,7 +8561,7 @@ type WpCoreGalleryBlockAttributesImages {
 }
 
 union WpCoreGalleryBlockAttributesUnion =
-    WpCoreGalleryBlockAttributes
+  | WpCoreGalleryBlockAttributes
   | WpCoreGalleryBlockDeprecatedV1Attributes
   | WpCoreGalleryBlockDeprecatedV2Attributes
   | WpCoreGalleryBlockDeprecatedV3Attributes
@@ -8684,7 +8799,7 @@ type WpCoreGroupBlockAttributes {
 }
 
 union WpCoreGroupBlockAttributesUnion =
-    WpCoreGroupBlockAttributes
+  | WpCoreGroupBlockAttributes
   | WpCoreGroupBlockDeprecatedV1Attributes
   | WpCoreGroupBlockDeprecatedV2Attributes
   | WpCoreGroupBlockDeprecatedV3Attributes
@@ -8815,7 +8930,7 @@ type WpCoreHeadingBlockAttributes {
 }
 
 union WpCoreHeadingBlockAttributesUnion =
-    WpCoreHeadingBlockAttributes
+  | WpCoreHeadingBlockAttributes
   | WpCoreHeadingBlockDeprecatedV1Attributes
   | WpCoreHeadingBlockDeprecatedV2Attributes
   | WpCoreHeadingBlockDeprecatedV3Attributes
@@ -9015,7 +9130,7 @@ type WpCoreImageBlockAttributes {
 }
 
 union WpCoreImageBlockAttributesUnion =
-    WpCoreImageBlockAttributes
+  | WpCoreImageBlockAttributes
   | WpCoreImageBlockDeprecatedV1Attributes
   | WpCoreImageBlockDeprecatedV2Attributes
   | WpCoreImageBlockDeprecatedV3Attributes
@@ -9224,7 +9339,7 @@ type WpCoreLatestPostsBlockAttributes {
 }
 
 union WpCoreLatestPostsBlockAttributesUnion =
-    WpCoreLatestPostsBlockAttributes
+  | WpCoreLatestPostsBlockAttributes
   | WpCoreLatestPostsBlockDeprecatedV1Attributes
 
 type WpCoreLatestPostsBlockDeprecatedV1Attributes {
@@ -9382,7 +9497,9 @@ type WpCoreListBlockAttributes {
   values: String!
 }
 
-union WpCoreListBlockAttributesUnion = WpCoreListBlockAttributes | WpCoreListBlockDeprecatedV1Attributes
+union WpCoreListBlockAttributesUnion =
+  | WpCoreListBlockAttributes
+  | WpCoreListBlockDeprecatedV1Attributes
 
 type WpCoreListBlockDeprecatedV1Attributes {
   anchor: String
@@ -9544,7 +9661,7 @@ type WpCoreMediaTextBlockAttributes {
 }
 
 union WpCoreMediaTextBlockAttributesUnion =
-    WpCoreMediaTextBlockAttributes
+  | WpCoreMediaTextBlockAttributes
   | WpCoreMediaTextBlockDeprecatedV1Attributes
   | WpCoreMediaTextBlockDeprecatedV2Attributes
   | WpCoreMediaTextBlockDeprecatedV3Attributes
@@ -9832,7 +9949,7 @@ type WpCoreNavigationBlockAttributes {
 }
 
 union WpCoreNavigationBlockAttributesUnion =
-    WpCoreNavigationBlockAttributes
+  | WpCoreNavigationBlockAttributes
   | WpCoreNavigationBlockDeprecatedV1Attributes
   | WpCoreNavigationBlockDeprecatedV2Attributes
   | WpCoreNavigationBlockDeprecatedV3Attributes
@@ -10065,7 +10182,7 @@ type WpCoreNavigationLinkBlockAttributes {
 }
 
 union WpCoreNavigationLinkBlockAttributesUnion =
-    WpCoreNavigationLinkBlockAttributes
+  | WpCoreNavigationLinkBlockAttributes
   | WpCoreNavigationLinkBlockDeprecatedV1Attributes
 
 type WpCoreNavigationLinkBlockDeprecatedV1Attributes {
@@ -10333,7 +10450,7 @@ type WpCoreParagraphBlockAttributes {
 }
 
 union WpCoreParagraphBlockAttributesUnion =
-    WpCoreParagraphBlockAttributes
+  | WpCoreParagraphBlockAttributes
   | WpCoreParagraphBlockDeprecatedV1Attributes
   | WpCoreParagraphBlockDeprecatedV2Attributes
   | WpCoreParagraphBlockDeprecatedV3Attributes
@@ -10734,7 +10851,9 @@ type WpCorePostDateBlockAttributes {
   textColor: String
 }
 
-union WpCorePostDateBlockAttributesUnion = WpCorePostDateBlockAttributes | WpCorePostDateBlockDeprecatedV1Attributes
+union WpCorePostDateBlockAttributesUnion =
+  | WpCorePostDateBlockAttributes
+  | WpCorePostDateBlockDeprecatedV1Attributes
 
 type WpCorePostDateBlockDeprecatedV1Attributes {
   backgroundColor: String
@@ -11141,7 +11260,9 @@ type WpCorePostTitleBlockAttributes {
   textColor: String
 }
 
-union WpCorePostTitleBlockAttributesUnion = WpCorePostTitleBlockAttributes | WpCorePostTitleBlockDeprecatedV1Attributes
+union WpCorePostTitleBlockAttributesUnion =
+  | WpCorePostTitleBlockAttributes
+  | WpCorePostTitleBlockDeprecatedV1Attributes
 
 type WpCorePostTitleBlockDeprecatedV1Attributes {
   align: String
@@ -11295,7 +11416,7 @@ type WpCorePullquoteBlockAttributes {
 }
 
 union WpCorePullquoteBlockAttributesUnion =
-    WpCorePullquoteBlockAttributes
+  | WpCorePullquoteBlockAttributes
   | WpCorePullquoteBlockDeprecatedV1Attributes
   | WpCorePullquoteBlockDeprecatedV2Attributes
   | WpCorePullquoteBlockDeprecatedV3Attributes
@@ -11450,7 +11571,9 @@ type WpCoreQueryBlockAttributes {
   textColor: String
 }
 
-union WpCoreQueryBlockAttributesUnion = WpCoreQueryBlockAttributes | WpCoreQueryBlockDeprecatedV1Attributes
+union WpCoreQueryBlockAttributesUnion =
+  | WpCoreQueryBlockAttributes
+  | WpCoreQueryBlockDeprecatedV1Attributes
 
 type WpCoreQueryBlockDeprecatedV1Attributes {
   align: String
@@ -11533,7 +11656,7 @@ type WpCoreQueryPaginationBlockAttributes {
 }
 
 union WpCoreQueryPaginationBlockAttributesUnion =
-    WpCoreQueryPaginationBlockAttributes
+  | WpCoreQueryPaginationBlockAttributes
   | WpCoreQueryPaginationBlockDeprecatedV1Attributes
 
 type WpCoreQueryPaginationBlockDeprecatedV1Attributes {
@@ -11803,7 +11926,7 @@ type WpCoreQueryTitleBlockAttributes {
 }
 
 union WpCoreQueryTitleBlockAttributesUnion =
-    WpCoreQueryTitleBlockAttributes
+  | WpCoreQueryTitleBlockAttributes
   | WpCoreQueryTitleBlockDeprecatedV1Attributes
 
 type WpCoreQueryTitleBlockDeprecatedV1Attributes {
@@ -11886,7 +12009,7 @@ type WpCoreQuoteBlockAttributes {
 }
 
 union WpCoreQuoteBlockAttributesUnion =
-    WpCoreQuoteBlockAttributes
+  | WpCoreQuoteBlockAttributes
   | WpCoreQuoteBlockDeprecatedV1Attributes
   | WpCoreQuoteBlockDeprecatedV2Attributes
   | WpCoreQuoteBlockDeprecatedV3Attributes
@@ -12314,7 +12437,7 @@ type WpCoreSiteTaglineBlockAttributes {
 }
 
 union WpCoreSiteTaglineBlockAttributesUnion =
-    WpCoreSiteTaglineBlockAttributes
+  | WpCoreSiteTaglineBlockAttributes
   | WpCoreSiteTaglineBlockDeprecatedV1Attributes
 
 type WpCoreSiteTaglineBlockDeprecatedV1Attributes {
@@ -12399,7 +12522,9 @@ type WpCoreSiteTitleBlockAttributes {
   textColor: String
 }
 
-union WpCoreSiteTitleBlockAttributesUnion = WpCoreSiteTitleBlockAttributes | WpCoreSiteTitleBlockDeprecatedV1Attributes
+union WpCoreSiteTitleBlockAttributesUnion =
+  | WpCoreSiteTitleBlockAttributes
+  | WpCoreSiteTitleBlockDeprecatedV1Attributes
 
 type WpCoreSiteTitleBlockDeprecatedV1Attributes {
   align: String
@@ -12549,7 +12674,7 @@ type WpCoreSocialLinksBlockAttributes {
 }
 
 union WpCoreSocialLinksBlockAttributesUnion =
-    WpCoreSocialLinksBlockAttributes
+  | WpCoreSocialLinksBlockAttributes
   | WpCoreSocialLinksBlockDeprecatedV1Attributes
 
 type WpCoreSocialLinksBlockDeprecatedV1Attributes {
@@ -12630,7 +12755,9 @@ type WpCoreSpacerBlockAttributes {
   width: String
 }
 
-union WpCoreSpacerBlockAttributesUnion = WpCoreSpacerBlockAttributes | WpCoreSpacerBlockDeprecatedV1Attributes
+union WpCoreSpacerBlockAttributesUnion =
+  | WpCoreSpacerBlockAttributes
+  | WpCoreSpacerBlockDeprecatedV1Attributes
 
 type WpCoreSpacerBlockDeprecatedV1Attributes {
   anchor: String
@@ -12745,7 +12872,7 @@ type WpCoreTableBlockAttributesHeadCells {
 }
 
 union WpCoreTableBlockAttributesUnion =
-    WpCoreTableBlockAttributes
+  | WpCoreTableBlockAttributes
   | WpCoreTableBlockDeprecatedV1Attributes
   | WpCoreTableBlockDeprecatedV2Attributes
 
@@ -13173,7 +13300,7 @@ type WpCoreVerseBlockAttributes {
 }
 
 union WpCoreVerseBlockAttributesUnion =
-    WpCoreVerseBlockAttributes
+  | WpCoreVerseBlockAttributes
   | WpCoreVerseBlockDeprecatedV1Attributes
   | WpCoreVerseBlockDeprecatedV2Attributes
 
@@ -19276,7 +19403,11 @@ type WpReusableBlock implements Node & WpBlockEditorContentNode & WpContentNode 
 type WpReusableBlockConnection {
   distinct(field: WpReusableBlockFieldsEnum!): [String!]!
   edges: [WpReusableBlockEdge!]!
-  group(field: WpReusableBlockFieldsEnum!, limit: Int, skip: Int): [WpReusableBlockGroupConnection!]!
+  group(
+    field: WpReusableBlockFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpReusableBlockGroupConnection!]!
   max(field: WpReusableBlockFieldsEnum!): Float
   min(field: WpReusableBlockFieldsEnum!): Float
   nodes: [WpReusableBlock!]!
@@ -19619,7 +19750,11 @@ type WpReusableBlockGroupConnection {
   edges: [WpReusableBlockEdge!]!
   field: String!
   fieldValue: String
-  group(field: WpReusableBlockFieldsEnum!, limit: Int, skip: Int): [WpReusableBlockGroupConnection!]!
+  group(
+    field: WpReusableBlockFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [WpReusableBlockGroupConnection!]!
   max(field: WpReusableBlockFieldsEnum!): Float
   min(field: WpReusableBlockFieldsEnum!): Float
   nodes: [WpReusableBlock!]!
@@ -21780,7 +21915,11 @@ type internal__events implements Node {
 type internal__eventsConnection {
   distinct(field: internal__eventsFieldsEnum!): [String!]!
   edges: [internal__eventsEdge!]!
-  group(field: internal__eventsFieldsEnum!, limit: Int, skip: Int): [internal__eventsGroupConnection!]!
+  group(
+    field: internal__eventsFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [internal__eventsGroupConnection!]!
   max(field: internal__eventsFieldsEnum!): Float
   min(field: internal__eventsFieldsEnum!): Float
   nodes: [internal__events!]!
@@ -22562,7 +22701,11 @@ type internal__eventsGroupConnection {
   edges: [internal__eventsEdge!]!
   field: String!
   fieldValue: String
-  group(field: internal__eventsFieldsEnum!, limit: Int, skip: Int): [internal__eventsGroupConnection!]!
+  group(
+    field: internal__eventsFieldsEnum!
+    limit: Int
+    skip: Int
+  ): [internal__eventsGroupConnection!]!
   max(field: internal__eventsFieldsEnum!): Float
   min(field: internal__eventsFieldsEnum!): Float
   nodes: [internal__events!]!

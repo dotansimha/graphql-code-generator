@@ -1,21 +1,21 @@
 {
   "name": "example-typescript-graphql-request",
   "version": "0.0.0",
+  "type": "commonjs",
   "private": true,
-  "devDependencies": {
-    "@graphql-codegen/cli": "6.2.1"
-  },
-  "dependencies": {
-    "graphql": "16.9.0",
-    "graphql-yoga": "5.7.0",
-    "graphql-request": "5.2.0"
-  },
   "scripts": {
-    "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
+    "codegen": "graphql-codegen --config codegen.ts",
     "dev": "ts-node src/main.ts",
     "test:end2end": "vitest --no-watch"
   },
-  "type": "commonjs",
+  "dependencies": {
+    "graphql": "16.9.0",
+    "graphql-request": "5.2.0",
+    "graphql-yoga": "5.7.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "6.2.1"
+  },
   "bob": false
 }

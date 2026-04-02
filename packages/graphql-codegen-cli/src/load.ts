@@ -1,4 +1,5 @@
 import { extname, join } from 'path';
+import { GraphQLError, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { CodeFileLoader } from '@graphql-tools/code-file-loader';
@@ -13,7 +14,6 @@ import {
   UnnormalizedTypeDefPointer,
 } from '@graphql-tools/load';
 import { UrlLoader } from '@graphql-tools/url-loader';
-import { GraphQLError, GraphQLSchema } from 'graphql';
 
 export const defaultSchemaLoadOptions = {
   assumeValidSDL: true,
@@ -29,7 +29,7 @@ export const defaultDocumentsLoadOptions = {
 
 export async function loadSchema(
   schemaPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
-  config: Types.Config
+  config: Types.Config,
 ): Promise<GraphQLSchema> {
   try {
     const loaders = [
@@ -61,14 +61,14 @@ export async function loadSchema(
         '- Multiple files with type definitions (glob expression)',
         '- String in config file',
         '\nTry to use one of above options and run codegen again.\n',
-      ].join('\n')
+      ].join('\n'),
     );
   }
 }
 
 export async function loadDocuments(
   documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
-  config: Types.Config
+  config: Types.Config,
 ): Promise<Types.DocumentFile[]> {
   const loaders = [
     new CodeFileLoader({
@@ -107,7 +107,10 @@ export async function loadDocuments(
 
     // For other errors, we need to add an error message with documentPointers, so it's better for DevX
     throw new Error(
-      [`Failed to load documents from ${Object.keys(documentPointers).join(',')}:`, printError(error)].join('\n')
+      [
+        `Failed to load documents from ${Object.keys(documentPointers).join(',')}:`,
+        printError(error),
+      ].join('\n'),
     );
   }
 }

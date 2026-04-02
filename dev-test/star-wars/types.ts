@@ -3,8 +3,12 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -278,12 +282,16 @@ export type HeroAndFriendsNamesQuery = {
     | {
         __typename?: 'Droid';
         name: string;
-        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
+        friends?: Array<
+          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null
+        > | null;
       }
     | {
         __typename?: 'Human';
         name: string;
-        friends?: Array<{ __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null> | null;
+        friends?: Array<
+          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; name: string } | null
+        > | null;
       }
     | null;
 };
@@ -310,7 +318,11 @@ export type HeroDetailsQuery = {
     | null;
 };
 
-type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction?: string | null; name: string };
+type HeroDetails_Droid_Fragment = {
+  __typename?: 'Droid';
+  primaryFunction?: string | null;
+  name: string;
+};
 
 type HeroDetails_Human_Fragment = { __typename?: 'Human'; height?: number | null; name: string };
 
@@ -368,14 +380,18 @@ export type HeroParentTypeDependentFieldQuery = {
         __typename?: 'Droid';
         name: string;
         friends?: Array<
-          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: number | null; name: string } | null
+          | { __typename?: 'Droid'; name: string }
+          | { __typename?: 'Human'; height?: number | null; name: string }
+          | null
         > | null;
       }
     | {
         __typename?: 'Human';
         name: string;
         friends?: Array<
-          { __typename?: 'Droid'; name: string } | { __typename?: 'Human'; height?: number | null; name: string } | null
+          | { __typename?: 'Droid'; name: string }
+          | { __typename?: 'Human'; height?: number | null; name: string }
+          | null
         > | null;
       }
     | null;
@@ -387,7 +403,10 @@ export type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
 
 export type HeroTypeDependentAliasedFieldQuery = {
   __typename?: 'Query';
-  hero?: { __typename?: 'Droid'; property?: string | null } | { __typename?: 'Human'; property?: string | null } | null;
+  hero?:
+    | { __typename?: 'Droid'; property?: string | null }
+    | { __typename?: 'Human'; property?: string | null }
+    | null;
 };
 
 export type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass?: number | null };

@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'schema-ast',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

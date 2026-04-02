@@ -2,7 +2,10 @@ import { withGuildDocs } from '@theguild/components/next.config';
 import { CategoryToPackages } from './src/category-to-packages.mjs';
 
 const PLUGINS_REDIRECTS = Object.entries(CategoryToPackages).flatMap(([category, packageNames]) =>
-  packageNames.map(packageName => [`/plugins/${packageName}`, `/plugins/${category}/${packageName}`])
+  packageNames.map(packageName => [
+    `/plugins/${packageName}`,
+    `/plugins/${category}/${packageName}`,
+  ]),
 );
 
 export default withGuildDocs({
@@ -64,7 +67,8 @@ export default withGuildDocs({
       '/docs/presets/:presetName': '/plugins/:presetName-preset',
       '/docs/plugins/:pluginName': '/plugins/:pluginName',
       '/docs/plugins/client-note': '/plugins',
-      '/docs/getting-started/config-reference/codegen-config': '/docs/config-reference/codegen-config',
+      '/docs/getting-started/config-reference/codegen-config':
+        '/docs/config-reference/codegen-config',
       '/docs/getting-started/codegen-config': '/docs/config-reference/codegen-config',
       '/docs/getting-started/documents-field': '/docs/config-reference/documents-field',
       '/docs/getting-started/schema-field': '/docs/config-reference/schema-field',

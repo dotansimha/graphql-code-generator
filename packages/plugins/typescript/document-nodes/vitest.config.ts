@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'typescript-document-nodes',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

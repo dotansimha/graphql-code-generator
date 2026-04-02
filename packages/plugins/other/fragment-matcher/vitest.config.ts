@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'fragment-matcher',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

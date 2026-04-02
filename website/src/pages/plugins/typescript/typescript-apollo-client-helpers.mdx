@@ -1,18 +1,25 @@
 ---
 title: typescript-apollo-client-helpers
-description: Generates helpers for improving the integration of TypeScript and Apollo-Client, based on your schema. This plugin generates fully-typed keyFields and Type-Policies for Apollo-Client.
+description:
+  Generates helpers for improving the integration of TypeScript and Apollo-Client, based on your
+  schema. This plugin generates fully-typed keyFields and Type-Policies for Apollo-Client.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+import { Callout } from '@theguild/components'
+
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
 
-This plugin generates helpers for improving the integration of TypeScript and Apollo-Client, based on your schema.
+This plugin generates helpers for improving the integration of TypeScript and Apollo-Client, based
+on your schema.
 
-<Callout type="warning">Note: this plugin generates code that intended for `apollo-client` @ `> v3` only.</Callout>
+<Callout type="warning">
+  Note: this plugin generates code that intended for `apollo-client` @ `> v3`
+  only.
+</Callout>
 
 This plugin generates fully-typed `keyFields` and Type-Policies for Apollo-Client.
 

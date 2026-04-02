@@ -1,5 +1,3 @@
-import { astFromInterfaceType, astFromObjectType, getRootTypeNames, MapperKind, mapSchema } from '@graphql-tools/utils';
-import type { FieldDefinitionResult } from '@graphql-codegen/visitor-plugin-common';
 import {
   DefinitionNode,
   DirectiveNode,
@@ -15,6 +13,14 @@ import {
   parse,
   StringValueNode,
 } from 'graphql';
+import type { FieldDefinitionResult } from '@graphql-codegen/visitor-plugin-common';
+import {
+  astFromInterfaceType,
+  astFromObjectType,
+  getRootTypeNames,
+  MapperKind,
+  mapSchema,
+} from '@graphql-tools/utils';
 import { oldVisit } from './index.js';
 import { getBaseType } from './utils.js';
 
@@ -57,7 +63,10 @@ interface TypeMeta {
    * - [[A, B], [C], [D]]      -> (A | B) & C & D
    * - [[A, B], [C, D], [E]] -> (A | B) & (C | D) & E
    */
-  referenceSelectionSets: { directive: '@key' | '@requires'; selectionSets: ReferenceSelectionSet[] }[];
+  referenceSelectionSets: {
+    directive: '@key' | '@requires';
+    selectionSets: ReferenceSelectionSet[];
+  }[];
   referenceSelectionSetsString: string;
 }
 
@@ -107,7 +116,10 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
     // @key() @key() - "primary keys" in Federation
     // A reference may receive one primary key combination at a time, so they will be combined with `|`
     const primaryKeys = resolvableKeyDirectives.map(extractReferenceSelectionSet);
-    referenceSelectionSets.push({ directive: '@key', selectionSets: [...primaryKeys] });
+    referenceSelectionSets.push({
+      directive: '@key',
+      selectionSets: [...primaryKeys],
+    });
 
     const requiresPossibleTypes: ReferenceSelectionSet[] = [];
     for (const fieldNode of Object.values(fields)) {
@@ -118,7 +130,10 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
         requiresPossibleTypes.push(requires);
       }
     }
-    referenceSelectionSets.push({ directive: '@requires', selectionSets: requiresPossibleTypes });
+    referenceSelectionSets.push({
+      directive: '@requires',
+      selectionSets: requiresPossibleTypes,
+    });
 
     return referenceSelectionSets;
   };
@@ -159,7 +174,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
    */
   function findAllSelectionSetCombinations(
     selectionSets: ReferenceSelectionSet[],
-    result: ReferenceSelectionSet[]
+    result: ReferenceSelectionSet[],
   ): void {
     if (selectionSets.length === 0) {
       return;
@@ -213,7 +228,9 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
         }
 
         for (const referenceSelectionSet of selectionSets) {
-          result.push(`GraphQLRecursivePick<${baseFederationType}, ${JSON.stringify(referenceSelectionSet)}>`);
+          result.push(
+            `GraphQLRecursivePick<${baseFederationType}, ${JSON.stringify(referenceSelectionSet)}>`,
+          );
         }
 
         if (result.length === 0) {
@@ -228,10 +245,12 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
         acc.push(`( ${result.join('\n        | ')} )`);
         return acc;
       },
-      []
+      [],
     );
 
-    return `\n    ( { __typename: '${typeName}' }\n    & ${referenceSelectionSetStrings.join('\n    & ')} )`;
+    return `\n    ( { __typename: '${typeName}' }\n    & ${referenceSelectionSetStrings.join(
+      '\n    & ',
+    )} )`;
   };
 
   const federationMeta: FederationMeta = {};
@@ -365,7 +384,15 @@ export class ApolloFederation {
   private fieldsToGenerate: Record<string, FieldDefinitionNode[]>;
   protected meta: FederationMeta = {};
 
-  constructor({ enabled, schema, meta }: { enabled: boolean; schema: GraphQLSchema; meta: FederationMeta }) {
+  constructor({
+    enabled,
+    schema,
+    meta,
+  }: {
+    enabled: boolean;
+    schema: GraphQLSchema;
+    meta: FederationMeta;
+  }) {
     this.enabled = enabled;
     this.schema = schema;
     this.providesMap = this.createMapOfProvides();
@@ -423,7 +450,9 @@ export class ApolloFederation {
       return this.fieldsToGenerate[nodeName];
     }
 
-    const fieldNodes = ((node.fields || []) as unknown as FieldDefinitionResult[]).map(field => field.node);
+    const fieldNodes = ((node.fields || []) as unknown as FieldDefinitionResult[]).map(
+      field => field.node,
+    );
 
     if (!this.enabled) {
       return fieldNodes;
@@ -447,19 +476,22 @@ export class ApolloFederation {
     // If the object is not marked with `@external`, fields to generate are:
     // - the fields without `@external`
     // - the `@external` fields with `@provides`
-    const fieldNodesWithoutExternalOrHasProvides = fieldNodes.reduce<FieldDefinitionNode[]>((acc, fieldNode) => {
-      if (!this.isExternal(fieldNode)) {
-        acc.push(fieldNode);
-        return acc;
-      }
+    const fieldNodesWithoutExternalOrHasProvides = fieldNodes.reduce<FieldDefinitionNode[]>(
+      (acc, fieldNode) => {
+        if (!this.isExternal(fieldNode)) {
+          acc.push(fieldNode);
+          return acc;
+        }
 
-      if (this.isExternal(fieldNode) && this.hasProvides(node, fieldNode.name.value)) {
-        acc.push(fieldNode);
-        return acc;
-      }
+        if (this.isExternal(fieldNode) && this.hasProvides(node, fieldNode.name.value)) {
+          acc.push(fieldNode);
+          return acc;
+        }
 
-      return acc;
-    }, []);
+        return acc;
+      },
+      [],
+    );
 
     this.fieldsToGenerate[nodeName] = fieldNodesWithoutExternalOrHasProvides;
 
@@ -492,11 +524,16 @@ export class ApolloFederation {
     return this.meta;
   }
 
-  private isExternal(node: FieldDefinitionNode | ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode): boolean {
+  private isExternal(
+    node: FieldDefinitionNode | ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
+  ): boolean {
     return getDirectivesByName('external', node).length > 0;
   }
 
-  private hasProvides(node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode, fieldName: string): boolean {
+  private hasProvides(
+    node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
+    fieldName: string,
+  ): boolean {
     const fields = this.providesMap[node.name.value];
 
     if (fields?.length) {
@@ -536,7 +573,7 @@ export class ApolloFederation {
  */
 function checkTypeFederationDetails(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
-  schema: GraphQLSchema
+  schema: GraphQLSchema,
 ): { resolvableKeyDirectives: readonly DirectiveNode[] } | false {
   const name = node.name.value;
   const directives = node.directives;
@@ -554,7 +591,11 @@ function checkTypeFederationDetails(
 
   const resolvableKeyDirectives = keyDirectives.filter(d => {
     for (const arg of d.arguments) {
-      if (arg.name.value === 'resolvable' && arg.value.kind === 'BooleanValue' && arg.value.value === false) {
+      if (
+        arg.name.value === 'resolvable' &&
+        arg.value.kind === 'BooleanValue' &&
+        arg.value.value === false
+      ) {
         return false;
       }
     }
@@ -571,7 +612,7 @@ function checkTypeFederationDetails(
  */
 function getDirectivesByName(
   name: string,
-  node: ObjectTypeDefinitionNode | FieldDefinitionNode | InterfaceTypeDefinitionNode
+  node: ObjectTypeDefinitionNode | FieldDefinitionNode | InterfaceTypeDefinitionNode,
 ): readonly DirectiveNode[] {
   return node?.directives?.filter(d => d.name.value === name) || [];
 }
@@ -597,7 +638,7 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
       Document(node) {
         return node.definitions.find(
           (def: DefinitionNode): def is OperationDefinitionNode =>
-            def.kind === 'OperationDefinition' && def.operation === 'query'
+            def.kind === 'OperationDefinition' && def.operation === 'query',
         ).selectionSet;
       },
     },

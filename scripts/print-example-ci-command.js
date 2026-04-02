@@ -2,7 +2,9 @@
 const fs = require('fs-extra');
 const fg = require('fast-glob');
 
-const packageJSON = fg.sync(['examples/**/package.json'], { ignore: ['**/node_modules/**'] });
+const packageJSON = fg.sync(['examples/**/package.json'], {
+  ignore: ['**/node_modules/**'],
+});
 
 const ignoredPackages = [];
 
@@ -33,7 +35,7 @@ const result = packageJSON.reduce(
     res.commands.push(`yarn workspace ${name} run ${process.argv[2]}`);
     return res;
   },
-  { ignored: [], commands: [] }
+  { ignored: [], commands: [] },
 );
 
 if (result.ignored.length > 0) {

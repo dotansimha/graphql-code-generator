@@ -1,4 +1,4 @@
-import { promises, unlink as fsUnlink } from 'fs';
+import { unlink as fsUnlink, promises } from 'fs';
 
 const { access: fsAccess, writeFile: fsWriteFile, readFile: fsReadFile, mkdir } = promises;
 

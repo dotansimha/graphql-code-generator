@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'visitor-plugin-common',
       include: ['**/*.spec.ts'],
     },
-  })
+  }),
 );

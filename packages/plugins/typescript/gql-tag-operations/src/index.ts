@@ -1,7 +1,7 @@
+import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { normalizeImportExtension, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { Source } from '@graphql-tools/utils';
-import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 
 export type OperationOrFragment = {
   initialName: string;
@@ -42,7 +42,7 @@ export const plugin: PluginFunction<{
     importExtension,
     documentMode,
   },
-  _info
+  _info,
 ) => {
   const appendedImportExtension = normalizeImportExtension({
     emitLegacyCommonJSImports,
@@ -61,14 +61,24 @@ export const plugin: PluginFunction<{
 
     if (sourcesWithOperations.length > 0) {
       code.push(
-        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', appendedImportExtension), `\n`].join('')
+        [
+          ...getGqlOverloadChunk(
+            sourcesWithOperations,
+            gqlTagName,
+            'augmented',
+            appendedImportExtension,
+          ),
+          `\n`,
+        ].join(''),
       );
     }
 
     code.push(
-      [`export function ${gqlTagName}(source: string) {\n`, `  return (documents as any)[source] ?? {};\n`, `}\n`].join(
-        ''
-      )
+      [
+        `export function ${gqlTagName}(source: string) {\n`,
+        `  return (documents as any)[source] ?? {};\n`,
+        `}\n`,
+      ].join(''),
     );
 
     return code.join('\n');
@@ -95,19 +105,28 @@ export const plugin: PluginFunction<{
         `/**\n * The ${gqlTagName} function is used to parse GraphQL queries into a document that can be used by GraphQL clients.\n *\n`,
         ` *\n * @example\n`,
         ' * ```ts\n',
-        ` * const query = ${gqlTagName}` + '(`query GetUser($id: ID!) { user(id: $id) { name } }`);\n',
+        ` * const query = ${gqlTagName}` +
+          '(`query GetUser($id: ID!) { user(id: $id) { name } }`);\n',
         ' * ```\n *\n',
         ` * The query argument is unknown!\n`,
         ` * Please regenerate the types.\n`,
         ` */\n`,
         `export function ${gqlTagName}(source: string): unknown;\n`,
         `\n`,
-      ].join('')
+      ].join(''),
     );
 
     if (sourcesWithOperations.length > 0) {
       code.push(
-        [...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', appendedImportExtension), `\n`].join('')
+        [
+          ...getGqlOverloadChunk(
+            sourcesWithOperations,
+            gqlTagName,
+            'lookup',
+            appendedImportExtension,
+          ),
+          `\n`,
+        ].join(''),
       );
     }
 
@@ -118,7 +137,7 @@ export const plugin: PluginFunction<{
         `}\n`,
         `\n`,
         ...documentTypePartial,
-      ].join('')
+      ].join(''),
     );
 
     return code.join('');
@@ -130,7 +149,12 @@ export const plugin: PluginFunction<{
     [
       `\n`,
       ...(sourcesWithOperations.length > 0
-        ? getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', appendedImportExtension)
+        ? getGqlOverloadChunk(
+            sourcesWithOperations,
+            gqlTagName,
+            'augmented',
+            appendedImportExtension,
+          )
         : []),
       `export function ${gqlTagName}(source: string): unknown;\n`,
       `\n`,
@@ -153,12 +177,14 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
     ` * 3. It does not support dead code elimination, so it will add unused operations.\n *\n`,
     ` * Therefore it is highly recommended to use the babel or swc plugin for production.\n`,
     ` * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size\n */\n`,
-    `type Documents = {\n`
+    `type Documents = {\n`,
   );
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL;
     const operation = operations[0];
-    const aboutToPushLine = `    ${JSON.stringify(originalString)}: typeof types.${operation.initialName},\n`;
+    const aboutToPushLine = `    ${JSON.stringify(
+      originalString,
+    )}: typeof types.${operation.initialName},\n`;
     if (!linesDupCheck.has(aboutToPushLine)) {
       lines.push(aboutToPushLine);
       linesDupCheck.add(aboutToPushLine);
@@ -168,7 +194,9 @@ function getDocumentRegistryChunk(sourcesWithOperations: Array<SourceWithOperati
   for (const { operations, ...rest } of sourcesWithOperations) {
     const originalString = rest.source.rawSDL!;
     const operation = operations[0];
-    const aboutToPushLine = `    ${JSON.stringify(originalString)}: types.${operation.initialName},\n`;
+    const aboutToPushLine = `    ${JSON.stringify(originalString)}: types.${
+      operation.initialName
+    },\n`;
     if (!linesDupCheck.has(aboutToPushLine)) {
       lines.push(aboutToPushLine);
       linesDupCheck.add(aboutToPushLine);
@@ -186,7 +214,7 @@ function getGqlOverloadChunk(
   sourcesWithOperations: Array<SourceWithOperations>,
   gqlTagName: string,
   mode: Mode,
-  importExtension: '' | `.${string}`
+  importExtension: '' | `.${string}`,
 ) {
   const lines = new Set<string>();
 
@@ -200,7 +228,9 @@ function getGqlOverloadChunk(
         : `typeof import('./graphql${importExtension}').${operations[0].initialName}`;
     lines.add(
       `/**\n * The ${gqlTagName} function is used to parse GraphQL queries into a document that can be used by GraphQL clients.\n */\n` +
-        `export function ${gqlTagName}(source: ${JSON.stringify(originalString)}): ${returnType};\n`
+        `export function ${gqlTagName}(source: ${JSON.stringify(
+          originalString,
+        )}): ${returnType};\n`,
     );
   }
 

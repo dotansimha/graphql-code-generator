@@ -23,7 +23,7 @@ const documents: Documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query HelloQuery {\n    hello\n  }\n'
+  source: '\n  query HelloQuery {\n    hello\n  }\n',
 ): typeof import('./graphql').HelloQueryDocument;
 
 export function graphql(source: string) {

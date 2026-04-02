@@ -9,8 +9,6 @@ const DEFAULT_JSDOC_KEY = 'default';
 const CWD = process.cwd();
 const OUT_PATH = join(CWD, 'public/config.schema.json');
 
-const prettierOptions = prettier.resolveConfig.sync(CWD);
-
 async function generate(): Promise<void> {
   const { schema } = transformDocs();
   // Remove non-standard keys
@@ -28,7 +26,11 @@ async function generate(): Promise<void> {
     }
     return v;
   });
-  const prettifiedSchema = prettier.format(JSON.stringify(schema), { ...prettierOptions, parser: 'json' });
+  const prettierOptions = await prettier.resolveConfig(CWD);
+  const prettifiedSchema = await prettier.format(JSON.stringify(schema), {
+    ...prettierOptions,
+    parser: 'json',
+  });
   await writeFile(OUT_PATH, prettifiedSchema);
 }
 

@@ -1,16 +1,22 @@
 ---
 title: typescript-urql
-description: GraphQL codegen plugin for generating TypeScript code using urql. This plugin generates React Hooks and TypeScript types.
+description:
+  GraphQL codegen plugin for generating TypeScript code using urql. This plugin generates React
+  Hooks and TypeScript types.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <Callout type="info">
 
-We now recommend using the `client-preset` package for a **better developer experience** and smaller impact on bundle size.
+We now recommend using the `client-preset` package for a **better developer experience** and smaller
+impact on bundle size.
 
 **Get started on [our "React/Vue" guide](/docs/guides/react-vue).**
 

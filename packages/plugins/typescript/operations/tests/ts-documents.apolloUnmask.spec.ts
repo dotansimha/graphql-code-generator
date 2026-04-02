@@ -1,6 +1,6 @@
 import { parse } from 'graphql';
-import { schema } from './shared/schema.js';
 import { plugin } from '../src/index.js';
+import { schema } from './shared/schema.js';
 
 describe('TypeScript Operations Plugin - apolloUnmask', () => {
   it("'mask' with @unmask configured with apolloUnmask yields correct types", async () => {
@@ -18,7 +18,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toMatchInlineSnapshot(`
@@ -47,7 +47,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask' },
-      { outputFile: '' }
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
@@ -77,8 +77,11 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
     const result = await plugin(
       schema,
       [{ location: 'test-file.ts', document: ast }],
-      { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: false } },
-      { outputFile: '' }
+      {
+        inlineFragmentTypes: 'mask',
+        customDirectives: { apolloUnmask: false },
+      },
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
@@ -114,7 +117,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
@@ -153,7 +156,7 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;

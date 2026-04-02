@@ -1,4 +1,4 @@
-import { ASTNode, OperationDefinitionNode, Kind, visit } from 'graphql';
+import { ASTNode, Kind, OperationDefinitionNode, visit } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 /**
@@ -18,7 +18,9 @@ export const addTypenameSelectionDocumentTransform: Types.DocumentTransformObjec
                 (parent as OperationDefinitionNode).operation === 'subscription';
               if (
                 !isSubscriptionRoot &&
-                !node.selections.find(selection => selection.kind === 'Field' && selection.name.value === '__typename')
+                !node.selections.find(
+                  selection => selection.kind === 'Field' && selection.name.value === '__typename',
+                )
               ) {
                 return {
                   ...node,

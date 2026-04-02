@@ -1,9 +1,9 @@
-import { codegen } from '@graphql-codegen/core';
 import { parse } from 'graphql';
 import { load } from 'js-yaml';
+import { codegen } from '@graphql-codegen/core';
+import { Config } from './formatter';
 import { pluginLoaderMap, presetLoaderMap } from './plugins';
 import { normalizeConfig } from './utils';
-import { Config } from './formatter';
 
 if (typeof window !== 'undefined') {
   // @ts-ignore
@@ -11,7 +11,12 @@ if (typeof window !== 'undefined') {
   window.global = window; // type-graphql error - global is not defined
 }
 
-export async function generate(config: string, schema: string, documents?: string, documentsLocation?: string) {
+export async function generate(
+  config: string,
+  schema: string,
+  documents?: string,
+  documentsLocation?: string,
+) {
   try {
     const outputs = [];
     const cleanTabs = config.replace(/\t/g, '  ');
@@ -46,11 +51,12 @@ export async function generate(config: string, schema: string, documents?: strin
         plugins?.map(async pluginElement => {
           const [pluginName] = Object.keys(pluginElement);
           try {
-            pluginMap[pluginName as string] = await pluginLoaderMap[pluginName as keyof typeof pluginLoaderMap]();
+            pluginMap[pluginName as string] =
+              await pluginLoaderMap[pluginName as keyof typeof pluginLoaderMap]();
           } catch (e) {
             console.error(e);
           }
-        })
+        }),
       );
 
       if (!outputOptions.preset) {
@@ -59,15 +65,20 @@ export async function generate(config: string, schema: string, documents?: strin
           ...props,
         });
       } else {
-        const presetExport = await presetLoaderMap[outputOptions.preset as unknown as keyof typeof presetLoaderMap]();
+        const presetExport =
+          await presetLoaderMap[outputOptions.preset as unknown as keyof typeof presetLoaderMap]();
         const presetFn = typeof presetExport === 'function' ? presetExport : presetExport.preset;
 
         runConfigurations.push(
           ...(await presetFn.buildGeneratesSection({
             baseOutputDir: filename,
-            presetConfig: { ...outputOptions.presetConfig, typesPath: 'graphql.ts', baseTypesPath: 'graphql.ts' },
+            presetConfig: {
+              ...outputOptions.presetConfig,
+              typesPath: 'graphql.ts',
+              baseTypesPath: 'graphql.ts',
+            },
             ...props,
-          }))
+          })),
         );
       }
     }
@@ -95,7 +106,7 @@ export async function generate(config: string, schema: string, documents?: strin
       return error.errors
         .map(
           (subError: any) => `${subError.message}:
-${subError.details}`
+${subError.details}`,
         )
         .join('\n');
     }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import { graphql, FragmentType, useFragment } from '../gql';
 import { useQuery } from 'urql';
+import { FragmentType, graphql, useFragment } from '../gql';
 
 const TweetFragment = graphql(/* GraphQL */ `
   fragment TweetFragment on Tweet {

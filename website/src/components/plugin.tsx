@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { Tabs, Callout, mdxComponents, RemoteContent } from '@theguild/components';
+import { Callout, mdxComponents, RemoteContent, Tabs } from '@theguild/components';
 
 export function PluginHeader(): ReactElement {
   // Get the data from SSG, and render it as a component.

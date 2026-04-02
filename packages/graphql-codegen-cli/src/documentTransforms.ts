@@ -4,7 +4,7 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 export async function getDocumentTransform(
   documentTransform: Types.OutputDocumentTransform,
   loader: Types.PackageLoaderFn<Types.DocumentTransformObject>,
-  defaultName: string
+  defaultName: string,
 ): Promise<Types.ConfiguredDocumentTransform> {
   if (typeof documentTransform === 'string') {
     const transformObject = await getDocumentTransformByName(documentTransform, loader);
@@ -16,27 +16,35 @@ export async function getDocumentTransform(
   if (isTransformFileConfig(documentTransform)) {
     const name = Object.keys(documentTransform)[0];
     const transformObject = await getDocumentTransformByName(name, loader);
-    return { name, transformObject, config: Object.values(documentTransform)[0] };
+    return {
+      name,
+      transformObject,
+      config: Object.values(documentTransform)[0],
+    };
   }
   throw new Error(
     `
         An unknown format document transform: '${defaultName}'.
-    `
+    `,
   );
 }
 
-function isTransformObject(config: Types.OutputDocumentTransform): config is Types.DocumentTransformObject {
+function isTransformObject(
+  config: Types.OutputDocumentTransform,
+): config is Types.DocumentTransformObject {
   return typeof config === 'object' && config.transform && typeof config.transform === 'function';
 }
 
-function isTransformFileConfig(config: Types.OutputDocumentTransform): config is Types.DocumentTransformFileConfig {
+function isTransformFileConfig(
+  config: Types.OutputDocumentTransform,
+): config is Types.DocumentTransformFileConfig {
   const keys = Object.keys(config);
   return keys.length === 1 && typeof keys[0] === 'string';
 }
 
 export async function getDocumentTransformByName(
   name: string,
-  loader: Types.PackageLoaderFn<Types.DocumentTransformObject>
+  loader: Types.PackageLoaderFn<Types.DocumentTransformObject>,
 ): Promise<Types.DocumentTransformObject> {
   const possibleNames = [
     `@graphql-codegen/${name}`,
@@ -57,7 +65,7 @@ export async function getDocumentTransformByName(
               Unable to load document transform matching '${name}'.
               Reason:
                 ${err.message}
-            `
+            `,
         );
       }
     }
@@ -67,7 +75,7 @@ export async function getDocumentTransformByName(
     .map(name =>
       `
         - ${name}
-    `.trimEnd()
+    `.trimEnd(),
     )
     .join('');
 
@@ -77,6 +85,6 @@ export async function getDocumentTransformByName(
         Install one of the following packages:
 
         ${possibleNamesMsg}
-      `
+      `,
   );
 }

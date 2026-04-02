@@ -1,5 +1,7 @@
 ---
-description: GraphQL Code Generator can generate typed results for your GraphQL operations. This tutorial uses GraphQL Yoga, but the practices are applicable to testing any GraphQL server.
+description:
+  GraphQL Code Generator can generate typed results for your GraphQL operations. This tutorial uses
+  GraphQL Yoga, but the practices are applicable to testing any GraphQL server.
 ---
 
 import { Callout } from '@theguild/components'
@@ -14,7 +16,9 @@ This tutorial uses GraphQL Yoga, but the practices are applicable to testing any
 
 <Callout type="info">
 
-Refer to [GraphQL Codegen - Yoga example](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/yoga-tests) for a fully running example using [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server).
+Refer to
+[GraphQL Codegen - Yoga example](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/yoga-tests)
+for a fully running example using [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server).
 
 </Callout>
 
@@ -116,8 +120,8 @@ export const yoga = createYoga({
 Now that we have a GraphQL Yoga server, we can write some tests.
 
 ```ts filename="./src/yoga.spec.ts"
+import { print, type ExecutionResult } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { type ExecutionResult, print } from 'graphql'
 import { graphql } from './gql'
 import { yoga } from './yoga'
 
@@ -183,7 +187,8 @@ describe('Yoga Tests', () => {
 })
 ```
 
-We can then generate the types for the referenced GraphQL operation using the GraphQL Code Generator CLI.
+We can then generate the types for the referenced GraphQL operation using the GraphQL Code Generator
+CLI.
 
 ```sh
 npx graphql-codegen
@@ -200,8 +205,8 @@ npx graphql-codegen --watch
 You can then run the tests using `npx jest` (or `npx jest --watch`) for watch mode.
 
 ```ts filename="Typed Execution Result helper function"
+import { print, type ExecutionResult } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { type ExecutionResult, print } from 'graphql'
 import { graphql } from './gql'
 
 function executeOperation<TResult, TVariables>(
@@ -224,9 +229,10 @@ function executeOperation<TResult, TVariables>(
 }
 ```
 
-The `executeOperation` function is a helper function that executes a GraphQL operation and returns a typed result.
-It can be used in any context, whether it is tests or server-to-server communication.
+The `executeOperation` function is a helper function that executes a GraphQL operation and returns a
+typed result. It can be used in any context, whether it is tests or server-to-server communication.
 
 ## Conclusion
 
-GraphQL Code Generator can enhance the developer experience by generating GraphQL operation types for unit and integration tests .
+GraphQL Code Generator can enhance the developer experience by generating GraphQL operation types
+for unit and integration tests .

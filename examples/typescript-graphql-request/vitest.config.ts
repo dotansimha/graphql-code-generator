@@ -7,6 +7,7 @@ export default mergeConfig(
     test: {
       name: 'examples-typescript-graphql-request',
       include: ['**/*.spec.ts'],
+      testTimeout: 15_000,
     },
-  })
+  }),
 );

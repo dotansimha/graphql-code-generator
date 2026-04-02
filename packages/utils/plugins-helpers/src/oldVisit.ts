@@ -9,7 +9,7 @@ type OldVisitor = {
 
 export function oldVisit(
   root: ASTNode,
-  { enter: enterVisitors, leave: leaveVisitors, ...newVisitor }: OldVisitor
+  { enter: enterVisitors, leave: leaveVisitors, ...newVisitor }: OldVisitor,
 ): any {
   if (typeof enterVisitors === 'object') {
     for (const key in enterVisitors) {

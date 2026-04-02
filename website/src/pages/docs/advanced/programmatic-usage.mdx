@@ -1,5 +1,7 @@
 ---
-description: GraphQL Code Generator also provides a complete programmatic API. The programmatic API can be used if you need to customize the execution flow or write a tool that uses the codegen.
+description:
+  GraphQL Code Generator also provides a complete programmatic API. The programmatic API can be used
+  if you need to customize the execution flow or write a tool that uses the codegen.
 ---
 
 import { Callout } from '@theguild/components'
@@ -8,7 +10,8 @@ import { Callout } from '@theguild/components'
 
 GraphQL Code Generator also provides a complete programmatic API.
 
-The programmatic API can be used if you need to customize the execution flow or write a tool that uses the codegen.
+The programmatic API can be used if you need to customize the execution flow or write a tool that
+uses the codegen.
 
 ## Basic Programmatic Usage
 
@@ -18,12 +21,13 @@ In order to use the programmatic API, start by importing `codegen` from `@graphq
 import { codegen } from '@graphql-codegen/core'
 ```
 
-Then, create a configuration object ([complete signature](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L6-L21)):
+Then, create a configuration object
+([complete signature](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L6-L21)):
 
 ```ts
 import fs from 'node:fs'
 import path from 'node:path'
-import { buildSchema, printSchema, parse, GraphQLSchema } from 'graphql'
+import { buildSchema, GraphQLSchema, parse, printSchema } from 'graphql'
 import * as typescriptPlugin from '@graphql-codegen/typescript'
 
 const schema: GraphQLSchema = buildSchema(`type A { name: String }`)
@@ -48,13 +52,17 @@ const config = {
 ```
 
 <Callout>
-  The `schema` field be a valid `GraphQLSchema` object. If you need to load your GraphQL schema from an external source
-  (file, URL), you can use `loadSchema` from `@graphql-tools/load`.
+  The `schema` field be a valid `GraphQLSchema` object. If you need to load your GraphQL schema from
+  an external source (file, URL), you can use `loadSchema` from `@graphql-tools/load`.
 </Callout>
 
-Notice that a plugin name key in `pluginMap` and `plugins` must match to identify a plugin and its configuration.
+Notice that a plugin name key in `pluginMap` and `plugins` must match to identify a plugin and its
+configuration.
 
-<Callout>You need to import the plugin in your favorite way; you can also use `await import` to lazy load it.</Callout>
+<Callout>
+  You need to import the plugin in your favorite way; you can also use `await import` to lazy load
+  it.
+</Callout>
 
 Then, provide the config object to `codegen`:
 
@@ -72,13 +80,16 @@ console.log('Outputs generated!')
 <Callout>
 **Loading schema and documents**
 
-You can use one of the tools from [`@graphql-tools`](https://github.com/ardatan/graphql-tools) for file loading, schema merging, transformations and more.
+You can use one of the tools from [`@graphql-tools`](https://github.com/ardatan/graphql-tools) for
+file loading, schema merging, transformations and more.
 
 </Callout>
 
 ## Using the CLI instead of `core`
 
-If you wish to have the benefits that `cli` package has (like loading schema and document files, parsing endpoints and more), you can use `require()` (or `import`) for `@graphql-codegen/cli` directly with Node.JS:
+If you wish to have the benefits that `cli` package has (like loading schema and document files,
+parsing endpoints and more), you can use `require()` (or `import`) for `@graphql-codegen/cli`
+directly with Node.JS:
 
 ```js
 import { generate } from '@graphql-codegen/cli'
@@ -102,6 +113,6 @@ async function doSomething() {
 The return value should be of type `Promise<FileOutput[]>`.
 
 <Callout type="warning">
-  This usage will not work in a browser environment because the `cli` package depends on Node.js internals and the file
-  system.
+  This usage will not work in a browser environment because the `cli` package depends on Node.js
+  internals and the file system.
 </Callout>

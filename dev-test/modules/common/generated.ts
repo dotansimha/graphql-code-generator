@@ -1,5 +1,6 @@
-import * as Types from '../types.js';
 import * as gm from 'graphql-modules';
+import * as Types from '../types.js';
+
 export namespace CommonModule {
   interface DefinedFields {
     Query: 'ping';

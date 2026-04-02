@@ -1,6 +1,7 @@
 # Yoga Testing Setup
 
-Example for executing typed GraphQL operations against your Yoga instance within tests using GraphQL Code Generator.
+Example for executing typed GraphQL operations against your Yoga instance within tests using GraphQL
+Code Generator.
 
 [Learn more about Yoga - The GraphQL Server.](https://the-guild.dev/graphql/yoga-server)
 

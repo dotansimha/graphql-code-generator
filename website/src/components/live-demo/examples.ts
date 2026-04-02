@@ -184,7 +184,8 @@ export const EXAMPLES: Record<
     },
     {
       name: 'Apollo-Client v3 TypePolicies',
-      description: 'This plugin generates fully-typed `keyFields` and Type-Policies for Apollo-Client v3.',
+      description:
+        'This plugin generates fully-typed `keyFields` and Type-Policies for Apollo-Client v3.',
       tags: ['typescript', 'apollo'],
       config: `generates:
       type-policies.ts:
@@ -408,7 +409,8 @@ export const EXAMPLES: Record<
           chats: [Chat!]! @link
         }
 
-        type Profile @entity(embedded: true, additionalFields: [{ path: "dateOfBirth", type: "string" }]) {
+        type Profile
+          @entity(embedded: true, additionalFields: [{ path: "dateOfBirth", type: "string" }]) {
           name: String! @column
           age: Int
         }

@@ -1,6 +1,7 @@
 {
   "name": "@graphql-codegen/typescript-operations",
   "version": "5.0.9",
+  "type": "module",
   "description": "GraphQL Code Generator plugin for generating TypeScript types for GraphQL queries, mutations, subscriptions and fragments",
   "repository": {
     "type": "git",
@@ -8,28 +9,8 @@
     "directory": "packages/plugins/typescript/operations"
   },
   "license": "MIT",
-  "scripts": {
-    "lint": "eslint **/*.ts",
-    "test": "vitest --no-watch"
-  },
-  "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^6.1.1",
-    "@graphql-codegen/typescript": "^5.0.9",
-    "@graphql-codegen/visitor-plugin-common": "^6.2.4",
-    "auto-bind": "~4.0.0",
-    "tslib": "~2.6.0"
-  },
-  "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
-    "graphql-sock": "^1.0.0"
-  },
-  "peerDependenciesMeta": {
-    "graphql-sock": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "graphql-sock": "1.0.0"
+  "engines": {
+    "node": ">=16"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -51,15 +32,34 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "vitest --no-watch"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+    "graphql-sock": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "graphql-sock": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "^6.1.1",
+    "@graphql-codegen/typescript": "^5.0.9",
+    "@graphql-codegen/visitor-plugin-common": "^6.2.4",
+    "auto-bind": "~4.0.0",
+    "tslib": "~2.6.0"
+  },
+  "devDependencies": {
+    "graphql-sock": "1.0.0"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "type": "module",
-  "engines": {
-    "node": ">=16"
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
   }
 }
