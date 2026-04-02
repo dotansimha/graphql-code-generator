@@ -28,7 +28,7 @@ async function generate(): Promise<void> {
     }
     return v;
   });
-  const prettifiedSchema = prettier.format(JSON.stringify(schema), {
+  const prettifiedSchema = await prettier.format(JSON.stringify(schema), {
     ...prettierOptions,
     parser: 'json',
   });

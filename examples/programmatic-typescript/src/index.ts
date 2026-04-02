@@ -72,7 +72,7 @@ const schema = makeExecutableSchema({
 
   await promises.writeFile(
     'src/gql.generated.ts',
-    prettier.format(codegenCode, {
+    await prettier.format(codegenCode, {
       ...(await prettier.resolveConfig(process.cwd())),
       parser: 'typescript',
     }),

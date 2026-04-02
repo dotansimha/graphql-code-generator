@@ -68,7 +68,7 @@ describe('TypeScript Operations Plugin - nullability', () => {
       },
     });
 
-    const formattedContent = prettier.format(result.content, {
+    const formattedContent = await prettier.format(result.content, {
       parser: 'typescript',
     });
     expect(formattedContent).toMatchInlineSnapshot(`
@@ -111,7 +111,7 @@ describe('TypeScript Operations Plugin - nullability', () => {
       },
     });
 
-    const formattedContent = prettier.format(result.content, {
+    const formattedContent = await prettier.format(result.content, {
       parser: 'typescript',
     });
     expect(formattedContent).toMatchInlineSnapshot(`
