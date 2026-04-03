@@ -5643,10 +5643,10 @@
   dependencies:
     wonka "^6.1.2"
 
-"@urql/core@^5.1.1":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-5.2.0.tgz#77ee41e192e261fea30c2ca6c2f340410b45d214"
-  integrity sha512-/n0ieD0mvvDnVAXEQgX/7qJiVcvYvNkOHeBvkwtylfjydar123caCXcl58PXFY11oU1oquJocVXHxLAbtv4x1A==
+"@urql/core@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-6.0.1.tgz#df2e3d606e4d1da2655a78cd78e7b84af4b95cee"
+  integrity sha512-FZDiQk6jxbj5hixf2rEPv0jI+IZz0EqqGW8mJBEug68/zHTtT+f34guZDmyjJZyiWbj0vL165LoMr/TkeDHaug==
   dependencies:
     "@0no-co/graphql.web" "^1.0.13"
     wonka "^6.3.2"
@@ -5661,12 +5661,12 @@
   resolved "https://registry.yarnpkg.com/@urql/introspection/-/introspection-1.2.1.tgz#4d864c681ef540d13322d31b67b45394f2f32d83"
   integrity sha512-U9FTSISz69EEK3bHWDsqux9JqOeiLzr3eDFBQ5DmHuTLaBsd5mjPdtLRzzzmb9nW1Ygd6IR8YcuM7zeNqQ5lCQ==
 
-"@urql/vue@^1.0.0":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@urql/vue/-/vue-1.4.3.tgz#8802413d58e90c8faf4b58548ea3d74022042643"
-  integrity sha512-+zdMQFBHL1V+tdTKzAqhiIP14cJ6GAUDux7uhC3rAt/rQhaVcdRmLuf0dhco04UHC+rdkd6sZ4epemL9VeTfRA==
+"@urql/vue@^2.0.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@urql/vue/-/vue-2.1.0.tgz#45b5bcdd0987106b45796c945beab71e8d0c30cb"
+  integrity sha512-fRsMOSJze7d9y2NUd31ekZMUWDoc+HYv/jFcO9iPpRFCFlqcuqto5r0v54jDB6C7MEo+xLsqRQGuxe0NM0J8YA==
   dependencies:
-    "@urql/core" "^5.1.1"
+    "@urql/core" "^6.0.1"
     wonka "^6.3.2"
 
 "@vitejs/plugin-react-swc@^4.0.0":
