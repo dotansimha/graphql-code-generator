@@ -26,7 +26,7 @@
     "@types/react-dom": "^19.0.0",
     "cypress": "15.13.1",
     "start-server-and-test": "3.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^6.0.0"
   },
   "bob": false,
   "browserslist": {
