@@ -14,7 +14,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.10",
     "@graphql-typed-document-node/core": "3.2.0",
-    "@vitejs/plugin-react-swc": "^3.0.0",
+    "@vitejs/plugin-react-swc": "^4.0.0",
     "graphql": "16.9.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
