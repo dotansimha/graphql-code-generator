@@ -19,7 +19,7 @@
     "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react-swc": "^3.3.0",
+    "@vitejs/plugin-react-swc": "^4.0.0",
     "typescript": "5.5.4",
     "vite": "^8.0.0"
   }
