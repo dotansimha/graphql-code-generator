@@ -14,6 +14,9 @@ import {
   UnnormalizedTypeDefPointer,
 } from '@graphql-tools/load';
 import { UrlLoader } from '@graphql-tools/url-loader';
+import { version } from '../package.json';
+
+const USER_AGENT = `graphql-codegen/${version}`;
 
 export const defaultSchemaLoadOptions = {
   assumeValidSDL: true,
@@ -47,6 +50,10 @@ export async function loadSchema(
       loaders,
       ...config,
       ...config.config,
+      headers: {
+        'User-Agent': USER_AGENT,
+        ...config.headers,
+      },
     });
     return schema;
   } catch (e) {
@@ -97,6 +104,10 @@ export async function loadDocuments(
       loaders,
       ...config,
       ...config.config,
+      headers: {
+        'User-Agent': USER_AGENT,
+        ...config.headers,
+      },
     });
     return loadedFromToolkit;
   } catch (error) {
