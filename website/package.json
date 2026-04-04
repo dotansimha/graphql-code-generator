@@ -72,7 +72,7 @@
     "postcss-nesting": "^13.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-markdown": "9.0.3",
+    "react-markdown": "10.1.0",
     "react-select": "5.8.0",
     "typescript-json-schema": "0.56.0"
   },
