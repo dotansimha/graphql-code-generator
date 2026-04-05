@@ -20,7 +20,7 @@
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^5.0.0",
+    "@vitejs/plugin-react": "^6.0.0",
     "cypress": "15.7.1",
     "serve": "14.2.3",
     "start-server-and-test": "3.0.0",
