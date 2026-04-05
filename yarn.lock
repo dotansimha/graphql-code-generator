@@ -2509,17 +2509,17 @@
     auto-bind "~4.0.0"
     tslib "^2.8.1"
 
-"@graphql-codegen/typescript-mongodb@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-mongodb/-/typescript-mongodb-4.0.0.tgz#b4a4aa65ee723b29e366600416a610be2e61310a"
-  integrity sha512-zps/cI0ZzyCs39WmimkMJMzvfTTn6XzhYmctzW+1W8lk9VmpCXkGlPdFaYXnajEhl20QsNmR742TXQkoH4VorA==
+"@graphql-codegen/typescript-mongodb@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-mongodb/-/typescript-mongodb-4.0.1.tgz#29e6916c942849df04cab6cd2839188857a89c99"
+  integrity sha512-PsgO44AcB4GcopRkULszzcCqF/feZGknGSJbhOPBmoCWUxGZSJ8icIwEFZP/TleGJmHo5hYnBINKqj54GBsKww==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^6.1.1"
     "@graphql-codegen/typescript" "^5.0.9"
     "@graphql-codegen/visitor-plugin-common" "^6.2.4"
     "@graphql-tools/utils" "^11.0.0"
     auto-bind "~4.0.0"
-    lodash "~4.17.0"
+    lodash "^4.18.1"
     tslib "^2.8.1"
 
 "@graphql-codegen/typescript-msw@4.0.0":
@@ -11047,7 +11047,12 @@ lodash.startcase@^4.4.0:
   resolved "https://registry.yarnpkg.com/lodash.startcase/-/lodash.startcase-4.4.0.tgz#9436e34ed26093ed7ffae1936144350915d9add8"
   integrity sha512-+WKqsK294HMSc2jEbNgpHpd0JfIBhp7rEV4aqXWqFr6AlXov+SlcgB1Fv01y2kGe3Gc8nMW7VA0SrGuSkRfIEg==
 
-lodash@^4.17.21, lodash@^4.17.23, lodash@~4.17.0:
+lodash@^4.17.21, lodash@^4.17.23, lodash@^4.18.1:
+  version "4.18.1"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.18.1.tgz#ff2b66c1f6326d59513de2407bf881439812771c"
+  integrity sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==
+
+lodash@~4.17.0:
   version "4.17.23"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.23.tgz#f113b0378386103be4f6893388c73d0bde7f2c5a"
   integrity sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==
