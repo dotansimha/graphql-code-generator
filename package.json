@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "bob build",
-    "ci:lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore --output-file eslint_report.json --format json .",
+    "ci:lint": "eslint --cache --output-file eslint_report.json --format json .",
     "clean": "rimraf node_modules/",
     "examples:build": "set -o xtrace && eval $(node scripts/print-example-ci-command.js build)",
     "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
@@ -26,7 +26,7 @@
     "generate:examples": "yarn generate:examples:cjs",
     "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
-    "lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --cache --ignore-path .gitignore .",
+    "lint": "eslint --cache .",
     "postbuild": "yarn fix-bins",
     "postinstall": "patch-package && husky install",
     "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
@@ -49,11 +49,12 @@
     "@babel/preset-typescript": "7.28.5",
     "@changesets/changelog-github": "0.6.0",
     "@changesets/cli": "2.30.0",
-    "@theguild/eslint-config": "0.13.3",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@theguild/eslint-config": "0.13.4",
     "@theguild/prettier-config": "3.0.1",
     "bob-the-bundler": "7.0.1",
-    "cross-env": "10.1.0",
-    "eslint": "9.9.0",
+    "eslint": "10.2.0",
     "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5",
     "graphql": "16.9.0",
     "husky": "9.1.7",
@@ -74,12 +75,21 @@
     "wrangler": "4.1.0"
   },
   "resolutions": {
+    "@rushstack/eslint-patch": "1.16.1",
+    "@typescript-eslint/eslint-plugin": "8.58.0",
+    "@typescript-eslint/parser": "8.58.0",
+    "@typescript-eslint/scope-manager": "8.58.0",
+    "@typescript-eslint/type-utils": "8.58.0",
+    "@typescript-eslint/types": "8.58.0",
+    "@typescript-eslint/typescript-estree": "8.58.0",
+    "@typescript-eslint/utils": "8.58.0",
+    "@typescript-eslint/visitor-keys": "8.58.0",
     "eslint-plugin-promise": "7.1.0",
     "typescript": "5.5.4"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
-      "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --fix"
+      "eslint --fix"
     ],
     "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
