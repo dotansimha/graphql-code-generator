@@ -3,22 +3,32 @@ title: typescript-msw
 description: TypeScript-MSW - Mock GraphQL requests with MSW.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <PluginHeader />
 
-[MSW](https://mswjs.io/) is a powerful tool for mocking HTTP requests in your tests and development environment. This plugin generates typed mock function wrappers for your GraphQL operations.
+[MSW](https://mswjs.io/) is a powerful tool for mocking HTTP requests in your tests and development
+environment. This plugin generates typed mock function wrappers for your GraphQL operations.
 
-The generated functions are named with the pattern: `mock<OperationName><OperationType>[LinkName]`. As an example, a query with the name `getUser` would generate a mock function `mockGetUserQuery`. If you have links configured for multiple endpoints, the link name will be appended to the end. A link configured for the Stripe API, for example, would generate a mock name `mockAdminMutationStripe`. See below for more examples.
+The generated functions are named with the pattern: `mock<OperationName><OperationType>[LinkName]`.
+As an example, a query with the name `getUser` would generate a mock function `mockGetUserQuery`. If
+you have links configured for multiple endpoints, the link name will be appended to the end. A link
+configured for the Stripe API, for example, would generate a mock name `mockAdminMutationStripe`.
+See below for more examples.
 
 ## Configuration
 
-To use this plugin, you need the `typescript` plugin and `typescript-operations` in your configuration.
+To use this plugin, you need the `typescript` plugin and `typescript-operations` in your
+configuration.
 
-If you are using the [`client`](https://the-guild.dev/graphql/codegen/plugins/presets/preset-client) you can simply add the `typescript-msw` plugin to your configuration:
+If you are using the [`client`](https://the-guild.dev/graphql/codegen/plugins/presets/preset-client)
+you can simply add the `typescript-msw` plugin to your configuration:
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -40,7 +50,8 @@ export default config
 
 ## Usage
 
-The examples below assume the following GraphQL schema with a `getUser` query and a `setEmail` mutation.
+The examples below assume the following GraphQL schema with a `getUser` query and a `setEmail`
+mutation.
 
 ```graphql filename="schema.graphql"
 query GetUser($id: ID!) {
@@ -99,7 +110,9 @@ export mockUserQueryError;
 
 ### Accessing other resolver argument properties
 
-The resolver function receives an object with a number of properties. The most up to date documentation is going to be in the [`msw` docs site](https://mswjs.io/docs/api/graphql#resolver-argument).
+The resolver function receives an object with a number of properties. The most up to date
+documentation is going to be in the
+[`msw` docs site](https://mswjs.io/docs/api/graphql#resolver-argument).
 
 ```ts
 mockGetUserQuery({ query, variables, operationName, request }) => {})
@@ -107,11 +120,13 @@ mockGetUserQuery({ query, variables, operationName, request }) => {})
 
 ## Migrating from MSW 1.x to 2.x
 
-MSW 2.x introduced a number of breaking changes. The types from `msw` are not compatible between the two versions so to upgrade, you will have to make some changes.
+MSW 2.x introduced a number of breaking changes. The types from `msw` are not compatible between the
+two versions so to upgrade, you will have to make some changes.
 
 ### Updating the resolver function
 
-You will need to update callback signatures to use the new resolver argument. In addition, the returned result must be a `Response` object.
+You will need to update callback signatures to use the new resolver argument. In addition, the
+returned result must be a `Response` object.
 
 ```ts filename="msw-v1.ts"
 mockGetUserQuery((req, res, ctx) => {
@@ -129,6 +144,7 @@ After:
 
 ```ts filename="msw-v2.ts"
 import { HttpResponse } from 'msw'
+
 mockGetUserQuery(({ variables }) => {
   const { id } = variables
 
@@ -142,7 +158,9 @@ mockGetUserQuery(({ variables }) => {
 
 ### Replacing the `res.once` method
 
-In addition to the changes above, since the `res` object does not get passed to the resolver, you will need to adjust. To achieve the same behavior, you can pass a second "options" parameter to the mock function.
+In addition to the changes above, since the `res` object does not get passed to the resolver, you
+will need to adjust. To achieve the same behavior, you can pass a second "options" parameter to the
+mock function.
 
 ```ts filename="msw-v1.ts"
 mockGetUserQuery((req, res, ctx) => {

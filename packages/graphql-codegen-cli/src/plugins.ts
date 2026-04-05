@@ -3,7 +3,7 @@ import { CodegenPlugin, Types } from '@graphql-codegen/plugin-helpers';
 
 export async function getPluginByName(
   name: string,
-  pluginLoader: Types.PackageLoaderFn<CodegenPlugin>
+  pluginLoader: Types.PackageLoaderFn<CodegenPlugin>,
 ): Promise<CodegenPlugin> {
   const possibleNames = [
     `@graphql-codegen/${name}`,
@@ -28,7 +28,7 @@ export async function getPluginByName(
               Unable to load template plugin matching '${name}'.
               Reason:
                 ${err.message}
-            `
+            `,
         );
       }
     }
@@ -38,7 +38,7 @@ export async function getPluginByName(
     .map(name =>
       `
         - ${name}
-    `.trimEnd()
+    `.trimEnd(),
     )
     .join('');
 
@@ -48,6 +48,6 @@ export async function getPluginByName(
         Install one of the following packages:
 
         ${possibleNamesMsg}
-      `
+      `,
   );
 }

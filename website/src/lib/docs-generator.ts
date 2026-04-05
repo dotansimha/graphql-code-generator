@@ -1,7 +1,10 @@
 import * as TJS from 'typescript-json-schema';
 import { PluginConfig, PresetConfig } from './plugins-docs';
 
-export function generateDocs(schema: TJS.Definition, types: (PluginConfig | PresetConfig)[]): Record<string, string> {
+export function generateDocs(
+  schema: TJS.Definition,
+  types: (PluginConfig | PresetConfig)[],
+): Record<string, string> {
   return Object.fromEntries(
     types.map(p => {
       const subSchema = schema.definitions![p.identifier] as TJS.Definition;
@@ -17,7 +20,7 @@ export function generateDocs(schema: TJS.Definition, types: (PluginConfig | Pres
       }
 
       return [p.name, content];
-    })
+    }),
   );
 }
 
@@ -31,7 +34,11 @@ function generateContentForSchema(schema: TJS.Definition): string {
       return `### \`${propName}\`
 
   type: \`${printType(prop)}\`
-  ${prop.default === undefined ? '' : `default: \`${prop.default === '' ? '(empty)' : prop.default}\`\n`}
+  ${
+    prop.default === undefined
+      ? ''
+      : `default: \`${prop.default === '' ? '(empty)' : prop.default}\`\n`
+  }
   ${prop.description ? `${prop.description}\n` : ''}
   ${
     (prop as any).exampleMarkdown

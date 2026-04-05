@@ -4,12 +4,16 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   stable:
-    uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
+    uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
     with:
       releaseScript: release
-      nodeVersion: 18
     secrets:
-      githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
+      # githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NPM_TOKEN }}

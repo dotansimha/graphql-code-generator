@@ -1,5 +1,6 @@
+import { print, type ExecutionResult } from 'graphql';
+import { describe, expect, it } from 'vitest';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { type ExecutionResult, print } from 'graphql';
 import { graphql } from './gql';
 import { yoga } from './yoga';
 
@@ -18,7 +19,7 @@ function executeOperation<TResult, TVariables>(
         query: print(operation),
         variables: variables ?? undefined,
       }),
-    })
+    }),
   ).then(response => response.json());
 }
 

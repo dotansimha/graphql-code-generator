@@ -1,24 +1,25 @@
 ---
-description: 'GraphQL Code Generator is a tool for generating code from GraphQL schema and operations.'
+description:
+  'GraphQL Code Generator is a tool for generating code from GraphQL schema and operations.'
 ---
 
 # Naming Convention
 
-GraphQL Code Generation provides a `namingConvention` option to control the naming convention of the different code elements generated (types, enum values, …).
+GraphQL Code Generation provides a `namingConvention` option to control the naming convention of the
+different code elements generated (types, enum values, …).
 
 ### `namingConvention`
 
-type: `NamingConvention`
-default: `change-case-all#pascalCase`
+type: `NamingConvention` default: `change-case-all#pascalCase`
 
 Allow you to override the naming convention of the output.
 
-You can either override all namings or specify an object with a specific custom naming convention per output.
-The converter format must be a valid `module#method`.
+You can either override all namings or specify an object with a specific custom naming convention
+per output. The converter format must be a valid `module#method`.
 
-Allowed values for specific output are: `typeNames`, `enumValues`.
-You can also use "keep" to keep all GraphQL names as-is.
-Additionally, you can set `transformUnderscore` to `true` if you want to override the default behavior to preserve underscores.
+Allowed values for specific output are: `typeNames`, `enumValues`. You can also use "keep" to keep
+all GraphQL names as-is. Additionally, you can set `transformUnderscore` to `true` if you want to
+override the default behavior to preserve underscores.
 
 #### Usage Examples
 
@@ -90,14 +91,15 @@ All the examples you saw so far were using `change-case-all` package.
 
 The `change-case-all` package being a direct dependency of graphql-codegen, you can use it directly.
 
-However, you can use any other package as long as it is installed as a dependency.
-The same syntax needs to be used:
+However, you can use any other package as long as it is installed as a dependency. The same syntax
+needs to be used:
 
 ```
 package-name#export-you-want-to-use
 ```
 
-For example, if you want to use `camelCase` from lodash, given that you have it already installed, you will do it like this:
+For example, if you want to use `camelCase` from lodash, given that you have it already installed,
+you will do it like this:
 
 ```ts {5}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -112,11 +114,11 @@ export default config
 
 #### Providing your own naming function
 
-As you may have guessed already, there is nothing fancy about naming functions.
-They are just functions that take a string as input and produce it as output.
+As you may have guessed already, there is nothing fancy about naming functions. They are just
+functions that take a string as input and produce it as output.
 
-If you stick to that signature, you can provide your own naming function.
-You need to provide a CJS module with a default export of a function that takes a string and returns a string.
+If you stick to that signature, you can provide your own naming function. You need to provide a CJS
+module with a default export of a function that takes a string and returns a string.
 
 The following example provides a workaround to a limitation of `change-case-all`:
 
@@ -152,8 +154,8 @@ const config: CodegenConfig = {
 export default config
 ```
 
-This also applies when you want a specific custom naming convention per output.
-Specify your custom naming function on the output or outputs you want to apply:
+This also applies when you want a specific custom naming convention per output. Specify your custom
+naming function on the output or outputs you want to apply:
 
 ```ts {6-8}
 import { CodegenConfig } from '@graphql-codegen/cli'

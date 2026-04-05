@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as types from './graphql.js';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import * as types from './graphql.js';
 
 /**
  * Map of all GraphQL operations in the project.
@@ -13,7 +13,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n': typeof types.FooDocument;
+  '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n': typeof types.LelFragmentDoc;
+  '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n': typeof types.BarDocument;
+};
+const documents: Documents = {
   '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n': types.FooDocument,
   '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n': types.LelFragmentDoc,
   '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n': types.BarDocument,
@@ -37,28 +42,24 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n'
+  source: '\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n',
 ): (typeof documents)['\n  query Foo {\n    Tweets {\n      id\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n'
+  source: '\n  fragment Lel on Tweet {\n    id\n    body\n  }\n',
 ): (typeof documents)['\n  fragment Lel on Tweet {\n    id\n    body\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n'
+  source: '\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n',
 ): (typeof documents)['\n  query Bar {\n    Tweets {\n      ...Lel\n    }\n  }\n'];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 
-export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<
-  infer TType,
-  any
->
-  ? TType
-  : never;
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
+  TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;

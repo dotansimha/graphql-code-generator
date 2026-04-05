@@ -16,7 +16,12 @@ export const CategoryToPackages = {
     'fragment-matcher',
     'add',
   ],
-  presets: ['near-operation-file-preset', 'import-types-preset', 'graphql-modules-preset', 'preset-client'],
+  presets: [
+    'near-operation-file-preset',
+    'import-types-preset',
+    'graphql-modules-preset',
+    'preset-client',
+  ],
   typescript: [
     'named-operations-object',
     'relay-operation-optimizer',

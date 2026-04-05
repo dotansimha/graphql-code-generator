@@ -3,8 +3,12 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -179,7 +183,11 @@ export type OnCommentAddedSubscription = {
     readonly id: number;
     readonly createdAt: number;
     readonly content: string;
-    readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+    readonly postedBy: {
+      readonly __typename?: 'User';
+      readonly login: string;
+      readonly html_url: string;
+    };
   } | null;
 };
 
@@ -191,19 +199,31 @@ export type CommentQueryVariables = Exact<{
 
 export type CommentQuery = {
   readonly __typename?: 'Query';
-  readonly currentUser?: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string } | null;
+  readonly currentUser?: {
+    readonly __typename?: 'User';
+    readonly login: string;
+    readonly html_url: string;
+  } | null;
   readonly entry?: {
     readonly __typename?: 'Entry';
     readonly id: number;
     readonly createdAt: number;
     readonly commentCount: number;
-    readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+    readonly postedBy: {
+      readonly __typename?: 'User';
+      readonly login: string;
+      readonly html_url: string;
+    };
     readonly comments: ReadonlyArray<{
       readonly __typename?: 'Comment';
       readonly id: number;
       readonly createdAt: number;
       readonly content: string;
-      readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+      readonly postedBy: {
+        readonly __typename?: 'User';
+        readonly login: string;
+        readonly html_url: string;
+      };
     } | null>;
     readonly repository: {
       readonly __typename?: 'Repository';
@@ -221,14 +241,22 @@ export type CommentsPageCommentFragment = {
   readonly id: number;
   readonly createdAt: number;
   readonly content: string;
-  readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+  readonly postedBy: {
+    readonly __typename?: 'User';
+    readonly login: string;
+    readonly html_url: string;
+  };
 };
 
 export type CurrentUserForProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserForProfileQuery = {
   readonly __typename?: 'Query';
-  readonly currentUser?: { readonly __typename?: 'User'; readonly login: string; readonly avatar_url: string } | null;
+  readonly currentUser?: {
+    readonly __typename?: 'User';
+    readonly login: string;
+    readonly avatar_url: string;
+  } | null;
 };
 
 export type FeedEntryFragment = {
@@ -247,7 +275,11 @@ export type FeedEntryFragment = {
     readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
   };
   readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
-  readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
+  readonly postedBy: {
+    readonly __typename?: 'User';
+    readonly html_url: string;
+    readonly login: string;
+  };
 };
 
 export type FeedQueryVariables = Exact<{
@@ -275,7 +307,11 @@ export type FeedQuery = {
       readonly owner?: { readonly __typename?: 'User'; readonly avatar_url: string } | null;
     };
     readonly vote: { readonly __typename?: 'Vote'; readonly vote_value: number };
-    readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
+    readonly postedBy: {
+      readonly __typename?: 'User';
+      readonly html_url: string;
+      readonly login: string;
+    };
   } | null> | null;
 };
 
@@ -297,7 +333,11 @@ export type RepoInfoFragment = {
     readonly stargazers_count: number;
     readonly open_issues_count?: number | null;
   };
-  readonly postedBy: { readonly __typename?: 'User'; readonly html_url: string; readonly login: string };
+  readonly postedBy: {
+    readonly __typename?: 'User';
+    readonly html_url: string;
+    readonly login: string;
+  };
 };
 
 export type SubmitCommentMutationVariables = Exact<{
@@ -312,7 +352,11 @@ export type SubmitCommentMutation = {
     readonly id: number;
     readonly createdAt: number;
     readonly content: string;
-    readonly postedBy: { readonly __typename?: 'User'; readonly login: string; readonly html_url: string };
+    readonly postedBy: {
+      readonly __typename?: 'User';
+      readonly login: string;
+      readonly html_url: string;
+    };
   } | null;
 };
 

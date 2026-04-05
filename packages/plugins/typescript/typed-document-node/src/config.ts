@@ -48,4 +48,31 @@ export interface TypeScriptTypedDocumentNodesConfig extends RawClientSideBasePlu
    * ```
    */
   addTypenameToSelectionSets?: boolean;
+
+  /**
+   * @description Allows you to import the operation types from a different file.
+   * @default ""
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript', 'typescript-operations']
+   *      },
+   *      'path/to/file2.ts': {
+   *        plugins: ['typed-document-node'],
+   *        config: {
+   *          importOperationTypesFrom: 'path/to/file.ts'
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  importOperationTypesFrom?: string;
 }

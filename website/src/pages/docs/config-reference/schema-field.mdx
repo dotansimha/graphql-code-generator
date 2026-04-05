@@ -141,6 +141,23 @@ const config: CodegenConfig = {
 export default config;
 ```
 
+Alternatively, you can specify a custom fetch function directly:
+
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli';
+import { myCustomFetch } from './my-custom-fetch.ts'
+
+const config: CodegenConfig = {
+  schema: [
+    {
+      'http://localhost:3000/graphql': {
+        customFetch: myCustomFetch,
+      }
+    }
+  ]
+};
+export default config;
+```
 
 ##### `method`
 

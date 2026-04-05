@@ -9,8 +9,8 @@
     "importHelpers": true,
     "experimentalDecorators": true,
     "module": "esnext",
-    "target": "es2021",
-    "lib": ["es6", "esnext", "es2021", "dom"],
+    "target": "es2022",
+    "lib": ["es6", "esnext", "es2023", "dom"],
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
@@ -29,17 +29,43 @@
       "@graphql-codegen/introspection": ["packages/plugins/other/introspection/src/index.ts"],
       "@graphql-codegen/schema-ast": ["packages/plugins/other/schema-ast/src/index.ts"],
       "@graphql-codegen/time": ["packages/plugins/other/time/src/index.ts"],
-      "@graphql-codegen/visitor-plugin-common": ["packages/plugins/other/visitor-plugin-common/src/index.ts"],
-      "@graphql-codegen/typescript-document-nodes": ["packages/plugins/typescript/document-nodes/src/index.ts"],
-      "@graphql-codegen/typescript-operations": ["packages/plugins/typescript/operations/src/index.ts"],
-      "@graphql-codegen/typescript-resolvers": ["packages/plugins/typescript/resolvers/src/index.ts"],
-      "@graphql-codegen/typed-document-node": ["packages/plugins/typescript/typed-document-node/src/index.ts"],
-      "@graphql-codegen/gql-tag-operations": ["packages/plugins/typescript/gql-tag-operations/src/index.ts"],
+      "@graphql-codegen/visitor-plugin-common": [
+        "packages/plugins/other/visitor-plugin-common/src/index.ts"
+      ],
+      "@graphql-codegen/typescript-document-nodes": [
+        "packages/plugins/typescript/document-nodes/src/index.ts"
+      ],
+      "@graphql-codegen/typescript-operations": [
+        "packages/plugins/typescript/operations/src/index.ts"
+      ],
+      "@graphql-codegen/typescript-resolvers": [
+        "packages/plugins/typescript/resolvers/src/index.ts"
+      ],
+      "@graphql-codegen/typed-document-node": [
+        "packages/plugins/typescript/typed-document-node/src/index.ts"
+      ],
+      "@graphql-codegen/gql-tag-operations": [
+        "packages/plugins/typescript/gql-tag-operations/src/index.ts"
+      ],
       "@graphql-codegen/typescript": ["packages/plugins/typescript/typescript/src/index.ts"],
       "@graphql-codegen/testing": ["packages/utils/graphql-codegen-testing/src/index.ts"],
       "@graphql-codegen/plugin-helpers": ["packages/utils/plugins-helpers/src/index.ts"]
     }
   },
   "include": ["packages"],
-  "exclude": ["**/tests/test-files", "**/tests/test-documents", "**/dist", "**/temp"]
+  "exclude": [
+    "**/dist",
+    "**/temp",
+    "**/vitest.config.ts",
+    "**/vitest.setup.ts",
+    "**/*.spec.ts",
+    "**/tests/**/*.ts",
+    "**/tests/test-files",
+    "**/tests/test-documents"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

@@ -1,15 +1,17 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { relative, resolve } from 'path';
+import chalk from 'chalk';
+import detectIndent from 'detect-indent';
 import generate from '@babel/generator';
 import template from '@babel/template';
 import * as t from '@babel/types';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import chalk from 'chalk';
-import detectIndent from 'detect-indent';
 import { getLatestVersion } from '../utils/get-latest-version.js';
 import { Answers, Tags } from './types.js';
 
-function jsObjectToBabelObjectExpression<T extends object>(obj: T): ReturnType<typeof t.objectExpression> {
+function jsObjectToBabelObjectExpression<T extends object>(
+  obj: T,
+): ReturnType<typeof t.objectExpression> {
   const objExp = t.objectExpression([]);
 
   for (const [key, val] of Object.entries(obj)) {
@@ -18,16 +20,22 @@ function jsObjectToBabelObjectExpression<T extends object>(obj: T): ReturnType<t
         t.objectProperty(
           /^[a-zA-Z0-9]+$/.test(key) ? t.identifier(key) : t.stringLiteral(key),
           t.arrayExpression(
-            val.map(v => (typeof v === 'object' ? jsObjectToBabelObjectExpression(v as object) : t.valueToNode(v)))
-          )
-        )
+            val.map(v =>
+              typeof v === 'object'
+                ? jsObjectToBabelObjectExpression(v as object)
+                : t.valueToNode(v),
+            ),
+          ),
+        ),
       );
     } else {
       objExp.properties.push(
         t.objectProperty(
           /^[a-zA-Z0-9]+$/.test(key) ? t.identifier(key) : t.stringLiteral(key),
-          typeof val === 'object' ? jsObjectToBabelObjectExpression(val as unknown as object) : t.valueToNode(val)
-        )
+          typeof val === 'object'
+            ? jsObjectToBabelObjectExpression(val as unknown as object)
+            : t.valueToNode(val),
+        ),
       );
     }
   }
@@ -86,16 +94,20 @@ export async function writePackage(answers: Answers, configLocation: string) {
   await Promise.all(
     (answers.plugins || []).map(async plugin => {
       pkg.devDependencies[plugin.package] = await getLatestVersion(plugin.package);
-    })
+    }),
   );
 
   if (answers.introspection) {
-    pkg.devDependencies['@graphql-codegen/introspection'] = await getLatestVersion('@graphql-codegen/introspection');
+    pkg.devDependencies['@graphql-codegen/introspection'] = await getLatestVersion(
+      '@graphql-codegen/introspection',
+    );
   }
 
   pkg.devDependencies['@graphql-codegen/cli'] = await getLatestVersion('@graphql-codegen/cli');
   if (answers.targets.includes(Tags.client)) {
-    pkg.devDependencies['@graphql-codegen/client-preset'] = await getLatestVersion('@graphql-codegen/client-preset');
+    pkg.devDependencies['@graphql-codegen/client-preset'] = await getLatestVersion(
+      '@graphql-codegen/client-preset',
+    );
   }
 
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));

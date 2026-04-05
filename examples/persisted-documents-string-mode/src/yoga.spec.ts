@@ -1,6 +1,7 @@
+import { describe, expect, it } from 'vitest';
 import { graphql } from './gql/index';
-import { makeYoga } from './yoga';
 import persistedDocumentsDictionary from './gql/persisted-documents.json';
+import { makeYoga } from './yoga';
 
 const persistedDocuments = new Map<string, string>(Object.entries(persistedDocumentsDictionary));
 
@@ -24,8 +25,8 @@ describe('Persisted Documents', () => {
       }),
     });
     expect(await result.json()).toMatchInlineSnapshot(`
-      Object {
-        "data": Object {
+      {
+        "data": {
           "hello": "Hello world!",
         },
       }
@@ -46,9 +47,9 @@ describe('Persisted Documents', () => {
       }),
     });
     expect(await result.json()).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
+      {
+        "errors": [
+          {
             "message": "PersistedQueryOnly",
           },
         ],
@@ -75,8 +76,8 @@ describe('Persisted Documents', () => {
     });
 
     expect(await result.json()).toMatchInlineSnapshot(`
-      Object {
-        "data": Object {
+      {
+        "data": {
           "hello": "Hello world!",
         },
       }

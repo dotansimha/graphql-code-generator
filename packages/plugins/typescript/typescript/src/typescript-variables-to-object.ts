@@ -1,3 +1,4 @@
+import { Kind, TypeNode } from 'graphql';
 import {
   ConvertNameFn,
   NormalizedAvoidOptionalsConfig,
@@ -6,7 +7,6 @@ import {
   ParsedDirectiveArgumentAndInputFieldMappings,
   ParsedEnumValuesMap,
 } from '@graphql-codegen/visitor-plugin-common';
-import { Kind, TypeNode } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
   constructor(
@@ -19,9 +19,9 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     _enumPrefix = true,
     _enumSuffix = true,
     _enumValues: ParsedEnumValuesMap = {},
-    _applyCoercion: Boolean = false,
+    _applyCoercion: boolean = false,
     _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {},
-    private _maybeType = 'Maybe'
+    private _maybeType = 'Maybe',
   ) {
     super(
       _scalars,
@@ -32,7 +32,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       _enumSuffix,
       _enumValues,
       _applyCoercion,
-      _directiveArgumentAndInputFieldMappings
+      _directiveArgumentAndInputFieldMappings,
     );
   }
 
@@ -47,7 +47,11 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     return str;
   }
 
-  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode, applyCoercion = false): string {
+  public wrapAstTypeWithModifiers(
+    baseType: string,
+    typeNode: TypeNode,
+    applyCoercion = false,
+  ): string {
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
       const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type, applyCoercion);
 
@@ -58,17 +62,27 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       const listInputCoercionExtension = applyCoercion ? ` | ${innerType}` : '';
 
       return this.wrapMaybe(
-        `${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`
+        `${
+          this._immutableTypes ? 'ReadonlyArray' : 'Array'
+        }<${innerType}>${listInputCoercionExtension}`,
       );
     }
     return this.wrapMaybe(baseType);
   }
 
-  protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+  protected formatFieldString(
+    fieldName: string,
+    isNonNullType: boolean,
+    hasDefaultValue: boolean,
+  ): string {
     return `${fieldName}${this.getAvoidOption(isNonNullType, hasDefaultValue) ? '?' : ''}`;
   }
 
-  protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+  protected formatTypeString(
+    fieldType: string,
+    isNonNullType: boolean,
+    hasDefaultValue: boolean,
+  ): string {
     if (!hasDefaultValue && isNonNullType) {
       return this.clearOptional(fieldType);
     }
@@ -83,7 +97,10 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
 
   protected getAvoidOption(isNonNullType: boolean, hasDefaultValue: boolean) {
     const options = this._avoidOptionals;
-    return ((options.object || !options.defaultValue) && hasDefaultValue) || (!options.object && !isNonNullType);
+    return (
+      ((options.object || !options.defaultValue) && hasDefaultValue) ||
+      (!options.object && !isNonNullType)
+    );
   }
 
   protected getPunctuation(): string {

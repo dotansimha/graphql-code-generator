@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as types from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import * as types from './graphql';
 
 /**
  * Map of all GraphQL operations in the project.
@@ -13,7 +13,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n': typeof types.FilmItemFragmentDoc;
+  '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n': typeof types.AllFilmsWithVariablesQueryDocument;
+};
+const documents: Documents = {
   '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n':
     types.FilmItemFragmentDoc,
   '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n':
@@ -38,22 +42,18 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n'
+  source: '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n',
 ): (typeof documents)['\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n'
+  source: '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n'];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 
-export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<
-  infer TType,
-  any
->
-  ? TType
-  : never;
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
+  TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;

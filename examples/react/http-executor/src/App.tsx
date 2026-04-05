@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { buildHTTPExecutor } from '@graphql-tools/executor-http';
 import './App.css';
 import Film from './Film';
-import { graphql, DocumentType } from './gql';
+import { DocumentType, graphql } from './gql';
 
 const executor = buildHTTPExecutor({
-  endpoint: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  endpoint: 'https://graphql.org/graphql/',
 });
 
 const AllFilmsWithVariablesQuery = graphql(/* GraphQL */ `
@@ -21,7 +21,7 @@ const AllFilmsWithVariablesQuery = graphql(/* GraphQL */ `
 `);
 
 // we could also define a client:
-// `const client = new GraphQLClient('https://swapi-graphql.netlify.app/.netlify/functions/index')`
+// `const client = new GraphQLClient('https://graphql.org/graphql/')`
 // and use:
 // `client.request(allFilmsWithVariablesQueryDocument, { first: 10 })`
 
@@ -43,7 +43,13 @@ function App() {
 
   return (
     <div className="App">
-      {data && <ul>{data.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>}
+      {data && (
+        <ul>
+          {data.allFilms?.edges?.map(
+            (e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />,
+          )}
+        </ul>
+      )}
     </div>
   );
 }

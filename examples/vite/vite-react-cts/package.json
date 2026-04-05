@@ -1,31 +1,31 @@
 {
   "name": "example-vite-react-cts",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
+  "private": true,
   "scripts": {
-    "dev": "vite",
     "build": "tsc && vite build",
-    "start": "vite preview --port 3000",
     "codegen": "graphql-codegen --config codegen.cts",
+    "dev": "vite",
+    "start": "vite preview --port 3000",
     "test": "cypress run",
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
     "@apollo/client": "^3.7.10",
     "@graphql-typed-document-node/core": "3.2.0",
-    "@vitejs/plugin-react-swc": "^3.0.0",
+    "@vitejs/plugin-react-swc": "^4.0.0",
     "graphql": "16.9.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "vite": "^5.0.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vite": "^8.0.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "5.0.2",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "cypress": "13.13.3",
-    "start-server-and-test": "2.0.5",
+    "@graphql-codegen/cli": "6.2.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "cypress": "15.7.1",
+    "start-server-and-test": "3.0.0",
     "typescript": "^5.0.0"
   },
   "bob": false,

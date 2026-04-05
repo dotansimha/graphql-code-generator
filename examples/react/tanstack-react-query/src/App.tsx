@@ -16,12 +16,18 @@ const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
 `);
 
 function App() {
-  const { data } = useGraphQL(allFilmsWithVariablesQueryDocument, { first: 10 });
+  const { data } = useGraphQL(allFilmsWithVariablesQueryDocument, {
+    first: 10,
+  });
 
   return (
     <div className="App">
       {data && (
-        <ul>{data.data?.allFilms?.edges?.map((e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />)}</ul>
+        <ul>
+          {data.data?.allFilms?.edges?.map(
+            (e, i) => e?.node && <Film film={e?.node} key={`film-${i}`} />,
+          )}
+        </ul>
       )}
     </div>
   );

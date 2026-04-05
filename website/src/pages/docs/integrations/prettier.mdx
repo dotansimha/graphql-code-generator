@@ -1,15 +1,18 @@
 ---
-description: Learn how to use Prettier and other linters with GraphQL Code Generator to apply your custom code style and formatting rules.
+description:
+  Learn how to use Prettier and other linters with GraphQL Code Generator to apply your custom code
+  style and formatting rules.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Prettier & Linters
 
-The codegen supports lifecycle hooks, and you can use those for integration with Prettier or other linters, to apply your custom code style and formatting rules.
+The codegen supports lifecycle hooks, and you can use those for integration with Prettier or other
+linters, to apply your custom code style and formatting rules.
 
-Before adding a hook, consider the alternative of having codegen ignored in your linting.
-Codegen files should not be edited manually and formatting them slows down your codegen considerably.
+Before adding a hook, consider the alternative of having codegen ignored in your linting. Codegen
+files should not be edited manually and formatting them slows down your codegen considerably.
 Differences can be measured in several seconds for every run on big projects.
 
 [You can read the complete documentation of lifecycle hooks here](/docs/config-reference/lifecycle-hooks)
@@ -20,8 +23,9 @@ Differences can be measured in several seconds for every run on big projects.
 
 **Using `--check` dry-run mode with prettyfied generated files**
 
-Because the [`--check` dry-run mode](/docs/config-reference/codegen-config#dry-run-mode) is comparing local files with in-memory generated content, projects that runs Prettier on files generated with codegen will always end-up returning
-all files as stale.
+Because the [`--check` dry-run mode](/docs/config-reference/codegen-config#dry-run-mode) is
+comparing local files with in-memory generated content, projects that runs Prettier on files
+generated with codegen will always end-up returning all files as stale.
 
 </Callout>
 
@@ -51,7 +55,8 @@ const config: CodegenConfig = {
 export default config
 ```
 
-Consider this method if you're using `near-operation-file` preset as this has better performance when writing many files.
+Consider this method if you're using `near-operation-file` preset as this has better performance
+when writing many files.
 
 ## TSLint
 

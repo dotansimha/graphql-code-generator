@@ -1,11 +1,11 @@
-import { createApp, provide, h } from 'vue';
+import { createApp, h, provide } from 'vue';
 import './assets/main.css';
-import { DefaultApolloClient } from '@vue/apollo-composable';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
+import { DefaultApolloClient } from '@vue/apollo-composable';
 import App from './App.vue';
 
 const httpLink = new HttpLink({
-  uri: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  uri: 'https://graphql.org/graphql/',
 });
 
 // Create the apollo client

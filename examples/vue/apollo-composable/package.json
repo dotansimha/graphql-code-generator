@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test": "cypress run",
+    "dev": "vite",
     "start": "serve -s dist",
+    "test": "cypress run",
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
@@ -17,13 +17,13 @@
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.2",
-    "@vitejs/plugin-vue": "^5.0.0",
-    "typescript": "^5.0.0",
-    "vite": "^5.0.0",
-    "vue-tsc": "^2.0.0",
+    "@graphql-codegen/cli": "^6.2.1",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "cypress": "15.7.1",
     "serve": "14.2.3",
-    "cypress": "13.13.3",
-    "start-server-and-test": "2.0.5"
+    "start-server-and-test": "3.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^8.0.0",
+    "vue-tsc": "^3.0.0"
   }
 }

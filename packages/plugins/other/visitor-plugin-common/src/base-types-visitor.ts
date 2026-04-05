@@ -13,11 +13,9 @@ import {
   Kind,
   ListTypeNode,
   NamedTypeNode,
-  NameNode,
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
-  StringValueNode,
   UnionTypeDefinitionNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
@@ -495,9 +493,11 @@ export interface RawTypesConfig extends RawConfig {
   directiveArgumentAndInputFieldMappingTypeSuffix?: string;
 }
 
+const onlyUnderscoresPattern = /^_+$/;
+
 export class BaseTypesVisitor<
   TRawConfig extends RawTypesConfig = RawTypesConfig,
-  TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig
+  TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig,
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _argumentsTransformer: OperationVariablesToObject;
 
@@ -505,7 +505,7 @@ export class BaseTypesVisitor<
     protected _schema: GraphQLSchema,
     rawConfig: TRawConfig,
     additionalConfig: TPluginConfig,
-    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS,
   ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
@@ -527,7 +527,7 @@ export class BaseTypesVisitor<
       ignoreEnumValuesFromSchema: getConfigValue(rawConfig.ignoreEnumValuesFromSchema, false),
       directiveArgumentAndInputFieldMappings: transformDirectiveArgumentAndInputFieldMappings(
         rawConfig.directiveArgumentAndInputFieldMappings ?? {},
-        rawConfig.directiveArgumentAndInputFieldMappingTypeSuffix
+        rawConfig.directiveArgumentAndInputFieldMappingTypeSuffix,
       ),
       ...additionalConfig,
     });
@@ -550,7 +550,9 @@ export class BaseTypesVisitor<
 
   public getEntireFieldWrapperValue(): string {
     if (this.config.entireFieldWrapperValue) {
-      return `${this.getExportPrefix()}type EntireFieldWrapper<T> = ${this.config.entireFieldWrapperValue};`;
+      return `${this.getExportPrefix()}type EntireFieldWrapper<T> = ${
+        this.config.entireFieldWrapperValue
+      };`;
     }
 
     return '';
@@ -561,12 +563,22 @@ export class BaseTypesVisitor<
       const mappedValue = this.config.scalars[enumName];
 
       if (mappedValue.input.isExternal) {
-        res.push(this._buildTypeImport(mappedValue.input.import, mappedValue.input.source, mappedValue.input.default));
+        res.push(
+          this._buildTypeImport(
+            mappedValue.input.import,
+            mappedValue.input.source,
+            mappedValue.input.default,
+          ),
+        );
       }
 
       if (mappedValue.output.isExternal) {
         res.push(
-          this._buildTypeImport(mappedValue.output.import, mappedValue.output.source, mappedValue.output.default)
+          this._buildTypeImport(
+            mappedValue.output.import,
+            mappedValue.output.source,
+            mappedValue.output.default,
+          ),
         );
       }
 
@@ -594,15 +606,18 @@ export class BaseTypesVisitor<
       const inputScalarValue = this.config.scalars[scalarName].input.type;
       const outputScalarValue = this.config.scalars[scalarName].output.type;
       const scalarType = this._schema.getType(scalarName);
-      const comment = scalarType?.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+      const comment =
+        scalarType?.astNode && scalarType.description
+          ? transformComment(scalarType.description, 1)
+          : '';
       const { scalar } = this._parsedConfig.declarationKind;
 
       return (
         comment +
         indent(
           `${scalarName}: { input: ${inputScalarValue}${this.getPunctuation(
-            scalar
-          )} output: ${outputScalarValue}${this.getPunctuation(scalar)} }`
+            scalar,
+          )} output: ${outputScalarValue}${this.getPunctuation(scalar)} }`,
         )
       );
     });
@@ -626,9 +641,13 @@ export class BaseTypesVisitor<
     for (const [directiveName, parsedMapper] of directiveEntries) {
       const directiveType = this._schema.getDirective(directiveName);
       const comment =
-        directiveType?.astNode && directiveType.description ? transformComment(directiveType.description, 1) : '';
+        directiveType?.astNode && directiveType.description
+          ? transformComment(directiveType.description, 1)
+          : '';
       const { directive } = this._parsedConfig.declarationKind;
-      allDirectives.push(comment + indent(`${directiveName}: ${parsedMapper.type}${this.getPunctuation(directive)}`));
+      allDirectives.push(
+        comment + indent(`${directiveName}: ${parsedMapper.type}${this.getPunctuation(directive)}`),
+      );
     }
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -658,27 +677,27 @@ export class BaseTypesVisitor<
       .export()
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
-      .withComment(node.description as any as string)
+      .withComment(node.description?.value)
       .withBlock(node.fields.join('\n'));
   }
 
   getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
     // As multiple fields always result in a union, we have
     // to force a declaration kind of `type` in this case
-    const declarationKind = node.fields.length === 1 ? this._parsedConfig.declarationKind.input : 'type';
+    const declarationKind =
+      node.fields.length === 1 ? this._parsedConfig.declarationKind.input : 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(declarationKind)
       .withName(this.convertName(node))
-      .withComment(node.description as any as string)
+      .withComment(node.description?.value)
       .withContent(`\n` + node.fields.join('\n  |'));
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     if (this.config.onlyEnums) return '';
 
-    // Why the heck is node.name a string and not { value: string } at runtime ?!
-    if (isOneOfInputObjectType(this._schema.getType(node.name as unknown as string))) {
+    if (isOneOfInputObjectType(this._schema.getType(node.name.value))) {
       return this.getInputObjectOneOfDeclarationBlock(node).string;
     }
 
@@ -688,7 +707,7 @@ export class BaseTypesVisitor<
   InputValueDefinition(node: InputValueDefinitionNode): string {
     if (this.config.onlyEnums) return '';
 
-    const comment = transformComment(node.description as any as string, 1);
+    const comment = transformComment(node.description.value, 1);
     const { input } = this._parsedConfig.declarationKind;
 
     let type: string = node.type as any as string;
@@ -696,11 +715,7 @@ export class BaseTypesVisitor<
       type = this._getDirectiveOverrideType(node.directives) || type;
     }
 
-    return comment + indent(`${node.name}: ${type}${this.getPunctuation(input)}`);
-  }
-
-  Name(node: NameNode): string {
-    return node.value;
+    return comment + indent(`${node.name.value}: ${type}${this.getPunctuation(input)}`);
   }
 
   FieldDefinition(node: FieldDefinitionNode): string {
@@ -710,21 +725,27 @@ export class BaseTypesVisitor<
     const { type } = this._parsedConfig.declarationKind;
     const comment = this.getNodeComment(node);
 
-    return comment + indent(`${node.name}: ${typeString}${this.getPunctuation(type)}`);
+    return comment + indent(`${node.name.value}: ${typeString}${this.getPunctuation(type)}`);
   }
 
-  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+  UnionTypeDefinition(
+    node: UnionTypeDefinitionNode,
+    key: string | number | undefined,
+    parent: any,
+  ): string {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t)))
+      .map(t =>
+        this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t),
+      )
       .join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node))
-      .withComment(node.description as any as string)
+      .withComment(node.description.value)
       .withContent(possibleTypes).string;
   }
 
@@ -732,14 +753,18 @@ export class BaseTypesVisitor<
     return interfaces.join(' & ') + (interfaces.length && hasOtherFields ? ' & ' : '');
   }
 
-  appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
+  appendInterfacesAndFieldsToBlock(
+    block: DeclarationBlock,
+    interfaces: string[],
+    fields: string[],
+  ): void {
     block.withContent(this.mergeInterfaces(interfaces, fields.length > 0));
     block.withBlock(this.mergeAllFields(fields, interfaces.length > 0));
   }
 
   getObjectTypeDeclarationBlock(
     node: ObjectTypeDefinitionNode,
-    originalNode: ObjectTypeDefinitionNode
+    originalNode: ObjectTypeDefinitionNode,
   ): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type, interface: interfacesType } = this._parsedConfig.declarationKind;
@@ -747,27 +772,32 @@ export class BaseTypesVisitor<
       ...(this.config.addTypename
         ? [
             indent(
-              `${this.config.immutableTypes ? 'readonly ' : ''}${optionalTypename}: '${node.name}'${this.getPunctuation(
-                type
-              )}`
+              `${
+                this.config.immutableTypes ? 'readonly ' : ''
+              }${optionalTypename}: '${node.name.value}'${this.getPunctuation(type)}`,
             ),
           ]
         : []),
       ...node.fields,
     ] as string[];
-    const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
+    const interfacesNames = originalNode.interfaces
+      ? originalNode.interfaces.map(i => this.convertName(i))
+      : [];
 
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(type)
       .withName(this.convertName(node))
-      .withComment(node.description as any as string);
+      .withComment(node.description?.value);
 
     if (type === 'interface' || type === 'class') {
       if (interfacesNames.length > 0) {
-        const keyword = interfacesType === 'interface' && type === 'class' ? 'implements' : 'extends';
+        const keyword =
+          interfacesType === 'interface' && type === 'class' ? 'implements' : 'extends';
 
-        declarationBlock.withContent(`${keyword} ` + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+        declarationBlock.withContent(
+          `${keyword} ` + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'),
+        );
       }
 
       declarationBlock.withBlock(this.mergeAllFields(allFields, false));
@@ -786,29 +816,39 @@ export class BaseTypesVisitor<
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
-    return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
+    return [
+      this.getObjectTypeDeclarationBlock(node, originalNode).string,
+      this.buildArgumentsBlock(originalNode),
+    ]
       .filter(f => f)
       .join('\n\n');
   }
 
   getInterfaceTypeDeclarationBlock(
     node: InterfaceTypeDefinitionNode,
-    _originalNode: InterfaceTypeDefinitionNode
+    _originalNode: InterfaceTypeDefinitionNode,
   ): DeclarationBlock {
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
-      .withComment(node.description as any as string);
+      .withComment(node.description?.value);
 
     return declarationBlock.withBlock(node.fields.join('\n'));
   }
 
-  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
+  InterfaceTypeDefinition(
+    node: InterfaceTypeDefinitionNode,
+    key: number | string,
+    parent: any,
+  ): string {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
-    return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
+    return [
+      this.getInterfaceTypeDeclarationBlock(node, originalNode).string,
+      this.buildArgumentsBlock(originalNode),
+    ]
       .filter(f => f)
       .join('\n\n');
   }
@@ -833,7 +873,7 @@ export class BaseTypesVisitor<
     typeIdentifier: string,
     importIdentifier: string | null,
     sourceIdentifier: string | null,
-    sourceFile: string | null
+    sourceFile: string | null,
   ): string[] {
     if (importIdentifier !== sourceIdentifier) {
       // use namespace import to dereference nested enum
@@ -856,14 +896,16 @@ export class BaseTypesVisitor<
 
         if (mappedValue.sourceFile) {
           if (mappedValue.isDefault) {
-            return [this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true)];
+            return [
+              this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true),
+            ];
           }
 
           return this.handleEnumValueMapper(
             mappedValue.typeIdentifier,
             mappedValue.importIdentifier,
             mappedValue.sourceIdentifier,
-            mappedValue.sourceFile
+            mappedValue.sourceFile,
           );
         }
 
@@ -873,7 +915,7 @@ export class BaseTypesVisitor<
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const enumName = node.name as any as string;
+    const enumName = node.name.value;
 
     // In case of mapped external enum string
     if (this.config.enumValues[enumName]?.sourceFile) {
@@ -887,15 +929,10 @@ export class BaseTypesVisitor<
         this.convertName(node, {
           useTypesPrefix: this.config.enumPrefix,
           useTypesSuffix: this.config.enumSuffix,
-        })
+        }),
       )
-      .withComment(node.description as any as string)
+      .withComment(node.description.value)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
-  }
-
-  // We are using it in order to transform "description" field
-  StringValue(node: StringValueNode): string {
-    return node.value;
   }
 
   protected makeValidEnumIdentifier(identifier: string): string {
@@ -905,7 +942,10 @@ export class BaseTypesVisitor<
     return identifier;
   }
 
-  protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
+  protected buildEnumValuesBlock(
+    typeName: string,
+    values: ReadonlyArray<EnumValueDefinitionNode>,
+  ): string {
     const schemaEnumType: GraphQLEnumType | undefined = this._schema
       ? (this._schema.getType(typeName) as GraphQLEnumType)
       : undefined;
@@ -915,16 +955,18 @@ export class BaseTypesVisitor<
         const optionName = this.makeValidEnumIdentifier(
           this.convertName(enumOption, {
             useTypesPrefix: false,
-            transformUnderscore: true,
-          })
+            // We can only strip out the underscores if the value contains other
+            // characters. Otherwise we'll generate syntactically invalid code.
+            transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
+          }),
         );
         const comment = this.getNodeComment(enumOption);
         const schemaEnumValue =
           schemaEnumType && !this.config.ignoreEnumValuesFromSchema
-            ? schemaEnumType.getValue(enumOption.name as any).value
+            ? schemaEnumType.getValue(enumOption.name.value).value
             : undefined;
         let enumValue: string | number =
-          typeof schemaEnumValue === 'undefined' ? (enumOption.name as any) : schemaEnumValue;
+          typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
 
         if (typeof this.config.enumValues[typeName]?.mappedValues?.[enumValue] !== 'undefined') {
           enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
@@ -933,10 +975,9 @@ export class BaseTypesVisitor<
         return (
           comment +
           indent(
-            `${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
-              enumValue,
-              typeof schemaEnumValue !== 'undefined'
-            )}`
+            `${optionName}${
+              this._declarationBlockConfig.enumNameValueSeparator
+            } ${wrapWithSingleQuotes(enumValue, typeof schemaEnumValue !== 'undefined')}`,
           )
         );
       })
@@ -950,27 +991,28 @@ export class BaseTypesVisitor<
   getArgumentsObjectDeclarationBlock(
     node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
     name: string,
-    field: FieldDefinitionNode
+    field: FieldDefinitionNode,
   ): DeclarationBlock {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.arguments)
       .withName(this.convertName(name))
-      .withComment(node.description)
+      .withComment(node.description?.value)
       .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments));
   }
 
   getArgumentsObjectTypeDefinition(
     node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
     name: string,
-    field: FieldDefinitionNode
+    field: FieldDefinitionNode,
   ): string {
     if (this.config.onlyEnums) return '';
     return this.getArgumentsObjectDeclarationBlock(node, name, field).string;
   }
 
   protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode) {
-    const fieldsWithArguments = node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
+    const fieldsWithArguments =
+      node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
     return fieldsWithArguments
       .map(field => {
         const name =
@@ -998,7 +1040,7 @@ export class BaseTypesVisitor<
   protected _getDirectiveOverrideType(directives: ReadonlyArray<DirectiveNode>): string | null {
     const type = directives
       .map(directive => {
-        const directiveName = directive.name as any as string;
+        const directiveName = directive.name.value;
         if (this.config.directiveArgumentAndInputFieldMappings[directiveName]) {
           return this._getDirectiveArgumentNadInputFieldMapping(directiveName);
         }
@@ -1011,7 +1053,7 @@ export class BaseTypesVisitor<
   }
 
   protected _getTypeForNode(node: NamedTypeNode, isVisitingInputType: boolean): string {
-    const typeAsString = node.name as any as string;
+    const typeAsString = node.name.value;
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString, isVisitingInputType ? 'input' : 'output');
@@ -1020,7 +1062,7 @@ export class BaseTypesVisitor<
       return this.config.enumValues[typeAsString].typeIdentifier;
     }
 
-    const schemaType = this._schema.getType(node.name as any);
+    const schemaType = this._schema.getType(typeAsString);
 
     if (schemaType && isEnumType(schemaType)) {
       return this.convertName(node, {
@@ -1054,9 +1096,15 @@ export class BaseTypesVisitor<
     return null;
   }
 
-  getNodeComment(node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode): string {
-    let commentText: string = node.description as any;
-    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+  SchemaExtension() {
+    return null;
+  }
+
+  getNodeComment(
+    node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode,
+  ): string {
+    let commentText = node.description?.value;
+    const deprecationDirective = node.directives.find(v => v.name.value === 'deprecated');
     if (deprecationDirective) {
       const deprecationReason = this.getDeprecationReason(deprecationDirective);
       commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
@@ -1066,11 +1114,11 @@ export class BaseTypesVisitor<
   }
 
   protected getDeprecationReason(directive: DirectiveNode): string | void {
-    if ((directive.name as any) === 'deprecated') {
-      const hasArguments = directive.arguments.length > 0;
+    if (directive.name.value === 'deprecated') {
       let reason = 'Field no longer supported';
-      if (hasArguments) {
-        reason = directive.arguments[0].value as any;
+      const deprecatedReason = directive.arguments[0];
+      if (deprecatedReason && deprecatedReason.value.kind === Kind.STRING) {
+        reason = deprecatedReason.value.value;
       }
       return reason;
     }

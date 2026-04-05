@@ -2,31 +2,30 @@
   "name": "example-react-apollo-client",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "build": "vite build",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "vite",
+    "start": "serve -s dist",
+    "test": "cypress run",
+    "test:end2end": "start-server-and-test start http://localhost:3000 test"
+  },
   "dependencies": {
     "@apollo/client": "^3.7.10",
     "graphql": "^16.6.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.2",
-    "@vitejs/plugin-react": "^4.0.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.10",
-    "typescript": "5.5.4",
+    "@graphql-codegen/cli": "^6.2.1",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "cypress": "15.7.1",
     "serve": "14.2.3",
-    "cypress": "13.13.3",
-    "start-server-and-test": "2.0.5",
-    "vite": "^5.0.0"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "start": "serve -s dist",
-    "test": "cypress run",
-    "test:end2end": "start-server-and-test start http://localhost:3000 test",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "start-server-and-test": "3.0.0",
+    "typescript": "5.5.4",
+    "vite": "^8.0.0"
   }
 }

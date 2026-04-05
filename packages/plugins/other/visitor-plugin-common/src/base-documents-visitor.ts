@@ -11,8 +11,13 @@ import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor.js';
 import { BaseVisitor } from './base-visitor.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import { SelectionSetToObject } from './selection-set-to-object.js';
-import { NormalizedScalarsMap } from './types.js';
-import { buildScalarsFromConfig, DeclarationBlock, DeclarationBlockConfig, getConfigValue } from './utils.js';
+import { CustomDirectivesConfig, NormalizedScalarsMap } from './types.js';
+import {
+  buildScalarsFromConfig,
+  DeclarationBlock,
+  DeclarationBlockConfig,
+  getConfigValue,
+} from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
@@ -40,6 +45,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   skipTypeNameForRoot: boolean;
   experimentalFragmentVariables: boolean;
   mergeFragmentTypes: boolean;
+  customDirectives: CustomDirectivesConfig;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -149,11 +155,36 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @ignore
    */
   namespacedImportName?: string;
+
+  /**
+   * @description Configures behavior for use with custom directives from
+   * various GraphQL libraries.
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file.ts': {
+   *        plugins: ['typescript'],
+   *        config: {
+   *          customDirectives: {
+   *            apolloUnmask: true
+   *          }
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  customDirectives?: CustomDirectivesConfig;
 }
 
 export class BaseDocumentsVisitor<
   TRawConfig extends RawDocumentsConfig = RawDocumentsConfig,
-  TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig
+  TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig,
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
@@ -164,7 +195,7 @@ export class BaseDocumentsVisitor<
     rawConfig: TRawConfig,
     additionalConfig: TPluginConfig,
     protected _schema: GraphQLSchema,
-    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS,
   ) {
     super(rawConfig, {
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
@@ -180,6 +211,9 @@ export class BaseDocumentsVisitor<
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       scalars: buildScalarsFromConfig(_schema, rawConfig, defaultScalars),
+      customDirectives: getConfigValue(rawConfig.customDirectives, {
+        apolloUnmask: false,
+      }),
       ...((additionalConfig || {}) as any),
     });
 
@@ -187,7 +221,7 @@ export class BaseDocumentsVisitor<
     this._variablesTransfomer = new OperationVariablesToObject(
       this.scalars,
       this.convertName,
-      this.config.namespacedImportName
+      this.config.namespacedImportName,
     );
   }
 
@@ -238,7 +272,11 @@ export class BaseDocumentsVisitor<
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.getFragmentSuffix(node);
     return [
-      selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig),
+      selectionSet.transformFragmentSelectionSetToTypes(
+        node.name.value,
+        fragmentSuffix,
+        this._declarationBlockConfig,
+      ),
       this.config.experimentalFragmentVariables
         ? new DeclarationBlock({
             ...this._declarationBlockConfig,
@@ -249,7 +287,7 @@ export class BaseDocumentsVisitor<
             .withName(
               this.convertName(node.name.value, {
                 suffix: fragmentSuffix + 'Variables',
-              })
+              }),
             )
             .withBlock(this._variablesTransfomer.transform(node.variableDefinitions)).string
         : undefined,
@@ -270,16 +308,19 @@ export class BaseDocumentsVisitor<
       throw new Error(`Unable to find root schema type for operation type "${node.operation}"!`);
     }
 
-    const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
+    const selectionSet = this._selectionSetToObject.createNext(
+      operationRootType,
+      node.selectionSet,
+    );
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
-      node.variableDefinitions
+      node.variableDefinitions,
     );
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix = this.getOperationSuffix(name, operationType);
     const selectionSetObjects = selectionSet.transformSelectionSet(
       this.convertName(name, {
         suffix: operationTypeSuffix,
-      })
+      }),
     );
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
@@ -288,7 +329,7 @@ export class BaseDocumentsVisitor<
       .withName(
         this.convertName(name, {
           suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
-        })
+        }),
       )
       .withContent(selectionSetObjects.mergedTypeString).string;
 
@@ -301,7 +342,7 @@ export class BaseDocumentsVisitor<
       .withName(
         this.convertName(name, {
           suffix: operationTypeSuffix + 'Variables',
-        })
+        }),
       )
       .withBlock(visitedOperationVariables).string;
 
@@ -312,7 +353,7 @@ export class BaseDocumentsVisitor<
               .export()
               .asKind('type')
               .withName(i.name)
-              .withContent(i.content).string
+              .withContent(i.content).string,
         )
       : [];
 

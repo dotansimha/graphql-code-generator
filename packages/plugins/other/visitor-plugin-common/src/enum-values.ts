@@ -26,7 +26,8 @@ export function parseEnumValues({
           if (value !== name) {
             mapOrStr[enumTypeName] ||= {};
             if (typeof mapOrStr[enumTypeName] !== 'string' && !mapOrStr[enumTypeName][name]) {
-              mapOrStr[enumTypeName][name] = typeof value === 'string' ? escapeString(value) : value;
+              mapOrStr[enumTypeName][name] =
+                typeof value === 'string' ? escapeString(value) : value;
             }
           }
         }
@@ -38,7 +39,7 @@ export function parseEnumValues({
     if (invalidMappings.length > 0) {
       throw new Error(
         `Invalid 'enumValues' mapping! \n
-        The following types does not exist in your GraphQL schema: ${invalidMappings.join(', ')}`
+        The following types does not exist in your GraphQL schema: ${invalidMappings.join(', ')}`,
       );
     }
 
@@ -75,7 +76,7 @@ export function parseEnumValues({
       }
       throw new Error(
         `Invalid "enumValues" configuration \n
-        Enum "${gqlIdentifier}": expected string or object (with enum values mapping)`
+        Enum "${gqlIdentifier}": expected string or object (with enum values mapping)`,
       );
     }, {} as ParsedEnumValuesMap);
   }

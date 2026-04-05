@@ -1,6 +1,5 @@
 import { dirname, join, resolve } from 'path';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { compressToEncodedURIComponent } from 'lz-string';
+import * as LZString from 'lz-string'; // lz-string is a package which has CJS/ESM issues. So, we cannot do `import { something } from 'lz-string'`
 import {
   CompilerOptions,
   createCompilerHost,
@@ -15,6 +14,7 @@ import {
   ScriptTarget,
   ScriptTarget as ScriptTargetType,
 } from 'typescript';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,
@@ -42,7 +42,7 @@ export function validateTs(
   isTsx = false,
   isStrict = false,
   suspenseErrors: string[] = [],
-  compileProgram = false
+  compileProgram = false,
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
@@ -59,9 +59,13 @@ export function validateTs(
   const contents: string =
     typeof pluginOutput === 'string'
       ? pluginOutput
-      : [...new Set([...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])])].join(
-          '\n'
-        );
+      : [
+          ...new Set([
+            ...(pluginOutput.prepend || []),
+            pluginOutput.content,
+            ...(pluginOutput.append || []),
+          ]),
+        ].join('\n');
 
   const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
   const errors: string[] = [];
@@ -74,7 +78,7 @@ export function validateTs(
         fileName: string,
         languageVersion: ScriptTargetType,
         onError?: (message: string) => void,
-        shouldCreateNewSourceFile?: boolean
+        shouldCreateNewSourceFile?: boolean,
       ) => {
         if (fileName === testFile) {
           return createSourceFile(fileName, contents, options.target);
@@ -115,7 +119,7 @@ export function validateTs(
       contents,
       ScriptTarget.ES2016,
       false,
-      isTsx ? ScriptKind.TSX : undefined
+      isTsx ? ScriptKind.TSX : undefined,
     ) as { parseDiagnostics?: Diagnostic[] };
 
     const allDiagnostics = result.parseDiagnostics;
@@ -123,7 +127,9 @@ export function validateTs(
     if (allDiagnostics && allDiagnostics.length > 0) {
       for (const diagnostic of allDiagnostics) {
         if (diagnostic.file) {
-          const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+          const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(
+            diagnostic.start!,
+          );
           const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
           errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
@@ -180,7 +186,7 @@ export function compileTs(
     module: ModuleKind.ESNext,
   },
   isTsx = false,
-  openPlayground = false
+  openPlayground = false,
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
@@ -195,7 +201,7 @@ export function compileTs(
         fileName: string,
         languageVersion: ScriptTargetType,
         onError?: (message: string) => void,
-        shouldCreateNewSourceFile?: boolean
+        shouldCreateNewSourceFile?: boolean,
       ) => {
         if (fileName === testFile) {
           return createSourceFile(fileName, contents, options.target);
@@ -239,7 +245,7 @@ export function compileTs(
     }
   } catch (e) {
     if (openPlayground) {
-      const compressedCode = compressToEncodedURIComponent(contents);
+      const compressedCode = LZString.compressToEncodedURIComponent(contents);
       open('http://www.typescriptlang.org/play/#code/' + compressedCode);
     }
 

@@ -1,5 +1,6 @@
-import * as Types from '../types';
 import * as gm from 'graphql-modules';
+import * as Types from '../types.js';
+
 export namespace UsersModule {
   interface DefinedFields {
     User: 'id' | 'firstName' | 'lastName';
@@ -9,7 +10,7 @@ export namespace UsersModule {
   export type User = Pick<Types.User, DefinedFields['User']>;
   export type Query = Pick<Types.Query, DefinedFields['Query']>;
 
-  export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User'] | '__isTypeOf'>;
+  export type UserResolvers = Pick<Types.UserResolvers, DefinedFields['User']>;
   export type QueryResolvers = Pick<Types.QueryResolvers, DefinedFields['Query']>;
 
   export interface Resolvers {

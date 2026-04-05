@@ -32,7 +32,7 @@ const AllPeopleWithVariablesQueryDocument = graphql(/* GraphQL */ `
   }
 `);
 
-const apiUrl = 'https://swapi-graphql.netlify.app/.netlify/functions/index';
+const apiUrl = 'https://graphql.org/graphql/';
 
 executeOperation(apiUrl, AllPeopleQueryDocument).then(res => {
   if (res.errors) {
@@ -43,7 +43,9 @@ executeOperation(apiUrl, AllPeopleQueryDocument).then(res => {
   console.log(res.data?.allPeople.edges);
 });
 
-executeOperation(apiUrl, AllPeopleWithVariablesQueryDocument, { first: 10 }).then(res => {
+executeOperation(apiUrl, AllPeopleWithVariablesQueryDocument, {
+  first: 10,
+}).then(res => {
   if (res.errors) {
     console.error(res.errors);
     process.exit(1);

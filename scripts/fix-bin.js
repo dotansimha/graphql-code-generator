@@ -30,7 +30,7 @@ for (const dirname of packageDirectories) {
   @SET PATHEXT=%PATHEXT:;.JS;=;%
   node  "${absoluteBinPath}" %*
 )
-            `
+            `,
         );
         fs.chmodSync(targetCmdPath, '755');
       } catch {

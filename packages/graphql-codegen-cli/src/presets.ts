@@ -3,7 +3,10 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 
 export async function getPresetByName(
   name: string,
-  loader: Types.PackageLoaderFn<{ preset?: Types.OutputPreset; default?: Types.OutputPreset }>
+  loader: Types.PackageLoaderFn<{
+    preset?: Types.OutputPreset;
+    default?: Types.OutputPreset;
+  }>,
 ): Promise<Types.OutputPreset> {
   const possibleNames = [
     `@graphql-codegen/${name}`,
@@ -37,7 +40,7 @@ export async function getPresetByName(
               Unable to load preset matching '${name}'.
               Reason:
                 ${err.message}
-            `
+            `,
         );
       }
     }
@@ -47,7 +50,7 @@ export async function getPresetByName(
     .map(name =>
       `
         - ${name}
-    `.trimEnd()
+    `.trimEnd(),
     )
     .join('');
 
@@ -58,6 +61,6 @@ export async function getPresetByName(
         Install one of the following packages:
 
         ${possibleNamesMsg}
-      `
+      `,
   );
 }

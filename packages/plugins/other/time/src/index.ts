@@ -1,15 +1,15 @@
 import { extname } from 'path';
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 // eslint-disable-next-line n/no-restricted-import -- todo: replace moment in v3
 import moment from 'moment';
+import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { TimePluginConfig } from './config.js';
 
 export const plugin: PluginFunction<TimePluginConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TimePluginConfig,
-  { outputFile }
+  { outputFile },
 ): Promise<string> => {
   let format: string;
   let message = 'Generated on ';

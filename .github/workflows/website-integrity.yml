@@ -3,20 +3,23 @@ on:
   pull_request:
     paths:
       - 'website/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   website-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Fetch
         run: git fetch origin master
 
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
-        with:
-          nodeVersion: 18
+        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
 
       - name: Build Packages
         run: yarn build
@@ -39,7 +42,7 @@ jobs:
 
       - name: Publish a message
         if: always() && contains(steps.diff_result.outputs.result, 'diff')
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@70d2764d1a7d5d9560b100cbea0077fc8f633987 # v3
         with:
           message: |
             ```diff

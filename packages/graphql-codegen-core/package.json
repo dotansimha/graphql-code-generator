@@ -1,46 +1,20 @@
 {
   "name": "@graphql-codegen/core",
-  "version": "4.0.2",
-  "license": "MIT",
+  "version": "5.0.1",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/graphql-codegen-core"
   },
-  "scripts": {
-    "lint": "eslint **/*.ts",
-    "test": "jest --no-watchman --config ../../jest.config.js"
-  },
-  "keywords": [
-    "gql",
-    "generator",
-    "code",
-    "types",
-    "interfaces",
-    "graphql",
-    "codegen",
-    "apollo",
-    "node",
-    "typescript",
-    "ts",
-    "flow",
-    "types",
-    "d.ts",
-    "typings"
-  ],
-  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
-  "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
-  },
-  "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^5.0.3",
-    "@graphql-tools/schema": "^10.0.0",
-    "@graphql-tools/utils": "^10.0.0",
-    "tslib": "~2.6.0"
+  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -62,15 +36,41 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "keywords": [
+    "gql",
+    "generator",
+    "code",
+    "types",
+    "interfaces",
+    "graphql",
+    "codegen",
+    "apollo",
+    "node",
+    "typescript",
+    "ts",
+    "flow",
+    "types",
+    "d.ts",
+    "typings"
+  ],
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "vitest --no-watch"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "^6.1.1",
+    "@graphql-tools/schema": "^10.0.0",
+    "@graphql-tools/utils": "^11.0.0",
+    "tslib": "~2.6.0"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "type": "module",
-  "engines": {
-    "node": ">=16"
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
   }
 }

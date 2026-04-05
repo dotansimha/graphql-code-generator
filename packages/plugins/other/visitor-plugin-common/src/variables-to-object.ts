@@ -26,8 +26,8 @@ export class OperationVariablesToObject {
     protected _enumPrefix = true,
     protected _enumSuffix = true,
     protected _enumValues: ParsedEnumValuesMap = {},
-    protected _applyCoercion: Boolean = false,
-    protected _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {}
+    protected _applyCoercion: boolean = false,
+    protected _directiveArgumentAndInputFieldMappings: ParsedDirectiveArgumentAndInputFieldMappings = {},
   ) {
     autoBind(this);
   }
@@ -47,14 +47,17 @@ export class OperationVariablesToObject {
     return null;
   }
 
-  transform<TDefinitionType extends InterfaceOrVariable>(variablesNode: ReadonlyArray<TDefinitionType>): string {
+  transform<TDefinitionType extends InterfaceOrVariable>(
+    variablesNode: ReadonlyArray<TDefinitionType>,
+  ): string {
     if (!variablesNode || variablesNode.length === 0) {
       return null;
     }
 
     return (
-      variablesNode.map(variable => indent(this.transformVariable(variable))).join(`${this.getPunctuation()}\n`) +
-      this.getPunctuation()
+      variablesNode
+        .map(variable => indent(this.transformVariable(variable)))
+        .join(`${this.getPunctuation()}\n`) + this.getPunctuation()
     );
   }
 
@@ -85,7 +88,9 @@ export class OperationVariablesToObject {
     return type || null;
   }
 
-  protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {
+  protected transformVariable<TDefinitionType extends InterfaceOrVariable>(
+    variable: TDefinitionType,
+  ): string {
     let typeValue = null;
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
 
@@ -93,7 +98,9 @@ export class OperationVariablesToObject {
       typeValue = variable.type;
     } else {
       const baseType = getBaseTypeNode(variable.type);
-      const overrideType = variable.directives ? this.getDirectiveOverrideType(variable.directives) : null;
+      const overrideType = variable.directives
+        ? this.getDirectiveOverrideType(variable.directives)
+        : null;
       const typeName = baseType.name.value;
 
       if (overrideType) {
@@ -101,7 +108,8 @@ export class OperationVariablesToObject {
       } else if (this._scalars[typeName]) {
         typeValue = this.getScalar(typeName);
       } else if (this._enumValues[typeName]?.sourceFile) {
-        typeValue = this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
+        typeValue =
+          this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
       } else {
         typeValue = `${prefix}${this._convertName(baseType, {
           useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,
@@ -113,7 +121,8 @@ export class OperationVariablesToObject {
     const fieldName = this.getName(variable);
     const fieldType = this.wrapAstTypeWithModifiers(typeValue, variable.type, this._applyCoercion);
 
-    const hasDefaultValue = variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
+    const hasDefaultValue =
+      variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
     const isNonNullType = variable.type.kind === Kind.NON_NULL_TYPE;
 
     const formattedFieldString = this.formatFieldString(fieldName, isNonNullType, hasDefaultValue);
@@ -122,15 +131,27 @@ export class OperationVariablesToObject {
     return `${formattedFieldString}: ${formattedTypeString}`;
   }
 
-  public wrapAstTypeWithModifiers(_baseType: string, _typeNode: TypeNode, _applyCoercion?: Boolean): string {
+  public wrapAstTypeWithModifiers(
+    _baseType: string,
+    _typeNode: TypeNode,
+    _applyCoercion?: boolean,
+  ): string {
     throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 
-  protected formatFieldString(fieldName: string, _isNonNullType: boolean, _hasDefaultValue: boolean): string {
+  protected formatFieldString(
+    fieldName: string,
+    _isNonNullType: boolean,
+    _hasDefaultValue: boolean,
+  ): string {
     return fieldName;
   }
 
-  protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+  protected formatTypeString(
+    fieldType: string,
+    isNonNullType: boolean,
+    hasDefaultValue: boolean,
+  ): string {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
 
     if (hasDefaultValue) {

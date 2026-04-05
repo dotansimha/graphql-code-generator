@@ -1,32 +1,44 @@
 ---
 title: typed-document-node
-description: Generate TypedDocumentNode for GraphQL operations. This plugin is a wrapper for graphql-typed-document-node.
+description:
+  Generate TypedDocumentNode for GraphQL operations. This plugin is a wrapper for
+  graphql-typed-document-node.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <Callout>
   This plugin is meant to be used for low-level use cases or as building block for presets.
-  <br /> For building a **GraphQL client application** we recommend using the [`client-preset`](/plugins/presets/preset-client).
+  <br /> For building a **GraphQL client application** we recommend using the
+  [`client-preset`](/plugins/presets/preset-client).
 </Callout>
 
 <PluginHeader />
 
-These plugins generate a ready-to-use `TypedDocumentNode` (a combination of pre-compiled `DocumentNode` and the TypeScript signature it represents).
+These plugins generate a ready-to-use `TypedDocumentNode` (a combination of pre-compiled
+`DocumentNode` and the TypeScript signature it represents).
 
-With the `typed-document-node` plugin you no longer need to reconfigure, and install different GraphQL Code Generator plugins to manage all your GraphQL client hooks. Generate a single `TypedDocumentNode` and pass it to your GraphQL client of choice.
+With the `typed-document-node` plugin you no longer need to reconfigure, and install different
+GraphQL Code Generator plugins to manage all your GraphQL client hooks. Generate a single
+`TypedDocumentNode` and pass it to your GraphQL client of choice.
 
 This plugin also generates less boilerplate code for your GraphQL operations.
 
 <Callout>
-  Watch [Episode #41 of `graphql.wtf`](https://graphql.wtf/episodes/41-typed-document-node) for a quick introduction to
-  using this plugin with GraphQL Code Generator:
+  Watch [Episode #41 of `graphql.wtf`](https://graphql.wtf/episodes/41-typed-document-node) for a
+  quick introduction to using this plugin with GraphQL Code Generator:
 </Callout>
 
-<iframe src="https://youtube.com/embed/cYIhx8dusa4" title="Typed Document Node with GraphQL Code Generator" />
+<iframe
+  src="https://youtube.com/embed/cYIhx8dusa4"
+  title="Typed Document Node with GraphQL Code Generator"
+/>
 
 ### Usage example
 
@@ -79,4 +91,5 @@ export const ratesQuery: TypedDocumentNode<RatesQuery, RatesQueryVariables> = {
 
 <Callout>This plugin also requires `typescript` and `typescript-operations`.</Callout>
 
-For information about the setup and usage of `TypedDocumentNode`, [please refer to the library's documentation](https://github.com/dotansimha/graphql-typed-document-node).
+For information about the setup and usage of `TypedDocumentNode`,
+[please refer to the library's documentation](https://github.com/dotansimha/graphql-typed-document-node).

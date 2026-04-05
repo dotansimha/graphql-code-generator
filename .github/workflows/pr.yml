@@ -4,32 +4,39 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
 jobs:
   dependencies:
-    uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@main
+    uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     secrets:
-      githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
+      githubToken: ${{ secrets.GITHUB_TOKEN  }}
 
   alpha:
-    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
+    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     with:
       npmTag: alpha
       buildScript: build
-      nodeVersion: 18
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NPM_TOKEN }}
 
   release-candidate:
-    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
+    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
     if: ${{ github.event.pull_request.title == 'Upcoming Release Changes' }}
     with:
       npmTag: rc
       restoreDeletedChangesets: true
       buildScript: build
-      nodeVersion: 18
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NPM_TOKEN }}

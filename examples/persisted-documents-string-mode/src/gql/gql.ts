@@ -12,7 +12,10 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+  '\n  query HelloQuery {\n    hello\n  }\n': typeof types.HelloQueryDocument;
+};
+const documents: Documents = {
   '\n  query HelloQuery {\n    hello\n  }\n': types.HelloQueryDocument,
 };
 
@@ -20,7 +23,7 @@ const documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query HelloQuery {\n    hello\n  }\n'
+  source: '\n  query HelloQuery {\n    hello\n  }\n',
 ): typeof import('./graphql').HelloQueryDocument;
 
 export function graphql(source: string) {

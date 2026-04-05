@@ -1,12 +1,5 @@
 import { extname } from 'path';
 import {
-  getCachedDocumentNodeFromSchema,
-  PluginFunction,
-  PluginValidateFn,
-  removeFederation,
-  Types,
-} from '@graphql-codegen/plugin-helpers';
-import {
   buildASTSchema,
   extendSchema,
   GraphQLSchema,
@@ -16,6 +9,13 @@ import {
   printSchema,
   visit,
 } from 'graphql';
+import {
+  getCachedDocumentNodeFromSchema,
+  PluginFunction,
+  PluginValidateFn,
+  removeFederation,
+  Types,
+} from '@graphql-codegen/plugin-helpers';
 
 /**
  * @description This plugin prints the merged schema as string. If multiple schemas are provided, they will be merged and printed as one schema.
@@ -107,15 +107,21 @@ export const plugin: PluginFunction<SchemaASTConfig> = async (
     includeIntrospectionTypes = false,
     sort = false,
     federation,
-  }
+  },
 ): Promise<string> => {
-  const transformedSchemaAndAst = transformSchemaAST(schema, { sort, federation, includeIntrospectionTypes });
+  const transformedSchemaAndAst = transformSchemaAST(schema, {
+    sort,
+    federation,
+    includeIntrospectionTypes,
+  });
 
   return [
     includeIntrospectionTypes ? printIntrospectionSchema(transformedSchemaAndAst.schema) : null,
     includeDirectives
       ? print(transformedSchemaAndAst.ast)
-      : (printSchema as any)(transformedSchemaAndAst.schema, { commentDescriptions }),
+      : (printSchema as any)(transformedSchemaAndAst.schema, {
+          commentDescriptions,
+        }),
   ]
     .filter(Boolean)
     .join('\n');
@@ -126,7 +132,7 @@ export const validate: PluginValidateFn<any> = async (
   _documents: Types.DocumentFile[],
   _config: SchemaASTConfig,
   outputFile: string,
-  allPlugins: Types.ConfiguredPlugin[]
+  allPlugins: Types.ConfiguredPlugin[],
 ) => {
   const singlePlugin = allPlugins.length === 1;
 
@@ -134,7 +140,9 @@ export const validate: PluginValidateFn<any> = async (
   const isAllowedExtension = allowedExtensions.includes(extname(outputFile));
 
   if (singlePlugin && !isAllowedExtension) {
-    const allowedExtensionsOutput = allowedExtensions.map(extension => `"${extension}"`).join(' or ');
+    const allowedExtensionsOutput = allowedExtensions
+      .map(extension => `"${extension}"`)
+      .join(' or ');
     throw new Error(`Plugin "schema-ast" requires extension to be ${allowedExtensionsOutput}!`);
   }
 };

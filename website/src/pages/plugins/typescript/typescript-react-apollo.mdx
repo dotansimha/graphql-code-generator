@@ -1,18 +1,33 @@
 ---
 title: typescript-react-apollo
-description: GraphQL Code Generator plugin for TypeScript and React Apollo. Generates React Hooks and HOCs for your GraphQL operations.
+description:
+  GraphQL Code Generator plugin for TypeScript and React Apollo. Generates React Hooks and HOCs for
+  your GraphQL operations.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <Callout type="info">
 
-We now recommend using the `client-preset` package for a **better developer experience** and smaller impact on bundle size.
+We now recommend using the `client-preset` package for a **better developer experience** and smaller
+impact on bundle size.
 
 **Get started on [our "React/Vue" guide](/docs/guides/react-vue).**
+
+</Callout>
+
+<Callout type="warning">
+
+The generated hooks created by this package are no longer compatible with Apollo Client 4.0. We
+provide a codemod that automates the the migration to the `client` preset. See the
+[tutorial video](https://youtu.be/GGmt0hvnQNU?si=4DQEyqc24pfiih9J) to learn how to use the codemod
+to migrate your codebase.
 
 </Callout>
 
@@ -58,9 +73,11 @@ const config: CodegenConfig = {
 export default config
 ```
 
-Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a ready-to-use React Hook for each operation you have.
+Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a
+ready-to-use React Hook for each operation you have.
 
-In your application code, you can import it from the generated file, and use the React Hook in your component code:
+In your application code, you can import it from the generated file, and use the React Hook in your
+component code:
 
 ```tsx
 import { useTest } from './generated-types'
@@ -74,7 +91,8 @@ export const MyComponent: React.FC = () => {
 
 ### Generate Data Component
 
-Codegen also supports generating data Components (deprecated in `@apollo/client` v3), you can turn it on this way:
+Codegen also supports generating data Components (deprecated in `@apollo/client` v3), you can turn
+it on this way:
 
 ```ts filename="codegen.ts" {10}
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -96,7 +114,8 @@ export default config
 
 ### Generate HOC
 
-Codegen also supports generating High-Order-Components (deprecated in `@apollo/client` v3), you can turn it on this way:
+Codegen also supports generating High-Order-Components (deprecated in `@apollo/client` v3), you can
+turn it on this way:
 
 ```ts filename="codegen.ts" {10}
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -117,8 +136,9 @@ export default config
 ```
 
 <Callout>
-  Watch [Episode #29 of `graphql.wtf`](https://graphql.wtf/episodes/29-apollo-client-3-with-graphql-code-generator) for
-  a quick introduction to using this plugin with GraphQL Code Generator:
+  Watch [Episode #29 of
+  `graphql.wtf`](https://graphql.wtf/episodes/29-apollo-client-3-with-graphql-code-generator) for a
+  quick introduction to using this plugin with GraphQL Code Generator:
 </Callout>
 
 <iframe src="https://youtube.com/embed/PYDGjTufGsk" />

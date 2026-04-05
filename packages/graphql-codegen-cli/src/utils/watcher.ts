@@ -1,14 +1,15 @@
-import { join, isAbsolute, relative, resolve, sep } from 'path';
+import { isAbsolute, join, relative, resolve, sep } from 'path';
+import debounce from 'debounce';
+import logSymbols from 'log-symbols';
+import mm from 'micromatch';
 import { normalizeOutputParam, Types } from '@graphql-codegen/plugin-helpers';
 import type { subscribe } from '@parcel/watcher';
-import debounce from 'debounce';
-import mm from 'micromatch';
-import logSymbols from 'log-symbols';
 import { executeCodegen } from '../codegen.js';
 import { CodegenContext, loadContext } from '../config.js';
 import { lifecycleHooks } from '../hooks.js';
-import { access } from './file-system.js';
+import { AbortController } from './abort-controller-polyfill.js';
 import { debugLog } from './debugging.js';
+import { access } from './file-system.js';
 import { getLogger } from './logger.js';
 import {
   allAffirmativePatternsFromPatternSets,
@@ -16,7 +17,6 @@ import {
   makeLocalPatternSet,
   makeShouldRebuild,
 } from './patterns.js';
-import { AbortController } from './abort-controller-polyfill.js';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -29,7 +29,7 @@ function emitWatching(watchDir: string) {
 
 export const createWatcher = (
   initialContext: CodegenContext,
-  onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
+  onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>,
 ): {
   /**
    * Call this function to stop the running watch server
@@ -51,9 +51,15 @@ export const createWatcher = (
   const localPatternSets = Object.keys(config.generates)
     .map(filename => normalizeOutputParam(config.generates[filename]))
     .map(conf => makeLocalPatternSet(conf));
-  const allAffirmativePatterns = allAffirmativePatternsFromPatternSets([globalPatternSet, ...localPatternSets]);
+  const allAffirmativePatterns = allAffirmativePatternsFromPatternSets([
+    globalPatternSet,
+    ...localPatternSets,
+  ]);
 
-  const shouldRebuild = makeShouldRebuild({ globalPatternSet, localPatternSets });
+  const shouldRebuild = makeShouldRebuild({
+    globalPatternSet,
+    localPatternSets,
+  });
 
   let watcherSubscription: Awaited<ReturnType<typeof subscribe>>;
 
@@ -64,9 +70,9 @@ export const createWatcher = (
     let parcelWatcher: typeof import('@parcel/watcher');
     try {
       parcelWatcher = await import('@parcel/watcher');
-    } catch (err) {
+    } catch {
       log(
-        `Failed to import @parcel/watcher due to the following error (to use watch mode, install https://www.npmjs.com/package/@parcel/watcher):\n${err}`
+        'Failed to import @parcel/watcher.\n  To use watch mode, install https://www.npmjs.com/package/@parcel/watcher.',
       );
       return;
     }
@@ -78,7 +84,24 @@ export const createWatcher = (
     const debouncedExec = debounce(() => {
       if (!isShutdown) {
         executeCodegen(initialContext)
-          .then(onNext, () => Promise.resolve())
+          .then(
+            ({ result, error }) => {
+              // FIXME: this is a quick fix to stop `onNext` (writeOutput) from
+              // removing all files when there is an error.
+              //
+              // This is because `removeStaleFiles()` will remove files if the
+              // generated files are different between runs. And on error, it
+              // returns an empty array i.e. will remove all generated files from
+              // the previous run
+              //
+              // This also means we don't have config.allowPartialOutputs in watch mode
+              if (error) {
+                return;
+              }
+              onNext(result);
+            },
+            () => Promise.resolve(),
+          )
           .then(() => emitWatching(watchDirectory));
       }
     }, 100);
@@ -91,7 +114,10 @@ export const createWatcher = (
     }))) {
       // ParcelWatcher expects relative ignore patterns to be relative from watchDirectory,
       // but we expect filename from config to be relative from cwd, so we need to convert
-      const filenameRelativeFromWatchDirectory = relative(watchDirectory, resolve(process.cwd(), entry.filename));
+      const filenameRelativeFromWatchDirectory = relative(
+        watchDirectory,
+        resolve(process.cwd(), entry.filename),
+      );
 
       if (entry.config.preset) {
         const extension = entry.config.presetConfig?.extension;
@@ -119,13 +145,15 @@ export const createWatcher = (
             // In ESM require is not defined
             try {
               delete require.cache[path];
-            } catch (err) {}
+            } catch {}
 
             if (eventName === 'update' && config.configFilePath && path === config.configFilePath) {
               log(`${logSymbols.info} Config file has changed, reloading...`);
               const context = await loadContext(config.configFilePath);
 
-              const newParsedConfig: Types.Config & { configFilePath?: string } = context.getConfig();
+              const newParsedConfig: Types.Config & {
+                configFilePath?: string;
+              } = context.getConfig();
               newParsedConfig.watch = config.watch;
               newParsedConfig.silent = config.silent;
               newParsedConfig.overwrite = config.overwrite;
@@ -135,17 +163,17 @@ export const createWatcher = (
             }
 
             debouncedExec();
-          })
+          }),
         );
       },
-      { ignore: ignored }
+      { ignore: ignored },
     );
 
     debugLog(`[Watcher] Started`);
 
     const shutdown = (
       /** Optional callback to execute after shutdown has completed its async tasks */
-      afterShutdown?: () => void
+      afterShutdown?: () => void,
     ) => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
@@ -198,7 +226,17 @@ export const createWatcher = (
    */
   stopWatching.runningWatcher = new Promise<void>((resolve, reject) => {
     executeCodegen(initialContext)
-      .then(onNext, () => Promise.resolve())
+      .then(
+        ({ result, error }) => {
+          // TODO: this is the initial run, the logic here mimics the above watcher logic.
+          // We need to check whether it's ok to deviate between these two.
+          if (error) {
+            return;
+          }
+          onNext(result);
+        },
+        () => Promise.resolve(),
+      )
       .then(() => runWatcher(abortController.signal))
       .catch(err => {
         watcherSubscription.unsubscribe();

@@ -8,13 +8,15 @@ import { Tabs } from '@theguild/components'
 
 ## What has changed?
 
-There was an outstanding issue with `@parcel/watcher` which prevented it to be installed in certain environments, or needed an extra amount of dependencies to be built.
-This release focuses on improving the usage of `@graphql-codegen/cli` in those environments by making it an optional peer dependency.
-NPM (or Yarn) will not emit errors when an optional peer dependency is missing.
+There was an outstanding issue with `@parcel/watcher` which prevented it to be installed in certain
+environments, or needed an extra amount of dependencies to be built. This release focuses on
+improving the usage of `@graphql-codegen/cli` in those environments by making it an optional peer
+dependency. NPM (or Yarn) will not emit errors when an optional peer dependency is missing.
 
 ## How to migrate?
 
-To use `@graphql-codegen/cli`'s watch mode (based on @parcel/watcher) you need to provide it in a package that uses `@graphql-codegen/cli` from now on.
+To use `@graphql-codegen/cli`'s watch mode (based on @parcel/watcher) you need to provide it in a
+package that uses `@graphql-codegen/cli` from now on.
 
 Start by updating your package.json
 
@@ -45,7 +47,8 @@ Start by updating your package.json
 </Tabs.Tab>
 </Tabs>
 
-If you had issues with `@parcel/watcher` previously, you can make NPM and Yarn silently discard any build errors, by using `optionalDependencies` instead:
+If you had issues with `@parcel/watcher` previously, you can make NPM and Yarn silently discard any
+build errors, by using `optionalDependencies` instead:
 
 <Tabs items={['Before', 'After', 'After (Alternative)']}>
 <Tabs.Tab>

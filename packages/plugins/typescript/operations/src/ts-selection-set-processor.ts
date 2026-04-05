@@ -1,3 +1,4 @@
+import { GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 import {
   BaseSelectionSetProcessor,
   LinkField,
@@ -6,13 +7,12 @@ import {
   ProcessResult,
   SelectionSetProcessorConfig,
 } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 
 export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
   transformPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
     fields: PrimitiveField[],
-    unsetTypes?: boolean
+    unsetTypes?: boolean,
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -25,20 +25,20 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       });
 
     if (unsetTypes) {
-      return [`MakeEmpty<${parentName}, ${fields.map(field => `'${field.fieldName}'`).join(' | ')}>`];
+      const escapedFieldNames = fields.map(field => `'${field.fieldName}'`);
+      return [formattedUnionTransform('MakeEmpty', parentName, escapedFieldNames)];
     }
 
     let hasConditionals = false;
-    const conditilnalsList: string[] = [];
-    let resString = `Pick<${parentName}, ${fields
-      .map(field => {
-        if (field.isConditional) {
-          hasConditionals = true;
-          conditilnalsList.push(field.fieldName);
-        }
-        return `'${field.fieldName}'`;
-      })
-      .join(' | ')}>`;
+    const escapedConditionalsList: string[] = [];
+    const escapedFieldNames = fields.map(field => {
+      if (field.isConditional) {
+        hasConditionals = true;
+        escapedConditionalsList.push(`'${field.fieldName}'`);
+      }
+      return `'${field.fieldName}'`;
+    });
+    let resString = formattedUnionTransform('Pick', parentName, escapedFieldNames);
 
     if (hasConditionals) {
       const avoidOptional =
@@ -52,7 +52,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       const transform = avoidOptional ? 'MakeMaybe' : 'MakeOptional';
       resString = `${
         this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''
-      }${transform}<${resString}, ${conditilnalsList.map(field => `'${field}'`).join(' | ')}>`;
+      }${formattedUnionTransform(transform, resString, escapedConditionalsList)}`;
     }
     return [resString];
   }
@@ -63,7 +63,7 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
 
   transformAliasesPrimitiveFields(
     schemaType: GraphQLObjectType | GraphQLInterfaceType,
-    fields: PrimitiveAliasedFields[]
+    fields: PrimitiveAliasedFields[],
   ): ProcessResult {
     if (fields.length === 0) {
       return [];
@@ -75,18 +75,15 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
         useTypesPrefix: true,
       });
 
-    return [
-      `{ ${fields
-        .map(aliasedField => {
-          const value =
-            aliasedField.fieldName === '__typename'
-              ? `'${schemaType.name}'`
-              : `${parentName}['${aliasedField.fieldName}']`;
+    const selections = fields.map(aliasedField => {
+      const value =
+        aliasedField.fieldName === '__typename'
+          ? `'${schemaType.name}'`
+          : `${parentName}['${aliasedField.fieldName}']`;
 
-          return `${aliasedField.alias}: ${value}`;
-        })
-        .join(', ')} }`,
-    ];
+      return `${aliasedField.alias}: ${value}`;
+    });
+    return [formatSelections(selections)];
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {
@@ -94,6 +91,28 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       return [];
     }
 
-    return [`{ ${fields.map(field => `${field.alias || field.name}: ${field.selectionSet}`).join(', ')} }`];
+    const selections = fields.map(field => `${field.alias || field.name}: ${field.selectionSet}`);
+
+    return [formatSelections(selections)];
   }
+}
+
+/** Equivalent to `${transformName}<${target}, ${unionElements.join(' | ')}>`, but with line feeds if necessary */
+function formattedUnionTransform(
+  transformName: string,
+  target: string,
+  unionElements: string[],
+): string {
+  if (unionElements.length > 3) {
+    return `${transformName}<\n    ${target},\n    | ${unionElements.join('\n    | ')}\n  >`;
+  }
+  return `${transformName}<${target}, ${unionElements.join(' | ')}>`;
+}
+
+/** Equivalent to `{ ${selections.join(', ')} }`, but with line feeds if necessary */
+function formatSelections(selections: string[]): string {
+  if (selections.length > 1) {
+    return `{\n    ${selections.map(s => s.replace(/\n/g, '\n  ')).join(',\n    ')},\n  }`;
+  }
+  return `{ ${selections.join(', ')} }`;
 }

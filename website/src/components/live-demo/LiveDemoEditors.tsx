@@ -1,15 +1,16 @@
+import { basename } from 'path';
 import { ReactElement, useEffect, useState } from 'react';
-import { Image } from '@theguild/components';
+import classnames from 'classnames';
 import { load } from 'js-yaml';
+import { Image } from '@theguild/components';
 import { Editor } from './Editor';
 import { Config, getMode } from './formatter';
 import codegenLogo from '../../../public/assets/img/gql-codegen-icon.svg';
 import graphqlLogo from '../../../public/assets/img/GraphQL_Logo.svg';
-import classnames from 'classnames';
-import { basename } from 'path';
 
 const classes = {
-  title: 'flex gap-1 justify-center font-bold h-12 items-center font-mono border-b dark:border-neutral-800',
+  title:
+    'flex gap-1 justify-center font-bold h-12 items-center font-mono border-b dark:border-neutral-800',
   column: 'w-[22vw]',
 };
 
@@ -56,14 +57,26 @@ export function LiveDemoEditors({
     <div className="flex">
       <div className={classes.column}>
         <div className={classes.title}>
-          <Image alt="GraphQL logo" src={graphqlLogo} placeholder="empty" loading="eager" className="h-7 w-7" />
+          <Image
+            alt="GraphQL logo"
+            src={graphqlLogo}
+            placeholder="empty"
+            loading="eager"
+            className="h-7 w-7"
+          />
           schema.graphql
         </div>
         <Editor lang="graphql" onEdit={setSchema} value={schema} />
       </div>
       <div className={classes.column}>
         <div className={classes.title}>
-          <Image alt="GraphQL logo" src={graphqlLogo} placeholder="empty" loading="eager" className="h-7 w-7" />
+          <Image
+            alt="GraphQL logo"
+            src={graphqlLogo}
+            placeholder="empty"
+            loading="eager"
+            className="h-7 w-7"
+          />
           {operationsFile?.filename ?? 'operation.graphql'}
         </div>
         <Editor
@@ -71,13 +84,23 @@ export function LiveDemoEditors({
           onEdit={newText => {
             setDocuments(newText !== READ_ONLY_DOCUMENTS_TEXT ? newText : undefined);
           }}
-          value={documents === undefined ? READ_ONLY_DOCUMENTS_TEXT : operationsFile?.content || documents}
+          value={
+            documents === undefined
+              ? READ_ONLY_DOCUMENTS_TEXT
+              : operationsFile?.content || documents
+          }
           readOnly={documents === undefined || !!operationsFile}
         />
       </div>
       <div className={classes.column}>
         <div className={classes.title}>
-          <Image alt="Codegen logo" src={codegenLogo} placeholder="empty" loading="eager" className="h-7 w-7" />
+          <Image
+            alt="Codegen logo"
+            src={codegenLogo}
+            placeholder="empty"
+            loading="eager"
+            className="h-7 w-7"
+          />
           codegen.yml
         </div>
         <Editor lang="yaml" onEdit={setConfig} value={config} />
@@ -90,7 +113,7 @@ export function LiveDemoEditors({
               key={outputItem.filename}
               className={classnames(
                 'h-2/3 min-w-[15%] rounded-t-md px-2 text-center font-mono text-xs font-bold',
-                index === i && 'bg-neutral-800 text-white'
+                index === i && 'bg-neutral-800 text-white',
               )}
             >
               {basename(outputItem.filename)}

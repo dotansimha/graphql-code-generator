@@ -1,29 +1,33 @@
 ---
 title: typescript-svelte-apollo
-description: This plugin generates observable Apollo queries with Typescript typings. This is a community plugin, to report eventual issues or find more examples, refer to this repository
+description:
+  This plugin generates observable Apollo queries with Typescript typings. This is a community
+  plugin, to report eventual issues or find more examples, refer to this repository
 ---
 
 import { PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
 
 This plugin generates observable Apollo queries with Typescript typings.
 
-This is a community plugin, to report eventual issues or find more examples, refer to this [repository](https://github.com/ticruz38/graphql-codegen-svelte-apollo#readme)
+This is a community plugin, to report eventual issues or find more examples, refer to this
+[repository](https://github.com/ticruz38/graphql-codegen-svelte-apollo#readme)
 
-It extends the basic TypeScript plugins: `@graphql-codegen/typescript`, `@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
+It extends the basic TypeScript plugins: `@graphql-codegen/typescript`,
+`@graphql-codegen/typescript-operations` - and thus shares a similar configuration.
 
 ## API Reference
 
 ### `clientPath`
 
-type: `string`
-default: `null`
-required: true
+type: `string` default: `null` required: true
 
-Path to the apollo client for this project (should point to a file with an apollo-client as default export)
+Path to the apollo client for this project (should point to a file with an apollo-client as default
+export)
 
 #### Usage Examples
 
@@ -45,10 +49,10 @@ export default config
 
 ### `asyncQuery`
 
-type: `boolean`
-default: `false`
+type: `boolean` default: `false`
 
-By default, the plugin only generate observable queries, sometimes it may be useful to generate promise-based queries
+By default, the plugin only generate observable queries, sometimes it may be useful to generate
+promise-based queries
 
 #### Usage Examples
 
@@ -114,9 +118,11 @@ const config: CodegenConfig = {
 export default config
 ```
 
-Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a ready-to-use Apollo query for each operation you have.
+Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a
+ready-to-use Apollo query for each operation you have.
 
-In your application code, you can import it from the generated file, and use the query in your component code:
+In your application code, you can import it from the generated file, and use the query in your
+component code:
 
 ```svelte
 <script lang="ts">
@@ -137,7 +143,8 @@ Each time you change the address, the query will re-fetch and show the new resul
 
 ### With Async Queries
 
-Sometimes, you may need/prefer to have an async query (only available with asyncQuery option set to true)
+Sometimes, you may need/prefer to have an async query (only available with asyncQuery option set to
+true)
 
 For the given input:
 
@@ -181,9 +188,11 @@ const config: CodegenConfig = {
 export default config
 ```
 
-Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a ready-to-use Apollo query for each operation you have.
+Codegen will pre-compile the GraphQL operation into a `DocumentNode` object, and generate a
+ready-to-use Apollo query for each operation you have.
 
-In your application code, you can import it from the generated file, and use the query in your component code:
+In your application code, you can import it from the generated file, and use the query in your
+component code:
 
 ```svelte
 <script lang="ts">

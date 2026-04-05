@@ -1,31 +1,25 @@
 import { join } from 'path';
-import { useMonorepo } from '@graphql-codegen/testing';
+import '@graphql-codegen/testing';
+import {
+  buildASTSchema,
+  buildSchema,
+  GraphQLObjectType,
+  Kind,
+  OperationDefinitionNode,
+  parse,
+  print,
+} from 'graphql';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { buildASTSchema, buildSchema, GraphQLObjectType, parse, print, OperationDefinitionNode, Kind } from 'graphql';
 import { createContext, executeCodegen } from '../src/index.js';
-import { Types } from '@graphql-codegen/plugin-helpers';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
-jest.mock('some-fetch');
-
-const monorepo = useMonorepo({
-  dirname: __dirname,
-});
-
 describe('Codegen Executor', () => {
-  monorepo.correctCWD();
-
-  beforeEach(() => {
-    jest.useFakeTimers({
-      legacyFakeTimers: true,
-    });
-  });
-
   describe('Generator General Options', () => {
     it('Should output the correct filenames', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': { plugins: ['typescript'] },
@@ -33,14 +27,14 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(2);
-      expect(output.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
+      expect(result.length).toBe(2);
+      expect(result.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
     });
 
     it('Should load require extensions', async () => {
       expect((global as any).dummyWasLoaded).toBeFalsy();
-      const output = await executeCodegen({
-        schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
+      const { result } = await executeCodegen({
+        schema: join(__dirname, './test-files/schema-dir/schema-object.cjs'),
         require: join(__dirname, './dummy-require.js'),
         generates: {
           'out1.ts': { plugins: ['typescript'] },
@@ -48,7 +42,7 @@ describe('Codegen Executor', () => {
         cwd: __dirname,
       });
 
-      expect(output.length).toBe(1);
+      expect(result.length).toBe(1);
       expect((global as any).dummyWasLoaded).toBeTruthy();
     });
 
@@ -70,7 +64,7 @@ describe('Codegen Executor', () => {
     });
 
     it('Should accept plugins as object', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -84,12 +78,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type RootQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type RootQuery');
     });
 
     it('Should accept plugins as array of objects', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -99,8 +93,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type RootQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type RootQuery');
     });
 
     it('Should throw when no output files has been specified', async () => {
@@ -118,7 +112,7 @@ describe('Codegen Executor', () => {
     });
 
     it('Should work with just schema', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out.ts': {
@@ -127,12 +121,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
+      expect(result.length).toBe(1);
     });
 
     it('Should not throw when every output has a schema and there is no root schema', async () => {
       try {
-        const output = await executeCodegen({
+        const { result } = await executeCodegen({
           generates: {
             'out.ts': {
               schema: SIMPLE_TEST_SCHEMA,
@@ -141,7 +135,7 @@ describe('Codegen Executor', () => {
           },
         });
 
-        expect(output.length).toBe(1);
+        expect(result.length).toBe(1);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).not.toMatch('Invalid Codegen Configuration!');
@@ -207,7 +201,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle extend keyword when GraphQLSchema is used', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: './tests/test-files/schema-dir/with-extend.js',
         generates: {
           'out.ts': {
@@ -216,15 +210,15 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].filename).toBe('out.ts');
-      expect(output[0].content).toContain(`hello?: Maybe<Scalars['String']['output']>`);
+      expect(result.length).toBe(1);
+      expect(result[0].filename).toBe('out.ts');
+      expect(result[0].content).toContain(`hello?: Maybe<Scalars['String']['output']>`);
     });
   });
 
   describe('Per-output options', () => {
     it('Should allow to specify schema extension for specific output', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
@@ -236,14 +230,14 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type Query');
-      expect(output[0].content).toContain('export type MyType');
-      expect(output[0].content).toContain('export type OtherType');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type Query');
+      expect(result[0].content).toContain('export type MyType');
+      expect(result[0].content).toContain('export type OtherType');
     });
 
     it('Should allow to specify documents extension for specific output', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
@@ -253,12 +247,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type QQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type QQuery');
     });
 
     it('Should extend existing documents', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -269,33 +263,86 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type QQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type QQuery');
     });
 
-    it('Should throw on duplicated names', async () => {
-      try {
-        await executeCodegen({
-          schema: `
+    it('Should inherit root importExtension and emitLegacyCommonJSImports for preset outputs and allow per-output overrides', async () => {
+      const recordingPreset = {
+        buildGeneratesSection: ({ baseOutputDir, config }) => [
+          {
+            filename: `${baseOutputDir}recorded-config.ts`,
+            pluginMap: {
+              recorder: {
+                plugin: (_schema, _documents, pluginConfig) =>
+                  JSON.stringify({
+                    importExtension: pluginConfig.importExtension,
+                    emitLegacyCommonJSImports: pluginConfig.emitLegacyCommonJSImports,
+                  }),
+              },
+            },
+            plugins: [{ recorder: {} }],
+            schema: parse(SIMPLE_TEST_SCHEMA),
+            documents: [],
+            config,
+          },
+        ],
+      };
+
+      const { result } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query root { f }`,
+        emitLegacyCommonJSImports: false,
+        importExtension: '.mjs',
+        generates: {
+          './src/gql/': {
+            preset: recordingPreset,
+          },
+          './src/gql-with-override/': {
+            preset: recordingPreset,
+            config: {
+              importExtension: '.js',
+            },
+          },
+        },
+      });
+
+      expect(result).toHaveLength(2);
+
+      const inheritedOutput = result.find(file => file.filename === './src/gql/recorded-config.ts');
+      expect(inheritedOutput?.content).toBe(
+        `{"importExtension":".mjs","emitLegacyCommonJSImports":false}`,
+      );
+
+      const overriddenOutput = result.find(
+        file => file.filename === './src/gql-with-override/recorded-config.ts',
+      );
+      expect(overriddenOutput?.content).toBe(
+        `{"importExtension":".js","emitLegacyCommonJSImports":false}`,
+      );
+    });
+
+    it('Should return error on duplicated names', async () => {
+      const { error } = await executeCodegen({
+        schema: `
             type RootQuery { f: String }
             schema { query: RootQuery }
           `,
-          documents: [`query q { e }`, `query q { f }`],
-          generates: {
-            'out1.ts': { plugins: ['typescript'] },
-          },
-        });
-        throw SHOULD_NOT_THROW_STRING;
-      } catch (e) {
-        expect(e).not.toEqual(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('Not all operations have an unique name: q');
-      }
+        documents: [`query q { e }`, `query q { f }`],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+      expect(error.message).toContain('Not all operations have an unique name: q');
     });
 
     it('should handle gql tag in ts with with nested fragment', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
-        documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
+        documents: [
+          './tests/test-documents/my-fragment.ts',
+          './tests/test-documents/query-with-my-fragment.ts',
+        ],
         generates: {
           'out1.ts': {
             plugins: ['typescript', 'typescript-operations'],
@@ -307,9 +354,12 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle gql tag in ts with with multiple nested fragment', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
-        documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
+        documents: [
+          './tests/test-documents/my-fragment.ts',
+          './tests/test-documents/query-with-my-fragment.ts',
+        ],
         generates: {
           'out1.ts': {
             plugins: ['typescript', 'typescript-operations'],
@@ -322,9 +372,12 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle gql tag in js with with nested fragment', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
-        documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
+        documents: [
+          './tests/test-documents/js-query-with-my-fragment.js',
+          './tests/test-documents/js-my-fragment.js',
+        ],
         generates: {
           'out1.ts': {
             plugins: ['typescript', 'typescript-operations'],
@@ -337,7 +390,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle TypeScript features', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/ts-features-with-query.ts'],
         generates: {
@@ -353,7 +406,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle multiple fragments with the same name, but one is commented out', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
         generates: {
@@ -367,7 +420,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle graphql-tag and gatsby by default (documents)', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
@@ -382,7 +435,7 @@ describe('Codegen Executor', () => {
     });
 
     it('should handle custom graphql string parsers (documents)', async () => {
-      const result = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
@@ -446,7 +499,7 @@ describe('Codegen Executor', () => {
 
   describe('Plugin Configuration', () => {
     it('Should inherit root config', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
@@ -459,13 +512,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type rootquery');
-      expect(output[0].content).toContain('export type root');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type rootquery');
+      expect(result[0].content).toContain('export type root');
     });
 
     it('Should accept config in per-output (override)', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -484,13 +537,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(2);
-      expect(output[0].content).toContain('export type rootquery');
-      expect(output[1].content).toContain('export type ROOTQUERY');
+      expect(result.length).toBe(2);
+      expect(result[0].content).toContain('export type rootquery');
+      expect(result[1].content).toContain('export type ROOTQUERY');
     });
 
     it('Should accept config in per-plugin', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -506,13 +559,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type root');
-      expect(output[0].content).toContain('export type rootquery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type root');
+      expect(result[0].content).toContain('export type rootquery');
     });
 
     it('Should allow override of config in', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
@@ -540,15 +593,15 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(2);
-      expect(output[0].content).toContain('export type ROOTQUERY');
-      expect(output[1].content).toContain('export type RootQuery');
+      expect(result.length).toBe(2);
+      expect(result[0].content).toContain('export type ROOTQUERY');
+      expect(result[1].content).toContain('export type RootQuery');
     });
   });
 
   describe('Plugin loading', () => {
     it('Should load custom plugin from local file', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
@@ -557,61 +610,54 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('plugin');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('plugin');
     });
 
-    it('Should throw when custom plugin is not valid', async () => {
-      try {
-        await executeCodegen({
-          schema: SIMPLE_TEST_SCHEMA,
-          generates: {
-            'out1.ts': {
-              plugins: ['./tests/custom-plugins/invalid.js'],
-            },
-          },
-        });
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('Invalid Custom Plugin');
-      }
-    });
-
-    it('Should execute custom plugin validation and throw when it fails', async () => {
-      try {
-        await executeCodegen({
-          schema: SIMPLE_TEST_SCHEMA,
-          generates: {
-            'out1.ts': {
-              plugins: ['./tests/custom-plugins/validation.js'],
-            },
-          },
-        });
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('validation failed');
-      }
-    });
-
-    it('Should allow plugins to extend schema', async () => {
-      const output = await executeCodegen({
+    it('Should return error when custom plugin is not valid', async () => {
+      const { error } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': {
-            plugins: ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+            plugins: ['./tests/custom-plugins/invalid.js'],
+          },
+        },
+      });
+      expect(error.message).toContain('Invalid Custom Plugin');
+    });
+
+    it('Should execute custom plugin validation and return error when it fails', async () => {
+      const { error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': {
+            plugins: ['./tests/custom-plugins/validation.js'],
+          },
+        },
+      });
+      expect(error.message).toContain('validation failed');
+    });
+
+    it('Should allow plugins to extend schema', async () => {
+      const { result } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': {
+            plugins: [
+              './tests/custom-plugins/extends-schema.js',
+              './tests/custom-plugins/checks-extended-schema.js',
+            ],
           },
         },
       });
 
-      expect(output[0].content).toContain('MyType,');
-      expect(output[0].content).toContain('Extension');
-      expect(output[0].content).toContain(`Should have the Extension type: 'Extension'`);
+      expect(result[0].content).toContain('MyType,');
+      expect(result[0].content).toContain('Extension');
+      expect(result[0].content).toContain(`Should have the Extension type: 'Extension'`);
     });
 
     it('Should allow plugins to extend schema (using a function)', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         config: {
           test: 'MyType',
@@ -623,7 +669,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output[0].content).toContain('MyType');
+      expect(result[0].content).toContain('MyType');
     });
   });
 
@@ -639,7 +685,7 @@ describe('Codegen Executor', () => {
               id: String @id
             }
           `),
-        ])
+        ]),
       );
 
       expect(merged.getDirectives().map(({ name }) => name)).toContainEqual('id');
@@ -665,12 +711,16 @@ describe('Codegen Executor', () => {
               query: Query
             }
           `),
-        ])
+        ]),
       );
 
-      expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('test');
       expect(
-        (merged.getType('Post') as GraphQLObjectType).getFields().id.astNode.directives.map(({ name }) => name.value)
+        merged.getType('Post').astNode.directives.map(({ name }) => name.value),
+      ).toContainEqual('test');
+      expect(
+        (merged.getType('Post') as GraphQLObjectType)
+          .getFields()
+          .id.astNode.directives.map(({ name }) => name.value),
       ).toContainEqual('id');
     });
 
@@ -708,7 +758,7 @@ describe('Codegen Executor', () => {
         }
       `;
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: [schemaA, schemaB],
         generates: {
           'out1.ts': {
@@ -717,8 +767,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toBeSimilarStringTo(`export type Scalars = {
+      expect(result.length).toBe(1);
+      expect(result[0].content).toBeSimilarStringTo(`export type Scalars = {
         ID: { input: string; output: string; }
         String: { input: string; output: string; }
         Boolean: { input: boolean; output: boolean; }
@@ -729,13 +779,132 @@ describe('Codegen Executor', () => {
     });
   });
 
+  describe('Parsed GraphQLSchema input', () => {
+    it('should accept a GraphQLSchema instance as root schema', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema,
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+    });
+
+    it('should accept a GraphQLSchema instance in an array', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema: [schema],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+    });
+
+    it('should merge a GraphQLSchema instance with an SDL string', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema: [schema, `type Post { id: ID! }`],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+      expect(result[0].content).toContain('Post');
+    });
+
+    it('should merge two GraphQLSchema instances', async () => {
+      const schemaA = buildSchema(SIMPLE_TEST_SCHEMA);
+      const schemaB = buildSchema(`type Post { id: ID! } type Query { posts: [Post] }`);
+      const { result } = await executeCodegen({
+        schema: [schemaA, schemaB],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+      expect(result[0].content).toContain('Post');
+    });
+
+    it('should accept a GraphQLSchema instance as output-level schema', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        generates: {
+          'out1.ts': {
+            schema,
+            plugins: ['typescript'],
+          },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+    });
+
+    it('should merge root SDL string with output-level GraphQLSchema instance', async () => {
+      const outputSchema = buildSchema(`type Post { id: ID! } type Query { posts: [Post] }`);
+      const { result } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': {
+            schema: outputSchema,
+            plugins: ['typescript'],
+          },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('MyType');
+      expect(result[0].content).toContain('Post');
+    });
+
+    it('should work with documents when schema is a GraphQLSchema instance', async () => {
+      const schema = buildSchema(SIMPLE_TEST_SCHEMA);
+      const { result } = await executeCodegen({
+        schema,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': { plugins: ['typescript', 'typescript-operations'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('RootQuery');
+    });
+
+    it('should preserve custom scalars from a GraphQLSchema instance', async () => {
+      const schema = buildSchema(`
+        scalar DateTime
+        type Query { now: DateTime }
+      `);
+      const { result } = await executeCodegen({
+        schema,
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('DateTime');
+    });
+  });
+
   describe('Custom schema loader', () => {
     it('Should allow custom loaders to load schema on root level', async () => {
       await executeCodegen({
         schema: [
           {
             './tests/test-documents/schema.graphql': {
-              loader: './tests/custom-loaders/custom-schema-loader.js',
+              loader: './tests/custom-loaders/custom-schema-loader.cjs',
             },
           },
         ],
@@ -754,7 +923,7 @@ describe('Codegen Executor', () => {
             schema: [
               {
                 './tests/test-documents/schema.graphql': {
-                  loader: './tests/custom-loaders/custom-schema-loader.js',
+                  loader: './tests/custom-loaders/custom-schema-loader.cjs',
                 },
               },
             ],
@@ -766,72 +935,60 @@ describe('Codegen Executor', () => {
       expect((global as any).CUSTOM_SCHEMA_LOADER_CALLED).toBeTruthy();
     });
 
-    it('Should throw when invalid return value from loader', async () => {
-      try {
-        await executeCodegen({
-          schema: [
-            {
-              './tests/test-documents/schema.graphql': {
-                loader: './tests/custom-loaders/invalid-return-value-schema-loader.js',
-              },
+    it('Should return error when invalid return value from loader', async () => {
+      const { error } = await executeCodegen({
+        schema: [
+          {
+            './tests/test-documents/schema.graphql': {
+              loader: './tests/custom-loaders/invalid-return-value-schema-loader.cjs',
             },
-          ],
-          generates: {
-            'out1.ts': { plugins: ['typescript'] },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load schema');
-      }
+      expect(error.message).toContain('Failed to load schema');
     });
 
-    it('Should throw when invalid module specified as loader', async () => {
-      try {
-        await executeCodegen({
-          schema: [
-            {
-              './tests/test-documents/schema.graphql': {
-                loader: './tests/custom-loaders/non-existing.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid module specified as loader', async () => {
+      const { error } = await executeCodegen({
+        schema: [
+          {
+            './tests/test-documents/schema.graphql': {
+              loader: './tests/custom-loaders/non-existing.js',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load custom loader');
     });
 
-    it('Should throw when invalid file declaration', async () => {
-      try {
-        await executeCodegen({
-          schema: [
-            {
-              './tests/test-documents/schema.graphql': {
-                loader: './tests/custom-loaders/invalid-export.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid file declaration', async () => {
+      const { error } = await executeCodegen({
+        schema: [
+          {
+            './tests/test-documents/schema.graphql': {
+              loader: './tests/custom-loaders/invalid-export.cjs',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load schema');
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load schema');
+      expect(error.message).toContain('Failed to load custom loader');
     });
   });
 
@@ -842,7 +999,7 @@ describe('Codegen Executor', () => {
         documents: [
           {
             './tests/test-documents/valid.graphql': {
-              loader: './tests/custom-loaders/custom-documents-loader.js',
+              loader: './tests/custom-loaders/custom-documents-loader.cjs',
             },
           },
         ],
@@ -876,76 +1033,66 @@ describe('Codegen Executor', () => {
       expect((global as any).CUSTOM_DOCUMENT_LOADER_CALLED).toBeTruthy();
     });
 
-    it('Should throw when invalid return value from custom documents loader', async () => {
-      try {
-        await executeCodegen({
-          schema: ['./tests/test-documents/schema.graphql'],
-          documents: [
-            {
-              './tests/test-documents/valid.graphql': {
-                loader: './tests/custom-loaders/invalid-return-value-documents-loader.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid return value from custom documents loader', async () => {
+      const { error } = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            './tests/test-documents/valid.graphql': {
+              loader: './tests/custom-loaders/invalid-return-value-documents-loader.cjs',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Unable to find any GraphQL type definitions for the following pointers');
-      }
+      expect(error.message).toContain(
+        'Unable to find any GraphQL type definitions for the following pointers',
+      );
     });
 
-    it('Should throw when invalid module specified as loader', async () => {
-      try {
-        await executeCodegen({
-          schema: ['./tests/test-documents/schema.graphql'],
-          documents: [
-            {
-              './tests/test-documents/valid.graphql': {
-                loader: './tests/custom-loaders/non-existing.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid module specified as loader', async () => {
+      const { error } = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            './tests/test-documents/valid.graphql': {
+              loader: './tests/custom-loaders/non-existing.js',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load custom loader');
     });
 
-    it('Should throw when invalid file declaration', async () => {
-      try {
-        await executeCodegen({
-          schema: ['./tests/test-documents/schema.graphql'],
-          documents: [
-            {
-              './tests/test-documents/valid.graphql': {
-                loader: './tests/custom-loaders/invalid-export.js',
-              },
-            },
-          ],
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
+    it('Should return error when invalid file declaration', async () => {
+      const { error } = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            './tests/test-documents/valid.graphql': {
+              loader: './tests/custom-loaders/invalid-export.cjs',
             },
           },
-        });
+        ],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (error) {
-        expect(error.message).toContain('Failed to load custom loader');
-      }
+      expect(error.message).toContain('Failed to load custom loader');
     });
   });
 
@@ -962,15 +1109,47 @@ describe('Codegen Executor', () => {
         },
       });
     } catch (error) {
-      expect(error.message).toContain('Failed to load schema from http://www.dummyschema.com/graphql');
+      expect(error.message).toContain(
+        'Failed to load schema from http://www.dummyschema.com/graphql',
+      );
     }
     expect((global as any).CUSTOM_FETCH_FN_CALLED).toBeTruthy();
+  });
+
+  it('should load schema with custom fetch function', async () => {
+    let fetchCalledFor = null;
+
+    async function myCustomFetch(url: string, _options?: RequestInit): Promise<Response> {
+      fetchCalledFor = url;
+      return Promise.resolve(new Response());
+    }
+
+    try {
+      await executeCodegen({
+        schema: ['http://www.dummyschema.com/graphql'],
+        customFetch: myCustomFetch,
+        documents: ['./tests/test-documents/valid.graphql'],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+          },
+        },
+      });
+    } catch (error) {
+      expect(error.message).toContain(
+        'Failed to load schema from http://www.dummyschema.com/graphql',
+      );
+    }
+    expect(fetchCalledFor).toBe('http://www.dummyschema.com/graphql');
   });
 
   it('should evaluate glob expressions correctly', async () => {
     try {
       await executeCodegen({
-        schema: ['./tests/test-documents/*schema.graphql', '!./tests/test-documents/invalid-schema.graphql'],
+        schema: [
+          './tests/test-documents/*schema.graphql',
+          '!./tests/test-documents/invalid-schema.graphql',
+        ],
         documents: [
           './tests/test-documents/*.graphql',
           '!./tests/test-documents/invalid-*.graphql',
@@ -991,27 +1170,30 @@ describe('Codegen Executor', () => {
 
   it('Should allow plugins to extend schema with custom root', async () => {
     try {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: `schema { query: RootQuery } type MyType { f: String } type RootQuery { f: String }`,
         documents: `query root { f }`,
         generates: {
           'out1.ts': {
-            plugins: ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+            plugins: [
+              './tests/custom-plugins/extends-schema.js',
+              './tests/custom-plugins/checks-extended-schema.js',
+            ],
           },
         },
       });
-      expect(output.length).toBe(1);
+      expect(result.length).toBe(1);
     } catch (e) {
       expect(e.message).not.toBe('Query root type must be provided.');
     }
   });
 
   it('Should allow plugin context to be accessed and modified', async () => {
-    const output = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [
         {
           './tests/test-documents/schema.graphql': {
-            loader: './tests/custom-loaders/custom-schema-loader-with-context.js',
+            loader: './tests/custom-loaders/custom-schema-loader-with-context.cjs',
           },
         },
       ],
@@ -1022,8 +1204,8 @@ describe('Codegen Executor', () => {
       },
     });
 
-    expect(output.length).toBe(1);
-    expect(output[0].content).toContain('Hello world!');
+    expect(result.length).toBe(1);
+    expect(result[0].content).toContain('Hello world!');
   });
 
   it('Should sort the input schema', async () => {
@@ -1044,7 +1226,7 @@ describe('Codegen Executor', () => {
         b: String
       }
     `;
-    const output = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: [nonSortedSchema],
       generates: {
         'out1.graphql': {
@@ -1056,8 +1238,8 @@ describe('Codegen Executor', () => {
       },
     });
 
-    expect(output.length).toBe(1);
-    expect(output[0].content).toBeSimilarStringTo(/* GraphQL */ `
+    expect(result.length).toBe(1);
+    expect(result[0].content).toBeSimilarStringTo(/* GraphQL */ `
       type A {
         b: String
         s: String
@@ -1108,8 +1290,8 @@ describe('Codegen Executor', () => {
       watch: false,
     });
     const config = prj1.getConfig();
-    const output = await executeCodegen(config);
-    expect(output[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
+    const { result } = await executeCodegen(config);
+    expect(result[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
   });
 
   describe('Document Transform', () => {
@@ -1131,7 +1313,7 @@ describe('Codegen Executor', () => {
         return newDocuments;
       };
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query foo { f }`,
         generates: {
@@ -1142,14 +1324,14 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type BarQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type BarQuery');
     });
 
     it('Should allow users to set config', async () => {
-      const generateDocumentTransform: (config: { queryName: string }) => Types.DocumentTransformObject = ({
-        queryName,
-      }) => {
+      const generateDocumentTransform: (config: {
+        queryName: string;
+      }) => Types.DocumentTransformObject = ({ queryName }) => {
         return {
           transform: ({ documents }) => {
             const newDocuments = [
@@ -1170,7 +1352,7 @@ describe('Codegen Executor', () => {
         };
       };
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query foo { f }`,
         generates: {
@@ -1181,12 +1363,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type TestQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type TestQuery');
     });
 
     it('Should transform documents when specifying files', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -1197,12 +1379,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type BarQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type BarQuery');
     });
 
     it('Should allow users to set config when specifying files', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -1219,12 +1401,12 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export type TestQuery');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('export type TestQuery');
     });
 
     it('Should allow plugin context to be accessed and modified', async () => {
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         generates: {
@@ -1242,34 +1424,32 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(output.length).toBe(1);
-      expect(output[0].content).toContain('Hello world!');
+      expect(result.length).toBe(1);
+      expect(result[0].content).toContain('Hello world!');
     });
 
-    it('should throw an understandable error if it fails.', async () => {
-      try {
-        await executeCodegen({
-          schema: SIMPLE_TEST_SCHEMA,
-          documents: `query foo { f }`,
-          generates: {
-            'out1.ts': {
-              plugins: ['typescript'],
-              documentTransforms: [
-                {
-                  transform: () => {
-                    throw new Error('Something Wrong!');
-                  },
+    it('should return error an understandable error if it fails.', async () => {
+      const { error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: `query foo { f }`,
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript'],
+            documentTransforms: [
+              {
+                transform: () => {
+                  throw new Error('Something Wrong!');
                 },
-              ],
-            },
+              },
+            ],
           },
-        });
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toContain('DocumentTransform "the element at index 0 of the documentTransforms" failed');
-        expect(e.message).toContain('Something Wrong!');
-      }
+        },
+      });
+
+      expect(error.message).toContain(
+        'DocumentTransform "the element at index 0 of the documentTransforms" failed',
+      );
+      expect(error.message).toContain('Something Wrong!');
     });
 
     it('Should transform documents with client-preset', async () => {
@@ -1290,7 +1470,7 @@ describe('Codegen Executor', () => {
         return newDocuments;
       };
 
-      const output = await executeCodegen({
+      const { result } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query foo { f }`,
         generates: {
@@ -1301,13 +1481,13 @@ describe('Codegen Executor', () => {
         },
       });
 
-      const fileOutput = output.find(file => file.filename === './src/gql/graphql.ts');
+      const fileOutput = result.find(file => file.filename === './src/gql/graphql.ts');
       expect(fileOutput.content).toContain('export type BarQuery');
     });
   });
 
   it('should not run out of memory when generating very complex types (issue #7720)', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema: ['../../dev-test/gatsby/schema.graphql'],
       documents: ['../../dev-test/gatsby/fragments.ts'],
       config: {

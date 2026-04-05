@@ -1,0 +1,3 @@
+.light ::selection {
+  @apply !bg-blue-500/20;
+}

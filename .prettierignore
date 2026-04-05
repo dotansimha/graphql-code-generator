@@ -30,3 +30,7 @@ website/src/components/live-demo/LiveDemo.tsx
 # This should be added bc our rust test setup for the SWC plugin does a string diff, and it fails
 # bc it compares imports with double quotes against the formatted perttier single quotes
 packages/presets/swc-plugin/tests/fixtures
+
+# Ignore intentional error files
+packages/graphql-codegen-cli/tests/test-files/schema-dir/error-schema.graphql
+packages/graphql-codegen-cli/tests/test-files/error-document.graphql
