@@ -15124,10 +15124,10 @@ ts-invariant@^0.10.3:
   dependencies:
     tslib "^2.1.0"
 
-ts-log@^2.2.3:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.2.7.tgz#4f4512144898b77c9984e91587076fcb8518688e"
-  integrity sha512-320x5Ggei84AxzlXp91QkIGSw5wgaLT6GeAH0KsqDmRZdVWW2OiSeVvElVoatk3f7nicwXlElXsoFkARiGE2yg==
+ts-log@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-3.0.0.tgz#74a84ca54ebeea02d6a6d052d21a8c47889c119a"
+  integrity sha512-dOh2B+XwtPsIt+bOy0krUiGGO9fbqUCrR4nkNNir/EObVmEJYd4q6KkfF2Ni8/QG1Lji3JwX8TrTa7LHftPWsA==
 
 ts-node@10.9.2, ts-node@^10.9.1:
   version "10.9.2"
