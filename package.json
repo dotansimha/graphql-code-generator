@@ -49,7 +49,7 @@
     "@babel/preset-typescript": "7.28.5",
     "@changesets/changelog-github": "0.6.0",
     "@changesets/cli": "2.30.0",
-    "@theguild/eslint-config": "0.13.3",
+    "@theguild/eslint-config": "0.13.4",
     "@theguild/prettier-config": "3.0.1",
     "bob-the-bundler": "7.0.1",
     "cross-env": "10.1.0",
