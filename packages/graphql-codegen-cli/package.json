@@ -89,7 +89,7 @@
     "@graphql-tools/merge": "^9.0.6",
     "@graphql-tools/url-loader": "^9.0.6",
     "@graphql-tools/utils": "^11.0.0",
-    "@inquirer/prompts": "^8.0.0",
+    "@inquirer/prompts": "^7.8.2",
     "@whatwg-node/fetch": "^0.10.0",
     "chalk": "^4.1.0",
     "cosmiconfig": "^9.0.0",
