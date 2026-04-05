@@ -11,7 +11,7 @@
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
-    "@tanstack/react-query": "4.36.1",
+    "@tanstack/react-query": "4.44.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -21,8 +21,8 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
-    "cypress": "15.7.1",
-    "serve": "14.2.3",
+    "cypress": "15.13.0",
+    "serve": "14.2.6",
     "start-server-and-test": "3.0.0",
     "typescript": "5.5.4",
     "vite": "^8.0.0"

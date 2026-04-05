@@ -42,7 +42,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^6.1.1",
     "@graphql-codegen/visitor-plugin-common": "^6.2.4",
-    "tslib": "~2.6.0"
+    "tslib": "~2.8.0"
   },
   "publishConfig": {
     "directory": "dist",

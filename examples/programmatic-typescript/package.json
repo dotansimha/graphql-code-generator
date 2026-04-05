@@ -17,14 +17,14 @@
     "@graphql-codegen/typescript-operations": "5.0.9",
     "@graphql-codegen/typescript-resolvers": "5.1.7",
     "@graphql-tools/graphql-file-loader": "^8.1.12",
-    "@graphql-tools/load": "8.1.0",
-    "@graphql-tools/schema": "10.0.6",
-    "graphql": "16.9.0",
+    "@graphql-tools/load": "8.1.8",
+    "@graphql-tools/schema": "10.0.31",
+    "graphql": "16.13.2",
     "graphql-tag": "2.12.6",
     "prettier": "3.8.1"
   },
   "devDependencies": {
     "@types/node": "24.12.2",
-    "tsup": "8.2.4"
+    "tsup": "8.5.1"
   }
 }

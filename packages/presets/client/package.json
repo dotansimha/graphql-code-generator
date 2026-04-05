@@ -58,12 +58,12 @@
     "@graphql-tools/documents": "^1.0.0",
     "@graphql-tools/utils": "^11.0.0",
     "@graphql-typed-document-node/core": "3.2.0",
-    "tslib": "~2.6.0"
+    "tslib": "~2.8.0"
   },
   "devDependencies": {
     "@types/babel__helper-plugin-utils": "7.10.3",
     "@types/babel__template": "7.4.4",
-    "graphql-sock": "1.0.0"
+    "graphql-sock": "1.0.1"
   },
   "publishConfig": {
     "directory": "dist",
