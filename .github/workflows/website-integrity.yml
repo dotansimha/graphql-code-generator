@@ -19,7 +19,7 @@ jobs:
         run: git fetch origin master
 
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@efca92ebf0309a89e2e1bb69b1f52115ff8ee7d6 # main
+        uses: the-guild-org/shared-config/setup@bcb53d910698d29749511f386139ad8180269101 # main
 
       - name: Build Packages
         run: yarn build
