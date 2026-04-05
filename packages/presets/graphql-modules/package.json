@@ -42,7 +42,7 @@
     "@graphql-codegen/plugin-helpers": "^6.1.1",
     "@graphql-codegen/visitor-plugin-common": "^6.2.4",
     "@graphql-tools/utils": "^11.0.0",
-    "change-case-all": "1.0.15",
+    "change-case-all": "2.1.0",
     "parse-filepath": "^1.0.2",
     "tslib": "~2.6.0"
   },
