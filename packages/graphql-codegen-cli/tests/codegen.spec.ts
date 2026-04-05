@@ -58,7 +58,7 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
       }
     });
@@ -105,7 +105,7 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).toMatch('Invalid Codegen Configuration!');
       }
@@ -136,7 +136,7 @@ describe('Codegen Executor', () => {
         });
 
         expect(result.length).toBe(1);
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).not.toMatch('Invalid Codegen Configuration!');
       }
@@ -153,7 +153,7 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toMatch('Invalid Codegen Configuration!');
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
       }
@@ -168,7 +168,7 @@ describe('Codegen Executor', () => {
             'out.ts': {},
           },
         });
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toMatch('Invalid Codegen Configuration!');
       }
     });
@@ -184,7 +184,7 @@ describe('Codegen Executor', () => {
             },
           },
         });
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toMatch('Invalid Codegen Configuration!');
       }
     });
@@ -1108,7 +1108,7 @@ describe('Codegen Executor', () => {
           },
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toContain(
         'Failed to load schema from http://www.dummyschema.com/graphql',
       );
@@ -1135,7 +1135,7 @@ describe('Codegen Executor', () => {
           },
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toContain(
         'Failed to load schema from http://www.dummyschema.com/graphql',
       );
@@ -1161,7 +1161,7 @@ describe('Codegen Executor', () => {
           },
         },
       });
-    } catch (e) {
+    } catch (e: any) {
       // eslint-disable-next-line no-console
       console.error(e);
       throw new Error('This should not throw as the invalid file is excluded via glob.');
@@ -1183,7 +1183,7 @@ describe('Codegen Executor', () => {
         },
       });
       expect(result.length).toBe(1);
-    } catch (e) {
+    } catch (e: any) {
       expect(e.message).not.toBe('Query root type must be provided.');
     }
   });
@@ -1273,7 +1273,7 @@ describe('Codegen Executor', () => {
           },
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toContain('Failed to load schema from');
     }
   });

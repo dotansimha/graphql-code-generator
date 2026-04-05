@@ -225,7 +225,7 @@ const assertParcelWouldIgnoreGlob = (
 
   try {
     expect(hasMatch).toBe(true);
-  } catch (error) {
+  } catch (error: any) {
     error.message = formatErrorGlobNotIgnoredByParcelWatcher({
       expectedGlob: expectToIgnoreGlob,
       parcelIgnoredGlobs,
@@ -287,7 +287,7 @@ const assertParcelWouldIgnorePath = (
 
   try {
     expect(hasMatch).toBe(true);
-  } catch (error) {
+  } catch (error: any) {
     error.message = formatErrorPathNotIgnoredByParcelWatcher({
       expectedPath: expectToIgnoreRelPathFromCwd,
       parcelIgnoredPaths,
@@ -316,7 +316,7 @@ const assertTriggeredBuild = async (
     await dispatchChange(path);
     expect(subscribeCallbackMock).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
     expect(onWatchTriggeredMock).toHaveBeenLastCalledWith('update', path);
-  } catch (error) {
+  } catch (error: any) {
     error.message = formatBuildTriggerErrorPrelude(path, true, error.message);
     Error.captureStackTrace(error, assertTriggeredBuild);
     throw error;
@@ -334,7 +334,7 @@ const assertDidNotTriggerBuild = async (
     await dispatchChange(path);
     expect(subscribeCallbackMock).toHaveBeenLastCalledWith(undefined, [{ path, type: 'update' }]);
     expect(onWatchTriggeredMock).not.toHaveBeenLastCalledWith('update', path);
-  } catch (error) {
+  } catch (error: any) {
     error.message = formatBuildTriggerErrorPrelude(path, false, error.message);
     Error.captureStackTrace(error, assertDidNotTriggerBuild);
     throw error;

@@ -714,7 +714,7 @@
       return {
         node: book
       }
-    } catch (e) {
+    } catch (e: any) {
       return {
         message: 'Failed to fetch book'
       }
@@ -745,7 +745,7 @@
         __typename: 'BookResult', // 1a. this also types `node` for us 🎉
         node: book
       }
-    } catch (e) {
+    } catch (e: any) {
       return {
         __typename: 'PayloadError',
         message: 'Failed to fetch book'

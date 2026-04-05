@@ -31,7 +31,7 @@ export async function transformDocuments(
             pluginContext: options.pluginContext,
           });
         }, `DocumentTransform "${name}" execution`);
-      } catch (e) {
+      } catch (e: any) {
         throw new Error(
           `DocumentTransform "${name}" failed: \n
             ${e.message}

@@ -243,7 +243,7 @@ export function compileTs(
     if (relevantErrors && relevantErrors.length > 0) {
       throw new Error(relevantErrors.join('\n'));
     }
-  } catch (e) {
+  } catch (e: any) {
     if (openPlayground) {
       const compressedCode = LZString.compressToEncodedURIComponent(contents);
       open('http://www.typescriptlang.org/play/#code/' + compressedCode);

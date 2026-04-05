@@ -27,7 +27,7 @@ const InlinedSlowDataField = (props: { data: DocumentType<typeof alphabetQuery> 
   try {
     // @ts-expect-error - this field should be either undefined or a string
     const _ = props.data.inlinedSlowField.toLowerCase();
-  } catch (e) {}
+  } catch (e: any) {}
 
   if (!props.data.inlinedSlowField) {
     return null;

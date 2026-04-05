@@ -69,7 +69,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): Codeg
       try {
         const result = yaml.parse(content, { prettyErrors: true, merge: true });
         return result;
-      } catch (error) {
+      } catch (error: any) {
         error.message = `YAML Error in ${filepath}:\n${error.message}`;
         throw error;
       }

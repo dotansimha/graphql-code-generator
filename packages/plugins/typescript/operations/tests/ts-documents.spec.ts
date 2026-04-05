@@ -1563,7 +1563,7 @@ export type Q2Query = { search: Array<
           { outputFile: '' },
         );
         expect(true).toBeFalsy();
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toBe('Unable to find root schema type for operation type "mutation"!');
       }
     });

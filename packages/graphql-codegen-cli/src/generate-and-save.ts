@@ -212,7 +212,7 @@ function isConfiguredOutput(output: any): output is Types.ConfiguredOutput {
 async function hashFile(filePath: string): Promise<string | null> {
   try {
     return hash(await readFile(filePath));
-  } catch (err) {
+  } catch (err: any) {
     if (err && err.code === 'ENOENT') {
       // return null if file does not exist
       return null;

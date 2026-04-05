@@ -45,7 +45,7 @@ export function LiveDemoEditors({
   try {
     const parsedConfig = load(config || '') as Config;
     mode = getMode(parsedConfig);
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
   }
 

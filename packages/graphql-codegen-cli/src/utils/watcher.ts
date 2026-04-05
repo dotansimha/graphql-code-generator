@@ -7,7 +7,6 @@ import type { subscribe } from '@parcel/watcher';
 import { executeCodegen } from '../codegen.js';
 import { CodegenContext, loadContext } from '../config.js';
 import { lifecycleHooks } from '../hooks.js';
-import { AbortController } from './abort-controller-polyfill.js';
 import { debugLog } from './debugging.js';
 import { access } from './file-system.js';
 import { getLogger } from './logger.js';

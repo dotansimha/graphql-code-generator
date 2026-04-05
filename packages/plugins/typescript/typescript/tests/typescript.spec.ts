@@ -3017,7 +3017,7 @@ describe('TypeScript', () => {
         try {
           await plugin(schema, [], {}, { outputFile: '' });
           throw new Error('Plugin should have raised an exception.');
-        } catch (err) {
+        } catch (err: any) {
           expect(err.message).toEqual(
             'Fields on an input object type can not be non-nullable. It seems like the schema was not validated.',
           );

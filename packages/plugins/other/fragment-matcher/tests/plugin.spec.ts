@@ -71,7 +71,7 @@ describe('Fragment Matcher Plugin', () => {
         await Promise.all(allCases.map(ext => validate(schema, [], {}, `foo${ext}`, [])));
 
         throw new Error('DONE');
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toEqual('DONE');
       }
     });
@@ -81,7 +81,7 @@ describe('Fragment Matcher Plugin', () => {
         await validate(schema, [], { module: 'commonjs' }, 'foo.ts', []);
 
         throw new Error('SHOULD_NOT_BE_HERE');
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toContain('commonjs');
       }
     });
@@ -91,7 +91,7 @@ describe('Fragment Matcher Plugin', () => {
         await validate(schema, [], {}, 'foo.yml', []);
 
         throw new Error('SHOULD_NOT_BE_HERE');
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toContain('extension');
       }
     });
