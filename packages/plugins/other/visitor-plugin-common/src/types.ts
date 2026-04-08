@@ -83,6 +83,7 @@ export type NamingConvention = string | NamingConventionFn | NamingConventionMap
 export interface NamingConventionMap {
   enumValues?: 'keep' | NamingConventionResolvePath | NamingConventionFn;
   typeNames?: 'keep' | NamingConventionResolvePath | NamingConventionFn;
+  varNames?: 'keep' | NamingConventionResolvePath | NamingConventionFn;
   transformUnderscore?: boolean;
 }
 
