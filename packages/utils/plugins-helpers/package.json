@@ -47,7 +47,7 @@
     "tslib": "^2.8.0"
   },
   "devDependencies": {
-    "@graphql-tools/apollo-engine-loader": "8.0.28"
+    "@graphql-tools/apollo-engine-loader": "8.0.29"
   },
   "publishConfig": {
     "directory": "dist",
