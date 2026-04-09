@@ -24,7 +24,7 @@
     "@graphql-codegen/cli": "6.2.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "cypress": "15.13.0",
+    "cypress": "15.13.1",
     "start-server-and-test": "3.0.0",
     "typescript": "^5.0.0"
   },
