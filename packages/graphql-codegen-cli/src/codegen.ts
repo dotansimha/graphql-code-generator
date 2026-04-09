@@ -44,7 +44,7 @@ const makeDefaultLoader = (from: string) => {
            * as import.meta is unavailable in a CommonJS context
            * and furthermore unavailable in stable Node.js.
            **/
-        mod
+          mod
         : relativeRequire.resolve(mod)
     );
   };
@@ -397,22 +397,37 @@ export async function executeCodegen(
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
                             ? await Promise.all(
-                              outputConfig.documentTransforms.map(async (config, index) => {
-                                return await getDocumentTransform(
-                                  config,
-                                  makeDefaultLoader(context.cwd),
-                                  `the element at index ${index} of the documentTransforms`,
-                                );
-                              }),
-                            )
+                                outputConfig.documentTransforms.map(async (config, index) => {
+                                  return await getDocumentTransform(
+                                    config,
+                                    makeDefaultLoader(context.cwd),
+                                    `the element at index ${index} of the documentTransforms`,
+                                  );
+                                }),
+                              )
                             : [];
 
                           const outputs: Types.GenerateOptions[] = preset
                             ? await context.profiler.run(
-                              async () =>
-                                preset.buildGeneratesSection({
-                                  baseOutputDir: filename,
-                                  presetConfig: outputConfig.presetConfig || {},
+                                async () =>
+                                  preset.buildGeneratesSection({
+                                    baseOutputDir: filename,
+                                    presetConfig: outputConfig.presetConfig || {},
+                                    plugins: normalizedPluginsArray,
+                                    schema: outputSchema,
+                                    schemaAst: outputSchemaAst,
+                                    documents: outputDocuments,
+                                    config: mergedConfig,
+                                    pluginMap,
+                                    pluginContext,
+                                    profiler: context.profiler,
+                                    documentTransforms,
+                                  }),
+                                `Build Generates Section: ${filename}`,
+                              )
+                            : [
+                                {
+                                  filename,
                                   plugins: normalizedPluginsArray,
                                   schema: outputSchema,
                                   schemaAst: outputSchemaAst,
@@ -422,23 +437,8 @@ export async function executeCodegen(
                                   pluginContext,
                                   profiler: context.profiler,
                                   documentTransforms,
-                                }),
-                              `Build Generates Section: ${filename}`,
-                            )
-                            : [
-                              {
-                                filename,
-                                plugins: normalizedPluginsArray,
-                                schema: outputSchema,
-                                schemaAst: outputSchemaAst,
-                                documents: outputDocuments,
-                                config: mergedConfig,
-                                pluginMap,
-                                pluginContext,
-                                profiler: context.profiler,
-                                documentTransforms,
-                              },
-                            ];
+                                },
+                              ];
 
                           const process = async (outputArgs: Types.GenerateOptions) => {
                             const output = await codegen({

@@ -87,7 +87,7 @@ export async function loadDocuments(
       // we omit paths that don't resolve to a specific file
       continue;
     }
-    ignore.push(join(process.cwd(), generatePath));
+    ignore.push(join(config.cwd || process.cwd(), generatePath));
   }
 
   try {
