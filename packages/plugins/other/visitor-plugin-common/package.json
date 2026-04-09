@@ -48,7 +48,7 @@
     "dependency-graph": "^1.0.0",
     "graphql-tag": "^2.11.0",
     "parse-filepath": "^1.0.2",
-    "tslib": "~2.8.0"
+    "tslib": "^2.8.0"
   },
   "devDependencies": {
     "@types/parse-filepath": "1.0.2"
