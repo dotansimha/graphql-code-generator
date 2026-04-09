@@ -392,7 +392,7 @@ export class CodegenContext {
     this._config = config;
     this._graphqlConfig = graphqlConfig;
     this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;
-    this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : process.cwd();
+    this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : config?.cwd || process.cwd();
     this.profiler = createNoopProfiler();
   }
 
@@ -416,9 +416,18 @@ export class CodegenContext {
       }
     }
 
-    return {
+    const config = {
       ...extraConfig,
       ...this.config,
+    };
+
+    if (this._graphqlConfig) {
+      return config;
+    }
+
+    return {
+      ...config,
+      cwd: this.cwd,
     };
   }
 

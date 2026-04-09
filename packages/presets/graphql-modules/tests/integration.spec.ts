@@ -255,8 +255,10 @@ describe('Integration', () => {
       importExtension: '' as const,
       emitLegacyCommonJSImports: false,
     };
-    const { result } = await executeCodegen(withBothOptions);
+    const { result, error } = await executeCodegen(withBothOptions);
     const importStatement = `import * as Types from "../global-types";`;
+
+    expect(error).toBeFalsy();
 
     expect(result.length).toBe(5);
     // Should use empty string from importExtension, not .js from emitLegacyCommonJSImports

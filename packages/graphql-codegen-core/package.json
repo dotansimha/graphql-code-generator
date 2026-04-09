@@ -64,7 +64,7 @@
     "@graphql-codegen/plugin-helpers": "^6.1.1",
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/utils": "^11.0.0",
-    "tslib": "~2.6.0"
+    "tslib": "^2.8.0"
   },
   "publishConfig": {
     "directory": "dist",

@@ -44,7 +44,7 @@
     "@graphql-tools/utils": "^11.0.0",
     "change-case-all": "1.0.15",
     "parse-filepath": "^1.0.2",
-    "tslib": "~2.6.0"
+    "tslib": "^2.8.0"
   },
   "devDependencies": {
     "@types/parse-filepath": "1.0.2"

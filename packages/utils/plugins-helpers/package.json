@@ -44,10 +44,10 @@
     "change-case-all": "1.0.15",
     "common-tags": "1.8.2",
     "import-from": "4.0.0",
-    "tslib": "~2.6.0"
+    "tslib": "^2.8.0"
   },
   "devDependencies": {
-    "@graphql-tools/apollo-engine-loader": "8.0.1"
+    "@graphql-tools/apollo-engine-loader": "8.0.28"
   },
   "publishConfig": {
     "directory": "dist",

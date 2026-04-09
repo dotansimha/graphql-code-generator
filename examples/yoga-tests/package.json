@@ -9,11 +9,11 @@
     "test:end2end": "yarn test"
   },
   "dependencies": {
-    "graphql-yoga": "5.7.0"
+    "graphql-yoga": "5.21.0"
   },
   "devDependencies": {
-    "@babel/core": "7.25.2",
-    "@babel/preset-env": "7.25.3",
+    "@babel/core": "7.29.0",
+    "@babel/preset-env": "7.29.2",
     "@babel/preset-typescript": "7.28.5",
     "@graphql-codegen/cli": "6.2.1",
     "@graphql-typed-document-node/core": "3.2.0"

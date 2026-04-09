@@ -50,6 +50,9 @@ describe('Persisted Documents', () => {
       {
         "errors": [
           {
+            "extensions": {
+              "code": "CANNOT_SEND_PQ_ID_AND_BODY",
+            },
             "message": "PersistedQueryOnly",
           },
         ],

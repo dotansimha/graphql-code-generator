@@ -1290,7 +1290,8 @@ describe('Codegen Executor', () => {
       watch: false,
     });
     const config = prj1.getConfig();
-    const { result } = await executeCodegen(config);
+    const { result, error } = await executeCodegen(config);
+    expect(error).toBeFalsy();
     expect(result[0].content).toContain('DocumentNode<MyQueryQuery, MyQueryQueryVariables>');
   });
 

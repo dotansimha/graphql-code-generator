@@ -11,8 +11,8 @@
     "test:end2end": "exit 0"
   },
   "dependencies": {
-    "graphql": "16.9.0",
-    "graphql-yoga": "5.7.0"
+    "graphql": "16.13.2",
+    "graphql-yoga": "5.21.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "6.2.1",
