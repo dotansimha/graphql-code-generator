@@ -27,7 +27,7 @@ export function makeYoga(args: { persistedDocuments: null | Map<string, string> 
     const { persistedDocuments } = args;
     plugins.push(
       usePersistedOperations({
-        getPersistedOperation: hash => persistedDocuments.get(hash),
+        getPersistedOperation: hash => persistedDocuments.get(hash) ?? null,
       }),
     );
   }
