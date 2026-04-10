@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import './App.css';
 import Film from './Film';
 import { graphql } from './gql';
