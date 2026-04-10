@@ -1,5 +1,5 @@
 import * as TJS from 'typescript-json-schema';
-import tsConfig from '../../tsconfig.json';
+import tsConfig from '../../tsconfig.json' with { type: 'json' };
 import { generateDocs } from './docs-generator';
 import { pluginsConfigurations, presetsConfigurations } from './plugins-docs';
 
@@ -15,6 +15,10 @@ export function transformDocs() {
     paths: tsConfig.compilerOptions.paths,
     skipLibCheck: true,
     allowSyntheticDefaultImports: true,
+    types: ['node'],
+    ignoreDeprecations: '6.0',
+    noImplicitAny: false,
+    strictNullChecks: false,
   });
 
   const generator = TJS.buildGenerator(program, {

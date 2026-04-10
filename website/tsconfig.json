@@ -17,6 +17,7 @@
     "incremental": true,
     "useUnknownInCatchVariables": false,
     "types": ["node"],
+    "allowImportingTsExtensions": true,
     "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./*"]
