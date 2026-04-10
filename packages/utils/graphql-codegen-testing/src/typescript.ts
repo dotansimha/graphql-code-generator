@@ -58,7 +58,7 @@ export function validateTs(
   }
   if (tsVersion.startsWith('6.')) {
     options.ignoreDeprecations ||= '6.0';
-    options.types ||= ['@types/node'];
+    options.types ||= ['node'];
   }
 
   const contents: string =
