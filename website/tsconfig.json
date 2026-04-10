@@ -16,6 +16,8 @@
     "jsx": "preserve",
     "incremental": true,
     "useUnknownInCatchVariables": false,
+    "types": ["node"],
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./*"]
     }
