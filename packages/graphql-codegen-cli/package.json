@@ -20,7 +20,7 @@
     "gql-gen": "dist/esm/bin.js",
     "graphql-codegen": "dist/esm/bin.js",
     "graphql-code-generator": "dist/esm/bin.js",
-    "graphql-codegen-esm": "dist/cjs/bin.js",
+    "graphql-codegen-esm": "dist/esm/bin.js",
     "graphql-codegen-cjs": "dist/cjs/bin.js"
   },
   "main": "dist/cjs/index.js",
