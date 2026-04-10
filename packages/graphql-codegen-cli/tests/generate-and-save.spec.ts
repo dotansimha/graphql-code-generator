@@ -2,7 +2,7 @@ import { dirname, join } from 'path';
 import logSymbols from 'log-symbols';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
-import makeDir from 'make-dir';
+import { makeDirectorySync } from 'make-dir';
 import { createContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as fs from '../src/utils/file-system.js';
@@ -169,7 +169,7 @@ describe('generate-and-save', () => {
     vi.unmock('fs');
     const fs = await import('fs');
 
-    makeDir.sync(dirname(outputFile));
+    makeDirectorySync(dirname(outputFile));
     if (fs.existsSync(outputFile)) {
       fs.unlinkSync(outputFile);
     }

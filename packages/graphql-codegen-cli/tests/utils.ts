@@ -1,6 +1,6 @@
 import os from 'os';
 import { join, parse, relative, resolve } from 'path';
-import makeDir from 'make-dir';
+import { makeDirectorySync } from 'make-dir';
 import * as rimraf from 'rimraf';
 
 const fs = await vi.importActual<typeof import('fs')>('fs');
@@ -16,14 +16,14 @@ export class TempDir {
     // This ensures that temp files/dirs won't cause side effects for other tests.
     this.dir = resolve(tempDir, 'codegen', `${relativeParent}-dir`);
 
-    makeDir.sync(this.dir);
+    makeDirectorySync(this.dir);
   }
 
   createFile(file: string, contents: string): void {
     const filePath = join(this.dir, file);
     const fileDir = parse(filePath).dir;
 
-    makeDir.sync(fileDir);
+    makeDirectorySync(fileDir);
 
     fs.writeFileSync(filePath, `${contents}\n`);
   }
