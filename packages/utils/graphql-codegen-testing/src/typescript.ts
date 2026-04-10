@@ -13,6 +13,7 @@ import {
   ScriptKind,
   ScriptTarget,
   ScriptTarget as ScriptTargetType,
+  version as tsVersion,
 } from 'typescript';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -54,6 +55,10 @@ export function validateTs(
     options.strictPropertyInitialization = true;
     options.alwaysStrict = true;
     options.strictFunctionTypes = true;
+  }
+  if (tsVersion.startsWith('6.')) {
+    options.ignoreDeprecations ||= '6.0';
+    options.types ||= ['node'];
   }
 
   const contents: string =
@@ -243,7 +248,7 @@ export function compileTs(
     if (relevantErrors && relevantErrors.length > 0) {
       throw new Error(relevantErrors.join('\n'));
     }
-  } catch (e) {
+  } catch (e: any) {
     if (openPlayground) {
       const compressedCode = LZString.compressToEncodedURIComponent(contents);
       open('http://www.typescriptlang.org/play/#code/' + compressedCode);

@@ -27,7 +27,7 @@ export async function getPresetByName(
       }
 
       return loaded as Types.OutputPreset;
-    } catch (err) {
+    } catch (err: any) {
       if (
         /** CJS Error code */
         err.code !== 'MODULE_NOT_FOUND' &&

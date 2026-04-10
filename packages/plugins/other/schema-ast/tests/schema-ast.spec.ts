@@ -20,7 +20,7 @@ describe('Schema AST', () => {
         await validate(null, null, null, fileName, plugins);
 
         throw new Error(SHOULD_THROW_ERROR);
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).not.toBe(SHOULD_THROW_ERROR);
         expect(e.message).toBe(
           'Plugin "schema-ast" requires extension to be ".graphql" or ".gql" or ".graphqls"!',

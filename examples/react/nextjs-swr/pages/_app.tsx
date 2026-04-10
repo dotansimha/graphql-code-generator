@@ -1,3 +1,4 @@
+// @ts-expect-error - CSS
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 

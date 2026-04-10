@@ -2,17 +2,14 @@ import {
   ASTNode,
   DocumentNode,
   FieldNode,
-  FragmentDefinitionNode,
   GraphQLObjectType,
   GraphQLOutputType,
   GraphQLSchema,
-  InlineFragmentNode,
   InputValueDefinitionNode,
   isListType,
   isNonNullType,
   isObjectType,
   Kind,
-  OperationDefinitionNode,
   SelectionSetNode,
   VariableDefinitionNode,
   visit,
@@ -96,24 +93,19 @@ export function isUsingTypes(
 
   visit(document, {
     SelectionSet: {
-      enter(
-        node: SelectionSetNode,
-        key,
-        parent: InlineFragmentNode | FragmentDefinitionNode | FieldNode | OperationDefinitionNode,
-        anscestors,
-      ) {
+      enter(node: SelectionSetNode, key, parent: ASTNode | readonly ASTNode[], anscestors) {
         const insideIgnoredFragment = (anscestors as any).find(
           (f: ASTNode) =>
             f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value),
         );
 
         if (insideIgnoredFragment) {
-          return;
+          return node;
         }
 
         const selections = node.selections || [];
 
-        if (schema && selections.length > 0) {
+        if (schema && selections.length > 0 && !Array.isArray(parent) && 'kind' in parent) {
           const nextTypeName = (() => {
             if (parent.kind === Kind.FRAGMENT_DEFINITION) {
               return parent.typeCondition.name.value;
@@ -157,7 +149,11 @@ export function isUsingTypes(
           })();
 
           typesStack.push(schema.getType(nextTypeName) as any);
+
+          return node;
         }
+
+        return undefined;
       },
       leave(node: SelectionSetNode) {
         const selections = node.selections || [];
@@ -165,12 +161,14 @@ export function isUsingTypes(
         if (schema && selections.length > 0) {
           typesStack.pop();
         }
+
+        return node;
       },
     },
     Field: {
       enter: (node: FieldNode, key, parent, path, anscestors) => {
         if (node.name.value.startsWith('__')) {
-          return;
+          return node;
         }
 
         const insideIgnoredFragment = (anscestors as any).find(
@@ -179,7 +177,7 @@ export function isUsingTypes(
         );
 
         if (insideIgnoredFragment) {
-          return;
+          return node;
         }
 
         const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
@@ -209,6 +207,8 @@ export function isUsingTypes(
             }
           }
         }
+
+        return undefined;
       },
     },
     VariableDefinition: {
@@ -219,9 +219,11 @@ export function isUsingTypes(
         );
 
         if (insideIgnoredFragment) {
-          return;
+          return node;
         }
         foundFields++;
+
+        return undefined;
       },
     },
     InputValueDefinition: {
@@ -232,9 +234,11 @@ export function isUsingTypes(
         );
 
         if (insideIgnoredFragment) {
-          return;
+          return node;
         }
         foundFields++;
+
+        return node;
       },
     },
   });

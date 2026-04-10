@@ -14721,10 +14721,10 @@ typescript-json-schema@0.56.0:
     typescript "~4.9.5"
     yargs "^17.1.1"
 
-typescript@5.5.4, typescript@^5, typescript@^5.0.0, typescript@~4.9.5:
-  version "5.5.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
-  integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
+typescript@6.0.2, typescript@^5, typescript@^6.0.0, typescript@~4.9.5:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-6.0.2.tgz#0b1bfb15f68c64b97032f3d78abbf98bdbba501f"
+  integrity sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==
 
 ua-parser-js@^1.0.35:
   version "1.0.41"

@@ -40,7 +40,7 @@ executeOperation(apiUrl, AllPeopleQueryDocument).then(res => {
     process.exit(1);
   }
 
-  console.log(res.data?.allPeople.edges);
+  console.log(res.data?.allPeople?.edges);
 });
 
 executeOperation(apiUrl, AllPeopleWithVariablesQueryDocument, {
@@ -51,5 +51,5 @@ executeOperation(apiUrl, AllPeopleWithVariablesQueryDocument, {
     process.exit(1);
   }
 
-  console.log(res.data?.allPeople.edges);
+  console.log(res.data?.allPeople?.edges);
 });

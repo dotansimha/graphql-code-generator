@@ -108,7 +108,7 @@ export async function executeCodegen(
       context.profiler.run(async () => {
         try {
           await Promise.resolve().then(() => task());
-        } catch (error) {
+        } catch (error: any) {
           if (source && !(error instanceof GraphQLError)) {
             error.source = source;
           }
@@ -328,7 +328,7 @@ export async function executeCodegen(
                               return {
                                 documents,
                               };
-                            } catch (error) {
+                            } catch (error: any) {
                               if (
                                 error instanceof NoTypeDefinitionsFound &&
                                 config.ignoreNoDocuments

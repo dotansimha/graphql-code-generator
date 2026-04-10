@@ -49,7 +49,7 @@ export async function loadSchema(
       ...config.config,
     });
     return schema;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(
       [
         `Failed to load schema from ${Object.keys(schemaPointers).join(',')}:`,
@@ -99,7 +99,7 @@ export async function loadDocuments(
       ...config.config,
     });
     return loadedFromToolkit;
-  } catch (error) {
+  } catch (error: any) {
     // NoTypeDefinitionsFound from `@graphql-tools/load` already has a message with pointer, so we can just rethrow the error
     if (error instanceof NoTypeDefinitionsFound) {
       throw error;

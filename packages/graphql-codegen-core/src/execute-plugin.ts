@@ -61,7 +61,7 @@ export async function executePlugin(
           ),
         `Plugin ${options.name} validate`,
       );
-    } catch (e) {
+    } catch (e: any) {
       throw new Error(
         `Plugin "${options.name}" validation failed: \n
             ${e.message}

@@ -84,7 +84,7 @@ export async function getAnswers(possibleTargets: Record<Tags, boolean>): Promis
       config,
       script,
     };
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof Error && error.name === 'ExitPromptError') {
       // This error because user exited using CMD+C, just exit gracefully or else user would see an ugly error message
       // https://github.com/SBoudrias/Inquirer.js/blob/ee16061a1e3f99a6cc714a3d473f7cd12b06a3f1/packages/prompts/README.md#handling-ctrlc-gracefully

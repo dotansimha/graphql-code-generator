@@ -50,7 +50,11 @@
       "@graphql-codegen/typescript": ["packages/plugins/typescript/typescript/src/index.ts"],
       "@graphql-codegen/testing": ["packages/utils/graphql-codegen-testing/src/index.ts"],
       "@graphql-codegen/plugin-helpers": ["packages/utils/plugins-helpers/src/index.ts"]
-    }
+    },
+    "ignoreDeprecations": "6.0",
+    "types": ["node"],
+    "noImplicitAny": false,
+    "strictNullChecks": false
   },
   "include": ["packages"],
   "exclude": [

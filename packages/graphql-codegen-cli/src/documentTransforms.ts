@@ -58,7 +58,7 @@ export async function getDocumentTransformByName(
   for (const moduleName of possibleModules) {
     try {
       return await loader(moduleName);
-    } catch (err) {
+    } catch (err: any) {
       if (err.code !== 'MODULE_NOT_FOUND' && err.code !== 'ERR_MODULE_NOT_FOUND') {
         throw new Error(
           `

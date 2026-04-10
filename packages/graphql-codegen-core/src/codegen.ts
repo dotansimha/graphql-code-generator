@@ -86,7 +86,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   const schemaDocumentNode =
     mergeNeeded || !options.schema
-      ? getCachedDocumentNodeFromSchema(schemaInstance)
+      ? getCachedDocumentNodeFromSchema(schemaInstance!)
       : options.schema;
 
   const documentTransforms = Array.isArray(options.documentTransforms)
@@ -298,7 +298,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       const definitionKindMap = definitionMap[node.kind];
 
       const length = definitionKindMap[node.name.value].contents.size;
-      definitionKindMap[node.name.value].paths.add(file.location);
+      definitionKindMap[node.name.value].paths.add(file.location!);
       definitionKindMap[node.name.value].contents.add(print(node));
       if (length === definitionKindMap[node.name.value].contents.size) {
         return null;
@@ -309,7 +309,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
 
   for (const file of files) {
     const deduplicatedDefinitions = new Set<DefinitionNode>();
-    visit(file.document, {
+    visit(file.document!, {
       OperationDefinition(node) {
         addDefinition(file, node, deduplicatedDefinitions);
       },

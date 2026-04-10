@@ -329,7 +329,7 @@ describe('CLI Flags', () => {
     try {
       await createContext(parseArgv(args));
       expect(true).toBeFalsy();
-    } catch (e) {
+    } catch (e: any) {
       expect(e.code).toEqual('MODULE_NOT_FOUND');
     }
   });

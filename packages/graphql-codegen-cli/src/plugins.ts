@@ -21,7 +21,7 @@ export async function getPluginByName(
   for (const moduleName of possibleModules) {
     try {
       return await pluginLoader(moduleName);
-    } catch (err) {
+    } catch (err: any) {
       if (err.code !== 'MODULE_NOT_FOUND' && err.code !== 'ERR_MODULE_NOT_FOUND') {
         throw new Error(
           `

@@ -24,7 +24,7 @@ export async function runCli(cmd: string): Promise<number> {
       return 1;
     }
     return 0;
-  } catch (error) {
+  } catch (error: any) {
     await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
     return 1;
   }
