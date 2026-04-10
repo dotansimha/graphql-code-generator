@@ -119,7 +119,7 @@
     "change-case-all": "1.0.15",
     "js-yaml": "4.1.1",
     "make-dir": "4.0.0",
-    "prettier": "3.8.1"
+    "prettier": "3.8.2"
   },
   "publishConfig": {
     "directory": "dist",
