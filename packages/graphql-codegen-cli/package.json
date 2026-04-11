@@ -100,7 +100,7 @@
     "jiti": "^2.3.0",
     "json-to-pretty-yaml": "^1.2.2",
     "listr2": "^10.0.0",
-    "log-symbols": "^4.0.0",
+    "log-symbols": "^7.0.0",
     "micromatch": "^4.0.5",
     "shell-quote": "^1.7.3",
     "string-env-interpolation": "^1.0.1",
