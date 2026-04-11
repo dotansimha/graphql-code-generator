@@ -1,11 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { GraphQL17Alpha9Handler } from '@apollo/client/incremental';
+import { ApolloProvider } from '@apollo/client/react';
 import App from './App';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  link: new HttpLink({
+    uri: 'https://graphql.org/graphql/',
+  }),
   cache: new InMemoryCache(),
+  incrementalHandler: new GraphQL17Alpha9Handler(),
 });
 
 const root = ReactDOM.createRoot(document.getElementById('app') as HTMLElement);

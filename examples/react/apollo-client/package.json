@@ -11,7 +11,7 @@
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.10",
+    "@apollo/client": "^4.0.0",
     "graphql": "^16.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

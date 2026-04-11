@@ -63,7 +63,7 @@ const TS_QUERY = dedent(/* GraphQL */ `
 `);
 
 export const APP_TSX = `\
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 
 import { graphql } from './gql/gql';
 

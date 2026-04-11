@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ApolloClient, ApolloProvider, InMemoryCache, useQuery } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloProvider, useQuery } from '@apollo/client/react';
 import Film from './Film';
 import { graphql } from './gql';
 
 const client = new ApolloClient({
-  uri: 'https://graphql.org/graphql/',
+  link: new HttpLink({
+    uri: 'https://graphql.org/graphql/',
+  }),
   cache: new InMemoryCache(),
 });
 

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { DocumentType, FragmentType, graphql, isFragmentReady, useFragment } from './gql';
 
 export const slowFieldFragment = graphql(/* GraphQL */ `
