@@ -14,7 +14,7 @@ import {
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { NoTypeDefinitionsFound } from '@graphql-tools/load';
+import { NoTypeDefinitionsFound, type UnnormalizedTypeDefPointer } from '@graphql-tools/load';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { CodegenContext, ensureContext } from './config.js';
 import { getDocumentTransform } from './documentTransforms.js';
@@ -86,6 +86,7 @@ export async function executeCodegen(
   let rootConfig: { [key: string]: any } = {};
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
+  let rootExternalDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   const cache = createCache();
@@ -135,6 +136,11 @@ export async function executeCodegen(
 
     /* Normalize root "documents" field */
     rootDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
+
+    /* Normalize root "externalDocuments" field */
+    rootExternalDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
+      config.externalDocuments,
+    );
 
     /* Normalize "generators" field */
     const generateKeys = Object.keys(config.generates || {});
@@ -228,13 +234,15 @@ export async function executeCodegen(
                 let outputSchemaAst: GraphQLSchema;
                 let outputSchema: DocumentNode;
                 const outputFileTemplateConfig = outputConfig.config || {};
-                let outputDocuments: Types.DocumentFile[] = [];
+                const outputDocuments: Types.DocumentFile[] = [];
                 const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(
                   outputConfig.schema,
                 );
                 let outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
                   outputConfig.documents,
                 );
+                let outputSpecificExternalDocuments =
+                  normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.externalDocuments);
 
                 const preset: Types.OutputPreset | null = hasPreset
                   ? typeof outputConfig.preset === 'string'
@@ -246,6 +254,10 @@ export async function executeCodegen(
                   outputSpecificDocuments = await preset.prepareDocuments(
                     filename,
                     outputSpecificDocuments,
+                  );
+                  outputSpecificExternalDocuments = await preset.prepareDocuments(
+                    filename,
+                    outputSpecificExternalDocuments,
                   );
                 }
 
@@ -308,41 +320,102 @@ export async function executeCodegen(
                       task: wrapTask(
                         async () => {
                           debugLog(`[CLI] Loading Documents`);
-                          const documentPointerMap: any = {};
+
+                          const populateDocumentPointerMap = (
+                            allDocumentsDenormalizedPointers: Types.OperationDocument[],
+                          ): UnnormalizedTypeDefPointer => {
+                            const pointer: UnnormalizedTypeDefPointer = {};
+                            for (const denormalizedPtr of allDocumentsDenormalizedPointers) {
+                              if (typeof denormalizedPtr === 'string') {
+                                pointer[denormalizedPtr] = {};
+                              } else if (typeof denormalizedPtr === 'object') {
+                                Object.assign(pointer, denormalizedPtr);
+                              }
+                            }
+                            return pointer;
+                          };
+
                           const allDocumentsDenormalizedPointers = [
                             ...rootDocuments,
                             ...outputSpecificDocuments,
                           ];
-                          for (const denormalizedPtr of allDocumentsDenormalizedPointers) {
-                            if (typeof denormalizedPtr === 'string') {
-                              documentPointerMap[denormalizedPtr] = {};
-                            } else if (typeof denormalizedPtr === 'object') {
-                              Object.assign(documentPointerMap, denormalizedPtr);
-                            }
-                          }
+                          const documentPointerMap = populateDocumentPointerMap(
+                            allDocumentsDenormalizedPointers,
+                          );
 
                           const hash = JSON.stringify(documentPointerMap);
-                          const result = await cache('documents', hash, async () => {
-                            try {
-                              const documents = await context.loadDocuments(documentPointerMap);
-                              return {
-                                documents,
-                              };
-                            } catch (error: any) {
-                              if (
-                                error instanceof NoTypeDefinitionsFound &&
-                                config.ignoreNoDocuments
-                              ) {
-                                return {
-                                  documents: [],
-                                };
+                          const outputDocumentsStandard = await cache(
+                            'documents',
+                            hash,
+                            async (): Promise<Types.DocumentFile[]> => {
+                              try {
+                                const documents = await context.loadDocuments(
+                                  documentPointerMap,
+                                  'standard',
+                                );
+                                return documents;
+                              } catch (error) {
+                                if (
+                                  error instanceof NoTypeDefinitionsFound &&
+                                  config.ignoreNoDocuments
+                                ) {
+                                  return [];
+                                }
+                                throw error;
                               }
+                            },
+                          );
 
-                              throw error;
+                          const allExternalDocumentsDenormalizedPointers = [
+                            ...rootExternalDocuments,
+                            ...outputSpecificExternalDocuments,
+                          ];
+
+                          const externalDocumentsPointerMap = populateDocumentPointerMap(
+                            allExternalDocumentsDenormalizedPointers,
+                          );
+
+                          const externalDocumentHash = JSON.stringify(externalDocumentsPointerMap);
+                          const outputExternalDocuments = await cache(
+                            'documents',
+                            externalDocumentHash,
+                            async (): Promise<Types.DocumentFile[]> => {
+                              try {
+                                const documents = await context.loadDocuments(
+                                  externalDocumentsPointerMap,
+                                  'external',
+                                );
+                                return documents;
+                              } catch (error) {
+                                if (
+                                  error instanceof NoTypeDefinitionsFound &&
+                                  config.ignoreNoDocuments
+                                ) {
+                                  return [];
+                                }
+                                throw error;
+                              }
+                            },
+                          );
+
+                          /**
+                           * Merging `standard` and `external` documents here,
+                           * so they can be processed the same way,
+                           * before passed into presets and plugins
+                           */
+                          const processedFile: Record<string, true> = {};
+                          const mergedDocuments = [
+                            ...outputDocumentsStandard,
+                            ...outputExternalDocuments,
+                          ];
+                          for (const file of mergedDocuments) {
+                            if (processedFile[file.hash]) {
+                              continue;
                             }
-                          });
 
-                          outputDocuments = result.documents;
+                            outputDocuments.push(file);
+                            processedFile[file.hash] = true;
+                          }
                         },
                         filename,
                         `Load GraphQL documents: ${filename}`,
@@ -437,7 +510,7 @@ export async function executeCodegen(
                                   pluginContext,
                                   profiler: context.profiler,
                                   documentTransforms,
-                                },
+                                } satisfies Types.GenerateOptions,
                               ];
 
                           const process = async (outputArgs: Types.GenerateOptions) => {
