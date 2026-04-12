@@ -93,7 +93,7 @@
     "@whatwg-node/fetch": "^0.10.0",
     "chalk": "^4.1.0",
     "cosmiconfig": "^9.0.0",
-    "debounce": "^3.0.0",
+    "debounce": "^2.0.0",
     "detect-indent": "^6.0.0",
     "graphql-config": "^5.1.6",
     "is-glob": "^4.0.1",
