@@ -453,15 +453,16 @@ Now, the default is `sha256`. When using `sha256`, the generated hash conforms t
 in the
 [GraphQL over HTTP spec for persisted document identifiers](https://github.com/graphql/graphql-over-http/blob/52d56fb36d51c17e08a920510a23bdc2f6a720be/spec/Appendix%20A%20--%20Persisted%20Documents.md#sha256-hex-document-identifier).
 
-### 14. Core plugins have ESM dependencies
+### 14. ESM-first
 
-<Callout>This change mainly impacts plugin maintainers.</Callout>
+Previously, the Codegen CLI and official plugins were stuck on older dependency versions because
+ESM-only packages made integration and testing harder for maintainers.
 
-Previously, core plugins were stuck on older dependency versions because ESM-only packages made
-integration and testing harder for maintainers.
+Now that Node.js 20 support has been dropped, Node.js 22 can load ESM seamlessly at runtime with no
+extra configuration. This allows us to move to ESM across the board:
 
-Now, Node.js 20 support has been dropped, Node.js 22 can load ESM seamlessly at runtime, with no
-extra configuration. This allows core plugins to adopt dependencies that are ESM-only.
+- Official plugins now use ESM-only dependencies.
+- The Codegen CLI is still published in both ESM and CJS formats, with ESM as the default.
 
 Plugin maintainers using [Jest](https://jestjs.io/) may still encounter issues. We recommend
 switching to [Vitest](https://vitest.dev/), which has native ESM support.
