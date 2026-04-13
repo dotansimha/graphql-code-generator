@@ -72,7 +72,7 @@
     "typescript": "6.0.2",
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.1.4",
-    "wrangler": "4.81.1"
+    "wrangler": "4.82.0"
   },
   "resolutions": {
     "@rushstack/eslint-patch": "1.16.1",
