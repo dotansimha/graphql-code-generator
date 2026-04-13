@@ -16,7 +16,7 @@
     "@babel/core": "7.29.0",
     "@babel/preset-env": "7.29.2",
     "@babel/preset-typescript": "7.28.5",
-    "@graphql-codegen/cli": "6.2.1",
+    "@graphql-codegen/cli": "6.3.0",
     "@graphql-typed-document-node/core": "3.2.0"
   },
   "bob": false

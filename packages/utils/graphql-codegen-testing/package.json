@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "type": "module",
   "description": "GraphQL Codegen Testing Utils",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
@@ -41,7 +41,7 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^6.0.0",
+    "@graphql-codegen/plugin-helpers": "^6.3.0",
     "common-tags": "^1.8.0",
     "graphql-helix": "1.13.0",
     "lz-string": "^1.4.4",

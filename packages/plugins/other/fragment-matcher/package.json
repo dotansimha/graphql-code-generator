@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/fragment-matcher",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "type": "module",
   "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": {
@@ -40,7 +40,7 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^6.0.0",
+    "@graphql-codegen/plugin-helpers": "^6.3.0",
     "tslib": "^2.8.0"
   },
   "publishConfig": {

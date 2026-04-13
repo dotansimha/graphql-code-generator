@@ -1,12 +1,37 @@
 # @graphql-codegen/typescript
 
+## 5.0.10
+
+### Patch Changes
+
+- [#10103](https://github.com/dotansimha/graphql-code-generator/pull/10103)
+  [`9a66574`](https://github.com/dotansimha/graphql-code-generator/commit/9a665749cfa271dcf1b36f9047ececeb9a62ea8a)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`tslib@^2.8.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.8.0) (from
+    `~2.6.0`, in `dependencies`)
+- Updated dependencies
+  [[`9a66574`](https://github.com/dotansimha/graphql-code-generator/commit/9a665749cfa271dcf1b36f9047ececeb9a62ea8a),
+  [`9a66574`](https://github.com/dotansimha/graphql-code-generator/commit/9a665749cfa271dcf1b36f9047ececeb9a62ea8a),
+  [`9a66574`](https://github.com/dotansimha/graphql-code-generator/commit/9a665749cfa271dcf1b36f9047ececeb9a62ea8a),
+  [`e65d303`](https://github.com/dotansimha/graphql-code-generator/commit/e65d3036475cc1e3cb05a8367d30a5092b20080e)]:
+  - @graphql-codegen/plugin-helpers@6.3.0
+  - @graphql-codegen/schema-ast@5.0.2
+  - @graphql-codegen/visitor-plugin-common@6.3.0
+
 ## 5.0.9
 
 ### Patch Changes
 
-- [#10619](https://github.com/dotansimha/graphql-code-generator/pull/10619) [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
-  - Updated dependency [`@graphql-codegen/visitor-plugin-common@^6.2.3` ↗︎](https://www.npmjs.com/package/@graphql-codegen/visitor-plugin-common/v/6.2.3) (from `6.2.3`, in `dependencies`)
-- Updated dependencies [[`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072), [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072), [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072)]:
+- [#10619](https://github.com/dotansimha/graphql-code-generator/pull/10619)
+  [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/visitor-plugin-common@^6.2.3` ↗︎](https://www.npmjs.com/package/@graphql-codegen/visitor-plugin-common/v/6.2.3)
+    (from `6.2.3`, in `dependencies`)
+- Updated dependencies
+  [[`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072),
+  [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072),
+  [`cdf5dc5`](https://github.com/dotansimha/graphql-code-generator/commit/cdf5dc56c5591cfe031e02cbc31deff761a40072)]:
   - @graphql-codegen/plugin-helpers@6.1.1
   - @graphql-codegen/schema-ast@5.0.1
   - @graphql-codegen/visitor-plugin-common@6.2.4
@@ -15,28 +40,33 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`6038634`](https://github.com/dotansimha/graphql-code-generator/commit/60386344081917f2884db933309821603a2be2bf)]:
+- Updated dependencies
+  [[`6038634`](https://github.com/dotansimha/graphql-code-generator/commit/60386344081917f2884db933309821603a2be2bf)]:
   - @graphql-codegen/visitor-plugin-common@6.2.3
 
 ## 5.0.7
 
 ### Patch Changes
 
-- Updated dependencies [[`f588d91`](https://github.com/dotansimha/graphql-code-generator/commit/f588d91ac43ea0aa5931915ce980d2e6876bb59c)]:
+- Updated dependencies
+  [[`f588d91`](https://github.com/dotansimha/graphql-code-generator/commit/f588d91ac43ea0aa5931915ce980d2e6876bb59c)]:
   - @graphql-codegen/visitor-plugin-common@6.2.2
 
 ## 5.0.6
 
 ### Patch Changes
 
-- Updated dependencies [[`b995ed1`](https://github.com/dotansimha/graphql-code-generator/commit/b995ed13a49379ea05e0e313fac68b557527523a)]:
+- Updated dependencies
+  [[`b995ed1`](https://github.com/dotansimha/graphql-code-generator/commit/b995ed13a49379ea05e0e313fac68b557527523a)]:
   - @graphql-codegen/visitor-plugin-common@6.2.1
 
 ## 5.0.5
 
 ### Patch Changes
 
-- Updated dependencies [[`f821e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f821e8ab9351f23a9f7e5d5e6fc69c8e8868cad8), [`9e70bcb`](https://github.com/dotansimha/graphql-code-generator/commit/9e70bcbf5390e815a6844f1965b04056e5d8e670)]:
+- Updated dependencies
+  [[`f821e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f821e8ab9351f23a9f7e5d5e6fc69c8e8868cad8),
+  [`9e70bcb`](https://github.com/dotansimha/graphql-code-generator/commit/9e70bcbf5390e815a6844f1965b04056e5d8e670)]:
   - @graphql-codegen/visitor-plugin-common@6.2.0
   - @graphql-codegen/plugin-helpers@6.1.0
 
@@ -44,41 +74,63 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`51a1a72`](https://github.com/dotansimha/graphql-code-generator/commit/51a1a7280578d43681391df11d320a8416c0b41d)]:
+- Updated dependencies
+  [[`51a1a72`](https://github.com/dotansimha/graphql-code-generator/commit/51a1a7280578d43681391df11d320a8416c0b41d)]:
   - @graphql-codegen/visitor-plugin-common@6.1.2
 
 ## 5.0.3
 
 ### Patch Changes
 
-- Updated dependencies [[`6715330`](https://github.com/dotansimha/graphql-code-generator/commit/67153304646694d75aee24afd70c3fce12e9f1f2)]:
+- Updated dependencies
+  [[`6715330`](https://github.com/dotansimha/graphql-code-generator/commit/67153304646694d75aee24afd70c3fce12e9f1f2)]:
   - @graphql-codegen/visitor-plugin-common@6.1.1
 
 ## 5.0.2
 
 ### Patch Changes
 
-- Updated dependencies [[`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26)]:
+- Updated dependencies
+  [[`8258f1f`](https://github.com/dotansimha/graphql-code-generator/commit/8258f1f6012c106d02ef28bca9ec424f70c4aa26)]:
   - @graphql-codegen/visitor-plugin-common@6.1.0
 
 ## 5.0.1
 
 ### Patch Changes
 
-- Updated dependencies [[`accdab6`](https://github.com/dotansimha/graphql-code-generator/commit/accdab69106605241933e9d66d64dc7077656f30)]:
+- Updated dependencies
+  [[`accdab6`](https://github.com/dotansimha/graphql-code-generator/commit/accdab69106605241933e9d66d64dc7077656f30)]:
   - @graphql-codegen/visitor-plugin-common@6.0.1
 
 ## 5.0.0
 
 ### Major Changes
 
-- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Remove NameNode override
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218)
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Remove NameNode override
 
-- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218) [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2) Thanks [@eddeee888](https://github.com/eddeee888)! - Drop Node 18 support
+- [#10218](https://github.com/dotansimha/graphql-code-generator/pull/10218)
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Drop Node 18 support
 
 ### Patch Changes
 
-- Updated dependencies [[`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2), [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)]:
+- Updated dependencies
+  [[`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2),
+  [`140298a`](https://github.com/dotansimha/graphql-code-generator/commit/140298a33b257a0b7958e361971b5bc97bbc01c2)]:
   - @graphql-codegen/visitor-plugin-common@6.0.0
   - @graphql-codegen/plugin-helpers@6.0.0
   - @graphql-codegen/schema-ast@5.0.0
@@ -87,42 +139,50 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc)]:
+- Updated dependencies
+  [[`f6909d1`](https://github.com/dotansimha/graphql-code-generator/commit/f6909d1797c15b79a0afb7ec089471763a485bfc)]:
   - @graphql-codegen/visitor-plugin-common@5.8.0
 
 ## 4.1.5
 
 ### Patch Changes
 
-- Updated dependencies [[`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a)]:
+- Updated dependencies
+  [[`d8566c0`](https://github.com/dotansimha/graphql-code-generator/commit/d8566c015943ea4dbcaeaf57d3d8406553ae230a)]:
   - @graphql-codegen/visitor-plugin-common@5.7.1
 
 ## 4.1.4
 
 ### Patch Changes
 
-- Updated dependencies [[`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c)]:
+- Updated dependencies
+  [[`6d7c1d7`](https://github.com/dotansimha/graphql-code-generator/commit/6d7c1d7c0a4662acdc0efafd4234229ad0a8dd3c)]:
   - @graphql-codegen/visitor-plugin-common@5.7.0
 
 ## 4.1.3
 
 ### Patch Changes
 
-- Updated dependencies [[`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517)]:
+- Updated dependencies
+  [[`60dd72f`](https://github.com/dotansimha/graphql-code-generator/commit/60dd72fb103fd7fd70b4e1def98da29588865517)]:
   - @graphql-codegen/visitor-plugin-common@5.6.1
 
 ## 4.1.2
 
 ### Patch Changes
 
-- Updated dependencies [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a), [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
+- Updated dependencies
+  [[`1617e3c`](https://github.com/dotansimha/graphql-code-generator/commit/1617e3cf38f3059cc5ea88b540033f521f03725a),
+  [`fa64fbf`](https://github.com/dotansimha/graphql-code-generator/commit/fa64fbf8a44e1cee7ae17806dcd178dc7350c4ba)]:
   - @graphql-codegen/visitor-plugin-common@5.6.0
 
 ## 4.1.1
 
 ### Patch Changes
 
-- Updated dependencies [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc), [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03)]:
+- Updated dependencies
+  [[`55a1e9e`](https://github.com/dotansimha/graphql-code-generator/commit/55a1e9e63830df17ed40602ea7e322bbf48b17bc),
+  [`a235051`](https://github.com/dotansimha/graphql-code-generator/commit/a23505180ac2f275a55ece27162ec9bfcdc52e03)]:
   - @graphql-codegen/visitor-plugin-common@5.5.0
   - @graphql-codegen/plugin-helpers@5.1.0
 
@@ -130,35 +190,47 @@
 
 ### Minor Changes
 
-- [#10077](https://github.com/dotansimha/graphql-code-generator/pull/10077) [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4) Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `config.avoidOptions` to support query, mutation and subscription
+- [#10077](https://github.com/dotansimha/graphql-code-generator/pull/10077)
+  [`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `config.avoidOptions` to support
+  query, mutation and subscription
 
-  Previously, `config.avoidOptions.resolvers` was being used to make query, mutation and subscription fields non-optional.
-  Now, `config.avoidOptions.query`, `config.avoidOptions.mutation` and `config.avoidOptions.subscription` can be used to target the respective types.
+  Previously, `config.avoidOptions.resolvers` was being used to make query, mutation and
+  subscription fields non-optional. Now, `config.avoidOptions.query`, `config.avoidOptions.mutation`
+  and `config.avoidOptions.subscription` can be used to target the respective types.
 
 ### Patch Changes
 
-- Updated dependencies [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
+- Updated dependencies
+  [[`3f4f546`](https://github.com/dotansimha/graphql-code-generator/commit/3f4f5466ff168ad822b9a00d83d3779078e6d8c4)]:
   - @graphql-codegen/visitor-plugin-common@5.4.0
 
 ## 4.0.9
 
 ### Patch Changes
 
-- Updated dependencies [[`79fee3c`](https://github.com/dotansimha/graphql-code-generator/commit/79fee3cada20d683d250aad5aa5fef9d6ed9f4d2)]:
+- Updated dependencies
+  [[`79fee3c`](https://github.com/dotansimha/graphql-code-generator/commit/79fee3cada20d683d250aad5aa5fef9d6ed9f4d2)]:
   - @graphql-codegen/visitor-plugin-common@5.3.1
 
 ## 4.0.8
 
 ### Patch Changes
 
-- Updated dependencies [[`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3), [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421)]:
+- Updated dependencies
+  [[`808ada5`](https://github.com/dotansimha/graphql-code-generator/commit/808ada595d83d39cad045da5824cac6378e9eca3),
+  [`14ce39e`](https://github.com/dotansimha/graphql-code-generator/commit/14ce39e41dfee38c652be736664177fa2b1df421)]:
   - @graphql-codegen/visitor-plugin-common@5.3.0
 
 ## 4.0.7
 
 ### Patch Changes
 
-- Updated dependencies [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e), [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431), [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e), [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e)]:
+- Updated dependencies
+  [[`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e),
+  [`156cc2b`](https://github.com/dotansimha/graphql-code-generator/commit/156cc2b9a2a5129beba121cfa987b04e29899431),
+  [`dfc5310`](https://github.com/dotansimha/graphql-code-generator/commit/dfc5310ab476bed6deaefc608f311ff368722f7e),
+  [`b49457b`](https://github.com/dotansimha/graphql-code-generator/commit/b49457b5f29328d2dc23c642788a2e697cb8966e)]:
   - @graphql-codegen/plugin-helpers@5.0.4
   - @graphql-codegen/visitor-plugin-common@5.2.0
 
@@ -166,23 +238,29 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53), [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d)]:
+- Updated dependencies
+  [[`920b443`](https://github.com/dotansimha/graphql-code-generator/commit/920b443a401b8cc4811f64ec5b25fc7b4ae32b53),
+  [`ed9c205`](https://github.com/dotansimha/graphql-code-generator/commit/ed9c205d15d7f14ed73e54aecf40e4fad5664e9d)]:
   - @graphql-codegen/visitor-plugin-common@5.1.0
 
 ## 4.0.5
 
 ### Patch Changes
 
-- Updated dependencies [[`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5)]:
+- Updated dependencies
+  [[`53f270a`](https://github.com/dotansimha/graphql-code-generator/commit/53f270acfa1da992e0f9d2e50921bb588392f8a5)]:
   - @graphql-codegen/visitor-plugin-common@5.0.0
 
 ## 4.0.4
 
 ### Patch Changes
 
-- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813) [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653) Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
+- [#9813](https://github.com/dotansimha/graphql-code-generator/pull/9813)
+  [`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)
+  Thanks [@saihaj](https://github.com/saihaj)! - bumping for a release
 
-- Updated dependencies [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
+- Updated dependencies
+  [[`4e69568`](https://github.com/dotansimha/graphql-code-generator/commit/4e6956899c96f8954cea8d5bbe32aa35a70cc653)]:
   - @graphql-codegen/visitor-plugin-common@4.1.2
   - @graphql-codegen/schema-ast@4.0.2
   - @graphql-codegen/plugin-helpers@5.0.3
@@ -191,16 +269,25 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f)]:
+- Updated dependencies
+  [[`7718a8113`](https://github.com/dotansimha/graphql-code-generator/commit/7718a8113dc6282475cb738f1e28698b8221fa2f)]:
   - @graphql-codegen/visitor-plugin-common@4.1.1
 
 ## 4.0.2
 
 ### Patch Changes
 
-- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811) [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975) Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
-  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from `~2.5.0`, in `dependencies`)
-- Updated dependencies [[`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975), [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975)]:
+- [#9811](https://github.com/dotansimha/graphql-code-generator/pull/9811)
+  [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975)
+  Thanks [@saihaj](https://github.com/saihaj)! - dependencies updates:
+  - Updated dependency [`tslib@~2.6.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.0) (from
+    `~2.5.0`, in `dependencies`)
+- Updated dependencies
+  [[`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975),
+  [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975),
+  [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975),
+  [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975),
+  [`d8364e045`](https://github.com/dotansimha/graphql-code-generator/commit/d8364e045a46ca6e8173583b5108d161c6832975)]:
   - @graphql-codegen/plugin-helpers@5.0.2
   - @graphql-codegen/schema-ast@4.0.1
   - @graphql-codegen/visitor-plugin-common@4.1.0
@@ -209,27 +296,38 @@
 
 ### Patch Changes
 
-- [#9497](https://github.com/dotansimha/graphql-code-generator/pull/9497) [`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a) Thanks [@eddeee888](https://github.com/eddeee888)! - Revert default ID scalar input type to string
+- [#9497](https://github.com/dotansimha/graphql-code-generator/pull/9497)
+  [`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Revert default ID scalar input type to string
 
-  We changed the ID Scalar input type from `string` to `string | number` in the latest major version of `typescript` plugin. This causes issues for server plugins (e.g. typescript-resolvers) that depends on `typescript` plugin. This is because the scalar type needs to be manually inverted on setup which is confusing.
+  We changed the ID Scalar input type from `string` to `string | number` in the latest major version
+  of `typescript` plugin. This causes issues for server plugins (e.g. typescript-resolvers) that
+  depends on `typescript` plugin. This is because the scalar type needs to be manually inverted on
+  setup which is confusing.
 
-- Updated dependencies [[`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a)]:
+- Updated dependencies
+  [[`2276708d0`](https://github.com/dotansimha/graphql-code-generator/commit/2276708d0ea2aab4942136923651226de4aabe5a)]:
   - @graphql-codegen/visitor-plugin-common@4.0.1
 
 ## 4.0.0
 
 ### Major Changes
 
-- [#9375](https://github.com/dotansimha/graphql-code-generator/pull/9375) [`ba84a3a27`](https://github.com/dotansimha/graphql-code-generator/commit/ba84a3a2758d94dac27fcfbb1bafdf3ed7c32929) Thanks [@eddeee888](https://github.com/eddeee888)! - Implement Scalars with input/output types
+- [#9375](https://github.com/dotansimha/graphql-code-generator/pull/9375)
+  [`ba84a3a27`](https://github.com/dotansimha/graphql-code-generator/commit/ba84a3a2758d94dac27fcfbb1bafdf3ed7c32929)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Implement Scalars with input/output types
 
-  In GraphQL, Scalar types can be different for client and server. For example, given the native GraphQL ID:
-
+  In GraphQL, Scalar types can be different for client and server. For example, given the native
+  GraphQL ID:
   - A client may send `string` or `number` in the input
   - A client receives `string` in its selection set (i.e output)
-  - A server receives `string` in the resolver (GraphQL parses `string` or `number` received from the client to `string`)
-  - A server may return `string` or `number` (GraphQL serializes the value to `string` before sending it to the client )
+  - A server receives `string` in the resolver (GraphQL parses `string` or `number` received from
+    the client to `string`)
+  - A server may return `string` or `number` (GraphQL serializes the value to `string` before
+    sending it to the client )
 
-  Currently, we represent every Scalar with only one type. This is what codegen generates as base type:
+  Currently, we represent every Scalar with only one type. This is what codegen generates as base
+  type:
 
   ```ts
   export type Scalars = {
@@ -274,7 +372,8 @@
   }
   ```
 
-  Note that for `typescript-resolvers`, the type of ID needs to be inverted. However, the referenced types in GraphQL input/output types should still work correctly:
+  Note that for `typescript-resolvers`, the type of ID needs to be inverted. However, the referenced
+  types in GraphQL input/output types should still work correctly:
 
   ```ts
   export type Scalars = {
@@ -305,7 +404,6 @@
   ***
 
   Config changes:
-
   1. Scalars option can now take input/output types:
 
   ```ts
@@ -319,7 +417,8 @@
   }
   ```
 
-  2. If a string is given (instead of an object with input/output fields), it will be used as both input and output types:
+  2. If a string is given (instead of an object with input/output fields), it will be used as both
+     input and output types:
 
   ```ts
   config: {
@@ -352,21 +451,30 @@
 
   ***
 
-  BREAKING CHANGE: This changes Scalar types which could be referenced in other plugins. If you are a plugin maintainer and reference Scalar, please update your plugin to use the correct input/output types.
+  BREAKING CHANGE: This changes Scalar types which could be referenced in other plugins. If you are
+  a plugin maintainer and reference Scalar, please update your plugin to use the correct
+  input/output types.
 
-- [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Require Node.js `>= 16`. Drop support for Node.js 14
+- [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Require Node.js `>= 16`. Drop support for Node.js
+  14
 
 ### Minor Changes
 
-- [#9196](https://github.com/dotansimha/graphql-code-generator/pull/9196) [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96) Thanks [@beerose](https://github.com/beerose)! - Add `@defer` directive support
+- [#9196](https://github.com/dotansimha/graphql-code-generator/pull/9196)
+  [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96)
+  Thanks [@beerose](https://github.com/beerose)! - Add `@defer` directive support
 
-  When a query includes a deferred fragment field, the server will return a partial response with the non-deferred fields first, followed by the remaining fields once they have been resolved.
+  When a query includes a deferred fragment field, the server will return a partial response with
+  the non-deferred fields first, followed by the remaining fields once they have been resolved.
 
-  Once start using the `@defer` directive in your queries, the generated code will automatically include support for the directive.
+  Once start using the `@defer` directive in your queries, the generated code will automatically
+  include support for the directive.
 
   ```jsx
   // src/index.tsx
   import { graphql } from './gql'
+
   const OrdersFragment = graphql(`
     fragment OrdersFragment on User {
       orders {
@@ -386,7 +494,8 @@
   `)
   ```
 
-  The generated type for `GetUserQuery` will have information that the fragment is _incremental,_ meaning it may not be available right away.
+  The generated type for `GetUserQuery` will have information that the fragment is _incremental,_
+  meaning it may not be available right away.
 
   ```tsx
   // gql/graphql.ts
@@ -397,8 +506,9 @@
   })
   ```
 
-  Apart from generating code that includes support for the `@defer` directive, the Codegen also exports a utility function called `isFragmentReady`. You can use it to conditionally render components based on whether the data for a deferred
-  fragment is available:
+  Apart from generating code that includes support for the `@defer` directive, the Codegen also
+  exports a utility function called `isFragmentReady`. You can use it to conditionally render
+  components based on whether the data for a deferred fragment is available:
 
   ```jsx
   const OrdersList = (props: { data: FragmentType<typeof OrdersFragment> }) => {
@@ -422,11 +532,28 @@
   export default App;
   ```
 
-- [#9304](https://github.com/dotansimha/graphql-code-generator/pull/9304) [`e1dc75f3c`](https://github.com/dotansimha/graphql-code-generator/commit/e1dc75f3c598bf7f83138ca533619716fc73f823) Thanks [@esfomeado](https://github.com/esfomeado)! - Added support for disabling suffixes on Enums.
+- [#9304](https://github.com/dotansimha/graphql-code-generator/pull/9304)
+  [`e1dc75f3c`](https://github.com/dotansimha/graphql-code-generator/commit/e1dc75f3c598bf7f83138ca533619716fc73f823)
+  Thanks [@esfomeado](https://github.com/esfomeado)! - Added support for disabling suffixes on
+  Enums.
 
 ### Patch Changes
 
-- Updated dependencies [[`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2), [`f46803a8c`](https://github.com/dotansimha/graphql-code-generator/commit/f46803a8c70840280529a52acbb111c865712af2), [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96), [`ba84a3a27`](https://github.com/dotansimha/graphql-code-generator/commit/ba84a3a2758d94dac27fcfbb1bafdf3ed7c32929), [`63827fabe`](https://github.com/dotansimha/graphql-code-generator/commit/63827fabede76b2380d40392aba2a3ccb099f0c4), [`50471e651`](https://github.com/dotansimha/graphql-code-generator/commit/50471e6514557db827cd26157262401c6c600a8c), [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c), [`ca02ad172`](https://github.com/dotansimha/graphql-code-generator/commit/ca02ad172a0e8f52570fdef4271ec286d883236d), [`e1dc75f3c`](https://github.com/dotansimha/graphql-code-generator/commit/e1dc75f3c598bf7f83138ca533619716fc73f823), [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0), [`5950f5a68`](https://github.com/dotansimha/graphql-code-generator/commit/5950f5a6843cdd92b9d5b8ced3a97b68eadf9f30), [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c)]:
+- Updated dependencies
+  [[`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2),
+  [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2),
+  [`4d9ea1a5a`](https://github.com/dotansimha/graphql-code-generator/commit/4d9ea1a5a94cd3458c1bd868ce1ab1cb806257f2),
+  [`f46803a8c`](https://github.com/dotansimha/graphql-code-generator/commit/f46803a8c70840280529a52acbb111c865712af2),
+  [`3848a2b73`](https://github.com/dotansimha/graphql-code-generator/commit/3848a2b73339fe9f474b31647b71e75b9ca52a96),
+  [`ba84a3a27`](https://github.com/dotansimha/graphql-code-generator/commit/ba84a3a2758d94dac27fcfbb1bafdf3ed7c32929),
+  [`63827fabe`](https://github.com/dotansimha/graphql-code-generator/commit/63827fabede76b2380d40392aba2a3ccb099f0c4),
+  [`50471e651`](https://github.com/dotansimha/graphql-code-generator/commit/50471e6514557db827cd26157262401c6c600a8c),
+  [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c),
+  [`ca02ad172`](https://github.com/dotansimha/graphql-code-generator/commit/ca02ad172a0e8f52570fdef4271ec286d883236d),
+  [`e1dc75f3c`](https://github.com/dotansimha/graphql-code-generator/commit/e1dc75f3c598bf7f83138ca533619716fc73f823),
+  [`bb66c2a31`](https://github.com/dotansimha/graphql-code-generator/commit/bb66c2a31985c1375912ccd6b2b02933f313c9c0),
+  [`5950f5a68`](https://github.com/dotansimha/graphql-code-generator/commit/5950f5a6843cdd92b9d5b8ced3a97b68eadf9f30),
+  [`5aa95aa96`](https://github.com/dotansimha/graphql-code-generator/commit/5aa95aa969993043ba5e9d5dabebd7127ea5e22c)]:
   - @graphql-codegen/plugin-helpers@5.0.0
   - @graphql-codegen/schema-ast@4.0.0
   - @graphql-codegen/visitor-plugin-common@4.0.0
@@ -435,16 +562,26 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`386cf9044`](https://github.com/dotansimha/graphql-code-generator/commit/386cf9044a41d87ed45069b22d26b30f4b262a85), [`402cb8ac0`](https://github.com/dotansimha/graphql-code-generator/commit/402cb8ac0f0c347b186d295c4b69c19e25a65d00)]:
+- Updated dependencies
+  [[`386cf9044`](https://github.com/dotansimha/graphql-code-generator/commit/386cf9044a41d87ed45069b22d26b30f4b262a85),
+  [`402cb8ac0`](https://github.com/dotansimha/graphql-code-generator/commit/402cb8ac0f0c347b186d295c4b69c19e25a65d00)]:
   - @graphql-codegen/visitor-plugin-common@3.1.1
 
 ## 3.0.3
 
 ### Patch Changes
 
-- [#9150](https://github.com/dotansimha/graphql-code-generator/pull/9150) [`92d86b009`](https://github.com/dotansimha/graphql-code-generator/commit/92d86b009579edf70f60b0b8e28658af93ff9fd1) Thanks [@rliljest](https://github.com/rliljest)! - Properly escape enum identifiers when enumsAsConst is used
+- [#9150](https://github.com/dotansimha/graphql-code-generator/pull/9150)
+  [`92d86b009`](https://github.com/dotansimha/graphql-code-generator/commit/92d86b009579edf70f60b0b8e28658af93ff9fd1)
+  Thanks [@rliljest](https://github.com/rliljest)! - Properly escape enum identifiers when
+  enumsAsConst is used
 
-- Updated dependencies [[`e56790104`](https://github.com/dotansimha/graphql-code-generator/commit/e56790104ae56d6c5b48ef71823345bd09d3b835), [`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29), [`f104619ac`](https://github.com/dotansimha/graphql-code-generator/commit/f104619acd27c9d62a06bc577737500880731087), [`acb647e4e`](https://github.com/dotansimha/graphql-code-generator/commit/acb647e4efbddecf732b6e55dc47ac40c9bdaf08), [`9f4d9c5a4`](https://github.com/dotansimha/graphql-code-generator/commit/9f4d9c5a479d34da25df8e060a8c2b3b162647dd)]:
+- Updated dependencies
+  [[`e56790104`](https://github.com/dotansimha/graphql-code-generator/commit/e56790104ae56d6c5b48ef71823345bd09d3b835),
+  [`b7dacb21f`](https://github.com/dotansimha/graphql-code-generator/commit/b7dacb21fb0ed1173d1e45120dc072e29231ed29),
+  [`f104619ac`](https://github.com/dotansimha/graphql-code-generator/commit/f104619acd27c9d62a06bc577737500880731087),
+  [`acb647e4e`](https://github.com/dotansimha/graphql-code-generator/commit/acb647e4efbddecf732b6e55dc47ac40c9bdaf08),
+  [`9f4d9c5a4`](https://github.com/dotansimha/graphql-code-generator/commit/9f4d9c5a479d34da25df8e060a8c2b3b162647dd)]:
   - @graphql-codegen/visitor-plugin-common@3.1.0
   - @graphql-codegen/plugin-helpers@4.2.0
 
@@ -452,16 +589,28 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`ba0610bbd`](https://github.com/dotansimha/graphql-code-generator/commit/ba0610bbd4578d8a82078014766f56d8ae5fcf7a), [`4b49f6fbe`](https://github.com/dotansimha/graphql-code-generator/commit/4b49f6fbed802907b460bfb7b6e9a85f88c555bc), [`b343626c9`](https://github.com/dotansimha/graphql-code-generator/commit/b343626c978b9ee0f14e314cea6c01ae3dad057c)]:
+- Updated dependencies
+  [[`ba0610bbd`](https://github.com/dotansimha/graphql-code-generator/commit/ba0610bbd4578d8a82078014766f56d8ae5fcf7a),
+  [`4b49f6fbe`](https://github.com/dotansimha/graphql-code-generator/commit/4b49f6fbed802907b460bfb7b6e9a85f88c555bc),
+  [`b343626c9`](https://github.com/dotansimha/graphql-code-generator/commit/b343626c978b9ee0f14e314cea6c01ae3dad057c)]:
   - @graphql-codegen/visitor-plugin-common@3.0.2
 
 ## 3.0.1
 
 ### Patch Changes
 
-- [#8879](https://github.com/dotansimha/graphql-code-generator/pull/8879) [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
-  - Updated dependency [`tslib@~2.5.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.5.0) (from `~2.4.0`, in `dependencies`)
-- Updated dependencies [[`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491), [`a118c307a`](https://github.com/dotansimha/graphql-code-generator/commit/a118c307a35bbb97b7cbca0f178a88276032a26c), [`6b6fe3cbc`](https://github.com/dotansimha/graphql-code-generator/commit/6b6fe3cbcc7de748754703adce0f62f3e070a098), [`a3309e63e`](https://github.com/dotansimha/graphql-code-generator/commit/a3309e63efed880e6f74ce6fcbf82dd3d7857a15)]:
+- [#8879](https://github.com/dotansimha/graphql-code-generator/pull/8879)
+  [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`tslib@~2.5.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.5.0) (from
+    `~2.4.0`, in `dependencies`)
+- Updated dependencies
+  [[`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491),
+  [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491),
+  [`8206b268d`](https://github.com/dotansimha/graphql-code-generator/commit/8206b268dfb485a748fd7783a163cb0ee9931491),
+  [`a118c307a`](https://github.com/dotansimha/graphql-code-generator/commit/a118c307a35bbb97b7cbca0f178a88276032a26c),
+  [`6b6fe3cbc`](https://github.com/dotansimha/graphql-code-generator/commit/6b6fe3cbcc7de748754703adce0f62f3e070a098),
+  [`a3309e63e`](https://github.com/dotansimha/graphql-code-generator/commit/a3309e63efed880e6f74ce6fcbf82dd3d7857a15)]:
   - @graphql-codegen/plugin-helpers@4.1.0
   - @graphql-codegen/schema-ast@3.0.1
   - @graphql-codegen/visitor-plugin-common@3.0.1
@@ -470,11 +619,15 @@
 
 ### Major Changes
 
-- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885) [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d) Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
+- [#8885](https://github.com/dotansimha/graphql-code-generator/pull/8885)
+  [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - drop Node.js 12 support
 
 ### Patch Changes
 
-- Updated dependencies [[`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5), [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)]:
+- Updated dependencies
+  [[`fc79b65d4`](https://github.com/dotansimha/graphql-code-generator/commit/fc79b65d4914fd25ae6bd5d58ebc7ded573a08a5),
+  [`fd0b0c813`](https://github.com/dotansimha/graphql-code-generator/commit/fd0b0c813015cae4f6f6bda5f4c5515e544eb76d)]:
   - @graphql-codegen/visitor-plugin-common@3.0.0
   - @graphql-codegen/plugin-helpers@4.0.0
   - @graphql-codegen/schema-ast@3.0.0
@@ -483,21 +636,27 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`a98198524`](https://github.com/dotansimha/graphql-code-generator/commit/a9819852443884b43de7c15040ccffc205f9177a)]:
+- Updated dependencies
+  [[`a98198524`](https://github.com/dotansimha/graphql-code-generator/commit/a9819852443884b43de7c15040ccffc205f9177a)]:
   - @graphql-codegen/visitor-plugin-common@2.13.8
 
 ## 2.8.7
 
 ### Patch Changes
 
-- Updated dependencies [[`eb454d06c`](https://github.com/dotansimha/graphql-code-generator/commit/eb454d06c977f11f7d4a7b0b07eb80f8fd590560)]:
+- Updated dependencies
+  [[`eb454d06c`](https://github.com/dotansimha/graphql-code-generator/commit/eb454d06c977f11f7d4a7b0b07eb80f8fd590560)]:
   - @graphql-codegen/visitor-plugin-common@2.13.7
 
 ## 2.8.6
 
 ### Patch Changes
 
-- Updated dependencies [[`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7), [`6c6b6f2df`](https://github.com/dotansimha/graphql-code-generator/commit/6c6b6f2df88a3a37b437a25320dab5590f033316)]:
+- Updated dependencies
+  [[`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7),
+  [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7),
+  [`ed87c782b`](https://github.com/dotansimha/graphql-code-generator/commit/ed87c782bf3292bfbee772c6962d6cbc43a9abe7),
+  [`6c6b6f2df`](https://github.com/dotansimha/graphql-code-generator/commit/6c6b6f2df88a3a37b437a25320dab5590f033316)]:
   - @graphql-codegen/plugin-helpers@3.1.2
   - @graphql-codegen/schema-ast@2.6.1
   - @graphql-codegen/visitor-plugin-common@2.13.6
@@ -506,9 +665,14 @@
 
 ### Patch Changes
 
-- [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a) Thanks [@saihaj](https://github.com/saihaj)! - fix the version of `@graphql-codegen/plugin-helpers@3.1.1`
+- [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a)
+  Thanks [@saihaj](https://github.com/saihaj)! - fix the version of
+  `@graphql-codegen/plugin-helpers@3.1.1`
 
-- Updated dependencies [[`fedd71cbb`](https://github.com/dotansimha/graphql-code-generator/commit/fedd71cbb7f37440a59032d942cb228df78d52e5), [`307a5d350`](https://github.com/dotansimha/graphql-code-generator/commit/307a5d350643dd065d228b04ef3b4bd70cac0e81), [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a)]:
+- Updated dependencies
+  [[`fedd71cbb`](https://github.com/dotansimha/graphql-code-generator/commit/fedd71cbb7f37440a59032d942cb228df78d52e5),
+  [`307a5d350`](https://github.com/dotansimha/graphql-code-generator/commit/307a5d350643dd065d228b04ef3b4bd70cac0e81),
+  [`46f75304a`](https://github.com/dotansimha/graphql-code-generator/commit/46f75304a69a13e8b5f58303f65c81b30a2ad96a)]:
   - @graphql-codegen/schema-ast@2.6.0
   - @graphql-codegen/plugin-helpers@3.1.1
   - @graphql-codegen/visitor-plugin-common@2.13.5
@@ -517,7 +681,11 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22), [`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22), [`f79a00e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f79a00e8ae073eab426ca08795c924e716123482), [`c802a0c0b`](https://github.com/dotansimha/graphql-code-generator/commit/c802a0c0b775cfabc5ace3e7fb6655540c6c4d84)]:
+- Updated dependencies
+  [[`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22),
+  [`a6c2097f4`](https://github.com/dotansimha/graphql-code-generator/commit/a6c2097f4789c0cce4296ce349790ce29943ed22),
+  [`f79a00e8a`](https://github.com/dotansimha/graphql-code-generator/commit/f79a00e8ae073eab426ca08795c924e716123482),
+  [`c802a0c0b`](https://github.com/dotansimha/graphql-code-generator/commit/c802a0c0b775cfabc5ace3e7fb6655540c6c4d84)]:
   - @graphql-codegen/plugin-helpers@3.0.0
   - @graphql-codegen/visitor-plugin-common@2.13.4
   - @graphql-codegen/schema-ast@2.5.2
@@ -526,23 +694,29 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`62f655452`](https://github.com/dotansimha/graphql-code-generator/commit/62f6554520955dd675e11c920f35ef9bf0aaeffe)]:
+- Updated dependencies
+  [[`62f655452`](https://github.com/dotansimha/graphql-code-generator/commit/62f6554520955dd675e11c920f35ef9bf0aaeffe)]:
   - @graphql-codegen/visitor-plugin-common@2.13.3
 
 ## 2.8.2
 
 ### Patch Changes
 
-- [#8586](https://github.com/dotansimha/graphql-code-generator/pull/8586) [`ef4c2c9c2`](https://github.com/dotansimha/graphql-code-generator/commit/ef4c2c9c233c68830f10eb4c167c7cceead27122) Thanks [@levrik](https://github.com/levrik)! - Fix incompatibility between `@oneOf` input types and declaration kind other than `type`
+- [#8586](https://github.com/dotansimha/graphql-code-generator/pull/8586)
+  [`ef4c2c9c2`](https://github.com/dotansimha/graphql-code-generator/commit/ef4c2c9c233c68830f10eb4c167c7cceead27122)
+  Thanks [@levrik](https://github.com/levrik)! - Fix incompatibility between `@oneOf` input types
+  and declaration kind other than `type`
 
-- Updated dependencies [[`ef4c2c9c2`](https://github.com/dotansimha/graphql-code-generator/commit/ef4c2c9c233c68830f10eb4c167c7cceead27122)]:
+- Updated dependencies
+  [[`ef4c2c9c2`](https://github.com/dotansimha/graphql-code-generator/commit/ef4c2c9c233c68830f10eb4c167c7cceead27122)]:
   - @graphql-codegen/visitor-plugin-common@2.13.2
 
 ## 2.8.1
 
 ### Patch Changes
 
-- Updated dependencies [[`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127)]:
+- Updated dependencies
+  [[`63dc8f205`](https://github.com/dotansimha/graphql-code-generator/commit/63dc8f2054e27b944f7d8dc59db8afa85760a127)]:
   - @graphql-codegen/visitor-plugin-common@2.13.1
   - @graphql-codegen/plugin-helpers@2.7.2
 
@@ -550,29 +724,39 @@
 
 ### Minor Changes
 
-- [#8390](https://github.com/dotansimha/graphql-code-generator/pull/8390) [`12ecbe067`](https://github.com/dotansimha/graphql-code-generator/commit/12ecbe067b37c340ffef99b96d487931be260f69) Thanks [@Diizzayy](https://github.com/Diizzayy)! - handle undefined namedType when including introspection type definitions
+- [#8390](https://github.com/dotansimha/graphql-code-generator/pull/8390)
+  [`12ecbe067`](https://github.com/dotansimha/graphql-code-generator/commit/12ecbe067b37c340ffef99b96d487931be260f69)
+  Thanks [@Diizzayy](https://github.com/Diizzayy)! - handle undefined namedType when including
+  introspection type definitions
 
 ## 2.7.5
 
 ### Patch Changes
 
-- Updated dependencies [[`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b)]:
+- Updated dependencies
+  [[`a46b8d99c`](https://github.com/dotansimha/graphql-code-generator/commit/a46b8d99c797283d773ec14163c62be9c84d4c2b)]:
   - @graphql-codegen/visitor-plugin-common@2.13.0
 
 ## 2.7.4
 
 ### Patch Changes
 
-- Updated dependencies [[`1bd7f771c`](https://github.com/dotansimha/graphql-code-generator/commit/1bd7f771ccb949a5a37395c7c57cb41c19340714)]:
+- Updated dependencies
+  [[`1bd7f771c`](https://github.com/dotansimha/graphql-code-generator/commit/1bd7f771ccb949a5a37395c7c57cb41c19340714)]:
   - @graphql-codegen/visitor-plugin-common@2.12.2
 
 ## 2.7.3
 
 ### Patch Changes
 
-- [#8189](https://github.com/dotansimha/graphql-code-generator/pull/8189) [`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+- [#8189](https://github.com/dotansimha/graphql-code-generator/pull/8189)
+  [`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix CommonJS TypeScript resolution with
+  `moduleResolution` `node16` or `nodenext`
 
-- Updated dependencies [[`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f), [`47d0a57e2`](https://github.com/dotansimha/graphql-code-generator/commit/47d0a57e27dd0d2334670bfc6c81c45e00ff4e74)]:
+- Updated dependencies
+  [[`b408f8238`](https://github.com/dotansimha/graphql-code-generator/commit/b408f8238c00bbb4cd448501093856c06cfde50f),
+  [`47d0a57e2`](https://github.com/dotansimha/graphql-code-generator/commit/47d0a57e27dd0d2334670bfc6c81c45e00ff4e74)]:
   - @graphql-codegen/schema-ast@2.5.1
   - @graphql-codegen/visitor-plugin-common@2.12.1
   - @graphql-codegen/plugin-helpers@2.6.2
@@ -596,7 +780,8 @@
 
 ### Minor Changes
 
-- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and `"moduleResolution": "node16"`).
+- d84afec09: Support TypeScript ESM modules (`"module": "node16"` and
+  `"moduleResolution": "node16"`).
 
   [More information on the TypeScript Release Notes.](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js)
 
@@ -794,7 +979,10 @@
 
   **WARNING:** Using this option does only change the type definitions.
 
-  For actually ensuring that a type is correct at runtime you will have to use schema transforms (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives)) that apply those rules! Otherwise, you might end up with a runtime type mismatch which could cause unnoticed bugs or runtime errors.
+  For actually ensuring that a type is correct at runtime you will have to use schema transforms
+  (e.g. with [@graphql-tools/utils mapSchema](https://www.graphql-tools.com/docs/schema-directives))
+  that apply those rules! Otherwise, you might end up with a runtime type mismatch which could cause
+  unnoticed bugs or runtime errors.
 
   Please use this configuration option with care!
 
@@ -831,7 +1019,8 @@
   }
   ```
 
-- 8261e4161: Make futureProofEnums option work for all enum output types, (it worked only with enumsAsTypes)
+- 8261e4161: Make futureProofEnums option work for all enum output types, (it worked only with
+  enumsAsTypes)
 
 ### Patch Changes
 
@@ -880,7 +1069,8 @@
 
   ‼️ ‼️ ‼️ Please note ‼️ ‼️ ‼️:
 
-  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no longer supported for Codegen packages.
+  This is a breaking change since Node 10 is no longer supported in `graphql-tools`, and also no
+  longer supported for Codegen packages.
 
 ### Patch Changes
 
@@ -894,7 +1084,8 @@
 
 ### Minor Changes
 
-- 9005cc17: add `allowEnumStringTypes` option for allowing string literals as valid return types from resolvers in addition to enum values.\_
+- 9005cc17: add `allowEnumStringTypes` option for allowing string literals as valid return types
+  from resolvers in addition to enum values.\_
 
 ### Patch Changes
 
@@ -955,7 +1146,8 @@
 ### Patch Changes
 
 - e947f8e3: Allow to have declarationKind of type: class, interface: interface
-- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming convention
+- 29b75b1e: enhance(namingConvention): use change-case-all instead of individual packages for naming
+  convention
 - Updated dependencies [e947f8e3]
 - Updated dependencies [29b75b1e]
 - Updated dependencies [d4942d04]
@@ -968,7 +1160,8 @@
 
 ### Minor Changes
 
-- 34b8087e: Adds futureProofUnion option to account for a possible unknown new type added to union types
+- 34b8087e: Adds futureProofUnion option to account for a possible unknown new type added to union
+  types
 
 ### Patch Changes
 
@@ -1006,7 +1199,8 @@
 
 ### Minor Changes
 
-- 1d6a593f: Added `useImplementingTypes` flag for generating code that uses implementing types instead of interfaces
+- 1d6a593f: Added `useImplementingTypes` flag for generating code that uses implementing types
+  instead of interfaces
 
 ### Patch Changes
 
@@ -1026,8 +1220,8 @@
 
 ### Minor Changes
 
-- 49242c20: Added a "defaultValue" option in the "avoidOptionals" config
-  See https://github.com/dotansimha/graphql-code-generator/issues/5112
+- 49242c20: Added a "defaultValue" option in the "avoidOptionals" config See
+  https://github.com/dotansimha/graphql-code-generator/issues/5112
 
 ### Patch Changes
 
@@ -1060,7 +1254,8 @@
 
 ### Patch Changes
 
-- 07f9b1b2: Fix a bug caused numeric enum values defined in the GraphQLSchema to be printed incorrectly
+- 07f9b1b2: Fix a bug caused numeric enum values defined in the GraphQLSchema to be printed
+  incorrectly
 - Updated dependencies [07f9b1b2]
 - Updated dependencies [35f67120]
   - @graphql-codegen/visitor-plugin-common@1.17.14
@@ -1070,7 +1265,8 @@
 ### Patch Changes
 
 - 1d7c6432: Bump all packages to allow "^" in deps and fix compatibility issues
-- 1d7c6432: Bump versions of @graphql-tools/ packages to fix issues with loading schemas and SDL comments
+- 1d7c6432: Bump versions of @graphql-tools/ packages to fix issues with loading schemas and SDL
+  comments
 - Updated dependencies [1d7c6432]
 - Updated dependencies [1d7c6432]
   - @graphql-codegen/visitor-plugin-common@1.17.13
