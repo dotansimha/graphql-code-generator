@@ -1,6 +1,6 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - Enum', () => {
@@ -134,7 +134,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'const' }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'const' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -249,7 +251,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -304,7 +308,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -360,7 +366,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -415,7 +423,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: true }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        { typesPrefix: 'I', enumPrefix: true },
+        { outputFile: '' },
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -468,7 +481,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { typesPrefix: 'I', enumPrefix: false }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        { typesPrefix: 'I', enumPrefix: false },
+        { outputFile: '' },
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -521,7 +539,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: true }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        { typesSuffix: 'Z', enumSuffix: true },
+        { outputFile: '' },
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -574,7 +597,12 @@ describe('TypeScript Operations Plugin - Enum', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { typesSuffix: 'Z', enumSuffix: false }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        { typesSuffix: 'Z', enumSuffix: false },
+        { outputFile: '' },
+      ),
     ]);
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -641,7 +669,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
             enumValues: 'keep',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(result).toMatchInlineSnapshot(`
@@ -715,7 +743,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
             enumValues: 'change-case-all#lowerCase',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(result).toMatchInlineSnapshot(`
@@ -781,7 +809,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
         {
           noExport: true,
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(result).toMatchInlineSnapshot(`
@@ -850,7 +878,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
             UserRole: './files#default as UserRole', // NOTE: `as UserRole` doesn't do anything here, this is here to demonstrate that it's the same as './files#default'
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -909,7 +937,9 @@ describe('TypeScript Operations Plugin - Enum', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -962,7 +992,9 @@ describe('TypeScript Operations Plugin - Enum `%future added value`', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { futureProofEnums: true }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { futureProofEnums: true }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -1038,7 +1070,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             },
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1120,7 +1152,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             },
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1200,7 +1232,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             },
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1274,7 +1306,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             UserRole: './my-file#MyEnum',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1341,7 +1373,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             UserRole: './my-file#MyEnum',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1403,7 +1435,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             UserRole: './my-file#NS.ETest',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1476,7 +1508,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             UserRole: './my-file#NS.UserRole',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1553,7 +1585,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
           enumType: 'native',
           enumValues: './my-file',
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1633,7 +1665,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
           enumType: 'native',
           enumValues: { UserRole: './my-file#UserRole', UserStatus: './my-file#UserStatus2X' },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -1700,7 +1732,7 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
             LicenseSKU: './my-file#LicenseSku',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 

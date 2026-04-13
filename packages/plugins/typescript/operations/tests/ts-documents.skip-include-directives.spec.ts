@@ -34,7 +34,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       schema,
       [{ location: '', document: fragment }],
       { maybeValue: "T | 'specialType'" },
-      { outputFile: 'graphql.ts' }
+      { outputFile: 'graphql.ts' },
     );
     expect(content).toMatchInlineSnapshot(`
         "export type UserQueryVariables = Exact<{
@@ -78,7 +78,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       schema,
       [{ location: '', document: fragment }],
       { allowUndefinedQueryVariables: true },
-      { outputFile: 'graphql.ts' }
+      { outputFile: 'graphql.ts' },
     );
 
     expect(content).toMatchInlineSnapshot(`
@@ -113,7 +113,12 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document: fragment }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document: fragment }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type UserQueryVariables = Exact<{
@@ -155,7 +160,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       schema,
       [{ location: '', document }],
       { inlineFragmentTypes: 'combine' },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(content).toMatchInlineSnapshot(`
@@ -199,7 +204,12 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document: fragment }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document: fragment }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
         "export type UserQueryVariables = Exact<{
@@ -246,7 +256,12 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document: fragment }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document: fragment }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
         "export type UserQueryVariables = Exact<{
@@ -289,7 +304,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       schema,
       [{ location: '', document: fragment }],
       { nonOptionalTypename: true },
-      { outputFile: 'graphql.ts' }
+      { outputFile: 'graphql.ts' },
     );
 
     expect(content).toMatchInlineSnapshot(`
@@ -332,7 +347,12 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document: fragment }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document: fragment }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type UserQueryVariables = Exact<{
@@ -379,7 +399,7 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       schema,
       [{ location: '', document: fragment }],
       { maybeValue: "T | 'specialType'" },
-      { outputFile: 'graphql.ts' }
+      { outputFile: 'graphql.ts' },
     );
     expect(content).toMatchInlineSnapshot(`
         "export type UserQueryVariables = Exact<{
@@ -417,7 +437,12 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type GetUsersQueryVariables = Exact<{
@@ -476,7 +501,12 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type UserQueryVariables = Exact<{
@@ -544,7 +574,12 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type UserQueryVariables = Exact<{
@@ -601,7 +636,12 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       }
     `);
 
-    const { content } = await plugin(testSchema, [{ location: '', document: query }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      testSchema,
+      [{ location: '', document: query }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
         "export type UserQueryQueryVariables = Exact<{
@@ -623,12 +663,17 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
         }
       `,
       // < v15 compatibility
-      { experimentalFragmentVariables: true, allowLegacyFragmentVariables: true } as any
+      { experimentalFragmentVariables: true, allowLegacyFragmentVariables: true } as any,
     );
     const config = { experimentalFragmentVariables: true };
-    const { content } = await plugin(schema, [{ location: 'test-file.ts', document: ast }], config, {
-      outputFile: '',
-    });
+    const { content } = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: ast }],
+      config,
+      {
+        outputFile: '',
+      },
+    );
     expect(content).toMatchInlineSnapshot(`
       "export type TextNotificationFragmentFragment = { text?: string };
 
@@ -661,7 +706,12 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type GetUsersQueryVariables = Exact<{
@@ -720,7 +770,12 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type UserQueryVariables = Exact<{
@@ -788,7 +843,12 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type UserQueryVariables = Exact<{
@@ -860,7 +920,12 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
       }
     `);
 
-    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: 'graphql.ts' });
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
 
     expect(content).toMatchInlineSnapshot(`
       "export type UserSkipQueryVariables = Exact<{ [key: string]: never; }>;

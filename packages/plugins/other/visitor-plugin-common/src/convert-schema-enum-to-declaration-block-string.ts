@@ -1,14 +1,19 @@
-import type { EnumTypeDefinitionNode, EnumValueDefinitionNode, GraphQLEnumType, GraphQLSchema } from 'graphql';
+import type {
+  EnumTypeDefinitionNode,
+  EnumValueDefinitionNode,
+  GraphQLEnumType,
+  GraphQLSchema,
+} from 'graphql';
+import { convertName } from './naming.js';
 import type { ConvertFn, ParsedEnumValuesMap } from './types.js';
 import {
   DeclarationBlock,
-  type DeclarationBlockConfig,
+  getNodeComment,
   indent,
   transformComment,
-  getNodeComment,
   wrapWithSingleQuotes,
+  type DeclarationBlockConfig,
 } from './utils.js';
-import { convertName } from './naming.js';
 
 export interface ConvertSchemaEnumToDeclarationBlockString {
   schema: GraphQLSchema;
@@ -53,7 +58,9 @@ export const convertSchemaEnumToDeclarationBlockString = ({
     return null;
   };
 
-  const withFutureAddedValue = [futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : []];
+  const withFutureAddedValue = [
+    futureProofEnums ? [indent('| ' + wrapWithSingleQuotes('%future added value'))] : [],
+  ];
 
   const enumTypeName = convertName({
     convert: () => naming.convert(node),
@@ -77,7 +84,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
               return comment + indent('| ' + wrapWithSingleQuotes(enumValue));
             })
             .concat(...withFutureAddedValue)
-            .join('\n')
+            .join('\n'),
       ).string;
   }
 
@@ -101,12 +108,12 @@ export const convertSchemaEnumToDeclarationBlockString = ({
                   useTypesPrefix: false,
                 },
                 convert: () => naming.convert(enumOption, { transformUnderscore: true }),
-              })
+              }),
             );
             return comment + indent(optionName) + ` = ${enumValue}`;
           })
           .concat(...withFutureAddedValue)
-          .join(',\n')
+          .join(',\n'),
       ).string;
   }
 
@@ -135,7 +142,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
                   naming.convert(enumOption, {
                     transformUnderscore: true,
                   }),
-              })
+              }),
             );
             const comment = transformComment(enumOption.description?.value, 1);
             const name = enumOption.name.value;
@@ -143,7 +150,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
 
             return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
           })
-          .join(',\n')
+          .join(',\n'),
       ).string;
 
     return [enumAsConst, typeName].join('\n');
@@ -163,7 +170,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
         ignoreEnumValuesFromSchema,
         declarationBlockConfig,
         enumValues,
-      })
+      }),
     ).string;
 };
 
@@ -202,14 +209,15 @@ export const buildEnumValuesBlock = ({
               // characters. Otherwise we'll generate syntactically invalid code.
               transformUnderscore: !onlyUnderscoresPattern.test(enumOption.name.value),
             }),
-        })
+        }),
       );
       const comment = getNodeComment(enumOption);
       const schemaEnumValue =
         schemaEnumType && !ignoreEnumValuesFromSchema
           ? schemaEnumType.getValue(enumOption.name.value).value
           : undefined;
-      let enumValue: string | number = typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
+      let enumValue: string | number =
+        typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
 
       if (typeof enumValues[typeName]?.mappedValues?.[enumValue] !== 'undefined') {
         enumValue = enumValues[typeName].mappedValues[enumValue];
@@ -220,8 +228,8 @@ export const buildEnumValuesBlock = ({
         indent(
           `${optionName}${declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
             enumValue,
-            typeof schemaEnumValue !== 'undefined'
-          )}`
+            typeof schemaEnumValue !== 'undefined',
+          )}`,
         )
       );
     })

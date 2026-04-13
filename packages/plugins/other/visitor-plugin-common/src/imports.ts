@@ -131,7 +131,11 @@ export function getEnumsImports({
       // use namespace import to dereference nested enum
       // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
       return [
-        buildTypeImport({ identifier: importIdentifier || sourceIdentifier, source: sourceFile, useTypeImports }),
+        buildTypeImport({
+          identifier: importIdentifier || sourceIdentifier,
+          source: sourceFile,
+          useTypeImports,
+        }),
         `import ${typeIdentifierConverted} = ${sourceIdentifier};`,
       ];
     }
@@ -144,7 +148,13 @@ export function getEnumsImports({
         }),
       ];
     }
-    return [buildTypeImport({ identifier: importIdentifier || sourceIdentifier, source: sourceFile, useTypeImports })];
+    return [
+      buildTypeImport({
+        identifier: importIdentifier || sourceIdentifier,
+        source: sourceFile,
+        useTypeImports,
+      }),
+    ];
   }
 
   return Object.keys(enumValues)

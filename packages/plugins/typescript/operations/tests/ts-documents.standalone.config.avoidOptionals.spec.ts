@@ -1,6 +1,6 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
@@ -36,7 +36,12 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       scalar DateTime
     `);
     const document = parse(/* GraphQL */ `
-      query User($testNullable: ID, $testNonNullable: ID!, $inputNullable: UserInput, $inputNonNullable: UserInput!) {
+      query User(
+        $testNullable: ID
+        $testNonNullable: ID!
+        $inputNullable: UserInput
+        $inputNonNullable: UserInput!
+      ) {
         user(input: $input) {
           id
           name
@@ -106,7 +111,12 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       scalar DateTime
     `);
     const document = parse(/* GraphQL */ `
-      query User($testNullable: ID, $testNonNullable: ID!, $inputNullable: UserInput, $inputNonNullable: UserInput!) {
+      query User(
+        $testNullable: ID
+        $testNonNullable: ID!
+        $inputNullable: UserInput
+        $inputNonNullable: UserInput!
+      ) {
         user(input: $input) {
           id
           name
@@ -115,7 +125,9 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { avoidOptionals: true }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { avoidOptionals: true }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
@@ -194,7 +206,7 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
             inputValue: true,
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -273,7 +285,7 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
             defaultValue: true,
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -352,7 +364,7 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
             variableValue: true,
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -437,7 +449,7 @@ describe('TypeScript Operations Plugin - config.avoidOptionals', () => {
             defaultValue: false,
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 

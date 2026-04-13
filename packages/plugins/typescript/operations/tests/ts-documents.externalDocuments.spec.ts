@@ -1,5 +1,6 @@
 import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - externalDocuments', () => {
@@ -49,15 +50,17 @@ describe('TypeScript Operations Plugin - externalDocuments', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string } | null };
+      export type UserQuery = { user: { id: string, name: string } | null };
       "
     `);
 
-    // FIXME: cannot call `validateTs` until next major version
-    // https://github.com/dotansimha/graphql-code-generator/pull/10496/changes
-    // validateTs(result, undefined, undefined, undefined, undefined, true);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 });

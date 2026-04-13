@@ -13,7 +13,7 @@ const DEFAULT_OPERATION_DECLARATION_KINDS: NormalizedOperationDeclarationKindCon
 };
 
 export function normalizeOperationDeclarationKind(
-  declarationKind: OperationDeclarationKind | OperationDeclarationKindConfig
+  declarationKind: OperationDeclarationKind | OperationDeclarationKindConfig,
 ): NormalizedOperationDeclarationKindConfig {
   if (typeof declarationKind === 'string') {
     return {

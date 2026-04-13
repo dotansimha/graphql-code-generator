@@ -1,6 +1,6 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 const warnSpy = vi.spyOn(console, 'warn');
@@ -165,7 +165,7 @@ describe('TypeScript Operations Plugin - config.declarationKind', () => {
             result: 'interface', // `result` value is `interface`, and `input` value is `type` (default)
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -267,14 +267,14 @@ describe('TypeScript Operations Plugin - config.declarationKind', () => {
           extractAllFieldsToTypes: true,
           declarationKind: 'interface',
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy).toHaveBeenNthCalledWith(
       1,
-      "`declarationKind.result` has been set to `'type'` because `extractAllFieldsToTypes` or `extractAllFieldsToTypesCompact` is true"
+      "`declarationKind.result` has been set to `'type'` because `extractAllFieldsToTypes` or `extractAllFieldsToTypesCompact` is true",
     );
 
     expect(result).toMatchInlineSnapshot(`
@@ -389,14 +389,14 @@ describe('TypeScript Operations Plugin - config.declarationKind', () => {
           extractAllFieldsToTypesCompact: true,
           declarationKind: 'interface',
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy).toHaveBeenNthCalledWith(
       1,
-      "`declarationKind.result` has been set to `'type'` because `extractAllFieldsToTypes` or `extractAllFieldsToTypesCompact` is true"
+      "`declarationKind.result` has been set to `'type'` because `extractAllFieldsToTypes` or `extractAllFieldsToTypesCompact` is true",
     );
 
     expect(result).toMatchInlineSnapshot(`

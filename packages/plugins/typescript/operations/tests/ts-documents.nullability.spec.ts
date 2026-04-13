@@ -70,7 +70,7 @@ describe('TypeScript Operations Plugin - nullability', () => {
           errorHandlingClient: true,
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     const formattedContent = await prettier.format(result.content, {
@@ -116,7 +116,7 @@ describe('TypeScript Operations Plugin - nullability', () => {
           errorHandlingClient: false,
         },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     const formattedContent = await prettier.format(result.content, {

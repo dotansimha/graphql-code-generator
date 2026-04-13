@@ -2451,9 +2451,6 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         `export type GqlAuthDirectiveArgs = {\n  role?: Maybe<GqlUserRole>;\n};`,
       ); // Note: `GqlUserRole` will be imported from `@org/package` by `typescript` plugin
       expect(output.content).toContain(
-        `export type GqlAuthDirectiveArgs = {\n  role?: Maybe<UserRole>;\n};`,
-      );
-      expect(output.content).toContain(
         `export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`,
       );
     });

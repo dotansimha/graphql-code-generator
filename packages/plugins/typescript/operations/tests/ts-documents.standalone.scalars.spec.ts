@@ -1,6 +1,6 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - Default Scalar types', () => {
@@ -350,7 +350,7 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
             UnusedScalar: 'scalars#UnusedScalar',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -400,7 +400,13 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
       scalar UnusedScalar
     `);
     const document = parse(/* GraphQL */ `
-      query User($userInput: UserInput, $scalar4: Scalar4, $scalar5: Scalar5, $scalar6: Scalar6, $scalar7: Scalar7) {
+      query User(
+        $userInput: UserInput
+        $scalar4: Scalar4
+        $scalar5: Scalar5
+        $scalar6: Scalar6
+        $scalar7: Scalar7
+      ) {
         user {
           id
         }
@@ -426,7 +432,7 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
             UnusedScalar: 'scalars#UnusedScalar',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -541,7 +547,7 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
             UnusedScalar: 'scalars#UnusedScalar',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -664,7 +670,7 @@ describe('TypeScript Operations Plugin - Custom Scalars', () => {
             UnusedScalar: 'scalars#UnusedScalar',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 

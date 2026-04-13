@@ -20,7 +20,10 @@ directive @join__field(
   overrideLabel: String
 ) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
 
-directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+directive @join__implements(
+  graph: join__Graph!
+  interface: String!
+) repeatable on OBJECT | INTERFACE
 
 directive @join__type(
   graph: join__Graph!
@@ -32,7 +35,12 @@ directive @join__type(
 
 directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
 
-directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+directive @link(
+  url: String
+  as: String
+  for: link__Purpose
+  import: [link__Import]
+) repeatable on SCHEMA
 
 directive @tag(
   name: String!
@@ -47,10 +55,15 @@ enum link__Purpose {
 }
 
 enum join__Graph {
-  SUPER_USER_MANAGER @join__graph(name: "super_user_management", url: "http://i.am.not.used.example.com")
-  GRAPHQL_MAIN__SHARD__BASE @join__graph(name: "graphql_main__shard__base", url: "http://i.am.not.used.example.com")
+  SUPER_USER_MANAGER
+    @join__graph(name: "super_user_management", url: "http://i.am.not.used.example.com")
+  GRAPHQL_MAIN__SHARD__BASE
+    @join__graph(name: "graphql_main__shard__base", url: "http://i.am.not.used.example.com")
   GRAPHQL_MAIN__SHARD__INTERNAL_TESTING
-    @join__graph(name: "graphql_main__shard__internal_testing", url: "http://i.am.not.used.example.com")
+    @join__graph(
+      name: "graphql_main__shard__internal_testing"
+      url: "http://i.am.not.used.example.com"
+    )
 }
 
 type Query {
@@ -203,8 +216,12 @@ enum ProcessableFeedbackSortBy
 enum ProcessableFeedbackSortOrder
   @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
   @join__type(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING) {
-  ASC @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE) @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
-  DESC @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE) @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  ASC
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
+  DESC
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__BASE)
+    @join__enumValue(graph: GRAPHQL_MAIN__SHARD__INTERNAL_TESTING)
 }
 
 type FeedbackConnection @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
@@ -229,7 +246,8 @@ type Thread implements Node
   @join__implements(graph: GRAPHQL_MAIN__SHARD__BASE, interface: "Node")
   @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
   id: ID!
-  posts(after: String, first: Int): ThreadPostConnection @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
+  posts(after: String, first: Int): ThreadPostConnection
+    @join__field(graph: GRAPHQL_MAIN__SHARD__BASE)
 }
 
 type ThreadPostConnection @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
@@ -253,7 +271,7 @@ union ThreadPostCreator
   @join__type(graph: GRAPHQL_MAIN__SHARD__BASE)
   @join__unionMember(graph: GRAPHQL_MAIN__SHARD__BASE, member: "OrgMember")
   @join__unionMember(graph: GRAPHQL_MAIN__SHARD__BASE, member: "EndUser") =
-    OrgMember
+  | OrgMember
   | EndUser
 
 type OrgMember @join__type(graph: GRAPHQL_MAIN__SHARD__BASE) {
