@@ -1,5 +1,29 @@
 # @graphql-codegen/plugin-helpers
 
+## 6.3.0
+
+### Minor Changes
+
+- [#10659](https://github.com/dotansimha/graphql-code-generator/pull/10659)
+  [`e65d303`](https://github.com/dotansimha/graphql-code-generator/commit/e65d3036475cc1e3cb05a8367d30a5092b20080e)
+  Thanks [@ikusakov2](https://github.com/ikusakov2)! - Add support for `externalDocuments`
+
+  `externalDocuments` declares GraphQL documents that will be read but will not have type files
+  generated for them. These documents are available to plugins for type resolution (e.g. fragment
+  types), but no output files will be generated based on them. Accepts the same formats as
+  `documents`.
+
+  This config option is useful for monorepos where each project may want to generate types for its
+  own documents, but some may need to read shared fragments from across projects.
+
+### Patch Changes
+
+- [#10103](https://github.com/dotansimha/graphql-code-generator/pull/10103)
+  [`9a66574`](https://github.com/dotansimha/graphql-code-generator/commit/9a665749cfa271dcf1b36f9047ececeb9a62ea8a)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`tslib@^2.8.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.8.0) (from
+    `~2.6.0`, in `dependencies`)
+
 ## 6.2.1
 
 ### Patch Changes

@@ -15,9 +15,9 @@
     "graphql-yoga": "5.21.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "6.2.1",
-    "@graphql-codegen/typescript": "5.0.9",
-    "@graphql-codegen/typescript-resolvers": "5.1.7"
+    "@graphql-codegen/cli": "6.3.0",
+    "@graphql-codegen/typescript": "5.0.10",
+    "@graphql-codegen/typescript-resolvers": "5.1.8"
   },
   "bob": false
 }
