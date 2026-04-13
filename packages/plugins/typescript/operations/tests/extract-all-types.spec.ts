@@ -1652,9 +1652,14 @@ describe('extractAllFieldsToTypesCompact: true', () => {
       nonOptionalTypename: true,
       omitOperationSuffix: true,
     };
-    const { content } = await plugin(companySchema, [{ location: 'test-file.ts', document: companyDoc }], config, {
-      outputFile: '',
-    });
+    const { content } = await plugin(
+      companySchema,
+      [{ location: 'test-file.ts', document: companyDoc }],
+      config,
+      {
+        outputFile: '',
+      },
+    );
     expect(content).toMatchInlineSnapshot(`
       "export type GetCompanyInfo_company_office_location = { __typename: 'Location', formatted: string | null };
 
@@ -1721,7 +1726,12 @@ describe('extractAllFieldsToTypesCompact: true', () => {
       nonOptionalTypename: true,
       omitOperationSuffix: true,
     };
-    const { content } = await plugin(schema, [{ location: 'test-file.ts', document: doc }], config, { outputFile: '' });
+    const { content } = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: doc }],
+      config,
+      { outputFile: '' },
+    );
 
     // Verify the naming follows Apollo Tooling style (field names only, no intermediate type names)
     expect(content).toContain('GetAnimals_animals_owner_Trainer');
@@ -1744,9 +1754,14 @@ describe('extractAllFieldsToTypesCompact: true', () => {
       nonOptionalTypename: true,
       omitOperationSuffix: true,
     };
-    const { content } = await plugin(companySchema, [{ location: 'test-file.ts', document: companyDoc }], config, {
-      outputFile: '',
-    });
+    const { content } = await plugin(
+      companySchema,
+      [{ location: 'test-file.ts', document: companyDoc }],
+      config,
+      {
+        outputFile: '',
+      },
+    );
 
     // When extractAllFieldsToTypesCompact is true, extractAllFieldsToTypes should be automatically enabled
     // So types should be extracted, not inlined
@@ -1810,7 +1825,12 @@ describe('extractAllFieldsToTypesCompact: true', () => {
       nonOptionalTypename: true,
       omitOperationSuffix: true,
     };
-    const { content } = await plugin(schema, [{ location: 'test-file.ts', document: doc }], config, { outputFile: '' });
+    const { content } = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: doc }],
+      config,
+      { outputFile: '' },
+    );
 
     // Fragment types should use compact naming (no intermediate type names)
     expect(content).toContain('UserProfile_profile_contact');

@@ -1,6 +1,6 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - Standalone', () => {
@@ -327,7 +327,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
         },
         {
           outputFile: '',
-        }
+        },
       ),
     ]);
 
@@ -394,7 +394,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { scalars: { ID: 'string | number | boolean' } }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        { scalars: { ID: 'string | number | boolean' } },
+        { outputFile: '' },
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -509,7 +514,12 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document: documentMain }, { document: documentWithFragment }], {}, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document: documentMain }, { document: documentWithFragment }],
+        {},
+        { outputFile: '' },
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -801,7 +811,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
           skipTypeNameForRoot: true,
           nonOptionalTypename: true,
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -897,7 +907,9 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       }
     `);
 
-    const result = mergeOutputs([await plugin(schema, [{ document }], { globalNamespace: true }, { outputFile: '' })]);
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { globalNamespace: true }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */

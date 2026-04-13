@@ -1,7 +1,7 @@
 import {
+  RawDocumentsConfig,
   type ConvertSchemaEnumToDeclarationBlockString,
   type EnumValuesMap,
-  RawDocumentsConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 
 /**

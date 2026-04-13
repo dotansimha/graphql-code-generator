@@ -1,6 +1,6 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
@@ -68,7 +68,7 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
             },
           ],
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -150,7 +150,7 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
             },
           ],
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -211,7 +211,10 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
     const roleFragmentDef = roleFragmentDocument.definitions[0];
     const statusFragmentDef = statusFragmentDocument.definitions[0];
 
-    if (roleFragmentDef.kind !== 'FragmentDefinition' || statusFragmentDef.kind !== 'FragmentDefinition') {
+    if (
+      roleFragmentDef.kind !== 'FragmentDefinition' ||
+      statusFragmentDef.kind !== 'FragmentDefinition'
+    ) {
       throw new Error('Expected fragment definitions');
     }
 
@@ -236,7 +239,7 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
             },
           ],
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -309,7 +312,7 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
             },
           ],
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -373,7 +376,10 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
     const profileFragmentDef = profileFragmentDocument.definitions[0];
     const userFragmentDef = userFragmentDocument.definitions[0];
 
-    if (profileFragmentDef.kind !== 'FragmentDefinition' || userFragmentDef.kind !== 'FragmentDefinition') {
+    if (
+      profileFragmentDef.kind !== 'FragmentDefinition' ||
+      userFragmentDef.kind !== 'FragmentDefinition'
+    ) {
       throw new Error('Expected fragment definitions');
     }
 
@@ -398,7 +404,7 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
             },
           ],
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -463,7 +469,7 @@ describe('TypeScript Operations Plugin - External Fragments with Enums', () => {
             },
           ],
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 

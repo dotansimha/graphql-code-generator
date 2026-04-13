@@ -1,6 +1,6 @@
 import { buildSchema, parse } from 'graphql';
-import { validateTs } from '@graphql-codegen/testing';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - Import Types', () => {
@@ -95,7 +95,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
         schema,
         [{ document }],
         { importSchemaTypesFrom: './base-dir/path-to-other-file.generated.ts' },
-        { outputFile: './base-dir/this-file.ts' }
+        { outputFile: './base-dir/this-file.ts' },
       ),
     ]);
 
@@ -229,7 +229,7 @@ describe('TypeScript Operations Plugin - Import Types', () => {
         schema,
         [{ document }],
         { importSchemaTypesFrom: '~@my-company/package/types' },
-        { outputFile: './base-dir/this-file.ts' }
+        { outputFile: './base-dir/this-file.ts' },
       ),
     ]);
 
@@ -340,7 +340,12 @@ describe('TypeScript Operations Plugin - Import Types', () => {
     `);
 
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { importSchemaTypesFrom: './path-to-other-file' }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        { importSchemaTypesFrom: './path-to-other-file' },
+        { outputFile: '' },
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -401,7 +406,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
             Scalar1: '@org/scalars#Scalar1',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(sharedTypeFileResult).toMatchInlineSnapshot(`
@@ -426,7 +431,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
             Scalar1: '@org/scalars#Scalar1',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
@@ -478,7 +483,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
             Scalar1: '@org/scalars#Scalar1',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(sharedTypeFileResult).toMatchInlineSnapshot(`
@@ -498,7 +503,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
             Scalar1: '@org/scalars#Scalar1',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
@@ -550,7 +555,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
             Scalar1: '@org/scalars#Scalar1',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(sharedTypeFileResult).toMatchInlineSnapshot(`
@@ -570,7 +575,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
             Scalar1: '@org/scalars#Scalar1',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
@@ -627,7 +632,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
           importSchemaTypesFrom: './base-dir/path-to-other-file.generated.ts',
           namespacedImportName: 'TypeImport',
         },
-        { outputFile: './base-dir/this-file.ts' }
+        { outputFile: './base-dir/this-file.ts' },
       ),
     ]);
 

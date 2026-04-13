@@ -1,5 +1,4 @@
 #!/usr/bin/env ts-node
-
 import { generate } from '@graphql-codegen/cli';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -62,7 +61,10 @@ export const main = async () => {
 
   await generate({
     schema: localSchemaFilePath,
-    documents: [...includes.map((include: any) => `${include}/**/*.{js,jsx,ts,tsx}`), `!**/${GENERATED}/**`],
+    documents: [
+      ...includes.map((include: any) => `${include}/**/*.{js,jsx,ts,tsx}`),
+      `!**/${GENERATED}/**`,
+    ],
     config: GRAPHQL_CODEGEN_CONFIG,
     generates: generatePaths,
     silent: false,

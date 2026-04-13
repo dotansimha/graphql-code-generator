@@ -1,6 +1,6 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin, type TypeScriptDocumentsPluginConfig } from '../src/index.js';
 
 describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
@@ -69,7 +69,9 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       fragmentSuffix: '',
     };
 
-    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, { outputFile: '' });
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, {
+      outputFile: '',
+    });
 
     await validate(content);
 
@@ -146,7 +148,9 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       fragmentSuffix: '',
     };
 
-    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, { outputFile: '' });
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, {
+      outputFile: '',
+    });
 
     await validate(content);
 
@@ -202,7 +206,9 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       fragmentSuffix: '',
     };
 
-    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, { outputFile: '' });
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, {
+      outputFile: '',
+    });
 
     await validate(content);
 
@@ -306,7 +312,9 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       fragmentSuffix: '',
     };
 
-    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, { outputFile: '' });
+    const { content } = await plugin(schema, [{ location: 'test-file.ts', document }], config, {
+      outputFile: '',
+    });
 
     await validate(content);
 

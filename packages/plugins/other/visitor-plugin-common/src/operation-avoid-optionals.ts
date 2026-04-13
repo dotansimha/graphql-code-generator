@@ -6,7 +6,7 @@ export interface OperationAvoidOptionalsConfig {
 export type NormalizedOperationAvoidOptionalsConfig = Required<OperationAvoidOptionalsConfig>;
 
 export const normalizeOperationAvoidOptionals = (
-  avoidOptionals: boolean | OperationAvoidOptionalsConfig
+  avoidOptionals: boolean | OperationAvoidOptionalsConfig,
 ): NormalizedOperationAvoidOptionalsConfig => {
   const defaultAvoidOptionals: NormalizedOperationAvoidOptionalsConfig = {
     variableValue: false,

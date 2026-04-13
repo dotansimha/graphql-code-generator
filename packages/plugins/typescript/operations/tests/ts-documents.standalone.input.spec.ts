@@ -1,13 +1,19 @@
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('TypeScript Operations Plugin - Input', () => {
   it('generates nested input correctly', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
-        users(input: UsersInput!, ageRange1: [Int], ageRange2: [Int]!, ageRange3: [Int!], ageRange4: [Int!]!): [User!]!
+        users(
+          input: UsersInput!
+          ageRange1: [Int]
+          ageRange2: [Int]!
+          ageRange3: [Int!]
+          ageRange4: [Int!]!
+        ): [User!]!
       }
 
       type User {
@@ -88,7 +94,7 @@ describe('TypeScript Operations Plugin - Input', () => {
             DateTime: 'Date',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -211,7 +217,7 @@ describe('TypeScript Operations Plugin - Input', () => {
           },
           immutableTypes: true,
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -322,7 +328,7 @@ describe('TypeScript Operations Plugin - Input', () => {
             DateTime: 'Date',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 
@@ -423,7 +429,7 @@ describe('TypeScript Operations Plugin - Input', () => {
             DateTime: 'Date',
           },
         },
-        { outputFile: '' }
+        { outputFile: '' },
       ),
     ]);
 

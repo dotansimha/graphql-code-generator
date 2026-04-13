@@ -1,4 +1,4 @@
-import { type GraphQLNamedType, isIntrospectionType, isSpecifiedScalarType } from 'graphql';
+import { isIntrospectionType, isSpecifiedScalarType, type GraphQLNamedType } from 'graphql';
 
 export const isNativeNamedType = (namedType: GraphQLNamedType): boolean => {
   // "Native" NamedType in this context means the following:

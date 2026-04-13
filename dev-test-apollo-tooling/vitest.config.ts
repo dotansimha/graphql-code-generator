@@ -8,5 +8,5 @@ export default mergeConfig(
       name: 'dev-test-apollo-tooling',
       include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
     },
-  })
+  }),
 );
