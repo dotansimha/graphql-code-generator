@@ -285,7 +285,7 @@ const config: CodegenConfig = {
   schema: './schema.graphql',
   documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
   // `externalDocuments` are read-only documents that are loaded but do not generate output.
-  // They are used to include fragments from another package within a monorepo.
+  // They are used to include fragments from another package in a monorepo without generating unnecessary files.
   externalDocuments: ['../other-package/src/**/*.{ts,tsx}', '!../other-package/src/**/__generated__/**'],
   generates: {
     './src/': {
