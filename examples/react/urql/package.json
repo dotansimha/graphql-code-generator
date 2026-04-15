@@ -13,7 +13,7 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "urql": "^3.0.0"
+    "urql": "^5.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^6.3.0",
