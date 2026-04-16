@@ -15,13 +15,13 @@ permissions:
 
 jobs:
   dependencies:
-    uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@bcb53d910698d29749511f386139ad8180269101 # main
+    uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN  }}
 
   alpha:
-    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@bcb53d910698d29749511f386139ad8180269101 # main
+    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     with:
       npmTag: alpha
@@ -31,7 +31,7 @@ jobs:
       npmToken: ${{ secrets.NPM_TOKEN }}
 
   release-candidate:
-    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@bcb53d910698d29749511f386139ad8180269101 # main
+    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
     if: ${{ github.event.pull_request.title == 'Upcoming Release Changes' }}
     with:
       npmTag: rc

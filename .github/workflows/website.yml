@@ -24,10 +24,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: the-guild-org/shared-config/setup@bcb53d910698d29749511f386139ad8180269101 # main
+      - uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
         name: setup env
 
-      - uses: the-guild-org/shared-config/website-cf@bcb53d910698d29749511f386139ad8180269101 # main
+      - uses: the-guild-org/shared-config/website-cf@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
         name: build and deploy website
         env:
           NEXT_BASE_PATH: ${{ github.ref == 'refs/heads/master' && '/graphql/codegen' || '' }}
