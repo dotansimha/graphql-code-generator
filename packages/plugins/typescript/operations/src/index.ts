@@ -57,6 +57,7 @@ export const plugin: PluginFunction<
   // For Fragment types to resolve correctly, we must get read all docs (`standard` and `external`)
   // Fragment types are usually (but not always) in `external` files in certain setup, like a monorepo.
   const allDocumentsAST = concatAST(parsedDocuments.all.documentNodes);
+  const fragmentNames = new Set<string>();
   const allFragments: LoadedFragment[] = [
     ...(
       allDocumentsAST.definitions.filter(
@@ -69,7 +70,14 @@ export const plugin: PluginFunction<
       isExternal: false,
     })),
     ...(config.externalFragments || []),
-  ];
+  ].filter(fragment => {
+    if (fragmentNames.has(fragment.name)) {
+      return false;
+    }
+
+    fragmentNames.add(fragment.name);
+    return true;
+  });
 
   const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
 
