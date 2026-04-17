@@ -23,7 +23,7 @@
     "cypress": "15.14.0",
     "serve": "14.2.6",
     "start-server-and-test": "3.0.2",
-    "typescript": "6.0.2",
+    "typescript": "6.0.3",
     "vite": "^8.0.0"
   }
 }
