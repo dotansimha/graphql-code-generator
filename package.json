@@ -60,7 +60,7 @@
     "husky": "9.1.7",
     "jest-diff": "30.3.0",
     "lint-staged": "16.4.0",
-    "memfs": "4.57.1",
+    "memfs": "4.57.2",
     "patch-package": "8.0.1",
     "prettier": "3.8.3",
     "prettier-plugin-svelte": "3.5.1",
