@@ -1,9 +1,101 @@
+import * as path from 'path';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from '../src/index.js';
 
-const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
+const SIMPLE_TEST_SCHEMA = /* GraphQL */ `
+  type Query {
+    user: User
+  }
+  type User {
+    id: ID!
+    name: String!
+  }
+`;
 
 describe('externalDocuments', () => {
+  it('Dedupes documents by location + hash', async () => {
+    const basePath = path.join(__dirname, 'codegen.config.externalDocuments');
+
+    let receivedDocuments: Types.DocumentFile[];
+    await executeCodegen({
+      schema: SIMPLE_TEST_SCHEMA,
+      documents: [
+        path.join(basePath, 'file*.graphql.ts'),
+        path.join(basePath, 'external2.graphql.ts'),
+      ],
+      pluginLoader: () => {
+        return {
+          plugin: (_schema, documents) => {
+            receivedDocuments = documents;
+            return { content: '' };
+          },
+        };
+      },
+      externalDocuments: [path.join(basePath, 'external1.graphql.ts')],
+      generates: {
+        'out1/generated.ts': {
+          plugins: ['test'],
+        },
+      },
+    });
+
+    expect(receivedDocuments.length).toBe(5);
+
+    const file1 = receivedDocuments.find(d => d.location.includes('file1.graphql.ts'));
+    expect(file1.type).toBe('standard');
+    expect(file1.rawSDL).toMatchInlineSnapshot(`
+      "
+        query Root {
+          user {
+            id
+          }
+        }
+      "
+    `);
+
+    const file2 = receivedDocuments.find(d => d.location.includes('file2.graphql.ts'));
+    expect(file2.type).toBe('standard');
+    expect(file2.rawSDL).toMatchInlineSnapshot(`
+      "
+        query User {
+          user {
+            ...UserFragment
+          }
+        }
+      "
+    `);
+
+    const file3 = receivedDocuments.find(d => d.location.includes('file3.graphql.ts'));
+    expect(file3.type).toBe('standard');
+    expect(file3.rawSDL).toMatchInlineSnapshot(`
+      "
+        fragment UserFragment on User {
+          name
+        }
+      "
+    `);
+
+    const external1 = receivedDocuments.find(d => d.location.includes('external1.graphql.ts'));
+    expect(external1.type).toBe('external');
+    expect(external1.rawSDL).toMatchInlineSnapshot(`
+      "
+        fragment UserFragment on User {
+          name
+        }
+      "
+    `);
+
+    const external2 = receivedDocuments.find(d => d.location.includes('external2.graphql.ts'));
+    expect(external2.type).toBe('standard');
+    expect(external2.rawSDL).toMatchInlineSnapshot(`
+      "
+        fragment UserFragment2 on User {
+          name
+        }
+      "
+    `);
+  });
+
   it('should pass externalDocuments to preset buildGeneratesSection', async () => {
     let capturedExternalDocuments: Types.DocumentFile[] | undefined;
 
@@ -25,8 +117,8 @@ describe('externalDocuments', () => {
 
     await executeCodegen({
       schema: SIMPLE_TEST_SCHEMA,
-      documents: `query root { f }`,
-      externalDocuments: `fragment Frag on MyType { f }`,
+      documents: `query root { user { id } }`,
+      externalDocuments: `query readOnlyQuery { user { id } }`,
       generates: {
         'out1/': { preset: capturePreset },
       },
@@ -59,8 +151,8 @@ describe('externalDocuments', () => {
 
     await executeCodegen({
       schema: SIMPLE_TEST_SCHEMA,
-      documents: `query root { f }`,
-      externalDocuments: `query readOnlyQuery { f }`,
+      documents: `query root { user { id } }`,
+      externalDocuments: `query readOnlyQuery { user { id } }`,
       generates: {
         'out1/': { preset: capturePreset },
       },
@@ -85,8 +177,8 @@ describe('externalDocuments', () => {
   it('should not include externalDocuments operations in non-preset plugin output', async () => {
     const { result } = await executeCodegen({
       schema: SIMPLE_TEST_SCHEMA,
-      documents: `query root { f }`,
-      externalDocuments: `query readOnlyQuery { f }`,
+      documents: `query root { user { id } }`,
+      externalDocuments: `query readOnlyQuery { user { id } }`,
       generates: {
         'out1.ts': { plugins: ['typescript-operations'] },
       },
@@ -122,7 +214,7 @@ describe('externalDocuments', () => {
       generates: {
         'out1/': {
           preset: capturePreset,
-          externalDocuments: `fragment Frag on MyType { f }`,
+          externalDocuments: `fragment Frag on User { id }`,
         },
       },
     });
@@ -151,11 +243,11 @@ describe('externalDocuments', () => {
 
     await executeCodegen({
       schema: SIMPLE_TEST_SCHEMA,
-      externalDocuments: `fragment RootFrag on MyType { f }`,
+      externalDocuments: `fragment RootFrag on User { id }`,
       generates: {
         'out1/': {
           preset: capturePreset,
-          externalDocuments: `fragment OutputFrag on MyType { f }`,
+          externalDocuments: `fragment OutputFrag on User { name }`,
         },
       },
     });
