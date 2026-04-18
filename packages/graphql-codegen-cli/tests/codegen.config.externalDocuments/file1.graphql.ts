@@ -7,7 +7,7 @@ export const doc1 = /* GraphQL */ `
 `;
 
 // Duplicate of doc1, so should be deduped
-export const doc2 = /* GraphQL */ `
+export const doc1a = /* GraphQL */ `
   query Root {
     user {
       id

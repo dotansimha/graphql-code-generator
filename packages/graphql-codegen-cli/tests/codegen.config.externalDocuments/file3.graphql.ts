@@ -1,4 +1,4 @@
-export const doc4 = /* GraphQL */ `
+export const doc3 = /* GraphQL */ `
   fragment UserFragment on User {
     name
   }
