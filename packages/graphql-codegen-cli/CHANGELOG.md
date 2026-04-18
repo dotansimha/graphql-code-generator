@@ -1,5 +1,14 @@
 # @graphql-codegen/cli
 
+## 6.3.1
+
+### Patch Changes
+
+- [#10737](https://github.com/dotansimha/graphql-code-generator/pull/10737)
+  [`be85118`](https://github.com/dotansimha/graphql-code-generator/commit/be851189b89ef15b51a3e91a4c04af97754c8bcb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix issue where same SDL in different
+  documents are ignored when handling documents vs externalDocuments
+
 ## 6.3.0
 
 ### Minor Changes
