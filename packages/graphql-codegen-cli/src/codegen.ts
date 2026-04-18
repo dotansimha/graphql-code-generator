@@ -409,12 +409,13 @@ export async function executeCodegen(
                             ...outputExternalDocuments,
                           ];
                           for (const file of mergedDocuments) {
-                            if (processedFile[file.hash]) {
+                            const fileIdentifier = (file.location || '') + (file.hash || '');
+                            if (processedFile[fileIdentifier]) {
                               continue;
                             }
 
                             outputDocuments.push(file);
-                            processedFile[file.hash] = true;
+                            processedFile[fileIdentifier] = true;
                           }
                         },
                         filename,
