@@ -1695,37 +1695,37 @@
   dependencies:
     giscus "^1.5.0"
 
-"@graphql-codegen/c-sharp-common@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/c-sharp-common/-/c-sharp-common-2.0.0.tgz#3d97f9840ac4a00fa2b27f52eeeb39dee59a632d"
-  integrity sha512-kGFxuuD8mM0gn4FwnZ3dolC6NRBBzvyw36J4SGpxRUTbhjAmEXIDIM0HOwkU9JdkULIlv2wTYzNDnCqdPnzu2A==
+"@graphql-codegen/c-sharp-common@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/c-sharp-common/-/c-sharp-common-2.0.1.tgz#32e1f1ac7fcec0c8953effadfc03d623d242317d"
+  integrity sha512-4acV9IDAp9aO0IacDs6HR6J5DTqI1DUnrtvO/1JktXuq+0a/QXdXWKf/sN//+I68j06W4JTTbxby+YexFlknow==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     auto-bind "~4.0.0"
     change-case-all "1.0.15"
     tslib "^2.8.1"
 
-"@graphql-codegen/c-sharp-operations@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/c-sharp-operations/-/c-sharp-operations-4.0.0.tgz#46eed11b7e81719245cae4b5c52eadeb76dcfbb5"
-  integrity sha512-uqnS487Q2zpPn3d+Vba5dlppip98nIzh0u35UGC+raZ4EkLWm7kKrNt7N9fosQFiaGMufFwx0LM+vo5qJrHQ2w==
+"@graphql-codegen/c-sharp-operations@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/c-sharp-operations/-/c-sharp-operations-4.0.1.tgz#a2e496c760cf29491951ec5ca172a3f7f562f5ff"
+  integrity sha512-qIXCb0q4R5f+1x/8Jv0cDd3Cs7ZMxZzH0oOMItSFAv6/4ztprpE6al6Ytb5fF33FKmZdpmFSwsuuDhCrGA5stw==
   dependencies:
-    "@graphql-codegen/c-sharp-common" "2.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/c-sharp-common" "2.0.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     auto-bind "~4.0.0"
     change-case-all "1.0.15"
     tslib "^2.8.1"
 
-"@graphql-codegen/c-sharp@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/c-sharp/-/c-sharp-6.0.0.tgz#5ee6f3050d7a1bb7b6709ceb99e856702855656a"
-  integrity sha512-5VgWWUC4E1qIRgKY2MYr+TMryFCWqzFCCvi/86WArS+By5MBwvrzWyJGAP9GV/09eEuSSiEgCaFUosIT/QD7PA==
+"@graphql-codegen/c-sharp@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/c-sharp/-/c-sharp-6.0.1.tgz#12098a92c6732bc065edb4461d8ad1ff2b5afe45"
+  integrity sha512-KezdUcrWzUAIhYk0GEDeX+tCKApVKDeXNYIiCUBZoiMmTRu4WYR4wx9PphwoHwVuOruF0UA/kJef4u4JKz6VmA==
   dependencies:
-    "@graphql-codegen/c-sharp-common" "2.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/c-sharp-common" "2.0.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     change-case-all "1.0.15"
     tslib "^2.8.1"
     unixify "^1.0.0"
@@ -1764,117 +1764,117 @@
     tslib "^2.8.1"
 
 "@graphql-codegen/flutter-freezed@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/flutter-freezed/-/flutter-freezed-5.0.0.tgz#54891cc55f80e81691b163633dfb9576ad218319"
-  integrity sha512-Is3rbTFi+SUNNfggk00Qk/faXAlkNlSa5sK0vz8PzyT62DKBKRXo5ghxwDk/NxFOU2CNNTcCGxnWZ8OSN2ok4A==
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/flutter-freezed/-/flutter-freezed-5.0.1.tgz#7e3107b2d8d6346b139186f85bc6b9b7df1de8f5"
+  integrity sha512-EYgaM8OeLaDmmbWJfG8zUnlr/zsTKvsgrpSzxaqLezLZUvmaxtObpA+rN/9gxRbum3pWBLuCC3oTb3idAKUV3g==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/schema-ast" "^5.0.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/schema-ast" "^5.0.2"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     auto-bind "~4.0.0"
     change-case-all "1.0.15"
     tslib "^2.8.1"
 
-"@graphql-codegen/hasura-allow-list@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/hasura-allow-list/-/hasura-allow-list-4.0.0.tgz#e8edf1b68a6cbaea92aebfd5a0aa8dacf7930cb1"
-  integrity sha512-Fv+Tqn1HYQrehsbERcxozR4o2kj7K+B5tIiLMpkIbXNroaOYBdr4SjfS0MuGFVwZQaUs3oNwe46W+D1gMIKDOw==
+"@graphql-codegen/hasura-allow-list@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/hasura-allow-list/-/hasura-allow-list-4.0.1.tgz#7d51c117e05a88a770277e61bde76a078cd5fbcc"
+  integrity sha512-+/C764nTNS6BgYUxC5Lrnj8T7veFJ40ZXrbWdvecu5yJbeK5BoZAG7FCeWhd0cegbdBN8tbZY0RX6pDuY/Cg9A==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
     tslib "^2.8.1"
     yaml "^1.10.2"
 
-"@graphql-codegen/import-types-preset@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/import-types-preset/-/import-types-preset-4.0.0.tgz#6786b0b2236f7007079968a084b219da605e39d8"
-  integrity sha512-0cx9gWxUSnkGwptTMDlXSD0dC6zkPzijp8BNrfwyhElStO2aEL+yxNIwI2k4veYWy68EQV9ZyC86949PB/gkJg==
+"@graphql-codegen/import-types-preset@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/import-types-preset/-/import-types-preset-4.0.1.tgz#27234606ad83aaa1c1248f1e052c5ed735dbf78a"
+  integrity sha512-0qN9ptrRdg4St6636RZIpEidizXFDh73LZ+Bebmss2vYW5+Bu2T/ZJ+WXduMzeRkPFFzF7adaZNRFy2ejuzmzQ==
   dependencies:
     "@graphql-codegen/add" "^6.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     tslib "^2.8.1"
 
-"@graphql-codegen/java-apollo-android@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/java-apollo-android/-/java-apollo-android-4.0.0.tgz#0ac8d7779888897f5f73aa03f06e3b809670f726"
-  integrity sha512-I6496o3qpv1oMWw6CzuEtX8KqK+ovUMyCEVIEJrPVuuJKZBIjV4ZucvGJUX0FZ9fbqOpY73wkY00poY0mgE1ug==
+"@graphql-codegen/java-apollo-android@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/java-apollo-android/-/java-apollo-android-4.0.1.tgz#8b23ff6a61b7b089a7cf927e8cb7974e3947b0b0"
+  integrity sha512-YPKdj0om/gug6vjedU/jGVywPmJRBWfQjEdTWkeCKxxK072uvt/X2h1X7iglo/xxNw7S8IGM/zuXT++OmvBxLw==
   dependencies:
-    "@graphql-codegen/java-common" "^4.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/java-common" "^4.0.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     auto-bind "~4.0.0"
     change-case-all "1.0.15"
     pluralize "^8.0.0"
     tslib "^2.8.1"
 
-"@graphql-codegen/java-common@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/java-common/-/java-common-4.0.0.tgz#27dde76e8d24fe2d8708591bc5e12e2b788ce947"
-  integrity sha512-39DJ4fkKK4DHhpQ2aCBopOamsGitRVOV+HvrT9zYJ6c+ve3mc45ogDEcsSrrm+I8TwZwUd4WgYnfTqpT6/YfEw==
+"@graphql-codegen/java-common@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/java-common/-/java-common-4.0.1.tgz#5aa345ee949646e697ab7aa0f4e46585d163b514"
+  integrity sha512-5N+ccnLmLwiDnfnjcUxf3fEb3GgPV3w+xo8LZ+XC2OTN0JBFD6gcHGYqfPufKDQ7Zn+RlWTs4FjWCsM5EecnkQ==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     auto-bind "~4.0.0"
     min-indent "1.0.1"
     tslib "^2.8.1"
     unixify "^1.0.0"
 
-"@graphql-codegen/java-resolvers@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/java-resolvers/-/java-resolvers-4.0.0.tgz#801e30bc4adabcd472b0df415d63b4f0880b1cf2"
-  integrity sha512-wRo2YiK9+XIgS3mW9VF+Q4qhgVu5x8+IWcbHm3yTsbrYcdCSTGf508o5QZP+LRF0/PNoqxT4EkbIT8cXgeSHbA==
+"@graphql-codegen/java-resolvers@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/java-resolvers/-/java-resolvers-4.0.1.tgz#3eefe506b3f4a892211f86e651e25177f904230f"
+  integrity sha512-hX+KzPa8o7WMsdcGxgutbs4BPMDfHYI0TUEVbJZu9FW/pT37m0vjAvhO/1SuGFM6dH62yZrh1my67fvVjGl/Qw==
   dependencies:
-    "@graphql-codegen/java-common" "^4.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/java-common" "^4.0.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     tslib "^2.8.1"
 
-"@graphql-codegen/java@5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/java/-/java-5.0.0.tgz#0b1b4ec0fc848179b0bc93c83d0dece321c95595"
-  integrity sha512-ZP5DwGekN1escCaNJ+VJ0CDg8jJP0ZhCkyJAMiWWdpYSVZ3fhNMLHj7zOwdgYqsQcfx4yMVuCbJ0KtWqOjlpfQ==
+"@graphql-codegen/java@5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/java/-/java-5.0.1.tgz#8c0ded627b185570f8b6e17d32c29d9e2bb7e6fb"
+  integrity sha512-c0oydoImnsrJh9gAgl2XCsBqDcyBFXvi42xLZzLLx29/AJvUEGZsFtZirJy4cjBvjf3rqHtRO0qoecn79aZSsQ==
   dependencies:
-    "@graphql-codegen/java-common" "^4.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/java-common" "^4.0.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     tslib "^2.8.1"
 
-"@graphql-codegen/jsdoc@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/jsdoc/-/jsdoc-4.0.0.tgz#1b25478df7362a4149fb3e060cd942d2b44b1658"
-  integrity sha512-9k0CBsf4/hg74GIqLfxftupeLvdhgIXYZneZuF2HWxhLGNaw656yenUqDmbODtxyKig+XzIb6D9X3473xP9MuA==
+"@graphql-codegen/jsdoc@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/jsdoc/-/jsdoc-4.0.1.tgz#3ea994cc4a1d2ec1c95ec87aebdc73683587a827"
+  integrity sha512-pH4V3Cq3ayuBN/NhyhoxN2oOMtRw3Qc+MVPCfgWXSEB3auRrRl5Mnd/kFNJU3U13k+6SuZrZpFKhX65+jCqU5A==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     tslib "^2.8.1"
 
-"@graphql-codegen/kotlin@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/kotlin/-/kotlin-4.0.0.tgz#4018031bcf93e7b3fc098e5e29c35d8a3e34d222"
-  integrity sha512-CqTUIAgqvwMb1ta39OsDTIzQgLMoCzeGMGQ3cDOMtDIvonF5L8nylxrMt4ZqQSFYNwHTIrNtfu2+ZpWZceVlYA==
+"@graphql-codegen/kotlin@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/kotlin/-/kotlin-4.0.1.tgz#3d3f0ca8151aac2b6a5bfe8e253064650dd5b24c"
+  integrity sha512-SmPHN6Fp8mHoEhh0JpKxYdNHA3ZeiC0P/9z4C87p7+MW9aNSwMKOuli4dsuHUdVmU7whyber8yxyiSIzPXjuTA==
   dependencies:
-    "@graphql-codegen/java-common" "^4.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/java-common" "^4.0.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     tslib "^2.8.1"
 
-"@graphql-codegen/named-operations-object@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/named-operations-object/-/named-operations-object-4.0.0.tgz#1dc618fb2323f34e61d242be1f26fa74c7e00bdd"
-  integrity sha512-fIn4C/DNy1SZOjH+l4diKryUWe0yJk06UOmfyvogA4Pu82AESFHrlSaGexFaDDZQ57SBrxEDengzgGdK/Iajmg==
+"@graphql-codegen/named-operations-object@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/named-operations-object/-/named-operations-object-4.0.1.tgz#6f29dbffdce2f086c5f39b6d29ae5a91c1487daf"
+  integrity sha512-f+3zfq56WSfkNFVikUhuD0PmzOskfYXB8kQNQWnO/DQ9hWqROd0GEGgtXwE0ucMnTNpyuy/YEnqOMnZOZsdfDQ==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
     change-case-all "1.0.15"
     tslib "^2.8.1"
 
-"@graphql-codegen/near-operation-file-preset@5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/near-operation-file-preset/-/near-operation-file-preset-5.0.0.tgz#00cf43ce61eba094f82751f3b1709b7a9b9857b9"
-  integrity sha512-Ck5jMu2izbKFwODYCM/sGWNQKN4BN4fpxr8g99fs6ESH29yfWMjA1dbUlTbtQtR7iXy39jT8451BLTG4/vOIxQ==
+"@graphql-codegen/near-operation-file-preset@5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/near-operation-file-preset/-/near-operation-file-preset-5.0.1.tgz#0713b394999a3e58f238e5da70fc8c3683205723"
+  integrity sha512-ptYKV+pz9dfTvN7+i/Wqxuorj2uaikaDkGQYJBmWiJVakGawqrglbVr1PxT6/FPUZmRqpI+Zw1kW8w6Jt+RODg==
   dependencies:
     "@graphql-codegen/add" "^6.0.0"
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
-    "@graphql-codegen/visitor-plugin-common" "^6.2.4"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
+    "@graphql-codegen/visitor-plugin-common" "^6.3.0"
     "@graphql-tools/utils" "^11.0.0"
     parse-filepath "^1.0.2"
     tslib "^2.8.1"
@@ -2118,12 +2118,12 @@
     auto-bind "~4.0.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/urql-introspection@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/urql-introspection/-/urql-introspection-4.0.0.tgz#9b51895daa279a88adf5577bdc29b407c11865dd"
-  integrity sha512-2jTWvNHOuYPS9s2+x/X1K9FzdKLLu1MmKM69IMywQHBdWUHNG+HDHiS6l5ZMi6ZGdnt8S5cyXwE6ow6OWGoVpA==
+"@graphql-codegen/urql-introspection@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/urql-introspection/-/urql-introspection-4.0.1.tgz#a7d5f03f5a8d2886e87939912573bcaeabd50683"
+  integrity sha512-nDfNojYqgrKHpGeeC+3Qq/nUCgfoHD8lpjfp4ce/e55v8Go1fzuwET5glERAeUu9hvVX5pzmMlCweL07o833Qg==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^6.1.1"
+    "@graphql-codegen/plugin-helpers" "^6.3.0"
     "@urql/introspection" "^0.3.2"
     tslib "^2.8.1"
 
