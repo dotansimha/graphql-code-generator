@@ -46,7 +46,7 @@
     "@graphql-codegen/typescript-nhost": "1.0.1",
     "@graphql-codegen/typescript-operations": "5.1.0",
     "@graphql-codegen/typescript-react-apollo": "4.4.2",
-    "@graphql-codegen/typescript-react-query": "4.1.0",
+    "@graphql-codegen/typescript-react-query": "7.0.1",
     "@graphql-codegen/typescript-resolvers": "5.1.8",
     "@graphql-codegen/typescript-rtk-query": "4.0.1",
     "@graphql-codegen/typescript-stencil-apollo": "4.0.1",
