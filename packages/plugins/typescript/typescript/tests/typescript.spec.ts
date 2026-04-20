@@ -3698,7 +3698,7 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
-      expect(result.content).toContain(`export { MyEnum }`);
+      expect(result.content).toContain(`export type { MyEnum };`);
       expect(result.prepend).toContain(`import MyEnum = NS.ETest;`);
       expect(result.prepend).toContain(`import { NS } from './my-file';`);
 
@@ -3715,7 +3715,7 @@ describe('TypeScript', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export enum MyEnum`);
-      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export type { MyEnum };`);
       expect(result.prepend).toContain(`import MyEnum = NS.MyEnum;`);
       expect(result.prepend).toContain(`import { NS } from './my-file';`);
 
@@ -3733,7 +3733,7 @@ describe('TypeScript', () => {
 
       expect(result.content).not.toContain(`export enum MyEnum`);
       expect(result.prepend).toContain(`import { MyCustomEnum as MyEnum } from './my-file';`);
-      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export type { MyEnum };`);
 
       validateTs(result);
     });
@@ -3769,8 +3769,8 @@ describe('TypeScript', () => {
         { outputFile: '' },
       )) as Types.ComplexPluginOutput;
 
-      expect(result.content).toContain(`export { MyEnum };`);
-      expect(result.content).toContain(`export { MyEnum2 };`);
+      expect(result.content).toContain(`export type { MyEnum };`);
+      expect(result.content).toContain(`export type { MyEnum2 };`);
       expect(result.prepend).toContain(`import { MyEnum2X as MyEnum2 } from './my-file';`);
 
       validateTs(result);
@@ -3787,8 +3787,8 @@ describe('TypeScript', () => {
 
       expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
       expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
-      expect(result.content).toContain(`export { MyEnum };`);
-      expect(result.content).toContain(`export { MyEnum2 };`);
+      expect(result.content).toContain(`export type { MyEnum };`);
+      expect(result.content).toContain(`export type { MyEnum2 };`);
 
       validateTs(result);
     });
