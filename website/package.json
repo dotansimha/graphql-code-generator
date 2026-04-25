@@ -83,7 +83,7 @@
     "@types/node": "24.12.2",
     "@types/react": "19.2.14",
     "@types/semver": "7.7.1",
-    "fast-xml-parser": "5.7.1",
+    "fast-xml-parser": "5.7.2",
     "jsonpath": "1.3.0",
     "postcss-import": "^16.1.0",
     "postcss-lightningcss": "^1.0.1",
