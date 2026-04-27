@@ -83,7 +83,7 @@
     "@typescript-eslint/typescript-estree": "8.59.0",
     "@typescript-eslint/utils": "8.59.0",
     "@typescript-eslint/visitor-keys": "8.59.0",
-    "eslint-plugin-promise": "7.2.1",
+    "eslint-plugin-promise": "7.3.0",
     "typescript": "6.0.3"
   },
   "lint-staged": {
