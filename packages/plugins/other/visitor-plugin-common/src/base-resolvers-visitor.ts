@@ -79,8 +79,6 @@ export interface ParsedResolversConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
   federation: boolean;
-  enumPrefix: boolean;
-  enumSuffix: boolean;
   optionalResolveType: boolean;
   immutableTypes: boolean;
   namespacedImportName: string;
@@ -522,59 +520,7 @@ export interface RawResolversConfig extends RawConfig {
    * @description Supports Apollo Federation
    */
   federation?: boolean;
-  /**
-   * @default true
-   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum prefixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
-   *        config: {
-   *          typesPrefix: 'I',
-   *          enumPrefix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumPrefix?: boolean;
 
-  /**
-   * @default true
-   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
-   *
-   * @exampleMarkdown
-   * ## Disable enum suffixes
-   *
-   * ```ts filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    // ...
-   *    generates: {
-   *      'path/to/file': {
-   *        plugins: ['typescript', 'typescript-resolver'],
-   *        config: {
-   *          typesSuffix: 'I',
-   *          enumSuffix: false
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  enumSuffix?: boolean;
   /**
    * @description Configures behavior for custom directives from various GraphQL libraries.
    * @exampleMarkdown
@@ -811,17 +757,11 @@ export class BaseResolversVisitor<
     super(rawConfig, {
       immutableTypes: getConfigValue(rawConfig.immutableTypes, false),
       optionalResolveType: getConfigValue(rawConfig.optionalResolveType, false),
-      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       federation: getConfigValue(rawConfig.federation, false),
       resolverTypeWrapperSignature: getConfigValue(
         rawConfig.resolverTypeWrapperSignature,
         'Promise<T> | T',
       ),
-      enumValues: parseEnumValues({
-        schema: _schema,
-        mapOrStr: rawConfig.enumValues,
-      }),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       addInterfaceFieldResolverTypes: getConfigValue(
         rawConfig.addInterfaceFieldResolverTypes,
@@ -854,6 +794,20 @@ export class BaseResolversVisitor<
       ),
       ...additionalConfig,
     } as TPluginConfig);
+
+    this.config.enumValues = parseEnumValues({
+      schema: _schema,
+      mapOrStr: rawConfig.enumValues,
+      naming: {
+        convert: this.config.convert,
+        options: {
+          typesPrefix: this.config.typesPrefix,
+          typesSuffix: this.config.typesSuffix,
+          useTypesPrefix: this.config.enumPrefix,
+          useTypesSuffix: this.config.enumSuffix,
+        },
+      },
+    });
 
     autoBind(this);
     this._federation = new ApolloFederation({
@@ -1021,10 +975,7 @@ export class BaseResolversVisitor<
       if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
         const isExternalFile = !!this.config.enumValues[typeName].sourceFile;
         prev[typeName] = isExternalFile
-          ? this.convertName(this.config.enumValues[typeName].typeIdentifier, {
-              useTypesPrefix: false,
-              useTypesSuffix: false,
-            })
+          ? this.config.enumValues[typeName].typeIdentifierConverted
           : this.config.enumValues[typeName].sourceIdentifier;
       } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
         prev[typeName] = applyWrapper(this.config.defaultMapper.type);
@@ -1482,7 +1433,7 @@ export class BaseResolversVisitor<
       : false;
     const existsFromEnums = !!Object.keys(this.config.enumValues)
       .map(key => this.config.enumValues[key])
-      .find(o => o.sourceFile === source && o.typeIdentifier === identifier);
+      .find(o => o.sourceFile === source && o.typeIdentifierConverted === identifier);
 
     return exists || existsFromEnums;
   }

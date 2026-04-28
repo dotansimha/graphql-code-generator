@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - master
+      - master-next # FIXME:eddeee888 Remove once done
   pull_request:
     branches:
       - master
+      - master-next # FIXME:eddeee888 Remove once released
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -137,10 +139,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # remove windows to speed up the tests
-        node_version: [20, 22, 24]
+        node_version: [22, 24]
         graphql_version: [15, 16]
         include:
-          - node-version: 20
+          - node-version: 22
             os: windows-latest
             graphql_version: 16
     steps:
