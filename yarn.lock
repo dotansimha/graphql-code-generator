@@ -5311,13 +5311,6 @@
     d3-selection "^3.0.0"
     d3-transition "^3.0.1"
 
-"@urql/core@^3.2.0":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@urql/core/-/core-3.2.2.tgz#2a44015b536d72981822f715c96393d8e0ddc576"
-  integrity sha512-i046Cz8cZ4xIzGMTyHZrbdgzcFMcKD7+yhCAH5FwWBRjcKrc+RjEOuR9X5AMuBvr8c6IAaE92xAqa4wmlGfWTQ==
-  dependencies:
-    wonka "^6.1.2"
-
 "@urql/core@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-6.0.1.tgz#df2e3d606e4d1da2655a78cd78e7b84af4b95cee"
@@ -15073,13 +15066,13 @@ urlpattern-polyfill@^10.0.0:
   resolved "https://registry.yarnpkg.com/urlpattern-polyfill/-/urlpattern-polyfill-10.1.0.tgz#1b2517e614136c73ba32948d5e7a3a063cba8e74"
   integrity sha512-IGjKp/o0NL3Bso1PymYURCJxMPNAf/ILOpendP9f5B6e1rTJgdgiOvgfoT8VxCAdY+Wisb9uhGaJJf3yZ2V9nw==
 
-urql@^3.0.0:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-3.0.4.tgz#f73dbd2e5b134b7328c14d5b8ab1f93f93db8990"
-  integrity sha512-okmQKQ9pF4t8O8iCC5gH9acqfFji5lkhW3nLBjx8WKDd2zZG7PXoUpUK19VQEMK87L6VFBOO/XZ52MMKFEI0AA==
+urql@^5.0.0:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-5.0.2.tgz#f15b175b109080bf9ffe1bc46617edfecba5f7a6"
+  integrity sha512-hiBR9GNbMPMZpv9Yd40EMCc94d8eAkGcmt5jcrKVfp26ScjluAQLCEKetJ4SXLy5DJG59Y6gbuA+2yquzh20/w==
   dependencies:
-    "@urql/core" "^3.2.0"
-    wonka "^6.0.0"
+    "@urql/core" "^6.0.1"
+    wonka "^6.3.2"
 
 use-isomorphic-layout-effect@^1.2.0:
   version "1.2.1"
@@ -15484,7 +15477,7 @@ widest-line@^4.0.1:
   dependencies:
     string-width "^5.0.1"
 
-wonka@^6.0.0, wonka@^6.1.2, wonka@^6.3.2:
+wonka@^6.3.2:
   version "6.3.6"
   resolved "https://registry.yarnpkg.com/wonka/-/wonka-6.3.6.tgz#a70e2e54ed6aaa8e20bb57d916166cdc3d385f2d"
   integrity sha512-MXH+6mDHAZ2GuMpgKS055FR6v0xVP3XwquxIMYXgiW+FejHQlMGlvVRZT4qMCxR+bEo/FCtIdKxwej9WV3YQag==
