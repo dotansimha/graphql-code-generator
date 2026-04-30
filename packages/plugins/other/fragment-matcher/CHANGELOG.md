@@ -1,5 +1,22 @@
 # @graphql-codegen/fragment-matcher
 
+## 7.0.0
+
+### Major Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Drop Node 20 support
+
+### Patch Changes
+
+- Updated dependencies
+  [[`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)]:
+  - @graphql-codegen/plugin-helpers@7.0.0
+
 ## 6.0.1
 
 ### Patch Changes

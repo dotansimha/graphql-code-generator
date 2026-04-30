@@ -10,12 +10,12 @@
     "test:end2end": "exit 0"
   },
   "dependencies": {
-    "@graphql-codegen/core": "5.0.2",
-    "@graphql-codegen/plugin-helpers": "6.3.0",
-    "@graphql-codegen/typed-document-node": "6.1.8",
-    "@graphql-codegen/typescript": "5.0.10",
-    "@graphql-codegen/typescript-operations": "5.1.0",
-    "@graphql-codegen/typescript-resolvers": "5.1.8",
+    "@graphql-codegen/core": "6.0.0",
+    "@graphql-codegen/plugin-helpers": "7.0.0",
+    "@graphql-codegen/typed-document-node": "7.0.0",
+    "@graphql-codegen/typescript": "6.0.0",
+    "@graphql-codegen/typescript-operations": "6.0.0",
+    "@graphql-codegen/typescript-resolvers": "6.0.0",
     "@graphql-tools/graphql-file-loader": "^8.1.12",
     "@graphql-tools/load": "8.1.10",
     "@graphql-tools/schema": "10.0.33",

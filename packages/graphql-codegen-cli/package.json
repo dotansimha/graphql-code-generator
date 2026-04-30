@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "6.3.1",
+  "version": "7.0.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -77,9 +77,9 @@
     "@babel/generator": "^7.18.13",
     "@babel/template": "^7.18.10",
     "@babel/types": "^7.18.13",
-    "@graphql-codegen/client-preset": "^5.3.0",
-    "@graphql-codegen/core": "^5.0.2",
-    "@graphql-codegen/plugin-helpers": "^6.3.0",
+    "@graphql-codegen/client-preset": "^6.0.0",
+    "@graphql-codegen/core": "^6.0.0",
+    "@graphql-codegen/plugin-helpers": "^7.0.0",
     "@graphql-tools/apollo-engine-loader": "^8.0.28",
     "@graphql-tools/code-file-loader": "^8.1.28",
     "@graphql-tools/git-loader": "^8.0.32",

@@ -1,5 +1,162 @@
 # @graphql-codegen/client-preset
 
+## 6.0.0
+
+### Major Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix nullable field optionality in operations
+
+  Previously, a nullable Result field is generated as optional (marked by `?` TypeScript modifier)
+  by default. This is not correct, because generally at runtime such field can only be `null`, and
+  not `undefined` (both missing from the object OR `undefined`). The only exceptions are when fields
+  are deferred (using `@defer` directive) or marked as conditional (using `@skip` or `@include`).
+
+  Now, a nullable Result field cannot be optional unless the exceptions are met. This also limits
+  `avoidOptionals` to only target Variables input, since some users may want to force explicit
+  `null` when providing operation variables.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Conditionally generate input types and output
+  enums into target file
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: make `unknown` instead of
+  `any` the default custom scalar type
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Update deps to latest, some
+  only support ESM
+
+  Node 20 support is dropped in this release. Node 22 comes with `require()` support for ESM, which
+  means it's easier to integrate ES modules into applications. Therefore, it is safe to start using
+  ESM-only packages.
+
+  If you are a user, please upgrade to Node 22. If you are a lib maintainer and see ESM vs CJS
+  issues when running Jest tests, try using Vitest.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Drop Node 20 support
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: `typescript` plugin no
+  longer generates `Exact` utility type. Instead, `typescript-operations` generates said utility
+  type for every file it creates. This is because it is used _only_ for `Variables`, so we only need
+  to generate it once for every generated operation file.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Operation plugin and Client
+  Preset no longer generates optional `__typename` for result type
+
+  `__typenam` should not be in the request unless:
+  - explicitly requested by the user
+  - automatically injected into the request by clients, such as Apollo Clients.
+
+  Note: Apollo Client users can still use `nonOptionalTypename: true` and
+  `skipTypeNameForRoot: true` to ensure generated types match the runtime behaviour.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGES: The default hashing
+  algorithm is now sha256 instead of sha1. Generated sha256 format also follows the standard
+  outlined in
+  https://github.com/graphql/graphql-over-http/blob/52d56fb36d51c17e08a920510a23bdc2f6a720be/spec/Appendix%20A%20--%20Persisted%20Documents.md#sha256-hex-document-identifier
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Integrate new typescript-operations into
+  client-preset
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: config.avoidOptionals now
+  only supports object, inputValue, defaultValue
+
+### Patch Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Removed dependency
+    [`@graphql-codegen/typescript@^5.0.8` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typescript/v/5.0.8)
+    (from `dependencies`)
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Remove @graphql-codegen/typescript from
+  client-preset dep as the preset no longer uses the plugin.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Abstract how enum imports are generated into
+  visitor-plugin-common package
+
+- Updated dependencies
+  [[`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)]:
+  - @graphql-codegen/gql-tag-operations@6.0.0
+  - @graphql-codegen/plugin-helpers@7.0.0
+  - @graphql-codegen/typed-document-node@7.0.0
+  - @graphql-codegen/typescript@6.0.0
+  - @graphql-codegen/typescript-operations@6.0.0
+  - @graphql-codegen/visitor-plugin-common@7.0.0
+  - @graphql-codegen/add@7.0.0
+
 ## 5.3.0
 
 ### Minor Changes

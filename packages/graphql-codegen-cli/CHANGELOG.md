@@ -1,5 +1,123 @@
 # @graphql-codegen/cli
 
+## 7.0.0
+
+### Major Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Update deps to latest, some
+  only support ESM
+
+  Node 20 support is dropped in this release. Node 22 comes with `require()` support for ESM, which
+  means it's easier to integrate ES modules into applications. Therefore, it is safe to start using
+  ESM-only packages.
+
+  If you are a user, please upgrade to Node 22. If you are a lib maintainer and see ESM vs CJS
+  issues when running Jest tests, try using Vitest.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Drop Node 20 support
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Set `noSilentErrors: true`
+  by default
+
+  When multiple files match documents pattern, and there are syntax errors in some but not others,
+  then the operations with errors are not included in the loaded documents list by default
+  (`noSilentErrors: false`). This is annoying for users as there is no feedback loop during
+  development.
+
+  `noSilentErrors: true` is used as the default for Codegen users to make the feedback loop faster.
+  It can still overriden in Codegen Config if desired.
+
+### Patch Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@inquirer/prompts@^8.3.2` ↗︎](https://www.npmjs.com/package/@inquirer/prompts/v/8.3.2) (from
+    `^7.8.2`, in `dependencies`)
+  - Updated dependency [`chalk@^5.6.0` ↗︎](https://www.npmjs.com/package/chalk/v/5.6.0) (from
+    `^4.1.0`, in `dependencies`)
+  - Updated dependency [`debounce@^3.0.0` ↗︎](https://www.npmjs.com/package/debounce/v/3.0.0) (from
+    `^2.0.0`, in `dependencies`)
+  - Updated dependency
+    [`detect-indent@^7.0.0` ↗︎](https://www.npmjs.com/package/detect-indent/v/7.0.0) (from `^6.0.0`,
+    in `dependencies`)
+  - Updated dependency [`listr2@^10.2.1` ↗︎](https://www.npmjs.com/package/listr2/v/10.2.1) (from
+    `^9.0.0`, in `dependencies`)
+  - Updated dependency [`log-symbols@^7.0.0` ↗︎](https://www.npmjs.com/package/log-symbols/v/7.0.0)
+    (from `^4.0.0`, in `dependencies`)
+  - Updated dependency [`ts-log@^3.0.0` ↗︎](https://www.npmjs.com/package/ts-log/v/3.0.0) (from
+    `^2.2.3`, in `dependencies`)
+  - Updated dependency [`yargs@^18.0.0` ↗︎](https://www.npmjs.com/package/yargs/v/18.0.0) (from
+    `^17.0.0`, in `dependencies`)
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency [`chalk@^5.6.0` ↗︎](https://www.npmjs.com/package/chalk/v/5.6.0) (from
+    `^4.1.0`, in `dependencies`)
+  - Updated dependency [`debounce@^3.0.0` ↗︎](https://www.npmjs.com/package/debounce/v/3.0.0) (from
+    `^2.0.0`, in `dependencies`)
+  - Updated dependency
+    [`detect-indent@^7.0.0` ↗︎](https://www.npmjs.com/package/detect-indent/v/7.0.0) (from `^6.0.0`,
+    in `dependencies`)
+  - Updated dependency [`listr2@^10.2.1` ↗︎](https://www.npmjs.com/package/listr2/v/10.2.1) (from
+    `^9.0.0`, in `dependencies`)
+  - Updated dependency [`log-symbols@^7.0.0` ↗︎](https://www.npmjs.com/package/log-symbols/v/7.0.0)
+    (from `^4.0.0`, in `dependencies`)
+  - Updated dependency [`ts-log@^3.0.0` ↗︎](https://www.npmjs.com/package/ts-log/v/3.0.0) (from
+    `^2.2.3`, in `dependencies`)
+  - Updated dependency [`yargs@^18.0.0` ↗︎](https://www.npmjs.com/package/yargs/v/18.0.0) (from
+    `^17.0.0`, in `dependencies`)
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@inquirer/prompts@^8.3.2` ↗︎](https://www.npmjs.com/package/@inquirer/prompts/v/8.3.2) (from
+    `^7.8.2`, in `dependencies`)
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Use ESM for CLI instead of CJS;
+
+  For backwards compatibility; `graphql-codegen-esm` is reserved, and also `graphql-codegen-cjs` is
+  added for users who want to use CJS.
+
+  So the commands are;
+  - `graphql-codegen` - ESM version, default
+  - `graphql-codegen-esm` - ESM version, same as above, but reserved for backwards compatibility
+  - `graphql-codegen-cjs` - CJS version, for users who want to use CJS, but not recommended for new
+    users. Will be removed in the future.
+  - `gql-gen` - ESM version, same as `graphql-codegen`
+  - `graphql-code-generator` - ESM version, same as `graphql-codegen` and `gql-gen`
+
+- Updated dependencies
+  [[`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)]:
+  - @graphql-codegen/client-preset@6.0.0
+  - @graphql-codegen/plugin-helpers@7.0.0
+  - @graphql-codegen/core@6.0.0
+
 ## 6.3.1
 
 ### Patch Changes
