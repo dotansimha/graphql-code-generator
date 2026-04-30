@@ -3,7 +3,6 @@ on:
   pull_request:
     branches:
       - master
-      - master-next # FIXME:eddeee888 Remove once done
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
