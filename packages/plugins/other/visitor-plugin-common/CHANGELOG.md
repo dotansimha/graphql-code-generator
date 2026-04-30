@@ -1,5 +1,204 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.0.0
+
+### Major Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix nullable field optionality in operations
+
+  Previously, a nullable Result field is generated as optional (marked by `?` TypeScript modifier)
+  by default. This is not correct, because generally at runtime such field can only be `null`, and
+  not `undefined` (both missing from the object OR `undefined`). The only exceptions are when fields
+  are deferred (using `@defer` directive) or marked as conditional (using `@skip` or `@include`).
+
+  Now, a nullable Result field cannot be optional unless the exceptions are met. This also limits
+  `avoidOptionals` to only target Variables input, since some users may want to force explicit
+  `null` when providing operation variables.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: visitors' config option are
+  moved based on their use case
+  - addTypename/skipTypename: is only a types-visitor concern. This is moved to types-visitor from
+    base-visitor
+  - nonOptionalTypename: is a documents-visitor and types-visitor concern. Moved from base-visitor
+    there
+  - extractAllFieldsToTypes: is a documents-visitor concern. Moved from base-visitor there
+  - enumPrefix and enumSuffix: need to be in base-visitor as all 3 types of visitors need this to
+    correctly sync the enum type names. This is moved to base visitor
+  - ignoreEnumValuesFromSchema: is a documents-visitor and types-visitor concern. Moved from
+    base-visitor there.
+  - globalNamespace: is a documents-visitor concern. Moved from base-visitor there
+
+  Refactors
+  - documents-visitor no longer extends types-visitor _option types_ as they have two distinct
+    usages now. The types now extend base-visitor types. This is now consistent with
+    documents-visitor extending base-visitor
+  - Classes now handle config parsing and types at the same level e.g. if typescript-operations
+    plugin parses configOne, then the types for configOne must be in that class, rather than in
+    base-documents-visitor
+
+  Note: These visitors are rolled up into one type for simplicity
+  - base-visitor: includes `base-visitor`
+  - documents-visitor: includes `base-documents-visitor` and `typescript-operations` visitor
+  - types-visitor: includes `base-types-visitor` and `typescript` visitor
+  - resolvers-visitor: includes `base-resolvers-visitor` and `typescript-resolvers` visitor
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: make `unknown` instead of
+  `any` the default custom scalar type
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Update deps to latest, some
+  only support ESM
+
+  Node 20 support is dropped in this release. Node 22 comes with `require()` support for ESM, which
+  means it's easier to integrate ES modules into applications. Therefore, it is safe to start using
+  ESM-only packages.
+
+  If you are a user, please upgrade to Node 22. If you are a lib maintainer and see ESM vs CJS
+  issues when running Jest tests, try using Vitest.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Drop Node 20 support
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE:
+  `@graphql-codegen/visitor-plugin-common`'s `base-types-visitor` no longer has `getNodeComment` or
+  `buildEnumValuesBlock` method.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Operation plugin and Client
+  Preset no longer generates optional `__typename` for result type
+
+  `__typenam` should not be in the request unless:
+  - explicitly requested by the user
+  - automatically injected into the request by clients, such as Apollo Clients.
+
+  Note: Apollo Client users can still use `nonOptionalTypename: true` and
+  `skipTypeNameForRoot: true` to ensure generated types match the runtime behaviour.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Remove unused utility types
+  from `typescript` plugin as they were previously used for `typescript-operations` plugin:
+  - `MakeOptional`
+  - `MakeMaybe`
+  - `MakeEmpty`
+  - `Incremental`
+
+  BREAKING CHANGE: Remove `getRootTypeNames` function because it's available in
+  `@graphql-utils/tools` and not used anywhere
+
+### Minor Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add support for declarationKind for
+  typescript-operations
+  - Input: can only be `type` or `interface`
+  - Variables: no support. It must always be `type` because it's an alias e.g.
+    `Variables = Exact<{ something: type }>`
+  - Result: can only be `type` or `interface`
+    - Note: when `extractAllFieldsToTypes:true` or `extractAllFieldsToTypesCompact:true`, Results
+      are used as type alias, so they are forced to be `type`. There is a console warning for users.
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add importSchemaTypesFrom support
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Adding config option
+  extractAllFieldsToTypesCompact, which renders nested types names with field names only (without
+  types)
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add generateOperationTypes to
+  typescript-operations to allow omitting operation types such as Variables,
+  Query/Mutation/Subscription selection set, and Fragment types
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fixing 2 bugs: 1) including enums from
+  external fragments; 2) extractAllFieldsToTypesCompact does not create duplicates
+
+### Patch Changes
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency [`auto-bind@^5.0.0` ↗︎](https://www.npmjs.com/package/auto-bind/v/5.0.0) (from
+    `~4.0.0`, in `dependencies`)
+  - Updated dependency
+    [`change-case-all@^2.1.0` ↗︎](https://www.npmjs.com/package/change-case-all/v/2.1.0) (from
+    `1.0.15`, in `dependencies`)
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency [`auto-bind@^5.0.0` ↗︎](https://www.npmjs.com/package/auto-bind/v/5.0.0) (from
+    `~4.0.0`, in `dependencies`)
+  - Updated dependency
+    [`change-case-all@^2.1.0` ↗︎](https://www.npmjs.com/package/change-case-all/v/2.1.0) (from
+    `1.0.15`, in `dependencies`)
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Improve `namespacedImportName` usability by
+  setting a default when `importSchemaTypesFrom` is set
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add `printTypeScriptMaybeType` to handle
+  printing TS types, as there are special cases like `any` and `unknown`
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix isNativeNamedType to handle types from
+  remote schemas correctly
+
+  Previously, we assumed that if a name type does note have `astNode`, it is a native named type
+  because it is not declared in user's schema.
+
+  However, this is a wrong assumption because remote schemas do not have `astNode`. This causes all
+  user declared types are wrongly recognised as native types e.g. Input
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Ensure Input and Variables use the same input
+  scalars default e.g. `ID` can take `string | number`
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix namingConvention not being applied
+  consistently
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Abstract how enum imports are generated into
+  visitor-plugin-common package
+
+- [#10496](https://github.com/dotansimha/graphql-code-generator/pull/10496)
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix namingConvention not being applied
+  consistently in imports, Variables, Input and Result
+
+- Updated dependencies
+  [[`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29),
+  [`afaace6`](https://github.com/dotansimha/graphql-code-generator/commit/afaace6bb1467793ea8fcda01a6a793e844e0c29)]:
+  - @graphql-codegen/plugin-helpers@7.0.0
+
 ## 6.3.0
 
 ### Minor Changes
@@ -791,8 +990,8 @@
   ```
 
   The `RefType` generic is used to reference back to `ResolversTypes` and `ResolversParentTypes` in
-  some cases such as field returning a Union.
-  2. `resolversNonOptionalTypename` also affects `ResolversInterfaceTypes`
+  some cases such as field returning a Union. 2. `resolversNonOptionalTypename` also affects
+  `ResolversInterfaceTypes`
 
   Using the schema above, if we use `resolversNonOptionalTypename` option:
 
