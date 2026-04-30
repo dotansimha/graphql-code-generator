@@ -29,7 +29,7 @@ describe('TypeScript', () => {
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
           /** My custom scalar */
-          A: { input: any; output: any; }
+          A: { input: unknown; output: unknown; }
         };
       `);
     });
@@ -354,12 +354,12 @@ describe('TypeScript', () => {
       expect(result.content).not.toBeSimilarStringTo(`/** My custom scalar */`);
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
-          ID: { input: string; output: string;   }
-          String: { input: string; output: string;   }
-          Boolean: { input: boolean; output: boolean;   }
-          Int: { input: number; output: number;   }
-          Float: { input: number; output: number;   }
-          A: { input: any; output: any;   }
+          ID: { input: string; output: string; }
+          String: { input: string; output: string; }
+          Boolean: { input: boolean; output: boolean; }
+          Int: { input: number; output: number; }
+          Float: { input: number; output: number; }
+          A: { input: unknown; output: unknown; }
         };
       `);
     });
@@ -905,13 +905,13 @@ describe('TypeScript', () => {
           typesPrefix: 'I',
           namingConvention: { enumValues: 'change-case-all#constantCase' },
           enumValues: {
-            MyEnum: './files#default as MyEnum',
+            MyEnum: './files#default as MyEnum', // NOTE: `as MyEnum` doesn't do anything, this is here to demonstrate that it's the same as './files#default'
           },
         },
         { outputFile: '' },
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
+      expect(result.prepend[0]).toBe(`import IMyEnum from './files';`);
     });
 
     it('#4834 - enum members should be quoted if numeric', async () => {
@@ -958,14 +958,21 @@ describe('TypeScript', () => {
         { outputFile: '' },
       )) as Types.ComplexPluginOutput;
 
+      expect(result.prepend).toMatchInlineSnapshot(`
+        [
+          "import { MyEnum as IMyEnum } from './files';",
+          "export type Maybe<T> = T | null;",
+          "export type InputMaybe<T> = Maybe<T>;",
+        ]
+      `);
       expect(result.content).toBeSimilarStringTo(`export type ITest = {
         __typename?: 'Test';
-       t?: Maybe<MyEnum>;
+       t?: Maybe<IMyEnum>;
        test?: Maybe<Scalars['String']['output']>;
      };`);
 
       expect(result.content).toBeSimilarStringTo(`export type ITestTestArgs = {
-      a?: InputMaybe<MyEnum>;
+      a?: InputMaybe<IMyEnum>;
     };`);
     });
 
@@ -997,9 +1004,9 @@ describe('TypeScript', () => {
         },
         { outputFile: '' },
       )) as Types.ComplexPluginOutput;
-      expect(result.prepend).toContain(`import { MyEnum } from './files';`);
+      expect(result.prepend).toContain(`import { MyEnum as GQL_MyEnum } from './files';`);
       expect(result.content).toContain(`enum GQL_OtherEnum {`);
-      expect(result.content).toContain(`a?: Maybe<MyEnum>;`);
+      expect(result.content).toContain(`a?: Maybe<GQL_MyEnum>;`);
       expect(result.content).toContain(`b?: Maybe<GQL_OtherEnum>`);
     });
 
@@ -2193,7 +2200,7 @@ describe('TypeScript', () => {
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-          MyScalar: { input: any; output: any; }
+          MyScalar: { input: unknown; output: unknown; }
         };`);
 
       expect(result.content).toBeSimilarStringTo(`
@@ -2322,7 +2329,7 @@ describe('TypeScript', () => {
       const result = (await plugin(
         schema,
         [],
-        { defaultScalarType: 'unknown' },
+        { defaultScalarType: 'any' },
         { outputFile: '' },
       )) as Types.ComplexPluginOutput;
 
@@ -2333,7 +2340,7 @@ describe('TypeScript', () => {
           Boolean: { input: boolean; output: boolean; }
           Int: { input: number; output: number; }
           Float: { input: number; output: number; }
-          MyScalar: { input: unknown; output: unknown; }
+          MyScalar: { input: any; output: any; }
         };`);
 
       expect(result.content).toBeSimilarStringTo(`

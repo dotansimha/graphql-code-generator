@@ -109,7 +109,8 @@ export class OperationVariablesToObject {
         typeValue = this.getScalar(typeName);
       } else if (this._enumValues[typeName]?.sourceFile) {
         typeValue =
-          this._enumValues[typeName].typeIdentifier || this._enumValues[typeName].sourceIdentifier;
+          this._enumValues[typeName].typeIdentifierConverted ||
+          this._enumValues[typeName].sourceIdentifier;
       } else {
         typeValue = `${prefix}${this._convertName(baseType, {
           useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,

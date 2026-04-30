@@ -724,8 +724,8 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(mergedOutputs).not.toContain(`NotMapped: NotMapped;`);
     expect(mergedOutputs).toContain(`A: MyA;`);
     expect(mergedOutputs).toContain(`B: GQL_B;`);
-    expect(mergedOutputs).toContain(`C: C;`);
-    expect(mergedOutputs).toContain(`import { MyC as C } from '../enums.js';`);
+    expect(mergedOutputs).toContain(`C: GQL_C;`);
+    expect(mergedOutputs).toContain(`import { MyC as GQL_C } from '../enums.js';`);
   });
 
   it('Should allow to generate optional __resolveType', async () => {
@@ -2448,8 +2448,8 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       )) as Types.ComplexPluginOutput;
 
       expect(output.content).toContain(
-        `export type GqlAuthDirectiveArgs = {\n  role?: Maybe<UserRole>;\n};`,
-      );
+        `export type GqlAuthDirectiveArgs = {\n  role?: Maybe<GqlUserRole>;\n};`,
+      ); // Note: `GqlUserRole` will be imported from `@org/package` by `typescript` plugin
       expect(output.content).toContain(
         `export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`,
       );

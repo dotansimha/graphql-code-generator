@@ -34,3 +34,7 @@ packages/presets/swc-plugin/tests/fixtures
 # Ignore intentional error files
 packages/graphql-codegen-cli/tests/test-files/schema-dir/error-schema.graphql
 packages/graphql-codegen-cli/tests/test-files/error-document.graphql
+
+# Ignore dev-tests with no prettier requirement
+dev-test/test-schema/flow-types.flow.js
+dev-test-apollo-tooling/src/__generated__/

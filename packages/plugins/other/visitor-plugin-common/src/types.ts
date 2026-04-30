@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { ASTNode, DirectiveNode, FragmentDefinitionNode } from 'graphql';
+import { ASTNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedMapper } from './mappers.js';
 
 /**
@@ -53,6 +53,8 @@ export type ParsedEnumValuesMap = {
     mappedValues?: { [valueName: string]: string | number };
     // The GraphQL enum name
     typeIdentifier: string;
+    // The GraphQL enum name after namingConvention conversion
+    typeIdentifierConverted: string;
     // The actual identifier that you should use in the code (original or aliased)
     sourceIdentifier?: string;
     // In case of external enum, this will contain the source file path
@@ -122,10 +124,6 @@ export interface ParsedImport {
   moduleName: string | null;
   propName: string;
 }
-
-export type FragmentDirectives = {
-  fragmentDirectives?: Array<DirectiveNode>;
-};
 
 export interface ResolversNonOptionalTypenameConfig {
   unionMember?: boolean;

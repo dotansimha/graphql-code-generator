@@ -1,19 +1,14 @@
-import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind, type DocumentNode } from 'graphql';
+import { concatAST, GraphQLSchema, type DocumentNode } from 'graphql';
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
+import { transformSchemaAST } from '@graphql-codegen/schema-ast';
+import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
 import { TypeScriptDocumentsVisitor } from './visitor.js';
-
-export { TypeScriptDocumentsPluginConfig } from './config.js';
 
 export const plugin: PluginFunction<
   TypeScriptDocumentsPluginConfig,
   Types.ComplexPluginOutput
-> = async (
-  inputSchema: GraphQLSchema,
-  rawDocuments: Types.DocumentFile[],
-  config: TypeScriptDocumentsPluginConfig,
-) => {
+> = async (inputSchema, rawDocuments, config, { outputFile }) => {
   const schema = config.nullability?.errorHandlingClient
     ? await semanticToStrict(inputSchema)
     : inputSchema;
@@ -57,42 +52,36 @@ export const plugin: PluginFunction<
   // For Fragment types to resolve correctly, we must get read all docs (`standard` and `external`)
   // Fragment types are usually (but not always) in `external` files in certain setup, like a monorepo.
   const allDocumentsAST = concatAST(parsedDocuments.all.documentNodes);
-  const allFragments: LoadedFragment[] = [
-    ...(
-      allDocumentsAST.definitions.filter(
-        d => d.kind === Kind.FRAGMENT_DEFINITION,
-      ) as FragmentDefinitionNode[]
-    ).map(fragmentDef => ({
-      node: fragmentDef,
-      name: fragmentDef.name.value,
-      onType: fragmentDef.typeCondition.name.value,
-      isExternal: false,
-    })),
-    ...(config.externalFragments || []),
-  ];
-
-  const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
+  const visitor = new TypeScriptDocumentsVisitor(schema, config, allDocumentsAST, outputFile);
 
   // We only visit `standard` documents to generate types.
   // `external` documents are included as references for typechecking and completeness i.e. only used for reading purposes, no writing.
   const documentsToVisitAST = concatAST(parsedDocuments.standard.documentNodes);
-  const visitorResult = oldVisit(documentsToVisitAST, {
+  const operationsResult = oldVisit(documentsToVisitAST, {
     leave: visitor,
   });
 
-  let content = visitorResult.definitions.join('\n');
+  const operationsDefinitions = operationsResult.definitions;
 
   if (config.addOperationExport) {
-    const exportConsts = [];
-
     for (const d of allDocumentsAST.definitions) {
       if ('name' in d) {
-        exportConsts.push(`export declare const ${d.name.value}: import("graphql").DocumentNode;`);
+        operationsDefinitions.push(
+          `export declare const ${d.name.value}: import("graphql").DocumentNode;`,
+        );
       }
     }
-
-    content = visitorResult.definitions.concat(exportConsts).join('\n');
   }
+
+  const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
+
+  // IMPORTANT: when a visitor leaves a node with no transformation logic,
+  // It will leave the node as an object.
+  // Here, we filter in nodes that have been turned into strings, i.e. they have been transformed
+  // This way, we do not have to explicitly declare a method for every node type to convert them to null
+  const schemaTypesDefinitions = schemaTypes.definitions.filter(def => typeof def === 'string');
+
+  let content = [...schemaTypesDefinitions, ...operationsDefinitions].join('\n');
 
   if (config.globalNamespace) {
     content = `
@@ -102,12 +91,20 @@ export const plugin: PluginFunction<
   }
 
   return {
-    prepend: [...visitor.getImports(), ...visitor.getGlobalDeclarations(visitor.config.noExport)],
+    prepend: [
+      ...visitor.getImports(),
+      ...visitor.getExternalSchemaTypeImports(),
+      ...visitor.getEnumsImports(),
+      ...visitor.getScalarsImports(),
+      ...visitor.getGlobalDeclarations(visitor.config.noExport),
+      visitor.getExactUtilityType(),
+      visitor.getIncrementalUtilityType(),
+    ],
     content,
   };
 };
 
-export { TypeScriptDocumentsVisitor };
+export { TypeScriptDocumentsVisitor, type TypeScriptDocumentsPluginConfig };
 
 const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> => {
   try {

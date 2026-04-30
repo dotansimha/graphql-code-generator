@@ -62,11 +62,16 @@ const document = parse(/* GraphQL */ `
 
 describe('TypeScript Operations Plugin - nullability', () => {
   it('converts semanticNonNull to nonNull when nullability.errorHandlingClient=true', async () => {
-    const result = await plugin(schema, [{ document }], {
-      nullability: {
-        errorHandlingClient: true,
+    const result = await plugin(
+      schema,
+      [{ document }],
+      {
+        nullability: {
+          errorHandlingClient: true,
+        },
       },
-    });
+      { outputFile: '' },
+    );
 
     const formattedContent = await prettier.format(result.content, {
       parser: 'typescript',
@@ -75,16 +80,14 @@ describe('TypeScript Operations Plugin - nullability', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
       export type Unnamed_1_Query = {
-        __typename?: "Query";
-        me?: {
-          __typename?: "User";
+        me: {
           field: string;
           fieldLevel0: string;
-          fieldLevel1?: string | null;
+          fieldLevel1: string | null;
           fieldBothLevels: string;
           list: Array<string | null>;
           listLevel0: Array<string | null>;
-          listLevel1?: Array<string> | null;
+          listLevel1: Array<string> | null;
           listBothLevels: Array<string>;
           nonNullableList: Array<string | null>;
           nonNullableListLevel0: Array<string | null>;
@@ -92,7 +95,7 @@ describe('TypeScript Operations Plugin - nullability', () => {
           nonNullableListBothLevels: Array<string>;
           listWithNonNullableItem: Array<string>;
           listWithNonNullableItemLevel0: Array<string>;
-          listWithNonNullableItemLevel1?: Array<string> | null;
+          listWithNonNullableItemLevel1: Array<string> | null;
           listWithNonNullableItemBothLevels: Array<string>;
           nonNullableListWithNonNullableItem: Array<string>;
           nonNullableListWithNonNullableItemLevel0: Array<string>;
@@ -105,11 +108,16 @@ describe('TypeScript Operations Plugin - nullability', () => {
   });
 
   it('does not convert nullability to nonNull when nullability.errorHandlingClient=false', async () => {
-    const result = await plugin(schema, [{ document }], {
-      nullability: {
-        errorHandlingClient: false,
+    const result = await plugin(
+      schema,
+      [{ document }],
+      {
+        nullability: {
+          errorHandlingClient: false,
+        },
       },
-    });
+      { outputFile: '' },
+    );
 
     const formattedContent = await prettier.format(result.content, {
       parser: 'typescript',
@@ -118,25 +126,23 @@ describe('TypeScript Operations Plugin - nullability', () => {
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
       export type Unnamed_1_Query = {
-        __typename?: "Query";
-        me?: {
-          __typename?: "User";
-          field?: string | null;
-          fieldLevel0?: string | null;
-          fieldLevel1?: string | null;
-          fieldBothLevels?: string | null;
-          list?: Array<string | null> | null;
-          listLevel0?: Array<string | null> | null;
-          listLevel1?: Array<string | null> | null;
-          listBothLevels?: Array<string | null> | null;
+        me: {
+          field: string | null;
+          fieldLevel0: string | null;
+          fieldLevel1: string | null;
+          fieldBothLevels: string | null;
+          list: Array<string | null> | null;
+          listLevel0: Array<string | null> | null;
+          listLevel1: Array<string | null> | null;
+          listBothLevels: Array<string | null> | null;
           nonNullableList: Array<string | null>;
           nonNullableListLevel0: Array<string | null>;
           nonNullableListLevel1: Array<string | null>;
           nonNullableListBothLevels: Array<string | null>;
-          listWithNonNullableItem?: Array<string> | null;
-          listWithNonNullableItemLevel0?: Array<string> | null;
-          listWithNonNullableItemLevel1?: Array<string> | null;
-          listWithNonNullableItemBothLevels?: Array<string> | null;
+          listWithNonNullableItem: Array<string> | null;
+          listWithNonNullableItemLevel0: Array<string> | null;
+          listWithNonNullableItemLevel1: Array<string> | null;
+          listWithNonNullableItemBothLevels: Array<string> | null;
           nonNullableListWithNonNullableItem: Array<string>;
           nonNullableListWithNonNullableItemLevel0: Array<string>;
           nonNullableListWithNonNullableItemLevel1: Array<string>;
