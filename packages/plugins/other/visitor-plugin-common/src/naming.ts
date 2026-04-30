@@ -13,6 +13,10 @@ function getKind(node: ASTNode | string): keyof NamingConventionMap {
     return 'enumValues';
   }
 
+  if (['Variable', 'VariableDefinition'].includes(node.kind)) {
+    return 'varNames';
+  }
+
   return 'typeNames';
 }
 
