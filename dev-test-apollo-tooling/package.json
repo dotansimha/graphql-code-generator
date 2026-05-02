@@ -14,7 +14,7 @@
     "test": "vitest --no-watch"
   },
   "dependencies": {
-    "@apollo/client": "3.13.8",
+    "@apollo/client": "3.14.1",
     "@graphql-codegen/cli": "*",
     "@graphql-codegen/plugin-helpers": "*",
     "@graphql-codegen/typed-document-node": "*",
@@ -23,9 +23,9 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
-    "tsx": "4.7.0",
+    "tsx": "4.21.0",
     "typescript": "^5.9.3",
-    "vitest": "4.0.4"
+    "vitest": "4.1.5"
   },
   "sideEffects": false
 }
