@@ -1012,10 +1012,10 @@
   dependencies:
     "@changesets/types" "^6.1.0"
 
-"@changesets/changelog-github@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@changesets/changelog-github/-/changelog-github-0.6.0.tgz#d7cd710bb4ba1b934a6050248ebcf5e487035756"
-  integrity sha512-wA2/y4hR/A1K411cCT75rz0d46Iezxp1WYRFoFJDIUpkQ6oDBAIUiU7BZkDCmYgz0NBl94X1lgcZO+mHoiHnFg==
+"@changesets/changelog-github@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@changesets/changelog-github/-/changelog-github-0.7.0.tgz#c359fe8cbb711a2247873c3623e7e47654a5ef16"
+  integrity sha512-rBsbRvc4TVn+FvFnOVM3LxlFJfTXXCp8gfVJ+0BubxWNSVnLuAzowi5j+IEraLLP52w8AAs9QfKbPS3MMiXQJA==
   dependencies:
     "@changesets/get-github-info" "^0.8.0"
     "@changesets/types" "^6.1.0"
