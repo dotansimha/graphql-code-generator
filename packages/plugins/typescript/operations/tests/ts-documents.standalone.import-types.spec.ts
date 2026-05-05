@@ -435,7 +435,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
       ),
     ]);
     expect(operationFileResult).toMatchInlineSnapshot(`
-      "import type * as Types from './graphql-code-generator/path-to-other-file';
+      "import type * as Types from './operations/path-to-other-file';
 
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
