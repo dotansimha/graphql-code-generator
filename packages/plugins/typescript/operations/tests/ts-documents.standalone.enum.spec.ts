@@ -49,7 +49,7 @@ describe('TypeScript Operations Plugin - Enum', () => {
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
-  it('handles `native-numeric`', async () => {
+  it('handles `native-numeric` enum', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         me: User
