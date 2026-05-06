@@ -57,7 +57,7 @@
     "bob-the-bundler": "7.0.1",
     "eslint": "10.3.0",
     "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5",
-    "graphql": "16.13.2",
+    "graphql": "16.14.0",
     "husky": "9.1.7",
     "jest-diff": "30.3.0",
     "lint-staged": "16.4.0",

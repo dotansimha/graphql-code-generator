@@ -64,7 +64,7 @@
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
     "dedent": "1.7.2",
-    "graphql": "16.13.2",
+    "graphql": "16.14.0",
     "js-yaml": "4.1.1",
     "next": "14.2.35",
     "next-mdx-remote": "6.0.0",

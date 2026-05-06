@@ -19,7 +19,7 @@
     "@graphql-tools/graphql-file-loader": "^8.1.12",
     "@graphql-tools/load": "8.1.10",
     "@graphql-tools/schema": "10.0.33",
-    "graphql": "16.13.2",
+    "graphql": "16.14.0",
     "graphql-tag": "2.12.6",
     "prettier": "3.8.3"
   },
