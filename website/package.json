@@ -35,7 +35,7 @@
     "@graphql-codegen/schema-ast": "6.0.0",
     "@graphql-codegen/time": "7.0.0",
     "@graphql-codegen/typed-document-node": "7.0.0",
-    "@graphql-codegen/typescript": "6.0.0",
+    "@graphql-codegen/typescript": "6.0.1",
     "@graphql-codegen/typescript-apollo-angular": "5.0.1",
     "@graphql-codegen/typescript-apollo-client-helpers": "4.0.1",
     "@graphql-codegen/typescript-generic-sdk": "5.0.1",
