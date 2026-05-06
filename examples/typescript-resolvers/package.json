@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "7.0.0",
-    "@graphql-codegen/typescript": "6.0.0",
+    "@graphql-codegen/typescript": "6.0.1",
     "@graphql-codegen/typescript-resolvers": "6.0.0"
   },
   "bob": false
