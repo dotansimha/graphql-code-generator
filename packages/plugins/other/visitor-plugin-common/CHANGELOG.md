@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.0.1
+
+### Patch Changes
+
+- [#10781](https://github.com/dotansimha/graphql-code-generator/pull/10781)
+  [`5f035cb`](https://github.com/dotansimha/graphql-code-generator/commit/5f035cb40ac351fa0e5b098369d2a77da3cd2803)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `const` enum applying `typesPrefix` and
+  `typesSuffix` incorrectly
+
 ## 7.0.0
 
 ### Major Changes

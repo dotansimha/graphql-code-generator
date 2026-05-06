@@ -1,5 +1,18 @@
 # @graphql-codegen/typescript
 
+## 6.0.1
+
+### Patch Changes
+
+- [#10764](https://github.com/dotansimha/graphql-code-generator/pull/10764)
+  [`c95db26`](https://github.com/dotansimha/graphql-code-generator/commit/c95db264be92090ae593f3ca22010e42668dc813)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`tslib@~2.8.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.8.0) (from
+    `~2.6.0`, in `dependencies`)
+- Updated dependencies
+  [[`5f035cb`](https://github.com/dotansimha/graphql-code-generator/commit/5f035cb40ac351fa0e5b098369d2a77da3cd2803)]:
+  - @graphql-codegen/visitor-plugin-common@7.0.1
+
 ## 6.0.0
 
 ### Major Changes
