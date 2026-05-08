@@ -26,3 +26,27 @@ export default config
 
 It will add the required GraphQL directives to your codegen schema and generate a compatible
 resolvers signature for [Apollo Federation](https://the-guild.dev/graphql/hive/federation).
+
+For schemas using Apollo Federation v2, the automatic injection of legacy Federation v1 definitions
+(such as `scalar _FieldSet`) can cause duplicate definition errors during validation.
+
+To resolve this, set `disableFederationDirectiveAndScalarInjection` to true in your configuration.
+This suppresses the automatic injection of legacy directives and scalars, ensuring full
+compatibility with Federation v2 schemas and preventing validation failures.
+
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: '<path_to_your_schema>',
+  config: {
+    federation: true,
+    disableFederationDirectiveAndScalarInjection: true
+  },
+  generates: {
+    // ...
+  }
+}
+
+export default config
+```

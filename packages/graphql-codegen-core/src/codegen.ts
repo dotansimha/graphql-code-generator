@@ -58,9 +58,20 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   }
 
   const federationInConfig: boolean = pickFlag('federation', options.config);
+  /**
+   * @description When set to `true`, it disables the automatic injection of legacy Federation v1 directives and scalars (such as `@key`, `@external`, and `_FieldSet`).
+   */
+  const disableFederationDirectiveAndScalarInjection: boolean = pickFlag(
+    'disableFederationDirectiveAndScalarInjection',
+    options.config,
+  );
   const isFederation = prioritize(federationInConfig, false);
 
-  if (isFederation && !hasFederationSpec(options.schemaAst || options.schema)) {
+  if (
+    isFederation &&
+    !disableFederationDirectiveAndScalarInjection &&
+    !hasFederationSpec(options.schemaAst || options.schema)
+  ) {
     additionalTypeDefs.push(federationSpec);
   }
 

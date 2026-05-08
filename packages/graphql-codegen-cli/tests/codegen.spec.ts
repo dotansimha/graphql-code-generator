@@ -1504,4 +1504,86 @@ describe('Codegen Executor', () => {
     expect(result.length).toBe(1);
     expect(result[0].content).toContain('export type WpCoreImageBlockForGalleryFragment = ');
   });
+
+  describe('Federation', () => {
+    it('should include federation directives and scalar when federation: true ', async () => {
+      const { result } = await executeCodegen({
+        schema: [SIMPLE_TEST_SCHEMA],
+        generates: {
+          'out1.graphql': {
+            plugins: ['schema-ast'],
+          },
+        },
+        config: {
+          federation: true,
+        },
+      });
+
+      expect(result[0].content).toContain('directive @external on FIELD_DEFINITION');
+      expect(result[0].content).toContain(
+        'directive @requires(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).toContain(
+        'directive @provides(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).toContain(
+        'directive @key(fields: _FieldSet!) on OBJECT | INTERFACE',
+      );
+      expect(result[0].content).toContain('scalar _FieldSet');
+    });
+    it('should not include federation directives and scalar when federation: true and disableFederationDirectiveAndScalarInjection: true', async () => {
+      const { result } = await executeCodegen({
+        schema: [SIMPLE_TEST_SCHEMA],
+        generates: {
+          'out1.graphql': {
+            plugins: ['schema-ast'],
+          },
+        },
+        config: {
+          federation: true,
+          disableFederationDirectiveAndScalarInjection: true,
+        },
+      });
+
+      expect(result[0].content).not.toContain('directive @external on FIELD_DEFINITION');
+      expect(result[0].content).not.toContain(
+        'directive @requires(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @provides(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @key(fields: _FieldSet!) on OBJECT | INTERFACE',
+      );
+      expect(result[0].content).not.toContain('scalar _FieldSet');
+      expect(result[0].content).toContain('type MyType');
+    });
+    it('should not include federation directives and scalar when federation: false and disableFederationDirectiveAndScalarInjection: true', async () => {
+      const { result } = await executeCodegen({
+        schema: [SIMPLE_TEST_SCHEMA],
+        generates: {
+          'out1.graphql': {
+            plugins: ['schema-ast'],
+          },
+        },
+        config: {
+          federation: false,
+          disableFederationDirectiveAndScalarInjection: true,
+        },
+      });
+
+      expect(result[0].content).not.toContain('directive @external on FIELD_DEFINITION');
+      expect(result[0].content).not.toContain(
+        'directive @requires(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @provides(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @key(fields: _FieldSet!) on OBJECT | INTERFACE',
+      );
+      expect(result[0].content).not.toContain('scalar _FieldSet');
+      expect(result[0].content).toContain('type MyType');
+    });
+  });
 });
