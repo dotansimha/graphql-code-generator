@@ -80,7 +80,7 @@
     "@theguild/tailwind-config": "0.6.4",
     "@types/dedent": "0.7.2",
     "@types/jsonpath": "0.2.4",
-    "@types/node": "24.12.2",
+    "@types/node": "24.12.3",
     "@types/react": "19.2.14",
     "@types/semver": "7.7.1",
     "fast-xml-parser": "5.7.3",

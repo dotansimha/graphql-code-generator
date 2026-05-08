@@ -59,7 +59,7 @@
     "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5",
     "graphql": "16.14.0",
     "husky": "9.1.7",
-    "jest-diff": "30.3.0",
+    "jest-diff": "30.4.1",
     "lint-staged": "17.0.2",
     "memfs": "4.57.2",
     "patch-package": "8.0.1",
@@ -72,7 +72,7 @@
     "tsx": "4.21.0",
     "typescript": "6.0.3",
     "vitest": "4.1.5",
-    "wrangler": "4.88.0"
+    "wrangler": "4.90.0"
   },
   "resolutions": {
     "@rushstack/eslint-patch": "1.16.1",
