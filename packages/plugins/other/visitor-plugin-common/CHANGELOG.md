@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.0.2
+
+### Patch Changes
+
+- [#10777](https://github.com/dotansimha/graphql-code-generator/pull/10777)
+  [`a6a6786`](https://github.com/dotansimha/graphql-code-generator/commit/a6a67861602cf59cf938f61665960a81f44ade8c)
+  Thanks [@ikusakov2](https://github.com/ikusakov2)! - skip conditional selection separation when
+  extractAllFieldsToTypesCompact is enabled
+
 ## 7.0.1
 
 ### Patch Changes
