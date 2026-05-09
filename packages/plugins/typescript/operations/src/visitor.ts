@@ -573,8 +573,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         type: 'GraphQLScalarType',
         node,
         tsType:
-          (DEFAULT_INPUT_SCALARS[node.name]?.input ||
-            this.config.scalars?.[node.name]?.input.type) ??
+          this.config.scalars?.[node.name]?.input.type ??
+          DEFAULT_INPUT_SCALARS[node.name]?.input ??
           'unknown',
         useCases: {
           variables: location === 'variables',
