@@ -31,7 +31,7 @@
     "@graphql-codegen/jsdoc": "4.0.1",
     "@graphql-codegen/kotlin": "4.0.1",
     "@graphql-codegen/named-operations-object": "4.0.1",
-    "@graphql-codegen/near-operation-file-preset": "5.2.0",
+    "@graphql-codegen/near-operation-file-preset": "5.2.1",
     "@graphql-codegen/schema-ast": "6.0.0",
     "@graphql-codegen/time": "7.0.0",
     "@graphql-codegen/typed-document-node": "7.0.0",
