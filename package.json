@@ -60,7 +60,7 @@
     "graphql": "16.14.0",
     "husky": "9.1.7",
     "jest-diff": "30.4.1",
-    "lint-staged": "17.0.3",
+    "lint-staged": "17.0.4",
     "memfs": "4.57.2",
     "patch-package": "8.0.1",
     "prettier": "3.8.3",
