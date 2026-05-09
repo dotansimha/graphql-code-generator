@@ -103,6 +103,65 @@ describe('TypeScript Operations Plugin - Enum', () => {
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
+  it('handles `native-numeric` enum with types prefix and suffix', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        ADMIN
+        CUSTOMER
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        { enumType: 'native-numeric', typesPrefix: 'AA_', typesSuffix: '_ZZ' },
+        { outputFile: '' },
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export enum AA_UserRole_ZZ {
+        Admin_ZZ = 0,
+        Customer_ZZ = 1
+      }
+
+      export type AA_MeQueryVariables_ZZ = Exact<{
+        role: AA_UserRole_ZZ;
+      }>;
+
+
+      export type AA_MeQuery_ZZ = { me: { id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
   it('handles `const` enum', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
@@ -158,6 +217,72 @@ describe('TypeScript Operations Plugin - Enum', () => {
 
 
       export type MeQuery = { me: { id: string } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `const` enum with types prefix and suffix', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        me: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        role: UserRole!
+        createdAt: DateTime!
+      }
+
+      enum UserRole {
+        A_B_C
+        X_Y_Z
+        _TEST
+        My_Value
+        _123
+      }
+
+      scalar DateTime
+    `);
+    const document = parse(/* GraphQL */ `
+      query Me($role: UserRole!) {
+        me {
+          id
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        { enumType: 'const', typesPrefix: 'AA_', typesSuffix: '_ZZ' },
+        { outputFile: '' },
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export const AA_UserRole_ZZ = {
+        AA_ABC_ZZ: 'A_B_C',
+        AA_XYZ_ZZ: 'X_Y_Z',
+        AA_Test_ZZ: '_TEST',
+        AA_MyValue_ZZ: 'My_Value',
+        AA_123_ZZ: '_123'
+      } as const;
+
+      export type AA_UserRole_ZZ = typeof AA_UserRole_ZZ[keyof typeof AA_UserRole_ZZ];
+      export type AA_MeQueryVariables_ZZ = Exact<{
+        role: AA_UserRole_ZZ;
+      }>;
+
+
+      export type AA_MeQuery_ZZ = { me: { id: string } | null };
       "
     `);
 

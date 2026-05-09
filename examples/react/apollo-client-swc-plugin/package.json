@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.10",
-    "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^7.0.0",

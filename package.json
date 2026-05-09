@@ -46,9 +46,9 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
-    "@babel/preset-env": "7.29.3",
+    "@babel/preset-env": "7.29.5",
     "@babel/preset-typescript": "7.28.5",
-    "@changesets/changelog-github": "0.6.0",
+    "@changesets/changelog-github": "0.7.0",
     "@changesets/cli": "2.31.0",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
@@ -57,10 +57,10 @@
     "bob-the-bundler": "7.0.1",
     "eslint": "10.3.0",
     "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5",
-    "graphql": "16.13.2",
+    "graphql": "16.14.0",
     "husky": "9.1.7",
-    "jest-diff": "30.3.0",
-    "lint-staged": "16.4.0",
+    "jest-diff": "30.4.1",
+    "lint-staged": "17.0.3",
     "memfs": "4.57.2",
     "patch-package": "8.0.1",
     "prettier": "3.8.3",
@@ -72,7 +72,7 @@
     "tsx": "4.21.0",
     "typescript": "6.0.3",
     "vitest": "4.1.5",
-    "wrangler": "4.87.0"
+    "wrangler": "4.90.0"
   },
   "resolutions": {
     "@rushstack/eslint-patch": "1.16.1",
