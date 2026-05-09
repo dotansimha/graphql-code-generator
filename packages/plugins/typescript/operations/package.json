@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-operations",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "type": "module",
   "description": "GraphQL Code Generator plugin for generating TypeScript types for GraphQL queries, mutations, subscriptions and fragments",
   "repository": {

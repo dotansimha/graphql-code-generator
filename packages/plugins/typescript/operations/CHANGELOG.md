@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 6.0.2
+
+### Patch Changes
+
+- [#10792](https://github.com/dotansimha/graphql-code-generator/pull/10792)
+  [`297c896`](https://github.com/dotansimha/graphql-code-generator/commit/297c8965c8f89a273a919b5f643d24ae02b5006d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `typescript-operations` incosistent
+  scalar overrides for native scalars
+
 ## 6.0.1
 
 ### Patch Changes

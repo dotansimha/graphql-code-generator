@@ -44,7 +44,7 @@
     "@graphql-codegen/typescript-mongodb": "4.0.2",
     "@graphql-codegen/typescript-msw": "4.0.1",
     "@graphql-codegen/typescript-nhost": "1.0.1",
-    "@graphql-codegen/typescript-operations": "6.0.1",
+    "@graphql-codegen/typescript-operations": "6.0.2",
     "@graphql-codegen/typescript-react-apollo": "4.4.2",
     "@graphql-codegen/typescript-react-query": "4.1.0",
     "@graphql-codegen/typescript-resolvers": "6.0.0",
