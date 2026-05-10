@@ -23,7 +23,7 @@ function generate({ schema, config }: { schema: string; config: TypeScriptResolv
   });
 }
 
-describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
+describe('TypeScript Resolvers Plugin & Federation', () => {
   it('generates __resolveReference for object types with resolvable @key', async () => {
     const federatedSchema = /* GraphQL */ `
       type Query {
@@ -879,76 +879,77 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // no GraphQLScalarType
     expect(content).not.toContain('GraphQLScalarType');
   });
+});
 
-  describe('meta', () => {
-    it('generates federation meta correctly', async () => {
-      const federatedSchema = /* GraphQL */ `
-        scalar _FieldSet
-        directive @key(fields: _FieldSet!, resolvable: Boolean) repeatable on OBJECT | INTERFACE
+describe('TypeScript Resolvers Plugin & Federation - meta', () => {
+  it('generates federation meta correctly', async () => {
+    const federatedSchema = /* GraphQL */ `
+      scalar _FieldSet
+      directive @key(fields: _FieldSet!, resolvable: Boolean) repeatable on OBJECT | INTERFACE
 
-        type Query {
-          user: UserPayload!
-          allUsers: [User]
-        }
+      type Query {
+        user: UserPayload!
+        allUsers: [User]
+      }
 
-        type User @key(fields: "id") {
-          id: ID!
-          name: String
-          username: String
-        }
+      type User @key(fields: "id") {
+        id: ID!
+        name: String
+        username: String
+      }
 
-        interface Node {
-          id: ID!
-        }
+      interface Node {
+        id: ID!
+      }
 
-        type UserOk {
-          id: ID!
-        }
-        type UserError {
-          message: String!
-        }
-        union UserPayload = UserOk | UserError
+      type UserOk {
+        id: ID!
+      }
+      type UserError {
+        message: String!
+      }
+      union UserPayload = UserOk | UserError
 
-        enum Country {
-          FR
-          US
-        }
+      enum Country {
+        FR
+        US
+      }
 
-        type NotResolvable @key(fields: "id", resolvable: false) {
-          id: ID!
-        }
+      type NotResolvable @key(fields: "id", resolvable: false) {
+        id: ID!
+      }
 
-        type Resolvable @key(fields: "id", resolvable: true) {
-          id: ID!
-        }
+      type Resolvable @key(fields: "id", resolvable: true) {
+        id: ID!
+      }
 
-        type MultipleResolvable
-          @key(fields: "id")
-          @key(fields: "id2", resolvable: true)
-          @key(fields: "id3", resolvable: false) {
-          id: ID!
-          id2: ID!
-          id3: ID!
-        }
+      type MultipleResolvable
+        @key(fields: "id")
+        @key(fields: "id2", resolvable: true)
+        @key(fields: "id3", resolvable: false) {
+        id: ID!
+        id2: ID!
+        id3: ID!
+      }
 
-        type MultipleNonResolvable
-          @key(fields: "id", resolvable: false)
-          @key(fields: "id2", resolvable: false)
-          @key(fields: "id3", resolvable: false) {
-          id: ID!
-          id2: ID!
-          id3: ID!
-        }
-      `;
+      type MultipleNonResolvable
+        @key(fields: "id", resolvable: false)
+        @key(fields: "id2", resolvable: false)
+        @key(fields: "id3", resolvable: false) {
+        id: ID!
+        id2: ID!
+        id3: ID!
+      }
+    `;
 
-      const result = await plugin(
-        buildSchema(federatedSchema),
-        [],
-        { federation: true },
-        { outputFile: '' },
-      );
+    const result = await plugin(
+      buildSchema(federatedSchema),
+      [],
+      { federation: true },
+      { outputFile: '' },
+    );
 
-      expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
+    expect(result.meta?.generatedResolverTypes).toMatchInlineSnapshot(`
         {
           "resolversMap": {
             "name": "Resolvers",
@@ -1006,6 +1007,5 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
           },
         }
       `);
-    });
   });
 });
