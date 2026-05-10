@@ -111,7 +111,7 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@inquirer/testing": "3.3.5",
+    "@inquirer/testing": "3.3.6",
     "@parcel/watcher": "^2.1.0",
     "@types/is-glob": "4.0.4",
     "@types/js-yaml": "4.0.9",
