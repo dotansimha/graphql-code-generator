@@ -1,5 +1,14 @@
 # @graphql-codegen/plugin-helpers
 
+## 7.0.1
+
+### Patch Changes
+
+- [#10797](https://github.com/dotansimha/graphql-code-generator/pull/10797)
+  [`6ed420a`](https://github.com/dotansimha/graphql-code-generator/commit/6ed420a4c12f810b3b610cd2baad161ec96bde56)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix FederationTypes not having typesPrefix
+  and typesSuffix applied
+
 ## 7.0.0
 
 ### Major Changes
