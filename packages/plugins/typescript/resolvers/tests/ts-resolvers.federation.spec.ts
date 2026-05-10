@@ -1009,3 +1009,177 @@ describe('TypeScript Resolvers Plugin & Federation - meta', () => {
       `);
   });
 });
+
+describe('TypeScript Resolvers Plugin & Federation - config', () => {
+  it('generates FederationTypes with correct typesPrefix and typesSuffix applied', async () => {
+    const federatedSchema = /* GraphQL */ `
+      scalar _FieldSet
+      directive @key(fields: _FieldSet!, resolvable: Boolean) repeatable on OBJECT | INTERFACE
+
+      type Query {
+        all: [Person]
+      }
+
+      interface Person @key(fields: "id") {
+        id: ID!
+      }
+
+      type User @key(fields: "id") {
+        id: ID!
+        name: String
+      }
+    `;
+
+    const result = await plugin(
+      buildSchema(federatedSchema),
+      [],
+      { federation: true, typesPrefix: '$', typesSuffix: '__' },
+      { outputFile: '' },
+    );
+
+    expect(result.content).toMatchInlineSnapshot(`
+      "
+
+      export type ResolverTypeWrapper<T> = Promise<T> | T;
+
+      export type ReferenceResolver<TResult, TReference, TContext> = (
+            reference: TReference,
+            context: TContext,
+            info: GraphQLResolveInfo
+          ) => Promise<TResult> | TResult;
+
+            type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
+            type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
+            type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+            export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
+          
+
+      export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+        resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+      };
+      export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+
+      export type ResolverFn<TResult, TParent, TContext, TArgs> = (
+        parent: TParent,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo
+      ) => Promise<TResult> | TResult;
+
+      export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
+        parent: TParent,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo
+      ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
+
+      export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
+        parent: TParent,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo
+      ) => TResult | Promise<TResult>;
+
+      export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+        subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+        resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
+      }
+
+      export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+        subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
+        resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
+      }
+
+      export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
+        | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
+        | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+
+      export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
+        | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+        | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
+
+      export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
+        parent: TParent,
+        context: TContext,
+        info: GraphQLResolveInfo
+      ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
+
+      export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+
+      export type NextResolverFn<T> = () => Promise<T>;
+
+      export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
+        next: NextResolverFn<TResult>,
+        parent: TParent,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo
+      ) => TResult | Promise<TResult>;
+
+      /** Mapping of federation types */
+      export type $FederationTypes__ = {
+        Person: $Person__;
+        User: $User__;
+      };
+
+      /** Mapping of federation reference types */
+      export type $FederationReferenceTypes__ = {
+        Person:
+          ( { __typename: 'Person' }
+          & GraphQLRecursivePick<$FederationTypes__['Person'], {"id":true}> );
+        User:
+          ( { __typename: 'User' }
+          & GraphQLRecursivePick<$FederationTypes__['User'], {"id":true}> );
+      };
+
+
+      /** Mapping of interface types */
+      export type $ResolversInterfaceTypes__<_RefType extends Record<string, unknown>> = {
+        Person: never;
+      };
+
+      /** Mapping between all available schema types and the resolvers types */
+      export type $ResolversTypes__ = {
+        Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+        Person: ResolverTypeWrapper<$ResolversInterfaceTypes__<$ResolversTypes__>['Person']>;
+        ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+        User: ResolverTypeWrapper<$User__>;
+        String: ResolverTypeWrapper<Scalars['String']['output']>;
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+      };
+
+      /** Mapping between all available schema types and the resolvers parents */
+      export type $ResolversParentTypes__ = {
+        Query: Record<PropertyKey, never>;
+        Person: $ResolversInterfaceTypes__<$ResolversParentTypes__>['Person'];
+        ID: Scalars['ID']['output'];
+        User: $User__ | $FederationReferenceTypes__['User'];
+        String: Scalars['String']['output'];
+        Boolean: Scalars['Boolean']['output'];
+      };
+
+      export type $QueryResolvers__<ContextType = any, ParentType extends $ResolversParentTypes__['Query'] = $ResolversParentTypes__['Query']> = {
+        all?: Resolver<Maybe<Array<Maybe<$ResolversTypes__['Person']>>>, ParentType, ContextType>;
+      };
+
+      export type $PersonResolvers__<ContextType = any, ParentType extends $ResolversParentTypes__['Person'] = $ResolversParentTypes__['Person'], FederationReferenceType extends $FederationReferenceTypes__['Person'] = $FederationReferenceTypes__['Person']> = {
+        __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+        __resolveReference?: ReferenceResolver<Maybe<$ResolversTypes__['Person']> | FederationReferenceType, FederationReferenceType, ContextType>;
+      };
+
+      export type $UserResolvers__<ContextType = any, ParentType extends $ResolversParentTypes__['User'] = $ResolversParentTypes__['User'], FederationReferenceType extends $FederationReferenceTypes__['User'] = $FederationReferenceTypes__['User']> = {
+        __resolveReference?: ReferenceResolver<Maybe<$ResolversTypes__['User']> | FederationReferenceType, FederationReferenceType, ContextType>;
+        id?: Resolver<$ResolversTypes__['ID'], ParentType, ContextType>;
+        name?: Resolver<Maybe<$ResolversTypes__['String']>, ParentType, ContextType>;
+      };
+
+      export type $Resolvers__<ContextType = any> = {
+        Query?: $QueryResolvers__<ContextType>;
+        Person?: $PersonResolvers__<ContextType>;
+        User?: $UserResolvers__<ContextType>;
+      };
+
+      "
+    `);
+  });
+});

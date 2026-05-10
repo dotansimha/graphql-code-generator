@@ -6,7 +6,12 @@ import {
   PluginFunction,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { parseMapper, type RootResolver } from '@graphql-codegen/visitor-plugin-common';
+import {
+  convertFactory,
+  convertName as convertNameUtil,
+  parseMapper,
+  type RootResolver,
+} from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptResolversPluginConfig } from './config.js';
 import { TypeScriptResolversVisitor } from './visitor.js';
 
@@ -88,7 +93,19 @@ export type Resolver${capitalizedDirectiveName}WithResolve<TResult, TParent, TCo
   }
 
   let { transformedSchema, federationMeta } = config.federation
-    ? addFederationReferencesToSchema(schema)
+    ? (() => {
+        const baseConvert = convertFactory(config);
+        return addFederationReferencesToSchema(schema, {
+          convertName: name =>
+            convertNameUtil({
+              convert: () => baseConvert(name),
+              options: {
+                typesPrefix: config.typesPrefix || '',
+                typesSuffix: config.typesSuffix || '',
+              },
+            }),
+        });
+      })()
     : { transformedSchema: schema, federationMeta: {} };
 
   transformedSchema = config.customDirectives?.semanticNonNull
