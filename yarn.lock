@@ -6067,7 +6067,7 @@ axe-core@^4.10.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.11.4.tgz#5b535e381ff1e61ffdd615e5483d16186d3b46a5"
   integrity sha512-KunSNx+TVpkAw/6ULfhnx+HWRecjqZGTOyquAoWHYLRSdK1tB5Ihce1ZW+UY3fj33bYAFWPu7W/GRSmmrCGuxA==
 
-axios@^1.15.0:
+axios@^1.16.0:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.16.0.tgz#f8e5dd931cef2a5f8c32216d5784eda2f8750eb7"
   integrity sha512-6hp5CwvTPlN2A31g5dxnwAX0orzM7pmCRDLnZSX772mv8WDqICwFjowHuPs04Mc8deIld1+ejhtaMn5vp6b+1w==
@@ -10095,10 +10095,10 @@ jiti@^2.0.0, jiti@^2.3.0:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-2.7.0.tgz#974228f2f4ca2bc21885a1797b45fea68e950c64"
   integrity sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==
 
-joi@^18.1.2:
-  version "18.1.2"
-  resolved "https://registry.yarnpkg.com/joi/-/joi-18.1.2.tgz#4735a384d7721fcda7a551d128862cf816541924"
-  integrity sha512-rF5MAmps5esSlhCA+N1b6IYHDw9j/btzGaqfgie522jS02Ju/HXBxamlXVlKEHAxoMKQL77HWI8jlqWsFuekZA==
+joi@^18.2.1:
+  version "18.2.1"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-18.2.1.tgz#a022e39496e25b010a6d4649975c160a4315bd79"
+  integrity sha512-2/OKlogiESf2Nh3TFCrRjrr9z1DRHeW0I+KReF67+4J0Ns+8hBtHRmoWAZ2OFU6I5+TWLEe6sVlSdXPjHm5UbQ==
   dependencies:
     "@hapi/address" "^5.1.1"
     "@hapi/formula" "^3.0.2"
@@ -13935,10 +13935,10 @@ stackback@0.0.2:
   resolved "https://registry.yarnpkg.com/stackback/-/stackback-0.0.2.tgz#1ac8a0d9483848d1695e418b6d031a3c3ce68e3b"
   integrity sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==
 
-start-server-and-test@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-3.0.2.tgz#045c6fdcd249763813f9a8e05670d55536b28577"
-  integrity sha512-g6v4zPr1RRL5XxXJ+Wnk1GFLb+DGZLjFqse+5lNZ0X7m4SRMC6eOA+AXYboQDfNCEjpnTu0AGrvJb/JTUOg8dQ==
+start-server-and-test@3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-3.0.4.tgz#621530bd38aa5fd403ff20cb8606aa8fc79ee7fe"
+  integrity sha512-y9j+VvFW5SH8deed5GvyNQs8gk8t8TJRDZYBvEPhCwdr/VhISvVvyamMNcNV4h9PxOptPGgPigb6yz4C67O1Qw==
   dependencies:
     arg "5.0.2"
     bluebird "3.7.2"
@@ -13947,7 +13947,7 @@ start-server-and-test@3.0.2:
     execa "5.1.1"
     lazy-ass "1.6.0"
     tree-kill "1.2.2"
-    wait-on "9.0.5"
+    wait-on "9.0.6"
 
 state-local@^1.0.6:
   version "1.0.7"
@@ -15374,13 +15374,13 @@ vue@^3.2.37, vue@^3.2.45:
     "@vue/server-renderer" "3.5.34"
     "@vue/shared" "3.5.34"
 
-wait-on@9.0.5:
-  version "9.0.5"
-  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-9.0.5.tgz#9569a31ee3669abb67b1284622fd1d5b1f0163fc"
-  integrity sha512-qgnbHDfDTRIp73ANEJNRW/7kn8CrDUcvZz18xotJQku/P4saTGkbIzvnMZebPmVvVNUiRq1qWAPyqCH+W4H8KA==
+wait-on@9.0.6:
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-9.0.6.tgz#21ede653d9cb41a6283c4f0b46de1cbbdb342d5e"
+  integrity sha512-KR+Te+NBg6DmPVil4anyIO72mpt/QDHjRo3nVFkwRgb26oweUp3DDW2szO3EeUY4cqafWy4rQuOOeEk4n+7Oeg==
   dependencies:
-    axios "^1.15.0"
-    joi "^18.1.2"
+    axios "^1.16.0"
+    joi "^18.2.1"
     lodash "^4.18.1"
     minimist "^1.2.8"
     rxjs "^7.8.2"

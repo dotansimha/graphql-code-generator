@@ -20,7 +20,7 @@
     "@vitejs/plugin-vue": "^6.0.0",
     "cypress": "15.14.2",
     "serve": "14.2.6",
-    "start-server-and-test": "3.0.2",
+    "start-server-and-test": "3.0.4",
     "typescript": "^6.0.0",
     "vite": "^8.0.0",
     "vue-tsc": "^3.0.0"
