@@ -241,10 +241,10 @@ describe('TypeScript Operations Plugin - Input', () => {
         readonly to?: Date | null | undefined;
         readonly timezone?: unknown;
         readonly role?: UserRole | null | undefined;
-        readonly ageRange1?: Array<number | null | undefined> | null | undefined;
-        readonly ageRange2: Array<number | null | undefined>;
-        readonly ageRange3?: Array<number> | null | undefined;
-        readonly ageRange4: Array<number>;
+        readonly ageRange1?: ReadonlyArray<number | null | undefined> | null | undefined;
+        readonly ageRange2: ReadonlyArray<number | null | undefined>;
+        readonly ageRange3?: ReadonlyArray<number> | null | undefined;
+        readonly ageRange4: ReadonlyArray<number>;
         readonly bestFriend?: UsersBestFriendInput | null | undefined;
         readonly nestedInput?: UsersInput | null | undefined;
       };
