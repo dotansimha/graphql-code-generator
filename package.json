@@ -64,14 +64,14 @@
     "memfs": "4.57.2",
     "patch-package": "8.0.1",
     "prettier": "3.8.3",
-    "prettier-plugin-svelte": "3.5.1",
+    "prettier-plugin-svelte": "3.5.2",
     "rimraf": "6.1.3",
     "svelte": "5.55.5",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "tsx": "4.21.0",
     "typescript": "6.0.3",
-    "vitest": "4.1.5",
+    "vitest": "4.1.6",
     "wrangler": "4.90.0"
   },
   "resolutions": {
