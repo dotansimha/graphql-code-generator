@@ -13936,10 +13936,10 @@ stackback@0.0.2:
   resolved "https://registry.yarnpkg.com/stackback/-/stackback-0.0.2.tgz#1ac8a0d9483848d1695e418b6d031a3c3ce68e3b"
   integrity sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==
 
-start-server-and-test@3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-3.0.4.tgz#621530bd38aa5fd403ff20cb8606aa8fc79ee7fe"
-  integrity sha512-y9j+VvFW5SH8deed5GvyNQs8gk8t8TJRDZYBvEPhCwdr/VhISvVvyamMNcNV4h9PxOptPGgPigb6yz4C67O1Qw==
+start-server-and-test@3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-3.0.5.tgz#b8b7a132ff192934975df90a87549cb40209fbba"
+  integrity sha512-2SvI2UR+rVM4FQ3GqEnjjfVATln6JgJGsZjRRyAqgl1EI6fJFH5zVCawqJLcmU9vBxwI0ZX9i3M+GFpY+sxWcw==
   dependencies:
     arg "5.0.2"
     bluebird "3.7.2"
@@ -13948,7 +13948,7 @@ start-server-and-test@3.0.4:
     execa "5.1.1"
     lazy-ass "1.6.0"
     tree-kill "1.2.2"
-    wait-on "9.0.6"
+    wait-on "9.0.10"
 
 state-local@^1.0.6:
   version "1.0.7"
@@ -15370,10 +15370,10 @@ vue@^3.2.37, vue@^3.2.45:
     "@vue/server-renderer" "3.5.34"
     "@vue/shared" "3.5.34"
 
-wait-on@9.0.6:
-  version "9.0.6"
-  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-9.0.6.tgz#21ede653d9cb41a6283c4f0b46de1cbbdb342d5e"
-  integrity sha512-KR+Te+NBg6DmPVil4anyIO72mpt/QDHjRo3nVFkwRgb26oweUp3DDW2szO3EeUY4cqafWy4rQuOOeEk4n+7Oeg==
+wait-on@9.0.10:
+  version "9.0.10"
+  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-9.0.10.tgz#9c73ad1908b8e46e853e1271b2c9563f2c2d8e02"
+  integrity sha512-rCoJEhvMr0X6alHmwc9abbrA5ZrLZFKpFQVKPNFwl2h7DapXOGdmimIHDtLOWhT4PjhZhxFEtZoQgEXbkDWdZw==
   dependencies:
     axios "^1.16.0"
     joi "^18.2.1"
