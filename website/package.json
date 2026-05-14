@@ -74,7 +74,7 @@
     "react-dom": "^19.0.0",
     "react-markdown": "10.1.0",
     "react-select": "5.10.2",
-    "typescript-json-schema": "0.56.0"
+    "typescript-json-schema": "0.67.2"
   },
   "devDependencies": {
     "@theguild/tailwind-config": "0.6.4",
