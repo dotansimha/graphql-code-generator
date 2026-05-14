@@ -12,7 +12,7 @@
     "examples/**/*",
     "dev-test-apollo-tooling"
   ],
-  "packageManager": "yarn@1.22.22",
+  "packageManager": "pnpm@11.1.2",
   "engines": {
     "node": ">= 16.0.0"
   },
