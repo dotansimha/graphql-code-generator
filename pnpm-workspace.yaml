@@ -1,4 +1,21 @@
+packages:
+  - packages/*
+  - packages/plugins/typescript/*
+  - packages/plugins/other/*
+  - packages/presets/*
+  - packages/utils/*
+  - website
+  - examples/**/*
+  - dev-test-apollo-tooling
+
 allowBuilds:
+  '@parcel/watcher': false
+  '@swc/core': false
+  cypress: false
   esbuild: false
+  fsevents: false
+  msw: false
   sharp: false
+  unrs-resolver: false
+  vue-demi: false
   workerd: false

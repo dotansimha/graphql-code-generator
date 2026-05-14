@@ -2,16 +2,6 @@
   "name": "graphql-code-generator",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "packages/utils/*",
-    "packages/plugins/typescript/*",
-    "packages/plugins/other/*",
-    "packages/presets/*",
-    "website",
-    "examples/**/*",
-    "dev-test-apollo-tooling"
-  ],
   "packageManager": "pnpm@11.1.2",
   "engines": {
     "node": ">= 16.0.0"
@@ -24,23 +14,22 @@
     "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
     "examples:test:end2end": "set -o xtrace && eval $(node scripts/print-example-ci-command.js test:end2end)",
     "fix-bins": "node scripts/fix-bin.js",
-    "generate:examples": "yarn generate:examples:cjs",
+    "generate:examples": "pnpm generate:examples:cjs",
     "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "lint": "eslint --cache .",
-    "postbuild": "yarn fix-bins",
-    "postinstall": "patch-package && husky install",
+    "postbuild": "pnpm fix-bins",
+    "postinstall": "husky install",
     "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
-    "prerelease": "yarn build",
+    "prerelease": "pnpm build",
     "prettier": "prettier --cache --write --list-different .",
     "prettier:check": "prettier --cache --check .",
     "rebuild": "bob build --incremental",
     "release": "changeset publish",
     "test": "vitest",
-    "test-and-build": "yarn build && yarn test",
     "types:check": "tsc --noEmit",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
-    "watch:examples": "yarn watch:examples:cjs",
+    "watch:examples": "pnpm watch:examples:cjs",
     "watch:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "watch:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env"
   },
@@ -74,19 +63,6 @@
     "vitest": "4.1.6",
     "wrangler": "4.92.0"
   },
-  "resolutions": {
-    "@rushstack/eslint-patch": "1.16.1",
-    "@typescript-eslint/eslint-plugin": "8.59.3",
-    "@typescript-eslint/parser": "8.59.3",
-    "@typescript-eslint/scope-manager": "8.59.3",
-    "@typescript-eslint/type-utils": "8.59.3",
-    "@typescript-eslint/types": "8.59.3",
-    "@typescript-eslint/typescript-estree": "8.59.3",
-    "@typescript-eslint/utils": "8.59.3",
-    "@typescript-eslint/visitor-keys": "8.59.3",
-    "eslint-plugin-promise": "7.3.0",
-    "typescript": "6.0.3"
-  },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
       "eslint --fix"
@@ -94,9 +70,24 @@
     "**/*.{js,jsx,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,json,md}": [
       "prettier --write"
     ],
-    "**/__generated__/**": [],
-    "yarn.lock": [
-      "npx yarn-deduplicate"
-    ]
+    "**/__generated__/**": []
+  },
+  "pnpm": {
+    "overrides": {
+      "@rushstack/eslint-patch": "1.16.1",
+      "@typescript-eslint/eslint-plugin": "8.59.3",
+      "@typescript-eslint/parser": "8.59.3",
+      "@typescript-eslint/scope-manager": "8.59.3",
+      "@typescript-eslint/type-utils": "8.59.3",
+      "@typescript-eslint/types": "8.59.3",
+      "@typescript-eslint/typescript-estree": "8.59.3",
+      "@typescript-eslint/utils": "8.59.3",
+      "@typescript-eslint/visitor-keys": "8.59.3",
+      "eslint-plugin-promise": "7.3.0",
+      "typescript": "6.0.3"
+    },
+    "patchedDependencies": {
+      "typescript-json-schema@0.56.0": "patches/typescript-json-schema+0.56.0.patch"
+    }
   }
 }
