@@ -20,12 +20,14 @@ jobs:
 
       - name: Setup env
         uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+        with:
+          packageManager: pnpm
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Build Website
-        run: yarn workspace website run build
+        run: pnpm --filter=website run build
 
       - name: Compare
         run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt
