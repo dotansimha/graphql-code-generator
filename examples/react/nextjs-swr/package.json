@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@graphql-tools/executor-http": "^3.0.0",
-    "next": "15.5.16",
+    "next": "15.5.18",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swr": "^2.0.0"
