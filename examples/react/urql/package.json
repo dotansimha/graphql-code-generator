@@ -16,7 +16,7 @@
     "urql": "^3.0.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^7.0.0",
+    "@graphql-codegen/cli": "workspace:*",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",

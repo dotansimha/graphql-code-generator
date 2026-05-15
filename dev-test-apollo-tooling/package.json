@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@apollo/client": "3.14.1",
-    "@graphql-codegen/cli": "*",
-    "@graphql-codegen/plugin-helpers": "*",
-    "@graphql-codegen/typed-document-node": "*",
-    "@graphql-codegen/typescript-operations": "*",
-    "@graphql-codegen/visitor-plugin-common": "*"
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/plugin-helpers": "workspace:*",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript-operations": "workspace:*",
+    "@graphql-codegen/visitor-plugin-common": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",

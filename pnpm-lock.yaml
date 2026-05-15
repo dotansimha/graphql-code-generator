@@ -99,20 +99,20 @@ importers:
         specifier: 3.14.1
         version: 3.14.1(@types/react@19.2.14)(graphql-ws@6.0.8(graphql@16.14.0)(ws@8.20.1))(graphql@16.14.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@graphql-codegen/cli':
-        specifier: '*'
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@5.9.3)
+        specifier: workspace:*
+        version: link:../packages/graphql-codegen-cli/dist
       '@graphql-codegen/plugin-helpers':
-        specifier: '*'
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../packages/utils/plugins-helpers/dist
       '@graphql-codegen/typed-document-node':
-        specifier: '*'
-        version: 7.0.0(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../packages/plugins/typescript/typed-document-node/dist
       '@graphql-codegen/typescript-operations':
-        specifier: '*'
-        version: 6.0.2(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../packages/plugins/typescript/operations/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: '*'
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../packages/plugins/other/visitor-plugin-common/dist
     devDependencies:
       '@types/node':
         specifier: ^25.0.3
@@ -146,8 +146,8 @@ importers:
         specifier: 7.28.5
         version: 7.28.5(@babel/core@7.29.0)
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.14.0)
@@ -171,8 +171,8 @@ importers:
         specifier: 7.28.5
         version: 7.28.5(@babel/core@7.29.0)
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.14.0)
@@ -180,23 +180,23 @@ importers:
   examples/programmatic-typescript:
     dependencies:
       '@graphql-codegen/core':
-        specifier: 6.0.0
-        version: 6.0.0(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-core/dist
       '@graphql-codegen/plugin-helpers':
-        specifier: 7.0.1
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/utils/plugins-helpers/dist
       '@graphql-codegen/typed-document-node':
-        specifier: 7.0.0
-        version: 7.0.0(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/typed-document-node/dist
       '@graphql-codegen/typescript':
-        specifier: 6.0.1
-        version: 6.0.1(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/typescript/dist
       '@graphql-codegen/typescript-operations':
-        specifier: 6.0.2
-        version: 6.0.2(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/operations/dist
       '@graphql-codegen/typescript-resolvers':
-        specifier: 6.0.1
-        version: 6.0.1(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/resolvers/dist
       '@graphql-tools/graphql-file-loader':
         specifier: ^8.1.12
         version: 8.1.14(graphql@16.14.0)
@@ -239,8 +239,8 @@ importers:
         version: 19.2.6(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/node':
         specifier: ^24.0.0
         version: 24.12.4
@@ -291,8 +291,8 @@ importers:
         version: 19.2.6(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/node':
         specifier: ^24.0.0
         version: 24.12.4
@@ -334,8 +334,8 @@ importers:
         version: 19.2.6(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@graphql-codegen/client-preset-swc-plugin':
         specifier: 0.2.0
         version: 0.2.0
@@ -368,8 +368,8 @@ importers:
         version: 19.2.6(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/node':
         specifier: ^24.0.0
         version: 24.12.4
@@ -417,14 +417,14 @@ importers:
         version: 2.4.1(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@graphql-codegen/client-preset-swc-plugin':
         specifier: 0.2.0
         version: 0.2.0
       '@graphql-codegen/schema-ast':
-        specifier: 6.0.0
-        version: 6.0.0(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../../packages/plugins/other/schema-ast/dist
       '@types/node':
         specifier: ^24.0.0
         version: 24.12.4
@@ -457,8 +457,8 @@ importers:
         version: 19.2.6(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/node':
         specifier: ^24.0.0
         version: 24.12.4
@@ -500,8 +500,8 @@ importers:
         version: 3.0.4(graphql@16.14.0)(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
@@ -537,8 +537,8 @@ importers:
         version: 16.14.0
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
 
   examples/typescript-graphql-request:
     dependencies:
@@ -553,8 +553,8 @@ importers:
         version: 5.21.0(graphql@16.14.0)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
 
   examples/typescript-resolvers:
     dependencies:
@@ -566,14 +566,14 @@ importers:
         version: 5.21.0(graphql@16.14.0)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
       '@graphql-codegen/typescript':
-        specifier: 6.0.1
-        version: 6.0.1(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/typescript/dist
       '@graphql-codegen/typescript-resolvers':
-        specifier: 6.0.1
-        version: 6.0.1(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/resolvers/dist
 
   examples/vite/vite-react-cts:
     dependencies:
@@ -600,8 +600,8 @@ importers:
         version: 8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(tsx@4.21.1)(yaml@2.9.0)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
@@ -643,8 +643,8 @@ importers:
         version: 8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(tsx@4.21.1)(yaml@2.9.0)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
@@ -686,8 +686,8 @@ importers:
         version: 8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(tsx@4.21.1)(yaml@2.9.0)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
@@ -720,8 +720,8 @@ importers:
         version: 3.5.34(typescript@6.0.3)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@vitejs/plugin-vue':
         specifier: ^6.0.0
         version: 6.0.6(vite@8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(tsx@4.21.1)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
@@ -757,8 +757,8 @@ importers:
         version: 3.5.34(typescript@6.0.3)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@vitejs/plugin-vue':
         specifier: ^6.0.0
         version: 6.0.6(vite@8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(tsx@4.21.1)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
@@ -794,8 +794,8 @@ importers:
         version: 3.5.34(typescript@6.0.3)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: ^7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
       '@vitejs/plugin-vue':
         specifier: ^6.0.0
         version: 6.0.6(vite@8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(tsx@4.21.1)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
@@ -834,8 +834,8 @@ importers:
         specifier: 7.28.5
         version: 7.28.5(@babel/core@7.29.0)
       '@graphql-codegen/cli':
-        specifier: 7.0.0
-        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.14.0)
@@ -13394,108 +13394,6 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@graphql-codegen/cli@7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@5.9.3)':
-    dependencies:
-      '@babel/generator': 7.29.1
-      '@babel/template': 7.28.6
-      '@babel/types': 7.29.0
-      '@graphql-codegen/client-preset': 6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
-      '@graphql-codegen/core': 6.0.0(graphql@16.14.0)
-      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
-      '@graphql-tools/apollo-engine-loader': 8.0.30(graphql@16.14.0)
-      '@graphql-tools/code-file-loader': 8.1.32(graphql@16.14.0)
-      '@graphql-tools/git-loader': 8.0.36(graphql@16.14.0)
-      '@graphql-tools/github-loader': 9.1.2(@types/node@25.7.0)(graphql@16.14.0)
-      '@graphql-tools/graphql-file-loader': 8.1.14(graphql@16.14.0)
-      '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.0)
-      '@graphql-tools/load': 8.1.10(graphql@16.14.0)
-      '@graphql-tools/merge': 9.1.9(graphql@16.14.0)
-      '@graphql-tools/url-loader': 9.1.2(@types/node@25.7.0)(graphql@16.14.0)
-      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
-      '@inquirer/prompts': 8.4.3(@types/node@25.7.0)
-      '@whatwg-node/fetch': 0.10.13
-      chalk: 5.6.2
-      cosmiconfig: 9.0.1(typescript@5.9.3)
-      debounce: 3.0.0
-      detect-indent: 7.0.2
-      graphql: 16.14.0
-      graphql-config: 5.1.6(@types/node@25.7.0)(graphql@16.14.0)(typescript@5.9.3)
-      is-glob: 4.0.3
-      jiti: 2.7.0
-      json-to-pretty-yaml: 1.2.2
-      listr2: 10.2.1
-      log-symbols: 7.0.1
-      micromatch: 4.0.8
-      shell-quote: 1.8.3
-      string-env-interpolation: 1.0.1
-      ts-log: 3.0.2
-      tslib: 2.8.1
-      yaml: 2.9.0
-      yargs: 18.0.0
-    optionalDependencies:
-      '@parcel/watcher': 2.5.6
-    transitivePeerDependencies:
-      - '@fastify/websocket'
-      - '@types/node'
-      - bufferutil
-      - cosmiconfig-toml-loader
-      - crossws
-      - graphql-sock
-      - supports-color
-      - typescript
-      - utf-8-validate
-
-  '@graphql-codegen/cli@7.0.0(@parcel/watcher@2.5.6)(@types/node@25.7.0)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)':
-    dependencies:
-      '@babel/generator': 7.29.1
-      '@babel/template': 7.28.6
-      '@babel/types': 7.29.0
-      '@graphql-codegen/client-preset': 6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
-      '@graphql-codegen/core': 6.0.0(graphql@16.14.0)
-      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
-      '@graphql-tools/apollo-engine-loader': 8.0.30(graphql@16.14.0)
-      '@graphql-tools/code-file-loader': 8.1.32(graphql@16.14.0)
-      '@graphql-tools/git-loader': 8.0.36(graphql@16.14.0)
-      '@graphql-tools/github-loader': 9.1.2(@types/node@25.7.0)(graphql@16.14.0)
-      '@graphql-tools/graphql-file-loader': 8.1.14(graphql@16.14.0)
-      '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.0)
-      '@graphql-tools/load': 8.1.10(graphql@16.14.0)
-      '@graphql-tools/merge': 9.1.9(graphql@16.14.0)
-      '@graphql-tools/url-loader': 9.1.2(@types/node@25.7.0)(graphql@16.14.0)
-      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
-      '@inquirer/prompts': 8.4.3(@types/node@25.7.0)
-      '@whatwg-node/fetch': 0.10.13
-      chalk: 5.6.2
-      cosmiconfig: 9.0.1(typescript@6.0.3)
-      debounce: 3.0.0
-      detect-indent: 7.0.2
-      graphql: 16.14.0
-      graphql-config: 5.1.6(@types/node@25.7.0)(graphql@16.14.0)(typescript@6.0.3)
-      is-glob: 4.0.3
-      jiti: 2.7.0
-      json-to-pretty-yaml: 1.2.2
-      listr2: 10.2.1
-      log-symbols: 7.0.1
-      micromatch: 4.0.8
-      shell-quote: 1.8.3
-      string-env-interpolation: 1.0.1
-      ts-log: 3.0.2
-      tslib: 2.8.1
-      yaml: 2.9.0
-      yargs: 18.0.0
-    optionalDependencies:
-      '@parcel/watcher': 2.5.6
-    transitivePeerDependencies:
-      - '@fastify/websocket'
-      - '@types/node'
-      - bufferutil
-      - cosmiconfig-toml-loader
-      - crossws
-      - graphql-sock
-      - supports-color
-      - typescript
-      - utf-8-validate
-
   '@graphql-codegen/client-preset-swc-plugin@0.2.0': {}
 
   '@graphql-codegen/client-preset@6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)':
@@ -17798,15 +17696,6 @@ snapshots:
       path-type: 4.0.0
       yaml: 1.10.3
 
-  cosmiconfig@8.3.6(typescript@5.9.3):
-    dependencies:
-      import-fresh: 3.3.1
-      js-yaml: 4.1.1
-      parse-json: 5.2.0
-      path-type: 4.0.0
-    optionalDependencies:
-      typescript: 5.9.3
-
   cosmiconfig@8.3.6(typescript@6.0.3):
     dependencies:
       import-fresh: 3.3.1
@@ -17815,15 +17704,6 @@ snapshots:
       path-type: 4.0.0
     optionalDependencies:
       typescript: 6.0.3
-
-  cosmiconfig@9.0.1(typescript@5.9.3):
-    dependencies:
-      env-paths: 2.2.1
-      import-fresh: 3.3.1
-      js-yaml: 4.1.1
-      parse-json: 5.2.0
-    optionalDependencies:
-      typescript: 5.9.3
 
   cosmiconfig@9.0.1(typescript@6.0.3):
     dependencies:
@@ -19526,28 +19406,6 @@ snapshots:
       '@graphql-tools/url-loader': 9.1.2(@types/node@24.12.4)(graphql@16.14.0)
       '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
       cosmiconfig: 8.3.6(typescript@6.0.3)
-      graphql: 16.14.0
-      jiti: 2.7.0
-      minimatch: 10.2.5
-      string-env-interpolation: 1.0.1
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - '@fastify/websocket'
-      - '@types/node'
-      - bufferutil
-      - crossws
-      - typescript
-      - utf-8-validate
-
-  graphql-config@5.1.6(@types/node@25.7.0)(graphql@16.14.0)(typescript@5.9.3):
-    dependencies:
-      '@graphql-tools/graphql-file-loader': 8.1.14(graphql@16.14.0)
-      '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.0)
-      '@graphql-tools/load': 8.1.10(graphql@16.14.0)
-      '@graphql-tools/merge': 9.1.9(graphql@16.14.0)
-      '@graphql-tools/url-loader': 9.1.2(@types/node@25.7.0)(graphql@16.14.0)
-      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
-      cosmiconfig: 8.3.6(typescript@5.9.3)
       graphql: 16.14.0
       jiti: 2.7.0
       minimatch: 10.2.5

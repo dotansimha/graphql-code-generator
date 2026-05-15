@@ -16,7 +16,7 @@
     "vue": "^3.2.45"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^7.0.0",
+    "@graphql-codegen/cli": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.0",
     "cypress": "15.15.0",
     "serve": "14.2.6",

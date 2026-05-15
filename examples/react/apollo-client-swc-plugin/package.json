@@ -15,7 +15,7 @@
     "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^7.0.0",
+    "@graphql-codegen/cli": "workspace:*",
     "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

@@ -15,7 +15,7 @@
     "graphql-yoga": "5.21.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "7.0.0"
+    "@graphql-codegen/cli": "workspace:*"
   },
   "bob": false
 }
