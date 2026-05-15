@@ -42,6 +42,39 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.0(jiti@2.7.0))
+      '@graphql-codegen/add':
+        specifier: workspace:*
+        version: link:packages/plugins/other/add/dist
+      '@graphql-codegen/cli':
+        specifier: workspace:*
+        version: link:packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:packages/presets/client/dist
+      '@graphql-codegen/flow':
+        specifier: 3.0.1
+        version: 3.0.1(graphql@16.14.0)
+      '@graphql-codegen/flow-resolvers':
+        specifier: 3.0.2
+        version: 3.0.2(graphql@16.14.0)
+      '@graphql-codegen/graphql-modules-preset':
+        specifier: workspace:*
+        version: link:packages/presets/graphql-modules/dist
+      '@graphql-codegen/typed-document-node':
+        specifier: workspace:*
+        version: link:packages/plugins/typescript/typed-document-node/dist
+      '@graphql-codegen/typescript':
+        specifier: workspace:*
+        version: link:packages/plugins/typescript/typescript/dist
+      '@graphql-codegen/typescript-graphql-files-modules':
+        specifier: 4.0.1
+        version: 4.0.1(graphql@16.14.0)
+      '@graphql-codegen/typescript-operations':
+        specifier: workspace:*
+        version: link:packages/plugins/typescript/operations/dist
+      '@graphql-codegen/typescript-resolvers':
+        specifier: workspace:*
+        version: link:packages/plugins/typescript/resolvers/dist
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 4.7.1
         version: 4.7.1(@vue/compiler-sfc@3.5.34)(prettier@3.8.3)
