@@ -606,9 +606,9 @@ checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
 name = "hstr"
-version = "3.0.4"
+version = "3.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "faa57007c3c9dab34df2fa4c1fb52fe9c34ec5a27ed9d8edea53254b50cd7887"
+checksum = "c1b94e40256e78ddd4e30490aa931bec17e65e9413a6ad11f64ec67815da9323"
 dependencies = [
  "hashbrown 0.14.5",
  "new_debug_unreachable",
@@ -1490,9 +1490,9 @@ dependencies = [
 
 [[package]]
 name = "swc_atoms"
-version = "9.0.0"
+version = "9.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4ccbe2ecad10ad7432100f878a107b1d972a8aee83ca53184d00c23a078bb8a"
+checksum = "ecbd7177c71140b23dc6b1b9c1a9f16f96d0337cb999f5a79bb49ca4d82eded0"
 dependencies = [
  "bytecheck",
  "cbor4ii",
@@ -1505,9 +1505,9 @@ dependencies = [
 
 [[package]]
 name = "swc_common"
-version = "21.0.1"
+version = "21.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "078f2144aa2c33ff8485773f1b81b9985fa2d00f4ad60879158ad6897db2de88"
+checksum = "da38f2cee8e659bf0ec7f51ec5b37ec58c9127de755d3fe0b2c2353ec9474b09"
 dependencies = [
  "anyhow",
  "ast_node",
@@ -1537,9 +1537,9 @@ dependencies = [
 
 [[package]]
 name = "swc_core"
-version = "65.1.0"
+version = "66.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cb28adfd0302ee7c5f0de598f353c8d1f2ef1fb033a3691d0f9a7e448ac8a2c"
+checksum = "c7732cc0c530a42ddfc03135c8747d8ef0db1d15f18f158fb2345f28ceb10ffb"
 dependencies = [
  "swc_allocator",
  "swc_atoms",
@@ -1560,9 +1560,9 @@ dependencies = [
 
 [[package]]
 name = "swc_ecma_ast"
-version = "23.0.0"
+version = "23.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "39f4173ab7e676eed4938d5ad8bbdf14418f87c9a8d36e6cdda82ac9645912b0"
+checksum = "550ee54eab536fe357090fec6d42d083c28cf44cc9bcfa93b1ea5e1606f3b2f7"
 dependencies = [
  "bitflags",
  "cbor4ii",
