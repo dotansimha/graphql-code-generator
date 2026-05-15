@@ -164,7 +164,7 @@ jobs:
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
-        run: pnpm i
+        run: pnpm ci
       - name: Build
         run: pnpm build
       - name: Test
@@ -202,7 +202,7 @@ jobs:
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
-        run: pnpm i
+        run: pnpm ci
       - name: Build
         run: pnpm build
       - name: Test
