@@ -13,6 +13,7 @@
     "node": ">=16"
   },
   "main": "dist/cjs/index.js",
+  "typings": "dist/typings/index.d.ts",
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
@@ -31,7 +32,6 @@
     },
     "./package.json": "./package.json"
   },
-  "typings": "dist/typings/index.d.ts",
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "vitest --no-watch"
