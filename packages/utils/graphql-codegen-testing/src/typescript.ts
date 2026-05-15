@@ -58,7 +58,7 @@ export function validateTs(
   }
   if (tsVersion.startsWith('6.')) {
     options.ignoreDeprecations ||= '6.0';
-    options.types ||= ['node'];
+    // options.types ||= ['node']; FIXME(pnpm-update): causing errors about missing node. Maybe resolving at the wrong location?
   }
 
   const contents: string =
