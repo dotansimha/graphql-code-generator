@@ -46,6 +46,7 @@
     "@theguild/prettier-config": "3.0.1",
     "@types/node": "24.12.4",
     "bob-the-bundler": "7.0.1",
+    "dotenv": "17.4.2",
     "eslint": "10.4.0",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5",
