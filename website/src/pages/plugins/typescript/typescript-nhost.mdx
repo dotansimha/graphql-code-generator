@@ -36,8 +36,8 @@ export default config
 
 First, install GraphQL codegen and the Nhost Typescript plugin:
 
-```sh
-yarn add -D @graphql-codegen/cli @graphql-codegen/typescript-nhost
+```sh npm2yarn
+npm i --save-dev @graphql-codegen/cli @graphql-codegen/typescript-nhost
 ```
 
 Then configure the code generator by adding a `codegen.yaml` file:
@@ -55,8 +55,8 @@ generates:
 
 ### Step 2: Install and configure the Nhost Typescript SDK
 
-```sh
-yarn add @nhost/nhost-js
+```sh npm2yarn
+npm i --save @nhost/nhost-js
 ```
 
 ```ts filename="src/main.ts"

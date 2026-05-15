@@ -6,7 +6,7 @@
     "build": "tsc",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "vitest --no-watch",
-    "test:end2end": "yarn test"
+    "test:end2end": "pnpm test"
   },
   "dependencies": {
     "@graphql-yoga/plugin-persisted-operations": "3.21.0",

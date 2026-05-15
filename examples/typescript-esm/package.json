@@ -7,7 +7,7 @@
     "build": "tsc",
     "codegen": "graphql-codegen-esm --config codegen.cjs",
     "start": "node dist/main.js",
-    "test:end2end": "yarn start"
+    "test:end2end": "pnpm start"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.2.0",

@@ -24,7 +24,7 @@ To be able to clone, build and develop codegen, you'll need to have the followin
 - [GitHub Account](https://github.com)
 - [Git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org/en) (v16+)
-- [Yarn](https://yarnpkg.com) (v1)
+- [PNPM](https://pnpm.io)
 - Any code editor (we recommend [VSCode](https://code.visualstudio.com))
 
 GraphQL Code Generator uses the following stack to manage the source code:
@@ -48,15 +48,14 @@ It's also recommended to create a new Git branch at this point, from `main` bran
 
 ## 3. Install Dependencies
 
-GraphQL Code Generator is built as a monorepo, using
-[Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces) it means that all scripts and
-dependencies are located in the root `package.json` of the project.
+GraphQL Code Generator is built as a monorepo, using [PNPM Workspaces](https://pnpm.io/workspaces)
+it means that all scripts and dependencies are located in the root `package.json` of the project.
 
 Now that you have a local copy of the project, start by installing the dependencies for all packages
 in the repo, by running the following in the root directory of the project:
 
 ```sh
-yarn
+pnpm i
 ```
 
 <Callout>
@@ -70,8 +69,8 @@ To test the initial scripts and verify that you have a valid development environ
 running the following scripts from the root directory:
 
 ```sh
-yarn build
-yarn test
+pnpm build
+pnpm test
 ```
 
 The command above will make sure to build all common/core packages, and will make sure that all
@@ -151,7 +150,7 @@ Now that your plugin is configured, you need to make sure Yarn knows about it an
 monorepo, so rerun the following command, in the root directory:
 
 ```sh
-yarn
+pnpm i
 ```
 
 ## 6. Create your plugin
@@ -215,7 +214,7 @@ describe('My Plugin', () => {
 Now, to make sure it works, run the following in your plugin directory:
 
 ```sh
-yarn test
+pnpm test
 ```
 
 ## 8. Integration
@@ -223,11 +222,11 @@ yarn test
 You can also test the integration of your plugin with the codegen core and cli, the integration with
 other plugins and the output for some complex schemas and operations.
 
-To do that, make sure everything is built by using `yarn build` in the root directory, then you can
-use it in `./dev-test/codegen.ts`, and run `yarn generate:examples` in the project root directory to
+To do that, make sure everything is built by using `pnpm build` in the root directory, then you can
+use it in `./dev-test/codegen.ts`, and run `pnpm generate:examples` in the project root directory to
 run it.
 
-If you would like to test "watch mode" in the same way, you can run `yarn watch:examples`.
+If you would like to test "watch mode" in the same way, you can run `pnpm watch:examples`.
 
 ## 9. Documentation
 
@@ -280,7 +279,7 @@ export const pluginsConfigurations: PluginConfig[] = [
 
 <Callout>
   Adding your plugin here will automatically include it in the generated `config.schema.json` that
-  provides VSCode auto-complete (try running `yarn generate-json-config` to see it in action) and
+  provides VSCode auto-complete (try running `pnpm generate-json-config` to see it in action) and
   will generate markdown documentation automatically based on your TypeScript types.
 </Callout>
 
@@ -301,7 +300,7 @@ Flow, Java, etc).
    For example, the `@graphql-codegen/typescript-react-apollo` plugin has a page at
    `website/src/pages/plugins/typescript/typescript-react-apollo.mdx`.
 
-2. Add your plugin's package as a dependency of the `website/package.json` and run `yarn install` at
+2. Add your plugin's package as a dependency of the `website/package.json` and run `pnpm install` at
    the root of the repository.
 
 3. Update the `website/src/lib/plugins-docs.ts` file by adding your plugin to the
@@ -314,7 +313,7 @@ existing plugins.
    `typescript` category). Make sure that your plugin is assigned to the proper category by updating
    the `website/src/category-to-packages.mjs` file:
 
-Go ahead to `website` directory and run the website using `yarn dev`.
+Go ahead to `website` directory and run the website using `pnpm dev`.
 
 Your plugin page should be available in `http://localhost:3000/plugins/<category>/<plugin-name>`.
 

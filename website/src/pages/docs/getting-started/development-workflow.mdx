@@ -21,8 +21,8 @@ If you wish to run the codegen before starting your server/app, you can use `pre
     "dev": "nodemon app.js",
     "start": "node app.js",
     "generate": "graphql-codegen",
-    "prestart": "yarn generate",
-    "predev": "yarn generate"
+    "prestart": "pnpm generate",
+    "predev": "pnpm generate"
   }
 }
 ```
@@ -51,10 +51,10 @@ You can either run it in a separate terminal session or use tools like
 ```json {3} /--watch/
 {
   "scripts": {
-    "dev": "concurrently \"nodemon app.js\" \"yarn generate --watch\"",
+    "dev": "concurrently \"nodemon app.js\" \"pnpm generate --watch\"",
     "start": "node app.js",
     "generate": "graphql-codegen",
-    "prestart": "yarn generate"
+    "prestart": "pnpm generate"
   }
 }
 ```
@@ -63,7 +63,7 @@ If you wish, you can specify a custom list of files to watch, by adding a glob e
 command, using `--watch` flag:
 
 ```sh /"src/**/*.js"/
-yarn graphql-codegen --watch "src/**/*.js"
+pnpm graphql-codegen --watch "src/**/*.js"
 ```
 
 Use this when you are loading your schema or documents from a single code file that depends on other
@@ -85,12 +85,11 @@ const config: CodegenConfig = {
 export default config
 ```
 
-## Monorepo and Yarn Workspaces
+## Monorepo and PNPM Workspaces
 
 If you are using a monorepo structure, with tools such as
-[Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or
-[Lerna](https://github.com/lerna/lerna), we recommend installing the codegen in the root of your
-monorepo.
+[PNPM Workspaces](https://pnpm.io/workspaces) or [Lerna](https://github.com/lerna/lerna), we
+recommend installing the codegen in the root of your monorepo.
 
 If you need to execute the codegen multiple times, note that you can specify multiple fields for
 `generates` field, for example:

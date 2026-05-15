@@ -6,7 +6,7 @@
     "build": "vite build",
     "codegen": "graphql-codegen --config codegen.ts",
     "dev": "vite",
-    "start": "yarn start:yoga & serve -s dist",
+    "start": "pnpm start:yoga & serve -s dist",
     "start:yoga": "node src/yoga.mjs",
     "test": "cypress run",
     "test:end2end": "start-server-and-test start http://localhost:3000 test"

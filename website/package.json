@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "yarn generate-packages-info && yarn generate-json-config && next build && next-sitemap",
+    "build": "pnpm generate-packages-info && pnpm generate-json-config && next build && next-sitemap",
     "dev": "next",
     "generate-json-config": "tsx scripts/generate-config-json-schema.ts",
     "generate-packages-info": "tsx scripts/generate-packages-info.ts",
