@@ -55,7 +55,7 @@
     "@theguild/eslint-config": "0.13.4",
     "@theguild/prettier-config": "3.0.1",
     "bob-the-bundler": "7.0.1",
-    "eslint": "10.3.0",
+    "eslint": "10.4.0",
     "eslint-plugin-tailwindcss": "npm:@hasparus/eslint-plugin-tailwindcss@3.17.5",
     "graphql": "16.14.0",
     "husky": "9.1.7",
