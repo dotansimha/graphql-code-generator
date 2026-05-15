@@ -82,19 +82,6 @@
     "**/__generated__/**": []
   },
   "pnpm": {
-    "overrides": {
-      "@rushstack/eslint-patch": "1.16.1",
-      "@typescript-eslint/eslint-plugin": "8.59.3",
-      "@typescript-eslint/parser": "8.59.3",
-      "@typescript-eslint/scope-manager": "8.59.3",
-      "@typescript-eslint/type-utils": "8.59.3",
-      "@typescript-eslint/types": "8.59.3",
-      "@typescript-eslint/typescript-estree": "8.59.3",
-      "@typescript-eslint/utils": "8.59.3",
-      "@typescript-eslint/visitor-keys": "8.59.3",
-      "eslint-plugin-promise": "7.3.0",
-      "typescript": "6.0.3"
-    },
     "patchedDependencies": {
       "typescript-json-schema@0.56.0": "patches/typescript-json-schema+0.56.0.patch"
     }
