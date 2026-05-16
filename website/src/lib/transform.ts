@@ -16,7 +16,6 @@ export function transformDocs() {
     skipLibCheck: true,
     allowSyntheticDefaultImports: true,
     types: ['node'],
-    ignoreDeprecations: '6.0',
     noImplicitAny: false,
     strictNullChecks: false,
   });
