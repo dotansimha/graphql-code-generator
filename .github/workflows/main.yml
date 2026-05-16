@@ -30,14 +30,23 @@ jobs:
     name: 🧹 Prettier Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Master
+      - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          packageManager: pnpm
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm install
+
       - name: Prettier Check
         run: pnpm prettier:check
+
   dev-tests-old:
     name: Validating dev-tests
     runs-on: ubuntu-latest
@@ -49,10 +58,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          packageManager: pnpm
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm install
+
       - name: Build
         run: pnpm build
         env:
@@ -61,22 +78,28 @@ jobs:
         run: |
           pnpm run generate:examples:${{matrix.method}}
           git diff --exit-code -- dev-test/
+
   dev-tests:
     name: Examples - Normal
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          packageManager: pnpm
-      - name: Prepare Cypress
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        # `side-effects-cache false` is set to avoid using pnpm cache for binary cache like Cypress'
         run: |
-          pnpm store prune
           pnpm config set side-effects-cache false --location project
-          pnpm rm -rf node_modules
           pnpm i
+
       - name: Build
         run: pnpm build
         env:
@@ -131,16 +154,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          packageManager: pnpm
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm i
+
       - name: Build
         run: pnpm build
         env:
           CI: true
       - name: Test ESM & CJS integrity
         run: pnpm bob check
+
   test:
     name:
       Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL
@@ -162,15 +194,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          nodeVersion: ${{matrix.node_version}}
-          packageManager: pnpm
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
-        run: pnpm i --no-frozen-lockfile
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because `graphql` version is changed
+
       - name: Build
         run: pnpm build
       - name: Test
@@ -200,15 +237,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          nodeVersion: ${{matrix.node_version}}
-          packageManager: pnpm
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
-        run: pnpm i --no-frozen-lockfile
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because `graphql` version is changed
+
       - name: Build
         run: pnpm build
       - name: Test

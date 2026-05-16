@@ -18,10 +18,17 @@ jobs:
       - name: Fetch
         run: git fetch origin master
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          packageManager: pnpm
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm install
 
       - name: Build Packages
         run: pnpm build
