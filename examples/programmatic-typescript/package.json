@@ -16,7 +16,7 @@
     "@graphql-codegen/typescript": "workspace:*",
     "@graphql-codegen/typescript-operations": "workspace:*",
     "@graphql-codegen/typescript-resolvers": "workspace:*",
-    "@graphql-tools/graphql-file-loader": "^8.1.12",
+    "@graphql-tools/graphql-file-loader": "8.1.12",
     "@graphql-tools/load": "8.1.10",
     "@graphql-tools/schema": "10.0.33",
     "graphql": "16.14.0",

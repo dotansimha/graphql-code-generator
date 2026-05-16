@@ -11,18 +11,18 @@
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
-    "graphql": "^16.6.0",
-    "villus": "^3.0.0",
-    "vue": "^3.2.37"
+    "graphql": "16.14.0",
+    "villus": "3.5.2",
+    "vue": "3.5.34"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*",
-    "@vitejs/plugin-vue": "^6.0.0",
+    "@vitejs/plugin-vue": "6.0.7",
     "cypress": "15.15.0",
     "serve": "14.2.6",
     "start-server-and-test": "3.0.5",
-    "typescript": "^6.0.0",
-    "vite": "^8.0.0",
-    "vue-tsc": "^3.0.0"
+    "typescript": "6.0.3",
+    "vite": "8.0.13",
+    "vue-tsc": "3.2.9"
   }
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "codegen": "graphql-codegen --config codegen.ts",
-    "dev": "ts-node src/main.ts",
+    "dev": "tsx src/main.ts",
     "test": "exit 0",
     "test:end2end": "exit 0"
   },
@@ -17,7 +17,8 @@
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*",
     "@graphql-codegen/typescript": "workspace:*",
-    "@graphql-codegen/typescript-resolvers": "workspace:*"
+    "@graphql-codegen/typescript-resolvers": "workspace:*",
+    "tsx": "4.22.0"
   },
   "bob": false
 }
