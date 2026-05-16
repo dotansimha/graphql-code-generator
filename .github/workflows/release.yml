@@ -13,6 +13,7 @@ jobs:
     uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
     with:
       releaseScript: release
+      packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NPM_TOKEN }}
