@@ -4,7 +4,7 @@ import { CodegenContext, createContext, ensureContext } from '../src/index.js';
 describe('Codegen config - Context', () => {
   it('loads and merge multiple schemas when using GraphQL config', async () => {
     const context = await createContext({
-      config: './tests/test-files/graphql.config.js',
+      config: './tests/test-files/graphql.config.cjs',
       project: 'prj1',
       errorsOnly: true,
       overwrite: true,

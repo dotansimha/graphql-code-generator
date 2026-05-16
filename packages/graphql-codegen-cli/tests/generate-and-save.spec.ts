@@ -418,7 +418,7 @@ describe('generate-and-save', () => {
       expect.assertions(1);
       try {
         const config = await createContext({
-          config: './tests/test-files/graphql.config.no-doc.js',
+          config: './tests/test-files/graphql.config.no-doc.cjs',
           project: undefined,
           errorsOnly: true,
           overwrite: true,
@@ -443,7 +443,7 @@ describe('generate-and-save', () => {
       outputErrorSpy.mockImplementation(() => true);
       vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
       const config = await createContext({
-        config: './tests/test-files/graphql.config.no-doc-ignored.js',
+        config: './tests/test-files/graphql.config.no-doc-ignored.cjs',
         project: undefined,
         errorsOnly: true,
         overwrite: true,

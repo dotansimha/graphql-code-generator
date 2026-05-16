@@ -22,9 +22,9 @@
     "@graphql-codegen/visitor-plugin-common": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
+    "@types/node": "24.12.4",
     "tsx": "4.22.0",
-    "typescript": "^5.9.3",
+    "typescript": "6.0.3",
     "vitest": "4.1.6"
   },
   "sideEffects": false
