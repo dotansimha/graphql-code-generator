@@ -29,7 +29,7 @@
     "test": "vitest",
     "types:check": "tsc --noEmit",
     "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
-    "watch:examples": "pnpm watch:examples:cjs",
+    "watch:examples": "pnpm watch:examples:esm",
     "watch:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "watch:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --watch --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env"
   },
