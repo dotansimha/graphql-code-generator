@@ -573,8 +573,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.6(react@19.2.6)
       urql:
-        specifier: ^3.0.0
-        version: 3.0.4(graphql@16.14.0)(react@19.2.6)
+        specifier: ^5.0.0
+        version: 5.0.2(@urql/core@3.2.2(graphql@16.14.0))(react@19.2.6)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: workspace:*
@@ -11976,10 +11976,10 @@ packages:
   urlpattern-polyfill@10.1.0:
     resolution: {integrity: sha512-IGjKp/o0NL3Bso1PymYURCJxMPNAf/ILOpendP9f5B6e1rTJgdgiOvgfoT8VxCAdY+Wisb9uhGaJJf3yZ2V9nw==}
 
-  urql@3.0.4:
-    resolution: {integrity: sha512-okmQKQ9pF4t8O8iCC5gH9acqfFji5lkhW3nLBjx8WKDd2zZG7PXoUpUK19VQEMK87L6VFBOO/XZ52MMKFEI0AA==}
+  urql@5.0.2:
+    resolution: {integrity: sha512-hiBR9GNbMPMZpv9Yd40EMCc94d8eAkGcmt5jcrKVfp26ScjluAQLCEKetJ4SXLy5DJG59Y6gbuA+2yquzh20/w==}
     peerDependencies:
-      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+      '@urql/core': ^6.0.0
       react: '>= 16.8.0'
 
   use-isomorphic-layout-effect@1.2.1:
@@ -24513,10 +24513,9 @@ snapshots:
 
   urlpattern-polyfill@10.1.0: {}
 
-  urql@3.0.4(graphql@16.14.0)(react@19.2.6):
+  urql@5.0.2(@urql/core@3.2.2(graphql@16.14.0))(react@19.2.6):
     dependencies:
       '@urql/core': 3.2.2(graphql@16.14.0)
-      graphql: 16.14.0
       react: 19.2.6
       wonka: 6.3.6
 
