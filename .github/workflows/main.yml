@@ -75,6 +75,7 @@ jobs:
         run: |
           pnpm store prune
           pnpm config set side-effects-cache false --location project
+          pnpm rm -rf node_modules
           pnpm i
       - name: Build
         run: pnpm build
