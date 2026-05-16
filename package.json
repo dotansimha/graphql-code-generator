@@ -16,7 +16,7 @@
     "examples:codegen": "set -o xtrace && eval $(node scripts/print-example-ci-command.js codegen)",
     "examples:test:end2end": "set -o xtrace && eval $(node scripts/print-example-ci-command.js test:end2end)",
     "fix-bins": "node scripts/fix-bin.js",
-    "generate:examples": "pnpm generate:examples:cjs",
+    "generate:examples": "pnpm generate:examples:esm",
     "generate:examples:cjs": "node packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "generate:examples:esm": "node packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config ./dev-test/codegen.ts dotenv_config_path=dev-test/.env",
     "postinstall": "husky install",
