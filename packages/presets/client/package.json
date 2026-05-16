@@ -67,7 +67,7 @@
     "@types/babel__helper-plugin-utils": "7.10.3",
     "@types/babel__template": "7.4.4",
     "graphql-sock": "1.0.1",
-    "jiti": "2.3.0"
+    "jiti": "2.7.0"
   },
   "publishConfig": {
     "directory": "dist",
