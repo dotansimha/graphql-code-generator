@@ -1,3 +1,5 @@
+minimumReleaseAge: 1440 # in minutes. 1440 minutes === 1 day
+
 packages:
   - packages/*
   - packages/plugins/typescript/*
