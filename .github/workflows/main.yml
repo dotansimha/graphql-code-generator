@@ -22,10 +22,11 @@ jobs:
     name: Linting Check
     uses: the-guild-org/shared-config/.github/workflows/lint.yml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
     with:
-      script: pnpm ci:lint
+      script: pnpm lint:ci
       packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
+
   prettier-check:
     name: 🧹 Prettier Check
     runs-on: ubuntu-latest
@@ -47,7 +48,7 @@ jobs:
       - name: Prettier Check
         run: pnpm prettier:check
 
-  dev-tests-old:
+  dev-tests:
     name: Validating dev-tests
     runs-on: ubuntu-latest
     strategy:
@@ -76,10 +77,10 @@ jobs:
           CI: true
       - name: Test dev-tests ${{matrix.method}}
         run: |
-          pnpm run generate:examples:${{matrix.method}}
+          pnpm run dev-test:generate:${{matrix.method}}
           git diff --exit-code -- dev-test/
 
-  dev-tests:
+  examples-tests:
     name: Examples - Normal
     runs-on: ubuntu-latest
     steps:
