@@ -1,0 +1,8 @@
+# When running `pnpm dev-test:watch`, updating this file should trigger rebuild,
+# even though it's "outside" of the CWD of `dev-test/general/codegen.ts`
+query CurrentUserForProfileFromOutsideDirectory {
+  currentUser {
+    login
+    avatar_url
+  }
+}
