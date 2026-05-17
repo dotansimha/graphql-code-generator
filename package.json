@@ -30,8 +30,7 @@
     "prerelease": "pnpm build",
     "release": "changeset publish",
     "test": "vitest",
-    "types:check": "tsc --noEmit",
-    "watch-build": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\""
+    "types:check": "tsc --noEmit"
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
