@@ -189,6 +189,12 @@ importers:
         specifier: 4.1.6
         version: 4.1.6(@types/node@24.12.4)(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))
 
+  dev-test/general:
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
+
   examples/persisted-documents:
     dependencies:
       '@graphql-yoga/plugin-persisted-operations':

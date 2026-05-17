@@ -1,0 +1,14 @@
+{
+  "name": "dev-test-general",
+  "version": "0.0.1",
+  "description": "Kitchen sink of various setups. For new dev-test, consider creating new project for better targetting",
+  "private": true,
+  "scripts": {
+    "generate": "pnpm generate:esm",
+    "generate:cjs": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env",
+    "generate:esm": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "workspace:*"
+  }
+}
