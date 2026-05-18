@@ -571,7 +571,36 @@ export class SelectionSetToObject<
               [],
             );
 
-            collectGrouped(flattenedSelectionNodes);
+            // Top-level INLINE_FRAGMENT / FRAGMENT_SPREAD nodes among the
+            // inlined selections cannot be consumed directly by
+            // `buildSelectionSet`, which only handles FIELD and DIRECTIVE
+            // kinds for AST nodes and throws "Unexpected type." otherwise.
+            // Route them through `flattenSelectionSet` — which already
+            // expands inline fragments and fragment spreads per type — and
+            // merge the FIELD-only result with the already-FIELD selections
+            // before handing off.
+            const directNodes: GroupedTypeNameNode[] = [];
+            const nestedSelections: SelectionNode[] = [];
+            for (const n of flattenedSelectionNodes) {
+              if (
+                'kind' in n &&
+                (n.kind === Kind.INLINE_FRAGMENT || n.kind === Kind.FRAGMENT_SPREAD)
+              ) {
+                nestedSelections.push(n);
+              } else {
+                directNodes.push(n);
+              }
+            }
+            if (nestedSelections.length) {
+              const { selectionNodesByTypeName: nestedByType } = this.flattenSelectionSet(
+                nestedSelections,
+                schemaType,
+              );
+              const nestedForThisType = nestedByType.get(typeName) ?? [];
+              directNodes.push(...nestedForThisType);
+            }
+
+            collectGrouped(directNodes);
           }
 
           if (incrementalDirectivesFound) {
