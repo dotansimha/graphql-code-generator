@@ -40,39 +40,6 @@ importers:
       '@eslint/js':
         specifier: 10.0.1
         version: 10.0.1(eslint@10.4.0(jiti@2.7.0))
-      '@graphql-codegen/add':
-        specifier: workspace:*
-        version: link:packages/plugins/other/add/dist
-      '@graphql-codegen/cli':
-        specifier: workspace:*
-        version: link:packages/graphql-codegen-cli/dist
-      '@graphql-codegen/client-preset':
-        specifier: workspace:*
-        version: link:packages/presets/client/dist
-      '@graphql-codegen/flow':
-        specifier: 3.0.1
-        version: 3.0.1(graphql@16.14.0)
-      '@graphql-codegen/flow-resolvers':
-        specifier: 3.0.2
-        version: 3.0.2(graphql@16.14.0)
-      '@graphql-codegen/graphql-modules-preset':
-        specifier: workspace:*
-        version: link:packages/presets/graphql-modules/dist
-      '@graphql-codegen/typed-document-node':
-        specifier: workspace:*
-        version: link:packages/plugins/typescript/typed-document-node/dist
-      '@graphql-codegen/typescript':
-        specifier: workspace:*
-        version: link:packages/plugins/typescript/typescript/dist
-      '@graphql-codegen/typescript-graphql-files-modules':
-        specifier: 4.0.1
-        version: 4.0.1(graphql@16.14.0)
-      '@graphql-codegen/typescript-operations':
-        specifier: workspace:*
-        version: link:packages/plugins/typescript/operations/dist
-      '@graphql-codegen/typescript-resolvers':
-        specifier: workspace:*
-        version: link:packages/plugins/typescript/resolvers/dist
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 4.7.1
         version: 4.7.1(@vue/compiler-sfc@3.5.34)(prettier@3.8.3)
@@ -96,7 +63,7 @@ importers:
         version: 10.4.0(jiti@2.7.0)
       eslint-plugin-import:
         specifier: 2.32.0
-        version: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
+        version: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-tailwindcss:
         specifier: npm:@hasparus/eslint-plugin-tailwindcss@3.17.5
         version: '@hasparus/eslint-plugin-tailwindcss@3.17.5(tailwindcss@3.4.19(tsx@4.22.0)(yaml@2.9.0))'
@@ -1028,6 +995,33 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
     devDependencies:
+      '@graphql-codegen/add':
+        specifier: workspace:*
+        version: link:../plugins/other/add/dist
+      '@graphql-codegen/flow':
+        specifier: 3.0.1
+        version: 3.0.1(graphql@16.14.0)
+      '@graphql-codegen/flow-resolvers':
+        specifier: 3.0.1
+        version: 3.0.1(graphql@16.14.0)
+      '@graphql-codegen/graphql-modules-preset':
+        specifier: workspace:*
+        version: link:../presets/graphql-modules/dist
+      '@graphql-codegen/typed-document-node':
+        specifier: workspace:*
+        version: link:../plugins/typescript/typed-document-node/dist
+      '@graphql-codegen/typescript':
+        specifier: workspace:*
+        version: link:../plugins/typescript/typescript/dist
+      '@graphql-codegen/typescript-graphql-files-modules':
+        specifier: 4.0.1
+        version: 4.0.1(graphql@16.14.0)
+      '@graphql-codegen/typescript-operations':
+        specifier: workspace:*
+        version: link:../plugins/typescript/operations/dist
+      '@graphql-codegen/typescript-resolvers':
+        specifier: workspace:*
+        version: link:../plugins/typescript/resolvers/dist
       '@inquirer/testing':
         specifier: 3.3.6
         version: 3.3.6(@inquirer/checkbox@5.1.5(@types/node@24.12.4))(@inquirer/confirm@6.0.13(@types/node@24.12.4))(@inquirer/editor@5.1.2(@types/node@24.12.4))(@inquirer/expand@5.0.14(@types/node@24.12.4))(@inquirer/external-editor@3.0.0(@types/node@24.12.4))(@inquirer/input@5.0.13(@types/node@24.12.4))(@inquirer/number@4.0.13(@types/node@24.12.4))(@inquirer/password@5.0.13(@types/node@24.12.4))(@inquirer/prompts@8.4.3(@types/node@24.12.4))(@inquirer/rawlist@5.2.9(@types/node@24.12.4))(@inquirer/search@4.1.9(@types/node@24.12.4))(@inquirer/select@5.1.5(@types/node@24.12.4))(@types/node@24.12.4)(vitest@4.1.6(@types/node@24.12.4)(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)))
@@ -3162,6 +3156,12 @@ packages:
 
   '@graphql-codegen/flow-operations@3.0.2':
     resolution: {integrity: sha512-4GYZ3ZVGIF4kI6D6XwXifch2/k8SF1j7e4aoJTkaR74i1P1Ldc/92CM9/LpRF4X9tU2io/J1N5Hz9DRR0qHl5w==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/flow-resolvers@3.0.1':
+    resolution: {integrity: sha512-3Ea2vdZh7nbdlntAvd/rgOSZV/XVpO6824mA0MUg8leWI3BI893oY/+O9Rq7HgAxszUThbQfTci7qN5Xd9yYVA==}
     engines: {node: '>= 16.0.0'}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -14026,6 +14026,19 @@ snapshots:
       - encoding
       - supports-color
 
+  '@graphql-codegen/flow-resolvers@3.0.1(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/flow': 3.0.1(graphql@16.14.0)
+      '@graphql-codegen/plugin-helpers': 3.1.2(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 2.13.8(graphql@16.14.0)
+      '@graphql-tools/utils': 10.11.0(graphql@16.14.0)
+      auto-bind: 4.0.0
+      graphql: 16.14.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
   '@graphql-codegen/flow-resolvers@3.0.2(graphql@16.14.0)':
     dependencies:
       '@graphql-codegen/flow': 3.0.1(graphql@16.14.0)
@@ -18894,7 +18907,7 @@ snapshots:
       eslint: 10.4.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@10.4.0(jiti@2.7.0))
@@ -18928,7 +18941,7 @@ snapshots:
       tinyglobby: 0.2.16
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -19029,7 +19042,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9

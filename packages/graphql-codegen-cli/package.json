@@ -111,6 +111,15 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "workspace:*",
+    "@graphql-codegen/flow": "3.0.1",
+    "@graphql-codegen/flow-resolvers": "3.0.1",
+    "@graphql-codegen/graphql-modules-preset": "workspace:*",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*",
+    "@graphql-codegen/typescript-graphql-files-modules": "4.0.1",
+    "@graphql-codegen/typescript-operations": "workspace:*",
+    "@graphql-codegen/typescript-resolvers": "workspace:*",
     "@inquirer/testing": "3.3.6",
     "@parcel/watcher": "^2.1.0",
     "@types/is-glob": "4.0.4",
