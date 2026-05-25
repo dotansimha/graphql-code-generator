@@ -1,5 +1,52 @@
 # @graphql-codegen/client-preset
 
+## 6.0.1
+
+### Patch Changes
+
+- [#10845](https://github.com/dotansimha/graphql-code-generator/pull/10845)
+  [`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/add@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/add/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/gql-tag-operations@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/gql-tag-operations/v/workspace:^)
+    (from `6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/typed-document-node@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typed-document-node/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/typescript@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typescript/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/typescript-operations@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typescript-operations/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/visitor-plugin-common@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/visitor-plugin-common/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+
+- [#10845](https://github.com/dotansimha/graphql-code-generator/pull/10845)
+  [`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Change dependency pinning
+
+- Updated dependencies
+  [[`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829),
+  [`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829),
+  [`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829),
+  [`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829),
+  [`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829),
+  [`f5a9963`](https://github.com/dotansimha/graphql-code-generator/commit/f5a99635385d53213dc6b9e558125c2e93a5d829)]:
+  - @graphql-codegen/add@7.0.1
+  - @graphql-codegen/gql-tag-operations@6.0.1
+  - @graphql-codegen/typed-document-node@7.0.1
+  - @graphql-codegen/typescript@6.0.2
+  - @graphql-codegen/typescript-operations@6.0.3
+  - @graphql-codegen/visitor-plugin-common@7.0.3
+
 ## 6.0.0
 
 ### Major Changes
