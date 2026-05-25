@@ -1,5 +1,28 @@
 # @graphql-codegen/cli
 
+## 7.0.1
+
+### Patch Changes
+
+- [#10843](https://github.com/dotansimha/graphql-code-generator/pull/10843)
+  [`2fb9bd3`](https://github.com/dotansimha/graphql-code-generator/commit/2fb9bd30884e420e0feeca7d74ee2bc31b2522f8)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/client-preset@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/core@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/core/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+- Updated dependencies
+  [[`2fb9bd3`](https://github.com/dotansimha/graphql-code-generator/commit/2fb9bd30884e420e0feeca7d74ee2bc31b2522f8),
+  [`2fb9bd3`](https://github.com/dotansimha/graphql-code-generator/commit/2fb9bd30884e420e0feeca7d74ee2bc31b2522f8),
+  [`2fb9bd3`](https://github.com/dotansimha/graphql-code-generator/commit/2fb9bd30884e420e0feeca7d74ee2bc31b2522f8)]:
+  - @graphql-codegen/client-preset@6.0.1
+  - @graphql-codegen/core@6.0.1
+
 ## 7.0.0
 
 ### Major Changes
