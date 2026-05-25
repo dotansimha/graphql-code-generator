@@ -46,9 +46,9 @@
     }
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "workspace:^",
-    "@graphql-codegen/schema-ast": "workspace:^",
-    "@graphql-codegen/visitor-plugin-common": "workspace:^",
+    "@graphql-codegen/plugin-helpers": "^7.0.0",
+    "@graphql-codegen/schema-ast": "^6.0.0",
+    "@graphql-codegen/visitor-plugin-common": "^7.0.1",
     "auto-bind": "^5.0.0",
     "tslib": "^2.8.0"
   },
