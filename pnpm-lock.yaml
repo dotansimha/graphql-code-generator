@@ -923,14 +923,14 @@ importers:
         specifier: ^7.18.13
         version: 7.29.0
       '@graphql-codegen/client-preset':
-        specifier: workspace:^
-        version: link:../presets/client/dist
+        specifier: ^6.0.0
+        version: 6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
       '@graphql-codegen/core':
-        specifier: workspace:^
-        version: link:../graphql-codegen-core/dist
+        specifier: ^6.0.0
+        version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-tools/apollo-engine-loader':
         specifier: ^8.0.28
         version: 8.0.30(graphql@16.14.0)
@@ -1060,8 +1060,8 @@ importers:
   packages/graphql-codegen-core:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-tools/schema':
         specifier: ^10.0.0
         version: 10.0.33(graphql@16.14.0)
@@ -1079,8 +1079,8 @@ importers:
   packages/plugins/other/add:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1092,8 +1092,8 @@ importers:
   packages/plugins/other/fragment-matcher:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1109,11 +1109,11 @@ importers:
   packages/plugins/other/introspection:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../visitor-plugin-common/dist
+        specifier: ^7.0.0
+        version: 7.0.2(graphql@16.14.0)
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1125,8 +1125,8 @@ importers:
   packages/plugins/other/schema-ast:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1141,8 +1141,8 @@ importers:
   packages/plugins/other/time:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1154,8 +1154,8 @@ importers:
   packages/plugins/other/visitor-plugin-common:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-tools/optimize':
         specifier: ^2.0.0
         version: 2.0.0(graphql@16.14.0)
@@ -1195,11 +1195,11 @@ importers:
   packages/plugins/typescript/document-nodes:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../other/visitor-plugin-common/dist
+        specifier: ^7.0.0
+        version: 7.0.2(graphql@16.14.0)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1214,11 +1214,11 @@ importers:
   packages/plugins/typescript/gql-tag-operations:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../other/visitor-plugin-common/dist
+        specifier: ^7.0.0
+        version: 7.0.2(graphql@16.14.0)
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1236,14 +1236,14 @@ importers:
   packages/plugins/typescript/operations:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/schema-ast':
-        specifier: workspace:^
-        version: link:../../other/schema-ast/dist
+        specifier: ^6.0.0
+        version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../other/visitor-plugin-common/dist
+        specifier: ^7.0.1
+        version: 7.0.2(graphql@16.14.0)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1262,14 +1262,14 @@ importers:
   packages/plugins/typescript/resolvers:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.1
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/typescript':
-        specifier: workspace:^
-        version: link:../typescript/dist
+        specifier: ^6.0.0
+        version: 6.0.1(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../other/visitor-plugin-common/dist
+        specifier: ^7.0.0
+        version: 7.0.2(graphql@16.14.0)
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1294,11 +1294,11 @@ importers:
   packages/plugins/typescript/typed-document-node:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../other/visitor-plugin-common/dist
+        specifier: ^7.0.0
+        version: 7.0.2(graphql@16.14.0)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1316,14 +1316,14 @@ importers:
   packages/plugins/typescript/typescript:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/schema-ast':
-        specifier: workspace:^
-        version: link:../../other/schema-ast/dist
+        specifier: ^6.0.0
+        version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../other/visitor-plugin-common/dist
+        specifier: ^7.0.1
+        version: 7.0.2(graphql@16.14.0)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1344,26 +1344,26 @@ importers:
         specifier: ^7.20.7
         version: 7.28.6
       '@graphql-codegen/add':
-        specifier: workspace:^
-        version: link:../../plugins/other/add/dist
+        specifier: ^7.0.0
+        version: 7.0.0(graphql@16.14.0)
       '@graphql-codegen/gql-tag-operations':
-        specifier: workspace:^
-        version: link:../../plugins/typescript/gql-tag-operations/dist
+        specifier: 6.0.0
+        version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/typed-document-node':
-        specifier: workspace:^
-        version: link:../../plugins/typescript/typed-document-node/dist
+        specifier: ^7.0.0
+        version: 7.0.0(graphql@16.14.0)
       '@graphql-codegen/typescript':
-        specifier: workspace:^
-        version: link:../../plugins/typescript/typescript/dist
+        specifier: ^6.0.0
+        version: 6.0.1(graphql@16.14.0)
       '@graphql-codegen/typescript-operations':
-        specifier: workspace:^
-        version: link:../../plugins/typescript/operations/dist
+        specifier: ^6.0.0
+        version: 6.0.2(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../plugins/other/visitor-plugin-common/dist
+        specifier: ^7.0.0
+        version: 7.0.2(graphql@16.14.0)
       '@graphql-tools/documents':
         specifier: ^1.0.0
         version: 1.0.1(graphql@16.14.0)
@@ -1406,11 +1406,11 @@ importers:
   packages/presets/graphql-modules:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../../utils/plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common':
-        specifier: workspace:^
-        version: link:../../plugins/other/visitor-plugin-common/dist
+        specifier: ^7.0.0
+        version: 7.0.2(graphql@16.14.0)
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1437,8 +1437,8 @@ importers:
   packages/utils/graphql-codegen-testing:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: workspace:^
-        version: link:../plugins-helpers/dist
+        specifier: ^7.0.0
+        version: 7.0.1(graphql@16.14.0)
       common-tags:
         specifier: ^1.8.0
         version: 1.8.2
@@ -1495,8 +1495,8 @@ importers:
   website:
     dependencies:
       '@graphql-codegen/add':
-        specifier: workspace:*
-        version: link:../packages/plugins/other/add/dist
+        specifier: 7.0.0
+        version: 7.0.0(graphql@16.14.0)
       '@graphql-codegen/c-sharp':
         specifier: 6.0.1
         version: 6.0.1(graphql-tag@2.12.6(graphql@16.14.0))(graphql@16.14.0)
@@ -1504,14 +1504,14 @@ importers:
         specifier: 4.0.1
         version: 4.0.1(graphql-tag@2.12.6(graphql@16.14.0))(graphql@16.14.0)
       '@graphql-codegen/cli':
-        specifier: workspace:*
-        version: link:../packages/graphql-codegen-cli/dist
+        specifier: 7.0.0
+        version: 7.0.0(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)
       '@graphql-codegen/client-preset':
-        specifier: workspace:*
-        version: link:../packages/presets/client/dist
+        specifier: 6.0.0
+        version: 6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
       '@graphql-codegen/core':
-        specifier: workspace:*
-        version: link:../packages/graphql-codegen-core/dist
+        specifier: 6.0.0
+        version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/flow':
         specifier: 3.0.1
         version: 3.0.1(graphql@16.14.0)
@@ -1525,8 +1525,8 @@ importers:
         specifier: 5.0.1
         version: 5.0.1(graphql@16.14.0)
       '@graphql-codegen/fragment-matcher':
-        specifier: workspace:*
-        version: link:../packages/plugins/other/fragment-matcher/dist
+        specifier: 7.0.0
+        version: 7.0.0(graphql@16.14.0)
       '@graphql-codegen/hasura-allow-list':
         specifier: 4.0.1
         version: 4.0.1(graphql@16.14.0)
@@ -1534,8 +1534,8 @@ importers:
         specifier: 4.0.1
         version: 4.0.1(graphql@16.14.0)
       '@graphql-codegen/introspection':
-        specifier: workspace:*
-        version: link:../packages/plugins/other/introspection/dist
+        specifier: 6.0.0
+        version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/java':
         specifier: 5.0.1
         version: 5.0.1(graphql@16.14.0)
@@ -1558,17 +1558,17 @@ importers:
         specifier: 5.2.1
         version: 5.2.1(graphql@16.14.0)
       '@graphql-codegen/schema-ast':
-        specifier: workspace:*
-        version: link:../packages/plugins/other/schema-ast/dist
+        specifier: 6.0.0
+        version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/time':
-        specifier: workspace:*
-        version: link:../packages/plugins/other/time/dist
+        specifier: 7.0.0
+        version: 7.0.0(graphql@16.14.0)
       '@graphql-codegen/typed-document-node':
-        specifier: workspace:*
-        version: link:../packages/plugins/typescript/typed-document-node/dist
+        specifier: 7.0.0
+        version: 7.0.0(graphql@16.14.0)
       '@graphql-codegen/typescript':
-        specifier: workspace:*
-        version: link:../packages/plugins/typescript/typescript/dist
+        specifier: 6.0.1
+        version: 6.0.1(graphql@16.14.0)
       '@graphql-codegen/typescript-apollo-angular':
         specifier: 5.0.1
         version: 5.0.1(graphql@16.14.0)
@@ -1594,8 +1594,8 @@ importers:
         specifier: 1.0.1
         version: 1.0.1(graphql@16.14.0)
       '@graphql-codegen/typescript-operations':
-        specifier: workspace:*
-        version: link:../packages/plugins/typescript/operations/dist
+        specifier: 6.0.2
+        version: 6.0.2(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
       '@graphql-codegen/typescript-react-apollo':
         specifier: 4.4.2
         version: 4.4.2(graphql@16.14.0)
@@ -1603,8 +1603,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0(graphql@16.14.0)
       '@graphql-codegen/typescript-resolvers':
-        specifier: workspace:*
-        version: link:../packages/plugins/typescript/resolvers/dist
+        specifier: 6.0.1
+        version: 6.0.1(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
       '@graphql-codegen/typescript-rtk-query':
         specifier: 4.0.1
         version: 4.0.1(@reduxjs/toolkit@2.12.0(react@19.2.6))(graphql-request@7.4.0(graphql@16.14.0))(graphql-tag@2.12.6(graphql@16.14.0))(graphql@16.14.0)
@@ -3123,9 +3123,36 @@ packages:
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
+  '@graphql-codegen/cli@7.0.0':
+    resolution: {integrity: sha512-SNgTiFU/jB3VJLr8koJjmXAwl60wG/9r5iQBiOmlf0m9KRaiCNmfDG6+VbeejJPkDIGJKQd0SwqV5i+fxdnjqA==}
+    engines: {node: '>=16'}
+    hasBin: true
+    peerDependencies:
+      '@parcel/watcher': ^2.1.0
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    peerDependenciesMeta:
+      '@parcel/watcher':
+        optional: true
+
   '@graphql-codegen/client-preset-swc-plugin@0.2.0':
     resolution: {integrity: sha512-wibvCKuB+pP1ggNzZnkMLQgfyr0l+71kZsfK9M9GxxV8kaFGypbT3eN2XP4U8wH35GTaceLDg9jTg2JSUpcWdg==}
     deprecated: This package is deprecated. Please use @swc-contrib/plugin-graphql-codegen-client-preset instead.
+
+  '@graphql-codegen/client-preset@6.0.0':
+    resolution: {integrity: sha512-nqidNH4rrulv0E2ZVkYcIWz5Jon+hLBKkx/Xp8KyRJ8WnNRD0kJO1ra8ECLU/JS8LuZehSJyCfoQh555TT5TEw==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql-sock: ^1.0.0
+    peerDependenciesMeta:
+      graphql-sock:
+        optional: true
+
+  '@graphql-codegen/core@6.0.0':
+    resolution: {integrity: sha512-/UDolbUC6q6MTHNvEUDq+vC3ugycxAQ71S62WB3RDXzbBVIG5MG5Kw89WFOh+dt/s+mRuX+tx+Vz/si81sZ0aw==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
   '@graphql-codegen/flow-operations@3.0.2':
     resolution: {integrity: sha512-4GYZ3ZVGIF4kI6D6XwXifch2/k8SF1j7e4aoJTkaR74i1P1Ldc/92CM9/LpRF4X9tU2io/J1N5Hz9DRR0qHl5w==}
@@ -3151,6 +3178,18 @@ packages:
     peerDependencies:
       graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
+  '@graphql-codegen/fragment-matcher@7.0.0':
+    resolution: {integrity: sha512-XvKb4SYcyNXbQuaKU1nu7+1R51+vOsrDgkOAPKpI83its2l9qQRfV2Q7yK0O2s+i0/jnGJJqlvQfytqXXIrxCA==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/gql-tag-operations@6.0.0':
+    resolution: {integrity: sha512-IBwQ/jYx5Z4yMV78oVGU3hhNu/I7xFiQpFXavZujwCvoyH611M/JAoZ/RTExjr9stzcKMmNxJV/1Pknv+5M9Fg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
   '@graphql-codegen/hasura-allow-list@4.0.1':
     resolution: {integrity: sha512-+/C764nTNS6BgYUxC5Lrnj8T7veFJ40ZXrbWdvecu5yJbeK5BoZAG7FCeWhd0cegbdBN8tbZY0RX6pDuY/Cg9A==}
     engines: {node: '>= 16.0.0'}
@@ -3160,6 +3199,12 @@ packages:
   '@graphql-codegen/import-types-preset@4.0.1':
     resolution: {integrity: sha512-0qN9ptrRdg4St6636RZIpEidizXFDh73LZ+Bebmss2vYW5+Bu2T/ZJ+WXduMzeRkPFFzF7adaZNRFy2ejuzmzQ==}
     engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/introspection@6.0.0':
+    resolution: {integrity: sha512-XPklHsJdyC7YpMTdDo0K9KBZHYO/3Mq8yrjdVBLnIovpW/aysQak14ce2NfeS6NWsrotz0DHLfdpvfdnUgK3aA==}
+    engines: {node: '>=16'}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
@@ -3251,6 +3296,24 @@ packages:
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
+  '@graphql-codegen/schema-ast@6.0.0':
+    resolution: {integrity: sha512-ww6lfCZYBZk8SbnOKp76FLvBrMD6oqFhAGj8Ov8f+bsrNh0SG1M6mxLWh4nl9hWIu/iwsZgrJcuIrTfyBeF6jQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/time@7.0.0':
+    resolution: {integrity: sha512-PVBtqQs2XvNLFsgB0vgs5uQnMyZs6T40lypJui5Fs+WH+nMo/BVLulNd/A0GTL6ZO8VQku/B8ROe9tWU2ZUfQg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/typed-document-node@7.0.0':
+    resolution: {integrity: sha512-gSsMEKe1QV5QmF+TsijSyhLYGYRYGD2fe7rGIJwca4s1gZK+aD3qjNFq3C0yFUsb92bsCxiOJTWeiPPfdPSMTg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
   '@graphql-codegen/typescript-apollo-angular@5.0.1':
     resolution: {integrity: sha512-gXHPLmBKtJHcvDwxzL4M9FKTNpYTy5hCdBHrA+fNTvA+bpnWW8wBtNVAQVe/lfpaTfXj82AV6LbJpgeXyl9mEQ==}
     engines: {node: '>= 16.0.0'}
@@ -3304,6 +3367,16 @@ packages:
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
+  '@graphql-codegen/typescript-operations@6.0.2':
+    resolution: {integrity: sha512-QYs8eQIOXsGKiWBlx4ZtIwYALa5RlLwznJELcnKayGubuEbglOsapJBswERXoogf3SMDrU21L58c1CYkYlyKIA==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql-sock: ^1.0.0
+    peerDependenciesMeta:
+      graphql-sock:
+        optional: true
+
   '@graphql-codegen/typescript-react-apollo@4.4.2':
     resolution: {integrity: sha512-S/VQeLWMNzo/WnUpvCQELqh2qgAK4H9kkWyC8JrrrPHaV3w/BmOwzeHpcwlHKcuSYWRH6u61XPRQ5+eCjj00AQ==}
     engines: {node: '>= 16.0.0'}
@@ -3314,6 +3387,16 @@ packages:
     resolution: {integrity: sha512-+3Hk+ws6HfCAZl7+5Q4LBkFh3y+2ISuahMYRHIqzqpwNnrthftg8xNx11VH5sabqqjqEmjY3UaP8glP93itPWQ==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/typescript-resolvers@6.0.1':
+    resolution: {integrity: sha512-Rt/kkvVVnYpAMDW4jiyB/qIQlhjZ9UUwc8F6q2d9xHImLOylJpCYq/GxpkGi2R5d3FiZWvFwhjHw9nYCY1CKtg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql-sock: ^1.0.0
+    peerDependenciesMeta:
+      graphql-sock:
+        optional: true
 
   '@graphql-codegen/typescript-rtk-query@4.0.1':
     resolution: {integrity: sha512-Ucm0AYBW1UARnzqzaRfldm+qlCPJ+gYzjCyT9wo9LlwGGww0FZcPA05VwqRavPTl1Xa7AyL+sJjfVoUMxgpGyA==}
@@ -3376,6 +3459,12 @@ packages:
 
   '@graphql-codegen/typescript@5.0.10':
     resolution: {integrity: sha512-Pa8OFmL9TdhEYnLYJLYA9EhP8eEeivP/YDYq4Nb8LQaL7GXm4TGX8zELYaCM9Fu8M3iZb7iQGMt7qc+1lXz8XQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/typescript@6.0.1':
+    resolution: {integrity: sha512-UmHKlOBqnmGs0ioZsfi7INIb6+YCXVMi3KSp/INO359fT3RJxWPLPiE7T30UaWXtLeO6fBNZcvhy3EGBI9UCvw==}
     engines: {node: '>=16'}
     peerDependencies:
       graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -13839,7 +13928,85 @@ snapshots:
     transitivePeerDependencies:
       - graphql-tag
 
+  '@graphql-codegen/cli@7.0.0(@parcel/watcher@2.5.6)(@types/node@24.12.4)(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)(typescript@6.0.3)':
+    dependencies:
+      '@babel/generator': 7.29.1
+      '@babel/template': 7.28.6
+      '@babel/types': 7.29.0
+      '@graphql-codegen/client-preset': 6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+      '@graphql-codegen/core': 6.0.0(graphql@16.14.0)
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-tools/apollo-engine-loader': 8.0.30(graphql@16.14.0)
+      '@graphql-tools/code-file-loader': 8.1.32(graphql@16.14.0)
+      '@graphql-tools/git-loader': 8.0.36(graphql@16.14.0)
+      '@graphql-tools/github-loader': 9.1.2(@types/node@24.12.4)(graphql@16.14.0)
+      '@graphql-tools/graphql-file-loader': 8.1.12(graphql@16.14.0)
+      '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.0)
+      '@graphql-tools/load': 8.1.10(graphql@16.14.0)
+      '@graphql-tools/merge': 9.1.9(graphql@16.14.0)
+      '@graphql-tools/url-loader': 9.1.2(@types/node@24.12.4)(graphql@16.14.0)
+      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
+      '@inquirer/prompts': 8.4.3(@types/node@24.12.4)
+      '@whatwg-node/fetch': 0.10.13
+      chalk: 5.6.2
+      cosmiconfig: 9.0.1(typescript@6.0.3)
+      debounce: 3.0.0
+      detect-indent: 7.0.2
+      graphql: 16.14.0
+      graphql-config: 5.1.6(@types/node@24.12.4)(graphql@16.14.0)(typescript@6.0.3)
+      is-glob: 4.0.3
+      jiti: 2.7.0
+      json-to-pretty-yaml: 1.2.2
+      listr2: 10.2.1
+      log-symbols: 7.0.1
+      micromatch: 4.0.8
+      shell-quote: 1.8.3
+      string-env-interpolation: 1.0.1
+      ts-log: 3.0.2
+      tslib: 2.8.1
+      yaml: 2.9.0
+      yargs: 18.0.0
+    optionalDependencies:
+      '@parcel/watcher': 2.5.6
+    transitivePeerDependencies:
+      - '@fastify/websocket'
+      - '@types/node'
+      - bufferutil
+      - cosmiconfig-toml-loader
+      - crossws
+      - graphql-sock
+      - supports-color
+      - typescript
+      - utf-8-validate
+
   '@graphql-codegen/client-preset-swc-plugin@0.2.0': {}
+
+  '@graphql-codegen/client-preset@6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)':
+    dependencies:
+      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/template': 7.28.6
+      '@graphql-codegen/add': 7.0.0(graphql@16.14.0)
+      '@graphql-codegen/gql-tag-operations': 6.0.0(graphql@16.14.0)
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-codegen/typed-document-node': 7.0.0(graphql@16.14.0)
+      '@graphql-codegen/typescript': 6.0.1(graphql@16.14.0)
+      '@graphql-codegen/typescript-operations': 6.0.2(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 7.0.2(graphql@16.14.0)
+      '@graphql-tools/documents': 1.0.1(graphql@16.14.0)
+      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.0)
+      graphql: 16.14.0
+      tslib: 2.8.1
+    optionalDependencies:
+      graphql-sock: 1.0.1(graphql@16.14.0)
+
+  '@graphql-codegen/core@6.0.0(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-tools/schema': 10.0.33(graphql@16.14.0)
+      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
+      graphql: 16.14.0
+      tslib: 2.8.1
 
   '@graphql-codegen/flow-operations@3.0.2(graphql@16.14.0)':
     dependencies:
@@ -13887,6 +14054,21 @@ snapshots:
       graphql: 16.14.0
       tslib: 2.8.1
 
+  '@graphql-codegen/fragment-matcher@7.0.0(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      graphql: 16.14.0
+      tslib: 2.8.1
+
+  '@graphql-codegen/gql-tag-operations@6.0.0(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 7.0.2(graphql@16.14.0)
+      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
+      auto-bind: 5.0.1
+      graphql: 16.14.0
+      tslib: 2.8.1
+
   '@graphql-codegen/hasura-allow-list@4.0.1(graphql@16.14.0)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 6.3.0(graphql@16.14.0)
@@ -13899,6 +14081,13 @@ snapshots:
       '@graphql-codegen/add': 6.0.1(graphql@16.14.0)
       '@graphql-codegen/plugin-helpers': 6.3.0(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common': 6.3.0(graphql@16.14.0)
+      graphql: 16.14.0
+      tslib: 2.8.1
+
+  '@graphql-codegen/introspection@6.0.0(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 7.0.2(graphql@16.14.0)
       graphql: 16.14.0
       tslib: 2.8.1
 
@@ -14034,6 +14223,28 @@ snapshots:
       graphql: 16.14.0
       tslib: 2.8.1
 
+  '@graphql-codegen/schema-ast@6.0.0(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
+      graphql: 16.14.0
+      tslib: 2.8.1
+
+  '@graphql-codegen/time@7.0.0(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      graphql: 16.14.0
+      moment: 2.30.1
+
+  '@graphql-codegen/typed-document-node@7.0.0(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 7.0.2(graphql@16.14.0)
+      auto-bind: 5.0.1
+      change-case-all: 2.1.0
+      graphql: 16.14.0
+      tslib: 2.8.1
+
   '@graphql-codegen/typescript-apollo-angular@5.0.1(graphql@16.14.0)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 6.3.0(graphql@16.14.0)
@@ -14108,6 +14319,17 @@ snapshots:
       graphql: 16.14.0
       tslib: 2.8.1
 
+  '@graphql-codegen/typescript-operations@6.0.2(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-codegen/schema-ast': 6.0.0(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 7.0.2(graphql@16.14.0)
+      auto-bind: 5.0.1
+      graphql: 16.14.0
+      tslib: 2.8.1
+    optionalDependencies:
+      graphql-sock: 1.0.1(graphql@16.14.0)
+
   '@graphql-codegen/typescript-react-apollo@4.4.2(graphql@16.14.0)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 6.3.0(graphql@16.14.0)
@@ -14128,6 +14350,18 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@graphql-codegen/typescript-resolvers@6.0.1(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-codegen/typescript': 6.0.1(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 7.0.2(graphql@16.14.0)
+      '@graphql-tools/utils': 11.1.0(graphql@16.14.0)
+      auto-bind: 5.0.1
+      graphql: 16.14.0
+      tslib: 2.8.1
+    optionalDependencies:
+      graphql-sock: 1.0.1(graphql@16.14.0)
 
   '@graphql-codegen/typescript-rtk-query@4.0.1(@reduxjs/toolkit@2.12.0(react@19.2.6))(graphql-request@7.4.0(graphql@16.14.0))(graphql-tag@2.12.6(graphql@16.14.0))(graphql@16.14.0)':
     dependencies:
@@ -14222,6 +14456,15 @@ snapshots:
       '@graphql-codegen/schema-ast': 5.0.2(graphql@16.14.0)
       '@graphql-codegen/visitor-plugin-common': 6.3.0(graphql@16.14.0)
       auto-bind: 4.0.0
+      graphql: 16.14.0
+      tslib: 2.8.1
+
+  '@graphql-codegen/typescript@6.0.1(graphql@16.14.0)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.14.0)
+      '@graphql-codegen/schema-ast': 6.0.0(graphql@16.14.0)
+      '@graphql-codegen/visitor-plugin-common': 7.0.2(graphql@16.14.0)
+      auto-bind: 5.0.1
       graphql: 16.14.0
       tslib: 2.8.1
 
