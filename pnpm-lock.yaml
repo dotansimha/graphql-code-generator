@@ -63,7 +63,7 @@ importers:
         version: 10.4.0(jiti@2.7.0)
       eslint-plugin-import:
         specifier: 2.32.0
-        version: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
+        version: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-tailwindcss:
         specifier: npm:@hasparus/eslint-plugin-tailwindcss@3.17.5
         version: '@hasparus/eslint-plugin-tailwindcss@3.17.5(tailwindcss@3.4.19(tsx@4.22.0)(yaml@2.9.0))'
@@ -158,9 +158,36 @@ importers:
 
   dev-test/general:
     devDependencies:
+      '@graphql-codegen/add':
+        specifier: workspace:*
+        version: link:../../packages/plugins/other/add/dist
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/flow':
+        specifier: 3.0.1
+        version: 3.0.1(graphql@16.14.0)
+      '@graphql-codegen/flow-resolvers':
+        specifier: 3.0.1
+        version: 3.0.1(graphql@16.14.0)
+      '@graphql-codegen/graphql-modules-preset':
+        specifier: workspace:*
+        version: link:../../packages/presets/graphql-modules/dist
+      '@graphql-codegen/typed-document-node':
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/typed-document-node/dist
+      '@graphql-codegen/typescript':
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/typescript/dist
+      '@graphql-codegen/typescript-graphql-files-modules':
+        specifier: 4.0.1
+        version: 4.0.1(graphql@16.14.0)
+      '@graphql-codegen/typescript-operations':
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/operations/dist
+      '@graphql-codegen/typescript-resolvers':
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/resolvers/dist
 
   examples/persisted-documents:
     dependencies:
@@ -18907,7 +18934,7 @@ snapshots:
       eslint: 10.4.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@10.4.0(jiti@2.7.0))
@@ -18941,7 +18968,7 @@ snapshots:
       tinyglobby: 0.2.16
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -19042,7 +19069,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
