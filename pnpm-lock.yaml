@@ -923,14 +923,14 @@ importers:
         specifier: ^7.18.13
         version: 7.29.0
       '@graphql-codegen/client-preset':
-        specifier: ^6.0.0
-        version: 6.0.0(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../presets/client/dist
       '@graphql-codegen/core':
-        specifier: ^6.0.0
-        version: 6.0.0(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../graphql-codegen-core/dist
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../utils/plugins-helpers/dist
       '@graphql-tools/apollo-engine-loader':
         specifier: ^8.0.28
         version: 8.0.30(graphql@16.14.0)
@@ -1060,8 +1060,8 @@ importers:
   packages/graphql-codegen-core:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../utils/plugins-helpers/dist
       '@graphql-tools/schema':
         specifier: ^10.0.0
         version: 10.0.33(graphql@16.14.0)
@@ -1079,8 +1079,8 @@ importers:
   packages/plugins/other/add:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1092,8 +1092,8 @@ importers:
   packages/plugins/other/fragment-matcher:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1109,11 +1109,11 @@ importers:
   packages/plugins/other/introspection:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.0
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../visitor-plugin-common/dist
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1125,8 +1125,8 @@ importers:
   packages/plugins/other/schema-ast:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1141,8 +1141,8 @@ importers:
   packages/plugins/other/time:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       graphql:
         specifier: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
         version: 16.14.0
@@ -1154,8 +1154,8 @@ importers:
   packages/plugins/other/visitor-plugin-common:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-tools/optimize':
         specifier: ^2.0.0
         version: 2.0.0(graphql@16.14.0)
@@ -1195,11 +1195,11 @@ importers:
   packages/plugins/typescript/document-nodes:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.0
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/visitor-plugin-common/dist
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1214,11 +1214,11 @@ importers:
   packages/plugins/typescript/gql-tag-operations:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.0
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/visitor-plugin-common/dist
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1236,14 +1236,14 @@ importers:
   packages/plugins/typescript/operations:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-codegen/schema-ast':
-        specifier: ^6.0.0
-        version: 6.0.0(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/schema-ast/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.1
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/visitor-plugin-common/dist
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1262,14 +1262,14 @@ importers:
   packages/plugins/typescript/resolvers:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.1
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-codegen/typescript':
-        specifier: ^6.0.0
-        version: 6.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../typescript/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.0
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/visitor-plugin-common/dist
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1294,11 +1294,11 @@ importers:
   packages/plugins/typescript/typed-document-node:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.0
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/visitor-plugin-common/dist
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1316,14 +1316,14 @@ importers:
   packages/plugins/typescript/typescript:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../../utils/plugins-helpers/dist
       '@graphql-codegen/schema-ast':
-        specifier: ^6.0.0
-        version: 6.0.0(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/schema-ast/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.1
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../other/visitor-plugin-common/dist
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1344,26 +1344,26 @@ importers:
         specifier: ^7.20.7
         version: 7.28.6
       '@graphql-codegen/add':
-        specifier: ^7.0.0
-        version: 7.0.0(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../plugins/other/add/dist
       '@graphql-codegen/gql-tag-operations':
-        specifier: 6.0.0
-        version: 6.0.0(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../plugins/typescript/gql-tag-operations/dist
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../utils/plugins-helpers/dist
       '@graphql-codegen/typed-document-node':
-        specifier: ^7.0.0
-        version: 7.0.0(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../plugins/typescript/typed-document-node/dist
       '@graphql-codegen/typescript':
-        specifier: ^6.0.0
-        version: 6.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../plugins/typescript/typescript/dist
       '@graphql-codegen/typescript-operations':
-        specifier: ^6.0.0
-        version: 6.0.2(graphql-sock@1.0.1(graphql@16.14.0))(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../plugins/typescript/operations/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.0
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../plugins/other/visitor-plugin-common/dist
       '@graphql-tools/documents':
         specifier: ^1.0.0
         version: 1.0.1(graphql@16.14.0)
@@ -1406,11 +1406,11 @@ importers:
   packages/presets/graphql-modules:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../utils/plugins-helpers/dist
       '@graphql-codegen/visitor-plugin-common':
-        specifier: ^7.0.0
-        version: 7.0.2(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../../plugins/other/visitor-plugin-common/dist
       '@graphql-tools/utils':
         specifier: ^11.0.0
         version: 11.1.0(graphql@16.14.0)
@@ -1437,8 +1437,8 @@ importers:
   packages/utils/graphql-codegen-testing:
     dependencies:
       '@graphql-codegen/plugin-helpers':
-        specifier: ^7.0.0
-        version: 7.0.1(graphql@16.14.0)
+        specifier: workspace:^
+        version: link:../plugins-helpers/dist
       common-tags:
         specifier: ^1.8.0
         version: 1.8.2
