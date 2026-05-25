@@ -32,10 +32,17 @@
     "@graphql-codegen/kotlin": "4.0.1",
     "@graphql-codegen/named-operations-object": "4.0.1",
     "@graphql-codegen/near-operation-file-preset": "5.2.1",
+<<<<<<< HEAD
     "@graphql-codegen/schema-ast": "workspace:*",
     "@graphql-codegen/time": "workspace:*",
     "@graphql-codegen/typed-document-node": "workspace:*",
     "@graphql-codegen/typescript": "workspace:*",
+=======
+    "@graphql-codegen/schema-ast": "6.0.0",
+    "@graphql-codegen/time": "7.0.0",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript": "6.0.1",
+>>>>>>> 3e5781980 (Try linking packages using workspace)
     "@graphql-codegen/typescript-apollo-angular": "5.0.1",
     "@graphql-codegen/typescript-apollo-client-helpers": "4.0.1",
     "@graphql-codegen/typescript-generic-sdk": "5.0.1",
