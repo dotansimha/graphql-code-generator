@@ -1347,7 +1347,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(graphql@16.14.0)
       '@graphql-codegen/gql-tag-operations':
-        specifier: 6.0.0
+        specifier: ^6.0.0
         version: 6.0.0(graphql@16.14.0)
       '@graphql-codegen/plugin-helpers':
         specifier: ^7.0.0
