@@ -6,10 +6,10 @@
   "scripts": {
     "generate": "pnpm generate:esm",
     "generate:cjs": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env",
-    "generate:esm": "graphql-codegen --require dotenv/config --config codegen.ts dotenv_config_path=.env",
+    "generate:esm": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env",
     "watch": "pnpm watch:esm",
-    "watch:cjs": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --watch --config codegen.ts dotenv_config_path=.env",
-    "watch:esm": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --watch --config codegen.ts dotenv_config_path=.env"
+    "watch:cjs": "pnpm generate:cjs --watch",
+    "watch:esm": "pnpm generate:esm --watch"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*"

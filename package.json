@@ -12,7 +12,7 @@
     "postbuild": "pnpm fix-bins",
     "clean": "rimraf node_modules/",
     "dev-test:generate": "pnpm --filter=\"dev-test*\" generate",
-    "dev-test:generate:cjs": "pnpm --filter=\"dev-test*\" generate:csj",
+    "dev-test:generate:cjs": "pnpm --filter=\"dev-test*\" generate:cjs",
     "dev-test:generate:esm": "pnpm --filter=\"dev-test*\" generate:esm",
     "dev-test:watch": "pnpm --filter=\"dev-test*\" watch",
     "dev-test:watch:cjs": "pnpm --filter=\"dev-test*\" watch:cjs",
