@@ -1,16 +1,5 @@
 # @graphql-codegen/visitor-plugin-common
 
-## 7.0.3
-
-### Patch Changes
-
-- [#10843](https://github.com/dotansimha/graphql-code-generator/pull/10843)
-  [`2fb9bd3`](https://github.com/dotansimha/graphql-code-generator/commit/2fb9bd30884e420e0feeca7d74ee2bc31b2522f8)
-  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
-  - Updated dependency
-    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
-    (from `^7.0.0`, in `dependencies`)
-
 ## 7.0.2
 
 ### Patch Changes
