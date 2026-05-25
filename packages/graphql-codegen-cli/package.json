@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "7.0.1",
+  "version": "7.0.0",
   "type": "module",
   "repository": {
     "type": "git",
