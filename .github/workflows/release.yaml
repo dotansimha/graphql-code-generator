@@ -1,0 +1,44 @@
+name: release
+on:
+  pull_request: # for snapshot release
+    branches:
+      - master
+
+  push: # for stable release
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-snapshot:
+    if: github.event_name == 'pull_request'
+    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@1c4632ccc198d4c9b34d9e6b3d556c6f245b4e69 # main
+    permissions:
+      id-token: write # allows OIDC publishing
+      pull-requests: write # allows creating comment with alpha versions
+    with:
+      npmTag: alpha
+      packageManager: pnpm
+      buildScript: build
+      nodeVersion: 24
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
+      npmToken: FILLER
+
+  release-stable:
+    if: github.event_name == 'push'
+    uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+    permissions:
+      id-token: write # allows OIDC publishing
+      pull-requests: write # allows creating Version Packages PR
+      contents: write # allows modifying changeset files
+    with:
+      packageManager: pnpm
+      releaseScript: release
+      nodeVersion: 24
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
+      npmToken: FILLER
