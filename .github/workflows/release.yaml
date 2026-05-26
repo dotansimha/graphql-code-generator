@@ -15,19 +15,46 @@ concurrency:
 jobs:
   release-snapshot:
     if: github.event_name == 'pull_request'
-    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@1c4632ccc198d4c9b34d9e6b3d556c6f245b4e69 # main
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write # allows OIDC publishing
       pull-requests: write # allows creating comment with alpha versions
-    with:
-      npmTag: alpha
-      packageManager: pnpm
-      packageManagerVersion: 11.1.1
-      buildScript: build
-      nodeVersion: 24
-    secrets:
-      githubToken: ${{ secrets.GITHUB_TOKEN }}
-      npmToken: FILLER
+      contents: read
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy snapshot
+        run: |
+          pnpm changeset version --snapshot alpha
+          pnpm build
+          pnpm changeset publish --tag alpha --no-git-tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ''
+          NPM_CONFIG_PROVENANCE: 'true'
+
+    # uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@1c4632ccc198d4c9b34d9e6b3d556c6f245b4e69 # main
+    # permissions:
+    #   id-token: write # allows OIDC publishing
+    #   pull-requests: write # allows creating comment with alpha versions
+    # with:
+    #   npmTag: alpha
+    #   packageManager: pnpm
+    #   buildScript: build
+    #   nodeVersion: 24
+    # secrets:
+    #   githubToken: ${{ secrets.GITHUB_TOKEN }}
+    #   npmToken: FILLER
 
   release-stable:
     if: github.event_name == 'push'
