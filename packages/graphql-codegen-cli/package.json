@@ -4,7 +4,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/graphql-codegen-cli"
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",

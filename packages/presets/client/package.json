@@ -5,7 +5,7 @@
   "description": "GraphQL Code Generator preset for client.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/presets/client"
   },
   "license": "MIT",

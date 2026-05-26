@@ -22,6 +22,7 @@ jobs:
     with:
       npmTag: alpha
       packageManager: pnpm
+      packageManagerVersion: 11.1.1
       buildScript: build
       nodeVersion: 24
     secrets:
