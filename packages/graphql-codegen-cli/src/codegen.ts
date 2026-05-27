@@ -44,6 +44,8 @@ const makeDefaultLoader = (from: string) => {
            * as import.meta is unavailable in a CommonJS context
            * and furthermore unavailable in stable Node.js.
            **/
+          // FIXME(pnpm-update): this causes dev-test devDeps to be brought into CLI's package.json, which is not ideal.
+          // Note that `relativeRequire.resolve(mod)` seems to work correctly for ESM as well.
           mod
         : relativeRequire.resolve(mod)
     );
