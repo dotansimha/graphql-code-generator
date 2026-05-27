@@ -21,8 +21,6 @@ jobs:
     permissions:
       id-token: write # allows OIDC publishing
       pull-requests: write # allows creating comment with alpha versions
-      contents: read
-      actions: write
     with:
       npmTag: alpha
       buildScript: build
