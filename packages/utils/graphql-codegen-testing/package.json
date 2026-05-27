@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "type": "module",
   "description": "GraphQL Codegen Testing Utils",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
