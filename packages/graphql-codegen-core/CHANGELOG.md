@@ -1,5 +1,14 @@
 # @graphql-codegen/core
 
+## 6.1.0
+
+### Minor Changes
+
+- [#10788](https://github.com/dotansimha/graphql-code-generator/pull/10788)
+  [`cbf9544`](https://github.com/dotansimha/graphql-code-generator/commit/cbf95443b41bda82852d0396f3ab15310e22e2ae)
+  Thanks [@robertobadalamenti](https://github.com/robertobadalamenti)! - Add
+  disableFederationDirectiveAndScalarInjection config to better support Federation v2
+
 ## 6.0.1
 
 ### Patch Changes
