@@ -1,5 +1,16 @@
 # @graphql-codegen/core
 
+## 6.0.1
+
+### Patch Changes
+
+- [#10849](https://github.com/dotansimha/graphql-code-generator/pull/10849)
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+
 ## 6.0.0
 
 ### Major Changes
