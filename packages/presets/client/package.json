@@ -5,7 +5,7 @@
   "description": "GraphQL Code Generator preset for client.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/presets/client"
   },
   "license": "MIT",
@@ -49,7 +49,7 @@
     "@babel/helper-plugin-utils": "^7.20.2",
     "@babel/template": "^7.20.7",
     "@graphql-codegen/add": "^7.0.0",
-    "@graphql-codegen/gql-tag-operations": "6.0.0",
+    "@graphql-codegen/gql-tag-operations": "^6.0.0",
     "@graphql-codegen/plugin-helpers": "^7.0.0",
     "@graphql-codegen/typed-document-node": "^7.0.0",
     "@graphql-codegen/typescript": "^6.0.0",

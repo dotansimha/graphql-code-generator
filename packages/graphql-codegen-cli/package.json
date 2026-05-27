@@ -4,7 +4,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/graphql-codegen-cli"
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
@@ -77,7 +77,7 @@
     "@babel/generator": "^7.18.13",
     "@babel/template": "^7.18.10",
     "@babel/types": "^7.18.13",
-    "@graphql-codegen/client-preset": "^6.0.0",
+    "@graphql-codegen/client-preset": "workspace:^",
     "@graphql-codegen/core": "^6.0.0",
     "@graphql-codegen/plugin-helpers": "^7.0.0",
     "@graphql-tools/apollo-engine-loader": "^8.0.28",
