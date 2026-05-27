@@ -40,7 +40,6 @@ jobs:
       contents: write # allows modifying changeset files
     with:
       nodeVersion: 24
-      npmTag: alpha
       packageManager: pnpm
       buildScript: build
       releaseScript: release
