@@ -16,6 +16,10 @@ This guide explains how to replace it with
 [GraphQL Code Generator](https://the-guild.dev/graphql/codegen), which is actively maintained, more
 flexible, and supports a broader range of use cases.
 
+This guide is using the
+[programmatic CLI version](https://the-guild.dev/graphql/codegen/docs/advanced/programmatic-usage)
+of GraphQL Codegen.
+
 ## Installation
 
 Remove Apollo Tooling and install GraphQL Code Generator:
@@ -46,9 +50,9 @@ npm i -D @graphql-codegen/cli @graphql-codegen/typescript-operations @graphql-co
 {
   "devDependencies": {
     ...
-    "@graphql-codegen/cli": "...",
-    "@graphql-codegen/typescript-operations": "...",
-    "@graphql-codegen/near-operation-file-preset": "..."
+    "@graphql-codegen/cli": "7.0.1",
+    "@graphql-codegen/near-operation-file-preset": "5.2.0",
+    "@graphql-codegen/typescript-operations": "6.0.0",
     ...
   }
 }
@@ -73,25 +77,16 @@ module.exports = {
   },
 }
 ```
-
-```sh
-apollo client:codegen --target=typescript --outputFlat src/__generated__/types.ts
-```
-
 </Tabs.Tab>
-
 <Tabs.Tab>
-
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
-
 const config: CodegenConfig = {
   schema: './schema.graphql',
-  documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
-  externalDocuments: [
-    '../other-package/src/**/*.{ts,tsx}',
-    '!../other-package/src/**/__generated__/**'
-  ],
+  documents: ['./src/**/*.{ts,tsx}',
+    '!./src/**/__generated__/**'],
+  externalDocuments: [ '../other-package/src/**/*.{ts,tsx}',
+    '!../other-package/src/**/__generated__/**' ],
   generates: {
     './src/': {
       preset: 'near-operation-file',
@@ -100,79 +95,59 @@ const config: CodegenConfig = {
         folder: '__generated__',
         filePerOperation: true
       },
-      plugins: ['typescript-operations'],
-      config: {
-        namingConvention: 'keep',
-        extractAllFieldsToTypesCompact: true,
-        printFieldsOnNewLines: true,
-        enumType: 'native',
-        nonOptionalTypename: true,
-        skipTypeNameForRoot: true,
-        omitOperationSuffix: true,
-        fragmentSuffix: '',
-        generatesOperationTypes: true,
-        defaultScalarType: 'any'
-      }
+      plugins: ['typescript-operations']
     }
+  },
+  config: {
+    extractAllFieldsToTypesCompact: true,
+    namingConvention: 'keep',
+    printFieldsOnNewLines: true,
+    enumType: 'native',
+    nonOptionalTypename: true,
+    skipTypeNameForRoot: true,
+    omitOperationSuffix: true,
+    fragmentSuffix: '',
+    defaultScalarType: 'any'
   }
 }
 
 export default config
 ```
-
-```sh
-graphql-codegen
-```
-
 </Tabs.Tab>
 </Tabs>
 
-Add a script to your `package.json` to run the code generator:
-
-```json filename="package.json"
-{
-  "scripts": {
-    "codegen": "graphql-codegen"
-  }
-}
-```
-
-## Per-file generation with `near-operation-file`
+## Per-operation file generation with `near-operation-file`
 
 Apollo Tooling's default behaviour is to generate one TypeScript file per graphql operation, placed
 in a `__generated__` folder next to the source. For example, given `src/Component.ts` containing a
 query `GetUser`, Apollo Tooling produces `src/__generated__/GetUser.ts`.
 
-GraphQL Code Generator replicates this with the
+GraphQL Code Generator replicates this with the `filePerOperation: true` parameter of the
 [`near-operation-file` preset](https://the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset).
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: './schema.graphql',
-  documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
-  externalDocuments: [
-    '../other-package/src/**/*.{ts,tsx}',
-    '!../other-package/src/**/__generated__/**'
-  ],
+  ...
   generates: {
     './src/': {
       preset: 'near-operation-file',
       presetConfig: {
-        extension: '.ts', // Extension for generated files
-        folder: '__generated__', // Generated files go into __generated__/ subfolder
+        extension: '.ts',
+        folder: '__generated__',
         filePerOperation: true // Generate type files per-operation (not per-component)
       },
-      plugins: ['typescript-operations']
+      ...
     }
   }
+  ...
 }
 
 export default config
 ```
 
-With this configuration, `src/Component.ts` → `src/__generated__/GetUser.ts`, matching Apollo
+With this configuration: `src/Component.ts` → `src/__generated__/GetUser.ts`, matching Apollo
 Tooling's output structure exactly.
 
 If you need to generate files per-component (default to GraphQL Codegen), remove the following
@@ -195,25 +170,13 @@ configuration option:
 
 ```ts filename="codegen.ts"
 const config: CodegenConfig = {
-  schema: './schema.graphql',
-  documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
-  externalDocuments: [
-    '../other-package/src/**/*.{ts,tsx}',
-    '!../other-package/src/**/__generated__/**'
-  ],
+  ...
   generates: {
-    './src/': {
-      preset: 'near-operation-file',
-      presetConfig: {
-        extension: '.ts',
-        folder: '__generated__',
-        filePerOperation: true
-      },
-      plugins: ['typescript-operations'],
-      config: {
-        extractAllFieldsToTypesCompact: true
-      }
-    }
+    ...
+  },
+  config: {
+    extractAllFieldsToTypesCompact: true
+    ...
   }
 }
 ```
@@ -241,27 +204,15 @@ declarations matching Apollo Tooling's output, set `enumType: 'native'`:
 
 ```ts filename="codegen.ts"
 const config: CodegenConfig = {
-  schema: './schema.graphql',
-  documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
-  externalDocuments: [
-    '../other-package/src/**/*.{ts,tsx}',
-    '!../other-package/src/**/__generated__/**'
-  ],
+  ...
   generates: {
-    './src/': {
-      preset: 'near-operation-file',
-      presetConfig: {
-        extension: '.ts',
-        folder: '__generated__',
-        filePerOperation: true
-      },
-      plugins: ['typescript-operations'],
-      config: {
-        extractAllFieldsToTypesCompact: true,
-        namingConvention: 'keep',
-        enumType: 'native'
-      }
-    }
+    ...
+  }
+  config: {
+    ...
+    namingConvention: 'keep',
+    enumType: 'native',
+    ...
   }
 }
 ```
@@ -289,6 +240,7 @@ per-file generation, enum output, and type naming:
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
+  // since codegen 6.0, we can also pass pre-parsed GraphQLSchema here (for caching - when running codegen in a loop on a monorepo with many packages)
   schema: './schema.graphql',
   documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
   // `externalDocuments` are read-only documents that are loaded but do not generate output.
@@ -306,29 +258,28 @@ const config: CodegenConfig = {
         // Generate type files per-operation (not per-component)
         filePerOperation: true
       },
-      plugins: ['typescript-operations'],
-      config: {
-        // Keep original naming as-is (no camelCase conversion)
-        namingConvention: 'keep',
-        // Extract nested field types to named types (matches Apollo Tooling naming)
-        extractAllFieldsToTypesCompact: true,
-        // Print each field on its own line for readability
-        printFieldsOnNewLines: true,
-        // Use native TypeScript enums (matches Apollo Tooling enum output)
-        enumType: 'native',
-        // Always include __typename in result types
-        nonOptionalTypename: true,
-        // Don't add __typename to root query/mutation/subscription types
-        skipTypeNameForRoot: true,
-        // Don't add 'Query'/'Mutation'/'Subscription' suffixes to operation result types
-        omitOperationSuffix: true,
-        // Don't add 'Fragment' suffix to fragment result types
-        fragmentSuffix: '',
-        generatesOperationTypes: true,
-        // Default is 'unknown'; to match Apollo tooling we need to put 'any'
-        defaultScalarType: 'any'
-      }
+      plugins: ['typescript-operations']
     }
+  },
+  config: {
+    // Extract nested field types to named types (matches Apollo Tooling naming)
+    extractAllFieldsToTypesCompact: true,
+    // Keep original naming as-is (no camelCase conversion)
+    namingConvention: 'keep',
+    // Print each field on its own line for readability
+    printFieldsOnNewLines: true,
+    // Use native TypeScript enums (matches Apollo Tooling enum output)
+    enumType: 'native',
+    // Always include __typename in result types
+    nonOptionalTypename: true,
+    // Don't add __typename to root query/mutation/subscription types
+    skipTypeNameForRoot: true,
+    // Don't add 'Query'/'Mutation'/'Subscription' suffixes to operation result types
+    omitOperationSuffix: true,
+    // Don't add 'Fragment' suffix to fragment result types
+    fragmentSuffix: '',
+    // Default is 'unknown'; to match Apollo tooling we need to put 'any'
+    defaultScalarType: 'any'
   }
 }
 
@@ -376,7 +327,7 @@ Experiment with the following configuration options to keep your codebase change
 - **nullability**: When `errorHandlingClient: true`, adjusts nullability for fields marked with
   `@semanticNonNull` directive (requires `graphql-sock`).
 
-#### 5. Extra `__typename` present, or required `__typename` missing.
+#### 5. Extra `__typename` present, or required `__typename` is missing.
 
 Experiment with the following configuration options to keep your codebase changes to a minimum:
 

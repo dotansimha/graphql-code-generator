@@ -1,5 +1,40 @@
 # @graphql-codegen/typescript-resolvers
 
+## 6.0.2
+
+### Patch Changes
+
+- [#10849](https://github.com/dotansimha/graphql-code-generator/pull/10849)
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.1`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/typescript@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typescript/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/visitor-plugin-common@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/visitor-plugin-common/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+- Updated dependencies
+  [[`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)]:
+  - @graphql-codegen/typescript@6.0.2
+  - @graphql-codegen/visitor-plugin-common@7.0.3
+
+## 6.0.1
+
+### Patch Changes
+
+- [#10797](https://github.com/dotansimha/graphql-code-generator/pull/10797)
+  [`6ed420a`](https://github.com/dotansimha/graphql-code-generator/commit/6ed420a4c12f810b3b610cd2baad161ec96bde56)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix FederationTypes not having typesPrefix
+  and typesSuffix applied
+
+- Updated dependencies
+  [[`6ed420a`](https://github.com/dotansimha/graphql-code-generator/commit/6ed420a4c12f810b3b610cd2baad161ec96bde56)]:
+  - @graphql-codegen/plugin-helpers@7.0.1
+
 ## 6.0.0
 
 ### Major Changes

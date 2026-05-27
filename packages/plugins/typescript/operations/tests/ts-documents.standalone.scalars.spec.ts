@@ -289,6 +289,89 @@ describe('TypeScript Operations Plugin - Default Scalar types', () => {
 });
 
 describe('TypeScript Operations Plugin - Custom Scalars', () => {
+  it('uses custom inline scalars for Input, Variables and Result', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(input: UserInput!): User
+      }
+
+      input UserInput {
+        id: ID!
+        age: Int!
+        createdAt: DateTime!
+        metadata: JSON!
+      }
+
+      type User {
+        id: ID!
+        age: Int!
+        createdAt: DateTime!
+        metadata: JSON!
+      }
+
+      scalar DateTime
+      scalar JSON
+    `);
+    const document = parse(/* GraphQL */ `
+      query User(
+        $input: UserInput!
+        $id: ID!
+        $age: Int!
+        $createdAt: DateTime!
+        $metadata: JSON!
+      ) {
+        user(input: $input) {
+          id
+          age
+          createdAt
+          metadata
+        }
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          scalars: {
+            ID: 'string',
+            Int: 'bigint',
+            DateTime: 'Date',
+          },
+        },
+        { outputFile: '' },
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserInput = {
+        id: string;
+        age: bigint;
+        createdAt: Date;
+        metadata: unknown;
+      };
+
+      export type UserQueryVariables = Exact<{
+        input: UserInput;
+        id: string;
+        age: bigint;
+        createdAt: Date;
+        metadata: unknown;
+      }>;
+
+
+      export type UserQuery = { user: { id: string, age: bigint, createdAt: Date, metadata: unknown } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
   it('imports external custom scalar correctly when used in Result SelectionSet', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {

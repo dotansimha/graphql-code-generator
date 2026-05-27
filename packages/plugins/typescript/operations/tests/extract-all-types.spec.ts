@@ -1842,4 +1842,217 @@ describe('extractAllFieldsToTypesCompact: true', () => {
 
     await validate(content);
   });
+
+  it('should not separate conditional inline fragments when extractAllFieldsToTypesCompact is enabled', async () => {
+    // Regression: with extractAllFieldsToTypesCompact, @skip/@include inline fragments were pushed into
+    // selectionNodesByTypeNameConditional, causing duplicate type declarations (a syntax error).
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+      }
+      type User {
+        id: ID!
+        name: String!
+        age: Int!
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      query GetUser($showAge: Boolean!) {
+        user {
+          id
+          name
+          ... on User @include(if: $showAge) {
+            age
+          }
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      omitOperationSuffix: true,
+    };
+
+    const { content } = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: doc }],
+      config,
+      {
+        outputFile: '',
+      },
+    );
+
+    // Should produce valid TypeScript — no duplicate type declarations
+    await validate(content);
+
+    // The conditional inline fragment fields should be merged into a single flat type, not split out
+    expect(content).toContain('GetUser_user');
+
+    // Should NOT produce duplicate export type declarations for the same name
+    const duplicateRegex = /export type GetUser_user /g;
+    const matches = content.match(duplicateRegex);
+    expect(matches).toHaveLength(1);
+  });
+
+  it('should not separate conditional fragment spreads when extractAllFieldsToTypesCompact is enabled', async () => {
+    // Regression: conditional fragment spreads (@skip/@include) were pushed into
+    // selectionNodesByTypeNameConditional, causing missing/duplicate type declarations.
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+      }
+      type User {
+        id: ID!
+        name: String!
+        age: Int!
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      fragment UserAge on User {
+        age
+      }
+
+      query GetUser($showAge: Boolean!) {
+        user {
+          id
+          name
+          ...UserAge @include(if: $showAge)
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      omitOperationSuffix: true,
+    };
+
+    const { content } = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: doc }],
+      config,
+      {
+        outputFile: '',
+      },
+    );
+
+    // Should produce valid TypeScript — no duplicate type declarations
+    await validate(content);
+
+    // The user type should be present
+    expect(content).toContain('GetUser_user');
+
+    // Should NOT produce duplicate export type declarations for the same name
+    const duplicateRegex = /export type GetUser_user /g;
+    const matches = content.match(duplicateRegex);
+    expect(matches).toHaveLength(1);
+  });
+
+  it('should merge all fields into a single flat type with both conditional and unconditional selections', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        product: Product
+      }
+      type Product {
+        id: ID!
+        title: String!
+        price: Float!
+        discount: Float
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      query GetProduct($showPrice: Boolean!) {
+        product {
+          id
+          title
+          ... on Product @include(if: $showPrice) {
+            price
+            discount
+          }
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      omitOperationSuffix: true,
+    };
+
+    const { content } = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: doc }],
+      config,
+      {
+        outputFile: '',
+      },
+    );
+
+    await validate(content);
+
+    // All fields (including those from conditional inline fragment) should be in the same type
+    expect(content).toContain('id');
+    expect(content).toContain('title');
+    expect(content).toContain('price');
+    expect(content).toContain('discount');
+
+    // Only one type declaration for GetProduct_product
+    const duplicateRegex = /export type GetProduct_product /g;
+    expect(content.match(duplicateRegex)).toHaveLength(1);
+  });
+
+  it('should handle nested fragment spreads with conditional directives without missing fields', async () => {
+    // Regression: nested conditional fragment spreads did not propagate transitively,
+    // causing missing fields in generated types.
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        order: Order
+      }
+      type Order {
+        id: ID!
+        total: Float!
+        status: String!
+      }
+    `);
+
+    const doc = parse(/* GraphQL */ `
+      fragment OrderStatus on Order {
+        status
+      }
+
+      fragment OrderDetails on Order {
+        total
+        ...OrderStatus @skip(if: false)
+      }
+
+      query GetOrder {
+        order {
+          id
+          ...OrderDetails
+        }
+      }
+    `);
+
+    const config: TypeScriptDocumentsPluginConfig = {
+      extractAllFieldsToTypesCompact: true,
+      omitOperationSuffix: true,
+    };
+
+    const { content } = await plugin(
+      schema,
+      [{ location: 'test-file.ts', document: doc }],
+      config,
+      {
+        outputFile: '',
+      },
+    );
+
+    await validate(content);
+
+    // Should not produce duplicate type declarations
+    const duplicateRegex = /export type GetOrder_order /g;
+    const matches = content.match(duplicateRegex);
+    expect(matches).toHaveLength(1);
+  });
 });

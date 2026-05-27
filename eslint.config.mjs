@@ -1,7 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import importPlugin from 'eslint-plugin-import';
 import tailwindcss from 'eslint-plugin-tailwindcss';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import unicorn from 'eslint-plugin-unicorn';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';

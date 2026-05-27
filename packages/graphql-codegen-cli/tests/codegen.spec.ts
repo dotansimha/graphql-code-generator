@@ -1280,7 +1280,7 @@ describe('Codegen Executor', () => {
 
   it('Should generate documents output even if prj1/documents and prj1/extensions/codegen/generate/xxx/documents are both definded with the same glob files', async () => {
     const prj1 = await createContext({
-      config: './tests/test-files/graphql.config.js',
+      config: './tests/test-files/graphql.config.cjs',
       project: 'prj1',
       errorsOnly: true,
       overwrite: true,
@@ -1489,8 +1489,9 @@ describe('Codegen Executor', () => {
 
   it('should not run out of memory when generating very complex types (issue #7720)', async () => {
     const { result } = await executeCodegen({
-      schema: ['../../dev-test/gatsby/schema.graphql'],
-      documents: ['../../dev-test/gatsby/fragments.ts'],
+      // FIXME(bad-project-boundary): shouldn't reach out to another project for assets. Copy the files here.
+      schema: ['../../dev-test/general/gatsby/schema.graphql'],
+      documents: ['../../dev-test/general/gatsby/fragments.ts'],
       config: {
         extractAllFieldsToTypes: true,
         dedupeOperationSuffix: true,

@@ -79,7 +79,12 @@ export type FederationMeta = { [typeName: string]: TypeMeta };
  * - return type
  * @param schema
  */
-export function addFederationReferencesToSchema(schema: GraphQLSchema): {
+export function addFederationReferencesToSchema(
+  schema: GraphQLSchema,
+  config: {
+    convertName: (type: string) => string;
+  },
+): {
   transformedSchema: GraphQLSchema;
   federationMeta: FederationMeta;
 } {
@@ -275,7 +280,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
 
         const referenceSelectionSetsString = printReferenceSelectionSets({
           typeName: type.name,
-          baseFederationType: `FederationTypes['${type.name}']`, // FIXME: run convertName on FederationTypes
+          baseFederationType: `${config.convertName('FederationTypes')}['${type.name}']`,
           referenceSelectionSets,
         });
 
@@ -315,7 +320,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): {
 
         const referenceSelectionSetsString = printReferenceSelectionSets({
           typeName: type.name,
-          baseFederationType: `FederationTypes['${type.name}']`, // FIXME: run convertName on FederationTypes
+          baseFederationType: `${config.convertName('FederationTypes')}['${type.name}']`,
           referenceSelectionSets,
         });
 

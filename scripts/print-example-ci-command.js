@@ -32,7 +32,7 @@ const result = packageJSON.reduce(
       return res;
     }
 
-    res.commands.push(`yarn workspace ${name} run ${process.argv[2]}`);
+    res.commands.push(`pnpm --filter=${name} run ${process.argv[2]}`);
     return res;
   },
   { ignored: [], commands: [] },

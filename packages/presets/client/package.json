@@ -1,11 +1,11 @@
 {
   "name": "@graphql-codegen/client-preset",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "type": "module",
   "description": "GraphQL Code Generator preset for client.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/presets/client"
   },
   "license": "MIT",
@@ -13,6 +13,7 @@
     "node": ">=16"
   },
   "main": "dist/cjs/index.js",
+  "typings": "dist/typings/index.d.ts",
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
@@ -31,7 +32,6 @@
     },
     "./package.json": "./package.json"
   },
-  "typings": "dist/typings/index.d.ts",
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "vitest --no-watch"
@@ -48,22 +48,26 @@
   "dependencies": {
     "@babel/helper-plugin-utils": "^7.20.2",
     "@babel/template": "^7.20.7",
-    "@graphql-codegen/add": "^7.0.0",
-    "@graphql-codegen/gql-tag-operations": "6.0.0",
-    "@graphql-codegen/plugin-helpers": "^7.0.0",
-    "@graphql-codegen/typed-document-node": "^7.0.0",
-    "@graphql-codegen/typescript": "^6.0.0",
-    "@graphql-codegen/typescript-operations": "^6.0.0",
-    "@graphql-codegen/visitor-plugin-common": "^7.0.0",
+    "@graphql-codegen/add": "workspace:^",
+    "@graphql-codegen/gql-tag-operations": "workspace:^",
+    "@graphql-codegen/plugin-helpers": "workspace:^",
+    "@graphql-codegen/typed-document-node": "workspace:^",
+    "@graphql-codegen/typescript": "workspace:^",
+    "@graphql-codegen/typescript-operations": "workspace:^",
+    "@graphql-codegen/visitor-plugin-common": "workspace:^",
     "@graphql-tools/documents": "^1.0.0",
     "@graphql-tools/utils": "^11.0.0",
     "@graphql-typed-document-node/core": "3.2.0",
     "tslib": "^2.8.0"
   },
   "devDependencies": {
+    "@babel/traverse": "7.29.0",
+    "@babel/types": "7.29.0",
+    "@types/babel__core": "7.20.5",
     "@types/babel__helper-plugin-utils": "7.10.3",
     "@types/babel__template": "7.4.4",
-    "graphql-sock": "1.0.1"
+    "graphql-sock": "1.0.1",
+    "jiti": "2.7.0"
   },
   "publishConfig": {
     "directory": "dist",

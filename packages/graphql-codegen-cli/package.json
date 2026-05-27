@@ -1,10 +1,10 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dotansimha/graphql-code-generator.git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git",
     "directory": "packages/graphql-codegen-cli"
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
@@ -24,6 +24,7 @@
     "graphql-codegen-cjs": "dist/cjs/bin.js"
   },
   "main": "dist/cjs/index.js",
+  "typings": "dist/typings/index.d.ts",
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
@@ -42,7 +43,6 @@
     },
     "./package.json": "./package.json"
   },
-  "typings": "dist/typings/index.d.ts",
   "keywords": [
     "gql",
     "generator",
@@ -77,9 +77,9 @@
     "@babel/generator": "^7.18.13",
     "@babel/template": "^7.18.10",
     "@babel/types": "^7.18.13",
-    "@graphql-codegen/client-preset": "^6.0.0",
-    "@graphql-codegen/core": "^6.0.0",
-    "@graphql-codegen/plugin-helpers": "^7.0.0",
+    "@graphql-codegen/client-preset": "workspace:^",
+    "@graphql-codegen/core": "workspace:^",
+    "@graphql-codegen/plugin-helpers": "workspace:^",
     "@graphql-tools/apollo-engine-loader": "^8.0.28",
     "@graphql-tools/code-file-loader": "^8.1.28",
     "@graphql-tools/git-loader": "^8.0.32",
@@ -111,7 +111,16 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@inquirer/testing": "3.3.5",
+    "@graphql-codegen/add": "workspace:*",
+    "@graphql-codegen/flow": "3.0.1",
+    "@graphql-codegen/flow-resolvers": "3.0.1",
+    "@graphql-codegen/graphql-modules-preset": "workspace:*",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*",
+    "@graphql-codegen/typescript-graphql-files-modules": "4.0.1",
+    "@graphql-codegen/typescript-operations": "workspace:*",
+    "@graphql-codegen/typescript-resolvers": "workspace:*",
+    "@inquirer/testing": "3.3.6",
     "@parcel/watcher": "^2.1.0",
     "@types/is-glob": "4.0.4",
     "@types/js-yaml": "4.0.9",
@@ -120,6 +129,7 @@
     "change-case-all": "2.1.0",
     "js-yaml": "4.1.1",
     "make-dir": "5.1.0",
+    "memfs": "4.57.2",
     "prettier": "3.8.3"
   },
   "publishConfig": {

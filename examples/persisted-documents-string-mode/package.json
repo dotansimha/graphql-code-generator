@@ -6,7 +6,7 @@
     "build": "tsc",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "vitest --no-watch",
-    "test:end2end": "yarn test"
+    "test:end2end": "pnpm test"
   },
   "dependencies": {
     "@graphql-yoga/plugin-persisted-operations": "3.21.0",
@@ -16,7 +16,7 @@
     "@babel/core": "7.29.0",
     "@babel/preset-env": "7.29.5",
     "@babel/preset-typescript": "7.28.5",
-    "@graphql-codegen/cli": "7.0.0",
+    "@graphql-codegen/cli": "workspace:*",
     "@graphql-typed-document-node/core": "3.2.0"
   },
   "bob": false

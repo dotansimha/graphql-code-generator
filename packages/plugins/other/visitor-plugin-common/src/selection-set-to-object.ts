@@ -359,8 +359,9 @@ export class SelectionSetToObject<
           break;
         case Kind.INLINE_FRAGMENT:
           if (
-            hasConditionalDirectives(selection.directives) ||
-            hasIncrementalDeliveryDirectives(selection.directives)
+            !this._config.extractAllFieldsToTypesCompact &&
+            (hasConditionalDirectives(selection.directives) ||
+              hasIncrementalDeliveryDirectives(selection.directives))
           ) {
             inlineFragmentConditionalSelections.push(selection);
             break;
@@ -369,8 +370,9 @@ export class SelectionSetToObject<
           break;
         case Kind.FRAGMENT_SPREAD:
           if (
-            hasConditionalDirectives(selection.directives) ||
-            hasIncrementalDeliveryDirectives(selection.directives)
+            !this._config.extractAllFieldsToTypesCompact &&
+            (hasConditionalDirectives(selection.directives) ||
+              hasIncrementalDeliveryDirectives(selection.directives))
           ) {
             fragmentSpreadsConditionalSelections.push(selection);
             break;

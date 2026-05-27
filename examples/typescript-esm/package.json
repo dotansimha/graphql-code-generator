@@ -7,14 +7,14 @@
     "build": "tsc",
     "codegen": "graphql-codegen-esm --config codegen.cjs",
     "start": "node dist/main.js",
-    "test:end2end": "yarn start"
+    "test:end2end": "pnpm start"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.2.0",
     "graphql": "16.14.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "7.0.0"
+    "@graphql-codegen/cli": "workspace:*"
   },
   "bob": false
 }
