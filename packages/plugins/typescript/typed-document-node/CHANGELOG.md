@@ -1,5 +1,18 @@
 # @graphql-codegen/typed-document-node
 
+## 7.0.2
+
+### Patch Changes
+
+- [#10554](https://github.com/dotansimha/graphql-code-generator/pull/10554)
+  [`446aef4`](https://github.com/dotansimha/graphql-code-generator/commit/446aef48b53f80d39b4a8d661eb5f028c35c784c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fragments not getting deduped when
+  documentMode=graphQLTag
+
+- Updated dependencies
+  [[`446aef4`](https://github.com/dotansimha/graphql-code-generator/commit/446aef48b53f80d39b4a8d661eb5f028c35c784c)]:
+  - @graphql-codegen/visitor-plugin-common@7.0.4
+
 ## 7.0.1
 
 ### Patch Changes
