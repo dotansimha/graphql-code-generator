@@ -41,7 +41,6 @@ jobs:
     with:
       nodeVersion: 24
       packageManager: pnpm
-      buildScript: build
       releaseScript: release
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
