@@ -158,8 +158,8 @@ config option: `filePerOperation: true` (or set it to `false`). Then, the output
 
 Nested fields are the fields inside operation result object.
 
-Apollo-tooling generates nested field type names using **only field names**, omitting the GraphQL object type
-name:
+Apollo-tooling generates nested field type names using **only field names**, omitting the GraphQL
+object type name:
 
 ```ts
 // Apollo-tooling output
@@ -175,8 +175,8 @@ export type GetUserQuery_user_User = { ... };
 export type GetUserQuery_user_User_address_Address = { ... };
 ```
 
-To achieve naming similar to apollo-tooling with GraphQL Codegen use the `extractAllFieldsToTypesCompact: true`
-configuration option:
+To achieve naming similar to apollo-tooling with GraphQL Codegen use the
+`extractAllFieldsToTypesCompact: true` configuration option:
 
 ```ts filename="codegen.ts"
 const config: CodegenConfig = {
@@ -298,8 +298,8 @@ export default config
 
 ## Manual changes
 
-The setup above closely mimics apollo-tooling (99.98% similarity in our tests) but isn’t an exact match.
-The following items may require manual fixes:
+The setup above closely mimics apollo-tooling (99.98% similarity in our tests) but isn’t an exact
+match. The following items may require manual fixes:
 
 #### 1. Nested field types naming.
 
