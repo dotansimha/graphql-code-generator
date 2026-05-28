@@ -107,14 +107,14 @@ jobs:
           CI: true
       - name: Generate and Diff Codegen Artifacts
         run: |
-          pnpm --filter="example-react-graphql-request" codegen
+          pnpm examples:codegen
           git diff --exit-code -- examples/
       - name: Build Examples
         run: |
-          pnpm --filter="example-react-graphql-request" build
+          pnpm examples:build
       - name: End2End Test Examples
         run: |
-          pnpm --filter="example-react-graphql-request" test:end2end
+          pnpm examples:test:end2end
 
   # TODO: Remove all SWC test setup and references as that has been moved to https://github.com/swc-project/plugins/tree/main/contrib/graphql-codegen-client-preset
   # dev-tests-swc:

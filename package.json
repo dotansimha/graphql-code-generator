@@ -19,7 +19,7 @@
     "dev-test:watch:esm": "pnpm --filter=\"dev-test*\" watch:esm",
     "examples:build": "pnpm --filter=\"example-*\" build",
     "examples:codegen": "pnpm --filter=\"example-*\" codegen",
-    "examples:test:end2end": "pnpm --filter=\"example-*\" test:end2end",
+    "examples:test:end2end": "pnpm --filter=\"example-*\" --workspace-concurrency=1 test:end2end",
     "fix-bins": "node scripts/fix-bin.js",
     "postinstall": "husky install",
     "lint": "eslint --cache .",
