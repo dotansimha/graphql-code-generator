@@ -8,10 +8,9 @@
   "ignore": [
     "website",
     "example-*",
+    "rust-example-*",
     "dev-test*",
-    "@graphql-codegen/client-preset-swc-plugin",
-    "example-apollo-client-swc-plugin",
-    "example-react-nextjs-swr"
+    "@graphql-codegen/client-preset-swc-plugin"
   ],
   "changelog": [
     "@changesets/changelog-github",
