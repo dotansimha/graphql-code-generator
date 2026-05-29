@@ -7,6 +7,8 @@
     "generate": "pnpm generate:esm",
     "generate:cjs": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env",
     "generate:esm": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env",
+    "test-cli-version:cjs": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --version",
+    "test-cli-version:esm": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --version",
     "watch": "pnpm watch:esm",
     "watch:cjs": "pnpm generate:cjs --watch",
     "watch:esm": "pnpm generate:esm --watch"

@@ -17,6 +17,7 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import type { UnnormalizedTypeDefPointer } from '@graphql-tools/load';
+import { version } from './_version.js'; // Run `pnpm prepare-cli-version` to initialize this value
 import { findAndLoadGraphQLConfig } from './graphql-config.js';
 import {
   defaultDocumentsLoadOptions,
@@ -283,7 +284,7 @@ export function buildOptions() {
 }
 
 export function parseArgv(argv = process.argv): YamlCliFlags {
-  return yargs(argv).options(buildOptions()).parse(argv) as any;
+  return yargs(argv).version(version).options(buildOptions()).parse(argv) as any;
 }
 
 export async function createContext(
