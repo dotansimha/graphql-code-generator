@@ -1,5 +1,5 @@
 {
-  "name": "example-apollo-client-swc-plugin",
+  "name": "rust-example-apollo-client-swc-plugin",
   "version": "0.1.0",
   "private": true,
   "scripts": {

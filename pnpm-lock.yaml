@@ -63,7 +63,7 @@ importers:
         version: 10.4.0(jiti@2.7.0)
       eslint-plugin-import:
         specifier: 2.32.0
-        version: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
+        version: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-tailwindcss:
         specifier: npm:@hasparus/eslint-plugin-tailwindcss@3.17.5
         version: '@hasparus/eslint-plugin-tailwindcss@3.17.5(tailwindcss@3.4.19(tsx@4.22.0)(yaml@2.9.0))'
@@ -238,6 +238,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../packages/presets/client/dist
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.14.0)
@@ -306,6 +309,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4
@@ -339,6 +345,9 @@ importers:
       '@apollo/client':
         specifier: 3.14.1
         version: 3.14.1(@types/react@19.2.14)(graphql-ws@6.0.8(graphql@16.14.0)(ws@8.20.1))(graphql@16.14.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@graphql-typed-document-node/core':
+        specifier: 3.2.0
+        version: 3.2.0(graphql@16.14.0)
       '@graphql-yoga/plugin-defer-stream':
         specifier: 3.21.0
         version: 3.21.0(graphql-yoga@5.21.0(graphql@16.14.0))(graphql@16.14.0)
@@ -358,6 +367,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4
@@ -435,6 +447,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4
@@ -524,6 +539,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4
@@ -567,6 +585,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -604,6 +625,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../packages/presets/client/dist
 
   examples/typescript-graphql-request:
     dependencies:
@@ -623,6 +647,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../packages/presets/client/dist
       tsx:
         specifier: 4.22.0
         version: 4.22.0
@@ -676,6 +703,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -719,6 +749,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -762,6 +795,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -796,6 +832,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@vitejs/plugin-vue':
         specifier: 6.0.7
         version: 6.0.7(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
@@ -833,6 +872,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@vitejs/plugin-vue':
         specifier: 6.0.7
         version: 6.0.7(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
@@ -870,6 +912,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../../packages/presets/client/dist
       '@vitejs/plugin-vue':
         specifier: 6.0.7
         version: 6.0.7(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
@@ -910,6 +955,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/client-preset':
+        specifier: workspace:*
+        version: link:../../packages/presets/client/dist
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.14.0)
@@ -18688,7 +18736,7 @@ snapshots:
       eslint: 10.4.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@10.4.0(jiti@2.7.0))
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@10.4.0(jiti@2.7.0))
@@ -18722,7 +18770,7 @@ snapshots:
       tinyglobby: 0.2.16
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -18823,7 +18871,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@10.4.0(jiti@2.7.0)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
