@@ -83,6 +83,7 @@ export default [
       'dev-test/**',
       'website/**',
       'examples/**',
+      'scripts/**',
       '**/tests/test-files/**',
       '**/tests/test-documents/**',
       '**/react-app-env.d.ts',

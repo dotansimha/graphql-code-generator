@@ -17,7 +17,6 @@ import {
   Types,
 } from '@graphql-codegen/plugin-helpers';
 import type { UnnormalizedTypeDefPointer } from '@graphql-tools/load';
-import { version } from './_version.js'; // Run `pnpm prepare-cli-version` to initialize this value
 import { findAndLoadGraphQLConfig } from './graphql-config.js';
 import {
   defaultDocumentsLoadOptions,
@@ -25,6 +24,7 @@ import {
   loadDocuments,
   loadSchema,
 } from './load.js';
+import { version } from './version.js';
 
 const { lstat } = promises;
 

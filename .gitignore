@@ -21,6 +21,3 @@ website/public/_redirects
 
 **/cypress/screenshots
 **/cypress/videos
-
-# Generated file for `graphql-codegen --version` to work. See `pnpm prepare-cli-version`.
-packages/graphql-codegen-cli/src/_version.ts

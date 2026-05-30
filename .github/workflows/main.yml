@@ -79,8 +79,6 @@ jobs:
         run: |
           pnpm run dev-test:generate:${{matrix.method}}
           git diff --exit-code -- dev-test/
-      - name: Test CLI version ${{matrix.method}}
-        run: pnpm run dev-test:test-cli-version:${{matrix.method}}
 
   examples-tests:
     name: Examples - Normal
