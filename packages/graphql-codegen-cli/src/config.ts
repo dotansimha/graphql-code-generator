@@ -24,6 +24,7 @@ import {
   loadDocuments,
   loadSchema,
 } from './load.js';
+import { version } from './version.js';
 
 const { lstat } = promises;
 
@@ -283,7 +284,7 @@ export function buildOptions() {
 }
 
 export function parseArgv(argv = process.argv): YamlCliFlags {
-  return yargs(argv).options(buildOptions()).parse(argv) as any;
+  return yargs(argv).version(version).options(buildOptions()).parse(argv) as any;
 }
 
 export async function createContext(

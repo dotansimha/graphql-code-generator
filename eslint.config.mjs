@@ -174,9 +174,10 @@ export default [
 
   // Scripts and config files
   {
-    files: ['scripts/*.{ts,js}', 'prettier.config.cjs'],
+    files: ['scripts/*.{mjs,ts,js}', 'prettier.config.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
     },
   },
 ];

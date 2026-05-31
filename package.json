@@ -9,7 +9,7 @@
   "scripts": {
     "prebuild": "rimraf dist/ .bob/ tsconfig.tsbuildinfo",
     "build": "bob build",
-    "postbuild": "pnpm fix-bins",
+    "postbuild": "pnpm fix-bins && pnpm inject-cli-version",
     "clean": "rimraf node_modules/",
     "dev-test:generate": "pnpm --filter=\"dev-test*\" generate",
     "dev-test:generate:cjs": "pnpm --filter=\"dev-test*\" generate:cjs",
@@ -21,6 +21,7 @@
     "examples:codegen": "pnpm --filter=\"example-*\" codegen",
     "examples:test:end2end": "pnpm --filter=\"example-*\" --workspace-concurrency=1 test:end2end",
     "fix-bins": "node scripts/fix-bin.js",
+    "inject-cli-version": "node scripts/inject-cli-version.mjs",
     "postinstall": "husky install",
     "lint": "eslint --cache .",
     "lint:ci": "eslint --cache --output-file eslint_report.json --format json .",
