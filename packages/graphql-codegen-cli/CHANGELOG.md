@@ -1,5 +1,13 @@
 # @graphql-codegen/cli
 
+## 7.1.1
+
+### Patch Changes
+
+- [#10858](https://github.com/dotansimha/graphql-code-generator/pull/10858)
+  [`3fa901b`](https://github.com/dotansimha/graphql-code-generator/commit/3fa901b23ad6d3ef0522d2d8121d654bcacbd65d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix --version flag
+
 ## 7.1.0
 
 ### Minor Changes
