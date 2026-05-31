@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-// @ts-check
 const fs = require('fs-extra');
 const path = require('path');
 const fg = require('fast-glob');

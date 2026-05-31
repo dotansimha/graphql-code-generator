@@ -83,7 +83,6 @@ export default [
       'dev-test/**',
       'website/**',
       'examples/**',
-      'scripts/**',
       '**/tests/test-files/**',
       '**/tests/test-documents/**',
       '**/react-app-env.d.ts',
@@ -175,9 +174,10 @@ export default [
 
   // Scripts and config files
   {
-    files: ['scripts/*.{ts,js}', 'prettier.config.cjs'],
+    files: ['scripts/*.{mjs,ts,js}', 'prettier.config.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
     },
   },
 ];
