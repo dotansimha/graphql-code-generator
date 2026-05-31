@@ -1,6 +1,7 @@
 import { BinaryToTextEncoding, createHash } from 'crypto';
 import { promises } from 'fs';
 import { createRequire } from 'module';
+import * as url from 'node:url';
 import { resolve } from 'path';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
@@ -293,13 +294,12 @@ export async function createContext(
   if (cliFlags.require && cliFlags.require.length > 0) {
     const relativeRequire = createRequire(process.cwd());
     await Promise.all(
-      cliFlags.require.map(
-        mod =>
-          import(
-            relativeRequire.resolve(mod, {
-              paths: [process.cwd()],
-            })
-          ),
+      cliFlags.require.map(mod =>
+        safeDynamicImport(
+          relativeRequire.resolve(mod, {
+            paths: [process.cwd()],
+          }),
+        ),
       ),
     );
   }
@@ -544,3 +544,14 @@ async function addMetadataToSources(
     }),
   );
 }
+
+/**
+ * `safeDynamicImport` is a wrapper of dynamic `import()` to work across MacOS and Windows
+ * On native Windows (i.e. no WSL or CI), a filename may look like this: `C:\\Users\\path\\to\\file.ts`
+ * If used directly with `import()`, we'll see `ERR_UNSUPPORTED_ESM_URL_SCHEME` error because C: is not a valid protocol
+ * `url.pathToFileURL` turns the filename to `fil:///C:/Users/path/to/file.ts`, which is import-able
+ */
+const safeDynamicImport = (absoluteFilename: string) => {
+  const { href: fileUrl } = url.pathToFileURL(absoluteFilename);
+  return import(fileUrl);
+};
