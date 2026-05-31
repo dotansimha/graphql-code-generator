@@ -18,16 +18,10 @@ import { NoTypeDefinitionsFound, type UnnormalizedTypeDefPointer } from '@graphq
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { CodegenContext, ensureContext } from './config.js';
 import { getDocumentTransform } from './documentTransforms.js';
+import { isESMModule } from './isESMModule.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
-
-/**
- * Poor mans ESM detection.
- * Looking at this and you have a better method?
- * Send a PR.
- */
-const isESMModule = (typeof __dirname === 'string') === false;
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
