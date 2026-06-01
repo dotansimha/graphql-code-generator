@@ -6,7 +6,7 @@ import {
   LoadedFragment,
   optimizeOperations,
   RawClientSideBasePluginConfig,
-  typedDocumentStringTemplate,
+  typedDocumentString,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptTypedDocumentNodesConfig } from './config.js';
 import { TypeScriptDocumentNodesVisitor } from './visitor.js';
@@ -40,7 +40,7 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
 
   let content: string[] = [];
   if (config.documentMode === DocumentMode.string) {
-    content = [typedDocumentStringTemplate];
+    content = [typedDocumentString.template];
   }
 
   return {
