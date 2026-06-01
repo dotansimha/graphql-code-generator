@@ -1,6 +1,7 @@
 import { BinaryToTextEncoding, createHash } from 'crypto';
 import { promises } from 'fs';
 import { createRequire } from 'module';
+import * as url from 'node:url';
 import { resolve } from 'path';
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
@@ -18,6 +19,7 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import type { UnnormalizedTypeDefPointer } from '@graphql-tools/load';
 import { findAndLoadGraphQLConfig } from './graphql-config.js';
+import { isESMModule } from './isESMModule.js';
 import {
   defaultDocumentsLoadOptions,
   defaultSchemaLoadOptions,
@@ -293,13 +295,12 @@ export async function createContext(
   if (cliFlags.require && cliFlags.require.length > 0) {
     const relativeRequire = createRequire(process.cwd());
     await Promise.all(
-      cliFlags.require.map(
-        mod =>
-          import(
-            relativeRequire.resolve(mod, {
-              paths: [process.cwd()],
-            })
-          ),
+      cliFlags.require.map(mod =>
+        safeDynamicImport(
+          relativeRequire.resolve(mod, {
+            paths: [process.cwd()],
+          }),
+        ),
       ),
     );
   }
@@ -544,3 +545,24 @@ async function addMetadataToSources(
     }),
   );
 }
+
+/**
+ * `safeDynamicImport` is a wrapper of dynamic `import()`
+ * to work across Linux and Windows
+ *
+ * CJS:
+ * `import()` seems to work well in CJS when given resolved filename
+ *
+ * ESM:
+ * On native Windows (i.e. no WSL or CI), filename may look like this: `C:\\Users\\path\\to\\file.ts`
+ * If used directly with `import()`, we'll see `ERR_UNSUPPORTED_ESM_URL_SCHEME` error because `c:` is not a valid protocol
+ * `url.pathToFileURL` turns the filename to `file:///C:/Users/path/to/file.ts`, which is import-able
+ */
+const safeDynamicImport = (absoluteFilename: string): Promise<any> => {
+  if (isESMModule) {
+    const { href: fileUrl } = url.pathToFileURL(absoluteFilename);
+    return import(fileUrl);
+  }
+
+  return import(absoluteFilename);
+};
