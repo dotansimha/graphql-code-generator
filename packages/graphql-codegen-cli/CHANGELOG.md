@@ -1,5 +1,14 @@
 # @graphql-codegen/cli
 
+## 7.1.2
+
+### Patch Changes
+
+- [#10861](https://github.com/dotansimha/graphql-code-generator/pull/10861)
+  [`a2e1093`](https://github.com/dotansimha/graphql-code-generator/commit/a2e109397eda1bdee51864eb3e713afce5ef7771)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix CLI's `require` flag when resolving
+  module issue in ESM in native Windows
+
 ## 7.1.1
 
 ### Patch Changes
