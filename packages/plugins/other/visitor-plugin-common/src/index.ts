@@ -21,3 +21,4 @@ export * from './utils.js';
 export * from './variables-to-object.js';
 export * from './convert-schema-enum-to-declaration-block-string.js';
 export * from './graphql-type-utils.js';
+export { typedDocumentStringTemplate } from './typed-document-string.js';
