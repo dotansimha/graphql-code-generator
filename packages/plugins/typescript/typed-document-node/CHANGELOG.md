@@ -1,5 +1,17 @@
 # @graphql-codegen/typed-document-node
 
+## 7.0.3
+
+### Patch Changes
+
+- [#10863](https://github.com/dotansimha/graphql-code-generator/pull/10863)
+  [`8707247`](https://github.com/dotansimha/graphql-code-generator/commit/8707247857ecd77aaed6930b9eb6985323350932)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Use `typedDocumentString` from
+  @graphql-codegen/visitor-plugin-common instead of the inlined version
+- Updated dependencies
+  [[`8707247`](https://github.com/dotansimha/graphql-code-generator/commit/8707247857ecd77aaed6930b9eb6985323350932)]:
+  - @graphql-codegen/visitor-plugin-common@7.1.0
+
 ## 7.0.2
 
 ### Patch Changes
