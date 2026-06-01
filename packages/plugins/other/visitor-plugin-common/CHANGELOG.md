@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.1.0
+
+### Minor Changes
+
+- [#10863](https://github.com/dotansimha/graphql-code-generator/pull/10863)
+  [`8707247`](https://github.com/dotansimha/graphql-code-generator/commit/8707247857ecd77aaed6930b9eb6985323350932)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Create `typedDocumentString` to support
+  `TypedDocumentString` usage (common in Client-side plugins when documentMode=string)
+
 ## 7.0.4
 
 ### Patch Changes
