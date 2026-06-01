@@ -2,4 +2,4 @@
 '@graphql-codegen/cli': patch
 ---
 
-Fix ESM issue in native Windows
+Fix CLI's `require` flag when resolving module issue in ESM in native Windows
