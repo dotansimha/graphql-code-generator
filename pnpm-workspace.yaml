@@ -1,5 +1,4 @@
 minimumReleaseAge: 1440 # in minutes. 1440 minutes === 1 day
-
 packages:
   - packages/*
   - packages/plugins/typescript/*
@@ -10,7 +9,6 @@ packages:
   - examples/**/*
   - dev-test/*
   - dev-test-apollo-tooling
-
 allowBuilds:
   '@parcel/watcher': false
   '@swc/core': false
@@ -22,14 +20,13 @@ allowBuilds:
   unrs-resolver: false
   vue-demi: false
   workerd: false
-
 overrides:
-  '@rushstack/eslint-patch': '1.16.1'
-  '@typescript-eslint/eslint-plugin': '8.59.3'
-  '@typescript-eslint/parser': '8.59.3'
-  '@typescript-eslint/scope-manager': '8.59.3'
-  '@typescript-eslint/type-utils': '8.59.3'
-  '@typescript-eslint/types': '8.59.3'
-  '@typescript-eslint/typescript-estree': '8.59.3'
-  '@typescript-eslint/utils': '8.59.3'
-  '@typescript-eslint/visitor-keys': '8.59.3'
+  '@rushstack/eslint-patch': 1.16.1
+  '@typescript-eslint/eslint-plugin': 8.59.3
+  '@typescript-eslint/parser': 8.59.3
+  '@typescript-eslint/scope-manager': 8.59.3
+  '@typescript-eslint/type-utils': 8.59.3
+  '@typescript-eslint/types': 8.59.3
+  '@typescript-eslint/typescript-estree': 8.59.3
+  '@typescript-eslint/utils': 8.59.3
+  '@typescript-eslint/visitor-keys': 8.59.3
