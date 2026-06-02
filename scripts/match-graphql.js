@@ -20,6 +20,6 @@ const file = fs.readFileSync(pnpmWorkspaceFile, 'utf8');
 const parsedFile = yaml.load(file);
 
 parsedFile.overrides ||= {};
-parsedFile.overrides.graphql = '15';
+parsedFile.overrides.graphql = version;
 
 fs.writeFileSync(pnpmWorkspaceFile, yaml.dump(parsedFile), 'utf8');
