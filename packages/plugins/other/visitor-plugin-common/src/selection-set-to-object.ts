@@ -308,7 +308,7 @@ export class SelectionSetToObject<
             if (originalNode.kind === Kind.FIELD) {
               return {
                 ...originalNode,
-                fragmentDirectives: [...spread.directives],
+                fragmentDirectives: [...(spread.directives || [])],
               } satisfies EnrichedFieldNode;
             }
             return originalNode;
@@ -319,7 +319,7 @@ export class SelectionSetToObject<
             typeName: usage,
             onType: fragmentSpreadObject.onType,
             selectionNodes: fragmentSelectionNodes,
-            fragmentDirectives: [...spread.directives],
+            fragmentDirectives: [...(spread.directives || [])],
           });
         }
       }

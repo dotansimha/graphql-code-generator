@@ -709,7 +709,7 @@ export const getNodeComment = (
   node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode,
 ): string => {
   let commentText = node.description?.value;
-  const deprecationDirective = node.directives.find(v => v.name.value === 'deprecated');
+  const deprecationDirective = node.directives?.find(v => v.name.value === 'deprecated');
   if (deprecationDirective) {
     const deprecationReason = getDeprecationReason(deprecationDirective);
     commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
