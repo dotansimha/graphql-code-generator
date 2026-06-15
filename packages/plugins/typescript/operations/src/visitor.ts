@@ -327,7 +327,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       }
 
       if (typeNode.type === 'ListType') {
-        typePart = `Array<${typePart}>`;
+        const listModifier = this.config.immutableTypes ? 'ReadonlyArray' : 'Array';
+        typePart = `${listModifier}<${typePart}>`;
         if (!typeNode.isNonNullable) {
           typePart = printTypeScriptMaybeType({
             type: typePart,
