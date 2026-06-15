@@ -1,7 +1,7 @@
 <div>
     <img src="./logo.svg" width="150px" alt="GraphQL Code Generator logo"/>
     <a href="https://the-guild.dev">
-        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/> 
+        <img align="right" src="https://the-guild-org.github.io/press-kit/full-dark-logo.svg" alt="Created by The Guild" style="width: 100px;align:right;"/>
     </a>
 </div>
 
@@ -36,14 +36,14 @@ community that writes and maintains custom plugins.
 Start by installing the basic deps of GraphQL Codegen:
 
 ```bash
-yarn add graphql
-yarn add -D @graphql-codegen/cli
+pnpm add graphql
+pnpm add -D @graphql-codegen/cli
 ```
 
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
 ```bash
-yarn graphql-codegen init
+pnpm graphql-codegen init
 ```
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting

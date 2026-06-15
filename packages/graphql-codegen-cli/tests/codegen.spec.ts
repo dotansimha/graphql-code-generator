@@ -1280,7 +1280,7 @@ describe('Codegen Executor', () => {
 
   it('Should generate documents output even if prj1/documents and prj1/extensions/codegen/generate/xxx/documents are both definded with the same glob files', async () => {
     const prj1 = await createContext({
-      config: './tests/test-files/graphql.config.js',
+      config: './tests/test-files/graphql.config.cjs',
       project: 'prj1',
       errorsOnly: true,
       overwrite: true,
@@ -1489,8 +1489,9 @@ describe('Codegen Executor', () => {
 
   it('should not run out of memory when generating very complex types (issue #7720)', async () => {
     const { result } = await executeCodegen({
-      schema: ['../../dev-test/gatsby/schema.graphql'],
-      documents: ['../../dev-test/gatsby/fragments.ts'],
+      // FIXME(bad-project-boundary): shouldn't reach out to another project for assets. Copy the files here.
+      schema: ['../../dev-test/general/gatsby/schema.graphql'],
+      documents: ['../../dev-test/general/gatsby/fragments.ts'],
       config: {
         extractAllFieldsToTypes: true,
         dedupeOperationSuffix: true,
@@ -1503,5 +1504,87 @@ describe('Codegen Executor', () => {
     });
     expect(result.length).toBe(1);
     expect(result[0].content).toContain('export type WpCoreImageBlockForGalleryFragment = ');
+  });
+
+  describe('Federation', () => {
+    it('should include federation directives and scalar when federation: true ', async () => {
+      const { result } = await executeCodegen({
+        schema: [SIMPLE_TEST_SCHEMA],
+        generates: {
+          'out1.graphql': {
+            plugins: ['schema-ast'],
+          },
+        },
+        config: {
+          federation: true,
+        },
+      });
+
+      expect(result[0].content).toContain('directive @external on FIELD_DEFINITION');
+      expect(result[0].content).toContain(
+        'directive @requires(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).toContain(
+        'directive @provides(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).toContain(
+        'directive @key(fields: _FieldSet!) on OBJECT | INTERFACE',
+      );
+      expect(result[0].content).toContain('scalar _FieldSet');
+    });
+    it('should not include federation directives and scalar when federation: true and disableFederationDirectiveAndScalarInjection: true', async () => {
+      const { result } = await executeCodegen({
+        schema: [SIMPLE_TEST_SCHEMA],
+        generates: {
+          'out1.graphql': {
+            plugins: ['schema-ast'],
+          },
+        },
+        config: {
+          federation: true,
+          disableFederationDirectiveAndScalarInjection: true,
+        },
+      });
+
+      expect(result[0].content).not.toContain('directive @external on FIELD_DEFINITION');
+      expect(result[0].content).not.toContain(
+        'directive @requires(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @provides(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @key(fields: _FieldSet!) on OBJECT | INTERFACE',
+      );
+      expect(result[0].content).not.toContain('scalar _FieldSet');
+      expect(result[0].content).toContain('type MyType');
+    });
+    it('should not include federation directives and scalar when federation: false and disableFederationDirectiveAndScalarInjection: true', async () => {
+      const { result } = await executeCodegen({
+        schema: [SIMPLE_TEST_SCHEMA],
+        generates: {
+          'out1.graphql': {
+            plugins: ['schema-ast'],
+          },
+        },
+        config: {
+          federation: false,
+          disableFederationDirectiveAndScalarInjection: true,
+        },
+      });
+
+      expect(result[0].content).not.toContain('directive @external on FIELD_DEFINITION');
+      expect(result[0].content).not.toContain(
+        'directive @requires(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @provides(fields: _FieldSet!) on FIELD_DEFINITION',
+      );
+      expect(result[0].content).not.toContain(
+        'directive @key(fields: _FieldSet!) on OBJECT | INTERFACE',
+      );
+      expect(result[0].content).not.toContain('scalar _FieldSet');
+      expect(result[0].content).toContain('type MyType');
+    });
   });
 });

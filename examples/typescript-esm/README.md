@@ -4,11 +4,11 @@
 
 ```
 # generate code
-yarn codegen
+pnpm codegen
 # run tsc
-yarn build
+pnpm build
 # run the tsc output
-yarn start
+pnpm start
 ```
 
 ## Explanation

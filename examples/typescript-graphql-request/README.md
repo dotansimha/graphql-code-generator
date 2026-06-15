@@ -7,7 +7,7 @@ utilizing the schema definition language first workflow.
 
 ```
 # generate code
-yarn codegen
+pnpm codegen
 # run the server
-yarn dev
+pnpm dev
 ```

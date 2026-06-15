@@ -1,5 +1,5 @@
 {
-  "name": "example-apollo-client-swc-plugin",
+  "name": "rust-example-apollo-client-swc-plugin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,17 +10,17 @@
     "test:end2end": "exit 0"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.10",
+    "@apollo/client": "3.14.1",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^7.0.0",
-    "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/client-preset-swc-plugin": "workspace:*",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react-swc": "^4.0.0",
+    "@vitejs/plugin-react-swc": "4.3.1",
     "typescript": "6.0.3",
-    "vite": "^8.0.0"
+    "vite": "8.0.13"
   }
 }

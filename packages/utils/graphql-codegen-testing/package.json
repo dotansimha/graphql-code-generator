@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "type": "module",
   "description": "GraphQL Codegen Testing Utils",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
@@ -14,6 +14,7 @@
     "node": ">=16"
   },
   "main": "dist/cjs/index.js",
+  "typings": "dist/typings/index.d.ts",
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
@@ -32,7 +33,6 @@
     },
     "./package.json": "./package.json"
   },
-  "typings": "dist/typings/index.d.ts",
   "scripts": {
     "lint": "eslint **/*.ts"
   },
@@ -41,7 +41,7 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^7.0.0",
+    "@graphql-codegen/plugin-helpers": "workspace:^",
     "common-tags": "^1.8.0",
     "graphql-helix": "1.13.0",
     "lz-string": "^1.4.4",

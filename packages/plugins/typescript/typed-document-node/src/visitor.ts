@@ -7,6 +7,7 @@ import {
   DocumentMode,
   LoadedFragment,
   RawClientSideBasePluginConfig,
+  typedDocumentString,
 } from '@graphql-codegen/visitor-plugin-common';
 
 interface TypeScriptDocumentNodesVisitorPluginConfig extends RawClientSideBasePluginConfig {
@@ -50,11 +51,8 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       this._imports.add(tagImport);
     } else if (this.config.documentMode === DocumentMode.string) {
       const tagImport = this._generateImport(
-        {
-          moduleName: '@graphql-typed-document-node/core',
-          propName: 'DocumentTypeDecoration',
-        },
-        'DocumentTypeDecoration',
+        typedDocumentString.import,
+        typedDocumentString.import.propName,
         true,
       );
       this._imports.add(tagImport);

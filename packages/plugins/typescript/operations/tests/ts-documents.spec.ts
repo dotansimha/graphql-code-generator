@@ -5,7 +5,10 @@ import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
 
 describe('TypeScript Operations Plugin', () => {
-  const gitHuntSchema = buildClientSchema(require('../../../../../dev-test/githunt/schema.json'));
+  // FIXME(bad-project-boundary): shouldn't reach out to another project for assets. Copy the files here.
+  const gitHuntSchema = buildClientSchema(
+    require('../../../../../dev-test/general/githunt/schema.json'),
+  );
 
   const validate = async (content: Types.PluginOutput, usage = '', suspenseErrors = []) => {
     const m = mergeOutputs([content, usage]);

@@ -1,7 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import importPlugin from 'eslint-plugin-import';
 import tailwindcss from 'eslint-plugin-tailwindcss';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import unicorn from 'eslint-plugin-unicorn';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
@@ -176,9 +174,10 @@ export default [
 
   // Scripts and config files
   {
-    files: ['scripts/*.{ts,js}', 'prettier.config.cjs'],
+    files: ['scripts/*.{mjs,ts,js}', 'prettier.config.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
     },
   },
 ];

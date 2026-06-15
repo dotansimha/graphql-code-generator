@@ -9,15 +9,15 @@ How to run this package:
    `packageManager` entry). Otherwise, you might run into unexplained bugs.
 2. In the monorepo root, run:
 
-yarn clean && yarn install && yarn build
+pnpm clean && pnpm install && pnpm build
 
 3. Patch `near-operation-file` manually (the automatic patch doesn’t always work). In the monorepo
    root, run:
 
-yarn postinstall
+pnpm postinstall
 
 4. Go to the `dev-test-apollo-tooling` directory and run:
 
-cd dev-test-apollo-tooling yarn install yarn start
+cd dev-test-apollo-tooling pnpm install pnpm start
 
 This will generate type files in `dev-test-apollo-tooling/src/__generated__/*`.

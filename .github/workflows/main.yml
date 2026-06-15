@@ -22,20 +22,33 @@ jobs:
     name: Linting Check
     uses: the-guild-org/shared-config/.github/workflows/lint.yml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
     with:
-      script: yarn ci:lint
+      script: pnpm lint:ci
+      packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
+
   prettier-check:
     name: 🧹 Prettier Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Master
+      - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm install
+
       - name: Prettier Check
-        run: yarn prettier:check
-  dev-tests-old:
+        run: pnpm prettier:check
+
+  dev-tests:
     name: Validating dev-tests
     runs-on: ubuntu-latest
     strategy:
@@ -46,38 +59,62 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm install
+
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           CI: true
       - name: Test dev-tests ${{matrix.method}}
         run: |
-          yarn run generate:examples:${{matrix.method}}
+          pnpm run dev-test:generate:${{matrix.method}}
           git diff --exit-code -- dev-test/
-  dev-tests:
+
+  examples-tests:
     name: Examples - Normal
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        # `side-effects-cache false` is set to avoid using pnpm cache for binary cache like Cypress'
+        run: |
+          pnpm config set side-effects-cache false --location project
+          pnpm i
+
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           CI: true
       - name: Generate and Diff Codegen Artifacts
         run: |
-          EXAMPLE_TYPE=normal yarn examples:codegen
+          pnpm examples:codegen
           git diff --exit-code -- examples/
       - name: Build Examples
         run: |
-          EXAMPLE_TYPE=normal yarn examples:build
+          pnpm examples:build
       - name: End2End Test Examples
         run: |
-          EXAMPLE_TYPE=normal yarn examples:test:end2end
+          pnpm examples:test:end2end
 
   # TODO: Remove all SWC test setup and references as that has been moved to https://github.com/swc-project/plugins/tree/main/contrib/graphql-codegen-client-preset
   # dev-tests-swc:
@@ -118,14 +155,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm i
+
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           CI: true
       - name: Test ESM & CJS integrity
-        run: yarn bob check
+        run: pnpm bob check
+
   test:
     name:
       Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL
@@ -147,19 +195,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          nodeVersion: ${{matrix.node_version}}
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{matrix.node_version}}
+      - name: Install Dependencies to match graphql version
+        run: pnpm i
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
-        run: yarn
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because `graphql` version is changed
+
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Test
         # FIXME: Do not test `watcher.run.spec.ts` here because it is currently not working for Node22+ in Ubuntu
-        run: yarn test --exclude="**/tests/watcher.run.spec.ts"
+        run: pnpm test --exclude="**/tests/watcher.run.spec.ts"
         env:
           CI: true
 
@@ -184,19 +240,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          nodeVersion: ${{matrix.node_version}}
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{matrix.node_version}}
+      - name: Install Dependencies to match graphql version
+        run: pnpm i
       - name: Use GraphQL v${{matrix.graphql_version}}
         run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
       - name: Install Dependencies
-        run: yarn
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because `graphql` version is changed
+
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Test
         # FIXME: Merge `watcher.run.spec.ts` test to the above when it works for Node22+ in Ubuntu
-        run: yarn test packages/graphql-codegen-cli/tests/watcher.run.spec.ts
+        run: pnpm test packages/graphql-codegen-cli/tests/watcher.run.spec.ts
         env:
           CI: true
 
