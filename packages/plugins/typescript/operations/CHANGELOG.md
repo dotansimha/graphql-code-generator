@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 6.0.4
+
+### Patch Changes
+
+- [#10806](https://github.com/dotansimha/graphql-code-generator/pull/10806)
+  [`16b9529`](https://github.com/dotansimha/graphql-code-generator/commit/16b95293c36046ed9328bab629c9a2baf4430f5f)
+  Thanks [@vinassefranche](https://github.com/vinassefranche)! - Fix Array used instead of
+  ReadonlyArray while immutableTypes config is true
+
 ## 6.0.3
 
 ### Patch Changes
