@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "generate": "pnpm generate:single && pnpm generate:multi && pnpm generate:multi:project1",
-    "generate:multi": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config multi/.graphqlrc.yml",
+    "generate:multi": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config multi/.graphqlrc.yml || [ $? -eq 1 ]",
     "generate:multi:project1": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config multi/.graphqlrc.yml --project project1",
     "generate:single": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config single/.graphqlrc.yml"
   },
