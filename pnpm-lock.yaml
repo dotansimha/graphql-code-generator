@@ -194,6 +194,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../packages/graphql-codegen-cli/dist
+      '@graphql-codegen/typescript':
+        specifier: workspace:*
+        version: link:../../packages/plugins/typescript/typescript/dist
 
   examples/persisted-documents:
     dependencies:

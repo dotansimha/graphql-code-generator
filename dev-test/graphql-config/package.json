@@ -14,6 +14,7 @@
     "generate:esm:single": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config single/.graphqlrc.yml"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "workspace:*"
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*"
   }
 }
