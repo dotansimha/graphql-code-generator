@@ -103,7 +103,7 @@
     "listr2": "^10.2.1",
     "log-symbols": "^7.0.0",
     "micromatch": "^4.0.5",
-    "shell-quote": "^1.7.3",
+    "shell-quote": "^1.8.4",
     "string-env-interpolation": "^1.0.1",
     "ts-log": "^3.0.0",
     "tslib": "^2.4.0",
@@ -127,7 +127,7 @@
     "@types/micromatch": "^4.0.2",
     "@types/shell-quote": "1.7.5",
     "change-case-all": "2.1.0",
-    "js-yaml": "4.1.1",
+    "js-yaml": "4.2.0",
     "make-dir": "5.1.0",
     "memfs": "4.57.2",
     "prettier": "3.8.3"
