@@ -1,0 +1,10 @@
+projects:
+  default:
+    schema: 'default/schema.graphql'
+  project1:
+    schema: 'project1/schema.graphql'
+    extensions:
+      codegen:
+        generates:
+          'project1/types.ts':
+            plugins: ['typescript']

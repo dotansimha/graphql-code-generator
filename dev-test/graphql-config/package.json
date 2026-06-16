@@ -1,0 +1,20 @@
+{
+  "name": "dev-test-graphql-config",
+  "version": "0.0.1",
+  "description": "Test graphql-config integration",
+  "private": true,
+  "scripts": {
+    "generate:cjs": "pnpm generate:cjs:single && pnpm generate:cjs:multi && pnpm generate:cjs:multi:project1",
+    "generate:cjs:multi": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --config multi/.graphqlrc.yml || [ $? -eq 1 ]",
+    "generate:cjs:multi:project1": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --config multi/.graphqlrc.yml --project project1",
+    "generate:cjs:single": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --config single/.graphqlrc.yml",
+    "generate:esm": "pnpm generate:esm:single && pnpm generate:esm:multi && pnpm generate:esm:multi:project1",
+    "generate:esm:multi": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config multi/.graphqlrc.yml || [ $? -eq 1 ]",
+    "generate:esm:multi:project1": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config multi/.graphqlrc.yml --project project1",
+    "generate:esm:single": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config single/.graphqlrc.yml"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*"
+  }
+}
