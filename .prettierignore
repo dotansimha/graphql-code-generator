@@ -38,4 +38,5 @@ packages/graphql-codegen-cli/tests/test-files/error-document.graphql
 # Ignore dev-tests with no prettier requirement
 dev-test/general/githunt-invalid/invalid.graphql
 dev-test/general/test-schema/flow-types.flow.js
+dev-test/graphql-config/**/__generated__/
 dev-test-apollo-tooling/src/__generated__/
