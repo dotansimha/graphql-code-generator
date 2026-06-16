@@ -4,6 +4,7 @@
   "description": "Test graphql-config integration",
   "private": true,
   "scripts": {
+    "generate": "pnpm generate:esm",
     "generate:cjs": "pnpm generate:cjs:single && pnpm generate:cjs:multi && pnpm generate:cjs:multi:project1",
     "generate:cjs:multi": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --config multi/.graphqlrc.yml || [ $? -eq 1 ]",
     "generate:cjs:multi:project1": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --config multi/.graphqlrc.yml --project project1",
