@@ -1,0 +1,12 @@
+{
+  "name": "dev-test-graphql-config",
+  "version": "0.0.1",
+  "description": "Test graphql-config integration",
+  "private": true,
+  "scripts": {
+    "generate": "pnpm generate"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "workspace:*"
+  }
+}
