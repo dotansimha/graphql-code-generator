@@ -1,0 +1,6 @@
+schema: 'schema.graphql'
+extensions:
+  codegen:
+    generates:
+      '__generated__/types.ts':
+        plugins: ['typescript']

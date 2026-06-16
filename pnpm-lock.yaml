@@ -189,6 +189,12 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugins/typescript/resolvers/dist
 
+  dev-test/graphql-config:
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: workspace:*
+        version: link:../../packages/graphql-codegen-cli/dist
+
   examples/persisted-documents:
     dependencies:
       '@graphql-yoga/plugin-persisted-operations':
