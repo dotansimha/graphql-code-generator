@@ -1,5 +1,35 @@
 # @graphql-codegen/cli
 
+## 7.1.3
+
+### Patch Changes
+
+- [#10335](https://github.com/dotansimha/graphql-code-generator/pull/10335)
+  [`3280ace`](https://github.com/dotansimha/graphql-code-generator/commit/3280ace4505dcadf5398b6cbf157a8c8d7a713c2)
+  Thanks [@Diluka](https://github.com/Diluka)! - Fix graphql-config loading order to correctly
+  detect codegen projects
+
+  Previously, a `graphql-config` file like this failed:
+
+  ```yml
+  projects:
+    default:
+      schema: 'default/schema.graphql'
+    project1:
+      schema: 'project1/schema.graphql'
+      extensions:
+        codegen:
+          generates:
+            'project1/__generated__/types.ts':
+              plugins: ['typescript']
+  ```
+
+  This is because the `default` project doesn't have a `codegen` extension, which caused previous
+  logic to short circuit before reading `project1`'s config.
+
+  The fix reads every named project first, before reading the `default` project to exhaustively go
+  through every single project.
+
 ## 7.1.2
 
 ### Patch Changes
