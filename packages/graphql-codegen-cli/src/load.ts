@@ -1,4 +1,6 @@
 import { extname, join } from 'path';
+import { GraphQLError, GraphQLSchema } from 'graphql';
+import type { Source } from 'graphql-config';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { ApolloEngineLoader } from '@graphql-tools/apollo-engine-loader';
 import { CodeFileLoader } from '@graphql-tools/code-file-loader';
@@ -9,11 +11,10 @@ import { JsonFileLoader } from '@graphql-tools/json-file-loader';
 import {
   loadDocuments as loadDocumentsToolkit,
   loadSchema as loadSchemaToolkit,
+  NoTypeDefinitionsFound,
   UnnormalizedTypeDefPointer,
 } from '@graphql-tools/load';
-import { PrismaLoader } from '@graphql-tools/prisma-loader';
 import { UrlLoader } from '@graphql-tools/url-loader';
-import { GraphQLError, GraphQLSchema } from 'graphql';
 
 export const defaultSchemaLoadOptions = {
   assumeValidSDL: true,
@@ -29,7 +30,7 @@ export const defaultDocumentsLoadOptions = {
 
 export async function loadSchema(
   schemaPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
-  config: Types.Config
+  config: Types.Config,
 ): Promise<GraphQLSchema> {
   try {
     const loaders = [
@@ -40,7 +41,6 @@ export async function loadSchema(
       new JsonFileLoader(),
       new UrlLoader(),
       new ApolloEngineLoader(),
-      new PrismaLoader(),
     ];
 
     const schema = await loadSchemaToolkit(schemaPointers, {
@@ -50,7 +50,7 @@ export async function loadSchema(
       ...config.config,
     });
     return schema;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(
       [
         `Failed to load schema from ${Object.keys(schemaPointers).join(',')}:`,
@@ -62,15 +62,15 @@ export async function loadSchema(
         '- Multiple files with type definitions (glob expression)',
         '- String in config file',
         '\nTry to use one of above options and run codegen again.\n',
-      ].join('\n')
+      ].join('\n'),
     );
   }
 }
 
 export async function loadDocuments(
   documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
-  config: Types.Config
-): Promise<Types.DocumentFile[]> {
+  config: Types.Config,
+): Promise<Source[]> {
   const loaders = [
     new CodeFileLoader({
       pluckConfig: {
@@ -88,7 +88,7 @@ export async function loadDocuments(
       // we omit paths that don't resolve to a specific file
       continue;
     }
-    ignore.push(join(process.cwd(), generatePath));
+    ignore.push(join(config.cwd || process.cwd(), generatePath));
   }
 
   try {
@@ -100,10 +100,18 @@ export async function loadDocuments(
       ...config.config,
     });
     return loadedFromToolkit;
-  } catch (error) {
-    if (config.ignoreNoDocuments) return [];
+  } catch (error: any) {
+    // NoTypeDefinitionsFound from `@graphql-tools/load` already has a message with pointer, so we can just rethrow the error
+    if (error instanceof NoTypeDefinitionsFound) {
+      throw error;
+    }
+
+    // For other errors, we need to add an error message with documentPointers, so it's better for DevX
     throw new Error(
-      [`Failed to load documents from ${Object.keys(documentPointers).join(',')}:`, printError(error)].join('\n')
+      [
+        `Failed to load documents from ${Object.keys(documentPointers).join(',')}:`,
+        printError(error),
+      ].join('\n'),
     );
   }
 }

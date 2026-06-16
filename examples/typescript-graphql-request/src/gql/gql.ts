@@ -27,13 +27,13 @@ const documents: Documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query AllPeopleQuery {\n    allPeople(first: 5) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n'
+  source: '\n  query AllPeopleQuery {\n    allPeople(first: 5) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n',
 ): typeof import('./graphql').AllPeopleQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query AllPeopleWithVariablesQuery($first: Int!) {\n    allPeople(first: $first) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n'
+  source: '\n  query AllPeopleWithVariablesQuery($first: Int!) {\n    allPeople(first: $first) {\n      edges {\n        node {\n          name\n          homeworld {\n            name\n          }\n        }\n      }\n    }\n  }\n',
 ): typeof import('./graphql').AllPeopleWithVariablesQueryDocument;
 
 export function graphql(source: string) {

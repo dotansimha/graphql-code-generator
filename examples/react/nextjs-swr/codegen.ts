@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {

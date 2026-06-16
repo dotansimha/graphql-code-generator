@@ -1,5 +1,6 @@
 import autoBind from 'auto-bind';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import { FragmentImport, ImportDeclaration } from './imports.js';
 import { convertFactory } from './naming.js';
 import {
@@ -12,7 +13,7 @@ import {
   ParsedScalarsMap,
   ScalarsMap,
 } from './types.js';
-import { DeclarationBlockConfig } from './utils.js';
+import { DeclarationBlockConfig, getConfigValue } from './utils.js';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -26,17 +27,16 @@ export interface ParsedConfig {
   convert: ConvertFn;
   typesPrefix: string;
   typesSuffix: string;
-  addTypename: boolean;
-  nonOptionalTypename: boolean;
-  extractAllFieldsToTypes: boolean;
+  enumPrefix: boolean;
+  enumSuffix: boolean;
   externalFragments: LoadedFragment[];
   fragmentImports: ImportDeclaration<FragmentImport>[];
   immutableTypes: boolean;
   useTypeImports: boolean;
-  dedupeFragments: boolean;
   allowEnumStringTypes: boolean;
   inlineFragmentTypes: InlineFragmentTypeOptions;
-  emitLegacyCommonJSImports: boolean;
+  emitLegacyCommonJSImports?: boolean;
+  importExtension: '' | `.${string}`;
   printFieldsOnNewLines: boolean;
   includeExternalFragments: boolean;
 }
@@ -70,7 +70,7 @@ export interface RawConfig {
   strictScalars?: boolean;
   /**
    * @description Allows you to override the type that unknown scalars will have.
-   * @default any
+   * @default unknown
    *
    * @exampleMarkdown
    * ```ts filename="codegen.ts"
@@ -82,7 +82,7 @@ export interface RawConfig {
    *      'path/to/file': {
    *        // plugins...
    *        config: {
-   *          defaultScalarType: 'unknown'
+   *          defaultScalarType: 'any'
    *        },
    *      },
    *    },
@@ -260,10 +260,12 @@ export interface RawConfig {
    */
   typesSuffix?: string;
   /**
-   * @default false
-   * @description Does not add `__typename` to the generated types, unless it was specified in the selection set.
+   * @default true
+   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
    *
    * @exampleMarkdown
+   * ## Disable enum prefixes
+   *
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';
    *
@@ -273,7 +275,8 @@ export interface RawConfig {
    *      'path/to/file': {
    *        // plugins...
    *        config: {
-   *          skipTypename: true
+   *          typesPrefix: 'I',
+   *          enumPrefix: false
    *        },
    *      },
    *    },
@@ -281,13 +284,14 @@ export interface RawConfig {
    *  export default config;
    * ```
    */
-  skipTypename?: boolean;
+  enumPrefix?: boolean;
   /**
-   * @default false
-   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
-   * in the selection set, and makes it non-optional
+   * @default true
+   * @description Allow you to disable suffixing for generated enums, works in combination with `typesSuffix`.
    *
    * @exampleMarkdown
+   * ## Disable enum suffixes
+   *
    * ```ts filename="codegen.ts"
    *  import type { CodegenConfig } from '@graphql-codegen/cli';
    *
@@ -297,7 +301,8 @@ export interface RawConfig {
    *      'path/to/file': {
    *        // plugins...
    *        config: {
-   *          nonOptionalTypename: true
+   *          typesSuffix: 'I',
+   *          enumSuffix: false
    *        },
    *      },
    *    },
@@ -305,7 +310,7 @@ export interface RawConfig {
    *  export default config;
    * ```
    */
-  nonOptionalTypename?: boolean;
+  enumSuffix?: boolean;
   /**
    * @name useTypeImports
    * @type boolean
@@ -345,19 +350,6 @@ export interface RawConfig {
   /**
    * @ignore
    */
-  globalNamespace?: boolean;
-  /**
-   * @description  Removes fragment duplicates for reducing data transfer.
-   * It is done by removing sub-fragments imports from fragment definition
-   * Instead - all of them are imported to the Operation node.
-   * @type boolean
-   * @default false
-   * @deprecated This option is no longer needed. It will be removed in the next major version.
-   */
-  dedupeFragments?: boolean;
-  /**
-   * @ignore
-   */
   allowEnumStringTypes?: boolean;
   /**
    * @description Whether fragment types should be inlined into other operations.
@@ -370,20 +362,17 @@ export interface RawConfig {
    */
   inlineFragmentTypes?: InlineFragmentTypeOptions;
   /**
+   * @deprecated Please use `importExtension` instead.
    * @default true
    * @description Emit legacy common js imports.
    * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
    */
   emitLegacyCommonJSImports?: boolean;
-
   /**
-   * @default false
-   * @description Extract all field types to their own types, instead of inlining them.
-   * This helps to reduce type duplication, and makes type errors more readable.
-   * It can also significantly reduce the size of the generated code, the generation time,
-   * and the typechecking time.
+   * @description Append this extension to all imports.
+   * Useful for ESM environments that require file extensions in import statements.
    */
-  extractAllFieldsToTypes?: boolean;
+  importExtension?: '' | `.${string}`;
 
   /**
    * @default false
@@ -401,27 +390,35 @@ export interface RawConfig {
   includeExternalFragments?: boolean;
 }
 
-export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
+export class BaseVisitor<
+  TRawConfig extends RawConfig = RawConfig,
+  TPluginConfig extends ParsedConfig = ParsedConfig,
+> {
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   public readonly scalars: NormalizedScalarsMap;
 
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
+    const importExtension = normalizeImportExtension({
+      emitLegacyCommonJSImports: rawConfig.emitLegacyCommonJSImports,
+      importExtension: rawConfig.importExtension,
+    });
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       typesSuffix: rawConfig.typesSuffix || '',
+      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      enumSuffix: getConfigValue(rawConfig.enumSuffix, true),
       externalFragments: rawConfig.externalFragments || [],
       fragmentImports: rawConfig.fragmentImports || [],
-      addTypename: !rawConfig.skipTypename,
-      nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       useTypeImports: !!rawConfig.useTypeImports,
-      dedupeFragments: !!rawConfig.dedupeFragments,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
       emitLegacyCommonJSImports:
-        rawConfig.emitLegacyCommonJSImports === undefined ? true : !!rawConfig.emitLegacyCommonJSImports,
-      extractAllFieldsToTypes: rawConfig.extractAllFieldsToTypes ?? false,
+        rawConfig.emitLegacyCommonJSImports === undefined
+          ? true
+          : !!rawConfig.emitLegacyCommonJSImports,
+      importExtension,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
       includeExternalFragments: rawConfig.includeExternalFragments ?? false,
       ...((additionalConfig || {}) as any),
@@ -450,9 +447,14 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     return this._parsedConfig;
   }
 
-  public convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
-    const useTypesPrefix = typeof options?.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
-    const useTypesSuffix = typeof options?.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
+  public convertName(
+    node: ASTNode | string,
+    options?: BaseVisitorConvertOptions & ConvertOptions,
+  ): string {
+    const useTypesPrefix =
+      typeof options?.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+    const useTypesSuffix =
+      typeof options?.useTypesSuffix === 'boolean' ? options.useTypesSuffix : true;
 
     let convertedName = '';
 
@@ -471,15 +473,17 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
   public getOperationSuffix(
     node: FragmentDefinitionNode | OperationDefinitionNode | string,
-    operationType: string
+    operationType: string,
   ): string {
-    const { omitOperationSuffix = false, dedupeOperationSuffix = false } = this.config as { [key: string]: any };
+    const { omitOperationSuffix = false, dedupeOperationSuffix = false } = this.config as {
+      [key: string]: any;
+    };
     const operationName = typeof node === 'string' ? node : node.name ? node.name.value : '';
     return omitOperationSuffix
       ? ''
       : dedupeOperationSuffix && operationName.toLowerCase().endsWith(operationType.toLowerCase())
-      ? ''
-      : operationType;
+        ? ''
+        : operationType;
   }
 
   public getFragmentSuffix(node: FragmentDefinitionNode | string): string {
@@ -505,10 +509,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     const suffix = omitOperationSuffix
       ? ''
       : dedupeOperationSuffix &&
-        fragmentName.toLowerCase().endsWith('fragment') &&
-        fragmentVariableSuffix.toLowerCase().startsWith('fragment')
-      ? fragmentVariableSuffix.substring('fragment'.length)
-      : fragmentVariableSuffix;
+          fragmentName.toLowerCase().endsWith('fragment') &&
+          fragmentVariableSuffix.toLowerCase().startsWith('fragment')
+        ? fragmentVariableSuffix.substring('fragment'.length)
+        : fragmentVariableSuffix;
 
     return this.convertName(node, {
       prefix: fragmentVariablePrefix,

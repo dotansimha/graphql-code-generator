@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { ASTNode, FragmentDefinitionNode, DirectiveNode } from 'graphql';
+import { ASTNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedMapper } from './mappers.js';
 
 /**
@@ -11,7 +11,9 @@ export type DirectiveArgumentAndInputFieldMappings = { [name: string]: string };
  * Parsed directives map - a mapping between GraphQL directive name and the parsed mapper object,
  * including all required information for generating code for that mapping.
  */
-export type ParsedDirectiveArgumentAndInputFieldMappings = { [name: string]: ParsedMapper };
+export type ParsedDirectiveArgumentAndInputFieldMappings = {
+  [name: string]: ParsedMapper;
+};
 
 /**
  * Scalars map or a string, a map between the GraphQL scalar name and the identifier that should be used
@@ -42,13 +44,17 @@ export type ParsedScalarsMap = {
  */
 export type EnumValuesMap<AdditionalProps = {}> =
   | string
-  | { [enumName: string]: string | ({ [key: string]: string | number } & AdditionalProps) };
+  | {
+      [enumName: string]: string | ({ [key: string]: string | number } & AdditionalProps);
+    };
 export type ParsedEnumValuesMap = {
   [enumName: string]: {
     // If values are explictly set, this will include the mapped values
     mappedValues?: { [valueName: string]: string | number };
     // The GraphQL enum name
     typeIdentifier: string;
+    // The GraphQL enum name after namingConvention conversion
+    typeIdentifierConverted: string;
     // The actual identifier that you should use in the code (original or aliased)
     sourceIdentifier?: string;
     // In case of external enum, this will contain the source file path
@@ -119,10 +125,6 @@ export interface ParsedImport {
   propName: string;
 }
 
-export type FragmentDirectives = {
-  fragmentDirectives?: Array<DirectiveNode>;
-};
-
 export interface ResolversNonOptionalTypenameConfig {
   unionMember?: boolean;
   interfaceImplementingType?: boolean;
@@ -138,8 +140,3 @@ export interface CustomDirectivesConfig {
    */
   apolloUnmask?: boolean;
 }
-
-export interface GenerateInternalResolversIfNeededConfig {
-  __resolveReference?: boolean;
-}
-export type NormalizedGenerateInternalResolversIfNeededConfig = Required<GenerateInternalResolversIfNeededConfig>;

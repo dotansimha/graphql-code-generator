@@ -1,7 +1,7 @@
+import { buildSchema } from 'graphql';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript';
-import { buildSchema } from 'graphql';
 
 export const resolversTestingSchema = buildSchema(/* GraphQL */ `
   type MyType {
@@ -78,7 +78,7 @@ export const resolversTestingValidate = async (
   content: Types.PluginOutput,
   config: any = {},
   pluginSchema = resolversTestingSchema,
-  additionalCode = ''
+  additionalCode = '',
 ) => {
   const mergedContent = mergeOutputs([
     await tsPlugin(pluginSchema, [], config, { outputFile: '' }),

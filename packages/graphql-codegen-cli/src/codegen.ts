@@ -2,29 +2,26 @@ import fs from 'fs';
 import { createRequire } from 'module';
 import { cpus } from 'os';
 import path from 'path';
+import { buildASTSchema, DocumentNode, GraphQLError, GraphQLSchema, isSchema } from 'graphql';
+import { Listr, ListrTask } from 'listr2';
 import { codegen } from '@graphql-codegen/core';
 import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
   normalizeConfig,
+  normalizeImportExtension,
   normalizeInstanceOrArray,
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
-import { Listr, ListrTask } from 'listr2';
-import { CodegenContext, ensureContext, shouldEmitLegacyCommonJSImports } from './config.js';
+import { NoTypeDefinitionsFound, type UnnormalizedTypeDefPointer } from '@graphql-tools/load';
+import { mergeTypeDefs } from '@graphql-tools/merge';
+import { CodegenContext, ensureContext } from './config.js';
+import { getDocumentTransform } from './documentTransforms.js';
+import { isESMModule } from './isESMModule.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
-import { getDocumentTransform } from './documentTransforms.js';
-
-/**
- * Poor mans ESM detection.
- * Looking at this and you have a better method?
- * Send a PR.
- */
-const isESMModule = (typeof __dirname === 'string') === false;
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -41,6 +38,8 @@ const makeDefaultLoader = (from: string) => {
            * as import.meta is unavailable in a CommonJS context
            * and furthermore unavailable in stable Node.js.
            **/
+          // FIXME(pnpm-update): this causes dev-test devDeps to be brought into CLI's package.json, which is not ideal.
+          // Note that `relativeRequire.resolve(mod)` seems to work correctly for ESM as well.
           mod
         : relativeRequire.resolve(mod)
     );
@@ -49,7 +48,11 @@ const makeDefaultLoader = (from: string) => {
 
 type Ctx = { errors: Error[] };
 
-function createCache(): <T>(namespace: string, key: string, factory: () => Promise<T>) => Promise<T> {
+function createCache(): <T>(
+  namespace: string,
+  key: string,
+  factory: () => Promise<T>,
+) => Promise<T> {
   const cache = new Map<string, Promise<unknown>>();
 
   return function ensure<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T> {
@@ -68,7 +71,9 @@ function createCache(): <T>(namespace: string, key: string, factory: () => Promi
   };
 }
 
-export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
+export async function executeCodegen(
+  input: CodegenContext | Types.Config,
+): Promise<{ result: Types.FileOutput[]; error: Error | null }> {
   const context = ensureContext(input);
   const config = context.getConfig();
   const pluginContext = context.getPluginContext();
@@ -77,16 +82,30 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let rootConfig: { [key: string]: any } = {};
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
+  let rootExternalDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   const cache = createCache();
+
+  // We need a simple string to uniqually identify the provided GraphQLSchema objects for the above cache.
+  // Because JavaScript does not provide access to its internal object ids, we need a workaround.
+  // Below is a common way to get unique ids for objects in JavaScript,
+  // by using a WeakMap and autoincrementing the id.
+  const jsObjectIds = new WeakMap<GraphQLSchema, number>();
+  let jsObjectIdCounter = 0;
+  function getJsObjectId(schema: GraphQLSchema): number {
+    if (!jsObjectIds.has(schema)) {
+      jsObjectIds.set(schema, jsObjectIdCounter++);
+    }
+    return jsObjectIds.get(schema)!;
+  }
 
   function wrapTask(task: () => void | Promise<void>, source: string, taskName: string, ctx: Ctx) {
     return () =>
       context.profiler.run(async () => {
         try {
           await Promise.resolve().then(() => task());
-        } catch (error) {
+        } catch (error: any) {
           if (source && !(error instanceof GraphQLError)) {
             error.source = source;
           }
@@ -114,6 +133,11 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     /* Normalize root "documents" field */
     rootDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
+    /* Normalize root "externalDocuments" field */
+    rootExternalDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
+      config.externalDocuments,
+    );
+
     /* Normalize "generators" field */
     const generateKeys = Object.keys(config.generates || {});
 
@@ -130,7 +154,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
           my-file.ts:
             - plugin1
             - plugin2
-            - plugin3`
+            - plugin3`,
       );
     }
 
@@ -151,7 +175,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
               - plugin1
               - plugin2
               - plugin3
-          `
+          `,
         );
       }
     }
@@ -162,7 +186,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         filename =>
           !generates[filename].schema ||
           (Array.isArray(generates[filename].schema === 'object') &&
-            (generates[filename].schema as unknown as any[]).length === 0)
+            (generates[filename].schema as unknown as any[]).length === 0),
       )
     ) {
       throw new Error(
@@ -178,7 +202,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
         generates:
           path/to/output:
             schema: my-schema.graphql
-      `
+      `,
       );
     }
   }
@@ -206,9 +230,15 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                 let outputSchemaAst: GraphQLSchema;
                 let outputSchema: DocumentNode;
                 const outputFileTemplateConfig = outputConfig.config || {};
-                let outputDocuments: Types.DocumentFile[] = [];
-                const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
-                let outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
+                const outputDocuments: Types.DocumentFile[] = [];
+                const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(
+                  outputConfig.schema,
+                );
+                let outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(
+                  outputConfig.documents,
+                );
+                let outputSpecificExternalDocuments =
+                  normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.externalDocuments);
 
                 const preset: Types.OutputPreset | null = hasPreset
                   ? typeof outputConfig.preset === 'string'
@@ -217,7 +247,14 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                   : null;
 
                 if (preset?.prepareDocuments) {
-                  outputSpecificDocuments = await preset.prepareDocuments(filename, outputSpecificDocuments);
+                  outputSpecificDocuments = await preset.prepareDocuments(
+                    filename,
+                    outputSpecificDocuments,
+                  );
+                  outputSpecificExternalDocuments = await preset.prepareDocuments(
+                    filename,
+                    outputSpecificExternalDocuments,
+                  );
                 }
 
                 return subTask.newListr(
@@ -228,19 +265,37 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         async () => {
                           debugLog(`[CLI] Loading Schemas`);
                           const schemaPointerMap: any = {};
-                          const allSchemaDenormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
+                          const parsedSchemas: GraphQLSchema[] = [];
+                          const allSchemaDenormalizedPointers = [
+                            ...rootSchemas,
+                            ...outputSpecificSchemas,
+                          ];
 
                           for (const denormalizedPtr of allSchemaDenormalizedPointers) {
-                            if (typeof denormalizedPtr === 'string') {
+                            if (isSchema(denormalizedPtr)) {
+                              parsedSchemas.push(denormalizedPtr);
+                            } else if (typeof denormalizedPtr === 'string') {
                               schemaPointerMap[denormalizedPtr] = {};
                             } else if (typeof denormalizedPtr === 'object') {
                               Object.assign(schemaPointerMap, denormalizedPtr);
                             }
                           }
 
-                          const hash = JSON.stringify(schemaPointerMap);
+                          const hash =
+                            JSON.stringify(schemaPointerMap) +
+                            parsedSchemas.map(getJsObjectId).join(',');
                           const result = await cache('schema', hash, async () => {
-                            const outputSchemaAst = await context.loadSchema(schemaPointerMap);
+                            // collect parsed schemas
+                            const schemasToMerge: GraphQLSchema[] = [...parsedSchemas];
+                            // collect schemas, provided by pointers
+                            if (Object.keys(schemaPointerMap).length) {
+                              schemasToMerge.push(await context.loadSchema(schemaPointerMap));
+                            }
+                            // merge all collected schemas into one
+                            const outputSchemaAst =
+                              schemasToMerge.length === 1
+                                ? schemasToMerge[0]
+                                : buildASTSchema(mergeTypeDefs(schemasToMerge));
                             const outputSchema = getCachedDocumentNodeFromSchema(outputSchemaAst);
                             return {
                               outputSchemaAst,
@@ -253,7 +308,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                         },
                         filename,
                         `Load GraphQL schemas: ${filename}`,
-                        ctx
+                        ctx,
                       ),
                     },
                     {
@@ -261,39 +316,107 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       task: wrapTask(
                         async () => {
                           debugLog(`[CLI] Loading Documents`);
-                          const documentPointerMap: any = {};
-                          const allDocumentsDenormalizedPointers = [...rootDocuments, ...outputSpecificDocuments];
-                          for (const denormalizedPtr of allDocumentsDenormalizedPointers) {
-                            if (typeof denormalizedPtr === 'string') {
-                              documentPointerMap[denormalizedPtr] = {};
-                            } else if (typeof denormalizedPtr === 'object') {
-                              Object.assign(documentPointerMap, denormalizedPtr);
+
+                          const populateDocumentPointerMap = (
+                            allDocumentsDenormalizedPointers: Types.OperationDocument[],
+                          ): UnnormalizedTypeDefPointer => {
+                            const pointer: UnnormalizedTypeDefPointer = {};
+                            for (const denormalizedPtr of allDocumentsDenormalizedPointers) {
+                              if (typeof denormalizedPtr === 'string') {
+                                pointer[denormalizedPtr] = {};
+                              } else if (typeof denormalizedPtr === 'object') {
+                                Object.assign(pointer, denormalizedPtr);
+                              }
                             }
-                          }
+                            return pointer;
+                          };
+
+                          const allDocumentsDenormalizedPointers = [
+                            ...rootDocuments,
+                            ...outputSpecificDocuments,
+                          ];
+                          const documentPointerMap = populateDocumentPointerMap(
+                            allDocumentsDenormalizedPointers,
+                          );
 
                           const hash = JSON.stringify(documentPointerMap);
-                          const result = await cache('documents', hash, async () => {
-                            try {
-                              const documents = await context.loadDocuments(documentPointerMap);
-                              return {
-                                documents,
-                              };
-                            } catch (error) {
-                              if (config.ignoreNoDocuments) {
-                                return {
-                                  documents: [],
-                                };
+                          const outputDocumentsStandard = await cache(
+                            'documents',
+                            hash,
+                            async (): Promise<Types.DocumentFile[]> => {
+                              try {
+                                const documents = await context.loadDocuments(
+                                  documentPointerMap,
+                                  'standard',
+                                );
+                                return documents;
+                              } catch (error) {
+                                if (
+                                  error instanceof NoTypeDefinitionsFound &&
+                                  config.ignoreNoDocuments
+                                ) {
+                                  return [];
+                                }
+                                throw error;
                               }
+                            },
+                          );
 
-                              throw error;
+                          const allExternalDocumentsDenormalizedPointers = [
+                            ...rootExternalDocuments,
+                            ...outputSpecificExternalDocuments,
+                          ];
+
+                          const externalDocumentsPointerMap = populateDocumentPointerMap(
+                            allExternalDocumentsDenormalizedPointers,
+                          );
+
+                          const externalDocumentHash = JSON.stringify(externalDocumentsPointerMap);
+                          const outputExternalDocuments = await cache(
+                            'documents',
+                            externalDocumentHash,
+                            async (): Promise<Types.DocumentFile[]> => {
+                              try {
+                                const documents = await context.loadDocuments(
+                                  externalDocumentsPointerMap,
+                                  'external',
+                                );
+                                return documents;
+                              } catch (error) {
+                                if (
+                                  error instanceof NoTypeDefinitionsFound &&
+                                  config.ignoreNoDocuments
+                                ) {
+                                  return [];
+                                }
+                                throw error;
+                              }
+                            },
+                          );
+
+                          /**
+                           * Merging `standard` and `external` documents here,
+                           * so they can be processed the same way,
+                           * before passed into presets and plugins
+                           */
+                          const processedFile: Record<string, true> = {};
+                          const mergedDocuments = [
+                            ...outputDocumentsStandard,
+                            ...outputExternalDocuments,
+                          ];
+                          for (const file of mergedDocuments) {
+                            const fileIdentifier = (file.location || '') + (file.hash || '');
+                            if (processedFile[fileIdentifier]) {
+                              continue;
                             }
-                          });
 
-                          outputDocuments = result.documents;
+                            outputDocuments.push(file);
+                            processedFile[fileIdentifier] = true;
+                          }
                         },
                         filename,
                         `Load GraphQL documents: ${filename}`,
-                        ctx
+                        ctx,
                       ),
                     },
                     {
@@ -303,9 +426,12 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           debugLog(`[CLI] Generating output`);
                           const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
 
-                          const pluginLoader = config.pluginLoader || makeDefaultLoader(context.cwd);
+                          const pluginLoader =
+                            config.pluginLoader || makeDefaultLoader(context.cwd);
                           const pluginPackages = await Promise.all(
-                            normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
+                            normalizedPluginsArray.map(plugin =>
+                              getPluginByName(Object.keys(plugin)[0], pluginLoader),
+                            ),
                           );
 
                           const pluginMap: {
@@ -315,15 +441,28 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                               const plugin = normalizedPluginsArray[i];
                               const name = Object.keys(plugin)[0];
                               return [name, pkg];
-                            })
+                            }),
                           );
 
-                          const mergedConfig = {
+                          const rawMergedConfig = {
                             ...rootConfig,
+                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
+                            importExtension: config.importExtension,
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
-                            emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config),
+                          };
+
+                          const importExtension = normalizeImportExtension({
+                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports,
+                            importExtension: rawMergedConfig.importExtension,
+                          });
+
+                          const mergedConfig = {
+                            ...rawMergedConfig,
+                            importExtension,
+                            emitLegacyCommonJSImports:
+                              rawMergedConfig.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -332,9 +471,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                   return await getDocumentTransform(
                                     config,
                                     makeDefaultLoader(context.cwd),
-                                    `the element at index ${index} of the documentTransforms`
+                                    `the element at index ${index} of the documentTransforms`,
                                   );
-                                })
+                                }),
                               )
                             : [];
 
@@ -354,7 +493,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                     profiler: context.profiler,
                                     documentTransforms,
                                   }),
-                                `Build Generates Section: ${filename}`
+                                `Build Generates Section: ${filename}`,
                               )
                             : [
                                 {
@@ -368,14 +507,15 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                                   pluginContext,
                                   profiler: context.profiler,
                                   documentTransforms,
-                                },
+                                } satisfies Types.GenerateOptions,
                               ];
 
                           const process = async (outputArgs: Types.GenerateOptions) => {
                             const output = await codegen({
                               ...outputArgs,
-                              // @ts-expect-error todo: fix 'emitLegacyCommonJSImports' does not exist in type 'GenerateOptions'
-                              emitLegacyCommonJSImports: shouldEmitLegacyCommonJSImports(config, outputArgs.filename),
+                              importExtension,
+                              emitLegacyCommonJSImports:
+                                rawMergedConfig.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({
@@ -385,18 +525,30 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             });
                           };
 
-                          await context.profiler.run(() => Promise.all(outputs.map(process)), `Codegen: ${filename}`);
+                          await context.profiler.run(
+                            () => Promise.all(outputs.map(process)),
+                            `Codegen: ${filename}`,
+                          );
                         },
                         filename,
                         `Generate: ${filename}`,
-                        ctx
+                        ctx,
                       ),
                     },
                   ],
                   {
-                    // it stops when of the tasks failed
+                    /**
+                     * For each `generates` task, we must do the following in order:
+                     *
+                     * 1. Load schema
+                     * 2. Load documents
+                     * 3. Generate based on the schema + documents
+                     *
+                     * This way, the 3rd step has all the schema and documents loaded in previous steps to work correctly
+                     */
                     exitOnError: true,
-                  }
+                    concurrent: false,
+                  },
                 );
               },
               // It doesn't stop when one of tasks failed, to finish at least some of outputs
@@ -404,22 +556,24 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
             };
           });
 
-          return task.newListr(generateTasks, { concurrent: cpus().length });
+          return task.newListr(generateTasks, {
+            concurrent: cpus().length || 1,
+          });
         },
       },
     ],
     {
       rendererOptions: {
         clearOutput: false,
-        collapse: true,
+        collapseSubtasks: true,
         formatOutput: 'wrap',
         removeEmptyLines: false,
       },
       renderer: config.verbose ? 'verbose' : 'default',
       ctx: { errors: [] },
-      rendererSilent: isTest || config.silent,
+      silentRendererCondition: isTest || config.silent,
       exitOnError: true,
-    }
+    },
   );
 
   // All the errors throw in `listr2` are collected in context
@@ -430,13 +584,15 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     printLogs();
   }
 
+  let error: Error | null = null;
   if (executedContext.errors.length > 0) {
     const errors = executedContext.errors.map(subErr => subErr.message || subErr.toString());
-    const newErr = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
+    error = new AggregateError(executedContext.errors, String(errors.join('\n\n')));
     // Best-effort to all stack traces for debugging
-    newErr.stack = `${newErr.stack}\n\n${executedContext.errors.map(subErr => subErr.stack).join('\n\n')}`;
-    throw newErr;
+    error.stack = `${error.stack}\n\n${executedContext.errors
+      .map(subErr => subErr.stack)
+      .join('\n\n')}`;
   }
 
-  return result;
+  return { result, error };
 }

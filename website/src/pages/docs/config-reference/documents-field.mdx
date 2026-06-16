@@ -6,11 +6,13 @@ import { Callout } from '@theguild/components'
 
 # `documents` field
 
-The `documents` field should point to your GraphQL documents: `query`, `mutation`, `subscription`, and `fragment`.
+The `documents` field should point to your GraphQL documents: `query`, `mutation`, `subscription`,
+and `fragment`.
 
 `documents` is only required if you use plugins that generate code for the client-side.
 
-You can specify either a `string` pointing to your documents or `string[]` pointing to multiple documents.
+You can specify either a `string` pointing to your documents or `string[]` pointing to multiple
+documents.
 
 ## How to use it?
 
@@ -24,7 +26,9 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   schema: 'http://localhost:3000/graphql',
   documents: 'src/**/*.graphql',
-  generates: { './src/types.ts': { plugins: ['typescript', 'typescript-operations'] } }
+  generates: {
+    './src/types.ts': { plugins: ['typescript', 'typescript-operations'] }
+  }
 }
 export default config
 ```
@@ -50,7 +54,8 @@ export default config
 
 ### Document Scanner
 
-GraphQL Code Generator has a built-in document scanner, which means you can specify a `.graphql` file or code files containing GraphQL documents (ex: `.tsx`).
+GraphQL Code Generator has a built-in document scanner, which means you can specify a `.graphql`
+file or code files containing GraphQL documents (ex: `.tsx`).
 
 You can tell it to find documents in TypeScript files:
 
@@ -137,9 +142,12 @@ const config: CodegenConfig = {
 export default config
 ```
 
-<Callout>All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.</Callout>
+<Callout>
+  All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
+</Callout>
 
-Additionally, you can use code files, and the codegen will try to extract the GraphQL documents from it:
+Additionally, you can use code files, and the codegen will try to extract the GraphQL documents from
+it:
 
 ```ts {5}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -152,9 +160,12 @@ const config: CodegenConfig = {
 export default config
 ```
 
-The codegen will try to load the file as an AST and look for exact GraphQL operations strings. Still, if it can't find those, it will try to `require` the file and look for operations in the default export.
+The codegen will try to load the file as an AST and look for exact GraphQL operations strings.
+Still, if it can't find those, it will try to `require` the file and look for operations in the
+default export.
 
-You can disable the `require` if it causes errors for you (for example, because of different module system):
+You can disable the `require` if it causes errors for you (for example, because of different module
+system):
 
 ```ts {7}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -177,7 +188,8 @@ Your operations should be declared as template strings with the `gql` tag or wit
 
 - ### String
 
-You can specify your GraphQL documents directly as an AST string in your config file. It's very useful for testing.
+You can specify your GraphQL documents directly as an AST string in your config file. It's very
+useful for testing.
 
 ```ts {5}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -192,9 +204,11 @@ export default config
 
 ## GraphQL Tag Pluck
 
-GraphQL Code Generator uses `graphql-tag-pluck` internally to extract GraphQL documents from your code file.
+GraphQL Code Generator uses `graphql-tag-pluck` internally to extract GraphQL documents from your
+code file.
 
-If you are pointing to a code file (such as `.js` or `.jsx`), GraphQL will try to look for usages of `gql` tag, or string literals that are using magic GraphQL comment (`/* GraphQL */`), for example:
+If you are pointing to a code file (such as `.js` or `.jsx`), GraphQL will try to look for usages of
+`gql` tag, or string literals that are using magic GraphQL comment (`/* GraphQL */`), for example:
 
 ```jsx {5-11,14-20}
 import React from 'react'
@@ -221,7 +235,9 @@ const MY_QUERY = /* GraphQL */ `
 // … some components code …
 ```
 
-By default, it has a predefined list of popular `gql` tags to look for, in order to make sure it's not trying to extract an invalid or unrelated string. [The default list could be found here](https://github.com/ardatan/graphql-tools/blob/master/packages/graphql-tag-pluck/src/visitor.ts#L12)
+By default, it has a predefined list of popular `gql` tags to look for, in order to make sure it's
+not trying to extract an invalid or unrelated string.
+[The default list could be found here](https://github.com/ardatan/graphql-tools/blob/master/packages/graphql-tag-pluck/src/visitor.ts#L12)
 
 You can add custom tags if you need by using `pluckConfig` on the root level on your config file:
 
@@ -278,7 +294,8 @@ export default config
 
 ## Custom Document Loader
 
-Suppose your schema has a different or complicated way of loading. In that case, you can specify a custom loader with the `loader` field.
+Suppose your schema has a different or complicated way of loading. In that case, you can specify a
+custom loader with the `loader` field.
 
 ```ts {6-8}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -307,7 +324,7 @@ module.exports = (docString, config) => {
 ```
 
 <Callout>
-  The second parameter passed to the loader function is a config object that includes a `pluginContext` property.
-  `pluginContext` is passed to any executed plugins, so it can be modified by the loader to pass any additional
-  information to those plugins.
+  The second parameter passed to the loader function is a config object that includes a
+  `pluginContext` property. `pluginContext` is passed to any executed plugins, so it can be modified
+  by the loader to pass any additional information to those plugins.
 </Callout>

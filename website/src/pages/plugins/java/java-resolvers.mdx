@@ -1,11 +1,14 @@
 ---
 title: java-resolvers
-description: Java Resolvers Plugin. Generate Java interfaces for your resolvers. Works with graphql-java library.
+description:
+  Java Resolvers Plugin. Generate Java interfaces for your resolvers. Works with graphql-java
+  library.
 ---
 
-import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import JavaInstallation from '@/components/java-installation.mdx'
+import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
@@ -14,7 +17,8 @@ The `java-resolvers` plugin creates Java `interface`s for the resolvers' signatu
 
 It works with `graphql-java` library, and it uses it's `DataFetcher` API.
 
-You can use this plugin to generate interfaces and later implement them, this way you can always tell if one of the fields is missing a resolvers:
+You can use this plugin to generate interfaces and later implement them, this way you can always
+tell if one of the fields is missing a resolvers:
 
 ```java
 import com.my.app.generated.Resolvers;

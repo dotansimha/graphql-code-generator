@@ -1,7 +1,7 @@
 import * as https from 'node:https';
-import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import type { ExecutionResult } from 'graphql';
 import { print } from 'graphql';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
 export function executeOperation<TResult, TVariables>(
   url: string,
@@ -21,13 +21,13 @@ export function executeOperation<TResult, TVariables>(
           resolve(JSON.parse(data));
         });
         response.on('error', reject);
-      }
+      },
     );
     request.write(
       JSON.stringify({
         query: print(operation),
         variables: variables == null ? undefined : variables,
-      })
+      }),
     );
     request.end();
   });

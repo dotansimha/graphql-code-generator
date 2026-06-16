@@ -1,0 +1,158 @@
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+/** The input object sent when passing a color */
+type ColorInput = {
+  blue: number;
+  green: number;
+  red: number;
+};
+
+/** The episodes in the Star Wars trilogy */
+type Episode =
+  /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
+  | 'EMPIRE'
+  /** Star Wars Episode VI: Return of the Jedi, released in 1983. */
+  | 'JEDI'
+  /** Star Wars Episode IV: A New Hope, released in 1977. */
+  | 'NEWHOPE';
+
+/** The input object sent when someone is creating a new review */
+type ReviewInput = {
+  /** Comment about the movie, optional */
+  commentary?: string | null | undefined;
+  /** Favorite color, optional */
+  favoriteColor?: ColorInput | null | undefined;
+  /** 0-5 stars */
+  stars: number;
+};
+
+type CreateReviewForEpisodeMutationVariables = Exact<{
+  episode: Episode;
+  review: ReviewInput;
+}>;
+
+type CreateReviewForEpisodeMutation = {
+  createReview: { stars: number; commentary: string | null } | null;
+};
+
+type ExcludeQueryAlphaQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type ExcludeQueryAlphaQuery = { hero: { name: string } | { name: string } | null };
+
+type ExcludeQueryBetaQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type ExcludeQueryBetaQuery = { hero: { name: string } | { name: string } | null };
+
+type HeroAndFriendsNamesQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type HeroAndFriendsNamesQuery = {
+  hero:
+    | { name: string; friends: Array<{ name: string } | { name: string } | null> | null }
+    | { name: string; friends: Array<{ name: string } | { name: string } | null> | null }
+    | null;
+};
+
+type HeroAppearsInQueryVariables = Exact<{ [key: string]: never }>;
+
+type HeroAppearsInQuery = {
+  hero:
+    | { name: string; appearsIn: Array<Episode | null> }
+    | { name: string; appearsIn: Array<Episode | null> }
+    | null;
+};
+
+type HeroDetailsQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type HeroDetailsQuery = {
+  hero:
+    | { primaryFunction: string | null; name: string }
+    | { height: number | null; name: string }
+    | null;
+};
+
+type HeroDetails_Droid_Fragment = { primaryFunction: string | null; name: string };
+
+type HeroDetails_Human_Fragment = { height: number | null; name: string };
+
+type HeroDetailsFragment = HeroDetails_Droid_Fragment | HeroDetails_Human_Fragment;
+
+type HeroDetailsWithFragmentQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type HeroDetailsWithFragmentQuery = {
+  hero:
+    | { primaryFunction: string | null; name: string }
+    | { height: number | null; name: string }
+    | null;
+};
+
+type HeroNameQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type HeroNameQuery = { hero: { name: string } | { name: string } | null };
+
+type HeroNameConditionalInclusionQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+  includeName: boolean;
+}>;
+
+type HeroNameConditionalInclusionQuery = { hero: { name?: string } | { name?: string } | null };
+
+type HeroNameConditionalExclusionQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+  skipName: boolean;
+}>;
+
+type HeroNameConditionalExclusionQuery = { hero: { name?: string } | { name?: string } | null };
+
+type HeroParentTypeDependentFieldQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type HeroParentTypeDependentFieldQuery = {
+  hero:
+    | {
+        name: string;
+        friends: Array<{ name: string } | { height: number | null; name: string } | null> | null;
+      }
+    | {
+        name: string;
+        friends: Array<{ name: string } | { height: number | null; name: string } | null> | null;
+      }
+    | null;
+};
+
+type HeroTypeDependentAliasedFieldQueryVariables = Exact<{
+  episode?: Episode | null | undefined;
+}>;
+
+type HeroTypeDependentAliasedFieldQuery = {
+  hero: { property: string | null } | { property: string | null } | null;
+};
+
+type HumanFieldsFragment = { name: string; mass: number | null };
+
+type HumanWithNullHeightQueryVariables = Exact<{ [key: string]: never }>;
+
+type HumanWithNullHeightQuery = { human: { name: string; mass: number | null } | null };
+
+type TwoHeroesQueryVariables = Exact<{ [key: string]: never }>;
+
+type TwoHeroesQuery = {
+  r2: { name: string } | { name: string } | null;
+  luke: { name: string } | { name: string } | null;
+};

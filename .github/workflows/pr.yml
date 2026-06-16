@@ -5,31 +5,10 @@ on:
       - master
 
 jobs:
-  # dependencies:
-  #   uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@main
-  #   if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
-  #   secrets:
-  #     githubToken: ${{ secrets.GUILD_BOT_TOKEN }}
-
-  alpha:
-    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
+  dependencies:
+    uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@f4eea983237a44bb0ca19c3348dacbfdfcdbec23 # main
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
-    with:
-      npmTag: alpha
-      buildScript: build
-      nodeVersion: 18
+    permissions:
+      contents: write # allows modifying changeset files
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
-      npmToken: ${{ secrets.NPM_TOKEN }}
-
-  release-candidate:
-    uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
-    if: ${{ github.event.pull_request.title == 'Upcoming Release Changes' }}
-    with:
-      npmTag: rc
-      restoreDeletedChangesets: true
-      buildScript: build
-      nodeVersion: 18
-    secrets:
-      githubToken: ${{ secrets.GITHUB_TOKEN }}
-      npmToken: ${{ secrets.NPM_TOKEN }}

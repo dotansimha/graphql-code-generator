@@ -1,10 +1,13 @@
-import { OperationOrFragment, SourceWithOperations } from '@graphql-codegen/gql-tag-operations';
-import { Source } from '@graphql-tools/utils';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { OperationOrFragment, SourceWithOperations } from '@graphql-codegen/gql-tag-operations';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 
 export type BuildNameFunction = (type: OperationDefinitionNode | FragmentDefinitionNode) => string;
 
-export function processSources(sources: Array<Source>, buildName: BuildNameFunction) {
+export function processSources(
+  sources: Array<Types.DocumentFile>,
+  buildName: BuildNameFunction,
+): Array<SourceWithOperations> {
   const sourcesWithOperations: Array<SourceWithOperations> = [];
 
   for (const originalSource of sources) {
@@ -13,12 +16,15 @@ export function processSources(sources: Array<Source>, buildName: BuildNameFunct
     const operations: Array<OperationOrFragment> = [];
 
     for (const definition of document?.definitions ?? []) {
-      if (definition?.kind !== `OperationDefinition` && definition?.kind !== 'FragmentDefinition') continue;
+      if (definition?.kind !== `OperationDefinition` && definition?.kind !== 'FragmentDefinition')
+        continue;
 
       if (definition.name?.kind !== `Name`) {
         if (definition?.kind === `OperationDefinition`) {
           // eslint-disable-next-line no-console
-          console.warn(`[client-preset] the following anonymous operation is skipped: ${source.rawSDL}`);
+          console.warn(
+            `[client-preset] the following anonymous operation is skipped: ${source.rawSDL}`,
+          );
         }
         continue;
       }
@@ -83,7 +89,7 @@ export function processSources(sources: Array<Source>, buildName: BuildNameFunct
  *
  * @param source
  */
-function fixLinebreaks(source: Source) {
+function fixLinebreaks(source: Types.DocumentFile) {
   const fixedSource = { ...source };
 
   fixedSource.rawSDL = source.rawSDL.replace(/\r\n/g, '\n');

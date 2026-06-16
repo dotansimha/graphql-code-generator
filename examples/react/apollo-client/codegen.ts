@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { type CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
@@ -7,6 +6,10 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client',
+      config: {
+        skipTypeNameForRoot: true,
+        nonOptionalTypename: true,
+      },
     },
   },
   hooks: { afterAllFileWrite: ['prettier --write'] },

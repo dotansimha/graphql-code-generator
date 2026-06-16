@@ -1,6 +1,6 @@
-import theGuildTailwindConfig from '@theguild/tailwind-config';
 import type { Config } from 'tailwindcss';
 import { fontFamily } from 'tailwindcss/defaultTheme';
+import theGuildTailwindConfig from '@theguild/tailwind-config';
 
 const config: Config = {
   ...theGuildTailwindConfig,
@@ -22,7 +22,10 @@ const config: Config = {
           to: { height: 'var(--radix-accordion-content-height)', opacity: '1' },
         },
         'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)', opacity: '1' },
+          from: {
+            height: 'var(--radix-accordion-content-height)',
+            opacity: '1',
+          },
           to: { height: '0', opacity: '0' },
         },
       },

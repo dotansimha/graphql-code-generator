@@ -1,6 +1,8 @@
 import { createNoopProfiler, Types } from '@graphql-codegen/plugin-helpers';
 
-export async function transformDocuments(options: Types.GenerateOptions): Promise<Types.DocumentFile[]> {
+export async function transformDocuments(
+  options: Types.GenerateOptions,
+): Promise<Types.DocumentFile[]> {
   const documentTransforms = options.documentTransforms || [];
   let documents = options.documents;
   if (documentTransforms.length === 0 || options.documents.length === 0) {
@@ -29,11 +31,11 @@ export async function transformDocuments(options: Types.GenerateOptions): Promis
             pluginContext: options.pluginContext,
           });
         }, `DocumentTransform "${name}" execution`);
-      } catch (e) {
+      } catch (e: any) {
         throw new Error(
           `DocumentTransform "${name}" failed: \n
             ${e.message}
-          `
+          `,
         );
       }
     } else {

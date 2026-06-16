@@ -1,3 +1,5 @@
+import autoBind from 'auto-bind';
+import { GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import {
   ClientSideBasePluginConfig,
@@ -5,9 +7,8 @@ import {
   DocumentMode,
   LoadedFragment,
   RawClientSideBasePluginConfig,
+  typedDocumentString,
 } from '@graphql-codegen/visitor-plugin-common';
-import autoBind from 'auto-bind';
-import { GraphQLSchema } from 'graphql';
 
 interface TypeScriptDocumentNodesVisitorPluginConfig extends RawClientSideBasePluginConfig {
   addTypenameToSelectionSets?: boolean;
@@ -23,7 +24,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     schema: GraphQLSchema,
     fragments: LoadedFragment[],
     config: TypeScriptDocumentNodesVisitorPluginConfig,
-    documents: Types.DocumentFile[]
+    documents: Types.DocumentFile[],
   ) {
     super(
       schema,
@@ -34,7 +35,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
         documentMode: config.documentMode || DocumentMode.documentNodeImportFragments,
       },
       {},
-      documents
+      documents,
     );
 
     this.pluginConfig = config;
@@ -43,14 +44,16 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
 
     // We need to make sure it's there because in this mode, the base plugin doesn't add the import
     if (this.config.documentMode === DocumentMode.graphQLTag) {
-      const documentNodeImport = this._parseImport(this.config.documentNodeImport || 'graphql#DocumentNode');
+      const documentNodeImport = this._parseImport(
+        this.config.documentNodeImport || 'graphql#DocumentNode',
+      );
       const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
       this._imports.add(tagImport);
     } else if (this.config.documentMode === DocumentMode.string) {
       const tagImport = this._generateImport(
-        { moduleName: '@graphql-typed-document-node/core', propName: 'DocumentTypeDecoration' },
-        'DocumentTypeDecoration',
-        true
+        typedDocumentString.import,
+        typedDocumentString.import.propName,
+        true,
       );
       this._imports.add(tagImport);
     }
@@ -76,7 +79,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     const hasTypename = selections.some(
       selection =>
         selection.kind === 'Field' &&
-        (selection.name.value === '__typename' || selection.name.value.lastIndexOf('__', 0) === 0)
+        (selection.name.value === '__typename' || selection.name.value.lastIndexOf('__', 0) === 0),
     );
     if (hasTypename) {
       return;
@@ -98,16 +101,20 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
   }
 
   protected getDocumentNodeSignature(resultType: string, variablesTypes: string, node) {
+    const shouldUseImportPrefix = !!this.config.importOperationTypesFrom;
+    const resultImportPrefix = shouldUseImportPrefix && resultType !== 'unknown' ? 'Types.' : '';
+    const variablesImportPrefix =
+      shouldUseImportPrefix && variablesTypes !== 'unknown' ? 'Types.' : '';
     if (
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.documentNodeImportFragments ||
       this.config.documentMode === DocumentMode.graphQLTag
     ) {
-      return ` as unknown as DocumentNode<${resultType}, ${variablesTypes}>`;
+      return ` as unknown as DocumentNode<${resultImportPrefix}${resultType}, ${variablesImportPrefix}${variablesTypes}>`;
     }
 
     if (this.config.documentMode === DocumentMode.string) {
-      return ` as unknown as TypedDocumentString<${resultType}, ${variablesTypes}>`;
+      return ` as unknown as TypedDocumentString<${resultImportPrefix}${resultType}, ${variablesImportPrefix}${variablesTypes}>`;
     }
 
     return super.getDocumentNodeSignature(resultType, variablesTypes, node);

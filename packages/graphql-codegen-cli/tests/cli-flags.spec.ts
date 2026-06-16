@@ -23,12 +23,12 @@ const temp = new TempDir();
 describe('CLI Flags', () => {
   beforeEach(() => {
     temp.clean();
-    jest.spyOn(process, 'cwd').mockImplementation(() => temp.dir);
+    vi.spyOn(process, 'cwd').mockImplementation(() => temp.dir);
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
+    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   afterAll(() => {
@@ -57,7 +57,7 @@ describe('CLI Flags', () => {
             file.ts:
                 - plugin
       `,
-      'other.yml'
+      'other.yml',
     );
     const args = createArgv('--config other.yml');
     const context = await createContext(parseArgv(args));
@@ -163,6 +163,73 @@ describe('CLI Flags', () => {
     expect(config.emitLegacyCommonJSImports).toBeFalsy();
   });
 
+  it('Should set importExtension config using cli flags to .js', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension .js');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('.js');
+  });
+
+  it('Should set importExtension config using cli flags to .mjs', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension .mjs');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('.mjs');
+  });
+
+  it('Should set importExtension config using cli flags to empty string', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension ""');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('');
+  });
+
+  it('Should overwrite importExtension from config using cli flags', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        importExtension: .js
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension .mjs');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('.mjs');
+  });
+
+  it('Should overwrite importExtension config using cli flags to empty string', async () => {
+    mockConfig(`
+        schema: schema.graphql
+        importExtension: .js
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--import-extension ""');
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
+    expect(config.importExtension).toBe('');
+  });
+
   it('Should overwrite ignoreNoDocuments config using cli flags to true', async () => {
     mockConfig(`
         schema: schema.graphql
@@ -262,7 +329,7 @@ describe('CLI Flags', () => {
     try {
       await createContext(parseArgv(args));
       expect(true).toBeFalsy();
-    } catch (e) {
+    } catch (e: any) {
       expect(e.code).toEqual('MODULE_NOT_FOUND');
     }
   });

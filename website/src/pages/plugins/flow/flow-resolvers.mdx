@@ -1,11 +1,13 @@
 ---
 title: flow-resolvers
-description: Flow plugin for GraphQL Code Generator. Generates Flow types for your GraphQL resolvers.
+description:
+  Flow plugin for GraphQL Code Generator. Generates Flow types for your GraphQL resolvers.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+import { Callout } from '@theguild/components'
+
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
@@ -13,17 +15,22 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 <Callout>
 **Quick Start with `flow-resolvers`**
 
-You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen), it refers to `typescript-resolvers` but everything there is relevant to `flow-resolvers` as well.
+You can find
+[a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen),
+it refers to `typescript-resolvers` but everything there is relevant to `flow-resolvers` as well.
 
 </Callout>
 
 ## Enum Resolvers
 
-[Apollo-Server](https://apollographql.com/docs/apollo-server) and schemas built with [`graphql-tools`](https://graphql-tools.com) supports creating resolvers for GraphQL `enum`s.
+[Apollo-Server](https://apollographql.com/docs/apollo-server) and schemas built with
+[`graphql-tools`](https://graphql-tools.com) supports creating resolvers for GraphQL `enum`s.
 
-This is helpful because you can have internal values that are different from the public enum values, and you can use the internal values in your resolvers.
+This is helpful because you can have internal values that are different from the public enum values,
+and you can use the internal values in your resolvers.
 
-Codegen allows you to specify either `mappers` or `enumValues` to map enums in your resolvers, and if you are using it for enums, you'll get a resolver signature for the enum resolvers as well.
+Codegen allows you to specify either `mappers` or `enumValues` to map enums in your resolvers, and
+if you are using it for enums, you'll get a resolver signature for the enum resolvers as well.
 
 ### Usage Example
 
@@ -60,8 +67,8 @@ export enum ColorsCode {
 ```
 
 ```ts filename="resolvers.ts"
-import type { Resolvers } from './resolvers-types'
 import { ColorsCode } from './enums'
+import type { Resolvers } from './resolvers-types'
 
 const resolvers: Resolvers = {
   Color: {

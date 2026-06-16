@@ -200,7 +200,7 @@ describe('parseMapper', () => {
         {
           Type: 'file#Type as SomeOtherType',
         },
-        'Suffix'
+        'Suffix',
       );
 
       const result = mappers.Type;

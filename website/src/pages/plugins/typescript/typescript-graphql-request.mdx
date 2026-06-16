@@ -1,16 +1,23 @@
 ---
 title: typescript-graphql-request
-description: GraphQL Code Generator plugin for generating TypeScript code using graphql-request. This plugin generates a fully-typed SDK based on your GraphQL operations.
+description:
+  GraphQL Code Generator plugin for generating TypeScript code using graphql-request. This plugin
+  generates a fully-typed SDK based on your GraphQL operations.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <PluginHeader />
 
-<Callout>Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:</Callout>
+<Callout>
+  Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
+</Callout>
 
 <PluginApiDocs />
 
@@ -34,7 +41,8 @@ fragment CountryFields on Country {
 }
 ```
 
-It generates SDK you can import and wrap your `GraphQLClient` instance, and get fully-typed SDK based on your operations:
+It generates SDK you can import and wrap your `GraphQLClient` instance, and get fully-typed SDK
+based on your operations:
 
 ```ts
 import { GraphQLClient } from 'graphql-request'
@@ -79,7 +87,8 @@ const clientTimingWrapper: SdkFunctionWrapper = async <T>(action: () => Promise<
 const sdk = getSdk(client, clientTimingWrapper)
 ```
 
-- This example uses [polly-js](https://github.com/mauricedb/polly-js) to define a failure retry wrapper. (this is the use case for which I originally intended to add this capability)
+- This example uses [polly-js](https://github.com/mauricedb/polly-js) to define a failure retry
+  wrapper. (this is the use case for which I originally intended to add this capability)
 
 ```ts
 const withRetries: RetryWrapper = <T>(action: () => Promise<T>) =>

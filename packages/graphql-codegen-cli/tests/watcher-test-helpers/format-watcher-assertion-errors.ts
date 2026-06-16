@@ -25,7 +25,11 @@ export const formatErrorGlobNotIgnoredByParcelWatcher = ({
 
   const maxGlobLength = Math.max(...rawGlobTableLines.map(s => s.length));
 
-  const globTableLineFormatters: ((s: string) => string)[] = [s => s, s => chalk.red(s), s => chalk.bold(s)];
+  const globTableLineFormatters: ((s: string) => string)[] = [
+    s => s,
+    s => chalk.red(s),
+    s => chalk.bold(s),
+  ];
 
   const tableLines = rawGlobTableLines.map((line, rowNum) => {
     const formatLine = globTableLineFormatters[rowNum] ?? (s => s);
@@ -37,17 +41,19 @@ export const formatErrorGlobNotIgnoredByParcelWatcher = ({
     chalk.gray(
       '-----------------------------------------',
       'Watch Mode Parcel Ignore Assertion Failure:',
-      '-----------------------------------------'
+      '-----------------------------------------',
     ),
     '',
     chalk.gray(
       chalk.bold('Note:'),
-      'Assertion should specify relative glob paths relative from watchDirectory (_not_ cwd),'
+      'Assertion should specify relative glob paths relative from watchDirectory (_not_ cwd),',
     ),
     chalk.gray(
-      '      i.e. exactly as given to ParcelWatcher (unlike path assertions which should be relative from cwd),'
+      '      i.e. exactly as given to ParcelWatcher (unlike path assertions which should be relative from cwd),',
     ),
-    chalk.gray('      because glob assertion looks for an exact match and does not try to convert them.'),
+    chalk.gray(
+      '      because glob assertion looks for an exact match and does not try to convert them.',
+    ),
     '',
     chalk.gray(chalk.bold('watchDirectory:'), watchDirectory),
     ' ',
@@ -57,7 +63,7 @@ export const formatErrorGlobNotIgnoredByParcelWatcher = ({
     chalk.gray(
       '----------------------------------------------------',
       'Raw Error (from Jest):',
-      '---------------------------------------------------'
+      '---------------------------------------------------',
     ),
   ].join('\n')}\n${jestErrorMessage}`;
 };
@@ -117,20 +123,31 @@ export const formatErrorPathNotIgnoredByParcelWatcher = ({
   }
 
   const tableLines = leftCol.map((leftCell, rowNum) => {
-    const [formatLeft, formatRight] = headerFormatters[rowNum] ?? [(s: string) => s, (s: string) => s];
+    const [formatLeft, formatRight] = headerFormatters[rowNum] ?? [
+      (s: string) => s,
+      (s: string) => s,
+    ];
 
-    return `${formatLeft(leftCell.padStart(maxLeftCol))} | ${formatRight(rightCol[rowNum].padEnd(maxRightCol))}`;
+    return `${formatLeft(leftCell.padStart(maxLeftCol))} | ${formatRight(
+      rightCol[rowNum].padEnd(maxRightCol),
+    )}`;
   });
 
   return `${[
     chalk.gray(
       '-----------------------------------------',
       'Watch Mode Parcel Ignore Assertion Failure:',
-      '-----------------------------------------'
+      '-----------------------------------------',
     ),
     chalk.red(`<${expectedPath}> ` + chalk.bold('would not have been ignored by Parcel Watcher')),
-    chalk.gray(chalk.bold('Note:'), 'Assertion should specify path relative from current working directory,'),
-    chalk.gray('      but code should give path to ParcelWatcher relative from', chalk.bold('watchDirectory')),
+    chalk.gray(
+      chalk.bold('Note:'),
+      'Assertion should specify path relative from current working directory,',
+    ),
+    chalk.gray(
+      '      but code should give path to ParcelWatcher relative from',
+      chalk.bold('watchDirectory'),
+    ),
     '',
     chalk.gray(chalk.bold('watchDirectory:'), watchDirectory),
     '',
@@ -140,7 +157,7 @@ export const formatErrorPathNotIgnoredByParcelWatcher = ({
     chalk.gray(
       '----------------------------------------------------',
       'Raw Error (from Jest):',
-      '---------------------------------------------------'
+      '---------------------------------------------------',
     ),
   ].join('\n')}\n${jestErrorMessage}`;
 };
@@ -158,18 +175,22 @@ export const formatErrorPathNotIgnoredByParcelWatcher = ({
 export const formatBuildTriggerErrorPrelude = (
   /** Absolute path */ path: string,
   expectedToBuild: boolean,
-  jestErrorMessage: string
+  jestErrorMessage: string,
 ) => {
   const relPath = relative(process.cwd(), path);
   const should = `${expectedToBuild ? 'have' : 'not have'} triggered build`;
   const but = expectedToBuild ? 'it did not' : 'it did';
   return `${[
-    chalk.gray('---------------------- Watch Mode Build Trigger Assertion Failure: ----------------------'),
+    chalk.gray(
+      '---------------------- Watch Mode Build Trigger Assertion Failure: ----------------------',
+    ),
     chalk.red(`<${relPath}>` + chalk.bold(` should ${should}, but ${but}.`)),
     `     Expected: ${chalk.green(expectedToBuild ? 'to trigger build' : 'not to trigger build')}`,
     `     Received: ${chalk.red(expectedToBuild ? 'did not trigger build' : 'triggered build')}`,
     chalk.gray(`Absolute Path: ${path}`),
     '',
-    chalk.gray('-------------------------------- Raw Error (from Jest): --------------------------------'),
+    chalk.gray(
+      '-------------------------------- Raw Error (from Jest): --------------------------------',
+    ),
   ].join('\n')}\n${jestErrorMessage}`;
 };

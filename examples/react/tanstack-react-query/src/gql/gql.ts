@@ -27,13 +27,13 @@ const documents: Documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n'
+  source: '\n  query allFilmsWithVariablesQuery($first: Int!) {\n    allFilms(first: $first) {\n      edges {\n        node {\n          ...FilmItem\n        }\n      }\n    }\n  }\n',
 ): typeof import('./graphql').AllFilmsWithVariablesQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n'
+  source: '\n  fragment FilmItem on Film {\n    id\n    title\n    releaseDate\n    producers\n  }\n',
 ): typeof import('./graphql').FilmItemFragmentDoc;
 
 export function graphql(source: string) {

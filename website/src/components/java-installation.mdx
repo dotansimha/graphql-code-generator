@@ -2,7 +2,9 @@ import { Callout } from '@theguild/components'
 
 ## Prepare your environment
 
-To use the GraphQL Code Generator with Java, start by adding the [com.moowork.node](https://plugins.gradle.org/plugin/com.moowork.node) Gradle plugin to your `build.gradle`:
+To use the GraphQL Code Generator with Java, start by adding the
+[com.moowork.node](https://plugins.gradle.org/plugin/com.moowork.node) Gradle plugin to your
+`build.gradle`:
 
 ```
 plugins {
@@ -33,10 +35,12 @@ Then, create a `package.json` file in your project root, with the following cont
 ```
 
 <Callout>
-  Make sure to use the latest version of codegen and the plugins, and replace `RELEVANT_PLUGIN` with your plugin name.
+  Make sure to use the latest version of codegen and the plugins, and replace `RELEVANT_PLUGIN` with
+  your plugin name.
 </Callout>
 
-Then, create `codegen.yml` file in your root directory, pointing to your schema, and add the plugins you need. For example:
+Then, create `codegen.yml` file in your root directory, pointing to your schema, and add the plugins
+you need. For example:
 
 ```yaml filename="codegen.yml"
 schema: src/main/resources/schema.graphqls

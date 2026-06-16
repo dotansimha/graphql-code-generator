@@ -1,26 +1,26 @@
 {
-  "name": "example-apollo-client-swc-plugin",
+  "name": "rust-example-apollo-client-swc-plugin",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "build": "vite build",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "vite",
+    "test": "node scripts/test.js",
+    "test:end2end": "exit 0"
+  },
   "dependencies": {
-    "@apollo/client": "^3.7.10",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "@apollo/client": "3.14.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@graphql-codegen/client-preset-swc-plugin": "0.2.0",
-    "@graphql-codegen/cli": "^5.0.5",
-    "@vitejs/plugin-react-swc": "^3.3.0",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
-    "typescript": "5.5.4",
-    "vite": "^6.0.0"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "test": "node scripts/test.js",
-    "test:end2end": "exit 0",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/client-preset-swc-plugin": "workspace:*",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react-swc": "4.3.1",
+    "typescript": "6.0.3",
+    "vite": "8.0.13"
   }
 }

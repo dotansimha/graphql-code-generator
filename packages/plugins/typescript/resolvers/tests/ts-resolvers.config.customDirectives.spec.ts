@@ -37,7 +37,7 @@ describe('customDirectives.sematicNonNull', () => {
       {
         customDirectives: { semanticNonNull: true },
       },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toBeSimilarStringTo(`
@@ -62,7 +62,6 @@ describe('customDirectives.sematicNonNull', () => {
         nonNullableListWithNonNullableItemLevel0?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
         nonNullableListWithNonNullableItemLevel1?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
         nonNullableListWithNonNullableItemBothLevels?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-        __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
       };
     `);
   });

@@ -1,4 +1,3 @@
-dev-test/githunt-invalid/invalid.graphql
 packages/graphql-codegen-cli/tests/test-documents/invalid-schema.graphql
 packages/presets/gql-tag-operations/tests/fixtures/crlf-operation.ts
 dist/
@@ -8,6 +7,7 @@ build/
 CHANGELOG.md
 .husky/_/
 .changeset/*.md
+pnpm-lock.yaml
 
 # temporarily ignore follow files because prettier-ignore comments don't work in mdx2
 # see https://github.com/prettier/prettier/pull/12208
@@ -34,3 +34,8 @@ packages/presets/swc-plugin/tests/fixtures
 # Ignore intentional error files
 packages/graphql-codegen-cli/tests/test-files/schema-dir/error-schema.graphql
 packages/graphql-codegen-cli/tests/test-files/error-document.graphql
+
+# Ignore dev-tests with no prettier requirement
+dev-test/general/githunt-invalid/invalid.graphql
+dev-test/general/test-schema/flow-types.flow.js
+dev-test-apollo-tooling/src/__generated__/

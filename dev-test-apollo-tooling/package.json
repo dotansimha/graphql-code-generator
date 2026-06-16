@@ -1,0 +1,31 @@
+{
+  "name": "dev-test-apollo-tooling",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "A setup which mimics Apollo tooling generation as close as possible",
+  "private": true,
+  "files": [
+    "cli"
+  ],
+  "scripts": {
+    "start": "tsx cli/index.ts",
+    "start:debug": "NODE_OPTIONS='--trace-warnings' tsx cli/index.ts",
+    "start:verbose": "DEBUG='*' tsx cli/index.ts",
+    "test": "vitest --no-watch"
+  },
+  "dependencies": {
+    "@apollo/client": "3.14.1",
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/plugin-helpers": "workspace:*",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript-operations": "workspace:*",
+    "@graphql-codegen/visitor-plugin-common": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.4",
+    "tsx": "4.22.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.6"
+  },
+  "sideEffects": false
+}

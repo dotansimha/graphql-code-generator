@@ -1,8 +1,19 @@
-import { GraphQLList, GraphQLNamedType, GraphQLNonNull, GraphQLOutputType, isListType, isNonNullType } from 'graphql';
+import {
+  GraphQLList,
+  GraphQLNamedType,
+  GraphQLNonNull,
+  GraphQLOutputType,
+  isListType,
+  isNonNullType,
+} from 'graphql';
 import { Types } from './types.js';
 
 export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOutput>): string {
-  const result: Types.ComplexPluginOutput = { content: '', prepend: [], append: [] };
+  const result: Types.ComplexPluginOutput = {
+    content: '',
+    prepend: [],
+    append: [],
+  };
 
   if (Array.isArray(content)) {
     for (const item of content) {

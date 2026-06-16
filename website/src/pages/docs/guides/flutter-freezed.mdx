@@ -1,16 +1,23 @@
 ---
-description: Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
+description:
+  Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly
+  from your GraphQL Schema.
 ---
 
 # Guide: Dart/Flutter
 
-Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly from your GraphQL Schema.
+Boost 🚀 your development of Dart/Flutter apps using a GraphQL API by generating models directly
+from your GraphQL Schema.
 
-Currently, this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work is ongoing to make it way easier to work with GraphQL by scaffolding an entire GraphQL client with support for Queries, Mutations and Subscriptions taking huge inspiration from [KitQL](https://www.kitql.dev/)
+Currently, this plugin only generates [Freezed](https://pub.dev/packages/freezed) models but work is
+ongoing to make it way easier to work with GraphQL by scaffolding an entire GraphQL client with
+support for Queries, Mutations and Subscriptions taking huge inspiration from
+[KitQL](https://www.kitql.dev/)
 
 ## TL;DR
 
-The `flutter-freezed` plugin generates [Freezed](https://pub.dev/packages/freezed) models from a GraphQL Schema.
+The `flutter-freezed` plugin generates [Freezed](https://pub.dev/packages/freezed) models from a
+GraphQL Schema.
 
 ## Motivation
 
@@ -23,13 +30,16 @@ The `flutter-freezed` plugin generates [Freezed](https://pub.dev/packages/freeze
 >
 > On top of that, Dart is also missing features such as union types and pattern-matching.
 >
-> Implementing all of this can take hundreds of lines, which are error-prone and the readability of your model significantly.
+> Implementing all of this can take hundreds of lines, which are error-prone and the readability of
+> your model significantly.
 >
-> Freezed tries to fix that by implementing most of this for you, allowing you to focus on the definition of your model.
-> https://pub.dev/packages/freezed
+> Freezed tries to fix that by implementing most of this for you, allowing you to focus on the
+> definition of your model. https://pub.dev/packages/freezed
 
-Fortunately enough, GraphQL is strongly typed, and so is Dart.
-Save yourself from implementing a model to match your strongly typed GraphQL types, and let [Freezed](https://pub.dev/packages/freezed) handle the work while you chill with this `flutter-freezed`plugin
+Fortunately enough, GraphQL is strongly typed, and so is Dart. Save yourself from implementing a
+model to match your strongly typed GraphQL types, and let
+[Freezed](https://pub.dev/packages/freezed) handle the work while you chill with this
+`flutter-freezed`plugin
 
 ## Features
 
@@ -44,12 +54,15 @@ Currently, the plugin supports the following features
 - [x] Support directives
 - [x] Support deprecation annotation
 - [x] ~~Support for InterfaceTypes~~
-- [x] Support for UnionTypes [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
-- [x] Merge InputTypes with ObjectType as union/sealed class [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
+- [x] Support for UnionTypes
+      [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
+- [x] Merge InputTypes with ObjectType as union/sealed class
+      [union/sealed classes](https://pub.dev/packages/freezed#unionssealed-classes)
 
 ## TODO:
 
-- [ ] Support Queries, Mutations, and Subscription: make it way easier to use GraphQL in flutter without going through any complex process. Inspired by [KitQL](https://www.kitql.dev/)
+- [ ] Support Queries, Mutations, and Subscription: make it way easier to use GraphQL in flutter
+      without going through any complex process. Inspired by [KitQL](https://www.kitql.dev/)
 
 ## Demo
 
@@ -140,7 +153,8 @@ To get started, make sure you have the following installed:
 - Node.js (10 or later)
 - NPM or Yarn
 
-Follow the [Installation Guide](/docs/getting-started/installation) for more details on getting started with GraphQL Code Generator
+Follow the [Installation Guide](/docs/getting-started/installation) for more details on getting
+started with GraphQL Code Generator
 
 Inside your Flutter project root folder:
 
@@ -148,7 +162,8 @@ Inside your Flutter project root folder:
 
 2. Install [json_serializable](https://pub.dev/packages/json_serializable) in your flutter project
 
-3. Download your GraphQL schema in graphql format and place it at the root of your Flutter project using a tool like [get-graphql-schema](https://www.npmjs.com/package/get-graphql-schema)
+3. Download your GraphQL schema in graphql format and place it at the root of your Flutter project
+   using a tool like [get-graphql-schema](https://www.npmjs.com/package/get-graphql-schema)
 
 ```sh
 npm install -g get-graphql-schema
@@ -205,9 +220,9 @@ npm run generate
 
 ## Configuring the plugin
 
-To configure the plugin, you need to first understand how to use Patterns
-to configure specific GraphQL Types and its fields and also apply
-a config option globally to all GraphQL Types and fields.
+To configure the plugin, you need to first understand how to use Patterns to configure specific
+GraphQL Types and its fields and also apply a config option globally to all GraphQL Types and
+fields.
 
 This plugin is heavily documented so please take a look into the `tests` directory to learn more.
 
@@ -271,8 +286,16 @@ const config: CodegenConfig = {
       plugins: {
         'flutter-freezed': Config.create({
           defaultValues: [
-            [FieldNamePattern.forFieldNamesOfAllTypeNames([friends]), '[]', ['union_factory_parameter']],
-            [FieldNamePattern.forFieldNamesOfAllTypeNames([appearsIn]), '[]', ['default_factory_parameter']]
+            [
+              FieldNamePattern.forFieldNamesOfAllTypeNames([friends]),
+              '[]',
+              ['union_factory_parameter']
+            ],
+            [
+              FieldNamePattern.forFieldNamesOfAllTypeNames([appearsIn]),
+              '[]',
+              ['default_factory_parameter']
+            ]
           ],
           deprecated: [
             [FieldNamePattern.forAllFieldNamesOfTypeName([Actor]), ['default_factory_parameter']],
@@ -417,63 +440,65 @@ class SearchResult with _$SearchResult { // @6
 
 ### Identifying the building blocks
 
-The generated output consists of several blocks enabling you to specify a configuration
-targetting a specific block.
+The generated output consists of several blocks enabling you to specify a configuration targetting a
+specific block.
 
 > All `APPLIES_ON_*` values are exported from the `plugin-config` module of this package.
 
 `@1`: is the `enum` block. Use `APPLIES_ON_ENUM` to configure this block.
 
-`@1.i` to `@1.iii` makes up the `enum_value` block. Use `APPLIES_ON_ENUM_VALUE` to configure this block
+`@1.i` to `@1.iii` makes up the `enum_value` block. Use `APPLIES_ON_ENUM_VALUE` to configure this
+block
 
 `@2` to `@6` are the `class` blocks. Use `APPLIES_ON_CLASS ` to configure these blocks.
 
 There are 2 types of factory constructors in each class:
 
-1. The Default Factory Constructor: Created automatically for each GraphQL Type.
-   Use `APPLIES_ON_DEFAULT_FACTORY` to configure these blocks.
-   `@2.a` to `@5.a` are the default factory constructors.
+1. The Default Factory Constructor: Created automatically for each GraphQL Type. Use
+   `APPLIES_ON_DEFAULT_FACTORY` to configure these blocks. `@2.a` to `@5.a` are the default factory
+   constructors.
 
 2. The Named Factory: There are 2 types of named factory constructors:
 
-- Merged Factory Constructors: created manually by merging two different GraphQL Types in the config.
-  See `config.mergeTypes` above. Use `APPLIES_ON_MERGED_FACTORY` to configure these block
+- Merged Factory Constructors: created manually by merging two different GraphQL Types in the
+  config. See `config.mergeTypes` above. Use `APPLIES_ON_MERGED_FACTORY` to configure these block
   `@2.b` and `@4.b` are the merged factory constructors.
 
-- Union Factory Constructors: created automatically from a GraphQL Union Type.
-  Each GraphQL Type in the Union is generated as a named factory in the class of the GraphQL Union Type.
-  Use `APPLIES_ON_UNION_FACTORY` to configure these factories
-  `@6.a`, `@6.b` and `@6.c` are the merged factory constructors.
+- Union Factory Constructors: created automatically from a GraphQL Union Type. Each GraphQL Type in
+  the Union is generated as a named factory in the class of the GraphQL Union Type. Use
+  `APPLIES_ON_UNION_FACTORY` to configure these factories `@6.a`, `@6.b` and `@6.c` are the merged
+  factory constructors.
 
 Use `APPLIES_ON_NAMED_FACTORY ` to configure both merged and union factories.
 
 Use `APPLIES_ON_FACTORY ` to configure all factories.
 
-> Each `class` block has exactly one default factory constructor and maybe one or more named factory constructors.
+> Each `class` block has exactly one default factory constructor and maybe one or more named factory
+> constructors.
 
 The fields of the GraphQL Type are generated as parameters to the factory constructors:
 
 There are 3 types of parameters are generated depending on the type of factory constructors:
 
-1. Parameters found in the default_factory are called `default_factory_parameter`.
-   Use `APPLIES_ON_DEFAULT_FACTORY_PARAMETERS` to configure these parameters
-   The following are all default factory parameters:
+1. Parameters found in the default_factory are called `default_factory_parameter`. Use
+   `APPLIES_ON_DEFAULT_FACTORY_PARAMETERS` to configure these parameters The following are all
+   default factory parameters:
 
 - `@2.a.i` to `@2.a.iii`
 - `@3.a.i` to `@3.a.iii`
 - `@4.a.i` to `@4.a.v`
 - `@5.a.i` to `@5.a.v`
 
-2. Parameters found on the merged_factory are called `merged_factory_parameter`.
-   Use `APPLIES_ON_MERGED_FACTORY_PARAMETERS` to configure these parameters
-   The following are all merged factory parameters:
+2. Parameters found on the merged_factory are called `merged_factory_parameter`. Use
+   `APPLIES_ON_MERGED_FACTORY_PARAMETERS` to configure these parameters The following are all merged
+   factory parameters:
 
 - `@2.b.i` to `@2.b.v`
 - `@4.b.i` and `@4.b.ii`
 
-3. Parameters found in the union_factory are called `union_factory_parameter`.
-   Use `APPLIES_ON_UNION_FACTORY_PARAMETERS` to configure these parameters.
-   The following are all merged factory parameters:
+3. Parameters found in the union_factory are called `union_factory_parameter`. Use
+   `APPLIES_ON_UNION_FACTORY_PARAMETERS` to configure these parameters. The following are all merged
+   factory parameters:
 
 - `@6.a.i` to `@6.a.v`
 - `@6.b.i` to `@6.b.v`
@@ -485,21 +510,30 @@ Use `APPLIES_ON_PARAMETERS ` to configure all parameters
 
 ## Patterns
 
-A compact string of patterns used in the config for granular configuration for each Graphql Type and/or its fieldNames
+A compact string of patterns used in the config for granular configuration for each Graphql Type
+and/or its fieldNames
 
 The string can contain more than one pattern, each pattern ends with a semi-colon (`;`).
 
 A dot (`.`) separates the TypeName from the FieldNames in each pattern
 
-To apply an option to all Graphql Types or fields, use the allTypeNames (`@*TypeNames`) and allFieldNames (`@*FieldNames`) tokens respectively
+To apply an option to all Graphql Types or fields, use the allTypeNames (`@*TypeNames`) and
+allFieldNames (`@*FieldNames`) tokens respectively
 
-Wherever you use the allTypeNames and the allFieldNames, know very well that you can make some exceptions. After all, to every rule, there is an exception
+Wherever you use the allTypeNames and the allFieldNames, know very well that you can make some
+exceptions. After all, to every rule, there is an exception
 
-A **square bracket** (`[]`) is used to specify what should be included and a **negated square bracket** (`-[]`) is used to specify what should be excluded
+A **square bracket** (`[]`) is used to specify what should be included and a **negated square
+bracket** (`-[]`) is used to specify what should be excluded
 
-Manually typing out a pattern may be prone to typos and invalid patterns therefore the [`TypeFieldName`]() class exports some builder methods which you can use in your plugin config file.
+Manually typing out a pattern may be prone to typos and invalid patterns therefore the
+[`TypeFieldName`]() class exports some builder methods which you can use in your plugin config file.
 
-The patterns themselves are readable and easy to manually type it out in the config but its RECOMMENDED that you the builder methods. However, along with builder methods, the [`TypeFieldName`]() class also exports the Regular Expression(RegExp) used to test the patterns for a match as well as matcher methods. You can use these to find out if you manually typed out patterns would work with this plugin.
+The patterns themselves are readable and easy to manually type it out in the config but its
+RECOMMENDED that you the builder methods. However, along with builder methods, the
+[`TypeFieldName`]() class also exports the Regular Expression(RegExp) used to test the patterns for
+a match as well as matcher methods. You can use these to find out if you manually typed out patterns
+would work with this plugin.
 
 ## Usage for Graphql Types
 
@@ -514,7 +548,8 @@ console.log(pattern) // "Droid;Starship;"
 
 ### Configuring all Graphql Types
 
-Instead of manually listing out **all** the types in the Graphql Schema, use the allTypeNames (`@*TypeNames`) to configure all the Graphql Types in the Schema
+Instead of manually listing out **all** the types in the Graphql Schema, use the allTypeNames
+(`@*TypeNames`) to configure all the Graphql Types in the Schema
 
 ```ts
 const pattern = Pattern.forAllTypeNames()
@@ -525,7 +560,8 @@ console.log(pattern) // "@*TypeNames;"
 
 You can configure all GraphQL Types except those specified.
 
-The example below configures all the Graphql Types in the Schema except the `Droid` and `Starship` Graphql Types
+The example below configures all the Graphql Types in the Schema except the `Droid` and `Starship`
+Graphql Types
 
 ```ts
 const pattern = Pattern.forAllTypeNamesExcludeTypeNames([Droid, Starship])
@@ -549,7 +585,8 @@ console.log(pattern) // "Droid.[id,name,friends];Human.[id,name,title];Starship.
 
 ### Configuring all fields of a specific Graphql Type
 
-Instead of manually listing out **all the fields** of the Graphql Type, use the allFieldNames (`@*FieldNames`) to configure all the fields of the Graphql Type.
+Instead of manually listing out **all the fields** of the Graphql Type, use the allFieldNames
+(`@*FieldNames`) to configure all the fields of the Graphql Type.
 
 ```ts
 const pattern = Pattern.forAllFieldNamesOfTypeName([Droid, Movie])
@@ -558,7 +595,8 @@ console.log(pattern) // "Droid.@*FieldNames;Movie.@*FieldNames;"
 
 ### Configuring all fields except those specified in the exclusion list of FieldNames for a specific GraphQL Type
 
-In the example below, the `id` and the `name` fields will be excluded from the configuration while all the remaining fields of the `Droid` Graphql Type will be configured
+In the example below, the `id` and the `name` fields will be excluded from the configuration while
+all the remaining fields of the `Droid` Graphql Type will be configured
 
 ```ts
 const pattern = Pattern.forAllFieldNamesExcludeFieldNamesOfTypeName([
@@ -571,7 +609,8 @@ console.log(pattern) // "Droid.@*FieldNames-[id,name,friends];Human.@*FieldNames
 
 ### Configuring specific fields of all Graphql Types
 
-When you use the allTypeNames (`@*TypeNames`), you can specify the fields to be configured. If field name that doesn't exists for a given Graphql Type, it would simply be ignored.
+When you use the allTypeNames (`@*TypeNames`), you can specify the fields to be configured. If field
+name that doesn't exists for a given Graphql Type, it would simply be ignored.
 
 The example below configures the `id` and `name` fields of all Graphql Types
 
@@ -582,7 +621,8 @@ console.log(pattern) // "@*TypeNames.[id,name,friends];"
 
 ### Configuring all fields of all Graphql Types
 
-Using the allFieldNames (`@*FieldNames`) on the allTypeNames (`@*TypeNames`), you can configure all fields of all the Graphql Types in the Schema
+Using the allFieldNames (`@*FieldNames`) on the allTypeNames (`@*TypeNames`), you can configure all
+fields of all the Graphql Types in the Schema
 
 ```ts
 const pattern = Pattern.forAllFieldNamesOfAllTypeNames()
@@ -591,9 +631,11 @@ console.log(pattern) // "@*TypeNames.@*FieldNames;"
 
 ### Configuring all fields except those specified in the exclusion list of FieldNames for all GraphQL Types
 
-As always, you can make some exception when you use the allFieldNames (`@*FieldNames`) to except some fields from the configuration.
+As always, you can make some exception when you use the allFieldNames (`@*FieldNames`) to except
+some fields from the configuration.
 
-In the example below, the `id` and the `name` fields will be excluded from the configuration while all the remaining fields of all Graphql Type will be configured
+In the example below, the `id` and the `name` fields will be excluded from the configuration while
+all the remaining fields of all Graphql Type will be configured
 
 ```ts
 const pattern = Pattern.forAllFieldNamesExcludeFieldNamesOfAllTypeNames([id, name, friends])
@@ -602,16 +644,22 @@ console.log(pattern) // "@*TypeNames.@*FieldNames-[id,name,friends];"
 
 ### Configuring specific fields of all GraphQL Types except those specified in the exclusion list of TypeNames
 
-In the example below, the `id` and `name` fields will be configured for all the Graphql Types in the Schema except`Droid` and `Starship`
+In the example below, the `id` and `name` fields will be configured for all the Graphql Types in the
+Schema except`Droid` and `Starship`
 
 ```ts
-const pattern = Pattern.forFieldNamesOfAllTypeNamesExcludeTypeNames([Droid, Human], [id, name, friends])
+const pattern = Pattern.forFieldNamesOfAllTypeNamesExcludeTypeNames(
+  [Droid, Human],
+  [id, name, friends]
+)
 console.log(pattern) // "@*TypeNames-[Droid,Human].[id,name,friends];"
 ```
 
 ### Configuring all fields of all GraphQL Types except those specified in the exclusion list of TypeNames
 
-In the example below, all fields of all Graphql Types in the Schema except for the fields of `Droid` and `Starship` will be excluded from the configuration while all the remaining fields of all Graphql Type will be configured
+In the example below, all fields of all Graphql Types in the Schema except for the fields of `Droid`
+and `Starship` will be excluded from the configuration while all the remaining fields of all Graphql
+Type will be configured
 
 ```ts
  * const pattern = Pattern.forAllFieldNamesOfAllTypeNamesExcludeTypeNames([Droid, Human]);
@@ -620,7 +668,9 @@ In the example below, all fields of all Graphql Types in the Schema except for t
 
 ### Configuring all fields except those specified in the exclusion list of FieldNames of all GraphQL Types except those specified in the exclusion list of TypeNames
 
-In the example below, the `id` and the `name` fields of `Droid` or `Starship` will be excluded from the configuration while all the **remaining fields** of all Graphql Types(including `Droid` and `Starship`) will be configured
+In the example below, the `id` and the `name` fields of `Droid` or `Starship` will be excluded from
+the configuration while all the **remaining fields** of all Graphql Types(including `Droid` and
+`Starship`) will be configured
 
 ```ts
 const pattern = Pattern.forAllFieldNamesExcludeFieldNamesOfAllTypeNamesExcludeTypeNames(
@@ -632,8 +682,11 @@ console.log(pattern) // "@*TypeNames-[Droid,Human].@*FieldNames-[id,name,friends
 
 ## PRs are welcomed
 
-This started as a plugin but eventually we hope to make it way easier to use GraphQL in your Flutter apps.
+This started as a plugin but eventually we hope to make it way easier to use GraphQL in your Flutter
+apps.
 
-For more advanced configuration, please refer to the [plugin documentation](/plugins/dart/flutter-freezed).
+For more advanced configuration, please refer to the
+[plugin documentation](/plugins/dart/flutter-freezed).
 
-For a different organization of the generated files, please refer to the ["Generated files colocation"](/docs/advanced/generated-files-colocation) page.
+For a different organization of the generated files, please refer to the
+["Generated files colocation"](/docs/advanced/generated-files-colocation) page.

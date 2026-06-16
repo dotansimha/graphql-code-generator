@@ -12,7 +12,7 @@ export const DEFAULT_AVOID_OPTIONALS: NormalizedAvoidOptionalsConfig = {
 };
 
 export function normalizeAvoidOptionals(
-  avoidOptionals?: boolean | AvoidOptionalsConfig
+  avoidOptionals?: boolean | AvoidOptionalsConfig,
 ): NormalizedAvoidOptionalsConfig {
   if (typeof avoidOptionals === 'boolean') {
     return {

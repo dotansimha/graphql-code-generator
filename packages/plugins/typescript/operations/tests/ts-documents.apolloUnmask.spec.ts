@@ -1,6 +1,6 @@
 import { parse } from 'graphql';
-import { schema } from './shared/schema.js';
 import { plugin } from '../src/index.js';
+import { schema } from './shared/schema.js';
 
 describe('TypeScript Operations Plugin - apolloUnmask', () => {
   it("'mask' with @unmask configured with apolloUnmask yields correct types", async () => {
@@ -18,16 +18,16 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
 
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: { __typename?: 'User', id: string } | null };
+      export type Unnamed_1_Query = { me: { id: string } | null };
 
-      export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      export type UserFragmentFragment = { id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
       "
     `);
   });
@@ -47,18 +47,15 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask' },
-      { outputFile: '' }
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
-          { __typename?: 'User' }
-          & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
-        ) | null };
+      export type Unnamed_1_Query = { me: { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } } | null };
 
-      export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      export type UserFragmentFragment = { id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
       "
     `);
   });
@@ -77,19 +74,19 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
     const result = await plugin(
       schema,
       [{ location: 'test-file.ts', document: ast }],
-      { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: false } },
-      { outputFile: '' }
+      {
+        inlineFragmentTypes: 'mask',
+        customDirectives: { apolloUnmask: false },
+      },
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
-          { __typename?: 'User' }
-          & { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } }
-        ) | null };
+      export type Unnamed_1_Query = { me: { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } } | null };
 
-      export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      export type UserFragmentFragment = { id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
       "
     `);
   });
@@ -114,20 +111,20 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
-          { __typename?: 'User', id: string }
+      export type Unnamed_1_Query = { me: (
+          { id: string }
           & { ' $fragmentRefs'?: { 'UserFragment2Fragment': UserFragment2Fragment } }
         ) | null };
 
-      export type UserFragmentFragment = { __typename?: 'User', id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      export type UserFragmentFragment = { id: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
 
-      export type UserFragment2Fragment = { __typename?: 'User', email: string } & { ' $fragmentName'?: 'UserFragment2Fragment' };
+      export type UserFragment2Fragment = { email: string } & { ' $fragmentName'?: 'UserFragment2Fragment' };
       "
     `);
   });
@@ -153,20 +150,20 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       schema,
       [{ location: 'test-file.ts', document: ast }],
       { inlineFragmentTypes: 'mask', customDirectives: { apolloUnmask: true } },
-      { outputFile: '' }
+      { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
       "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type Unnamed_1_Query = { __typename?: 'Query', me?: (
-          { __typename?: 'User', id: string, email: string }
+      export type Unnamed_1_Query = { me: (
+          { id: string, email: string }
           & { ' $fragmentRefs'?: { 'UserFragment2Fragment': UserFragment2Fragment } }
         ) | null };
 
-      export type UserFragmentFragment = { __typename?: 'User', id: string, email: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
+      export type UserFragmentFragment = { id: string, email: string } & { ' $fragmentName'?: 'UserFragmentFragment' };
 
-      export type UserFragment2Fragment = { __typename?: 'User', email: string } & { ' $fragmentName'?: 'UserFragment2Fragment' };
+      export type UserFragment2Fragment = { email: string } & { ' $fragmentName'?: 'UserFragment2Fragment' };
       "
     `);
   });

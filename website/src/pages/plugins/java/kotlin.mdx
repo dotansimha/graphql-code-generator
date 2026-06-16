@@ -1,18 +1,21 @@
 ---
 title: kotlin
-description: Kotlin plugin for GraphQL Code Generator. Generate Kotlin classes for Enums and Input types.
+description:
+  Kotlin plugin for GraphQL Code Generator. Generate Kotlin classes for Enums and Input types.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+import { Callout } from '@theguild/components'
+
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
 
 The `kotlin` plugin generates Kotlin `classes` for Enums and Input types.
 
-You can use this plugin to generate Java enums based on your GraphQL schema, and it also generates a type-safe Kotlin transformer for GraphQL `input` types.
+You can use this plugin to generate Java enums based on your GraphQL schema, and it also generates a
+type-safe Kotlin transformer for GraphQL `input` types.
 
 ## Prepare your environment
 

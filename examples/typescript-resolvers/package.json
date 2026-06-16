@@ -1,23 +1,24 @@
 {
   "name": "example-typescript-resolvers",
   "version": "0.0.0",
+  "type": "commonjs",
   "private": true,
-  "devDependencies": {
-    "@graphql-codegen/cli": "5.0.5",
-    "@graphql-codegen/typescript": "4.1.6",
-    "@graphql-codegen/typescript-resolvers": "4.5.0"
-  },
-  "dependencies": {
-    "graphql": "16.9.0",
-    "graphql-yoga": "5.7.0"
-  },
   "scripts": {
-    "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc",
-    "dev": "ts-node src/main.ts",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "tsx src/main.ts",
     "test": "exit 0",
     "test:end2end": "exit 0"
   },
-  "type": "commonjs",
+  "dependencies": {
+    "graphql": "16.14.0",
+    "graphql-yoga": "5.21.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*",
+    "@graphql-codegen/typescript-resolvers": "workspace:*",
+    "tsx": "4.22.0"
+  },
   "bob": false
 }

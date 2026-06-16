@@ -40,14 +40,16 @@ executeOperation(apiUrl, AllPeopleQueryDocument).then(res => {
     process.exit(1);
   }
 
-  console.log(res.data?.allPeople.edges);
+  console.log(res.data?.allPeople?.edges);
 });
 
-executeOperation(apiUrl, AllPeopleWithVariablesQueryDocument, { first: 10 }).then(res => {
+executeOperation(apiUrl, AllPeopleWithVariablesQueryDocument, {
+  first: 10,
+}).then(res => {
   if (res.errors) {
     console.error(res.errors);
     process.exit(1);
   }
 
-  console.log(res.data?.allPeople.edges);
+  console.log(res.data?.allPeople?.edges);
 });

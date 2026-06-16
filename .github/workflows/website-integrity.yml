@@ -3,26 +3,38 @@ on:
   pull_request:
     paths:
       - 'website/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   website-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Fetch
         run: git fetch origin master
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
-          nodeVersion: 18
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm install
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Build Website
-        run: yarn workspace website run build
+        run: pnpm --filter=website run build
 
       - name: Compare
         run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt
@@ -39,7 +51,7 @@ jobs:
 
       - name: Publish a message
         if: always() && contains(steps.diff_result.outputs.result, 'diff')
-        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2
+        uses: marocchino/sticky-pull-request-comment@70d2764d1a7d5d9560b100cbea0077fc8f633987 # v3
         with:
           message: |
             ```diff

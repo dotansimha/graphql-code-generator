@@ -1,8 +1,15 @@
-import { createHash, BinaryToTextEncoding } from 'crypto';
+import { BinaryToTextEncoding, createHash } from 'crypto';
 import { promises } from 'fs';
 import { createRequire } from 'module';
+import * as url from 'node:url';
 import { resolve } from 'path';
-
+import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
+import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
+import { GraphQLConfig, type Source } from 'graphql-config';
+import { createJiti } from 'jiti';
+import { env } from 'string-env-interpolation';
+import yaml from 'yaml';
+import yargs from 'yargs';
 import {
   createNoopProfiler,
   createProfiler,
@@ -10,15 +17,16 @@ import {
   Profiler,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
-import jiti from 'jiti';
-import { GraphQLSchema, GraphQLSchemaExtensions, print } from 'graphql';
-import { GraphQLConfig } from 'graphql-config';
-import { env } from 'string-env-interpolation';
-import yaml from 'yaml';
-import yargs from 'yargs';
+import type { UnnormalizedTypeDefPointer } from '@graphql-tools/load';
 import { findAndLoadGraphQLConfig } from './graphql-config.js';
-import { defaultDocumentsLoadOptions, defaultSchemaLoadOptions, loadDocuments, loadSchema } from './load.js';
+import { isESMModule } from './isESMModule.js';
+import {
+  defaultDocumentsLoadOptions,
+  defaultSchemaLoadOptions,
+  loadDocuments,
+  loadSchema,
+} from './load.js';
+import { version } from './version.js';
 
 const { lstat } = promises;
 
@@ -38,6 +46,7 @@ export type YamlCliFlags = {
   debug?: boolean;
   ignoreNoDocuments?: boolean;
   emitLegacyCommonJSImports?: boolean;
+  importExtension?: '' | `.${string}`;
 };
 
 export function generateSearchPlaces(moduleName: string) {
@@ -64,7 +73,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): Codeg
       try {
         const result = yaml.parse(content, { prettyErrors: true, merge: true });
         return result;
-      } catch (error) {
+      } catch (error: any) {
         error.message = `YAML Error in ${filepath}:\n${error.message}`;
         throw error;
       }
@@ -75,13 +84,16 @@ function customLoader(ext: 'json' | 'yaml' | 'js' | 'ts' | 'mts' | 'cts'): Codeg
     }
 
     if (ext === 'ts') {
-      const jitiLoader = jiti('', { interopDefault: true });
-      return jitiLoader(filepath);
+      const jitiLoader = createJiti('');
+      return jitiLoader.import(filepath, { default: true });
     }
   };
 }
 
-export type CodegenConfigLoader = (filepath: string, content: string) => Promise<Types.Config> | Types.Config;
+export type CodegenConfigLoader = (
+  filepath: string,
+  content: string,
+) => Promise<Types.Config> | Types.Config;
 
 export interface LoadCodegenConfigOptions {
   /**
@@ -161,14 +173,14 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
           $ graphql-codegen --config ${configFilePath}
 
         Please make sure the --config points to a correct file.
-      `
+      `,
       );
     }
 
     throw new Error(
       `Unable to find Codegen config file! \n
         Please make sure that you have a configuration file under the current directory!
-      `
+      `,
     );
   }
 
@@ -176,7 +188,7 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
     throw new Error(
       `Found Codegen config file but it was empty! \n
         Please make sure that you have a valid configuration file under the current directory!
-      `
+      `,
     );
   }
 
@@ -197,7 +209,8 @@ export function buildOptions() {
     c: {
       alias: 'config',
       type: 'string' as const,
-      describe: 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory',
+      describe:
+        'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory',
     },
     w: {
       alias: 'watch',
@@ -215,7 +228,8 @@ export function buildOptions() {
     },
     r: {
       alias: 'require',
-      describe: 'Loads specific require.extensions before running the codegen and reading the configuration',
+      describe:
+        'Loads specific require.extensions before running the codegen and reading the configuration',
       type: 'array' as const,
       default: [],
     },
@@ -255,25 +269,39 @@ export function buildOptions() {
       type: 'boolean' as const,
       default: false,
     },
+    'emit-legacy-common-js-imports': {
+      describe: 'Emit legacy CommonJS imports (deprecated, use import-extension instead)',
+      type: 'boolean' as const,
+    },
+    'import-extension': {
+      describe:
+        'Extension to append to imports (e.g., .js, .mjs, or empty string for no extension)',
+      type: 'string' as const,
+    },
+    'ignore-no-documents': {
+      describe: 'Suppress errors for no documents',
+      type: 'boolean' as const,
+    },
   };
 }
 
 export function parseArgv(argv = process.argv): YamlCliFlags {
-  return yargs(argv).options(buildOptions()).parse(argv) as any;
+  return yargs(argv).version(version).options(buildOptions()).parse(argv) as any;
 }
 
-export async function createContext(cliFlags: YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
+export async function createContext(
+  cliFlags: YamlCliFlags = parseArgv(process.argv),
+): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
     const relativeRequire = createRequire(process.cwd());
     await Promise.all(
-      cliFlags.require.map(
-        mod =>
-          import(
-            relativeRequire.resolve(mod, {
-              paths: [process.cwd()],
-            })
-          )
-      )
+      cliFlags.require.map(mod =>
+        safeDynamicImport(
+          relativeRequire.resolve(mod, {
+            paths: [process.cwd()],
+          }),
+        ),
+      ),
     );
   }
 
@@ -322,6 +350,10 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
     config.emitLegacyCommonJSImports = cliFlags['emit-legacy-common-js-imports'] === true;
   }
 
+  if (cliFlags['import-extension'] !== undefined) {
+    config.importExtension = cliFlags['import-extension'];
+  }
+
   if (cliFlags.project) {
     context.useProject(cliFlags.project);
   }
@@ -363,7 +395,7 @@ export class CodegenContext {
     this._config = config;
     this._graphqlConfig = graphqlConfig;
     this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;
-    this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : process.cwd();
+    this.cwd = this._graphqlConfig ? this._graphqlConfig.dirpath : config?.cwd || process.cwd();
     this.profiler = createNoopProfiler();
   }
 
@@ -387,9 +419,19 @@ export class CodegenContext {
       }
     }
 
-    return {
+    const config = {
+      noSilentErrors: true, // When a `documents` pattern matches multiple files e.g. `*` exists in filename like `src/something.*.ts`, and some files fail but some pass syntax error check, the failed files will silently fail if `noSilentErrors: false`. So, `noSilentErrors: true` is turned on by default to help users detect errors faster.
       ...extraConfig,
       ...this.config,
+    };
+
+    if (this._graphqlConfig) {
+      return config;
+    }
+
+    return {
+      ...config,
+      cwd: this.cwd,
     };
   }
 
@@ -427,20 +469,30 @@ export class CodegenContext {
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
       return addHashToSchema(
-        this._graphqlConfig.getProject(this._project).loadSchema(pointer, 'GraphQLSchema', config)
+        this._graphqlConfig
+          .getProject(this._project)
+          .loadSchema(pointer, 'GraphQLSchema', { ...config, ...config.config }),
       );
     }
     return addHashToSchema(loadSchema(pointer, config));
   }
 
-  async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
+  async loadDocuments(
+    pointer: UnnormalizedTypeDefPointer,
+    type: 'standard' | 'external',
+  ): Promise<Types.DocumentFile[]> {
     const config = this.getConfig(defaultDocumentsLoadOptions);
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
-      return addHashToDocumentFiles(this._graphqlConfig.getProject(this._project).loadDocuments(pointer, config));
+      return addMetadataToSources(
+        this._graphqlConfig
+          .getProject(this._project)
+          .loadDocuments(pointer, { ...config, ...config.config }),
+        type,
+      );
     }
 
-    return addHashToDocumentFiles(loadDocuments(pointer, config));
+    return addMetadataToSources(loadDocuments(pointer, config), type);
   }
 }
 
@@ -467,40 +519,50 @@ function addHashToSchema(schemaPromise: Promise<GraphQLSchema>): Promise<GraphQL
   });
 }
 
-function hashDocument(doc: Types.DocumentFile) {
-  if (doc.rawSDL) {
-    return hashContent(doc.rawSDL);
+async function addMetadataToSources(
+  documentFilesPromise: Promise<Source[]>,
+  type: 'standard' | 'external',
+): Promise<Types.DocumentFile[]> {
+  function hashDocument(doc: Source): string | null {
+    if (doc.rawSDL) {
+      return hashContent(doc.rawSDL);
+    }
+
+    if (doc.document) {
+      return hashContent(print(doc.document));
+    }
+
+    return null;
   }
 
-  if (doc.document) {
-    return hashContent(print(doc.document));
-  }
-
-  return null;
-}
-
-function addHashToDocumentFiles(documentFilesPromise: Promise<Types.DocumentFile[]>): Promise<Types.DocumentFile[]> {
   return documentFilesPromise.then(documentFiles =>
-    documentFiles.map(doc => {
+    // Note: `doc` here is technically `Source`, but by the end of the funciton it's `Types.DocumentFile`. This re-declaration makes TypeScript happy.
+    documentFiles.map((doc: Types.DocumentFile): Types.DocumentFile => {
       doc.hash = hashDocument(doc);
+      doc.type = type;
 
       return doc;
-    })
+    }),
   );
 }
 
-export function shouldEmitLegacyCommonJSImports(config: Types.Config): boolean {
-  const globalValue = config.emitLegacyCommonJSImports === undefined ? true : !!config.emitLegacyCommonJSImports;
-  // const outputConfig = config.generates[outputPath];
+/**
+ * `safeDynamicImport` is a wrapper of dynamic `import()`
+ * to work across Linux and Windows
+ *
+ * CJS:
+ * `import()` seems to work well in CJS when given resolved filename
+ *
+ * ESM:
+ * On native Windows (i.e. no WSL or CI), filename may look like this: `C:\\Users\\path\\to\\file.ts`
+ * If used directly with `import()`, we'll see `ERR_UNSUPPORTED_ESM_URL_SCHEME` error because `c:` is not a valid protocol
+ * `url.pathToFileURL` turns the filename to `file:///C:/Users/path/to/file.ts`, which is import-able
+ */
+const safeDynamicImport = (absoluteFilename: string): Promise<any> => {
+  if (isESMModule) {
+    const { href: fileUrl } = url.pathToFileURL(absoluteFilename);
+    return import(fileUrl);
+  }
 
-  // if (!outputConfig) {
-  //   debugLog(`Couldn't find a config of ${outputPath}`);
-  //   return globalValue;
-  // }
-
-  // if (isConfiguredOutput(outputConfig) && typeof outputConfig.emitLegacyCommonJSImports === 'boolean') {
-  //   return outputConfig.emitLegacyCommonJSImports;
-  // }
-
-  return globalValue;
-}
+  return import(absoluteFilename);
+};

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createClient, Provider } from 'urql';
-
 import './main.css';
 import App from './App';
 
@@ -15,5 +14,5 @@ root.render(
     <Provider value={client}>
       <App />
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

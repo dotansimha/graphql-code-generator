@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-// @ts-check
 const fs = require('fs-extra');
 const path = require('path');
 const fg = require('fast-glob');
@@ -30,7 +28,7 @@ for (const dirname of packageDirectories) {
   @SET PATHEXT=%PATHEXT:;.JS;=;%
   node  "${absoluteBinPath}" %*
 )
-            `
+            `,
         );
         fs.chmodSync(targetCmdPath, '755');
       } catch {

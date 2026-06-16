@@ -1,4 +1,3 @@
-import { describe, expect, it } from '@jest/globals';
 import { flatten, groupBy, unique } from '../src/utils';
 
 describe('utils', () => {

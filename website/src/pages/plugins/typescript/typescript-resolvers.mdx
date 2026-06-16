@@ -1,22 +1,29 @@
 ---
 title: typescript-resolvers
-description: Generate TypeScript resolvers types. Works with graphql-tools and apollo-server. Supports custom mappers and enum resolvers.
+description:
+  Generate TypeScript resolvers types. Works with graphql-tools and apollo-server. Supports custom
+  mappers and enum resolvers.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <Callout>
   This plugin is meant to be used for low-level use cases or as building block for presets.
-  <br /> For building a **GraphQL server schema** we recommend using the [`server-preset`](/docs/guides/graphql-server-apollo-yoga-with-server-preset).
+  <br /> For building a **GraphQL server schema** we recommend using the
+  [`server-preset`](/docs/guides/graphql-server-apollo-yoga-with-server-preset).
 </Callout>
 
 <PluginHeader />
 
 <Callout>
-  Watch [Episode #26 of `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator)
+  Watch [Episode #26 of
+  `graphql.wtf`](https://graphql.wtf/episodes/26-type-safe-resolvers-with-graphql-code-generator)
   for a quick introduction to this plugin and its features:
 </Callout>
 
@@ -34,7 +41,8 @@ export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNo
 <Callout>
 **Quick Start with `typescript-resolvers`**
 
-You can find [a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)
+You can find
+[a blog post we wrote about using and customizing this plugin here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen)
 
 </Callout>
 
@@ -66,15 +74,19 @@ export const resolvers: Resolvers = {
 }
 ```
 
-This will make the resolver fully typed and compatible with typescript compiler, including the handler's arguments and return value.
+This will make the resolver fully typed and compatible with typescript compiler, including the
+handler's arguments and return value.
 
-Generated resolvers can be passed directly into [graphql-tools](https://npmjs.com/package/graphql-tools) `makeExecutableSchema` function.
+Generated resolvers can be passed directly into
+[graphql-tools](https://npmjs.com/package/graphql-tools) `makeExecutableSchema` function.
 
 ## Integration with Apollo-Server
 
 By default `apollo-server` will not work with generated resolvers signature.
 
-If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
+If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true`
+in your config, in order to add a compatible index signature
+([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -92,11 +104,15 @@ const config: CodegenConfig = {
 export default config
 ```
 
-If you wish to have an easy start, and have the ability to use resolvers chaining without models types, you can also add to your config `defaultMapper: Partial<{T}>`. This will allow you to return partial types in your resolvers.
+If you wish to have an easy start, and have the ability to use resolvers chaining without models
+types, you can also add to your config `defaultMapper: Partial<{T}>`. This will allow you to return
+partial types in your resolvers.
 
 ## Use Your Model Types (`mappers`)
 
-If you wish to use your custom model types, codegen allow you to use `mappers` feature to map GraphQL types to your custom model types. [You can find an article explaining how to use `mappers` here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen).
+If you wish to use your custom model types, codegen allow you to use `mappers` feature to map
+GraphQL types to your custom model types.
+[You can find an article explaining how to use `mappers` here](https://the-guild.dev/blog/better-type-safety-for-resolvers-with-graphql-codegen).
 
 Here's the basic example of using it:
 
@@ -123,11 +139,14 @@ export default config
 
 ## Enum Resolvers
 
-[Apollo-Server](https://apollographql.com/docs/apollo-server) and schemas built with [`graphql-tools`](https://graphql-tools.com) supports creating resolvers for GraphQL `enum`s.
+[Apollo-Server](https://apollographql.com/docs/apollo-server) and schemas built with
+[`graphql-tools`](https://graphql-tools.com) supports creating resolvers for GraphQL `enum`s.
 
-This is helpful because you can have internal values that are different from the public enum values, and you can use the internal values in your resolvers.
+This is helpful because you can have internal values that are different from the public enum values,
+and you can use the internal values in your resolvers.
 
-Codegen allows you to specify either `mappers` or `enumValues` to map enums in your resolvers, and if you are using it for enums, you'll get a resolver signature for the enum resolvers as well.
+Codegen allows you to specify either `mappers` or `enumValues` to map enums in your resolvers, and
+if you are using it for enums, you'll get a resolver signature for the enum resolvers as well.
 
 ### Usage Example
 
@@ -171,8 +190,8 @@ export enum ColorsCode {
 ```
 
 ```ts filename="resolvers.ts"
-import { Resolvers } from './resolvers-types'
 import { ColorsCode } from './enums'
+import { Resolvers } from './resolvers-types'
 
 const resolvers: Resolvers = {
   Color: {
@@ -270,8 +289,11 @@ const config: CodegenConfig = {
 export default config
 ```
 
-The above configuration will provide the ID type mapping to both `resolvers-types-1.ts` and `resolvers-types-2.ts` files.
+The above configuration will provide the ID type mapping to both `resolvers-types-1.ts` and
+`resolvers-types-2.ts` files.
 
-The complete example is available here: [codegen-repros/reusable-mappers](https://github.com/charlypoly/codegen-repros/blob/master/reusable-mappers/codegen.yml)
+The complete example is available here:
+[codegen-repros/reusable-mappers](https://github.com/charlypoly/codegen-repros/blob/master/reusable-mappers/codegen.yml)
 
-You can also achieve a similar reusable mappers configuration by providing a TypeScript or JavaScript file configuration.
+You can also achieve a similar reusable mappers configuration by providing a TypeScript or
+JavaScript file configuration.

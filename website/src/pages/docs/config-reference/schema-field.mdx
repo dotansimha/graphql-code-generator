@@ -141,6 +141,23 @@ const config: CodegenConfig = {
 export default config;
 ```
 
+Alternatively, you can specify a custom fetch function directly:
+
+```ts {7}
+import { CodegenConfig } from '@graphql-codegen/cli';
+import { myCustomFetch } from './my-custom-fetch.ts'
+
+const config: CodegenConfig = {
+  schema: [
+    {
+      'http://localhost:3000/graphql': {
+        customFetch: myCustomFetch,
+      }
+    }
+  ]
+};
+export default config;
+```
 
 ##### `method`
 
@@ -465,8 +482,8 @@ export default config;
 
 Then, run codegen:
 
-```bash
-yarn graphql-codegen
+```sh npm2yarn
+npm run graphql-codegen
 ```
 
 #### Provide GitHub token via Codegen CLI
@@ -482,10 +499,10 @@ const config: CodegenConfig = {
 export default config;
 ```
 
-Then, provide your GitHub token using the `GITHU_TOKEN` environment variable when running codegen:
+Then, provide your GitHub token using the `GITHUB_TOKEN` environment variable when running codegen:
 
-```bash
-GITHUB_TOKEN=<YOUR GITHUB TOKEN> yarn graphql-codegen
+```sh
+GITHUB_TOKEN=<YOUR GITHUB TOKEN> npm run graphql-codegen
 ```
 
 <Callout>You can load from a JSON file, `.graphql` file, or from a code file containing `gql` tag syntax.</Callout>

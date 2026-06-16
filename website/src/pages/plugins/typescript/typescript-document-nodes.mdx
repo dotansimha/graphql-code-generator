@@ -5,6 +5,7 @@ description: Generate TypeScript code for GraphQL documents. Useful for GraphQL 
 
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
+
 export const getStaticProps = pluginGetStaticProps(__filename)
 
 <PluginHeader />
@@ -12,7 +13,8 @@ export const getStaticProps = pluginGetStaticProps(__filename)
 
 ## Usage
 
-With [GitHub GraphQL API v4](https://developer.github.com/v4) schema and following GraphQL operation:
+With [GitHub GraphQL API v4](https://developer.github.com/v4) schema and following GraphQL
+operation:
 
 ```graphql
 query Viewer {

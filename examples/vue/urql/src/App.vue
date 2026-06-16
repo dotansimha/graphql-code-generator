@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useQuery } from '@urql/vue';
 import './assets/main.css';
-import { graphql } from './gql';
-import FilmItem from './components/FilmItem.vue';
 import { computed } from 'vue';
+import FilmItem from './components/FilmItem.vue';
+import { graphql } from './gql';
 
 const { data } = useQuery({
   query: graphql(/* GraphQL */ `

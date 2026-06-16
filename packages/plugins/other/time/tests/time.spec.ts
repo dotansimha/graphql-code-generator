@@ -7,7 +7,9 @@ describe('Time', () => {
   });
 
   it('Should use # prefix for comment when extension is graphql', async () => {
-    const result = await plugin(null as any, [], null, { outputFile: 'schema.graphql' });
+    const result = await plugin(null as any, [], null, {
+      outputFile: 'schema.graphql',
+    });
     expect(result).toContain('# Generated on');
   });
 });

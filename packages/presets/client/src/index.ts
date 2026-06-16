@@ -1,11 +1,14 @@
+import { parse, printSchema, type DocumentNode, type GraphQLSchema } from 'graphql';
 import * as addPlugin from '@graphql-codegen/add';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import type { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import {
+  normalizeImportExtension,
+  type PluginFunction,
+  type Types,
+} from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
-import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { parse, printSchema, type DocumentNode, type GraphQLSchema } from 'graphql';
 import * as fragmentMaskingPlugin from './fragment-masking-plugin.js';
 import { generateDocumentHash, normalizeAndPrintDocumentNode } from './persisted-documents.js';
 import { processSources } from './process-sources.js';
@@ -91,7 +94,7 @@ export type ClientPresetConfig = {
          * The algorithm parameter is typed with known algorithms and as a string rather than a union because it solely depends on Crypto's algorithms supported
          * by the version of OpenSSL on the platform.
          *
-         * @default `sha1`
+         * @default `sha256`
          */
         hashAlgorithm?: 'sha1' | 'sha256' | (string & {}) | ((operation: string) => string);
       };
@@ -100,17 +103,23 @@ export type ClientPresetConfig = {
 const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/');
 
 export const preset: Types.OutputPreset<ClientPresetConfig> = {
-  prepareDocuments: (outputFilePath, outputSpecificDocuments) => [...outputSpecificDocuments, `!${outputFilePath}`],
+  prepareDocuments: (outputFilePath, outputSpecificDocuments) => [
+    ...outputSpecificDocuments,
+    `!${outputFilePath}`,
+  ],
   buildGeneratesSection: async options => {
     if (!isOutputFolderLike(options.baseOutputDir)) {
       throw new Error(
-        '[client-preset] target output should be a directory, ex: "src/gql/". Make sure you add "/" at the end of the directory path'
+        '[client-preset] target output should be a directory, ex: "src/gql/". Make sure you add "/" at the end of the directory path',
       );
     }
 
-    if (options.plugins.length > 0 && Object.keys(options.plugins).some(p => p.startsWith('typescript'))) {
+    if (
+      options.plugins.length > 0 &&
+      Object.keys(options.plugins).some(p => p.startsWith('typescript'))
+    ) {
       throw new Error(
-        '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types'
+        '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types',
       );
     }
     const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
@@ -128,22 +137,24 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       strictScalars: options.config.strictScalars,
       namingConvention: options.config.namingConvention,
       useTypeImports: options.config.useTypeImports,
-      skipTypename: options.config.skipTypename,
       arrayInputCoercion: options.config.arrayInputCoercion,
-      enumsAsTypes: options.config.enumsAsTypes,
-      enumsAsConst: options.config.enumsAsConst,
+      enumType: options.config.enumType,
+      enumValues: options.config.enumValues,
       futureProofEnums: options.config.futureProofEnums,
-      dedupeFragments: options.config.dedupeFragments,
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
       skipTypeNameForRoot: options.config.skipTypeNameForRoot,
-      onlyOperationTypes: options.config.onlyOperationTypes,
-      onlyEnums: options.config.onlyEnums,
       customDirectives: options.config.customDirectives,
+      immutableTypes: options.config.immutableTypes,
     };
 
-    const visitor = new ClientSideBaseVisitor(options.schemaAst, [], options.config, options.config);
+    const visitor = new ClientSideBaseVisitor(
+      options.schemaAst,
+      [],
+      options.config,
+      options.config,
+    );
     let fragmentMaskingConfig: FragmentMaskingConfig | null = null;
 
     if (typeof options?.presetConfig?.fragmentMasking === 'object') {
@@ -168,7 +179,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           hashAlgorithm:
             (typeof options.presetConfig.persistedDocuments === 'object' &&
               options.presetConfig.persistedDocuments.hashAlgorithm) ||
-            'sha1',
+            'sha256',
         }
       : null;
 
@@ -186,7 +197,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     const pluginMap = {
       ...options.pluginMap,
       [`add`]: addPlugin,
-      [`typescript`]: typescriptPlugin,
       [`typescript-operations`]: typescriptOperationPlugin,
       [`typed-document-node`]: {
         ...typedDocumentNodePlugin,
@@ -220,7 +230,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     const plugins: Array<Types.ConfiguredPlugin> = [
       { [`add`]: { content: `/* eslint-disable */` } },
-      { [`typescript`]: {} },
       { [`typescript-operations`]: {} },
       {
         [`typed-document-node`]: {
@@ -246,6 +255,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
+    const importExtension = normalizeImportExtension({
+      emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+      importExtension: options.config.importExtension,
+    });
+
     if (isMaskingFragments === true) {
       const fragmentMaskingArtifactFileExtension = '.ts';
 
@@ -268,6 +282,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
           emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
+          importExtension,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },
         documents: [],
@@ -276,8 +291,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     }
 
     let indexFileGenerateConfig: Types.GenerateOptions | null = null;
-
-    const reexportsExtension = options.config.emitLegacyCommonJSImports ? '' : '.js';
 
     if (reexports.length) {
       indexFileGenerateConfig = {
@@ -290,7 +303,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
             [`add`]: {
               content: reexports
                 .sort()
-                .map(moduleName => `export * from "./${moduleName}${reexportsExtension}";`)
+                .map(moduleName => `export * from "./${moduleName}${importExtension}";`)
                 .join('\n'),
             },
           },
@@ -341,7 +354,11 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
                   plugin: async () => {
                     await tdnFinished.promise;
                     return {
-                      content: JSON.stringify(Object.fromEntries(persistedDocumentsMap.entries()), null, 2),
+                      content: JSON.stringify(
+                        Object.fromEntries(persistedDocumentsMap.entries()),
+                        null,
+                        2,
+                      ),
                     };
                   },
                 },
@@ -380,7 +397,7 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
     return sock.semanticToStrict(schema);
   } catch {
     throw new Error(
-      "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package."
+      "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package.",
     );
   }
 };

@@ -1,5 +1,6 @@
 import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { parseEnumValues } from '../src/enum-values.js';
+import { convertFactory } from '../src/naming.js';
 
 describe('enumValues', () => {
   const schema = buildSchema(/* GraphQL */ `
@@ -20,12 +21,20 @@ describe('enumValues', () => {
       mapOrStr: {
         Test: `my-file#SomeNamespace.ETest`,
       },
+      naming: {
+        convert: convertFactory({}),
+        options: {
+          typesPrefix: '',
+          typesSuffix: '',
+        },
+      },
     });
 
     expect(result).toEqual({
       Test: {
         isDefault: false,
         typeIdentifier: 'Test',
+        typeIdentifierConverted: 'Test',
         sourceFile: 'my-file',
         sourceIdentifier: 'SomeNamespace.ETest',
         importIdentifier: 'SomeNamespace',
@@ -40,12 +49,20 @@ describe('enumValues', () => {
       mapOrStr: {
         Test: `my-file#ETest`,
       },
+      naming: {
+        convert: convertFactory({}),
+        options: {
+          typesPrefix: '',
+          typesSuffix: '',
+        },
+      },
     });
 
     expect(result).toEqual({
       Test: {
         isDefault: false,
         typeIdentifier: 'Test',
+        typeIdentifierConverted: 'Test',
         sourceFile: 'my-file',
         sourceIdentifier: 'ETest',
         importIdentifier: 'ETest',
@@ -60,12 +77,20 @@ describe('enumValues', () => {
       mapOrStr: {
         Test: `my-file#ETest as Something`,
       },
+      naming: {
+        convert: convertFactory({}),
+        options: {
+          typesPrefix: '',
+          typesSuffix: '',
+        },
+      },
     });
 
     expect(result).toEqual({
       Test: {
         isDefault: false,
         typeIdentifier: 'Test',
+        typeIdentifierConverted: 'Test',
         sourceFile: 'my-file',
         sourceIdentifier: 'Something',
         importIdentifier: 'ETest as Something',
@@ -106,12 +131,20 @@ describe('enumValues', () => {
       schema: schemaWithEnumValues,
       mapOrStr: {},
       ignoreEnumValuesFromSchema: false,
+      naming: {
+        convert: convertFactory({}),
+        options: {
+          typesPrefix: '',
+          typesSuffix: '',
+        },
+      },
     });
 
     expect(result).toEqual({
       Test: {
         isDefault: false,
         typeIdentifier: 'Test',
+        typeIdentifierConverted: 'Test',
         sourceFile: null,
         importIdentifier: null,
         sourceIdentifier: null,
@@ -130,22 +163,16 @@ describe('enumValues', () => {
       schema: schemaWithEnumValues,
       mapOrStr: {},
       ignoreEnumValuesFromSchema: true,
-    });
-
-    expect(result).not.toEqual({
-      Test: {
-        isDefault: false,
-        typeIdentifier: 'Test',
-        sourceFile: null,
-        importIdentifier: null,
-        sourceIdentifier: null,
-        mappedValues: {
-          A: 'a',
-          B: 'b',
-          C: 'c',
+      naming: {
+        convert: convertFactory({}),
+        options: {
+          typesPrefix: '',
+          typesSuffix: '',
         },
       },
     });
+
+    expect(result).toEqual({});
   });
 
   const schemaWithNonStringEnumValues = new GraphQLSchema({
@@ -180,20 +207,27 @@ describe('enumValues', () => {
       schema: schemaWithNonStringEnumValues,
       mapOrStr: {},
       ignoreEnumValuesFromSchema: false,
+      naming: {
+        convert: convertFactory({}),
+        options: {
+          typesPrefix: '',
+          typesSuffix: '',
+        },
+      },
     });
 
-    expect(result).not.toEqual({
+    expect(result).toEqual({
       Test: {
         isDefault: false,
         typeIdentifier: 'Test',
+        typeIdentifierConverted: 'Test',
         sourceFile: null,
         importIdentifier: null,
         sourceIdentifier: null,
         mappedValues: {
-          A: '1',
-          B: 'true',
-          C: 'null',
-          D: 'undefined',
+          A: 1,
+          B: true,
+          C: null,
         },
       },
     });

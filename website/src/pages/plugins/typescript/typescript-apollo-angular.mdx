@@ -1,12 +1,17 @@
 ---
 title: typescript-apollo-angular
-description: GraphQL Code Generator plugin for Angular services using Apollo Angular. It generates Angular services with observables and typed variables.
+description:
+  GraphQL Code Generator plugin for Angular services using Apollo Angular. It generates Angular
+  services with observables and typed variables.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <PluginHeader />
 <PluginApiDocs />
@@ -24,7 +29,8 @@ query MyFeed {
 }
 ```
 
-Using `graphql-codegen` you can generate a file with Angular services that you can use when coding an Angular component:
+Using `graphql-codegen` you can generate a file with Angular services that you can use when coding
+an Angular component:
 
 ```ts filename="codegen.ts"
 import type { CodegenConfig } from '@graphql-codegen/cli'
@@ -43,10 +49,10 @@ export default config
 Then, use it:
 
 ```ts
-import { MyFeedGQL, MyFeedQuery } from './graphql'
 // BE SURE TO USE Observable from rxjs and not from @apollo/client/core when using map
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
+import { MyFeedGQL, MyFeedQuery } from './graphql'
 
 @Component({
   selector: 'feed',
@@ -68,7 +74,10 @@ export class FeedComponent {
 
 #### `@NgModule` directive
 
-All generated services are defined with `@Injectable({ providedIn: 'root' }){:ts}` and in most cases you don't need to overwrite it, because providing a service to the root injector is highly recommended. To customize that behavior you can use `@NgModule` directive, anywhere in an operation, to let the codegen know which injector should it use to create a service.
+All generated services are defined with `@Injectable({ providedIn: 'root' }){:ts}` and in most cases
+you don't need to overwrite it, because providing a service to the root injector is highly
+recommended. To customize that behavior you can use `@NgModule` directive, anywhere in an operation,
+to let the codegen know which injector should it use to create a service.
 
 <Callout>You can't use multiple `@NgModule` directives in the same operation</Callout>
 
@@ -83,7 +92,9 @@ query feed {
 
 #### `@namedClient` directive
 
-Sometimes you end up with multiple Apollo clients, which means part of operations can't use the defaults. In order to customize that behavior you simply attach the `@namedClient` directive and the `typescript-apollo-angular` plugin takes care of the rest.
+Sometimes you end up with multiple Apollo clients, which means part of operations can't use the
+defaults. In order to customize that behavior you simply attach the `@namedClient` directive and the
+`typescript-apollo-angular` plugin takes care of the rest.
 
 <Callout>You can't use multiple `@namedClient` directives in the same operation</Callout>
 

@@ -28,7 +28,7 @@ describe('normalizeAndPrintDocumentNode', () => {
     `);
     const result = normalizeAndPrintDocumentNode(document);
     expect(result).toMatchInlineSnapshot(
-      `"fragment myFrag on Query { someField } query myQuery { regularField ...myOtherFrag }"`
+      `"fragment myFrag on Query { someField } query myQuery { regularField ...myOtherFrag }"`,
     );
   });
 
@@ -52,7 +52,7 @@ describe('normalizeAndPrintDocumentNode', () => {
     `);
     const result = normalizeAndPrintDocumentNode(document);
     expect(result).toMatchInlineSnapshot(
-      `"fragment myFrag on Query { someField } query myQuery { regularField ... on Query { regularField } }"`
+      `"fragment myFrag on Query { someField } query myQuery { regularField ... on Query { regularField } }"`,
     );
   });
 });

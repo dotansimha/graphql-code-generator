@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
-import { executeCodegen } from '@graphql-codegen/cli';
 import * as prettier from 'prettier';
+import { executeCodegen } from '@graphql-codegen/cli';
 import { preset } from '../src/index.js';
 
 const schema = /* GraphQL */ `
@@ -63,7 +63,7 @@ const document = /* GraphQL */ `
 
 describe('client-preset - nullability', () => {
   it('converts semanticNonNull to non-null when nullability.errorHandlingClient=true', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema,
       documents: [document],
       generates: {
@@ -79,20 +79,20 @@ describe('client-preset - nullability', () => {
     });
 
     const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
-    const formattedContent = prettier.format(graphqlFile.content, { parser: 'typescript' });
+    const formattedContent = await prettier.format(graphqlFile.content, {
+      parser: 'typescript',
+    });
 
     expect(formattedContent).toBeSimilarStringTo(`
       export type TestQuery = {
-        __typename?: "Query";
-        me?: {
-          __typename?: "User";
+        me: {
           field: string;
           fieldLevel0: string;
-          fieldLevel1?: string | null;
+          fieldLevel1: string | null;
           fieldBothLevels: string;
           list: Array<string | null>;
           listLevel0: Array<string | null>;
-          listLevel1?: Array<string> | null;
+          listLevel1: Array<string> | null;
           listBothLevels: Array<string>;
           nonNullableList: Array<string | null>;
           nonNullableListLevel0: Array<string | null>;
@@ -100,7 +100,7 @@ describe('client-preset - nullability', () => {
           nonNullableListBothLevels: Array<string>;
           listWithNonNullableItem: Array<string>;
           listWithNonNullableItemLevel0: Array<string>;
-          listWithNonNullableItemLevel1?: Array<string> | null;
+          listWithNonNullableItemLevel1: Array<string> | null;
           listWithNonNullableItemBothLevels: Array<string>;
           nonNullableListWithNonNullableItem: Array<string>;
           nonNullableListWithNonNullableItemLevel0: Array<string>;
@@ -112,7 +112,7 @@ describe('client-preset - nullability', () => {
   });
 
   it('leave semanticNonNull as null when nullability.errorHandlingClient=false', async () => {
-    const result = await executeCodegen({
+    const { result } = await executeCodegen({
       schema,
       documents: [document],
       generates: {
@@ -128,29 +128,29 @@ describe('client-preset - nullability', () => {
     });
 
     const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
-    const formattedContent = prettier.format(graphqlFile.content, { parser: 'typescript' });
+    const formattedContent = await prettier.format(graphqlFile.content, {
+      parser: 'typescript',
+    });
 
     expect(formattedContent).toBeSimilarStringTo(`
       export type TestQuery = {
-        __typename?: "Query";
-        me?: {
-          __typename?: "User";
-          field?: string | null;
-          fieldLevel0?: string | null;
-          fieldLevel1?: string | null;
-          fieldBothLevels?: string | null;
-          list?: Array<string | null> | null;
-          listLevel0?: Array<string | null> | null;
-          listLevel1?: Array<string | null> | null;
-          listBothLevels?: Array<string | null> | null;
+        me: {
+          field: string | null;
+          fieldLevel0: string | null;
+          fieldLevel1: string | null;
+          fieldBothLevels: string | null;
+          list: Array<string | null> | null;
+          listLevel0: Array<string | null> | null;
+          listLevel1: Array<string | null> | null;
+          listBothLevels: Array<string | null> | null;
           nonNullableList: Array<string | null>;
           nonNullableListLevel0: Array<string | null>;
           nonNullableListLevel1: Array<string | null>;
           nonNullableListBothLevels: Array<string | null>;
-          listWithNonNullableItem?: Array<string> | null;
-          listWithNonNullableItemLevel0?: Array<string> | null;
-          listWithNonNullableItemLevel1?: Array<string> | null;
-          listWithNonNullableItemBothLevels?: Array<string> | null;
+          listWithNonNullableItem: Array<string> | null;
+          listWithNonNullableItemLevel0: Array<string> | null;
+          listWithNonNullableItemLevel1: Array<string> | null;
+          listWithNonNullableItemBothLevels: Array<string> | null;
           nonNullableListWithNonNullableItem: Array<string>;
           nonNullableListWithNonNullableItemLevel0: Array<string>;
           nonNullableListWithNonNullableItemLevel1: Array<string>;

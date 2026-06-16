@@ -1,5 +1,7 @@
 import { dirname, isAbsolute, join, relative, resolve } from 'path';
 import parse from 'parse-filepath';
+import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
+import type { ParsedEnumValuesMap } from './types';
 
 export type ImportDeclaration<T = string> = {
   outputPath: string;
@@ -7,7 +9,8 @@ export type ImportDeclaration<T = string> = {
   baseOutputDir: string;
   baseDir: string;
   typesImport: boolean;
-  emitLegacyCommonJSImports: boolean;
+  emitLegacyCommonJSImports?: boolean;
+  importExtension: '' | `.${string}`;
 };
 
 export type ImportSource<T = string> = {
@@ -32,7 +35,7 @@ export type FragmentImport = {
 
 export function generateFragmentImportStatement(
   statement: ImportDeclaration<FragmentImport>,
-  kind: 'type' | 'document' | 'both'
+  kind: 'type' | 'document' | 'both',
 ): string {
   const { importSource: fragmentImportSource, ...rest } = statement;
   const { identifiers, path, namespace } = fragmentImportSource;
@@ -57,7 +60,12 @@ export function generateImportStatement(statement: ImportDeclaration): string {
     ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
     : '*';
   const importExtension =
-    importPath.startsWith('/') || importPath.startsWith('.') ? (statement.emitLegacyCommonJSImports ? '' : '.js') : '';
+    importPath.startsWith('/') || importPath.startsWith('.')
+      ? normalizeImportExtension({
+          emitLegacyCommonJSImports: statement.emitLegacyCommonJSImports,
+          importExtension: statement.importExtension,
+        })
+      : '';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   const importStatement = typesImport ? 'import type' : 'import';
   return `${importStatement} ${importNames}${importAlias} from '${importPath}${importExtension}';${
@@ -97,4 +105,103 @@ export function clearExtension(path: string): string {
 
 export function fixLocalFilePath(path: string): string {
   return path.startsWith('..') ? path : `./${path}`;
+}
+
+export function getEnumsImports({
+  enumValues,
+  useTypeImports,
+}: {
+  enumValues: ParsedEnumValuesMap;
+  useTypeImports: boolean;
+}): string[] {
+  function handleEnumValueMapper({
+    typeIdentifierConverted,
+    importIdentifier,
+    sourceIdentifier,
+    sourceFile,
+    useTypeImports,
+  }: {
+    typeIdentifierConverted: string;
+    importIdentifier: string | null;
+    sourceIdentifier: string | null;
+    sourceFile: string | null;
+    useTypeImports: boolean;
+  }): string[] {
+    if (importIdentifier !== sourceIdentifier) {
+      // use namespace import to dereference nested enum
+      // { enumValues: { MyEnum: './my-file#NS.NestedEnum' } }
+      return [
+        buildTypeImport({
+          identifier: importIdentifier || sourceIdentifier,
+          source: sourceFile,
+          useTypeImports,
+        }),
+        `import ${typeIdentifierConverted} = ${sourceIdentifier};`,
+      ];
+    }
+    if (sourceIdentifier !== typeIdentifierConverted) {
+      return [
+        buildTypeImport({
+          identifier: `${sourceIdentifier} as ${typeIdentifierConverted}`,
+          source: sourceFile,
+          useTypeImports,
+        }),
+      ];
+    }
+    return [
+      buildTypeImport({
+        identifier: importIdentifier || sourceIdentifier,
+        source: sourceFile,
+        useTypeImports,
+      }),
+    ];
+  }
+
+  return Object.keys(enumValues)
+    .flatMap(enumName => {
+      const mappedValue = enumValues[enumName];
+      if (mappedValue.sourceFile) {
+        if (mappedValue.isDefault) {
+          return [
+            buildTypeImport({
+              identifier: mappedValue.typeIdentifierConverted,
+              source: mappedValue.sourceFile,
+              asDefault: true,
+              useTypeImports,
+            }),
+          ];
+        }
+
+        return handleEnumValueMapper({
+          typeIdentifierConverted: mappedValue.typeIdentifierConverted,
+          importIdentifier: mappedValue.importIdentifier,
+          sourceIdentifier: mappedValue.sourceIdentifier,
+          sourceFile: mappedValue.sourceFile,
+          useTypeImports,
+        });
+      }
+
+      return [];
+    })
+    .filter(Boolean);
+}
+
+export function buildTypeImport({
+  identifier,
+  source,
+  useTypeImports,
+  asDefault = false,
+}: {
+  identifier: string;
+  source: string;
+  useTypeImports: boolean;
+  asDefault?: boolean;
+}): string {
+  if (asDefault) {
+    if (useTypeImports) {
+      return `import type { default as ${identifier} } from '${source}';`;
+    }
+    return `import ${identifier} from '${source}';`;
+  }
+  return `import${useTypeImports ? ' type' : ''} { ${identifier} } from '${source}';`;
 }

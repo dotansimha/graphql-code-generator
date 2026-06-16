@@ -1,5 +1,7 @@
 ---
-description: How to integrate GraphQL Code Generator into your development workflow. Learn how to run it in watch mode, or as part of your CI flow.
+description:
+  How to integrate GraphQL Code Generator into your development workflow. Learn how to run it in
+  watch mode, or as part of your CI flow.
 ---
 
 import { Callout } from '@theguild/components'
@@ -10,7 +12,8 @@ GraphQL Code Generator should be integrated as part of your development workflow
 
 ## Scripts Integration
 
-If you wish to run the codegen before starting your server/app, you can use `pre` scripts in your `package.json`, for example:
+If you wish to run the codegen before starting your server/app, you can use `pre` scripts in your
+`package.json`, for example:
 
 ```json filename="package.json" {6-7}
 {
@@ -18,15 +21,18 @@ If you wish to run the codegen before starting your server/app, you can use `pre
     "dev": "nodemon app.js",
     "start": "node app.js",
     "generate": "graphql-codegen",
-    "prestart": "yarn generate",
-    "predev": "yarn generate"
+    "prestart": "pnpm generate",
+    "predev": "pnpm generate"
   }
 }
 ```
 
-This way, the codegen generates the output according to your configuration before each time you run `dev` or `start` scripts.
+This way, the codegen generates the output according to your configuration before each time you run
+`dev` or `start` scripts.
 
-It's also helpful to run the codegen during your continuous integration flow and ensure that your code continually compiles with the generated output; this way, you can detect breaking changes in your GraphQL schema and GraphQL documents.
+It's also helpful to run the codegen during your continuous integration flow and ensure that your
+code continually compiles with the generated output; this way, you can detect breaking changes in
+your GraphQL schema and GraphQL documents.
 
 ## Watch Mode
 
@@ -39,28 +45,33 @@ To use watch mode, install [`@parcel/watcher`](https://www.npmjs.com/package/@pa
 
 If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
 
-You can either run it in a separate terminal session or use tools like [`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
+You can either run it in a separate terminal session or use tools like
+[`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
 
 ```json {3} /--watch/
 {
   "scripts": {
-    "dev": "concurrently \"nodemon app.js\" \"yarn generate --watch\"",
+    "dev": "concurrently \"nodemon app.js\" \"pnpm generate --watch\"",
     "start": "node app.js",
     "generate": "graphql-codegen",
-    "prestart": "yarn generate"
+    "prestart": "pnpm generate"
   }
 }
 ```
 
-If you wish, you can specify a custom list of files to watch, by adding a glob expression to the command, using `--watch` flag:
+If you wish, you can specify a custom list of files to watch, by adding a glob expression to the
+command, using `--watch` flag:
 
 ```sh /"src/**/*.js"/
-yarn graphql-codegen --watch "src/**/*.js"
+pnpm graphql-codegen --watch "src/**/*.js"
 ```
 
-Use this when you are loading your schema or documents from a single code file that depends on other files internally because codegen can't tell that you're using those files automatically.
+Use this when you are loading your schema or documents from a single code file that depends on other
+files internally because codegen can't tell that you're using those files automatically.
 
-We use [`@parcel/watcher`](https://github.com/parcel-bundler/watcher) which supports subscribing to realtime notifications of changes in a directory. It works recursively, so changes in sub-directories will also be emitted.
+We use [`@parcel/watcher`](https://github.com/parcel-bundler/watcher) which supports subscribing to
+realtime notifications of changes in a directory. It works recursively, so changes in
+sub-directories will also be emitted.
 
 ```ts {6-10}
 import { CodegenConfig } from '@graphql-codegen/cli'
@@ -74,11 +85,14 @@ const config: CodegenConfig = {
 export default config
 ```
 
-## Monorepo and Yarn Workspaces
+## Monorepo and pnpm Workspaces
 
-If you are using a monorepo structure, with tools such as [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces) or [Lerna](https://github.com/lerna/lerna), we recommend installing the codegen in the root of your monorepo.
+If you are using a monorepo structure, with tools such as
+[pnpm Workspaces](https://pnpm.io/workspaces) or [Lerna](https://github.com/lerna/lerna), we
+recommend installing the codegen in the root of your monorepo.
 
-If you need to execute the codegen multiple times, note that you can specify multiple fields for `generates` field, for example:
+If you need to execute the codegen multiple times, note that you can specify multiple fields for
+`generates` field, for example:
 
 ```ts {7-8}
 import { CodegenConfig } from '@graphql-codegen/cli'

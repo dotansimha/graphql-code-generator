@@ -1,26 +1,35 @@
-import { GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLOutputType, Location } from 'graphql';
-import { AvoidOptionalsConfig, ConvertNameFn, NormalizedScalarsMap } from '../types.js';
+import {
+  GraphQLInterfaceType,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLOutputType,
+  Location,
+} from 'graphql';
+import { ConvertNameFn, NormalizedScalarsMap } from '../types.js';
 
 export type PrimitiveField = { isConditional: boolean; fieldName: string };
-export type PrimitiveAliasedFields = { isConditional: boolean; alias: string; fieldName: string };
-export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
+export type PrimitiveAliasedFields = {
+  isConditional: boolean;
+  alias: string;
+  fieldName: string;
+};
+export type LinkField = {
+  alias: string;
+  name: string;
+  type: string;
+  selectionSet: string;
+};
 export type NameAndType = { name: string; type: string };
 export type ProcessResult = null | Array<NameAndType | string>;
 
 export type SelectionSetProcessorConfig = {
   namespacedImportName: string | null;
   convertName: ConvertNameFn<any>;
-  enumPrefix: boolean | null;
-  enumSuffix: boolean | null;
+  enumPrefix: boolean;
+  enumSuffix: boolean;
   scalars: NormalizedScalarsMap;
-  formatNamedField(
-    name: string,
-    type?: GraphQLOutputType | GraphQLNamedType | null,
-    isConditional?: boolean,
-    isOptional?: boolean
-  ): string;
+  formatNamedField(params: { name: string; isOptional?: boolean }): string;
   wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType | GraphQLNamedType): string;
-  avoidOptionals?: AvoidOptionalsConfig | boolean;
   printFieldsOnNewLines?: boolean;
 };
 
@@ -49,30 +58,32 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   transformPrimitiveFields(
     _schemaType: GraphQLObjectType | GraphQLInterfaceType,
     _fields: PrimitiveField[],
-    _unsetTypes?: boolean
+    _unsetTypes?: boolean,
   ): ProcessResult {
     throw new Error(
-      `Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
+      `Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`,
     );
   }
 
   transformAliasesPrimitiveFields(
     _schemaType: GraphQLObjectType | GraphQLInterfaceType,
     _fields: PrimitiveAliasedFields[],
-    _unsetTypes?: boolean
+    _unsetTypes?: boolean,
   ): ProcessResult {
     throw new Error(
-      `Please override "transformAliasesPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
+      `Please override "transformAliasesPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`,
     );
   }
 
   transformLinkFields(_fields: LinkField[], _unsetTypes?: boolean): ProcessResult {
-    throw new Error(`Please override "transformLinkFields" as part of your BaseSelectionSetProcessor implementation!`);
+    throw new Error(
+      `Please override "transformLinkFields" as part of your BaseSelectionSetProcessor implementation!`,
+    );
   }
 
   transformTypenameField(_type: string, _name: string): ProcessResult {
     throw new Error(
-      `Please override "transformTypenameField" as part of your BaseSelectionSetProcessor implementation!`
+      `Please override "transformTypenameField" as part of your BaseSelectionSetProcessor implementation!`,
     );
   }
 }

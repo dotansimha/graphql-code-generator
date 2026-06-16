@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useQuery } from '@vue/apollo-composable';
-import { graphql } from './gql';
-import FilmItem from './components/FilmItem.vue';
 import { computed } from 'vue';
+import { useQuery } from '@vue/apollo-composable';
+import FilmItem from './components/FilmItem.vue';
+import { graphql } from './gql';
 
 const { result } = useQuery(
   graphql(/* GraphQL */ `
@@ -16,7 +16,7 @@ const { result } = useQuery(
       }
     }
   `),
-  { first: 10 }
+  { first: 10 },
 );
 const films = computed(() => result.value?.allFilms?.edges?.map(e => e?.node!));
 </script>

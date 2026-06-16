@@ -2,20 +2,19 @@
 /* eslint sort-keys: error */
 import { useRouter } from 'next/router';
 import {
+  Anchor,
+  cn,
+  CodegenIcon,
   defineConfig,
   Giscus,
-  PRODUCTS,
-  useTheme,
-  HiveFooter,
-  cn,
-  HiveNavigation,
-  Anchor,
-  CodegenIcon,
   GitHubIcon,
+  HiveFooter,
+  HiveNavigation,
   PaperIcon,
   PencilIcon,
+  PRODUCTS,
+  useTheme,
 } from '@theguild/components';
-
 import favicon from './public/favicon.svg';
 
 export default defineConfig({
@@ -99,7 +98,10 @@ export default defineConfig({
 
       return (
         <HiveFooter
-          className={cn(route === '/' ? 'light' : '[&>:first-child]:mx-0 [&>:first-child]:max-w-[90rem]', 'pt-[72px]')}
+          className={cn(
+            route === '/' ? 'light' : '[&>:first-child]:mx-0 [&>:first-child]:max-w-[90rem]',
+            'pt-[72px]',
+          )}
           resources={[
             {
               children: 'Privacy Policy',

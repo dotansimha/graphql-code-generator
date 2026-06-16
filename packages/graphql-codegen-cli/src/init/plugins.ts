@@ -9,7 +9,9 @@ export const plugins: Array<PluginOption> = [
     pathInRepo: 'typescript/typescript',
     available: hasTag(Tags.typescript),
     shouldBeSelected: tags =>
-      oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react) || noneOf(tags, Tags.flow),
+      oneOf(tags, Tags.angular, Tags.stencil) ||
+      allOf(tags, Tags.typescript, Tags.react) ||
+      noneOf(tags, Tags.flow),
     defaultExtension: '.ts',
   },
   {
@@ -18,7 +20,8 @@ export const plugins: Array<PluginOption> = [
     value: 'typescript-operations',
     pathInRepo: 'typescript/operations',
     available: tags => allOf(tags, Tags.client, Tags.typescript) || hasTag(Tags.stencil)(tags),
-    shouldBeSelected: tags => oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react),
+    shouldBeSelected: tags =>
+      oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react),
     defaultExtension: '.ts',
   },
   {
@@ -98,7 +101,8 @@ export const plugins: Array<PluginOption> = [
     package: '@graphql-codegen/fragment-matcher',
     value: 'fragment-matcher',
     pathInRepo: 'other/fragment-matcher',
-    available: tags => hasTag(Tags.client)(tags) || hasTag(Tags.angular)(tags) || hasTag(Tags.stencil)(tags),
+    available: tags =>
+      hasTag(Tags.client)(tags) || hasTag(Tags.angular)(tags) || hasTag(Tags.stencil)(tags),
     shouldBeSelected: () => false,
     defaultExtension: '.ts',
   },

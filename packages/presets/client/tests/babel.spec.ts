@@ -4,11 +4,14 @@ import babelPlugin from '../src/babel.js';
 
 describe('client-preset > babelPlugin', () => {
   test('can imports files in the same directory', () => {
-    const result = transformFileSync(path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'), {
-      plugins: [[babelPlugin, { artifactDirectory: path.join(__dirname, 'fixtures') }]],
-      babelrc: false,
-      configFile: false,
-    }).code;
+    const result = transformFileSync(
+      path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      {
+        plugins: [[babelPlugin, { artifactDirectory: path.join(__dirname, 'fixtures') }]],
+        babelrc: false,
+        configFile: false,
+      },
+    ).code;
 
     expect(result).toMatchInlineSnapshot(`
       "import { CFragmentDoc } from "./graphql";
@@ -29,11 +32,14 @@ describe('client-preset > babelPlugin', () => {
     `);
   });
   test('can import files in another directory', () => {
-    const result = transformFileSync(path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'), {
-      plugins: [[babelPlugin, { artifactDirectory: __dirname }]],
-      babelrc: false,
-      configFile: false,
-    }).code;
+    const result = transformFileSync(
+      path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      {
+        plugins: [[babelPlugin, { artifactDirectory: __dirname }]],
+        babelrc: false,
+        configFile: false,
+      },
+    ).code;
     expect(result).toMatchInlineSnapshot(`
       "import { CFragmentDoc } from "../graphql";
       import { BDocument } from "../graphql";

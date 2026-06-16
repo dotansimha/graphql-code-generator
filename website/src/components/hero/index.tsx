@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
-import { DecorationIsolation, cn, CodegenIcon } from '@theguild/components';
 import Image from 'next/image';
-
+import { cn, CodegenIcon, DecorationIsolation } from '@theguild/components';
 import codegenHeroBadge from './codegen-badge.svg';
 
 export function Hero(props: { children: ReactNode; className?: string }) {
@@ -9,7 +8,7 @@ export function Hero(props: { children: ReactNode; className?: string }) {
     <div
       className={cn(
         'relative isolate flex max-w-[90rem] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-blue-400 px-4 py-6 sm:py-12 md:gap-8 lg:py-24',
-        props.className
+        props.className,
       )}
     >
       <DecorationIsolation className="-z-10">
@@ -32,7 +31,9 @@ export function Hero(props: { children: ReactNode; className?: string }) {
 
 export function HeroLinks(props: { children: ReactNode }) {
   return (
-    <div className="relative z-10 flex justify-center gap-2 px-0.5 max-sm:flex-col sm:gap-4">{props.children}</div>
+    <div className="relative z-10 flex justify-center gap-2 px-0.5 max-sm:flex-col sm:gap-4">
+      {props.children}
+    </div>
   );
 }
 
@@ -55,8 +56,12 @@ export function HeroTitle(props: { children: ReactNode }) {
 export function TrustedBy({ className, children, ...rest }: React.HTMLAttributes<HTMLElement>) {
   return (
     <div className={cn('max-w-[80%] text-center', className)} {...rest}>
-      <p className="text-base text-blue-800">Trusted by global enterprises and fast-moving startups</p>
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 text-blue-1000">{children}</div>
+      <p className="text-base text-blue-800">
+        Trusted by global enterprises and fast-moving startups
+      </p>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 text-blue-1000">
+        {children}
+      </div>
     </div>
   );
 }

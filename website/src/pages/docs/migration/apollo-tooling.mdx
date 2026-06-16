@@ -1,0 +1,358 @@
+---
+description:
+  Migrating from Apollo-tooling (apollo client:codegen) to GraphQL Code Generator. What has changed?
+  How to migrate? What configuration options replace apollo-tooling's behaviour?
+---
+
+import { Callout, Tabs } from '@theguild/components'
+
+# Migrating from Apollo-tooling to GraphQL Code Generator
+
+[Apollo-tooling](https://github.com/apollographql/apollo-tooling) (the `apollo` CLI, specifically
+`apollo client:codegen`) is a code generation tool that generates TypeScript types from GraphQL
+operations for use with Apollo Client.
+
+This guide explains how to replace it with
+[GraphQL Code Generator](https://the-guild.dev/graphql/codegen), which is actively maintained, more
+flexible, and supports a broader range of use cases.
+
+This guide is using the
+[programmatic CLI version](https://the-guild.dev/graphql/codegen/docs/advanced/programmatic-usage)
+of GraphQL Codegen.
+
+## Installation
+
+Remove apollo-tooling and install GraphQL Code Generator:
+
+<Tabs items={['Before', 'After']}>
+<Tabs.Tab>
+```sh npm2yarn
+npm uninstall apollo
+```
+</Tabs.Tab>
+
+<Tabs.Tab>
+```sh npm2yarn
+npm i -D @graphql-codegen/cli @graphql-codegen/typescript-operations @graphql-codegen/near-operation-file-preset
+```
+</Tabs.Tab>
+</Tabs>
+
+### Required packages
+
+| Package                                       | Description                                                        |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| `@graphql-codegen/cli`                        | Core CLI that runs the code generator                              |
+| `@graphql-codegen/typescript-operations`      | Plugin that generates TypeScript types for GraphQL operations      |
+| `@graphql-codegen/near-operation-file-preset` | Preset that places generated files next to their source operations |
+
+```json filename="package.json"
+{
+  "devDependencies": {
+    ...
+    "@graphql-codegen/cli": "^7.0.0",
+    "@graphql-codegen/near-operation-file-preset": "^5.2.0",
+    "@graphql-codegen/typescript-operations": "^6.0.0",
+    ...
+  }
+}
+```
+
+## Configuration
+
+Apollo-tooling is configured via `apollo.config.js` (or `apollo.config.ts`) and invoked with
+`apollo client:codegen`. GraphQL Code Generator uses a `codegen.ts` file and is invoked with
+`graphql-codegen` cli command or programmatically.
+
+<Tabs items={['Before', 'After']}>
+<Tabs.Tab>
+```js filename="apollo.config.js"
+module.exports = {
+  client: {
+    service: {
+      name: 'my-service',
+      localSchemaFile: './schema.graphql',
+    },
+    includes: ['./src/**/*.tsx', './src/**/*.ts'],
+  },
+}
+```
+</Tabs.Tab>
+<Tabs.Tab>
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+const config: CodegenConfig = {
+  schema: './schema.graphql',
+  documents: ['./src/**/*.{ts,tsx}',
+    '!./src/**/__generated__/**'],
+  externalDocuments: [ '../other-package/src/**/*.{ts,tsx}',
+    '!../other-package/src/**/__generated__/**' ],
+  generates: {
+    './src/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        extension: '.ts',
+        folder: '__generated__',
+        filePerOperation: true
+      },
+      plugins: ['typescript-operations']
+    }
+  },
+  config: {
+    extractAllFieldsToTypesCompact: true,
+    namingConvention: 'keep',
+    printFieldsOnNewLines: true,
+    enumType: 'native',
+    nonOptionalTypename: true,
+    skipTypeNameForRoot: true,
+    omitOperationSuffix: true,
+    fragmentSuffix: '',
+    defaultScalarType: 'any'
+  }
+}
+
+export default config
+```
+</Tabs.Tab>
+</Tabs>
+
+## Per-operation file generation with `near-operation-file`
+
+Apollo-tooling's default behaviour is to generate one TypeScript file per graphql operation, placed
+in a `__generated__` folder next to the source. For example, given `src/Component.ts` containing a
+query `GetUser`, apollo-tooling produces `src/__generated__/GetUser.ts`.
+
+GraphQL Code Generator replicates this with the `filePerOperation: true` parameter of the
+[`near-operation-file` preset](https://the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset).
+
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  ...
+  generates: {
+    './src/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        extension: '.ts',
+        folder: '__generated__',
+        filePerOperation: true // Generate type files per-operation (not per-source file)
+      },
+      ...
+    }
+  }
+  ...
+}
+
+export default config
+```
+
+With this configuration: `src/Component.ts` → `src/__generated__/GetUser.ts`, matching Apollo
+Tooling's output structure exactly.
+
+If you need to generate files per-source file (default to GraphQL Codegen), remove the following
+config option: `filePerOperation: true` (or set it to `false`). Then, the output will be:
+`src/Component.ts` → `src/__generated__/Component.ts`
+
+## Nested field types naming conventions
+
+Nested fields are the fields inside operation result object.
+
+Apollo-tooling generates nested field type names using **only field names**, omitting the GraphQL
+object type name:
+
+```ts
+// Apollo-tooling output
+export type GetUserQuery_user = { ... };
+export type GetUserQuery_user_address = { ... };
+```
+
+By default GraphQL Codegen always adds field types:
+
+```ts
+// GraphQL Codegen output
+export type GetUserQuery_user_User = { ... };
+export type GetUserQuery_user_User_address_Address = { ... };
+```
+
+To achieve naming similar to apollo-tooling with GraphQL Codegen use the
+`extractAllFieldsToTypesCompact: true` configuration option:
+
+```ts filename="codegen.ts"
+const config: CodegenConfig = {
+  ...
+  generates: {
+    ...
+  },
+  config: {
+    extractAllFieldsToTypesCompact: true
+    ...
+  }
+}
+```
+
+## Enum types
+
+Apollo-tooling generates enums as native TypeScript `enum` declarations and references them directly
+by name (without any namespace prefix):
+
+```ts
+// Apollo-tooling output
+export enum UserManagerRoleType {
+  ROLE_TYPE_1 = 'ROLE_TYPE_1',
+  ROLE_TYPE_2 = 'ROLE_TYPE_2',
+  ROLE_TYPE_3 = 'ROLE_TYPE_3'
+}
+
+export type GetUserQuery_user_manager = {
+  roleType: UserManagerRoleType
+}
+```
+
+GraphQL Code Generator generates string literal union types by default. To produce native `enum`
+declarations matching apollo-tooling's output, set `enumType: 'native'`:
+
+```ts filename="codegen.ts"
+const config: CodegenConfig = {
+  ...
+  generates: {
+    ...
+  }
+  config: {
+    ...
+    namingConvention: 'keep',
+    enumType: 'native',
+    ...
+  }
+}
+```
+
+<Callout type="warning">
+  Native TypeScript `enum` declarations incur a runtime cost (they compile to JavaScript objects). If you only need
+  type-level checking, consider using the default `string-literal` enum type instead:
+
+```ts
+type UserManagerRoleType = 'ROLE_TYPE_1' | 'ROLE_TYPE_2' | 'ROLE_TYPE_3'
+```
+
+See the
+[typescript-operations configuration reference](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-operations#enumtype)
+for all available enum type options.
+
+</Callout>
+
+## Recommended configuration
+
+Below is a configuration that produces output closely matching apollo-tooling's behaviour, including
+per-file generation, enum output, and type naming:
+
+```ts filename="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // since codegen 6.0, we can also pass pre-parsed GraphQLSchema here (for caching - when running codegen in a loop on a monorepo with many packages)
+  schema: './schema.graphql',
+  documents: ['./src/**/*.{ts,tsx}', '!./src/**/__generated__/**'],
+  // `externalDocuments` are read-only documents that are loaded but no output is generated for them.
+  // They are used to include fragments from another package in a monorepo without generating unnecessary files.
+  externalDocuments: [
+    '../other-package/src/**/*.{ts,tsx}',
+    '!../other-package/src/**/__generated__/**'
+  ],
+  generates: {
+    './src/': {
+      preset: 'near-operation-file',
+      presetConfig: {
+        extension: '.ts',
+        folder: '__generated__',
+        // Generate type files per-operation (not per-component)
+        filePerOperation: true
+      },
+      plugins: ['typescript-operations']
+    }
+  },
+  config: {
+    // Extract nested field types to named types (matches apollo-tooling naming)
+    extractAllFieldsToTypesCompact: true,
+    // Keep original naming as-is (no camelCase conversion)
+    namingConvention: 'keep',
+    // Print each field on its own line for readability
+    printFieldsOnNewLines: true,
+    // Use native TypeScript enums (matches apollo-tooling enum output)
+    enumType: 'native',
+    // Always include __typename in result types
+    nonOptionalTypename: true,
+    // Don't add __typename to root query/mutation/subscription types
+    skipTypeNameForRoot: true,
+    // Don't add 'Query'/'Mutation'/'Subscription' suffixes to operation result types
+    omitOperationSuffix: true,
+    // Don't add 'Fragment' suffix to fragment result types
+    fragmentSuffix: '',
+    // Default is 'unknown'; to match apollo-tooling we need to put 'any'
+    defaultScalarType: 'any'
+  }
+}
+
+export default config
+```
+
+## Manual changes
+
+The setup above closely mimics apollo-tooling (99.98% similarity in our tests) but isn’t an exact
+match. The following items may require manual fixes:
+
+#### 1. Nested field types naming.
+
+In very rare cases, the field names generated by GraphQL Codegen don’t match apollo-tooling’s.
+Update these cases manually.
+
+#### 2. Enum file location.
+
+Occasionally, GraphQL Codegen places enums in a different file then apollo-tooling. If an enum is
+missing, check nearby generated files and adjust your imports accordingly.
+
+#### 3. `is possibly null` and `has any type` typecheck bugs.
+
+These bugs has to be fixed.
+
+For `is possibly null` bug, asserting for not null or adding `!` will fix most cases:
+
+```
+  getUser.name -> getUser!.name
+```
+
+For `has any type` bug - a proper type needs to be determined.
+
+#### 4. Mismatch between `Type | null` and `Type | null | undefined`.
+
+Experiment with the following configuration options to keep your codebase changes to a minimum:
+
+- **maybeValue**: defaults to `T | null`, set to `T | null | undefined` if necessary
+- **inputMaybeValue**: defaults to `Maybe<T>`, set to `T | null | undefined` if necessary
+- **avoidOptionals**: Replaces ? optional modifier with explicit `Maybe<T>`. Supports granular
+  control via object form.
+- **allowUndefinedQueryVariables**: Adds | undefined to Query operation variable types (not
+  Mutation/Subscription)
+- **optionalResolveType**: Makes `__resolveType` optional (`__resolveType?`) in resolver types.
+- **nullability**: When `errorHandlingClient: true`, adjusts nullability for fields marked with
+  `@semanticNonNull` directive (requires `graphql-sock`).
+
+#### 5. Extra `__typename` present, or required `__typename` is missing.
+
+Experiment with the following configuration options to keep your codebase changes to a minimum:
+
+- **skipTypename**: prevents adding `__typename` to generated types unless explicitly in the
+  selection set.
+- **skipTypeNameForRoot**: skips `__typename` specifically for root types (Query, Mutation,
+  Subscription). Ignored if `__typename` is explicitly in the selection set
+- **nonOptionalTypename**: always adds `__typename` and makes it a required (non-optional) field.
+- **addTypenameToSelectionSets**: injects `__typename` directly into the generated document node
+  selection sets.
+- **resolversNonOptionalTypename**: makes `__typename` non-optional in resolver mappings without
+  affecting base types. Supports granular control via object form.
+
+## Further reading
+
+- [GraphQL Code Generator configuration reference](https://the-guild.dev/graphql/codegen/docs/config-reference/codegen-config)
+- [typescript-operations plugin documentation](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-operations)
+- [near-operation-file preset documentation](https://the-guild.dev/graphql/codegen/plugins/presets/near-operation-file-preset)

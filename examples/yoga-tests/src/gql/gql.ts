@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as types from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import * as types from './graphql';
 
 /**
  * Map of all GraphQL operations in the project.
@@ -41,22 +41,18 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n      query HelloQuery {\n        hello\n      }\n    '
+  source: '\n      query HelloQuery {\n        hello\n      }\n    ',
 ): (typeof documents)['\n      query HelloQuery {\n        hello\n      }\n    '];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n      mutation EchoMutation($message: String!) {\n        echo(message: $message)\n      }\n    '
+  source: '\n      mutation EchoMutation($message: String!) {\n        echo(message: $message)\n      }\n    ',
 ): (typeof documents)['\n      mutation EchoMutation($message: String!) {\n        echo(message: $message)\n      }\n    '];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 
-export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<
-  infer TType,
-  any
->
-  ? TType
-  : never;
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
+  TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;

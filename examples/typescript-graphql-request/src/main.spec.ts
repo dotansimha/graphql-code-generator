@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { getPeople } from './main';
 
 describe('TypeScript GraphQL Request tests', () => {

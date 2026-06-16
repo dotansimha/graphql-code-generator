@@ -1,19 +1,26 @@
 ---
 title: typescript-generic-sdk
-description: Generate TypeScript SDK for GraphQL APIs. Supports Apollo Client, React Query, and more.
+description:
+  Generate TypeScript SDK for GraphQL APIs. Supports Apollo Client, React Query, and more.
 ---
 
-import { Callout } from '@theguild/components'
 import { PluginApiDocs, PluginHeader } from '@/components/plugin'
 import { pluginGetStaticProps } from '@/lib/plugin-get-static-props'
-export const getStaticProps = pluginGetStaticProps(__filename, { hasOperationsNote: true })
+import { Callout } from '@theguild/components'
+
+export const getStaticProps = pluginGetStaticProps(__filename, {
+  hasOperationsNote: true
+})
 
 <PluginHeader />
 
-<Callout>Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:</Callout>
+<Callout>
+  Make sure you have `typescript` plugin and `typescript-operations` as well in your configuration:
+</Callout>
 
 <PluginApiDocs />
 
 ## Usage
 
-You can find a usage [example for Apollo-Client here](https://gist.github.com/akozhemiakin/731b0c1e99eb89b01f80f08f9146b6b6).
+You can find a usage
+[example for Apollo-Client here](https://gist.github.com/akozhemiakin/731b0c1e99eb89b01f80f08f9146b6b6).

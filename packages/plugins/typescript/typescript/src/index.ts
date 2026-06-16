@@ -1,5 +1,3 @@
-import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import {
   DocumentNode,
   getNamedType,
@@ -13,6 +11,8 @@ import {
   visit,
   visitWithTypeInfo,
 } from 'graphql';
+import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { TypeScriptPluginConfig } from './config.js';
 import { TsIntrospectionVisitor } from './introspection-visitor.js';
 import { TsVisitor } from './visitor.js';
@@ -25,7 +25,7 @@ export * from './visitor.js';
 export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: TypeScriptPluginConfig
+  config: TypeScriptPluginConfig,
 ) => {
   const { schema: _schema, ast } = transformSchemaAST(schema, config);
 
@@ -34,7 +34,8 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
   const visitorResult = oldVisit(ast, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
-  const directiveArgumentAndInputFieldMappings = visitor.directiveArgumentAndInputFieldMappingsDefinition;
+  const directiveArgumentAndInputFieldMappings =
+    visitor.directiveArgumentAndInputFieldMappingsDefinition;
 
   return {
     prepend: [
@@ -57,7 +58,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
 export function includeIntrospectionTypesDefinitions(
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  config: TypeScriptPluginConfig
+  config: TypeScriptPluginConfig,
 ): string[] {
   const typeInfo = new TypeInfo(schema);
   const usedTypes: GraphQLNamedType[] = [];
@@ -82,7 +83,9 @@ export function includeIntrospectionTypesDefinitions(
   }
 
   const visitor = new TsIntrospectionVisitor(schema, config, typesToInclude);
-  const result: DocumentNode = oldVisit(parse(printIntrospectionSchema(schema)), { leave: visitor });
+  const result: DocumentNode = oldVisit(parse(printIntrospectionSchema(schema)), {
+    leave: visitor,
+  });
 
   // recursively go through each `usedTypes` and their children and collect all used types
   // we don't care about Interfaces, Unions and others, but Objects and Enums

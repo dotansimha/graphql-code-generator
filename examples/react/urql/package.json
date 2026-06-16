@@ -2,28 +2,29 @@
   "name": "example-react-urql",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "urql": "^3.0.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.17",
-    "@types/react-dom": "^18.0.10",
-    "@graphql-codegen/cli": "^5.0.5",
-    "@vitejs/plugin-react": "^4.0.0",
-    "typescript": "5.5.4",
-    "serve": "14.2.3",
-    "cypress": "14.0.0",
-    "start-server-and-test": "2.0.5",
-    "vite": "^6.0.0"
-  },
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "vite",
     "start": "serve -s dist",
     "test": "cypress run",
-    "test:end2end": "start-server-and-test start http://localhost:3000 test",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "test:end2end": "start-server-and-test start http://localhost:3000 test"
+  },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "urql": "3.0.4"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/client-preset": "workspace:*",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "cypress": "15.15.0",
+    "serve": "14.2.6",
+    "start-server-and-test": "3.0.5",
+    "typescript": "6.0.3",
+    "vite": "8.0.13"
   }
 }

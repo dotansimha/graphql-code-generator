@@ -1,7 +1,6 @@
 import '@theguild/components/style.css';
 import { AppProps } from 'next/app';
 import localFont from 'next/font/local';
-
 import '../selection-styles.css';
 
 const neueMontreal = localFont({

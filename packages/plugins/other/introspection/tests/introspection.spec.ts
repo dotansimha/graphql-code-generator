@@ -1,5 +1,11 @@
+import {
+  buildSchema,
+  introspectionFromSchema,
+  IntrospectionObjectType,
+  IntrospectionQuery,
+  parse,
+} from 'graphql';
 import { codegen } from '@graphql-codegen/core';
-import { buildSchema, introspectionFromSchema, IntrospectionObjectType, IntrospectionQuery, parse } from 'graphql';
 import { plugin } from '../src/index.js';
 
 describe('Introspection template', () => {
@@ -16,9 +22,13 @@ describe('Introspection template', () => {
 
     const content = await plugin(schema, [], {}, { outputFile: '' });
     const introspection = JSON.stringify(
-      introspectionFromSchema(schema, { descriptions: true, schemaDescription: false, specifiedByUrl: false }),
+      introspectionFromSchema(schema, {
+        descriptions: true,
+        schemaDescription: false,
+        specifiedByUrl: false,
+      }),
       null,
-      2
+      2,
     );
     expect(introspection).toEqual(content);
   });
@@ -36,7 +46,11 @@ describe('Introspection template', () => {
 
     const content = await plugin(schema, [], { minify: true }, { outputFile: '' });
     const introspection = JSON.stringify(
-      introspectionFromSchema(schema, { descriptions: true, schemaDescription: false, specifiedByUrl: false })
+      introspectionFromSchema(schema, {
+        descriptions: true,
+        schemaDescription: false,
+        specifiedByUrl: false,
+      }),
     );
     expect(introspection).toEqual(content);
   });
@@ -87,7 +101,7 @@ describe('Introspection template', () => {
     const introspection: IntrospectionQuery = JSON.parse(content);
     const { types } = introspection.__schema;
     const queryType = types.find(
-      type => type.name === introspection.__schema.queryType.name
+      type => type.name === introspection.__schema.queryType.name,
     ) as IntrospectionObjectType;
 
     // scalar _Any
