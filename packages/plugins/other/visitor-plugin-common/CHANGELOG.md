@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.1.1
+
+### Patch Changes
+
+- [#10874](https://github.com/dotansimha/graphql-code-generator/pull/10874)
+  [`6d37a7d`](https://github.com/dotansimha/graphql-code-generator/commit/6d37a7decd660fc908f0e2ac7e34df67a809e050)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix \_fragments to be protected instead of
+  private
+
 ## 7.1.0
 
 ### Minor Changes
