@@ -248,7 +248,7 @@ export class ClientSideBaseVisitor<
 
   private _onExecutableDocumentNode?: Unstable_OnExecutableDocumentNode;
   private _omitDefinitions?: boolean;
-  private readonly _fragments: ReadonlyMap<string, LoadedFragment>;
+  protected readonly _fragments: ReadonlyMap<string, LoadedFragment>;
   private readonly fragmentsGraph: DepGraph<LoadedFragment>;
 
   constructor(
