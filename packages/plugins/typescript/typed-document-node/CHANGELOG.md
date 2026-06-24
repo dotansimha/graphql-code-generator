@@ -1,5 +1,47 @@
 # @graphql-codegen/typed-document-node
 
+## 7.0.3
+
+### Patch Changes
+
+- [#10863](https://github.com/dotansimha/graphql-code-generator/pull/10863)
+  [`8707247`](https://github.com/dotansimha/graphql-code-generator/commit/8707247857ecd77aaed6930b9eb6985323350932)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Use `typedDocumentString` from
+  @graphql-codegen/visitor-plugin-common instead of the inlined version
+- Updated dependencies
+  [[`8707247`](https://github.com/dotansimha/graphql-code-generator/commit/8707247857ecd77aaed6930b9eb6985323350932)]:
+  - @graphql-codegen/visitor-plugin-common@7.1.0
+
+## 7.0.2
+
+### Patch Changes
+
+- [#10554](https://github.com/dotansimha/graphql-code-generator/pull/10554)
+  [`446aef4`](https://github.com/dotansimha/graphql-code-generator/commit/446aef48b53f80d39b4a8d661eb5f028c35c784c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fragments not getting deduped when
+  documentMode=graphQLTag
+
+- Updated dependencies
+  [[`446aef4`](https://github.com/dotansimha/graphql-code-generator/commit/446aef48b53f80d39b4a8d661eb5f028c35c784c)]:
+  - @graphql-codegen/visitor-plugin-common@7.0.4
+
+## 7.0.1
+
+### Patch Changes
+
+- [#10849](https://github.com/dotansimha/graphql-code-generator/pull/10849)
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/visitor-plugin-common@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/visitor-plugin-common/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+- Updated dependencies
+  [[`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)]:
+  - @graphql-codegen/visitor-plugin-common@7.0.3
+
 ## 7.0.0
 
 ### Major Changes

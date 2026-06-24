@@ -6,6 +6,7 @@ import {
   LoadedFragment,
   optimizeOperations,
   RawClientSideBasePluginConfig,
+  typedDocumentString,
 } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptTypedDocumentNodesConfig } from './config.js';
 import { TypeScriptDocumentNodesVisitor } from './visitor.js';
@@ -39,27 +40,7 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
 
   let content: string[] = [];
   if (config.documentMode === DocumentMode.string) {
-    content = [
-      `\
-export class TypedDocumentString<TResult, TVariables>
-  extends String
-  implements DocumentTypeDecoration<TResult, TVariables>
-{
-  __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
-  private value: string;
-  public __meta__?: Record<string, any> | undefined;
-
-  constructor(value: string, __meta__?: Record<string, any> | undefined) {
-    super(value);
-    this.value = value;
-    this.__meta__ = __meta__;
-  }
-
-  override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
-    return this.value;
-  }
-}`,
-    ];
+    content = [typedDocumentString.template];
   }
 
   return {

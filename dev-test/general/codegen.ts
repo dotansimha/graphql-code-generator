@@ -4,234 +4,228 @@ const config: CodegenConfig = {
   hooks: { afterAllFileWrite: ['prettier --write'] },
   emitLegacyCommonJSImports: false,
   generates: {
-    './dev-test/general/test-schema/resolvers-types.ts': {
-      schema: './dev-test/general/test-schema/schema-text.js',
+    './test-schema/resolvers-types.ts': {
+      schema: './test-schema/schema-text.js',
       plugins: ['typescript', 'typescript-resolvers'],
     },
-    './dev-test/general/test-schema/flow-types.flow.js': {
-      schema: './dev-test/general/test-schema/schema.json',
+    './test-schema/flow-types.flow.js': {
+      schema: './test-schema/schema.json',
       plugins: ['flow', 'flow-resolvers'],
     },
-    './dev-test/general/test-schema/resolvers-root.ts': {
-      schema: './dev-test/general/test-schema/schema-with-root.graphql',
+    './test-schema/resolvers-root.ts': {
+      schema: './test-schema/schema-with-root.graphql',
       plugins: ['typescript', 'typescript-resolvers'],
     },
-    './dev-test/general/test-schema/resolvers-federation.ts': {
-      schema: './dev-test/general/test-schema/schema-federation.graphql',
+    './test-schema/resolvers-federation.ts': {
+      schema: './test-schema/schema-federation.graphql',
       config: { federation: true },
       plugins: ['typescript', 'typescript-resolvers'],
     },
-    './dev-test/general/test-schema/resolvers-stitching.ts': {
-      schema: './dev-test/general/test-schema/schema-text.js',
+    './test-schema/resolvers-stitching.ts': {
+      schema: './test-schema/schema-text.js',
       plugins: ['typescript', { 'typescript-resolvers': { noSchemaStitching: false } }],
     },
-    './dev-test/general/test-schema/typings.ts': {
-      schema: './dev-test/general/test-schema/schema.json',
+    './test-schema/typings.ts': {
+      schema: './test-schema/schema.json',
       plugins: ['typescript', 'typescript-resolvers'],
     },
-    './dev-test/general/test-schema/typings.avoidOptionals.ts': {
-      schema: './dev-test/general/test-schema/schema.json',
+    './test-schema/typings.avoidOptionals.ts': {
+      schema: './test-schema/schema.json',
       config: { avoidOptionals: true },
       plugins: ['typescript'],
     },
-    './dev-test/general/test-schema/typings.wrapped.ts': {
-      schema: './dev-test/general/test-schema/schema.json',
+    './test-schema/typings.wrapped.ts': {
+      schema: './test-schema/schema.json',
       plugins: [
         { add: { content: 'declare namespace GraphQL {' } },
         { add: { placement: 'append', content: '}' } },
         'typescript',
       ],
     },
-    './dev-test/general/test-schema/env.types.ts': {
+    './test-schema/env.types.ts': {
       schema: process.env.SCHEMA_PATH,
       plugins: ['typescript'],
     },
-    './dev-test/general/test-schema/typings.immutableTypes.ts': {
-      schema: './dev-test/general/test-schema/schema.json',
+    './test-schema/typings.immutableTypes.ts': {
+      schema: './test-schema/schema.json',
       config: { imutableTypes: true },
       plugins: ['typescript'],
     },
-    './dev-test/general/test-schema/typings.enum.ts': {
-      schema: './dev-test/general/test-schema/schema-object.js',
+    './test-schema/typings.enum.ts': {
+      schema: './test-schema/schema-object.js',
       plugins: ['typescript'],
     },
-    './dev-test/general/githunt/graphql-declared-modules.d.ts': {
-      schema: './dev-test/general/githunt/schema.json',
+    './githunt/graphql-declared-modules.d.ts': {
+      schema: './githunt/schema.json',
       documents: [
-        './dev-test/general/githunt/**/*.graphql',
+        './githunt/**/*.graphql',
         './dev-test/general-outer-dir/githunt/**/*.graphql',
         '!**/nothing-should-use-this-query.graphql',
       ],
       plugins: ['typescript-graphql-files-modules'],
     },
-    './dev-test/general/githunt/typed-document-nodes.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/typed-document-nodes.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       plugins: ['typescript-operations', 'typed-document-node'],
     },
-    './dev-test/general/githunt/types.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.preResolveTypes.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.preResolveTypes.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: { preResolveTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.onlyEnums.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.onlyEnums.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: { generateOperationTypes: false },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.preResolveTypes.onlyOperationTypes.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.preResolveTypes.onlyOperationTypes.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: { preResolveTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.flatten.preResolveTypes.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.flatten.preResolveTypes.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: { preResolveTypes: true, flattenGeneratedTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.enumsAsTypes.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.enumsAsTypes.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: { enumType: 'string-literal' },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.d.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.d.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: {},
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.avoidOptionals.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.avoidOptionals.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: { avoidOptionals: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/githunt/types.immutableTypes.ts': {
-      schema: './dev-test/general/githunt/schema.json',
-      documents: './dev-test/general/githunt/**/*.graphql',
+    './githunt/types.immutableTypes.ts': {
+      schema: './githunt/schema.json',
+      documents: './githunt/**/*.graphql',
       config: { immutableTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.excludeQueryAlpha.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: [
-        './dev-test/general/star-wars/**/*.graphql',
-        '!./dev-test/general/star-wars/**/ExcludeQueryAlpha.graphql',
-      ],
+    './star-wars/types.excludeQueryAlpha.ts': {
+      schema: './star-wars/schema.json',
+      documents: ['./star-wars/**/*.graphql', '!./star-wars/**/ExcludeQueryAlpha.graphql'],
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.excludeQueryBeta.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: [
-        './dev-test/general/star-wars/**/*.graphql',
-        '!./dev-test/general/star-wars/**/ExcludeQueryBeta.graphql',
-      ],
+    './star-wars/types.excludeQueryBeta.ts': {
+      schema: './star-wars/schema.json',
+      documents: ['./star-wars/**/*.graphql', '!./star-wars/**/ExcludeQueryBeta.graphql'],
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.preResolveTypes.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.preResolveTypes.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       config: { preResolveTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.OnlyEnums.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.OnlyEnums.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       config: { onlyEnums: true },
       plugins: ['typescript'],
     },
-    './dev-test/general/star-wars/types.preResolveTypes.onlyOperationTypes.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.preResolveTypes.onlyOperationTypes.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       config: { preResolveTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/test-schema/types.preResolveTypes.ts': {
-      schema: './dev-test/general/test-schema/schema.graphql',
+    './test-schema/types.preResolveTypes.ts': {
+      schema: './test-schema/schema.graphql',
       documents: ['query test { testArr1 testArr2 testArr3 }'],
       config: { preResolveTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/test-schema/types.preResolveTypes.onlyOperationTypes.ts': {
-      schema: './dev-test/general/test-schema/schema.graphql',
+    './test-schema/types.preResolveTypes.onlyOperationTypes.ts': {
+      schema: './test-schema/schema.graphql',
       documents: ['query test { testArr1 testArr2 testArr3 }'],
       config: { preResolveTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.d.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
+    './star-wars/types.d.ts': {
+      schema: './star-wars/schema.json',
       config: { enumType: 'string-literal' },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/modules/': {
-      schema: './dev-test/general/modules/*/types/*.graphql',
+    './modules/': {
+      schema: './modules/*/types/*.graphql',
       preset: 'graphql-modules',
       presetConfig: { baseTypesPath: 'types.ts', filename: 'generated.ts' },
       plugins: ['typescript', 'typescript-resolvers'],
     },
-    './dev-test/general/star-wars/types.globallyAvailable.d.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.globallyAvailable.d.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       config: { noExport: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.avoidOptionals.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.avoidOptionals.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       config: { avoidOptionals: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.immutableTypes.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.immutableTypes.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       config: { immutableTypes: true },
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/star-wars/types.skipSchema.ts': {
-      schema: './dev-test/general/star-wars/schema.json',
-      documents: './dev-test/general/star-wars/**/*.graphql',
+    './star-wars/types.skipSchema.ts': {
+      schema: './star-wars/schema.json',
+      documents: './star-wars/**/*.graphql',
       plugins: ['typescript-operations'],
     },
-    './dev-test/general/gql-tag-operations/gql/': {
-      schema: './dev-test/general/gql-tag-operations/schema.graphql',
-      documents: './dev-test/general/gql-tag-operations/src/**/*.ts',
+    './gql-tag-operations/gql/': {
+      schema: './gql-tag-operations/schema.graphql',
+      documents: './gql-tag-operations/src/**/*.ts',
       preset: 'client',
     },
-    './dev-test/general/gql-tag-operations/graphql/': {
-      schema: './dev-test/general/gql-tag-operations/schema.graphql',
-      documents: './dev-test/general/gql-tag-operations/src/**/*.ts',
+    './gql-tag-operations/graphql/': {
+      schema: './gql-tag-operations/schema.graphql',
+      documents: './gql-tag-operations/src/**/*.ts',
       preset: 'client',
     },
-    './dev-test/general/gql-tag-operations-urql/gql/': {
-      schema: './dev-test/general/gql-tag-operations-urql/schema.graphql',
-      documents: './dev-test/general/gql-tag-operations-urql/src/**/*.ts',
+    './gql-tag-operations-urql/gql/': {
+      schema: './gql-tag-operations-urql/schema.graphql',
+      documents: './gql-tag-operations-urql/src/**/*.ts',
       preset: 'client',
       presetConfig: { augmentedModuleName: '@urql/core' },
     },
-    './dev-test/general/gql-tag-operations-masking/gql/': {
-      schema: './dev-test/general/gql-tag-operations-masking/schema.graphql',
-      documents: './dev-test/general/gql-tag-operations-masking/src/**/*.tsx',
+    './gql-tag-operations-masking/gql/': {
+      schema: './gql-tag-operations-masking/schema.graphql',
+      documents: './gql-tag-operations-masking/src/**/*.tsx',
       preset: 'client',
       presetConfig: { fragmentMasking: true },
     },
-    './dev-test/general/test-null-value/result.d.ts': {
-      schema: './dev-test/general/test-null-value/schema.graphql',
-      documents: ['./dev-test/general/test-null-value/query.ts'],
+    './test-null-value/result.d.ts': {
+      schema: './test-null-value/schema.graphql',
+      documents: ['./test-null-value/query.ts'],
       plugins: ['typescript-operations'],
       config: {
         // The combination of these two flags caused the following issue:
@@ -240,8 +234,8 @@ const config: CodegenConfig = {
         mergeFragmentTypes: true,
       },
     },
-    './dev-test/general/subpath-import/result.d.ts': {
-      schema: './dev-test/general/subpath-import/schema.graphql',
+    './subpath-import/result.d.ts': {
+      schema: './subpath-import/schema.graphql',
       plugins: ['typescript', 'typescript-resolvers'],
       config: {
         contextType: '\\#test-null-value/context#TestContext',
@@ -251,8 +245,8 @@ const config: CodegenConfig = {
         },
       },
     },
-    './dev-test/general/test-federation/generated/types.ts': {
-      schema: './dev-test/general/test-federation/schema.gql',
+    './test-federation/generated/types.ts': {
+      schema: './test-federation/schema.gql',
       plugins: ['typescript', 'typescript-resolvers'],
       config: {
         mapperTypeSuffix: 'Mapper',
@@ -265,45 +259,43 @@ const config: CodegenConfig = {
       },
     },
     // #region externalDocuments option
-    './dev-test/general/external-documents/app/types.generated.ts': {
-      schema: './dev-test/general/external-documents/schema.graphqls',
-      documents: ['./dev-test/general/external-documents/app/*.graphql.ts'],
-      externalDocuments: ['./dev-test/general/external-documents/lib/*.graphql.ts'],
+    './external-documents/app/types.generated.ts': {
+      schema: './external-documents/schema.graphqls',
+      documents: ['./external-documents/app/*.graphql.ts'],
+      externalDocuments: ['./external-documents/lib/*.graphql.ts'],
       plugins: ['typescript-operations'],
     },
     // #endregion
 
     // standalone-operations/import-schema-types
-    './dev-test/general/standalone-operations/import-schema-types/_base.generated.ts': {
-      schema: './dev-test/general/standalone-operations/schema.graphql',
-      documents: ['./dev-test/general/standalone-operations/import-schema-types/*.graphql'],
+    './standalone-operations/import-schema-types/_base.generated.ts': {
+      schema: './standalone-operations/schema.graphql',
+      documents: ['./standalone-operations/import-schema-types/*.graphql'],
       plugins: ['typescript-operations'],
       config: {
         generateOperationTypes: false,
       },
     },
-    './dev-test/general/standalone-operations/import-schema-types/_types.generated.ts': {
-      schema: './dev-test/general/standalone-operations/schema.graphql',
-      documents: ['./dev-test/general/standalone-operations/import-schema-types/*.graphql'],
+    './standalone-operations/import-schema-types/_types.generated.ts': {
+      schema: './standalone-operations/schema.graphql',
+      documents: ['./standalone-operations/import-schema-types/*.graphql'],
       plugins: ['typescript-operations'],
       config: {
-        importSchemaTypesFrom:
-          './dev-test/general/standalone-operations/import-schema-types/_base.generated.ts',
+        importSchemaTypesFrom: './standalone-operations/import-schema-types/_base.generated.ts',
       },
     },
 
     // standalone-operations/with-typescript-plugin
-    './dev-test/general/standalone-operations/with-typescript-plugin/_base.generated.ts': {
-      schema: './dev-test/general/standalone-operations/schema.graphql',
+    './standalone-operations/with-typescript-plugin/_base.generated.ts': {
+      schema: './standalone-operations/schema.graphql',
       plugins: ['typescript'],
     },
-    './dev-test/general/standalone-operations/with-typescript-plugin/_types.generated.ts': {
-      schema: './dev-test/general/standalone-operations/schema.graphql',
-      documents: ['./dev-test/general/standalone-operations/with-typescript-plugin/*.graphql'],
+    './standalone-operations/with-typescript-plugin/_types.generated.ts': {
+      schema: './standalone-operations/schema.graphql',
+      documents: ['./standalone-operations/with-typescript-plugin/*.graphql'],
       plugins: ['typescript-operations'],
       config: {
-        importSchemaTypesFrom:
-          './dev-test/general/standalone-operations/with-typescript-plugin/_base.generated.ts',
+        importSchemaTypesFrom: './standalone-operations/with-typescript-plugin/_base.generated.ts',
       },
     },
   },

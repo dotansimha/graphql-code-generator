@@ -1,5 +1,43 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.1.1
+
+### Patch Changes
+
+- [#10874](https://github.com/dotansimha/graphql-code-generator/pull/10874)
+  [`6d37a7d`](https://github.com/dotansimha/graphql-code-generator/commit/6d37a7decd660fc908f0e2ac7e34df67a809e050)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix \_fragments to be protected instead of
+  private
+
+## 7.1.0
+
+### Minor Changes
+
+- [#10863](https://github.com/dotansimha/graphql-code-generator/pull/10863)
+  [`8707247`](https://github.com/dotansimha/graphql-code-generator/commit/8707247857ecd77aaed6930b9eb6985323350932)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Create `typedDocumentString` to support
+  `TypedDocumentString` usage (common in Client-side plugins when documentMode=string)
+
+## 7.0.4
+
+### Patch Changes
+
+- [#10554](https://github.com/dotansimha/graphql-code-generator/pull/10554)
+  [`446aef4`](https://github.com/dotansimha/graphql-code-generator/commit/446aef48b53f80d39b4a8d661eb5f028c35c784c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fragments not getting deduped when
+  documentMode=graphQLTag
+
+## 7.0.3
+
+### Patch Changes
+
+- [#10849](https://github.com/dotansimha/graphql-code-generator/pull/10849)
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+
 ## 7.0.2
 
 ### Patch Changes

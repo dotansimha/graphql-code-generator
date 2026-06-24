@@ -14,7 +14,8 @@
     "graphql": "16.14.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "workspace:*"
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/client-preset": "workspace:*"
   },
   "bob": false
 }

@@ -1,5 +1,36 @@
 # @graphql-codegen/typescript-operations
 
+## 6.0.4
+
+### Patch Changes
+
+- [#10806](https://github.com/dotansimha/graphql-code-generator/pull/10806)
+  [`16b9529`](https://github.com/dotansimha/graphql-code-generator/commit/16b95293c36046ed9328bab629c9a2baf4430f5f)
+  Thanks [@vinassefranche](https://github.com/vinassefranche)! - Fix Array used instead of
+  ReadonlyArray while immutableTypes config is true
+
+## 6.0.3
+
+### Patch Changes
+
+- [#10849](https://github.com/dotansimha/graphql-code-generator/pull/10849)
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/schema-ast@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/schema-ast/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/visitor-plugin-common@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/visitor-plugin-common/v/workspace:^)
+    (from `^7.0.1`, in `dependencies`)
+- Updated dependencies
+  [[`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)]:
+  - @graphql-codegen/schema-ast@6.0.1
+  - @graphql-codegen/visitor-plugin-common@7.0.3
+
 ## 6.0.2
 
 ### Patch Changes

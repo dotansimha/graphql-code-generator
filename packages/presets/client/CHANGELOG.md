@@ -1,5 +1,59 @@
 # @graphql-codegen/client-preset
 
+## 6.0.1
+
+### Patch Changes
+
+- [#10848](https://github.com/dotansimha/graphql-code-generator/pull/10848)
+  [`f3ce427`](https://github.com/dotansimha/graphql-code-generator/commit/f3ce427e251c45b87f462a4584381a76989c628d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/gql-tag-operations@^6.0.0` ↗︎](https://www.npmjs.com/package/@graphql-codegen/gql-tag-operations/v/6.0.0)
+    (from `6.0.0`, in `dependencies`)
+
+- [#10849](https://github.com/dotansimha/graphql-code-generator/pull/10849)
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/add@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/add/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/gql-tag-operations@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/gql-tag-operations/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/typed-document-node@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typed-document-node/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/typescript@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typescript/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/typescript-operations@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/typescript-operations/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/visitor-plugin-common@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/visitor-plugin-common/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+
+- [#10848](https://github.com/dotansimha/graphql-code-generator/pull/10848)
+  [`f3ce427`](https://github.com/dotansimha/graphql-code-generator/commit/f3ce427e251c45b87f462a4584381a76989c628d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix package pinning
+
+- Updated dependencies
+  [[`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)]:
+  - @graphql-codegen/add@7.0.1
+  - @graphql-codegen/gql-tag-operations@6.0.1
+  - @graphql-codegen/typed-document-node@7.0.1
+  - @graphql-codegen/typescript@6.0.2
+  - @graphql-codegen/typescript-operations@6.0.3
+  - @graphql-codegen/visitor-plugin-common@7.0.3
+
 ## 6.0.0
 
 ### Major Changes

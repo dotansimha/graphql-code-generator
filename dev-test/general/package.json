@@ -1,0 +1,26 @@
+{
+  "name": "dev-test-general",
+  "version": "0.0.1",
+  "description": "Kitchen sink of various setups. For new dev-test, consider creating new project for better targetting",
+  "private": true,
+  "scripts": {
+    "generate": "pnpm generate:esm",
+    "generate:cjs": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env",
+    "generate:esm": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --require dotenv/config --config codegen.ts dotenv_config_path=.env",
+    "watch": "pnpm watch:esm",
+    "watch:cjs": "pnpm generate:cjs --watch",
+    "watch:esm": "pnpm generate:esm --watch"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "workspace:*",
+    "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/flow": "3.0.1",
+    "@graphql-codegen/flow-resolvers": "3.0.1",
+    "@graphql-codegen/graphql-modules-preset": "workspace:*",
+    "@graphql-codegen/typed-document-node": "workspace:*",
+    "@graphql-codegen/typescript": "workspace:*",
+    "@graphql-codegen/typescript-graphql-files-modules": "4.0.1",
+    "@graphql-codegen/typescript-operations": "workspace:*",
+    "@graphql-codegen/typescript-resolvers": "workspace:*"
+  }
+}

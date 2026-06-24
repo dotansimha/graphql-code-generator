@@ -8,6 +8,7 @@ packages:
   - packages/utils/*
   - website
   - examples/**/*
+  - dev-test/*
   - dev-test-apollo-tooling
 
 allowBuilds:

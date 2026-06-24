@@ -1,5 +1,95 @@
 # @graphql-codegen/cli
 
+## 7.1.3
+
+### Patch Changes
+
+- [#10335](https://github.com/dotansimha/graphql-code-generator/pull/10335)
+  [`3280ace`](https://github.com/dotansimha/graphql-code-generator/commit/3280ace4505dcadf5398b6cbf157a8c8d7a713c2)
+  Thanks [@Diluka](https://github.com/Diluka)! - Fix graphql-config loading order to correctly
+  detect codegen projects
+
+  Previously, a `graphql-config` file like this failed:
+
+  ```yml
+  projects:
+    default:
+      schema: 'default/schema.graphql'
+    project1:
+      schema: 'project1/schema.graphql'
+      extensions:
+        codegen:
+          generates:
+            'project1/__generated__/types.ts':
+              plugins: ['typescript']
+  ```
+
+  This is because the `default` project doesn't have a `codegen` extension, which caused previous
+  logic to short circuit before reading `project1`'s config.
+
+  The fix reads every named project first, before reading the `default` project to exhaustively go
+  through every single project.
+
+## 7.1.2
+
+### Patch Changes
+
+- [#10861](https://github.com/dotansimha/graphql-code-generator/pull/10861)
+  [`a2e1093`](https://github.com/dotansimha/graphql-code-generator/commit/a2e109397eda1bdee51864eb3e713afce5ef7771)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix CLI's `require` flag when resolving
+  module issue in ESM in native Windows
+
+## 7.1.1
+
+### Patch Changes
+
+- [#10858](https://github.com/dotansimha/graphql-code-generator/pull/10858)
+  [`3fa901b`](https://github.com/dotansimha/graphql-code-generator/commit/3fa901b23ad6d3ef0522d2d8121d654bcacbd65d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix --version flag
+
+## 7.1.0
+
+### Minor Changes
+
+- [#10855](https://github.com/dotansimha/graphql-code-generator/pull/10855)
+  [`cfc4fc3`](https://github.com/dotansimha/graphql-code-generator/commit/cfc4fc3e659bf34df7e114c7f02eda583b2d0918)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add
+  disableFederationDirectiveAndScalarInjection config to better support Federation v2
+
+### Patch Changes
+
+- Updated dependencies
+  [[`cbf9544`](https://github.com/dotansimha/graphql-code-generator/commit/cbf95443b41bda82852d0396f3ab15310e22e2ae)]:
+  - @graphql-codegen/core@6.1.0
+
+## 7.0.1
+
+### Patch Changes
+
+- [#10848](https://github.com/dotansimha/graphql-code-generator/pull/10848)
+  [`f3ce427`](https://github.com/dotansimha/graphql-code-generator/commit/f3ce427e251c45b87f462a4584381a76989c628d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/client-preset@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/client-preset/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+
+- [#10849](https://github.com/dotansimha/graphql-code-generator/pull/10849)
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-codegen/core@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/core/v/workspace:^)
+    (from `^6.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-codegen/plugin-helpers@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-codegen/plugin-helpers/v/workspace:^)
+    (from `^7.0.0`, in `dependencies`)
+- Updated dependencies
+  [[`f3ce427`](https://github.com/dotansimha/graphql-code-generator/commit/f3ce427e251c45b87f462a4584381a76989c628d),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`55a4742`](https://github.com/dotansimha/graphql-code-generator/commit/55a47421273ac795c516a011c257c5af159880cb),
+  [`f3ce427`](https://github.com/dotansimha/graphql-code-generator/commit/f3ce427e251c45b87f462a4584381a76989c628d)]:
+  - @graphql-codegen/client-preset@6.0.1
+  - @graphql-codegen/core@6.0.1
+
 ## 7.0.0
 
 ### Major Changes
