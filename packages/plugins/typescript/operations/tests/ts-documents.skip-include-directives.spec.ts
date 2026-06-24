@@ -604,6 +604,173 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       "
     `);
   });
+
+  it('handles conditional spread of a fragment whose top-level selections contain inline fragments', async () => {
+    // Regression: when the spread fragment's top-level selection set contains
+    // an INLINE_FRAGMENT (or nested FRAGMENT_SPREAD), the conditional path used
+    // to push those raw AST nodes into `buildSelectionSet`, which only accepts
+    // FIELD/DIRECTIVE for raw nodes and threw `TypeError: Unexpected type.`.
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Book {
+        id: ID!
+        title: String!
+      }
+      type Magazine {
+        id: ID!
+        issue: Int!
+      }
+      union Publication = Book | Magazine
+      type Library {
+        id: ID!
+        name: String!
+        featured: Publication
+      }
+      type Query {
+        library(id: ID!): Library
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      fragment PublicationFragment on Publication {
+        ... on Book {
+          id
+          title
+        }
+        ... on Magazine {
+          id
+          issue
+        }
+      }
+
+      query Library($includeFeatured: Boolean!) {
+        library(id: "x") {
+          id
+          name
+          featured {
+            ...PublicationFragment @include(if: $includeFeatured)
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(
+      testSchema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
+
+    // Should not throw, and should produce a usable type where the Publication
+    // fields appear when includeFeatured=true and an empty-object variant
+    // covers includeFeatured=false.
+    expect(content).toContain('LibraryQuery');
+    expect(content).toContain('featured');
+    expect(content).toMatchInlineSnapshot(`
+      "type PublicationFragment_Book_Fragment = { id: string, title: string };
+
+      type PublicationFragment_Magazine_Fragment = { id: string, issue: number };
+
+      export type PublicationFragmentFragment =
+        | PublicationFragment_Book_Fragment
+        | PublicationFragment_Magazine_Fragment
+      ;
+
+      export type LibraryQueryVariables = Exact<{
+        includeFeatured: boolean;
+      }>;
+
+
+      export type LibraryQuery = { library: { id: string, name: string, featured:
+            | { id: string, title: string }
+            | { id: string, issue: number }
+            | Record<PropertyKey, never>
+           | null } | null };
+      "
+    `);
+  });
+
+  it('handles conditional spread of a fragment whose top-level selections are fragment spreads', async () => {
+    // Same regression, but the inline fragments inside the spread fragment have
+    // been refactored into named fragment spreads — also failed before the fix.
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Book {
+        id: ID!
+        title: String!
+      }
+      type Magazine {
+        id: ID!
+        issue: Int!
+      }
+      union Publication = Book | Magazine
+      type Library {
+        id: ID!
+        featured: Publication
+      }
+      type Query {
+        library(id: ID!): Library
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      fragment BookFragment on Book {
+        id
+        title
+      }
+      fragment MagazineFragment on Magazine {
+        id
+        issue
+      }
+      fragment PublicationFragment on Publication {
+        ...BookFragment
+        ...MagazineFragment
+      }
+
+      query Library($includeFeatured: Boolean!) {
+        library(id: "x") {
+          id
+          featured {
+            ...PublicationFragment @include(if: $includeFeatured)
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(
+      testSchema,
+      [{ location: '', document }],
+      {},
+      { outputFile: 'graphql.ts' },
+    );
+
+    expect(content).toContain('LibraryQuery');
+    expect(content).toContain('featured');
+    expect(content).toMatchInlineSnapshot(`
+      "export type BookFragmentFragment = { id: string, title: string };
+
+      export type MagazineFragmentFragment = { id: string, issue: number };
+
+      type PublicationFragment_Book_Fragment = { id: string, title: string };
+
+      type PublicationFragment_Magazine_Fragment = { id: string, issue: number };
+
+      export type PublicationFragmentFragment =
+        | PublicationFragment_Book_Fragment
+        | PublicationFragment_Magazine_Fragment
+      ;
+
+      export type LibraryQueryVariables = Exact<{
+        includeFeatured: boolean;
+      }>;
+
+
+      export type LibraryQuery = { library: { id: string, featured:
+            | { id: string, title: string }
+            | { id: string, issue: number }
+            | Record<PropertyKey, never>
+           | null } | null };
+      "
+    `);
+  });
 });
 
 describe('TypeScript Operations Plugin - @skip directive', () => {
