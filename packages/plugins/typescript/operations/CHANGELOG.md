@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-operations
 
+## 6.0.5
+
+### Patch Changes
+
+- [#10839](https://github.com/dotansimha/graphql-code-generator/pull/10839)
+  [`8a65a1b`](https://github.com/dotansimha/graphql-code-generator/commit/8a65a1b403e92eedf73c9b1bce8262a4dbc7df8f)
+  Thanks [@vkbansal-rubrik](https://github.com/vkbansal-rubrik)! - handles conditional spread of a
+  fragment whose top-level selections are fragment spreads or contain inline fragments
+- Updated dependencies
+  [[`8a65a1b`](https://github.com/dotansimha/graphql-code-generator/commit/8a65a1b403e92eedf73c9b1bce8262a4dbc7df8f)]:
+  - @graphql-codegen/visitor-plugin-common@7.1.2
+
 ## 6.0.4
 
 ### Patch Changes
