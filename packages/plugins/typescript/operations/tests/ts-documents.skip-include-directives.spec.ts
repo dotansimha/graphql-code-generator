@@ -665,6 +665,28 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     // covers includeFeatured=false.
     expect(content).toContain('LibraryQuery');
     expect(content).toContain('featured');
+    expect(content).toMatchInlineSnapshot(`
+      "type PublicationFragment_Book_Fragment = { id: string, title: string };
+
+      type PublicationFragment_Magazine_Fragment = { id: string, issue: number };
+
+      export type PublicationFragmentFragment =
+        | PublicationFragment_Book_Fragment
+        | PublicationFragment_Magazine_Fragment
+      ;
+
+      export type LibraryQueryVariables = Exact<{
+        includeFeatured: boolean;
+      }>;
+
+
+      export type LibraryQuery = { library: { id: string, name: string, featured:
+            | { id: string, title: string }
+            | { id: string, issue: number }
+            | Record<PropertyKey, never>
+           | null } | null };
+      "
+    `);
   });
 
   it('handles conditional spread of a fragment whose top-level selections are fragment spreads', async () => {
@@ -722,6 +744,32 @@ describe('TypeScript Operations Plugin - @include directives', () => {
 
     expect(content).toContain('LibraryQuery');
     expect(content).toContain('featured');
+    expect(content).toMatchInlineSnapshot(`
+      "export type BookFragmentFragment = { id: string, title: string };
+
+      export type MagazineFragmentFragment = { id: string, issue: number };
+
+      type PublicationFragment_Book_Fragment = { id: string, title: string };
+
+      type PublicationFragment_Magazine_Fragment = { id: string, issue: number };
+
+      export type PublicationFragmentFragment =
+        | PublicationFragment_Book_Fragment
+        | PublicationFragment_Magazine_Fragment
+      ;
+
+      export type LibraryQueryVariables = Exact<{
+        includeFeatured: boolean;
+      }>;
+
+
+      export type LibraryQuery = { library: { id: string, featured:
+            | { id: string, title: string }
+            | { id: string, issue: number }
+            | Record<PropertyKey, never>
+           | null } | null };
+      "
+    `);
   });
 });
 
