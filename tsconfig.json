@@ -61,6 +61,7 @@
     "**/dist",
     "**/temp",
     "**/vitest.config.ts",
+    "**/vitest.config.mts",
     "**/vitest.setup.ts",
     "**/*.spec.ts",
     "**/tests/**/*.ts",
