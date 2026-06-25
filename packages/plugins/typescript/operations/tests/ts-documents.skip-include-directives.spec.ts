@@ -1,4 +1,4 @@
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, parse, versionInfo } from 'graphql';
 import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
 
@@ -822,26 +822,36 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       `);
   });
 
-  it('should include fragment variable definitions when experimentalFragmentVariables is set', async () => {
-    const ast = parse(
-      /* GraphQL */ `
-        fragment TextNotificationFragment($skip: Boolean!) on TextNotification {
-          text @skip(if: $skip)
-        }
-      `,
-      // < v15 compatibility
-      { experimentalFragmentVariables: true, allowLegacyFragmentVariables: true } as any,
-    );
-    const config = { experimentalFragmentVariables: true };
-    const { content } = await plugin(
-      schema,
-      [{ location: 'test-file.ts', document: ast }],
-      config,
-      {
-        outputFile: '',
-      },
-    );
-    expect(content).toMatchInlineSnapshot(`
+  /**
+   * `experimentalFragmentVariables` and `allowLegacyFragmentVariables` have been removed in graphql v17:
+   * This test is not a valid test in graphql v17 so we just skip it
+   *
+   * https://graphql.org/blog/2026-06-15-introducing-graphql-js-v17/#experimental-specification-work
+   *
+   */
+  if (versionInfo.major < 17) {
+    it('should include fragment variable definitions when experimentalFragmentVariables is set (graphql <v17)', async () => {
+      const ast = parse(
+        /* GraphQL */ `
+          fragment TextNotificationFragment($skip: Boolean!) on TextNotification {
+            text @skip(if: $skip)
+          }
+        `,
+        {
+          experimentalFragmentVariables: true, // < v15 compatibility
+          allowLegacyFragmentVariables: true, // v16 compatibility
+        } as any,
+      );
+      const config = { experimentalFragmentVariables: true };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
+      expect(content).toMatchInlineSnapshot(`
       "export type TextNotificationFragmentFragment = { text?: string };
 
 
@@ -850,7 +860,8 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       }>;
       "
     `);
-  });
+    });
+  }
 
   it('generates optional field when @skip is used on an aliased field', async () => {
     const schema = buildSchema(/* GraphQL */ `
