@@ -9,11 +9,6 @@ const pkg = require(pkgPath);
 
 const version = argv[2];
 
-if (pkg.devDependencies.graphql?.startsWith(version)) {
-  console.info(`GraphQL v${version} is match! Skipping.`);
-  return;
-}
-
 const pnpmWorkspaceFile = './pnpm-workspace.yaml';
 
 const file = fs.readFileSync(pnpmWorkspaceFile, 'utf8');
