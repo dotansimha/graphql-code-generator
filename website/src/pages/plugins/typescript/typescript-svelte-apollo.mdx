@@ -37,7 +37,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   generates: {
     'path/to/file.ts': {
-      plugins: ['typescript', 'typescript-operations', 'graphql-codegen-svelte-apollo'],
+      plugins: ['typescript-operations', 'graphql-codegen-svelte-apollo'],
       config: {
         clientPath: 'PATH_TO_APOLLO_CLIENT'
       }
@@ -62,7 +62,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   generates: {
     'path/to/file.ts': {
-      plugins: ['typescript', 'typescript-operations', 'graphql-codegen-svelte-apollo'],
+      plugins: ['typescript-operations', 'graphql-codegen-svelte-apollo'],
       config: {
         clientPath: 'PATH_TO_APOLLO_CLIENT',
         asyncQuery: true
@@ -108,7 +108,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     'path/to/file.ts': {
-      plugins: ['typescript', 'typescript-operations', 'graphql-codegen-svelte-apollo'],
+      plugins: ['typescript-operations', 'graphql-codegen-svelte-apollo'],
       config: {
         clientPath: 'PATH_TO_APOLLO_CLIENT'
       }
@@ -177,7 +177,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     'path/to/file.ts': {
-      plugins: ['typescript', 'typescript-operations', 'graphql-codegen-svelte-apollo'],
+      plugins: ['typescript-operations', 'graphql-codegen-svelte-apollo'],
       config: {
         clientPath: 'PATH_TO_APOLLO_CLIENT',
         asyncQuery: true
