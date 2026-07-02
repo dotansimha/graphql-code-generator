@@ -45,7 +45,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generates.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      plugins: ['typescript-operations', 'typescript-react-query'],
       config: {
         fetcher: 'fetch'
       }
@@ -85,7 +85,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generates.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      plugins: ['typescript-operations', 'typescript-react-query'],
       config: {
         fetcher: {
           endpoint: 'http://localhost:3000/graphql',
@@ -113,7 +113,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generates.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      plugins: ['typescript-operations', 'typescript-react-query'],
       config: {
         fetcher: {
           endpoint: 'process.env.ENDPOINT'
@@ -181,7 +181,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generates.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      plugins: ['typescript-operations', 'typescript-react-query'],
       config: {
         fetcher: 'graphql-request'
       }
@@ -215,7 +215,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generates.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-query'],
+      plugins: ['typescript-operations', 'typescript-react-query'],
       config: {
         fetcher: {
           func: './my-file#myFetcher',

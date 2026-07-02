@@ -66,7 +66,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generated-types.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo']
+      plugins: ['typescript-operations', 'typescript-react-apollo']
     }
   }
 }
@@ -102,7 +102,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generated-types.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      plugins: ['typescript-operations', 'typescript-react-apollo'],
       config: {
         withComponent: true
       }
@@ -125,7 +125,7 @@ const config: CodegenConfig = {
   documents: './src/**/*.graphql',
   generates: {
     './generated-types.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      plugins: ['typescript-operations', 'typescript-react-apollo'],
       config: {
         withHOC: true
       }
