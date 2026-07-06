@@ -491,7 +491,7 @@ export class ClientSideBaseVisitor<
       const selection = queue.shift();
       if (
         selection.kind === Kind.FRAGMENT_SPREAD &&
-        selection.directives.some((d: DirectiveNode) => d.name.value === 'defer')
+        selection.directives?.some((d: DirectiveNode) => d.name.value === 'defer')
       ) {
         const fragmentName = selection.name.value;
         const fragment = this.fragmentsGraph.getNodeData(fragmentName);

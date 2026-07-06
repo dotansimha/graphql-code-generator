@@ -66,7 +66,7 @@
   },
   "peerDependencies": {
     "@parcel/watcher": "^2.1.0",
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "peerDependenciesMeta": {
     "@parcel/watcher": {
@@ -89,7 +89,7 @@
     "@graphql-tools/load": "^8.1.8",
     "@graphql-tools/merge": "^9.0.6",
     "@graphql-tools/url-loader": "^9.0.6",
-    "@graphql-tools/utils": "^11.0.0",
+    "@graphql-tools/utils": "^11.2.0",
     "@inquirer/prompts": "^8.3.2",
     "@whatwg-node/fetch": "^0.10.0",
     "chalk": "^5.6.0",
