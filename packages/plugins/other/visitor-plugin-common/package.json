@@ -42,7 +42,7 @@
     "@graphql-codegen/plugin-helpers": "workspace:^",
     "@graphql-tools/optimize": "^2.0.0",
     "@graphql-tools/relay-operation-optimizer": "^7.1.1",
-    "@graphql-tools/utils": "11.2.0-rc-20260703111316-6d117ceb02d4f6851c3929ab27f73e0fd8df235c",
+    "@graphql-tools/utils": "^11.2.0",
     "auto-bind": "^5.0.0",
     "change-case-all": "^2.1.0",
     "dependency-graph": "^1.0.0",

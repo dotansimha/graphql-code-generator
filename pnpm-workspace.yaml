@@ -1,4 +1,6 @@
 minimumReleaseAge: 1440 # in minutes. 1440 minutes === 1 day
+minimumReleaseAgeExclude:
+  - '@graphql-tools/utils'
 packages:
   - packages/*
   - packages/plugins/typescript/*
