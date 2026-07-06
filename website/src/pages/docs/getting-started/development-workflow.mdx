@@ -101,7 +101,7 @@ const config: CodegenConfig = {
   schema: 'server/src/**/*.graphql',
   documents: 'client/src/**/*.graphql',
   generates: {
-    'client/src/models.ts': ['typescript', 'typescript-operations'],
+    'client/src/models.ts': ['typescript-operations'],
     'server/src/models.ts': ['typescript', 'typescript-resolver']
   }
 }
