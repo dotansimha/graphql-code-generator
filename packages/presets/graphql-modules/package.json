@@ -41,7 +41,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "workspace:^",
     "@graphql-codegen/visitor-plugin-common": "workspace:^",
-    "@graphql-tools/utils": "11.2.0-alpha-20260623121950-9791cce120fe931141445a7135bb46cf4212582e",
+    "@graphql-tools/utils": "11.2.0-rc-20260703111316-6d117ceb02d4f6851c3929ab27f73e0fd8df235c",
     "change-case-all": "^2.1.0",
     "parse-filepath": "^1.0.2",
     "tslib": "^2.8.0"
