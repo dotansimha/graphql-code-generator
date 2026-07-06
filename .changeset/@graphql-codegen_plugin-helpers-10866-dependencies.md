@@ -1,5 +1,5 @@
 ---
-"@graphql-codegen/plugin-helpers": patch
+"@graphql-codegen/plugin-helpers": minor
 ---
 dependencies updates:
   - Updated dependency [`@graphql-tools/utils@^11.2.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/11.2.0) (from `^11.0.0`, in `dependencies`)
