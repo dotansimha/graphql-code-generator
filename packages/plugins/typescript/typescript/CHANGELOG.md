@@ -1,5 +1,26 @@
 # @graphql-codegen/typescript
 
+## 6.1.0
+
+### Minor Changes
+
+- [#10866](https://github.com/dotansimha/graphql-code-generator/pull/10866)
+  [`959915f`](https://github.com/dotansimha/graphql-code-generator/commit/959915ffa3d01411a0e8b02a15529fafdd47f6b2)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`graphql@^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/0.12.0)
+    (from `^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0`, in `peerDependencies`)
+
+### Patch Changes
+
+- Updated dependencies
+  [[`959915f`](https://github.com/dotansimha/graphql-code-generator/commit/959915ffa3d01411a0e8b02a15529fafdd47f6b2),
+  [`959915f`](https://github.com/dotansimha/graphql-code-generator/commit/959915ffa3d01411a0e8b02a15529fafdd47f6b2),
+  [`959915f`](https://github.com/dotansimha/graphql-code-generator/commit/959915ffa3d01411a0e8b02a15529fafdd47f6b2)]:
+  - @graphql-codegen/plugin-helpers@7.1.0
+  - @graphql-codegen/schema-ast@6.1.0
+  - @graphql-codegen/visitor-plugin-common@7.2.0
+
 ## 6.0.2
 
 ### Patch Changes
