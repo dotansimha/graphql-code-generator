@@ -90,9 +90,12 @@ Here are the supported options that you can define in the config file (see
   specified in your `.yml` file get loaded after loading the `.yml` file
 
 - [**`config`**](./config-field#root-level) - Options we would like to provide to the specified
-  plugins. The options may vary depending on what plugins you specified. Read the documentation of
-  that specific plugin for more information. You can read more about passing configuration to
-  plugins [here](./config-field)
+  plugins. When used at the
+  [root level](https://the-guild.dev/graphql/codegen/docs/config-reference/config-field#root-level),
+  whatever value is provided is applied to all plugins in `generates` blocks below. If it is instead
+  used inside a plugin's configuration, it applies only to that plugin. Either way, the options may
+  vary depending on what plugins you specified. Read the documentation of that specific plugin for
+  more information. You can read more about passing configuration to plugins [here](./config-field)
 
 - **`overwrite`** - A flag to overwrite files if they already exist when generating code (`true` by
   default)
