@@ -4,7 +4,7 @@ import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 
 describe('extractAllFieldsToTypes: true with @defer', () => {
-  it('should extract types from queries', async () => {
+  it('#10867 - should extract fields to types with @defer', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user(id: ID!): User
@@ -42,11 +42,11 @@ describe('extractAllFieldsToTypes: true with @defer', () => {
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserEmailFragment = { email: string };
 
-      export type UserQuery_user_User = { id: string, username: string };
+      export type UserQuery_user_User_0 = { id: string, username: string };
 
-      export type UserQuery_user_User = { email: string } | { email?: never };
+      export type UserQuery_user_User_1 = { email: string } | { email?: never };
 
-      export type UserQuery_Query = { user: UserQuery_user_User & UserQuery_user_User | null };
+      export type UserQuery_Query = { user: UserQuery_user_User_0 & UserQuery_user_User_1 | null };
 
 
       export type UserQueryVariables = Exact<{ [key: string]: never; }>;
