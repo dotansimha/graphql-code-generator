@@ -282,8 +282,11 @@ export class SelectionSetToObject<
    */
   protected buildFragmentSpreadsUsage(
     spreads: FragmentSpreadNode[],
-  ): Record<string, FragmentSpreadUsage[]> {
-    const selectionNodesByTypeName: Record<string, FragmentSpreadUsage[]> = {};
+  ): Record<string, Array<FragmentSpreadUsage | EnrichedFieldNode>> {
+    const selectionNodesByTypeName: Record<
+      string,
+      Array<FragmentSpreadUsage | EnrichedFieldNode>
+    > = {};
 
     for (const spread of spreads) {
       const fragmentSpreadObject = this._loadedFragments.find(lf => lf.name === spread.name.value);
@@ -291,6 +294,8 @@ export class SelectionSetToObject<
       if (fragmentSpreadObject) {
         const schemaType = this._schema.getType(fragmentSpreadObject.onType);
         const possibleTypesForFragment = getPossibleTypes(this._schema, schemaType);
+        const fragmentDirectives = [...(spread.directives || [])];
+        const isIncremental = hasIncrementalDeliveryDirectives(fragmentDirectives);
 
         for (const possibleType of possibleTypesForFragment) {
           const fragmentSuffix = this._getFragmentSuffix(spread.name.value);
@@ -302,13 +307,40 @@ export class SelectionSetToObject<
 
           selectionNodesByTypeName[possibleType.name] ||= [];
 
+          // Expand @defer/@stream named spreads into per-selection nodes so each
+          // deferred field becomes its own optional union (same as inline @defer).
+          // Keeping them as one node collapses optionality when a field (e.g. `id`)
+          // is also selected outside the deferred spread.
+          // Skip when fragment masking is enabled — the Incremental<> fragment ref
+          // already models deferred optionality at the fragment boundary.
+          if (isIncremental && this._config.inlineFragmentTypes !== 'mask') {
+            for (const selection of fragmentSpreadObject.node.selectionSet.selections) {
+              if (selection.kind === Kind.FIELD) {
+                selectionNodesByTypeName[possibleType.name].push({
+                  ...selection,
+                  fragmentDirectives,
+                });
+                continue;
+              }
+
+              selectionNodesByTypeName[possibleType.name].push({
+                fragmentName: spread.name.value,
+                typeName: usage,
+                onType: fragmentSpreadObject.onType,
+                selectionNodes: [selection],
+                fragmentDirectives,
+              });
+            }
+            continue;
+          }
+
           const fragmentSelectionNodes: FragmentSpreadUsage['selectionNodes'] = [
             ...fragmentSpreadObject.node.selectionSet.selections,
           ].map(originalNode => {
             if (originalNode.kind === Kind.FIELD) {
               return {
                 ...originalNode,
-                fragmentDirectives: [...(spread.directives || [])],
+                fragmentDirectives,
               } satisfies EnrichedFieldNode;
             }
             return originalNode;
@@ -319,7 +351,7 @@ export class SelectionSetToObject<
             typeName: usage,
             onType: fragmentSpreadObject.onType,
             selectionNodes: fragmentSelectionNodes,
-            fragmentDirectives: [...(spread.directives || [])],
+            fragmentDirectives,
           });
         }
       }

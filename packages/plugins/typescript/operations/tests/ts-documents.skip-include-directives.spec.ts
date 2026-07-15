@@ -1109,12 +1109,12 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
       "export type UserSkipQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+      export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age?: number } | { age?: never }) & ({ createdAt?: string } | { createdAt?: never }) | null };
 
       export type UserIncludeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type UserIncludeQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+      export type UserIncludeQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age?: number } | { age?: never }) & ({ createdAt?: string } | { createdAt?: never }) | null };
 
       export type User_NameFragment = { name: string, niName: string };
 

@@ -5586,7 +5586,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & ({ widgetCount: number, widgetPreference: string } | { widgetCount?: never, widgetPreference?: never }) & ({ favoriteFood: string, leastFavoriteFood: string } | { favoriteFood?: never, leastFavoriteFood?: never }) };
+        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & ({ widgetCount: number } | { widgetCount?: never }) & ({ widgetPreference: string } | { widgetPreference?: never }) & ({ favoriteFood: string } | { favoriteFood?: never }) & ({ leastFavoriteFood: string } | { leastFavoriteFood?: never }) };
         "
       `);
     });
@@ -5678,7 +5678,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string | 'specialType' } } | { address?: never }) & ({ widgetName: string, widgetCount: number } | { widgetName?: never, widgetCount?: never }) };
+        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string | 'specialType' } } | { address?: never }) & ({ widgetName: string } | { widgetName?: never }) & ({ widgetCount: number } | { widgetCount?: never }) };
         "
       `);
     });
@@ -5794,6 +5794,69 @@ function test(q: GetEntityBrandDataQuery): void {
           ) & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & { ' $fragmentRefs'?: { 'WidgetFragmentFragment': Incremental<WidgetFragmentFragment> } } & { ' $fragmentRefs'?: { 'FoodFragmentFragment': Incremental<FoodFragmentFragment> } } };
         "
       `);
+    });
+
+    it('keeps deferred-only fields optional when a named @defer spread overlaps a selected field', async () => {
+      // When `id` is selected both outside and inside a @defer named spread, bundling
+      // the spread as one union collapses optionality: intersecting with outer `id`
+      // eliminates the absent branch, so deferred-only fields become required.
+      // Each deferred selection must be its own optional union (same as inline @defer).
+      const schema = buildSchema(/* GraphQL */ `
+        type User {
+          id: ID!
+          name: String!
+          connected: Boolean!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const document = parse(/* GraphQL */ `
+        fragment UserDeferred on User {
+          id
+          connected
+        }
+
+        query user {
+          user {
+            id
+            name
+            ...UserDeferred @defer
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        {},
+        { outputFile: 'graphql.ts' },
+      );
+
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserDeferredFragment = { id: string, connected: boolean };
+
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQuery = { user: { id: string, name: string } & ({ id: string } | { id?: never }) & ({ connected: boolean } | { connected?: never }) };
+        "
+      `);
+
+      await validate(
+        content,
+        `
+        declare function useUserQuery(): UserQuery;
+        const data = useUserQuery();
+        // deferred-only field must remain optional despite overlapping \`id\`
+        const connected: boolean | undefined = data.user.connected;
+        // required non-deferred fields stay required
+        const id: string = data.user.id;
+        const name: string = data.user.name;
+        `,
+      );
     });
   });
 
