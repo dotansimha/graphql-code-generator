@@ -3,4 +3,4 @@
 '@graphql-codegen/typescript-operations': patch
 ---
 
-Keep deferred-only fields optional when a named `@defer` spread overlaps a field also selected outside the spread
+Keep `@defer` fields optional: expand overlapping named `@defer` spreads into per-selection unions, preserve optionality on interface/union selections, surface nested `@defer`/`@stream` through inlined fragment spreads, and restore trailing `_` on implementing-type aliases when `omitOperationSuffix` is enabled
