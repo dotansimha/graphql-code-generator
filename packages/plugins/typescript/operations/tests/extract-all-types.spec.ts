@@ -81,21 +81,21 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' },
     );
     expect(content).toMatchInlineSnapshot(`
-      "type UserFragment_DummyUser = {
+      "type UserFragment_DummyUser_ = {
         __typename: 'DummyUser',
         id: string,
         joinDate: unknown
       };
 
-      type UserFragment_ActiveUser = {
+      type UserFragment_ActiveUser_ = {
         __typename: 'ActiveUser',
         id: string,
         joinDate: unknown
       };
 
       export type UserFragment =
-        | UserFragment_DummyUser
-        | UserFragment_ActiveUser
+        | UserFragment_DummyUser_
+        | UserFragment_ActiveUser_
       ;
 
       export type MeFragment_ActiveUser_parentUser_DummyUser = {
