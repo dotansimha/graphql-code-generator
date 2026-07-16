@@ -5586,7 +5586,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & ({ widgetCount: number, widgetPreference: string } | { widgetCount?: never, widgetPreference?: never }) & ({ favoriteFood: string, leastFavoriteFood: string } | { favoriteFood?: never, leastFavoriteFood?: never }) };
+        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & ({ widgetCount: number } | { widgetCount?: never }) & ({ widgetPreference: string } | { widgetPreference?: never }) & ({ favoriteFood: string } | { favoriteFood?: never }) & ({ leastFavoriteFood: string } | { leastFavoriteFood?: never }) };
         "
       `);
     });
@@ -5678,7 +5678,7 @@ function test(q: GetEntityBrandDataQuery): void {
         export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string | 'specialType' } } | { address?: never }) & ({ widgetName: string, widgetCount: number } | { widgetName?: never, widgetCount?: never }) };
+        export type UserQuery = { user: { clearanceLevel: string, name: string, phone: { home: string }, employment: { title: string } } & ({ email: string } | { email?: never }) & ({ address: { street1: string | 'specialType' } } | { address?: never }) & ({ widgetName: string } | { widgetName?: never }) & ({ widgetCount: number } | { widgetCount?: never }) };
         "
       `);
     });
@@ -5794,6 +5794,235 @@ function test(q: GetEntityBrandDataQuery): void {
           ) & ({ email: string } | { email?: never }) & ({ address: { street1: string } } | { address?: never }) & { ' $fragmentRefs'?: { 'WidgetFragmentFragment': Incremental<WidgetFragmentFragment> } } & { ' $fragmentRefs'?: { 'FoodFragmentFragment': Incremental<FoodFragmentFragment> } } };
         "
       `);
+    });
+
+    it('keeps deferred-only fields optional when a named @defer spread overlaps a selected field', async () => {
+      // When `id` is selected both outside and inside a @defer named spread, bundling
+      // the spread as one union collapses optionality: intersecting with outer `id`
+      // eliminates the absent branch, so deferred-only fields become required.
+      // Each deferred selection must be its own optional union (same as inline @defer).
+      const schema = buildSchema(/* GraphQL */ `
+        type User {
+          id: ID!
+          name: String!
+          connected: Boolean!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const document = parse(/* GraphQL */ `
+        fragment UserDeferred on User {
+          id
+          connected
+        }
+
+        query user {
+          user {
+            id
+            name
+            ...UserDeferred @defer
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        {},
+        { outputFile: 'graphql.ts' },
+      );
+
+      expect(content).toMatchInlineSnapshot(`
+        "export type UserDeferredFragment = { id: string, connected: boolean };
+
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        export type UserQuery = { user: { id: string, name: string } & ({ id: string } | { id?: never }) & ({ connected: boolean } | { connected?: never }) };
+        "
+      `);
+
+      await validate(
+        content,
+        `
+        declare function useUserQuery(): UserQuery;
+        const data = useUserQuery();
+        // deferred-only field must remain optional despite overlapping \`id\`
+        const connected: boolean | undefined = data.user.connected;
+        // required non-deferred fields stay required
+        const id: string = data.user.id;
+        const name: string = data.user.name;
+        `,
+      );
+    });
+
+    it('keeps @defer fields optional on interface selections', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface EventStats {
+          id: ID!
+          name: String!
+          trends: Int!
+        }
+
+        type ConcreteEventStats implements EventStats {
+          id: ID!
+          name: String!
+          trends: Int!
+        }
+
+        type Query {
+          event: EventStats!
+        }
+      `);
+
+      const document = parse(/* GraphQL */ `
+        fragment EventCard on EventStats {
+          id
+          name
+          ... @defer {
+            id
+            trends
+          }
+        }
+
+        query event {
+          event {
+            ...EventCard
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        { inlineFragmentTypes: 'inline' },
+        { outputFile: 'graphql.ts' },
+      );
+
+      expect(content).toContain('({ trends: number } | { trends?: never })');
+      expect(content).not.toMatch(/trends: number,/);
+
+      await validate(
+        content,
+        `
+        declare function useEventQuery(): EventQuery;
+        const data = useEventQuery();
+        const trends: number | undefined = data.event.trends;
+        const name: string = data.event.name;
+        `,
+      );
+    });
+
+    it('surfaces nested @defer fields when inlining a fragment spread', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Connection {
+          id: ID!
+          name: String!
+          connected: Boolean!
+        }
+
+        type Query {
+          connection: Connection!
+        }
+      `);
+
+      const document = parse(/* GraphQL */ `
+        fragment ConnectionStatus on Connection {
+          id
+          ... @defer {
+            id
+            connected
+          }
+        }
+
+        fragment ConnectionRow on Connection {
+          id
+          name
+          ...ConnectionStatus
+        }
+
+        query connection {
+          connection {
+            ...ConnectionRow
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        { inlineFragmentTypes: 'inline' },
+        { outputFile: 'graphql.ts' },
+      );
+
+      expect(content).toContain('({ connected: boolean } | { connected?: never })');
+
+      await validate(
+        content,
+        `
+        declare function useConnectionQuery(): ConnectionQuery;
+        const data = useConnectionQuery();
+        const connected: boolean | undefined = data.connection.connected;
+        const name: string = data.connection.name;
+        `,
+      );
+    });
+
+    it('keeps trailing underscore on implementing-type aliases with omitOperationSuffix', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Node {
+          id: ID!
+        }
+
+        type User implements Node {
+          id: ID!
+          name: String!
+        }
+
+        type Post implements Node {
+          id: ID!
+          title: String!
+        }
+
+        type Query {
+          node: Node!
+        }
+      `);
+
+      const document = parse(/* GraphQL */ `
+        fragment NodeCard on Node {
+          id
+          ... on User {
+            name
+          }
+          ... on Post {
+            title
+          }
+        }
+
+        query node {
+          node {
+            ...NodeCard
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        schema,
+        [{ location: '', document }],
+        { omitOperationSuffix: true },
+        { outputFile: 'graphql.ts' },
+      );
+
+      // With omitOperationSuffix, implementing-type aliases historically ended with `_`
+      // (`NodeCard_User_`). The v7 formula dropped that trailing underscore.
+      expect(content).toContain('NodeCard_User_');
+      expect(content).toContain('NodeCard_Post_');
+      expect(content).not.toMatch(/export type NodeCard_User =/);
+      expect(content).not.toMatch(/export type NodeCard_Post =/);
     });
   });
 

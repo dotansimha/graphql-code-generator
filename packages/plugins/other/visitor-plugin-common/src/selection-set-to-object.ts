@@ -188,7 +188,9 @@ export class SelectionSetToObject<
           isInterfaceType(typeOnSchema) &&
           parentType.getInterfaces().includes(typeOnSchema)
         ) {
-          this._appendToTypeMap(types, parentType.name, fields);
+          // Same as object-type path: keep inline-fragment directives on fields so
+          // @defer/@skip/@include survive the later `fragmentDirectives` filter.
+          this._appendToTypeMap(types, parentType.name, fieldsWithFragmentDirectives);
           this._appendToTypeMap(types, parentType.name, spreadsUsage[parentType.name]);
           this._collectInlineFragments(typeOnSchema, inlines, types);
         }
@@ -202,17 +204,22 @@ export class SelectionSetToObject<
           : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
+        const directives = (node.directives as DirectiveNode[]) || undefined;
+        const fieldsWithFragmentDirectives: EnrichedFieldNode[] = fields.map(field => ({
+          ...field,
+          fragmentDirectives: directives,
+        }));
 
         if (
           isObjectType(schemaType) &&
           possibleTypes.find(possibleType => possibleType.name === schemaType.name)
         ) {
-          this._appendToTypeMap(types, schemaType.name, fields);
+          this._appendToTypeMap(types, schemaType.name, fieldsWithFragmentDirectives);
           this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
           this._collectInlineFragments(schemaType, inlines, types);
         } else if (isInterfaceType(schemaType) && schemaType.name === parentType.name) {
           for (const possibleType of possibleTypes) {
-            this._appendToTypeMap(types, possibleType.name, fields);
+            this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
             this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
             this._collectInlineFragments(schemaType, inlines, types);
           }
@@ -228,7 +235,7 @@ export class SelectionSetToObject<
             // the field should only be added to the valid selections
             // in case the possible type actually implements the given interface
             if (isTypeSubTypeOf(this._schema, possibleType, fragmentSpreadType)) {
-              this._appendToTypeMap(types, possibleType.name, fields);
+              this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
               this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
             }
           }
@@ -243,12 +250,17 @@ export class SelectionSetToObject<
           : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
+        const directives = (node.directives as DirectiveNode[]) || undefined;
+        const fieldsWithFragmentDirectives: EnrichedFieldNode[] = fields.map(field => ({
+          ...field,
+          fragmentDirectives: directives,
+        }));
 
         if (
           isObjectType(schemaType) &&
           possibleTypes.find(possibleType => possibleType.name === schemaType.name)
         ) {
-          this._appendToTypeMap(types, schemaType.name, fields);
+          this._appendToTypeMap(types, schemaType.name, fieldsWithFragmentDirectives);
           this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
           this._collectInlineFragments(schemaType, inlines, types);
         } else if (isInterfaceType(schemaType)) {
@@ -260,14 +272,14 @@ export class SelectionSetToObject<
                 possibleInterfaceType => possibleInterfaceType.name === possibleType.name,
               )
             ) {
-              this._appendToTypeMap(types, possibleType.name, fields);
+              this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
               this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
               this._collectInlineFragments(schemaType, inlines, types);
             }
           }
         } else {
           for (const possibleType of possibleTypes) {
-            this._appendToTypeMap(types, possibleType.name, fields);
+            this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
             this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
           }
         }
@@ -282,8 +294,11 @@ export class SelectionSetToObject<
    */
   protected buildFragmentSpreadsUsage(
     spreads: FragmentSpreadNode[],
-  ): Record<string, FragmentSpreadUsage[]> {
-    const selectionNodesByTypeName: Record<string, FragmentSpreadUsage[]> = {};
+  ): Record<string, Array<FragmentSpreadUsage | EnrichedFieldNode>> {
+    const selectionNodesByTypeName: Record<
+      string,
+      Array<FragmentSpreadUsage | EnrichedFieldNode>
+    > = {};
 
     for (const spread of spreads) {
       const fragmentSpreadObject = this._loadedFragments.find(lf => lf.name === spread.name.value);
@@ -291,6 +306,8 @@ export class SelectionSetToObject<
       if (fragmentSpreadObject) {
         const schemaType = this._schema.getType(fragmentSpreadObject.onType);
         const possibleTypesForFragment = getPossibleTypes(this._schema, schemaType);
+        const fragmentDirectives = [...(spread.directives || [])];
+        const isIncremental = hasIncrementalDeliveryDirectives(fragmentDirectives);
 
         for (const possibleType of possibleTypesForFragment) {
           const fragmentSuffix = this._getFragmentSuffix(spread.name.value);
@@ -302,13 +319,40 @@ export class SelectionSetToObject<
 
           selectionNodesByTypeName[possibleType.name] ||= [];
 
+          // Expand @defer/@stream named spreads into per-selection nodes so each
+          // deferred field becomes its own optional union (same as inline @defer).
+          // Keeping them as one node collapses optionality when a field (e.g. `id`)
+          // is also selected outside the deferred spread.
+          // Skip when fragment masking is enabled — the Incremental<> fragment ref
+          // already models deferred optionality at the fragment boundary.
+          if (isIncremental && this._config.inlineFragmentTypes !== 'mask') {
+            for (const selection of fragmentSpreadObject.node.selectionSet.selections) {
+              if (selection.kind === Kind.FIELD) {
+                selectionNodesByTypeName[possibleType.name].push({
+                  ...selection,
+                  fragmentDirectives,
+                });
+                continue;
+              }
+
+              selectionNodesByTypeName[possibleType.name].push({
+                fragmentName: spread.name.value,
+                typeName: usage,
+                onType: fragmentSpreadObject.onType,
+                selectionNodes: [selection],
+                fragmentDirectives,
+              });
+            }
+            continue;
+          }
+
           const fragmentSelectionNodes: FragmentSpreadUsage['selectionNodes'] = [
             ...fragmentSpreadObject.node.selectionSet.selections,
           ].map(originalNode => {
             if (originalNode.kind === Kind.FIELD) {
               return {
                 ...originalNode,
-                fragmentDirectives: [...(spread.directives || [])],
+                fragmentDirectives,
               } satisfies EnrichedFieldNode;
             }
             return originalNode;
@@ -319,7 +363,7 @@ export class SelectionSetToObject<
             typeName: usage,
             onType: fragmentSpreadObject.onType,
             selectionNodes: fragmentSelectionNodes,
-            fragmentDirectives: [...(spread.directives || [])],
+            fragmentDirectives,
           });
         }
       }
@@ -416,6 +460,24 @@ export class SelectionSetToObject<
 
     for (const [typeName, records] of Object.entries(fragmentSpreadsUsage)) {
       this._appendToTypeMap(result.selectionNodesByTypeName, typeName, records);
+      // Nested @defer/@stream inside spread fragments are otherwise dropped when
+      // `inlineFragmentTypes: 'inline'` re-flattens the spread (only the base map merges).
+      // Walk nested fragment defs with a visited set so types stay consistent and
+      // fragment cycles cannot hang codegen. (@skip/@include are handled elsewhere —
+      // promoting them here duplicates types under extractAllFieldsToTypesCompact.)
+      const nestedParentType =
+        this._schema.getType(typeName) ?? parentSchemaType ?? this._parentSchemaType;
+      for (const record of records) {
+        if (!('fragmentName' in record)) {
+          continue;
+        }
+        this._promoteNestedIncrementalSelections(
+          record.selectionNodes,
+          nestedParentType,
+          result,
+          new Set([record.fragmentName]),
+        );
+      }
     }
 
     // 2. Push conditional inline fragments into the result.selectionNodesByTypeNameConditional
@@ -459,6 +521,64 @@ export class SelectionSetToObject<
 
     if (nodes && nodes.length > 0) {
       types.get(typeName).push(...nodes);
+    }
+  }
+
+  /**
+   * Surfaces @defer/@stream selections nested inside inlined fragment spreads onto the
+   * parent conditional map. `visitedFragmentNames` prevents cycles.
+   */
+  private _promoteNestedIncrementalSelections(
+    selectionNodes: ReadonlyArray<SelectionNode | EnrichedFieldNode>,
+    parentType: GraphQLNamedType,
+    result: ReturnType<typeof this.flattenSelectionSet>,
+    visitedFragmentNames: Set<string>,
+  ): void {
+    for (const node of selectionNodes) {
+      if (!('kind' in node)) {
+        continue;
+      }
+
+      if (node.kind === Kind.INLINE_FRAGMENT && hasIncrementalDeliveryDirectives(node.directives)) {
+        const conditionalNodes = new Map<string, Array<GroupedTypeNameNode>>();
+        this._collectInlineFragments(parentType, [node], conditionalNodes);
+        result.selectionNodesByTypeNameConditional.push(conditionalNodes);
+        continue;
+      }
+
+      if (node.kind !== Kind.FRAGMENT_SPREAD) {
+        continue;
+      }
+
+      if (hasIncrementalDeliveryDirectives(node.directives)) {
+        const conditionalFragmentSpreadsUsage = this.buildFragmentSpreadsUsage([node]);
+        for (const [conditionalTypeName, conditionalRecords] of Object.entries(
+          conditionalFragmentSpreadsUsage,
+        )) {
+          const conditionalNodes = new Map<string, Array<GroupedTypeNameNode>>();
+          this._appendToTypeMap(conditionalNodes, conditionalTypeName, conditionalRecords);
+          result.selectionNodesByTypeNameConditional.push(conditionalNodes);
+        }
+        continue;
+      }
+
+      if (visitedFragmentNames.has(node.name.value)) {
+        continue;
+      }
+      visitedFragmentNames.add(node.name.value);
+
+      const nestedFragment = this._loadedFragments.find(lf => lf.name === node.name.value);
+      if (!nestedFragment) {
+        continue;
+      }
+
+      const nestedParentType = this._schema.getType(nestedFragment.onType) ?? parentType;
+      this._promoteNestedIncrementalSelections(
+        nestedFragment.node.selectionSet.selections,
+        nestedParentType,
+        result,
+        visitedFragmentNames,
+      );
     }
   }
 
@@ -1248,11 +1368,12 @@ export class SelectionSetToObject<
   }
 
   protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
-    const fragmentSuffix =
-      typeName && suffix ? `_${typeName}_${suffix}` : typeName ? `_${typeName}` : suffix;
+    // Keep `_${typeName}_${suffix}` even when `omitOperationSuffix` makes `suffix` ''.
+    // The intermediate `typeName && suffix ? … : typeName ? …` form dropped the trailing
+    // `_` on implementing-type aliases (`Foo_Bar` instead of `Foo_Bar_`).
     return this._convertName(name, {
       useTypesPrefix: true,
-      suffix: fragmentSuffix,
+      suffix: typeName ? `_${typeName}_${suffix}` : suffix,
     });
   }
 
