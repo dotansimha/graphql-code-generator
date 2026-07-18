@@ -1,4 +1,6 @@
 import { buildSchema, parse, versionInfo } from 'graphql';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
 
@@ -771,6 +773,65 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       "
     `);
   });
+
+  it('#10881 - nested @include fragments (inline and spread) must be added correctly to the operation Result', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        bio: String!
+        email: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      fragment EmailFields on User {
+        email
+      }
+
+      fragment UserFields on User {
+        id
+        bio @include(if: $withBio)
+        ...EmailFields @include(if: $withEmail)
+        ... on User @include(if: $withName) {
+          name
+        }
+      }
+
+      query GetUser($withBio: Boolean!, $withEmail: Boolean!, $withName: Boolean!) {
+        user {
+          ...UserFields
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type EmailFieldsFragment = { email: string };
+
+      export type UserFieldsFragment = { id: string, bio?: string } & { name?: string } & { email?: string };
+
+      export type GetUserQueryVariables = Exact<{
+        withBio: boolean;
+        withEmail: boolean;
+        withName: boolean;
+      }>;
+
+
+      export type GetUserQuery = { user: { id: string, bio?: string, name?: string, email?: string } | null };
+      "
+    `);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
 });
 
 describe('TypeScript Operations Plugin - @skip directive', () => {
@@ -1050,6 +1111,65 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       export type User_CreatedAtFragment = { createdAt: string };
       "
     `);
+  });
+
+  it('#10881 - nested @skip fragments (inline and spread) must be added correctly to the operation Result', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        bio: String!
+        email: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      fragment EmailFields on User {
+        email
+      }
+
+      fragment UserFields on User {
+        id
+        bio @skip(if: $noBio)
+        ...EmailFields @skip(if: $noEmail)
+        ... on User @skip(if: $noName) {
+          name
+        }
+      }
+
+      query GetUser($noBio: Boolean!, $noEmail: Boolean!, $noName: Boolean!) {
+        user {
+          ...UserFields
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type EmailFieldsFragment = { email: string };
+
+      export type UserFieldsFragment = { id: string, bio?: string } & { name?: string } & { email?: string };
+
+      export type GetUserQueryVariables = Exact<{
+        noBio: boolean;
+        noEmail: boolean;
+        noName: boolean;
+      }>;
+
+
+      export type GetUserQuery = { user: { id: string, bio?: string, name?: string, email?: string } | null };
+      "
+    `);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 });
 
