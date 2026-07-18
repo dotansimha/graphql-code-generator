@@ -782,7 +782,7 @@ export class SelectionSetToObject<
     selectionNodes = [...selectionNodes];
     let inlineFragmentConditional = false;
     for (const selectionNode of selectionNodes) {
-      // 1. Handle Field or Directtives selection nodes
+      // 1. Handle Field or Directives selection nodes
       if ('kind' in selectionNode) {
         if (selectionNode.kind === Kind.FIELD) {
           if (selectionNode.selectionSet) {
@@ -934,36 +934,46 @@ export class SelectionSetToObject<
       requireTypename,
       this._config.skipTypeNameForRoot,
     );
-    const transformed: ProcessResult = [
-      // Only add the typename field if we're not merging fragment
-      // types. If we are merging, we need to wait until we know all
-      // the involved typenames.
-      ...(typeInfoField &&
+
+    // Only add the typename field if we're not merging fragment
+    // types. If we are merging, we need to wait until we know all
+    // the involved typenames.
+    const transformedTypenameFields =
+      typeInfoField &&
       (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask')
         ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
-        : []),
-      ...this._processor.transformPrimitiveFields(
-        parentSchemaType,
-        Array.from(primitiveFields.values()).map(field => ({
-          isConditional:
-            hasConditionalDirectives(field.directives) ||
-            hasConditionalDirectives(field.fragmentDirectives),
-          fieldName: field.name.value,
-        })),
-        options.unsetTypes,
-      ),
-      ...this._processor.transformAliasesPrimitiveFields(
-        parentSchemaType,
-        Array.from(primitiveAliasFields.values()).map(field => ({
-          alias: field.alias.value,
-          fieldName: field.name.value,
-          isConditional:
-            hasConditionalDirectives(field.directives) ||
-            hasConditionalDirectives(field.fragmentDirectives),
-        })),
-        options.unsetTypes,
-      ),
-      ...this._processor.transformLinkFields(linkFields, options.unsetTypes),
+        : [];
+    const transformedPrimitiveFields = this._processor.transformPrimitiveFields(
+      parentSchemaType,
+      Array.from(primitiveFields.values()).map(field => ({
+        isConditional:
+          hasConditionalDirectives(field.directives) ||
+          hasConditionalDirectives(field.fragmentDirectives),
+        fieldName: field.name.value,
+      })),
+      options.unsetTypes,
+    );
+    const transformedAliasesPrimitiveFields = this._processor.transformAliasesPrimitiveFields(
+      parentSchemaType,
+      Array.from(primitiveAliasFields.values()).map(field => ({
+        alias: field.alias.value,
+        fieldName: field.name.value,
+        isConditional:
+          hasConditionalDirectives(field.directives) ||
+          hasConditionalDirectives(field.fragmentDirectives),
+      })),
+      options.unsetTypes,
+    );
+    const transformedLinkFields = this._processor.transformLinkFields(
+      linkFields,
+      options.unsetTypes,
+    );
+
+    const transformed: ProcessResult = [
+      ...transformedTypenameFields,
+      ...transformedPrimitiveFields,
+      ...transformedAliasesPrimitiveFields,
+      ...transformedLinkFields,
     ].filter(Boolean);
 
     const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
