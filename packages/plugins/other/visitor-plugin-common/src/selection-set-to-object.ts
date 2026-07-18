@@ -64,7 +64,7 @@ type FragmentSpreadUsage = {
 /**
  * @description EnrichedFieldNode are field nodes enriched with Codegen metadata for subsequent processing
  */
-type EnrichedFieldNode = FieldNode & {
+export type EnrichedFieldNode = FieldNode & {
   /**
    * A field node may implicitly inherit fragment directives from parents
    * For example, if the field's parent is marked with `@skip`, the field is implicitly marked with `@skip` as well
@@ -174,9 +174,12 @@ export class SelectionSetToObject<
         // that can be associated back to the fields in the fragment, to
         // support things like making those fields optional when deferring a
         // fragment (using @defer).
-        const fieldsWithFragmentDirectives: EnrichedFieldNode[] = fields.map(field => ({
+        const fieldsWithFragmentDirectives = fields.map(field => ({
           ...field,
-          fragmentDirectives: directives,
+          // A field may already carry `fragmentDirectives` from an enclosing
+          // conditional fragment spread; keep those in addition to the
+          // directives on this inline fragment, instead of overwriting them.
+          fragmentDirectives: [...(field.fragmentDirectives || []), ...(directives || [])],
         }));
 
         if (isObjectType(typeOnSchema)) {
@@ -899,13 +902,7 @@ export class SelectionSetToObject<
             (node): node is EnrichedFieldNode | FragmentSpreadUsage => 'fragmentDirectives' in node,
           );
           for (const selectionNode of _selectionNodes) {
-            if ('kind' in selectionNode) {
-              // Inline fragments are inline as `EnrichedFieldNode` i.e. a field
-              selectionNodes.push(selectionNode);
-            } else {
-              // `FragmentSpreadUsage` contains `selectionNodes` i.e. an array of fields
-              selectionNodes.push(...selectionNode.selectionNodes);
-            }
+            selectionNodes.push(selectionNode);
           }
         }
       }
