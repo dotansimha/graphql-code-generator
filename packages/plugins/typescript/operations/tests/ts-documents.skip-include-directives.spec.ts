@@ -1142,12 +1142,22 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
         name: String!
         bio: String!
         email: String!
+        emailLocalPart: String!
+        emailDomainPart: String!
       }
     `);
 
     const document = parse(/* GraphQL */ `
+      fragment EmailLocalPartFields on User {
+        emailLocalPart
+      }
+
       fragment EmailFields on User {
         email
+        ...EmailLocalPartFields @skip(if: $noEmailParts)
+        ... on User @skip(if: $noEmailParts) {
+          emailDomainPart
+        }
       }
 
       fragment UserFields on User {
@@ -1159,7 +1169,12 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
         }
       }
 
-      query GetUser($noBio: Boolean!, $noEmail: Boolean!, $noName: Boolean!) {
+      query GetUser(
+        $noBio: Boolean!
+        $noEmail: Boolean!
+        $noName: Boolean!
+        $noEmailParts: Boolean!
+      ) {
         user {
           ...UserFields
         }
@@ -1173,7 +1188,9 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      export type EmailFieldsFragment = { email: string };
+      export type EmailLocalPartFieldsFragment = { emailLocalPart: string };
+
+      export type EmailFieldsFragment = { email: string } & { emailDomainPart?: string } & { emailLocalPart?: string };
 
       export type UserFieldsFragment = { id: string, bio?: string } & { name?: string } & { email?: string };
 
@@ -1181,10 +1198,11 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
         noBio: boolean;
         noEmail: boolean;
         noName: boolean;
+        noEmailParts: boolean;
       }>;
 
 
-      export type GetUserQuery = { user: { id: string, bio?: string, name?: string, email?: string } | null };
+      export type GetUserQuery = { user: { id: string, bio?: string, name?: string, email?: string, emailDomainPart?: string, emailLocalPart?: string } | null };
       "
     `);
     validateTs(result, undefined, undefined, undefined, undefined, true);
