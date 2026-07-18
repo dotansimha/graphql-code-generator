@@ -872,6 +872,9 @@ export class SelectionSetToObject<
         );
       }
 
+      // #region Recursively find all fields and nested fields of the SelectionSet
+      // And by pushing the fields to `selectionNodes`
+      // The for loop continues to build SelectionSet & nested SelectionSet exhaustively
       if (
         parentSchemaType.name === selectionNode.onType ||
         parentSchemaType
@@ -881,17 +884,32 @@ export class SelectionSetToObject<
           fragmentType.getTypes().find(objectType => objectType.name === parentSchemaType.name))
       ) {
         // also process fields from fragment that apply for this parentType
-        const { selectionNodesByTypeName } = this.flattenSelectionSet(
-          selectionNode.selectionNodes,
-          parentSchemaType,
-        );
+        const { selectionNodesByTypeName, selectionNodesByTypeNameConditional } =
+          this.flattenSelectionSet(selectionNode.selectionNodes, parentSchemaType);
+
         const typeNodes = selectionNodesByTypeName.get(parentSchemaType.name) ?? [];
         selectionNodes.push(...typeNodes);
         for (const iinterface of parentSchemaType.getInterfaces()) {
           const typeNodes = selectionNodesByTypeName.get(iinterface.name) ?? [];
           selectionNodes.push(...typeNodes);
         }
+
+        for (const conditionalNodes of selectionNodesByTypeNameConditional) {
+          const _selectionNodes = (conditionalNodes.get(parentSchemaType.name) || []).filter(
+            (node): node is EnrichedFieldNode | FragmentSpreadUsage => 'fragmentDirectives' in node,
+          );
+          for (const selectionNode of _selectionNodes) {
+            if ('kind' in selectionNode) {
+              // Inline fragments are inline as `EnrichedFieldNode` i.e. a field
+              selectionNodes.push(selectionNode);
+            } else {
+              // `FragmentSpreadUsage` contains `selectionNodes` i.e. an array of fields
+              selectionNodes.push(...selectionNode.selectionNodes);
+            }
+          }
+        }
       }
+      // #endregion
     }
 
     const linkFields: LinkField[] = [];
