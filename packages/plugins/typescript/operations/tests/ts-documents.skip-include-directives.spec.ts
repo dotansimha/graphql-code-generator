@@ -1210,7 +1210,7 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
 });
 
 describe('TypeScript Operations Plugin - @include and @skip with @defer', () => {
-  it('generates conditional object with defer fields when @skip and @include are used with defer', async () => {
+  it('generates conditional object with defer fields when @skip and @include are used with @defer', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user: User
@@ -1221,7 +1221,7 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
         id: ID!
         name: String!
         nickName: String!
-        age: Int!
+        age: Int
         createdAt: String!
       }
     `);
@@ -1265,16 +1265,16 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
       "export type UserSkipQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+      export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number | null, createdAt?: string } & ({ age?: number | null, createdAt?: string } | { age?: never, createdAt?: never }) | null };
 
       export type UserIncludeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type UserIncludeQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+      export type UserIncludeQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number | null, createdAt?: string } & ({ age?: number | null, createdAt?: string } | { age?: never, createdAt?: never }) | null };
 
       export type User_NameFragment = { name: string, niName: string };
 
-      export type User_AgeFragment = { age: number, createdAt: string };
+      export type User_AgeFragment = { age: number | null, createdAt: string };
       "
     `);
   });
