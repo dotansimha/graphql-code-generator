@@ -1,5 +1,17 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.1
+
+### Patch Changes
+
+- [#10897](https://github.com/dotansimha/graphql-code-generator/pull/10897)
+  [`bd689bb`](https://github.com/dotansimha/graphql-code-generator/commit/bd689bb4468a31b7493dddd644b41d75c80373ee)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix issues when
+  `extractAllFieldsToTypes=true` and `@defer` are used, then duplicate types may be generated
+- Updated dependencies
+  [[`bd689bb`](https://github.com/dotansimha/graphql-code-generator/commit/bd689bb4468a31b7493dddd644b41d75c80373ee)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.1
+
 ## 6.1.0
 
 ### Minor Changes
