@@ -1121,7 +1121,8 @@ export class SelectionSetToObject<
     const dependentTypes = Object.keys(grouped)
       .map(typeName => {
         const relevant = grouped[typeName].filter(Boolean);
-        return relevant.map(objDefinition => {
+        const hasTypesToMerge = relevant.length > 1;
+        return relevant.map((objDefinition, index) => {
           // In extractAllFieldsToTypesCompact mode, we still need to keep the final concrete type name for union/interface types
           // to distinguish between different implementations, but we skip it for simple object types
           const hasMultipleTypes = Object.keys(grouped).length > 1;
@@ -1129,6 +1130,8 @@ export class SelectionSetToObject<
           if (fieldName) {
             if (this._config.extractAllFieldsToTypesCompact && !hasMultipleTypes) {
               name = fieldName;
+            } else if (this._config.extractAllFieldsToTypes && hasTypesToMerge) {
+              name = `${fieldName}_${typeName}_${index}`;
             } else {
               name = `${fieldName}_${typeName}`;
             }
