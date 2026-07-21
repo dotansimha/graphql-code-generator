@@ -366,14 +366,17 @@ export function buildScalars(
             };
           }
         } else if (scalarType.extensions?.codegenScalarType) {
+          const normalizedScalar = normalizeScalarType(
+            scalarType.extensions.codegenScalarType as string | { input: string; output: string },
+          );
           result[name] = {
             input: {
               isExternal: false,
-              type: scalarType.extensions.codegenScalarType as string,
+              type: normalizedScalar.input,
             },
             output: {
               isExternal: false,
-              type: scalarType.extensions.codegenScalarType as string,
+              type: normalizedScalar.output,
             },
           };
         } else if (!defaultScalarsMapping[name]) {
