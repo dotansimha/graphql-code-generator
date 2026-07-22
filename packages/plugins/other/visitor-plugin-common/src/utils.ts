@@ -26,10 +26,16 @@ import {
   StringValueNode,
   TypeNode,
 } from 'graphql';
-import { RawConfig } from './base-visitor.js';
+import type { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
-import { LoadedFragment, NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
+import type { EnrichedFieldNode } from './selection-set-to-object.js';
+import type {
+  LoadedFragment,
+  NormalizedScalarsMap,
+  ParsedScalarsMap,
+  ScalarsMap,
+} from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -487,12 +493,12 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
 };
 
 export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): {
-  fields: FieldNode[];
+  fields: EnrichedFieldNode[];
   spreads: FragmentSpreadNode[];
   inlines: InlineFragmentNode[];
 } {
   return {
-    fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
+    fields: selections.filter(s => s.kind === Kind.FIELD) as EnrichedFieldNode[],
     inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],
     spreads: selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD) as FragmentSpreadNode[],
   };

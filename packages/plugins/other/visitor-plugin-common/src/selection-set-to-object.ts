@@ -64,7 +64,7 @@ type FragmentSpreadUsage = {
 /**
  * @description EnrichedFieldNode are field nodes enriched with Codegen metadata for subsequent processing
  */
-type EnrichedFieldNode = FieldNode & {
+export type EnrichedFieldNode = FieldNode & {
   /**
    * A field node may implicitly inherit fragment directives from parents
    * For example, if the field's parent is marked with `@skip`, the field is implicitly marked with `@skip` as well
@@ -174,9 +174,12 @@ export class SelectionSetToObject<
         // that can be associated back to the fields in the fragment, to
         // support things like making those fields optional when deferring a
         // fragment (using @defer).
-        const fieldsWithFragmentDirectives: EnrichedFieldNode[] = fields.map(field => ({
+        const fieldsWithFragmentDirectives = fields.map(field => ({
           ...field,
-          fragmentDirectives: directives,
+          // A field may already carry `fragmentDirectives` from an enclosing
+          // conditional fragment spread; keep those in addition to the
+          // directives on this inline fragment, instead of overwriting them.
+          fragmentDirectives: [...(field.fragmentDirectives || []), ...(directives || [])],
         }));
 
         if (isObjectType(typeOnSchema)) {
@@ -782,7 +785,7 @@ export class SelectionSetToObject<
     selectionNodes = [...selectionNodes];
     let inlineFragmentConditional = false;
     for (const selectionNode of selectionNodes) {
-      // 1. Handle Field or Directtives selection nodes
+      // 1. Handle Field or Directives selection nodes
       if ('kind' in selectionNode) {
         if (selectionNode.kind === Kind.FIELD) {
           if (selectionNode.selectionSet) {
@@ -872,6 +875,9 @@ export class SelectionSetToObject<
         );
       }
 
+      // #region Recursively find all fields and nested fields of the SelectionSet
+      // And by pushing the fields to `selectionNodes`
+      // The for loop continues to build SelectionSet & nested SelectionSet exhaustively
       if (
         parentSchemaType.name === selectionNode.onType ||
         parentSchemaType
@@ -881,17 +887,26 @@ export class SelectionSetToObject<
           fragmentType.getTypes().find(objectType => objectType.name === parentSchemaType.name))
       ) {
         // also process fields from fragment that apply for this parentType
-        const { selectionNodesByTypeName } = this.flattenSelectionSet(
-          selectionNode.selectionNodes,
-          parentSchemaType,
-        );
+        const { selectionNodesByTypeName, selectionNodesByTypeNameConditional } =
+          this.flattenSelectionSet(selectionNode.selectionNodes, parentSchemaType);
+
         const typeNodes = selectionNodesByTypeName.get(parentSchemaType.name) ?? [];
         selectionNodes.push(...typeNodes);
         for (const iinterface of parentSchemaType.getInterfaces()) {
           const typeNodes = selectionNodesByTypeName.get(iinterface.name) ?? [];
           selectionNodes.push(...typeNodes);
         }
+
+        for (const conditionalNodes of selectionNodesByTypeNameConditional) {
+          const _selectionNodes = (conditionalNodes.get(parentSchemaType.name) || []).filter(
+            (node): node is EnrichedFieldNode | FragmentSpreadUsage => 'fragmentDirectives' in node,
+          );
+          for (const selectionNode of _selectionNodes) {
+            selectionNodes.push(selectionNode);
+          }
+        }
       }
+      // #endregion
     }
 
     const linkFields: LinkField[] = [];
@@ -934,36 +949,46 @@ export class SelectionSetToObject<
       requireTypename,
       this._config.skipTypeNameForRoot,
     );
-    const transformed: ProcessResult = [
-      // Only add the typename field if we're not merging fragment
-      // types. If we are merging, we need to wait until we know all
-      // the involved typenames.
-      ...(typeInfoField &&
+
+    // Only add the typename field if we're not merging fragment
+    // types. If we are merging, we need to wait until we know all
+    // the involved typenames.
+    const transformedTypenameFields =
+      typeInfoField &&
       (!this._config.mergeFragmentTypes || this._config.inlineFragmentTypes === 'mask')
         ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name)
-        : []),
-      ...this._processor.transformPrimitiveFields(
-        parentSchemaType,
-        Array.from(primitiveFields.values()).map(field => ({
-          isConditional:
-            hasConditionalDirectives(field.directives) ||
-            hasConditionalDirectives(field.fragmentDirectives),
-          fieldName: field.name.value,
-        })),
-        options.unsetTypes,
-      ),
-      ...this._processor.transformAliasesPrimitiveFields(
-        parentSchemaType,
-        Array.from(primitiveAliasFields.values()).map(field => ({
-          alias: field.alias.value,
-          fieldName: field.name.value,
-          isConditional:
-            hasConditionalDirectives(field.directives) ||
-            hasConditionalDirectives(field.fragmentDirectives),
-        })),
-        options.unsetTypes,
-      ),
-      ...this._processor.transformLinkFields(linkFields, options.unsetTypes),
+        : [];
+    const transformedPrimitiveFields = this._processor.transformPrimitiveFields(
+      parentSchemaType,
+      Array.from(primitiveFields.values()).map(field => ({
+        isConditional:
+          hasConditionalDirectives(field.directives) ||
+          hasConditionalDirectives(field.fragmentDirectives),
+        fieldName: field.name.value,
+      })),
+      options.unsetTypes,
+    );
+    const transformedAliasesPrimitiveFields = this._processor.transformAliasesPrimitiveFields(
+      parentSchemaType,
+      Array.from(primitiveAliasFields.values()).map(field => ({
+        alias: field.alias.value,
+        fieldName: field.name.value,
+        isConditional:
+          hasConditionalDirectives(field.directives) ||
+          hasConditionalDirectives(field.fragmentDirectives),
+      })),
+      options.unsetTypes,
+    );
+    const transformedLinkFields = this._processor.transformLinkFields(
+      linkFields,
+      options.unsetTypes,
+    );
+
+    const transformed: ProcessResult = [
+      ...transformedTypenameFields,
+      ...transformedPrimitiveFields,
+      ...transformedAliasesPrimitiveFields,
+      ...transformedLinkFields,
     ].filter(Boolean);
 
     const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
