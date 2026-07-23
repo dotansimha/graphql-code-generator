@@ -188,7 +188,7 @@ describe('generate-and-save', () => {
           documents: inputFile,
           generates: {
             [outputFile]: {
-              plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+              plugins: ['typescript', 'typescript-operations'],
             },
           },
         },

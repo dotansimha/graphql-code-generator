@@ -1,11 +1,11 @@
 import { defineProject, mergeConfig } from 'vitest/config';
-import { sharedConfig } from '../../vitest.config.js';
+import { sharedConfig } from '../../../../vitest.config.mjs';
 
 export default mergeConfig(
   sharedConfig,
   defineProject({
     test: {
-      name: 'examples-persisted-documents',
+      name: 'typescript-resolvers',
       include: ['**/*.spec.ts'],
     },
   }),

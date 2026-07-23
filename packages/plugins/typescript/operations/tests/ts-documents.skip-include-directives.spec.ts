@@ -1,4 +1,6 @@
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, parse, versionInfo } from 'graphql';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 import { schema } from './shared/schema.js';
 
@@ -771,6 +773,83 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       "
     `);
   });
+
+  it('#10881 - nested @include fragments (inline and spread) must be added correctly to the operation Result', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        bio: String!
+        email: String!
+        emailLocalPart: String!
+        emailDomainPart: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      fragment EmailLocalPartFields on User {
+        emailLocalPart
+      }
+
+      fragment EmailFields on User {
+        email
+        ...EmailLocalPartFields @include(if: $withEmailParts)
+        ... on User @include(if: $withEmailParts) {
+          emailDomainPart
+        }
+      }
+
+      fragment UserFields on User {
+        id
+        bio @include(if: $withBio)
+        ...EmailFields @include(if: $withEmail)
+        ... on User @include(if: $withName) {
+          name
+        }
+      }
+
+      query GetUser(
+        $withBio: Boolean!
+        $withEmail: Boolean!
+        $withName: Boolean!
+        $withEmailParts: Boolean!
+      ) {
+        user {
+          ...UserFields
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type EmailLocalPartFieldsFragment = { emailLocalPart: string };
+
+      export type EmailFieldsFragment = { email: string } & { emailDomainPart?: string } & { emailLocalPart?: string };
+
+      export type UserFieldsFragment = { id: string, bio?: string } & { name?: string } & { email?: string };
+
+      export type GetUserQueryVariables = Exact<{
+        withBio: boolean;
+        withEmail: boolean;
+        withName: boolean;
+        withEmailParts: boolean;
+      }>;
+
+
+      export type GetUserQuery = { user: { id: string, bio?: string, name?: string, email?: string, emailDomainPart?: string, emailLocalPart?: string } | null };
+      "
+    `);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
 });
 
 describe('TypeScript Operations Plugin - @skip directive', () => {
@@ -822,26 +901,36 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       `);
   });
 
-  it('should include fragment variable definitions when experimentalFragmentVariables is set', async () => {
-    const ast = parse(
-      /* GraphQL */ `
-        fragment TextNotificationFragment($skip: Boolean!) on TextNotification {
-          text @skip(if: $skip)
-        }
-      `,
-      // < v15 compatibility
-      { experimentalFragmentVariables: true, allowLegacyFragmentVariables: true } as any,
-    );
-    const config = { experimentalFragmentVariables: true };
-    const { content } = await plugin(
-      schema,
-      [{ location: 'test-file.ts', document: ast }],
-      config,
-      {
-        outputFile: '',
-      },
-    );
-    expect(content).toMatchInlineSnapshot(`
+  /**
+   * `experimentalFragmentVariables` and `allowLegacyFragmentVariables` have been removed in graphql v17:
+   * This test is not a valid test in graphql v17 so we just skip it
+   *
+   * https://graphql.org/blog/2026-06-15-introducing-graphql-js-v17/#experimental-specification-work
+   *
+   */
+  if (versionInfo.major < 17) {
+    it('should include fragment variable definitions when experimentalFragmentVariables is set (graphql <v17)', async () => {
+      const ast = parse(
+        /* GraphQL */ `
+          fragment TextNotificationFragment($skip: Boolean!) on TextNotification {
+            text @skip(if: $skip)
+          }
+        `,
+        {
+          experimentalFragmentVariables: true, // < v15 compatibility
+          allowLegacyFragmentVariables: true, // v16 compatibility
+        } as any,
+      );
+      const config = { experimentalFragmentVariables: true };
+      const { content } = await plugin(
+        schema,
+        [{ location: 'test-file.ts', document: ast }],
+        config,
+        {
+          outputFile: '',
+        },
+      );
+      expect(content).toMatchInlineSnapshot(`
       "export type TextNotificationFragmentFragment = { text?: string };
 
 
@@ -850,7 +939,8 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       }>;
       "
     `);
-  });
+    });
+  }
 
   it('generates optional field when @skip is used on an aliased field', async () => {
     const schema = buildSchema(/* GraphQL */ `
@@ -1040,10 +1130,87 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
       "
     `);
   });
+
+  it('#10881 - nested @skip fragments (inline and spread) must be added correctly to the operation Result', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user: User
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        bio: String!
+        email: String!
+        emailLocalPart: String!
+        emailDomainPart: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      fragment EmailLocalPartFields on User {
+        emailLocalPart
+      }
+
+      fragment EmailFields on User {
+        email
+        ...EmailLocalPartFields @skip(if: $noEmailParts)
+        ... on User @skip(if: $noEmailParts) {
+          emailDomainPart
+        }
+      }
+
+      fragment UserFields on User {
+        id
+        bio @skip(if: $noBio)
+        ...EmailFields @skip(if: $noEmail)
+        ... on User @skip(if: $noName) {
+          name
+        }
+      }
+
+      query GetUser(
+        $noBio: Boolean!
+        $noEmail: Boolean!
+        $noName: Boolean!
+        $noEmailParts: Boolean!
+      ) {
+        user {
+          ...UserFields
+        }
+      }
+    `);
+
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type EmailLocalPartFieldsFragment = { emailLocalPart: string };
+
+      export type EmailFieldsFragment = { email: string } & { emailDomainPart?: string } & { emailLocalPart?: string };
+
+      export type UserFieldsFragment = { id: string, bio?: string } & { name?: string } & { email?: string };
+
+      export type GetUserQueryVariables = Exact<{
+        noBio: boolean;
+        noEmail: boolean;
+        noName: boolean;
+        noEmailParts: boolean;
+      }>;
+
+
+      export type GetUserQuery = { user: { id: string, bio?: string, name?: string, email?: string, emailDomainPart?: string, emailLocalPart?: string } | null };
+      "
+    `);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
 });
 
 describe('TypeScript Operations Plugin - @include and @skip with @defer', () => {
-  it('generates conditional object with defer fields when @skip and @include are used with defer', async () => {
+  it('generates conditional object with defer fields when @skip and @include are used with @defer', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         user: User
@@ -1054,7 +1221,7 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
         id: ID!
         name: String!
         nickName: String!
-        age: Int!
+        age: Int
         createdAt: String!
       }
     `);
@@ -1098,16 +1265,16 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
       "export type UserSkipQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+      export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number | null, createdAt?: string } & ({ age?: number | null, createdAt?: string } | { age?: never, createdAt?: never }) | null };
 
       export type UserIncludeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-      export type UserIncludeQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number, createdAt?: string } & ({ age: number, createdAt: string } | { age?: never, createdAt?: never }) | null };
+      export type UserIncludeQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number | null, createdAt?: string } & ({ age?: number | null, createdAt?: string } | { age?: never, createdAt?: never }) | null };
 
       export type User_NameFragment = { name: string, niName: string };
 
-      export type User_AgeFragment = { age: number, createdAt: string };
+      export type User_AgeFragment = { age: number | null, createdAt: string };
       "
     `);
   });

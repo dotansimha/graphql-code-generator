@@ -269,6 +269,8 @@ export function addFederationReferencesToSchema(
         typeConfig.fields = {
           [resolveReferenceFieldName]: {
             type,
+            args: {},
+            extensions: {},
           },
           ...typeConfig.fields,
         };
@@ -314,6 +316,8 @@ export function addFederationReferencesToSchema(
         typeConfig.fields = {
           [resolveReferenceFieldName]: {
             type,
+            args: {},
+            extensions: {},
           },
           ...typeConfig.fields,
         };

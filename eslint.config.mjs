@@ -154,7 +154,7 @@ export default [
       '**/*.spec.ts',
       '**/tests/**/*.{js,ts,tsx,cjs}',
       '**/graphql-codegen-testing/**/*.ts',
-      '**/vitest.config.ts',
+      '**/vitest.config.mts',
       '**/vitest.setup.ts',
       '**/__mocks__/*',
     ],

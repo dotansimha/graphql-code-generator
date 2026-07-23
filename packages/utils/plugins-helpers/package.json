@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/plugin-helpers",
-  "version": "7.0.1",
+  "version": "7.1.0",
   "type": "module",
   "description": "GraphQL Code Generator common utils and types",
   "repository": {
@@ -37,10 +37,10 @@
     "test": "vitest --no-watch"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "dependencies": {
-    "@graphql-tools/utils": "^11.0.0",
+    "@graphql-tools/utils": "^11.2.0",
     "change-case-all": "^2.1.0",
     "common-tags": "1.8.2",
     "import-from": "4.0.0",

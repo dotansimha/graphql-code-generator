@@ -1,11 +1,11 @@
 import { defineProject, mergeConfig } from 'vitest/config';
-import { sharedConfig } from '../../../../vitest.config.js';
+import { sharedConfig } from '../../vitest.config.mjs';
 
 export default mergeConfig(
   sharedConfig,
   defineProject({
     test: {
-      name: 'typed-document-node',
+      name: 'examples-persisted-documents-string-mode',
       include: ['**/*.spec.ts'],
     },
   }),

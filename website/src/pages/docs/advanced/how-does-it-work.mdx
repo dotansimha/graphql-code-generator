@@ -97,7 +97,7 @@ import { CodegenConfig } from '@graphql-codegen/cli';
 const config: CodegenConfig = {
   schema: 'http://localhost:3333',
   generates: {
-    'types-and-hooks.tsx': { plugins: ['typescript', 'typescript-operations', 'typescript-react-query'] },
+    'types-and-hooks.tsx': { plugins: ['typescript-operations', 'typescript-react-query'] },
   },
 };
 export default config;

@@ -1,5 +1,36 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.1
+
+### Patch Changes
+
+- [#10897](https://github.com/dotansimha/graphql-code-generator/pull/10897)
+  [`bd689bb`](https://github.com/dotansimha/graphql-code-generator/commit/bd689bb4468a31b7493dddd644b41d75c80373ee)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix issues when
+  `extractAllFieldsToTypes=true` and `@defer` are used, then duplicate types may be generated
+
+## 7.2.0
+
+### Minor Changes
+
+- [#10866](https://github.com/dotansimha/graphql-code-generator/pull/10866)
+  [`959915f`](https://github.com/dotansimha/graphql-code-generator/commit/959915ffa3d01411a0e8b02a15529fafdd47f6b2)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/utils@^11.2.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/11.2.0)
+    (from `^11.0.0`, in `dependencies`)
+  - Updated dependency
+    [`graphql@^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/0.8.0)
+    (from
+    `^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0`,
+    in `peerDependencies`)
+
+### Patch Changes
+
+- Updated dependencies
+  [[`959915f`](https://github.com/dotansimha/graphql-code-generator/commit/959915ffa3d01411a0e8b02a15529fafdd47f6b2)]:
+  - @graphql-codegen/plugin-helpers@7.1.0
+
 ## 7.1.2
 
 ### Patch Changes

@@ -1,11 +1,11 @@
 import { defineProject, mergeConfig } from 'vitest/config';
-import { sharedConfig } from '../../../../vitest.config.js';
+import { sharedConfig } from '../../../../vitest.config.mjs';
 
 export default mergeConfig(
   sharedConfig,
   defineProject({
     test: {
-      name: 'schema-ast',
+      name: 'introspection',
       include: ['**/*.spec.ts'],
     },
   }),

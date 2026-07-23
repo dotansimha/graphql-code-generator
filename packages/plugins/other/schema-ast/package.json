@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/schema-ast",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "type": "module",
   "description": "GraphQL Code Generator plugin for generating a .graphql file from a given schema",
   "repository": {
@@ -37,11 +37,11 @@
     "test": "vitest --no-watch"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "workspace:^",
-    "@graphql-tools/utils": "^11.0.0",
+    "@graphql-tools/utils": "^11.2.0",
     "tslib": "^2.8.0"
   },
   "publishConfig": {

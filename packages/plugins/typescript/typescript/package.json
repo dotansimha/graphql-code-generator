@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript",
-  "version": "6.0.2",
+  "version": "6.1.0",
   "type": "module",
   "description": "GraphQL Code Generator plugin for generating TypeScript types",
   "repository": {
@@ -37,7 +37,7 @@
     "test": "vitest --no-watch"
   },
   "peerDependencies": {
-    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "workspace:^",
