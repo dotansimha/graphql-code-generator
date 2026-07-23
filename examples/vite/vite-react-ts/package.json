@@ -18,7 +18,7 @@
     "graphql": "16.14.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "vite": "8.0.13"
+    "vite": "8.0.16"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*",
