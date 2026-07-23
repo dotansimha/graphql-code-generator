@@ -55,6 +55,10 @@ export function generateFragmentImportStatement(
 
 export function generateImportStatement(statement: ImportDeclaration): string {
   const { baseDir, importSource, outputPath, typesImport } = statement;
+
+  if (!importSource.identifiers?.length && !importSource.namespace) {
+    return '';
+  }
   const importPath = resolveImportPath(baseDir, outputPath, importSource.path);
   const importNames = importSource.identifiers?.length
     ? `{ ${Array.from(new Set(importSource.identifiers)).join(', ')} }`
