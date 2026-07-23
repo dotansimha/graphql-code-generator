@@ -1,5 +1,18 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.2
+
+### Patch Changes
+
+- [#10899](https://github.com/dotansimha/graphql-code-generator/pull/10899)
+  [`e7a1451`](https://github.com/dotansimha/graphql-code-generator/commit/e7a1451bb2ccf201c61ebc9cc83a46740b5d1be9)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix conditional directive (`@skip` and
+  `@include`) incorrectly drop fields in Result when used on Inline Fragment / Fragment Spread
+- Updated dependencies
+  [[`206a409`](https://github.com/dotansimha/graphql-code-generator/commit/206a409736f934ab9d317482b761fa0c8bbf0d77),
+  [`e7a1451`](https://github.com/dotansimha/graphql-code-generator/commit/e7a1451bb2ccf201c61ebc9cc83a46740b5d1be9)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.2
+
 ## 6.1.1
 
 ### Patch Changes
