@@ -165,6 +165,11 @@ describe('client-preset - fragment masking', () => {
             : never
           : never;
 
+        // return partial if \`fragmentType\` is partial e.g. because of conditional directives
+        export function iLikeTurtles<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<Partial<TType>, any>>
+        ): Partial<TType>;
         // return non-nullable if \`fragmentType\` is non-nullable
         export function iLikeTurtles<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
@@ -285,6 +290,11 @@ describe('client-preset - fragment masking', () => {
             : never
           : never;
 
+        // return partial if \`fragmentType\` is partial e.g. because of conditional directives
+        export function useFragment<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<Partial<TType>, any>>
+        ): Partial<TType>;
         // return non-nullable if \`fragmentType\` is non-nullable
         export function useFragment<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
@@ -418,6 +428,11 @@ describe('client-preset - fragment masking', () => {
             : never
           : never;
 
+        // return partial if \`fragmentType\` is partial e.g. because of conditional directives
+        export function useFragment<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<Partial<TType>, any>>
+        ): Partial<TType>;
         // return non-nullable if \`fragmentType\` is non-nullable
         export function useFragment<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
@@ -551,6 +566,11 @@ describe('client-preset - fragment masking', () => {
             : never
           : never;
 
+        // return partial if \`fragmentType\` is partial e.g. because of conditional directives
+        export function useFragment<TType>(
+          _documentNode: DocumentTypeDecoration<TType, any>,
+          fragmentType: FragmentType<DocumentTypeDecoration<Partial<TType>, any>>
+        ): Partial<TType>;
         // return non-nullable if \`fragmentType\` is non-nullable
         export function useFragment<TType>(
           _documentNode: DocumentTypeDecoration<TType, any>,
@@ -636,5 +656,222 @@ describe('client-preset - fragment masking', () => {
     //   `,
     // ]);
     // validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+  });
+
+  it('#10896 - reserves fragmentMasking=true behaviour, even when used with conditional directives @include/@skip', async () => {
+    const schema = /* GraphQL */ `
+      type Query {
+        user: User
+      }
+      type User {
+        id: ID!
+        nicknames: [String!]
+        age: Int
+      }
+    `;
+    const document = /* GraphQL */ `
+      query GetUser($withNicknames: Boolean!) {
+        user {
+          id
+          ...UserNicknames @include(if: true)
+          ... on User @include(if: true) {
+            age
+          }
+        }
+      }
+      fragment UserNicknames on User {
+        nicknames
+      }
+    `;
+    const { result } = await executeCodegen({
+      schema,
+      documents: document,
+      generates: {
+        'out1/': {
+          preset,
+          presetConfig: {
+            fragmentMasking: true,
+          },
+        },
+      },
+    });
+
+    expect(result).toHaveLength(4);
+
+    const typeFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(typeFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      /** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type GetUserQueryVariables = Exact<{
+        withNicknames: boolean;
+      }>;
+
+
+      export type GetUserQuery = { user: (
+          { id: string }
+          & { ' $fragmentRefs'?: { 'UserNicknamesFragment': Partial<UserNicknamesFragment> } }
+        ) | null };
+
+      export type UserNicknamesFragment = { nicknames: Array<string> | null } & { ' $fragmentName'?: 'UserNicknamesFragment' };
+
+      export const UserNicknamesFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserNicknames"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nicknames"}}]}}]} as unknown as DocumentNode<UserNicknamesFragment, unknown>;
+      export const GetUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"withNicknames"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserNicknames"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"BooleanValue","value":true}}]}]}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserNicknames"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nicknames"}}]}}]} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;"
+    `);
+    const fragmentMaskingFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
+    expect(fragmentMaskingFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
+      import { FragmentDefinitionNode } from 'graphql';
+      import { Incremental } from './graphql';
+
+
+      export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
+        infer TType,
+        any
+      >
+        ? [TType] extends [{ ' $fragmentName'?: infer TKey }]
+          ? TKey extends string
+            ? { ' $fragmentRefs'?: { [key in TKey]: TType } }
+            : never
+          : never
+        : never;
+
+      // return partial if \`fragmentType\` is partial e.g. because of conditional directives
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<Partial<TType>, any>>
+      ): Partial<TType>;
+      // return non-nullable if \`fragmentType\` is non-nullable
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>>
+      ): TType;
+      // return nullable if \`fragmentType\` is undefined
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | undefined
+      ): TType | undefined;
+      // return nullable if \`fragmentType\` is nullable
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null
+      ): TType | null;
+      // return nullable if \`fragmentType\` is nullable or undefined
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | null | undefined
+      ): TType | null | undefined;
+      // return array of non-nullable if \`fragmentType\` is array of non-nullable
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>>
+      ): Array<TType>;
+      // return array of nullable if \`fragmentType\` is array of nullable
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: Array<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+      ): Array<TType> | null | undefined;
+      // return readonly array of non-nullable if \`fragmentType\` is array of non-nullable
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>>
+      ): ReadonlyArray<TType>;
+      // return readonly array of nullable if \`fragmentType\` is array of nullable
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+      ): ReadonlyArray<TType> | null | undefined;
+      export function useFragment<TType>(
+        _documentNode: DocumentTypeDecoration<TType, any>,
+        fragmentType: FragmentType<DocumentTypeDecoration<TType, any>> | Array<FragmentType<DocumentTypeDecoration<TType, any>>> | ReadonlyArray<FragmentType<DocumentTypeDecoration<TType, any>>> | null | undefined
+      ): TType | Array<TType> | ReadonlyArray<TType> | null | undefined {
+        return fragmentType as any;
+      }
+
+
+      export function makeFragmentData<
+        F extends DocumentTypeDecoration<any, any>,
+        FT extends ResultOf<F>
+      >(data: FT, _fragment: F): FragmentType<F> {
+        return data as FragmentType<F>;
+      }
+      export function isFragmentReady<TQuery, TFrag>(
+        queryNode: DocumentTypeDecoration<TQuery, any>,
+        fragmentNode: TypedDocumentNode<TFrag>,
+        data: FragmentType<TypedDocumentNode<Incremental<TFrag>, any>> | null | undefined
+      ): data is FragmentType<typeof fragmentNode> {
+        const deferredFields = (queryNode as { __meta__?: { deferredFields: Record<string, (keyof TFrag)[]> } }).__meta__
+          ?.deferredFields;
+
+        if (!deferredFields) return true;
+
+        const fragDef = fragmentNode.definitions[0] as FragmentDefinitionNode | undefined;
+        const fragName = fragDef?.name?.value;
+
+        const fields = (fragName && deferredFields[fragName]) || [];
+        return fields.length > 0 && fields.every(field => data && field in data);
+      }
+      "
+    `);
+
+    const indexFile = result.find(file => file.filename === 'out1/index.ts');
+    expect(indexFile.content).toMatchInlineSnapshot(`
+      "export * from "./fragment-masking";
+      export * from "./gql";"
+    `);
+
+    const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
+    expect(gqlFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      import * as types from './graphql';
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+      /**
+       * Map of all GraphQL operations in the project.
+       *
+       * This map has several performance disadvantages:
+       * 1. It is not tree-shakeable, so it will include all operations in the project.
+       * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+       * 3. It does not support dead code elimination, so it will add unused operations.
+       *
+       * Therefore it is highly recommended to use the babel or swc plugin for production.
+       * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
+       */
+      type Documents = {
+          "query GetUser($withNicknames: Boolean!) {\\n  user {\\n    id\\n    ...UserNicknames @include(if: true)\\n    ... on User @include(if: true) {\\n      age\\n    }\\n  }\\n}\\n\\nfragment UserNicknames on User {\\n  nicknames\\n}": typeof types.GetUserDocument,
+      };
+      const documents: Documents = {
+          "query GetUser($withNicknames: Boolean!) {\\n  user {\\n    id\\n    ...UserNicknames @include(if: true)\\n    ... on User @include(if: true) {\\n      age\\n    }\\n  }\\n}\\n\\nfragment UserNicknames on User {\\n  nicknames\\n}": types.GetUserDocument,
+      };
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       *
+       *
+       * @example
+       * \`\`\`ts
+       * const query = graphql(\`query GetUser($id: ID!) { user(id: $id) { name } }\`);
+       * \`\`\`
+       *
+       * The query argument is unknown!
+       * Please regenerate the types.
+       */
+      export function graphql(source: string): unknown;
+
+      /**
+       * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+       */
+      export function graphql(source: "query GetUser($withNicknames: Boolean!) {\\n  user {\\n    id\\n    ...UserNicknames @include(if: true)\\n    ... on User @include(if: true) {\\n      age\\n    }\\n  }\\n}\\n\\nfragment UserNicknames on User {\\n  nicknames\\n}"): (typeof documents)["query GetUser($withNicknames: Boolean!) {\\n  user {\\n    id\\n    ...UserNicknames @include(if: true)\\n    ... on User @include(if: true) {\\n      age\\n    }\\n  }\\n}\\n\\nfragment UserNicknames on User {\\n  nicknames\\n}"];
+
+      export function graphql(source: string) {
+        return (documents as any)[source] ?? {};
+      }
+
+      export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    `);
   });
 });
