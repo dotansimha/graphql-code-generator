@@ -553,26 +553,37 @@ export class SelectionSetToObject<
           }
 
           if (conditionalDirectivesFound) {
-            // When a FragmentSpreadUsage is marked as conditional,
-            // it should just be treated like an Inline Fragment
-            // i.e. every field in the fragment's selection set should be optional
-            const flattenedSelectionNodes = selectionNodes.reduce<GroupedTypeNameNode[]>(
-              (prev, node) => {
-                if ('kind' in node) {
-                  prev.push(node);
-                  return prev;
-                }
+            const flattenedSelectionNodes: GroupedTypeNameNode[] = [];
+            // A conditional FragmentSpreadUsage is handled one of two ways.
+            for (const conditionalNode of selectionNodes) {
+              // 1. Fragment masking: preserve the mask as an optional `Partial`
+              // ref rather than inlining the fragment's fields.
+              if (
+                this._config.inlineFragmentTypes === 'mask' &&
+                'fragmentName' in conditionalNode
+              ) {
+                const { fields: partialFields, dependentTypes: partialDependentTypes } =
+                  this.buildSelectionSet(schemaType, [conditionalNode], {
+                    partialTypes: true,
+                    parentFieldName: parentName,
+                  });
+                prev[typeName].push(this.selectionSetStringFromFields(partialFields));
+                dependentTypes.push(...partialDependentTypes);
+                continue;
+              }
 
-                // When a node is a FragmentSpreadUsage,
-                // We just "inline" all the field in its selection set. Note: each field has fragmentDirectives which should contain `@skip` or `@inlcude`
-                // So, `buildSelectionSet` function below can correctly make said fields optional
-                for (const fragmentSpreadUsageSelectionNode of node.selectionNodes) {
-                  prev.push(fragmentSpreadUsageSelectionNode);
-                }
-                return prev;
-              },
-              [],
-            );
+              // 2. Otherwise (`combine` / conditional inline-fragment fields):
+              // treat it like an Inline Fragment - inline the fields so
+              // `buildSelectionSet` can make each one optional. Note: each field
+              // carries `fragmentDirectives` containing `@skip`/`@include`.
+              if ('kind' in conditionalNode) {
+                flattenedSelectionNodes.push(conditionalNode);
+                continue;
+              }
+              for (const fragmentSpreadUsageSelectionNode of conditionalNode.selectionNodes) {
+                flattenedSelectionNodes.push(fragmentSpreadUsageSelectionNode);
+              }
+            }
 
             // Top-level INLINE_FRAGMENT / FRAGMENT_SPREAD nodes among the
             // inlined selections cannot be consumed directly by
@@ -765,7 +776,7 @@ export class SelectionSetToObject<
   protected buildSelectionSet(
     parentSchemaType: GraphQLObjectType,
     selectionNodes: Array<GroupedTypeNameNode>,
-    options: { unsetTypes?: boolean; parentFieldName?: string },
+    options: { unsetTypes?: boolean; partialTypes?: boolean; parentFieldName?: string },
   ) {
     const primitiveFields = new Map<string, EnrichedFieldNode>();
     const primitiveAliasFields = new Map<string, EnrichedFieldNode>();
@@ -1011,7 +1022,17 @@ export class SelectionSetToObject<
       } else if (this._config.inlineFragmentTypes === 'mask') {
         fields.push(
           `{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages
-            .map(name => `'${name}': ${options.unsetTypes ? `Incremental<${name}>` : name}`)
+            .map(name => {
+              // A conditional (`@skip`/`@include`) masked spread may be absent,
+              // so its data is wrapped in `Partial`.
+              if (options.partialTypes) {
+                return `'${name}': Partial<${name}>`;
+              }
+              if (options.unsetTypes) {
+                return `'${name}': Incremental<${name}>`;
+              }
+              return `'${name}': ${name}`;
+            })
             .join(`;`)} } }`,
         );
       }
