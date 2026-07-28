@@ -1,4 +1,9 @@
-import { GraphQLInterfaceType, GraphQLObjectType, isEnumType } from 'graphql';
+import {
+  GraphQLInterfaceType,
+  GraphQLObjectType,
+  isEnumType,
+  isIntrospectionType as isIntrospectionTypeFn,
+} from 'graphql';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import {
   BaseSelectionSetProcessor,
@@ -15,6 +20,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       {
         type,
         name,
+        isIntrospectionType: false,
       },
     ];
   }
@@ -32,6 +38,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       const fieldObj = schemaType.getFields()[field.fieldName];
 
       const baseType = getBaseType(fieldObj.type);
+      const isIntrospectionType = isIntrospectionTypeFn(baseType);
       let typeToUse = baseType.name;
 
       const name = this.config.formatNamedField({
@@ -43,6 +50,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         return {
           name,
           type: 'never',
+          isIntrospectionType,
         };
       }
 
@@ -62,6 +70,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       return {
         name,
         type: wrappedType,
+        isIntrospectionType,
       };
     });
   }
@@ -81,10 +90,12 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         return {
           name,
           type: `'${schemaType.name}'`,
+          isIntrospectionType: false,
         };
       }
       const fieldObj = schemaType.getFields()[aliasedField.fieldName];
       const baseType = getBaseType(fieldObj.type);
+      const isIntrospectionType = isIntrospectionTypeFn(baseType);
       let typeToUse = this.config.scalars[baseType.name]?.output || baseType.name;
 
       if (isEnumType(baseType)) {
@@ -104,6 +115,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         return {
           type: 'never',
           name,
+          isIntrospectionType,
         };
       }
 
@@ -112,6 +124,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       return {
         name,
         type: wrappedType,
+        isIntrospectionType,
       };
     });
   }
@@ -124,6 +137,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     return fields.map(field => ({
       name: field.alias || field.name,
       type: unsetTypes ? 'never' : field.selectionSet,
+      isIntrospectionType: false, // TODO: eddeee888 to verify if this is correct
     }));
   }
 }

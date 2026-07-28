@@ -991,11 +991,22 @@ export class SelectionSetToObject<
       ...transformedLinkFields,
     ].filter(Boolean);
 
-    const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
+    const allStrings: string[] = [];
+    const allObjectsMerged: string[] = [];
+    for (const result of transformed) {
+      if (typeof result === 'string') {
+        allStrings.push(result);
+        continue;
+      }
 
-    const allObjectsMerged: string[] = transformed
-      .filter(t => typeof t !== 'string')
-      .map((t: NameAndType) => `${t.name}: ${t.type}`);
+      allObjectsMerged.push(`${result.name}: ${result.type}`);
+
+      if (result.isIntrospectionType) {
+        // TODO: add to a map of imports from `graphql`
+        // This is because certain fields like `__schema` or `__type` may end up
+        // referencing introspection fields
+      }
+    }
 
     let mergedObjectsAsString: string = null;
 
