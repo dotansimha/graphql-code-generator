@@ -2968,20 +2968,23 @@ export type Q2Query = { search: Array<
         }
       `);
 
-      const { content } = await plugin(
-        testSchema,
-        [{ location: '', document: query }],
-        {},
-        { outputFile: 'graphql.ts' },
-      );
+      const result = mergeOutputs([
+        await plugin(testSchema, [{ document: query }], {}, { outputFile: '' }),
+      ]);
 
-      expect(content).toMatchInlineSnapshot(`
-        "export type InfoQueryVariables = Exact<{ [key: string]: never; }>;
+      expect(result).toMatchInlineSnapshot(`
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type InfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type InfoQuery = { __type: { name: string | null, fields: Array<{ name: string, type: { name: string | null, kind: __TypeKind } }> | null } | null };
         "
       `);
+
+      validateTs(result, undefined, undefined, undefined, undefined, true);
     });
 
     it('Should generate correctly when using enums and typesPrefix', async () => {
