@@ -23,6 +23,12 @@ export function makeFragmentData<
 const defaultUnmaskFunctionName = 'useFragment';
 
 const createUnmaskFunctionTypeDefinitions = (unmaskFunctionName = defaultUnmaskFunctionName) => [
+  `// return partial if \`fragmentType\` is partial e.g. because of conditional directives
+export function ${unmaskFunctionName}<TType>(
+  _documentNode: DocumentTypeDecoration<TType, any>,
+  fragmentType: FragmentType<DocumentTypeDecoration<Partial<TType>, any>>
+): Partial<TType>;`,
+
   `// return non-nullable if \`fragmentType\` is non-nullable
 export function ${unmaskFunctionName}<TType>(
   _documentNode: DocumentTypeDecoration<TType, any>,
