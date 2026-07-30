@@ -389,12 +389,22 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getImports(): Array<string> {
-    return !this.config.globalNamespace &&
-      (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
-      ? this.config.fragmentImports.map(fragmentImport =>
-          generateFragmentImportStatement(fragmentImport, 'type'),
-        )
-      : [];
+    if (this.config.globalNamespace) {
+      return [];
+    }
+
+    const result = [];
+
+    if (
+      this.config.inlineFragmentTypes === 'combine' ||
+      this.config.inlineFragmentTypes === 'mask'
+    ) {
+      for (const fragmentImport of this.config.fragmentImports) {
+        result.push(generateFragmentImportStatement(fragmentImport, 'type'));
+      }
+    }
+
+    return result;
   }
 
   public getExternalSchemaTypeImports(): Array<string> {
