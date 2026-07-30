@@ -80,6 +80,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 > {
   protected _usedSchemaTypes: UsedSchemaTypes = {};
   protected _needsExactUtilityType: boolean = false;
+
+  /**
+   * _externalImports is used to track imports from
+   * The key is the module and value is the named imports
+   */
+  protected _externalImports: { graphql: Set<string> } = { graphql: new Set() };
   private _outputPath: string;
 
   constructor(
@@ -186,6 +192,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         this.getFragmentSuffix.bind(this),
         allFragments,
         this.config,
+        this._externalImports,
       ),
     );
 
@@ -394,6 +401,26 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     const result = [];
+
+    if (this._externalImports.graphql.size > 0) {
+      result.push(
+        generateImportStatement({
+          baseDir: process.cwd(),
+          baseOutputDir: '',
+          outputPath: this._outputPath,
+          importSource: {
+            path: '~graphql',
+            identifiers: [...this._externalImports.graphql],
+          },
+          typesImport: true,
+          emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+          importExtension: normalizeImportExtension({
+            emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
+            importExtension: this.config.importExtension,
+          }),
+        }),
+      );
+    }
 
     if (
       this.config.inlineFragmentTypes === 'combine' ||

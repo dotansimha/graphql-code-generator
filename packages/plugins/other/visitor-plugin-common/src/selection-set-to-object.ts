@@ -124,6 +124,7 @@ export class SelectionSetToObject<
     protected _getFragmentSuffix: GetFragmentSuffixFn,
     protected _loadedFragments: LoadedFragment[],
     protected _config: Config,
+    protected _externalImports: { graphql: Set<string> },
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode,
   ) {
@@ -142,6 +143,7 @@ export class SelectionSetToObject<
       this._getFragmentSuffix.bind(this),
       this._loadedFragments,
       this._config,
+      this._externalImports,
       parentSchemaType,
       selectionSet,
     );
@@ -999,13 +1001,13 @@ export class SelectionSetToObject<
         continue;
       }
 
-      allObjectsMerged.push(`${result.name}: ${result.type}`);
-
       if (result.isIntrospectionType) {
-        // TODO: add to a map of imports from `graphql`
-        // This is because certain fields like `__schema` or `__type` may end up
-        // referencing introspection fields
+        this._externalImports.graphql.add(result.type);
+        allObjectsMerged.push(`${result.name}: typeof ${result.type}`);
+        continue;
       }
+
+      allObjectsMerged.push(`${result.name}: ${result.type}`);
     }
 
     let mergedObjectsAsString: string = null;

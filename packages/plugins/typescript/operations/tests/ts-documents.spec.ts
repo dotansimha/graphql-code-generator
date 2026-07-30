@@ -2973,14 +2973,15 @@ export type Q2Query = { search: Array<
       ]);
 
       expect(result).toMatchInlineSnapshot(`
-        "/** Internal type. DO NOT USE DIRECTLY. */
+        "import type { __TypeKind } from 'graphql';
+        /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
         /** Internal type. DO NOT USE DIRECTLY. */
         export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
         export type InfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-        export type InfoQuery = { __type: { name: string | null, fields: Array<{ name: string, type: { name: string | null, kind: __TypeKind } }> | null } | null };
+        export type InfoQuery = { __type: { name: string | null, fields: Array<{ name: string, type: { name: string | null, kind: typeof __TypeKind } }> | null } | null };
         "
       `);
 
