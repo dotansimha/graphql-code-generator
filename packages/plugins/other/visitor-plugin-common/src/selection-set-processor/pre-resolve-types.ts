@@ -137,7 +137,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     return fields.map(field => ({
       name: field.alias || field.name,
       type: unsetTypes ? 'never' : field.selectionSet,
-      isIntrospectionType: false, // TODO: eddeee888 to verify if this is correct
+      isIntrospectionType: false,
     }));
   }
 }
