@@ -398,42 +398,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   }
 
   public getImports(): Array<string> {
-    if (this.config.globalNamespace) {
-      return [];
-    }
-
-    const result = [];
-
-    // if (this._externalImports.graphql.size > 0) {
-    //   result.push(
-    //     generateImportStatement({
-    //       baseDir: process.cwd(),
-    //       baseOutputDir: '',
-    //       outputPath: this._outputPath,
-    //       importSource: {
-    //         path: '~graphql',
-    //         identifiers: [...this._externalImports.graphql],
-    //       },
-    //       typesImport: true,
-    //       emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
-    //       importExtension: normalizeImportExtension({
-    //         emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
-    //         importExtension: this.config.importExtension,
-    //       }),
-    //     }),
-    //   );
-    // }
-
-    if (
-      this.config.inlineFragmentTypes === 'combine' ||
-      this.config.inlineFragmentTypes === 'mask'
-    ) {
-      for (const fragmentImport of this.config.fragmentImports) {
-        result.push(generateFragmentImportStatement(fragmentImport, 'type'));
-      }
-    }
-
-    return result;
+    return !this.config.globalNamespace &&
+      (this.config.inlineFragmentTypes === 'combine' || this.config.inlineFragmentTypes === 'mask')
+      ? this.config.fragmentImports.map(fragmentImport =>
+          generateFragmentImportStatement(fragmentImport, 'type'),
+        )
+      : [];
   }
 
   public getExternalSchemaTypeImports(): Array<string> {

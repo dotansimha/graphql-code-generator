@@ -19,8 +19,8 @@ export type LinkField = {
   type: string;
   selectionSet: string;
 };
-export type NameAndType = { name: string; type: string; isIntrospectionType: boolean };
-export type ProcessResult = Array<NameAndType | string>;
+export type NameAndType = { name: string; type: string };
+export type ProcessResult = null | Array<NameAndType | string>;
 
 export type SelectionSetProcessorConfig = {
   namespacedImportName: string | null;

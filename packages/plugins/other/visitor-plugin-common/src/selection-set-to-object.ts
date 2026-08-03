@@ -1002,16 +1002,11 @@ export class SelectionSetToObject<
       ...transformedLinkFields,
     ].filter(Boolean);
 
-    const allStrings: string[] = [];
-    const allObjectsMerged: string[] = [];
-    for (const result of transformed) {
-      if (typeof result === 'string') {
-        allStrings.push(result);
-        continue;
-      }
+    const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
 
-      allObjectsMerged.push(`${result.name}: ${result.type}`);
-    }
+    const allObjectsMerged: string[] = transformed
+      .filter(t => typeof t !== 'string')
+      .map((t: NameAndType) => `${t.name}: ${t.type}`);
 
     let mergedObjectsAsString: string = null;
 
