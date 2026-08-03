@@ -68,7 +68,6 @@ export const plugin: PluginFunction<
   });
 
   const operationsDefinitions: string[] = operationsResult.definitions;
-
   if (config.addOperationExport) {
     for (const d of allDocumentsAST.definitions) {
       if ('name' in d) {
@@ -80,23 +79,14 @@ export const plugin: PluginFunction<
   }
 
   const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
-
-  // IMPORTANT: when a visitor leaves a node with no transformation logic,
-  // It will leave the node as an object.
-  // Here, we filter in nodes that have been turned into strings, i.e. they have been transformed
-  // This way, we do not have to explicitly declare a method for every node type to convert them to null
-  const schemaTypesDefinitions: string[] = schemaTypes.definitions.filter(
-    def => typeof def === 'string',
-  );
+  const schemaTypesDefinitions = findTransformedDefinitions(schemaTypes);
 
   let introspectionTypesDefinitions: string[] = [];
   if (visitor.shouldVisitIntrospectionTypes()) {
     const introspectionTypes = oldVisit(parse(printIntrospectionSchema(schema)), {
       leave: visitor,
     });
-    introspectionTypesDefinitions = introspectionTypes.definitions.filter(
-      def => typeof def === 'string',
-    );
+    introspectionTypesDefinitions = findTransformedDefinitions(introspectionTypes);
   }
 
   let content = [
@@ -137,4 +127,13 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
       "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package.",
     );
   }
+};
+
+// IMPORTANT: when a visitor leaves a node with no transformation logic,
+// It will leave the node as an object.
+//
+// This helper function filters in nodes that have been turned into strings, i.e. they have been transformed
+// This way, we do not have to explicitly declare a method for every node type to convert them to null
+const findTransformedDefinitions = (visitedResult: any): string[] => {
+  return visitedResult.definitions.filter(def => typeof def === 'string');
 };

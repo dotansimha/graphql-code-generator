@@ -150,7 +150,7 @@ if (versionInfo.major <= 16) {
   });
 }
 
-if (versionInfo.major <= 17) {
+if (versionInfo.major === 17) {
   describe('TypeScript Operations Plugin - Query introspection enums graphql@17', () => {
     it('should handle introspection types (__schema)', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
