@@ -1,4 +1,10 @@
-import { concatAST, GraphQLSchema, type DocumentNode } from 'graphql';
+import {
+  concatAST,
+  GraphQLSchema,
+  parse,
+  printIntrospectionSchema,
+  type DocumentNode,
+} from 'graphql';
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
@@ -61,7 +67,7 @@ export const plugin: PluginFunction<
     leave: visitor,
   });
 
-  const operationsDefinitions = operationsResult.definitions;
+  const operationsDefinitions: string[] = operationsResult.definitions;
 
   if (config.addOperationExport) {
     for (const d of allDocumentsAST.definitions) {
@@ -79,9 +85,25 @@ export const plugin: PluginFunction<
   // It will leave the node as an object.
   // Here, we filter in nodes that have been turned into strings, i.e. they have been transformed
   // This way, we do not have to explicitly declare a method for every node type to convert them to null
-  const schemaTypesDefinitions = schemaTypes.definitions.filter(def => typeof def === 'string');
+  const schemaTypesDefinitions: string[] = schemaTypes.definitions.filter(
+    def => typeof def === 'string',
+  );
 
-  let content = [...schemaTypesDefinitions, ...operationsDefinitions].join('\n');
+  let introspectionTypesDefinitions: string[] = [];
+  if (visitor.shouldVisitIntrospectionTypes()) {
+    const introspectionTypes = oldVisit(parse(printIntrospectionSchema(schema)), {
+      leave: visitor,
+    });
+    introspectionTypesDefinitions = introspectionTypes.definitions.filter(
+      def => typeof def === 'string',
+    );
+  }
+
+  let content = [
+    ...schemaTypesDefinitions,
+    ...introspectionTypesDefinitions,
+    ...operationsDefinitions,
+  ].join('\n');
 
   if (config.globalNamespace) {
     content = `

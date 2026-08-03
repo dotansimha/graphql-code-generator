@@ -124,7 +124,6 @@ export class SelectionSetToObject<
     protected _getFragmentSuffix: GetFragmentSuffixFn,
     protected _loadedFragments: LoadedFragment[],
     protected _config: Config,
-    protected _externalImports: { graphql: Set<string> },
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode,
   ) {
@@ -143,7 +142,6 @@ export class SelectionSetToObject<
       this._getFragmentSuffix.bind(this),
       this._loadedFragments,
       this._config,
-      this._externalImports,
       parentSchemaType,
       selectionSet,
     );
@@ -1009,12 +1007,6 @@ export class SelectionSetToObject<
     for (const result of transformed) {
       if (typeof result === 'string') {
         allStrings.push(result);
-        continue;
-      }
-
-      if (result.isIntrospectionType) {
-        this._externalImports.graphql.add(result.type);
-        allObjectsMerged.push(`${result.name}: typeof ${result.type}`);
         continue;
       }
 
