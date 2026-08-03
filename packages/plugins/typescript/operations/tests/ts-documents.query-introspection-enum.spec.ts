@@ -176,59 +176,61 @@ if (versionInfo.major <= 17) {
       ]);
 
       expect(result).toMatchInlineSnapshot(`
-          "/** Internal type. DO NOT USE DIRECTLY. */
-          type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-          /** Internal type. DO NOT USE DIRECTLY. */
-          export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-          /** A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies. */
-          export type __DirectiveLocation =
-            /** Location adjacent to a query operation. */
-            | 'QUERY'
-            /** Location adjacent to a mutation operation. */
-            | 'MUTATION'
-            /** Location adjacent to a subscription operation. */
-            | 'SUBSCRIPTION'
-            /** Location adjacent to a field. */
-            | 'FIELD'
-            /** Location adjacent to a fragment definition. */
-            | 'FRAGMENT_DEFINITION'
-            /** Location adjacent to a fragment spread. */
-            | 'FRAGMENT_SPREAD'
-            /** Location adjacent to an inline fragment. */
-            | 'INLINE_FRAGMENT'
-            /** Location adjacent to a variable definition. */
-            | 'VARIABLE_DEFINITION'
-            /** Location adjacent to a schema definition. */
-            | 'SCHEMA'
-            /** Location adjacent to a scalar definition. */
-            | 'SCALAR'
-            /** Location adjacent to an object type definition. */
-            | 'OBJECT'
-            /** Location adjacent to a field definition. */
-            | 'FIELD_DEFINITION'
-            /** Location adjacent to an argument definition. */
-            | 'ARGUMENT_DEFINITION'
-            /** Location adjacent to an interface definition. */
-            | 'INTERFACE'
-            /** Location adjacent to a union definition. */
-            | 'UNION'
-            /** Location adjacent to an enum definition. */
-            | 'ENUM'
-            /** Location adjacent to an enum value definition. */
-            | 'ENUM_VALUE'
-            /** Location adjacent to an input object type definition. */
-            | 'INPUT_OBJECT'
-            /** Location adjacent to an input object field definition. */
-            | 'INPUT_FIELD_DEFINITION'
-            /** Location adjacent to a directive definition. */
-            | 'DIRECTIVE_DEFINITION';
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        /** A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies. */
+        export type __DirectiveLocation =
+          /** Location adjacent to a query operation. */
+          | 'QUERY'
+          /** Location adjacent to a mutation operation. */
+          | 'MUTATION'
+          /** Location adjacent to a subscription operation. */
+          | 'SUBSCRIPTION'
+          /** Location adjacent to a field. */
+          | 'FIELD'
+          /** Location adjacent to a fragment definition. */
+          | 'FRAGMENT_DEFINITION'
+          /** Location adjacent to a fragment spread. */
+          | 'FRAGMENT_SPREAD'
+          /** Location adjacent to an inline fragment. */
+          | 'INLINE_FRAGMENT'
+          /** Location adjacent to an operation variable definition. */
+          | 'VARIABLE_DEFINITION'
+          /** Location adjacent to a fragment variable definition. */
+          | 'FRAGMENT_VARIABLE_DEFINITION'
+          /** Location adjacent to a schema definition. */
+          | 'SCHEMA'
+          /** Location adjacent to a scalar definition. */
+          | 'SCALAR'
+          /** Location adjacent to an object type definition. */
+          | 'OBJECT'
+          /** Location adjacent to a field definition. */
+          | 'FIELD_DEFINITION'
+          /** Location adjacent to an argument definition. */
+          | 'ARGUMENT_DEFINITION'
+          /** Location adjacent to an interface definition. */
+          | 'INTERFACE'
+          /** Location adjacent to a union definition. */
+          | 'UNION'
+          /** Location adjacent to an enum definition. */
+          | 'ENUM'
+          /** Location adjacent to an enum value definition. */
+          | 'ENUM_VALUE'
+          /** Location adjacent to an input object type definition. */
+          | 'INPUT_OBJECT'
+          /** Location adjacent to an input object field definition. */
+          | 'INPUT_FIELD_DEFINITION'
+          /** Location adjacent to a directive definition. */
+          | 'DIRECTIVE_DEFINITION';
 
-          export type InfoQueryVariables = Exact<{ [key: string]: never; }>;
+        export type InfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-          export type InfoQuery = { __schema: { directives: Array<{ locations: Array<__DirectiveLocation> }> } };
-          "
-        `);
+        export type InfoQuery = { __schema: { directives: Array<{ locations: Array<__DirectiveLocation> }> } };
+        "
+      `);
 
       validateTs(result, undefined, undefined, undefined, undefined, true);
     });
