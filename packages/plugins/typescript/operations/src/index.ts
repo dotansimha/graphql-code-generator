@@ -78,9 +78,20 @@ export const plugin: PluginFunction<
     }
   }
 
+  // #region generateSchemaTypes
+  // When Input and Enum appear in Result selection sets, we need to
+  // generate those types so they can be referred to correctly
   const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
   const schemaTypesDefinitions = findTransformedDefinitions(schemaTypes);
+  // #endregion
 
+  // #region generateIntrospectionTypesDefinitions
+  // It is possible for queries to refer to enums in introspection:
+  // - `__TypeKind`
+  // - `__DirectiveOperation`
+  //
+  // In such cases, we need to generate the used introspection types
+  // so the Result types can refer to them correctly (similar to how we do schema types)
   let introspectionTypesDefinitions: string[] = [];
   if (visitor.shouldVisitIntrospectionTypes()) {
     const introspectionTypes = oldVisit(parse(printIntrospectionSchema(schema)), {
@@ -88,6 +99,7 @@ export const plugin: PluginFunction<
     });
     introspectionTypesDefinitions = findTransformedDefinitions(introspectionTypes);
   }
+  // #endregion
 
   let content = [
     ...schemaTypesDefinitions,
