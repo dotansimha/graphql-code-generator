@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.4
+
+### Patch Changes
+
+- [#10910](https://github.com/dotansimha/graphql-code-generator/pull/10910)
+  [`1624c8a`](https://github.com/dotansimha/graphql-code-generator/commit/1624c8aae53176a21c0dbbe1fb0d7d565ba50e22)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix performance issue when
+  config.importSchemaTypesFrom is set, and the provided schema is still unnecessarily visited
+
 ## 6.1.3
 
 ### Patch Changes
