@@ -132,6 +132,32 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   noExport?: boolean;
+
+  /**
+   * @description Set the value to `true` in order to disable all description generation.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ## Disable description generation
+   * ```ts filename="codegen.ts"
+   * import type { CodegenConfig } from '@graphql-codegen/cli'
+   *
+   * const config: CodegenConfig = {
+   *   // ...
+   *   generates: {
+   *     'path/to/file.ts': {
+   *       plugins: ['typescript-operations'],
+   *       config: {
+   *         disableDescriptions: true
+   *       }
+   *     }
+   *   }
+   * }
+   * export default config
+   * ```
+   */
+  disableDescriptions?: boolean;
+
   /**
    * @name addOperationExport
    * @type boolean
