@@ -48,6 +48,47 @@ describe('TypeScript Operations Plugin', () => {
       await validate(content);
     });
 
+    describe('disableDescriptions', () => {
+      const description = 'Description.';
+      const testSchema = buildSchema(/* GraphQL */ `
+        "${description}"
+        enum A {
+          B
+        }
+
+        type Query {
+          a: A
+        }
+      `);
+      const document = parse(/* GraphQL */ `
+        query {
+          a
+        }
+      `);
+
+      it('Should generate descriptions when set to false', async () => {
+        const { content } = await plugin(
+          testSchema,
+          [{ document }],
+          { disableDescriptions: false },
+          { outputFile: '' },
+        );
+
+        expect(content).toContain(description);
+      });
+
+      it('Should not generate descriptions when set to true', async () => {
+        const { content } = await plugin(
+          testSchema,
+          [{ document }],
+          { disableDescriptions: true },
+          { outputFile: '' },
+        );
+
+        expect(content).not.toContain(description);
+      });
+    });
+
     it('Can merge an inline fragment with a spread', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Comment {
