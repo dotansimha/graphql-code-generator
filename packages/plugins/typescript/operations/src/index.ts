@@ -81,8 +81,16 @@ export const plugin: PluginFunction<
   // #region generateSchemaTypes
   // When Input and Enum appear in Result selection sets, we need to
   // generate those types so they can be referred to correctly
-  const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
-  const schemaTypesDefinitions = findTransformedDefinitions(schemaTypes);
+  //
+  // Note: we don't run visitor on the schema when i.e. `!config.importSchemaTypesFrom`
+  // because the schema types are supposedly already generated elsewhere.
+  // In such cases, running the visitor on the schema will do unncessary work
+  let schemaTypesDefinitions: string[] = [];
+  if (!config.importSchemaTypesFrom) {
+    const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
+    schemaTypesDefinitions = findTransformedDefinitions(schemaTypes);
+  }
+
   // #endregion
 
   // #region generateIntrospectionTypesDefinitions
