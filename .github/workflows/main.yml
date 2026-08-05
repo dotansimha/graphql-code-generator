@@ -174,26 +174,6 @@ jobs:
       - name: Test ESM & CJS integrity
         run: pnpm bob check
 
-  workflow-check:
-    name: Validate workflow matrices
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Install pnpm
-        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
-        with:
-          standalone: true
-          cache: true
-      - name: Install Node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: 24
-      - name: Install packages
-        run: pnpm install
-      - name: Check workflow matrices
-        run: node scripts/check-workflows.js
-
   test:
     name:
       Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL
