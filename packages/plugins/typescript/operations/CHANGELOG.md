@@ -1,5 +1,27 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.4
+
+### Patch Changes
+
+- [#10910](https://github.com/dotansimha/graphql-code-generator/pull/10910)
+  [`1624c8a`](https://github.com/dotansimha/graphql-code-generator/commit/1624c8aae53176a21c0dbbe1fb0d7d565ba50e22)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix performance issue when
+  config.importSchemaTypesFrom is set, and the provided schema is still unnecessarily visited
+
+## 6.1.3
+
+### Patch Changes
+
+- [#10905](https://github.com/dotansimha/graphql-code-generator/pull/10905)
+  [`5a9f96c`](https://github.com/dotansimha/graphql-code-generator/commit/5a9f96cde55b310976729d5fc3cc2e7aa98ace31)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix types when introspection is used and
+  values are not generated or imported correctly
+
+- Updated dependencies
+  [[`2dd1531`](https://github.com/dotansimha/graphql-code-generator/commit/2dd1531475193de473cb5220926faf8715a64854)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.3
+
 ## 6.1.2
 
 ### Patch Changes

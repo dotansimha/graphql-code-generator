@@ -1,4 +1,10 @@
-import { concatAST, GraphQLSchema, type DocumentNode } from 'graphql';
+import {
+  concatAST,
+  GraphQLSchema,
+  parse,
+  printIntrospectionSchema,
+  type DocumentNode,
+} from 'graphql';
 import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
@@ -61,8 +67,7 @@ export const plugin: PluginFunction<
     leave: visitor,
   });
 
-  const operationsDefinitions = operationsResult.definitions;
-
+  const operationsDefinitions: string[] = operationsResult.definitions;
   if (config.addOperationExport) {
     for (const d of allDocumentsAST.definitions) {
       if ('name' in d) {
@@ -73,15 +78,42 @@ export const plugin: PluginFunction<
     }
   }
 
-  const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
+  // #region generateSchemaTypes
+  // When Input and Enum appear in Result selection sets, we need to
+  // generate those types so they can be referred to correctly
+  //
+  // Note: we don't run visitor on the schema when i.e. `!config.importSchemaTypesFrom`
+  // because the schema types are supposedly already generated elsewhere.
+  // In such cases, running the visitor on the schema will do unncessary work
+  let schemaTypesDefinitions: string[] = [];
+  if (!config.importSchemaTypesFrom) {
+    const schemaTypes = oldVisit(transformSchemaAST(schema, config).ast, { leave: visitor });
+    schemaTypesDefinitions = findTransformedDefinitions(schemaTypes);
+  }
 
-  // IMPORTANT: when a visitor leaves a node with no transformation logic,
-  // It will leave the node as an object.
-  // Here, we filter in nodes that have been turned into strings, i.e. they have been transformed
-  // This way, we do not have to explicitly declare a method for every node type to convert them to null
-  const schemaTypesDefinitions = schemaTypes.definitions.filter(def => typeof def === 'string');
+  // #endregion
 
-  let content = [...schemaTypesDefinitions, ...operationsDefinitions].join('\n');
+  // #region generateIntrospectionTypesDefinitions
+  // It is possible for queries to refer to enums in introspection:
+  // - `__TypeKind`
+  // - `__DirectiveOperation`
+  //
+  // In such cases, we need to generate the used introspection types
+  // so the Result types can refer to them correctly (similar to how we do schema types)
+  let introspectionTypesDefinitions: string[] = [];
+  if (visitor.shouldVisitIntrospectionTypes()) {
+    const introspectionTypes = oldVisit(parse(printIntrospectionSchema(schema)), {
+      leave: visitor,
+    });
+    introspectionTypesDefinitions = findTransformedDefinitions(introspectionTypes);
+  }
+  // #endregion
+
+  let content = [
+    ...schemaTypesDefinitions,
+    ...introspectionTypesDefinitions,
+    ...operationsDefinitions,
+  ].join('\n');
 
   if (config.globalNamespace) {
     content = `
@@ -115,4 +147,13 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
       "To use the `nullability.errorHandlingClient` option, you must install the 'graphql-sock' package.",
     );
   }
+};
+
+// IMPORTANT: when a visitor leaves a node with no transformation logic,
+// It will leave the node as an object.
+//
+// This helper function filters in nodes that have been turned into strings, i.e. they have been transformed
+// This way, we do not have to explicitly declare a method for every node type to convert them to null
+const findTransformedDefinitions = (visitedResult: any): string[] => {
+  return visitedResult.definitions.filter(def => typeof def === 'string');
 };

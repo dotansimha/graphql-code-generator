@@ -178,7 +178,7 @@ jobs:
     name:
       Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL
       v${{matrix.graphql_version}}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs:
       - lint
       - prettier-check
@@ -189,7 +189,7 @@ jobs:
         node_version: [22, 24]
         graphql_version: [15, 16, 17]
         include:
-          - node-version: 22
+          - node_version: 22
             os: windows-latest
             graphql_version: 16
     steps:
@@ -223,7 +223,7 @@ jobs:
     name:
       Watcher Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL
       v${{matrix.graphql_version}}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs:
       - lint
       - prettier-check
@@ -234,7 +234,7 @@ jobs:
         node_version: [20]
         graphql_version: [15, 16]
         include:
-          - node-version: 20
+          - node_version: 20
             os: windows-latest
             graphql_version: 16
     steps:

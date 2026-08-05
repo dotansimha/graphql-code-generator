@@ -1,6 +1,5 @@
 import autoBind from 'auto-bind';
 import {
-  EnumTypeDefinitionNode,
   getNamedType,
   GraphQLEnumType,
   GraphQLInputObjectType,
@@ -8,11 +7,13 @@ import {
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
   isEnumType,
+  isIntrospectionType,
   Kind,
   TypeInfo,
   visit,
   visitWithTypeInfo,
   type DocumentNode,
+  type EnumTypeDefinitionNode,
   type FragmentDefinitionNode,
   type GraphQLNamedInputType,
   type GraphQLSchema,
@@ -80,6 +81,14 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 > {
   protected _usedSchemaTypes: UsedSchemaTypes = {};
   protected _needsExactUtilityType: boolean = false;
+  /**
+   * _usedEnumIntrospectionType is a metadata value
+   * which tracks whether an introspection type enum (i.e. __TypeKind or __DirectiveLocation)
+   * has been referred to in selection sets
+   *
+   * If it is, we need to generate the enum values from introspection types
+   */
+  protected _usedEnumIntrospectionType: boolean = false;
   private _outputPath: string;
 
   constructor(
@@ -687,6 +696,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
                 node: namedType,
                 tsType: this.convertName(namedType.name),
               };
+
+              if (isIntrospectionType(namedType)) {
+                this._usedEnumIntrospectionType = true;
+              }
+
               return;
             }
 
@@ -738,6 +752,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     // 1. It is not always used in the rest of the file, so this is a safe way to avoid lint rules (in tsconfig or eslint) complaining it's not used in the current file.
     // 2. In Client Preset, it is used by fragment-masking.ts, so it needs `export`
     return `${internalUtilityTypeWarning}export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };`;
+  }
+
+  shouldVisitIntrospectionTypes(): boolean {
+    return this._usedEnumIntrospectionType;
   }
 }
 

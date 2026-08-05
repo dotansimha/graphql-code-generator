@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.3
+
+### Patch Changes
+
+- [#10904](https://github.com/dotansimha/graphql-code-generator/pull/10904)
+  [`2dd1531`](https://github.com/dotansimha/graphql-code-generator/commit/2dd1531475193de473cb5220926faf8715a64854)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fragment masking generation when
+  conditional directive is used
+
 ## 7.2.2
 
 ### Patch Changes
