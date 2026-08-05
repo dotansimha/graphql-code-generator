@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.5
+
+### Patch Changes
+
+- [#10909](https://github.com/dotansimha/graphql-code-generator/pull/10909)
+  [`b36c084`](https://github.com/dotansimha/graphql-code-generator/commit/b36c0843de8d5f5958f1eabee74fd72086d63953)
+  Thanks [@jaydenseric](https://github.com/jaydenseric)! - Added missing types and tests for the
+  TypeScript operations plugin option `disableDescriptions`.
+
 ## 6.1.4
 
 ### Patch Changes
