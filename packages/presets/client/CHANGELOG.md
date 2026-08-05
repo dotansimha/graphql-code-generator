@@ -1,5 +1,20 @@
 # @graphql-codegen/client-preset
 
+## 6.1.1
+
+### Patch Changes
+
+- [#10904](https://github.com/dotansimha/graphql-code-generator/pull/10904)
+  [`2dd1531`](https://github.com/dotansimha/graphql-code-generator/commit/2dd1531475193de473cb5220926faf8715a64854)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix fragment masking generation when
+  conditional directive is used
+
+- Updated dependencies
+  [[`2dd1531`](https://github.com/dotansimha/graphql-code-generator/commit/2dd1531475193de473cb5220926faf8715a64854),
+  [`5a9f96c`](https://github.com/dotansimha/graphql-code-generator/commit/5a9f96cde55b310976729d5fc3cc2e7aa98ace31)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.3
+  - @graphql-codegen/typescript-operations@6.1.3
+
 ## 6.1.0
 
 ### Minor Changes
