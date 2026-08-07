@@ -15,7 +15,6 @@ import {
   PRODUCTS,
   useTheme,
 } from '@theguild/components';
-import favicon from './public/favicon.svg';
 
 export default defineConfig({
   docsRepositoryBase: 'https://github.com/dotansimha/graphql-code-generator/tree/master/website',
@@ -127,12 +126,5 @@ export default defineConfig({
         />
       );
     },
-  },
-  head: () => {
-    return (
-      <>
-        <link rel="icon" href={favicon.src} />
-      </>
-    );
   },
 });
