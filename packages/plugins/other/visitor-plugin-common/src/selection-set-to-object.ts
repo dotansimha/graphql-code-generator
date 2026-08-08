@@ -1023,11 +1023,12 @@ export class SelectionSetToObject<
         fields.push(
           `{ ' $fragmentRefs'?: { ${fragmentsSpreadUsages
             .map(name => {
+              // FIXME: https://github.com/dotansimha/graphql-code-generator/pull/10904/changes#r3729881814
               // A conditional (`@skip`/`@include`) masked spread may be absent,
               // so its data is wrapped in `Partial`.
-              if (options.partialTypes) {
-                return `'${name}': Partial<${name}>`;
-              }
+              // if (options.partialTypes) {
+              //   return `'${name}': Partial<${name}>`;
+              // }
               if (options.unsetTypes) {
                 return `'${name}': Incremental<${name}>`;
               }
