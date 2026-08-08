@@ -1,5 +1,16 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.4
+
+### Patch Changes
+
+- [#10916](https://github.com/dotansimha/graphql-code-generator/pull/10916)
+  [`d95d378`](https://github.com/dotansimha/graphql-code-generator/commit/d95d37884c8d74e7462b752c56f56ea24df56d11)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Revert Partial handling when conditional
+  fragment and fragment masking are used
+
+  This is causing all masked fields to be optional due to how function type override works.
+
 ## 7.2.3
 
 ### Patch Changes
