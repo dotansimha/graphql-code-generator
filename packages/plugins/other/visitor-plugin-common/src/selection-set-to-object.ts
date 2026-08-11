@@ -157,6 +157,34 @@ export class SelectionSetToObject<
     nodes: Array<InlineFragmentNode>,
     types: Map<string, Array<GroupedTypeNameNode>>,
   ): void {
+    /**
+     * When we collect the selection sets of inline fragments we need to
+     * make sure directives on the inline fragments are stored in a way
+     * that can be associated back to the fields in the fragment i.e. `fragmentDirectives`
+     *
+     * This helps support things like making those fields optional when deferring a
+     * fragment (using @defer).
+     */
+    const enrichFieldWithDirectives = ({
+      node,
+      fields,
+    }: {
+      node: InlineFragmentNode;
+      fields: EnrichedFieldNode[];
+    }) => {
+      const directives = (node.directives as DirectiveNode[]) || undefined;
+      return {
+        fieldsWithFragmentDirectives: fields.map(field => ({
+          ...field,
+          // A field may already carry `fragmentDirectives` from an enclosing
+          // conditional fragment spread; keep those in addition to the
+          // directives on this inline fragment, instead of overwriting them.
+          fragmentDirectives: [...(field.fragmentDirectives || []), ...(directives || [])],
+        })),
+        directives,
+      };
+    };
+
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType as GraphQLNamedType, nodes, types);
     }
@@ -166,21 +194,11 @@ export class SelectionSetToObject<
           ? this._schema.getType(node.typeCondition.name.value)
           : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
+        const { fieldsWithFragmentDirectives, directives } = enrichFieldWithDirectives({
+          node,
+          fields,
+        });
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
-        const directives = (node.directives as DirectiveNode[]) || undefined;
-
-        // When we collect the selection sets of inline fragments we need to
-        // make sure directives on the inline fragments are stored in a way
-        // that can be associated back to the fields in the fragment, to
-        // support things like making those fields optional when deferring a
-        // fragment (using @defer).
-        const fieldsWithFragmentDirectives = fields.map(field => ({
-          ...field,
-          // A field may already carry `fragmentDirectives` from an enclosing
-          // conditional fragment spread; keep those in addition to the
-          // directives on this inline fragment, instead of overwriting them.
-          fragmentDirectives: [...(field.fragmentDirectives || []), ...(directives || [])],
-        }));
 
         if (isObjectType(typeOnSchema)) {
           this._appendToTypeMap(types, typeOnSchema.name, fieldsWithFragmentDirectives);
@@ -245,12 +263,14 @@ export class SelectionSetToObject<
           ? this._schema.getType(node.typeCondition.name.value)
           : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
+        const { fieldsWithFragmentDirectives } = enrichFieldWithDirectives({ node, fields });
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (
           isObjectType(schemaType) &&
           possibleTypes.find(possibleType => possibleType.name === schemaType.name)
         ) {
+          this._appendToTypeMap(types, schemaType.name, fieldsWithFragmentDirectives);
           this._appendToTypeMap(types, schemaType.name, fields);
           this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
           this._collectInlineFragments(schemaType, inlines, types);
