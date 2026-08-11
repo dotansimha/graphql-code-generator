@@ -846,4 +846,188 @@ describe('client-preset - fragment masking', () => {
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
   });
+
+  it('inline fragment in union with conditional directives must make inline fragment fields optional', async () => {
+    const schema = /* GraphQL */ `
+      type Mutation {
+        doSomething: Payload!
+      }
+
+      union Payload =
+        | SystemError
+        | SystemSuccess
+        | ClientError
+        | ClientMissingServiceError
+        | ClientMissingUrlError
+        | ClientRetry
+        | ClientSuccess
+
+      type SystemError {
+        message: String!
+      }
+
+      type SystemSuccess {
+        message: String!
+      }
+
+      type ClientError {
+        changes: ChangeConnection
+        errors: ErrorConnection
+        linkToWebsite: String
+        valid: Boolean!
+      }
+
+      type ClientMissingServiceError {
+        message: String!
+      }
+
+      type ClientMissingUrlError {
+        message: String!
+      }
+
+      type ClientRetry {
+        reason: String!
+      }
+
+      type ClientSuccess {
+        changes: ChangeConnection
+        initial: Boolean!
+        linkToWebsite: String
+        message: String
+        valid: Boolean!
+      }
+
+      type ChangeConnection {
+        edges: [ChangeEdge!]!
+      }
+      type ChangeEdge {
+        cursor: String!
+        node: ChangeNode!
+      }
+      type ChangeNode {
+        value: String
+      }
+
+      type ErrorConnection {
+        edges: [ErrorEdge!]!
+      }
+      type ErrorEdge {
+        cursor: String!
+        node: ErrorNode!
+      }
+      type ErrorNode {
+        message: String!
+      }
+    `;
+    const document = /* GraphQL */ `
+      mutation Test($skip: Boolean!) {
+        doSomething {
+          __typename
+          ... on ClientSuccess @skip(if: $skip) {
+            initial
+            valid
+            successMessage: message
+            linkToWebsite
+            changes {
+              edges {
+                __typename
+              }
+              ...Changes
+            }
+          }
+          ... on ClientError @skip(if: $skip) {
+            valid
+            linkToWebsite
+            changes {
+              edges {
+                __typename
+              }
+              ...Changes
+            }
+            errors {
+              ...Errors
+            }
+          }
+          ... on ClientMissingServiceError @skip(if: $skip) {
+            missingServiceError: message
+          }
+          ... on ClientMissingUrlError @skip(if: $skip) {
+            missingUrlError: message
+          }
+          ... on SystemSuccess @include(if: $skip) {
+            message
+          }
+          ... on SystemError @include(if: $skip) {
+            message
+          }
+          ... on ClientRetry {
+            reason
+          }
+        }
+      }
+
+      fragment Changes on ChangeConnection {
+        edges {
+          node {
+            value
+          }
+        }
+      }
+
+      fragment Errors on ErrorConnection {
+        edges {
+          node {
+            message
+          }
+        }
+      }
+    `;
+    const { result } = await executeCodegen({
+      schema,
+      documents: document,
+      generates: {
+        'out1/': {
+          preset,
+        },
+      },
+    });
+
+    const typeFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(typeFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      /** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type TestMutationVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type TestMutation = { doSomething:
+          | { __typename: 'ClientError' } & { valid?: boolean, linkToWebsite?: string | null, changes?: (
+              { edges: Array<{ __typename: 'ChangeEdge' }> }
+              & { ' $fragmentRefs'?: { 'ChangesFragment': ChangesFragment } }
+            ) | null, errors?: { ' $fragmentRefs'?: { 'ErrorsFragment': ErrorsFragment } } | null }
+          | { __typename: 'ClientMissingServiceError' } & { missingServiceError?: string }
+          | { __typename: 'ClientMissingUrlError' } & { missingUrlError?: string }
+          | { __typename: 'ClientRetry', reason: string }
+          | { __typename: 'ClientSuccess' } & { initial?: boolean, valid?: boolean, linkToWebsite?: string | null, successMessage?: string | null, changes?: (
+              { edges: Array<{ __typename: 'ChangeEdge' }> }
+              & { ' $fragmentRefs'?: { 'ChangesFragment': ChangesFragment } }
+            ) | null }
+          | { __typename: 'SystemError' } & { message?: string }
+          | { __typename: 'SystemSuccess' } & { message?: string }
+         };
+
+      export type ChangesFragment = { edges: Array<{ node: { value: string | null } }> } & { ' $fragmentName'?: 'ChangesFragment' };
+
+      export type ErrorsFragment = { edges: Array<{ node: { message: string } }> } & { ' $fragmentName'?: 'ErrorsFragment' };
+
+      export const ChangesFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Changes"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChangeConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<ChangesFragment, unknown>;
+      export const ErrorsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Errors"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ErrorConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<ErrorsFragment, unknown>;
+      export const TestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Test"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doSomething"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientSuccess"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initial"}},{"kind":"Field","name":{"kind":"Name","value":"valid"}},{"kind":"Field","alias":{"kind":"Name","value":"successMessage"},"name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"linkToWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"changes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Changes"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valid"}},{"kind":"Field","name":{"kind":"Name","value":"linkToWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"changes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Changes"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Errors"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientMissingServiceError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"missingServiceError"},"name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientMissingUrlError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"missingUrlError"},"name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemSuccess"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientRetry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reason"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Changes"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChangeConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Errors"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ErrorConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<TestMutation, TestMutationVariables>;"
+    `);
+  });
 });
