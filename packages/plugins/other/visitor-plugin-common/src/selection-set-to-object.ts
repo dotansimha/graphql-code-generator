@@ -271,7 +271,6 @@ export class SelectionSetToObject<
           possibleTypes.find(possibleType => possibleType.name === schemaType.name)
         ) {
           this._appendToTypeMap(types, schemaType.name, fieldsWithFragmentDirectives);
-          this._appendToTypeMap(types, schemaType.name, fields);
           this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
           this._collectInlineFragments(schemaType, inlines, types);
         } else if (isInterfaceType(schemaType)) {
