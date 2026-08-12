@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.5
+
+### Patch Changes
+
+- [#10918](https://github.com/dotansimha/graphql-code-generator/pull/10918)
+  [`6a3b734`](https://github.com/dotansimha/graphql-code-generator/commit/6a3b734efe8a6ca3826296d3baf2fda3dfca4352)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix union and conditional directives
+  resulting in no field types
+
 ## 7.2.4
 
 ### Patch Changes
