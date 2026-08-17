@@ -288,7 +288,7 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
-    overwrite?: boolean;
+    overwrite?: boolean | Partial<NormalizedOverwriteOption>;
     /**
      * @description A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.
      * You can use one of the following:
@@ -471,7 +471,7 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
-    overwrite?: boolean;
+    overwrite?: boolean | Partial<NormalizedOverwriteOption>;
     /**
      * @description A flag to trigger codegen when there are changes in the specified GraphQL schemas.
      *
@@ -570,6 +570,11 @@ export namespace Types {
      */
     cwd?: string;
   }
+
+  export type NormalizedOverwriteOption = {
+    removeStaleFiles: boolean;
+    updateExistingFiles: boolean;
+  };
 
   export type ComplexPluginOutput<M = Record<string, unknown>> = {
     content: string;
