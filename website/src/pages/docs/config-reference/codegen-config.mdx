@@ -81,7 +81,7 @@ Here are the supported options that you can define in the config file (see
     for the specific output file
 
   - **`generates.overwrite`** - Same as root `overwrite`, but applies only for the specific output
-    file
+    file. When set, it takes precedence over the root `overwrite` option for this output file
 
 - [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()`
   handlers for custom file extensions. This option is essential if the code generator has to go
@@ -98,7 +98,24 @@ Here are the supported options that you can define in the config file (see
   more information. You can read more about passing configuration to plugins [here](./config-field)
 
 - **`overwrite`** - A flag to overwrite files if they already exist when generating code (`true` by
-  default)
+  default). Instead of a boolean, you can pass an object to control the two overwrite behaviors
+  independently:
+
+  - **`overwrite.updateExistingFiles`** - Whether to overwrite the content of a generated file that
+    already exists on disk (`true` by default)
+  - **`overwrite.removeStaleFiles`** - Whether to delete previously generated files that are no
+    longer produced by the current run. This only takes effect in
+    [watch mode](/docs/getting-started/development-workflow#watch-mode) (`true` by default)
+
+  ```ts
+  const config: CodegenConfig = {
+    // ...
+    overwrite: {
+      updateExistingFiles: true,
+      removeStaleFiles: false
+    }
+  }
+  ```
 
 - **`watch`** - A flag to trigger codegen when there are changes in the specified GraphQL schemas.
   You can either specify a boolean to turn it on/off or specify an array of glob patterns to add
