@@ -55,6 +55,7 @@
   ],
   "scripts": {
     "lint": "eslint **/*.ts",
+    "prepack": "node ./scripts/sync-publish-bugs.mjs",
     "test": "vitest --no-watch"
   },
   "peerDependencies": {
