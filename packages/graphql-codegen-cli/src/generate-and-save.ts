@@ -37,7 +37,7 @@ export async function generate(
     // find stale files from previous build which are not present in current build
     const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
     for (const filename of staleFilenames) {
-      if (shouldOverwrite(config, filename)) {
+      if (normalizeOverwriteConfig(config, filename).removeStaleFiles) {
         unlinkFile(filename, err => {
           const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
           if (err) {
@@ -79,7 +79,7 @@ export async function generate(
               recentOutputHash.set(result.filename, previousHash);
             }
 
-            if (!shouldOverwrite(config, result.filename) && exists) {
+            if (!normalizeOverwriteConfig(config, result.filename).updateExistingFiles && exists) {
               return;
             }
 
@@ -189,20 +189,42 @@ export async function generate(
   return outputFiles;
 }
 
-function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.overwrite === undefined ? true : !!config.overwrite;
-  const outputConfig = config.generates[outputPath];
+function normalizeOverwriteConfig(
+  config: Types.Config,
+  outputPath: string,
+): Types.NormalizedOverwriteOption {
+  const overwrite = (function getOverwriteOption(): Types.Config['overwrite'] {
+    const { overwrite: result = true } = config;
+    const outputConfig = config.generates[outputPath];
 
-  if (!outputConfig) {
-    debugLog(`Couldn't find a config of ${outputPath}`);
-    return globalValue;
+    if (!outputConfig) {
+      debugLog(`Couldn't find a config of ${outputPath}`);
+      return result;
+    }
+    if (isConfiguredOutput(outputConfig) && outputConfig.overwrite !== undefined) {
+      return outputConfig.overwrite;
+    }
+
+    return result;
+  })();
+
+  if (overwrite === true) {
+    return {
+      removeStaleFiles: true,
+      updateExistingFiles: true,
+    };
   }
 
-  if (isConfiguredOutput(outputConfig) && typeof outputConfig.overwrite === 'boolean') {
-    return outputConfig.overwrite;
+  if (overwrite === false) {
+    return {
+      removeStaleFiles: false,
+      updateExistingFiles: false,
+    };
   }
 
-  return globalValue;
+  const { removeStaleFiles = true, updateExistingFiles = true } = overwrite;
+
+  return { removeStaleFiles, updateExistingFiles };
 }
 
 function isConfiguredOutput(output: any): output is Types.ConfiguredOutput {

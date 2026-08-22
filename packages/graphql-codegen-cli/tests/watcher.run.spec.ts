@@ -1,8 +1,11 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import type { Mock } from 'vitest';
 import { CodegenContext } from '../src/config.js';
-import { createWatcher } from '../src/utils/watcher.js';
+import { generate } from '../src/generate-and-save.js';
+import * as watcherModule from '../src/utils/watcher.js';
+
+const createWatcherSpy = vi.spyOn(watcherModule, 'createWatcher');
 
 /**
  * waitForNextEvent
@@ -49,7 +52,7 @@ const setupMockWatcher = async (
   codegenContext: ConstructorParameters<typeof CodegenContext>[0],
   onNext: Mock = vi.fn().mockResolvedValue([]),
 ) => {
-  const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
+  const { stopWatching } = watcherModule.createWatcher(new CodegenContext(codegenContext), onNext);
   // After creating watcher, wait for a tick for subscription to be completely set up
   await waitForNextEvent();
   return { stopWatching };
@@ -134,6 +137,179 @@ describe('Watch runs', () => {
 
     await stopWatching();
 
+    await waitForNextEvent();
+  });
+});
+
+describe('Watch runs - overwrite.removeStaleFiles', () => {
+  const runWatchAndGetStopWatching = async (
+    codegenContext: ConstructorParameters<typeof CodegenContext>[0],
+  ) => {
+    const context = new CodegenContext(codegenContext);
+    const runningWatcher = generate(context);
+    await waitForNextEvent();
+
+    const { stopWatching } = createWatcherSpy.mock.results.at(-1)!.value as ReturnType<
+      typeof watcherModule.createWatcher
+    >;
+
+    return { context, runningWatcher, stopWatching };
+  };
+
+  test('removes a stale generated file on rebuild when overwrite.removeStaleFiles=true', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    const keptOutputFile = path.join(testDir, 'kept.ts');
+    const staleOutputFile = path.join(testDir, 'stale.ts');
+
+    const { context, runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        overwrite: {
+          removeStaleFiles: true,
+          updateExistingFiles: true,
+        },
+        generates: {
+          [keptOutputFile]: { plugins: ['typescript'] },
+          [staleOutputFile]: { plugins: ['typescript'] },
+        },
+      },
+    });
+
+    // Initial run: both outputs are generated
+    expect(existsSync(keptOutputFile)).toBe(true);
+    expect(existsSync(staleOutputFile)).toBe(true);
+
+    // Simulate the config no longer producing `staleOutputFile` (e.g. removed from codegen config)
+    context.updateConfig({
+      generates: {
+        [keptOutputFile]: { plugins: ['typescript'] },
+      },
+    });
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    expect(existsSync(keptOutputFile)).toBe(true);
+    expect(existsSync(staleOutputFile)).toBe(false);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
+
+  test('keeps a stale generated file on rebuild when overwrite.removeStaleFiles=false', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    const keptOutputFile = path.join(testDir, 'kept.ts');
+    const staleOutputFile = path.join(testDir, 'stale.ts');
+
+    const { context, runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        overwrite: {
+          removeStaleFiles: false,
+          updateExistingFiles: true,
+        },
+        generates: {
+          [keptOutputFile]: { plugins: ['typescript'] },
+          [staleOutputFile]: { plugins: ['typescript'] },
+        },
+      },
+    });
+
+    // Initial run: both outputs are generated
+    expect(existsSync(keptOutputFile)).toBe(true);
+    expect(existsSync(staleOutputFile)).toBe(true);
+
+    // Simulate the config no longer producing `staleOutputFile` (e.g. removed from codegen config)
+    context.updateConfig({
+      generates: {
+        [keptOutputFile]: { plugins: ['typescript'] },
+      },
+    });
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    expect(existsSync(keptOutputFile)).toBe(true);
+    // removeStaleFiles=false means the stale file is left on disk
+    expect(existsSync(staleOutputFile)).toBe(true);
+
+    await stopWatching();
+    await runningWatcher;
     await waitForNextEvent();
   });
 });

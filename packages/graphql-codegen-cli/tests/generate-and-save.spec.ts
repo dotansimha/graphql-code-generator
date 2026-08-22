@@ -165,6 +165,132 @@ describe('generate-and-save', () => {
     expect(writeSpy).toHaveBeenCalled();
   });
 
+  test('should write to an existing file when global overwrite.updateExistingFiles=true', async () => {
+    const filename = 'overwrite.ts';
+    writeSpy.mockImplementation(() => Promise.resolve());
+    readSpy.mockImplementation(async () => ''); // forces file to exist
+
+    const output = await generate(
+      {
+        schema: SIMPLE_TEST_SCHEMA,
+        overwrite: {
+          updateExistingFiles: true,
+          removeStaleFiles: false,
+        },
+        generates: {
+          [filename]: {
+            schema: `
+            type OtherType { a: String }
+          `,
+            plugins: ['typescript'],
+          },
+        },
+      },
+      true,
+    );
+
+    expect(output.length).toBe(1);
+    // makes sure it checks if file is there
+    expect(readSpy).toHaveBeenCalledWith(filename);
+    // makes sure it writes a new file
+    expect(writeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test('should NOT write to an existing file when global overwrite.updateExistingFiles=false', async () => {
+    const filename = 'overwrite.ts';
+    writeSpy.mockImplementation(() => Promise.resolve());
+    readSpy.mockImplementation(async () => ''); // forces file to exist
+
+    const output = await generate(
+      {
+        schema: SIMPLE_TEST_SCHEMA,
+        overwrite: {
+          updateExistingFiles: false,
+          removeStaleFiles: true,
+        },
+        generates: {
+          [filename]: {
+            schema: `
+            type OtherType { a: String }
+          `,
+            plugins: ['typescript'],
+          },
+        },
+      },
+      true,
+    );
+
+    expect(output.length).toBe(1);
+    // makes sure it checks if file is there
+    expect(readSpy).toHaveBeenCalledWith(filename);
+    // makes sure it doesn't write a new file
+    expect(writeSpy).not.toHaveBeenCalled();
+  });
+
+  test("should write to an existing file when specific output's overwrite.updateExistingFiles=true", async () => {
+    const filename = 'overwrite.ts';
+    writeSpy.mockImplementation(() => Promise.resolve());
+    readSpy.mockImplementation(async () => ''); // forces file to exist
+
+    const output = await generate(
+      {
+        schema: SIMPLE_TEST_SCHEMA,
+        overwrite: false,
+        generates: {
+          [filename]: {
+            overwrite: {
+              updateExistingFiles: true,
+            },
+            schema: `
+            type OtherType { a: String }
+          `,
+            plugins: ['typescript'],
+          },
+        },
+      },
+      true,
+    );
+
+    expect(output.length).toBe(1);
+    // makes sure it checks if file is there
+    expect(readSpy).toHaveBeenCalledWith(filename);
+    // makes sure it writes a new file
+    expect(writeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test("should NOT write to an existing file when specific output's overwrite.updateExistingFiles=false", async () => {
+    const filename = 'overwrite.ts';
+    writeSpy.mockImplementation(() => Promise.resolve());
+    readSpy.mockImplementation(async () => ''); // forces file to exist
+
+    const output = await generate(
+      {
+        schema: SIMPLE_TEST_SCHEMA,
+        overwrite: {
+          updateExistingFiles: true,
+        },
+        generates: {
+          [filename]: {
+            overwrite: {
+              updateExistingFiles: false,
+            },
+            schema: `
+            type OtherType { a: String }
+          `,
+            plugins: ['typescript'],
+          },
+        },
+      },
+      true,
+    );
+
+    expect(output.length).toBe(1);
+    // makes sure it checks if file is there
+    expect(readSpy).toHaveBeenCalledWith(filename);
+    // makes sure it doesn't write a new file
+    expect(writeSpy).not.toHaveBeenCalled();
+  });
+
   test('should override generated files', async () => {
     vi.unmock('fs');
     const fs = await import('fs');
