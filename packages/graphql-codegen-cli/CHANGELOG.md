@@ -1,5 +1,29 @@
 # @graphql-codegen/cli
 
+## 7.3.0
+
+### Minor Changes
+
+- [#10921](https://github.com/dotansimha/graphql-code-generator/pull/10921)
+  [`58cdb31`](https://github.com/dotansimha/graphql-code-generator/commit/58cdb31a4acfa88a3cf7bfcf188de894495c7e1c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `overwrite` with
+  `overwrite.removeStaleFiles` and `overwrite.updateExistingFiles`
+
+  `overwrite` was being used to both remove stale files in watch mode and update existing files.
+  Some plugins such as Server Preset may dynamically return files to write between watch runs (for
+  performance purposes).
+
+  The `overwrite` can now take an object with `overwrite.removeStaleFiles` and
+  `overwrite.updateExistingFiles` fields to allow granular control over actions.
+
+  This is not a breaking change because `overwrite=true|false` still works.
+
+### Patch Changes
+
+- Updated dependencies
+  [[`58cdb31`](https://github.com/dotansimha/graphql-code-generator/commit/58cdb31a4acfa88a3cf7bfcf188de894495c7e1c)]:
+  - @graphql-codegen/plugin-helpers@7.2.0
+
 ## 7.2.0
 
 ### Minor Changes
