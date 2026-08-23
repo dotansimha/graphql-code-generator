@@ -1,5 +1,31 @@
 # @graphql-codegen/cli
 
+## 7.3.1
+
+### Patch Changes
+
+- [#10924](https://github.com/dotansimha/graphql-code-generator/pull/10924)
+  [`0c8f5ba`](https://github.com/dotansimha/graphql-code-generator/commit/0c8f5ba763b6cfb714814d1666f066dbdb91ef02)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix profiler output not being written to the
+  filesystem in watch mode (`--profile --watch`)
+
+  The profiler trace was only written on the non-watch code path, after the watch-mode early return,
+  so a profiled watch session never produced a `codegen-*.json` file.
+
+  The profiler now writes a fresh trace file after the initial run and after every rebuild, with
+  each file containing only that run's events. A failed rebuild does not produce a trace and its
+  events are discarded so they don't leak into the next successful run.
+
+  The `Profiler` now owns its own trace lifecycle:
+  - a new `clear()` method starts a new trace
+  - a new `outputName` property provides the filename for the current trace (`null` for the noop
+    profiler)
+  - filename generation was removed from `CodegenContext`
+
+- Updated dependencies
+  [[`0c8f5ba`](https://github.com/dotansimha/graphql-code-generator/commit/0c8f5ba763b6cfb714814d1666f066dbdb91ef02)]:
+  - @graphql-codegen/plugin-helpers@7.2.1
+
 ## 7.3.0
 
 ### Minor Changes
