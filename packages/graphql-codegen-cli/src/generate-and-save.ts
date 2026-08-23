@@ -143,9 +143,22 @@ export async function generate(
     return generationResult;
   }
 
+  // Flush the collected profiler events to disk, then reset the profiler so the
+  // next run produces its own trace under a fresh filename. No-op when profiling
+  // is disabled (the noop profiler has no `outputName`).
+  async function writeProfilerOutput(): Promise<void> {
+    const { profiler } = context;
+    if (!profiler.outputName) {
+      return;
+    }
+
+    await writeFile(join(context.cwd, profiler.outputName), JSON.stringify(profiler.collect()));
+    profiler.clear();
+  }
+
   // watch mode
   if (config.watch) {
-    return createWatcher(context, writeOutput).runningWatcher;
+    return createWatcher(context, writeOutput, writeProfilerOutput).runningWatcher;
   }
 
   const { result: outputFiles, error } = await context.profiler.run(
@@ -179,12 +192,7 @@ export async function generate(
     'Lifecycle: beforeDone',
   );
 
-  if (context.profilerOutput) {
-    await writeFile(
-      join(context.cwd, context.profilerOutput),
-      JSON.stringify(context.profiler.collect()),
-    );
-  }
+  await writeProfilerOutput();
 
   return outputFiles;
 }

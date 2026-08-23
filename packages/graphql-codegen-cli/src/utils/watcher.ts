@@ -29,6 +29,12 @@ function emitWatching(watchDir: string) {
 export const createWatcher = (
   initialContext: CodegenContext,
   onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>,
+  /**
+   * Called after a successful run (initial build or rebuild) once `onNext` has
+   * finished. Used to flush profiler output per run; a no-op when profiling is
+   * disabled.
+   */
+  afterRun: () => Promise<void> = () => Promise.resolve(),
 ): {
   /**
    * Call this function to stop the running watch server
@@ -82,9 +88,10 @@ export const createWatcher = (
 
     const debouncedExec = debounce(() => {
       if (!isShutdown) {
-        executeCodegen(initialContext)
+        initialContext.profiler
+          .run(() => executeCodegen(initialContext), 'executeCodegen')
           .then(
-            ({ result, error }) => {
+            async ({ result, error }) => {
               // FIXME: this is a quick fix to stop `onNext` (writeOutput) from
               // removing all files when there is an error.
               //
@@ -95,9 +102,13 @@ export const createWatcher = (
               //
               // This also means we don't have config.allowPartialOutputs in watch mode
               if (error) {
+                // Discard this failed run's profiler events so they don't leak
+                // into the next successful run's trace.
+                initialContext.profiler.clear();
                 return;
               }
-              onNext(result);
+              await onNext(result);
+              await afterRun();
             },
             () => Promise.resolve(),
           )
@@ -224,15 +235,20 @@ export const createWatcher = (
    * stopWatching() was called or there was an error inside it
    */
   stopWatching.runningWatcher = new Promise<void>((resolve, reject) => {
-    executeCodegen(initialContext)
+    initialContext.profiler
+      .run(() => executeCodegen(initialContext), 'executeCodegen')
       .then(
-        ({ result, error }) => {
+        async ({ result, error }) => {
           // TODO: this is the initial run, the logic here mimics the above watcher logic.
           // We need to check whether it's ok to deviate between these two.
           if (error) {
+            // Discard this failed run's profiler events so they don't leak
+            // into the next successful run's trace.
+            initialContext.profiler.clear();
             return;
           }
-          onNext(result);
+          await onNext(result);
+          await afterRun();
         },
         () => Promise.resolve(),
       )
