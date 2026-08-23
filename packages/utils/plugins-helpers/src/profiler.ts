@@ -22,27 +22,53 @@ export interface ProfilerEvent {
 }
 
 export interface Profiler {
+  /**
+   * Filename of the current trace's collected events should be written to,
+   * or `null` when profiling is disabled.
+   * A fresh name is generated whenever {@link clear} starts a new trace.
+   */
+  readonly outputName: string | null;
   run<T>(fn: () => Promise<T>, name: string, cat?: string): Promise<T>;
   collect(): ProfilerEvent[];
+  /** Discard all collected events so the next {@link collect} starts fresh */
+  clear(): void;
 }
 
 export function createNoopProfiler(): Profiler {
   return {
+    outputName: null,
     run(fn) {
       return Promise.resolve().then(() => fn());
     },
     collect() {
       return [];
     },
+    clear() {},
   };
 }
 
 export function createProfiler(): Profiler {
+  /** Build a unique, human-readable trace filename e.g. `codegen-20111005T144800000.json` */
+  function generateOutputName(): string {
+    const datetimeNormalized = new Date()
+      .toISOString() // 2011-10-05T14:48:00.000Z
+      .replace(/[-:.Z]/g, ''); // 20111005T144800000
+    return `codegen-${datetimeNormalized}.json`;
+  }
+
   const events: ProfilerEvent[] = [];
+  let outputName = generateOutputName();
 
   return {
+    get outputName() {
+      return outputName;
+    },
     collect() {
       return events;
+    },
+    clear() {
+      events.length = 0;
+      outputName = generateOutputName();
     },
     run(fn, name, cat) {
       let startTime: [number, number];

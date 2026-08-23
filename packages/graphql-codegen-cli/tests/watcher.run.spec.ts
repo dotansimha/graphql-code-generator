@@ -1,4 +1,12 @@
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from 'fs';
 import * as path from 'path';
 import type { Mock } from 'vitest';
 import { CodegenContext } from '../src/config.js';
@@ -311,5 +319,189 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     await stopWatching();
     await runningWatcher;
     await waitForNextEvent();
+  });
+});
+
+describe('Watch runs - profiler output', () => {
+  // The watcher matches changed paths relative to process.cwd(), so a profiled
+  // watch run resolves `context.cwd` to process.cwd() and writes its trace files
+  // there. Since that location is shared, each test tracks only the files it
+  // created (baseline delta) and cleans up just those.
+  //
+  // IMPORTANT: these tests must stay sequential (do NOT mark them
+  // `.concurrent`). They share process.cwd() for trace output, so running them
+  // at the same time would make each test see the other's files in its delta and
+  // clobber them during cleanup.
+  const listProfilerFiles = () =>
+    readdirSync(process.cwd()).filter(f => f.startsWith('codegen-') && f.endsWith('.json'));
+
+  test('writes a fresh profiler trace file after the initial run and after each rebuild', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    const context = new CodegenContext({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        generates: {
+          [path.join(testDir, 'types.ts')]: {
+            plugins: ['typescript'],
+          },
+        },
+      },
+    });
+    context.useProfiler();
+
+    const runningWatcher = generate(context);
+    await waitForNextEvent();
+
+    const { stopWatching } = createWatcherSpy.mock.results.at(-1)!.value as ReturnType<
+      typeof watcherModule.createWatcher
+    >;
+
+    try {
+      // Initial run writes one profiler trace
+      const afterInitial = listProfilerFiles();
+      expect(afterInitial).toHaveLength(1);
+
+      // Trigger a rebuild
+      writeFileSync(
+        documentFile.absolute,
+        /* GraphQL */ `
+          query {
+            me {
+              id
+              name
+            }
+          }
+        `,
+      );
+      await waitForNextEvent();
+
+      // Rebuild writes a second, distinct profiler trace
+      const afterRebuild = listProfilerFiles();
+      expect(afterRebuild).toHaveLength(2);
+      expect(new Set(afterRebuild).size).toBe(2); // filenames are unique per run
+
+      // Each trace contains only its own run's events (profiler was cleared between runs)
+      for (const filename of afterRebuild) {
+        const events = JSON.parse(readFileSync(path.join(process.cwd(), filename), 'utf8'));
+        expect(Array.isArray(events)).toBe(true);
+        expect(events.length).toBeGreaterThan(0);
+      }
+    } finally {
+      await stopWatching();
+      await runningWatcher;
+      await waitForNextEvent();
+      for (const filename of listProfilerFiles()) {
+        unlinkSync(path.join(process.cwd(), filename));
+      }
+    }
+  });
+
+  test('does not write a trace for a failed rebuild and clears its events so the next trace stays clean', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    const context = new CodegenContext({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        generates: {
+          [path.join(testDir, 'types.ts')]: {
+            plugins: ['typescript'],
+          },
+        },
+      },
+    });
+    context.useProfiler();
+
+    const runningWatcher = generate(context);
+    await waitForNextEvent();
+
+    const { stopWatching } = createWatcherSpy.mock.results.at(-1)!.value as ReturnType<
+      typeof watcherModule.createWatcher
+    >;
+
+    try {
+      // Initial run writes one profiler trace
+      const afterInitial = listProfilerFiles();
+      expect(afterInitial).toHaveLength(1);
+
+      // Trigger a rebuild that fails (invalid field in the document)
+      writeFileSync(
+        documentFile.absolute,
+        /* GraphQL */ `
+          query {
+            me {
+              id
+              zzzz # invalid field -> generation error
+            }
+          }
+        `,
+      );
+      await waitForNextEvent();
+
+      // No trace is written for the failed run, and its events were discarded
+      expect(listProfilerFiles()).toHaveLength(1);
+      expect(context.profiler.collect()).toHaveLength(0);
+    } finally {
+      await stopWatching();
+      await runningWatcher;
+      await waitForNextEvent();
+      for (const filename of listProfilerFiles()) {
+        unlinkSync(path.join(process.cwd(), filename));
+      }
+    }
   });
 });

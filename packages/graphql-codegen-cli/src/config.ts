@@ -380,7 +380,6 @@ export class CodegenContext {
   cwd: string;
   filepath: string;
   profiler: Profiler;
-  profilerOutput?: string;
   checkModeStaleFiles = [];
 
   constructor({
@@ -452,12 +451,6 @@ export class CodegenContext {
 
   useProfiler() {
     this.profiler = createProfiler();
-
-    const now = new Date(); // 2011-10-05T14:48:00.000Z
-    const datetime = now.toISOString().split('.')[0]; // 2011-10-05T14:48:00
-    const datetimeNormalized = datetime.replace(/-|:/g, ''); // 20111005T144800
-
-    this.profilerOutput = `codegen-${datetimeNormalized}.json`;
   }
 
   getPluginContext(): { [key: string]: any } {
