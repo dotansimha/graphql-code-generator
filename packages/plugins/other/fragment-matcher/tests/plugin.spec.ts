@@ -512,4 +512,41 @@ describe('Fragment Matcher Plugin', () => {
 
     expect(contentA).toEqual(contentB);
   });
+  it('should support schemas that declare @defer and @stream', async () => {
+    const incrementalSchema = buildASTSchema(gql`
+      directive @defer(if: Boolean! = true, label: String) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+      directive @stream(if: Boolean! = true, label: String, initialCount: Int = 0) on FIELD
+
+      type Character {
+        name: String
+      }
+
+      type Jedi {
+        side: String
+      }
+
+      type Droid {
+        model: String
+      }
+
+      union People = Character | Jedi | Droid
+
+      type Query {
+        allPeople: [People]
+      }
+    `);
+
+    const content = await plugin(
+      incrementalSchema,
+      [],
+      {
+        apolloClientVersion: 2,
+      },
+      {
+        outputFile: 'foo.json',
+      },
+    );
+
+    expect(content).toEqual(introspection);
+  });
 });
