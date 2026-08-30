@@ -51,6 +51,10 @@ export async function generate(
     previouslyGeneratedFilenames = filenames;
   }
 
+  // Records the hash of the content codegen last wrote per file. This is always
+  // kept up to date; `FileOutput.contentComparison` only decides whether the
+  // skip-check trusts this record ('cache-first') or re-reads the file from disk
+  // ('disk'), for outputs whose content depends on the file's existing content.
   const recentOutputHash = new Map<string, string>();
 
   async function writeOutput(generationResult: Types.FileOutput[]): Promise<Types.FileOutput[]> {
@@ -69,12 +73,28 @@ export async function generate(
     await context.profiler.run(
       () =>
         Promise.all(
-          generationResult.map(async (result: Types.FileOutput) => {
-            const previousHash =
-              recentOutputHash.get(result.filename) || (await hashFile(result.filename));
+          generationResult.map(async result => {
+            // The "previous" hash the skip-check compares against:
+            // - 'cache-first' trusts the in-memory record of what codegen last wrote
+            // (falling back to disk when there's no entry).
+            // - 'disk' always re-reads the file, because the output's content
+            // depends on the file's existing content
+            // (e.g. a preset that reads the file and rewrites part of it), so the
+            // in-memory record could wrongly skip a write when the file was changed
+            // on disk but the regenerated content matches a previous run.
+            const previousHash = await (async function getPreviousHash(): Promise<string | null> {
+              const { contentComparison = 'cache-first' } = result;
+
+              if (contentComparison === 'disk') {
+                return await hashFile(result.filename);
+              }
+
+              return recentOutputHash.get(result.filename) || (await hashFile(result.filename));
+            })();
             const exists = previousHash !== null;
 
-            // Store previous hash to avoid reading from disk again
+            // Always update the cache, regardless of `cache-first` or `disk` option,
+            // so subsequent runs have consistent entry to compare against
             if (previousHash) {
               recentOutputHash.set(result.filename, previousHash);
             }

@@ -522,6 +522,10 @@ export async function executeCodegen(
                               filename: outputArgs.filename,
                               content: output,
                               hooks: outputConfig.hooks || {},
+                              // A preset sets `outputArgs` per output via `buildGeneratesSection`.
+                              // Fall back to `outputConfig` so plugin outputs can opt in too.
+                              contentComparison:
+                                outputArgs.contentComparison ?? outputConfig.contentComparison,
                             });
                           };
 
