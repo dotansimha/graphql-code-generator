@@ -9,6 +9,7 @@ import {
 } from 'fs';
 import * as path from 'path';
 import type { Mock } from 'vitest';
+import * as addPlugin from '@graphql-codegen/add';
 import { CodegenContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as watcherModule from '../src/utils/watcher.js';
@@ -315,6 +316,251 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     expect(existsSync(keptOutputFile)).toBe(true);
     // removeStaleFiles=false means the stale file is left on disk
     expect(existsSync(staleOutputFile)).toBe(true);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
+});
+
+describe('Watch runs - externally modified output files', () => {
+  const runWatchAndGetStopWatching = async (
+    codegenContext: ConstructorParameters<typeof CodegenContext>[0],
+  ) => {
+    const context = new CodegenContext(codegenContext);
+    const runningWatcher = generate(context);
+    await waitForNextEvent();
+
+    const { stopWatching } = createWatcherSpy.mock.results.at(-1)!.value as ReturnType<
+      typeof watcherModule.createWatcher
+    >;
+
+    return { context, runningWatcher, stopWatching };
+  };
+
+  const setupSchemaAndDocument = () => {
+    const files = setupTestFiles();
+    writeFileSync(
+      files.schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      files.documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    return files;
+  };
+
+  // The `typescript` plugin output depends only on the schema, so editing the
+  // document triggers a rebuild that regenerates identical content -- exercising
+  // the "identical hash -> skip write" path where the on-disk change would
+  // otherwise be lost.
+  const triggerRebuild = (documentFile: { absolute: string }) => {
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `,
+    );
+  };
+
+  test('preset - compares output content against content on disk when contentComparison=disk', async () => {
+    const { testDir, schemaFile, documentFile } = setupSchemaAndDocument();
+    await waitForNextEvent();
+
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        generates: {
+          [testDir]: {
+            preset: {
+              buildGeneratesSection: options => [
+                {
+                  filename: path.join(options.baseOutputDir, 'output.ts'),
+                  schema: options.schema,
+                  schemaAst: options.schemaAst,
+                  documents: [],
+                  config: {},
+                  pluginMap: { add: addPlugin },
+                  plugins: [{ add: { content: 'Default Content' } }],
+                  contentComparison: 'disk',
+                },
+              ],
+            },
+          },
+        },
+      },
+    });
+
+    const outputFile = path.join(testDir, 'output.ts');
+
+    // Initial run generates the file.
+    expect(existsSync(outputFile)).toBe(true);
+    const generatedContent = readFileSync(outputFile, 'utf8');
+    expect(generatedContent.length).toBeGreaterThan(0);
+
+    // Simulate the file being changed on disk after codegen wrote it. The watcher
+    // ignores output files, so this write does not itself trigger a rebuild.
+    writeFileSync(outputFile, '// tampered on disk\n');
+
+    triggerRebuild(documentFile);
+    await waitForNextEvent();
+
+    // contentComparison:'disk' forces a disk comparison, so the tampered file is
+    // restored to the generated content.
+    expect(readFileSync(outputFile, 'utf8')).toBe(generatedContent);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
+
+  test('preset - compares output content against content in the cache when contentComparison=cache-first (default)', async () => {
+    const { testDir, schemaFile, documentFile } = setupSchemaAndDocument();
+    await waitForNextEvent();
+
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        generates: {
+          [testDir]: {
+            preset: {
+              buildGeneratesSection: options => [
+                {
+                  filename: path.join(options.baseOutputDir, 'output.ts'),
+                  schema: options.schema,
+                  schemaAst: options.schemaAst,
+                  documents: [],
+                  config: {},
+                  pluginMap: { add: addPlugin },
+                  plugins: [{ add: { content: 'Default Content' } }],
+                },
+              ],
+            },
+          },
+        },
+      },
+    });
+
+    const outputFile = path.join(testDir, 'output.ts');
+
+    // Initial run generates the file.
+    expect(existsSync(outputFile)).toBe(true);
+    const generatedContent = readFileSync(outputFile, 'utf8');
+    expect(generatedContent.length).toBeGreaterThan(0);
+
+    // Simulate the file being changed on disk after codegen wrote it. The watcher
+    // ignores output files, so this write does not itself trigger a rebuild.
+    const tampered = '// tampered on disk\n';
+    writeFileSync(outputFile, tampered);
+
+    triggerRebuild(documentFile);
+    await waitForNextEvent();
+
+    // The regenerated content is identical to the cached hash, so the write is
+    // skipped and the on-disk change is left untouched -- the existing
+    // performance optimization for pure outputs.
+    expect(readFileSync(outputFile, 'utf8')).toBe(tampered);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
+
+  test('plugin - compares output content against content on disk when contentComparison=disk', async () => {
+    const { testDir, schemaFile, documentFile } = setupSchemaAndDocument();
+    await waitForNextEvent();
+
+    const outputFile = path.join(testDir, 'types.ts');
+
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        generates: {
+          // No preset: the flag is set directly on the output config, which the CLI
+          // forwards to the resulting FileOutput.
+          [outputFile]: { plugins: ['typescript'], contentComparison: 'disk' },
+        },
+      },
+    });
+
+    expect(existsSync(outputFile)).toBe(true);
+    const generatedContent = readFileSync(outputFile, 'utf8');
+    expect(generatedContent.length).toBeGreaterThan(0);
+
+    writeFileSync(outputFile, '// tampered on disk\n');
+
+    triggerRebuild(documentFile);
+    await waitForNextEvent();
+
+    expect(readFileSync(outputFile, 'utf8')).toBe(generatedContent);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
+
+  test('plugin - compares output content against content in the cache when contentComparison=cache-first (default)', async () => {
+    const { testDir, schemaFile, documentFile } = setupSchemaAndDocument();
+    await waitForNextEvent();
+
+    const outputFile = path.join(testDir, 'types.ts');
+
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        generates: {
+          // Default contentComparison ('cache-first'): output is treated as a pure
+          // function of the schema, so the CLI trusts its in-memory hash and skips
+          // re-reading the file.
+          [outputFile]: { plugins: ['typescript'] },
+        },
+      },
+    });
+
+    expect(existsSync(outputFile)).toBe(true);
+    const tampered = '// tampered on disk\n';
+    writeFileSync(outputFile, tampered);
+
+    triggerRebuild(documentFile);
+    await waitForNextEvent();
+
+    // The regenerated content is identical to the cached hash, so the write is
+    // skipped and the on-disk change is left untouched -- the existing
+    // performance optimization for pure outputs.
+    expect(readFileSync(outputFile, 'utf8')).toBe(tampered);
 
     await stopWatching();
     await runningWatcher;
