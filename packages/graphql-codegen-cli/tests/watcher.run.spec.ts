@@ -323,7 +323,7 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     await waitForNextEvent();
   });
 
-  test('honors overwrite.removeStaleFiles=false set on a preset-based `generates` entry', async () => {
+  test('preset - does not remove stale files when overwrite.removeStaleFiles=false', async () => {
     const { testDir, schemaFile, documentFile } = setupTestFiles();
     writeFileSync(
       schemaFile.absolute,
@@ -360,25 +360,8 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     // path-prefix match on the directory key would not cover this one either.
     const fileOutsideDir = path.join(testDir, 'outside.ts');
 
-    // A minimal stub preset that emits one file per name in `presetConfig.filenames`,
-    // with an inline plugin so the content is non-empty and the files land on disk.
-    const stubPreset: Types.OutputPreset = {
-      buildGeneratesSection: options =>
-        (options.presetConfig.filenames as string[]).map(filename => ({
-          filename,
-          plugins: [{ inline: {} }],
-          pluginMap: { inline: { plugin: () => 'export const generated = true;' } },
-          schema: options.schema,
-          schemaAst: options.schemaAst,
-          documents: options.documents,
-          config: options.config,
-          pluginContext: options.pluginContext,
-          profiler: options.profiler,
-          documentTransforms: options.documentTransforms,
-        })),
-    };
-
-    const { context, runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+    let run = 0;
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
       filepath: path.join(testDir, 'codegen.ts'),
       config: {
         schema: schemaFile.relative,
@@ -388,8 +371,28 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
         // stale files would be deleted unless the entry's setting is honored.
         generates: {
           [baseOutputDir]: {
-            preset: stubPreset,
-            presetConfig: { filenames: [fileUnderDirA, fileUnderDirB, fileOutsideDir] },
+            preset: {
+              buildGeneratesSection: options => {
+                const runFiles: string[][] = [
+                  [fileUnderDirA, fileUnderDirB, fileOutsideDir],
+                  [fileUnderDirA],
+                ];
+
+                const result = runFiles[run].map((filename: string) => ({
+                  filename,
+                  plugins: [{ inline: {} }],
+                  pluginMap: { inline: { plugin: () => 'export const generated = true;' } },
+                  schema: options.schema,
+                  schemaAst: options.schemaAst,
+                  documents: [],
+                  config: {},
+                }));
+
+                run++;
+
+                return result;
+              },
+            } satisfies Types.OutputPreset,
             overwrite: { removeStaleFiles: false },
           },
         },
@@ -402,15 +405,6 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     expect(existsSync(fileOutsideDir)).toBe(true);
 
     // Second run: the preset now emits only one file, so the other two become stale
-    context.updateConfig({
-      generates: {
-        [baseOutputDir]: {
-          preset: stubPreset,
-          presetConfig: { filenames: [fileUnderDirA] },
-          overwrite: { removeStaleFiles: false },
-        },
-      },
-    });
     writeFileSync(
       documentFile.absolute,
       /* GraphQL */ `
