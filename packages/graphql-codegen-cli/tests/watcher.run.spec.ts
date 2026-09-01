@@ -428,6 +428,108 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     await runningWatcher;
     await waitForNextEvent();
   });
+
+  test('preset - removes stale files when overwrite.removeStaleFiles=true', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    const baseOutputDir = path.join(testDir, 'generated');
+    const fileUnderDirA = path.join(baseOutputDir, 'a.ts');
+    const fileUnderDirB = path.join(baseOutputDir, 'b.ts');
+    const fileOutsideDir = path.join(testDir, 'outside.ts');
+
+    let run = 0;
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        // Global `overwrite` disables stale removal, so the stale files would be kept
+        // unless the entry's `removeStaleFiles: true` is honored and overrides it.
+        overwrite: { removeStaleFiles: false },
+        generates: {
+          [baseOutputDir]: {
+            preset: {
+              buildGeneratesSection: options => {
+                const runFiles: string[][] = [
+                  [fileUnderDirA, fileUnderDirB, fileOutsideDir],
+                  [fileUnderDirA],
+                ];
+
+                const result = runFiles[run].map((filename: string) => ({
+                  filename,
+                  plugins: [{ inline: {} }],
+                  pluginMap: { inline: { plugin: () => 'export const generated = true;' } },
+                  schema: options.schema,
+                  schemaAst: options.schemaAst,
+                  documents: [],
+                  config: {},
+                }));
+
+                run++;
+
+                return result;
+              },
+            } satisfies Types.OutputPreset,
+            overwrite: { removeStaleFiles: true },
+          },
+        },
+      },
+    });
+
+    // Initial run: all three outputs are generated
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    expect(existsSync(fileUnderDirB)).toBe(true);
+    expect(existsSync(fileOutsideDir)).toBe(true);
+
+    // Second run: the preset now emits only one file, so the other two become stale
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    // removeStaleFiles=true on the preset entry means both stale files are removed,
+    // whether they were under `baseOutputDir` or outside it.
+    expect(existsSync(fileUnderDirB)).toBe(false);
+    expect(existsSync(fileOutsideDir)).toBe(false);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
 });
 
 describe('Watch runs - externally modified output files', () => {
