@@ -39,7 +39,7 @@ export async function generate(
     // find stale files from previous build which are not present in current build
     const staleFiles = previouslyGeneratedFiles.filter(f => !filenames.includes(f.filename));
     for (const staleFile of staleFiles) {
-      if (normalizeOverwriteConfig(config, staleFile).removeStaleFiles) {
+      if (normalizeOverwriteConfig(config.overwrite, staleFile.overwrite).removeStaleFiles) {
         unlinkFile(staleFile.filename, err => {
           const prettyFilename = staleFile.filename.replace(`${input.cwd || process.cwd()}/`, '');
           if (err) {
@@ -50,9 +50,9 @@ export async function generate(
         });
       }
     }
-    previouslyGeneratedFiles = generationResult.map(o => ({
-      filename: o.filename,
-      overwrite: o.overwrite,
+    previouslyGeneratedFiles = generationResult.map(res => ({
+      filename: res.filename,
+      overwrite: res.overwrite,
     }));
   }
 
@@ -104,7 +104,10 @@ export async function generate(
               recentOutputHash.set(result.filename, previousHash);
             }
 
-            if (!normalizeOverwriteConfig(config, result).updateExistingFiles && exists) {
+            if (
+              !normalizeOverwriteConfig(config.overwrite, result.overwrite).updateExistingFiles &&
+              exists
+            ) {
               return;
             }
 
@@ -223,11 +226,10 @@ export async function generate(
 }
 
 function normalizeOverwriteConfig(
-  config: Types.Config,
-  fileOutput: Pick<Types.FileOutput, 'filename' | 'overwrite'>,
+  configOverwrite: Types.Config['overwrite'],
+  fileOverwrite: Types.FileOutput['overwrite'],
 ): Types.NormalizedOverwriteOption {
-  // `??` (not `||`) is load-bearing: `overwrite: false` is meaningful and must survive.
-  const overwrite = fileOutput.overwrite ?? config.overwrite ?? true;
+  const overwrite = fileOverwrite ?? configOverwrite ?? true;
 
   if (overwrite === true) {
     return {
