@@ -3,6 +3,17 @@ const path = require('path');
 const fg = require('fast-glob');
 
 const absoluteBinPath = path.resolve(__dirname, '../packages/graphql-codegen-cli/dist/cjs/bin.js');
+
+if (!fs.existsSync(absoluteBinPath)) {
+  // `fs.ensureSymlinkSync` below happily creates a dangling symlink, so a missing bin file
+  // wouldn't otherwise be noticed until something tries to run it. Surface it loudly instead -
+  // it means `bob build` didn't emit the CLI package's build output (seen intermittently on
+  // Windows CI).
+  console.warn(
+    `⚠ ${absoluteBinPath} does not exist - the CLI package may not have built correctly.`,
+  );
+}
+
 const packageDirectories = fg
   .sync(['examples/**/package.json'], { ignore: ['**/node_modules/**'] })
   .map(p => path.dirname(p));
