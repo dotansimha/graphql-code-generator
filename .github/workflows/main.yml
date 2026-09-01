@@ -213,6 +213,12 @@ jobs:
 
       - name: Build
         run: pnpm build
+      # TEMPORARY: diagnostics for https://github.com/dotansimha/graphql-code-generator/pull/10931
+      # Runs even if Build failed, to inspect whatever `bob build` left in .bob/ before crashing.
+      # Remove once the Windows `bob build` / version.js issue is root-caused.
+      - name: Diagnose Windows build (temporary)
+        if: always() && matrix.os == 'windows-latest'
+        run: node scripts/diagnose-windows-build.mjs
       - name: Test
         # FIXME: Do not test `watcher.run.spec.ts` here because it is currently not working for Node22+ in Ubuntu
         run: pnpm test --exclude="**/tests/watcher.run.spec.ts"
@@ -258,6 +264,12 @@ jobs:
 
       - name: Build
         run: pnpm build
+      # TEMPORARY: diagnostics for https://github.com/dotansimha/graphql-code-generator/pull/10931
+      # Runs even if Build failed, to inspect whatever `bob build` left in .bob/ before crashing.
+      # Remove once the Windows `bob build` / version.js issue is root-caused.
+      - name: Diagnose Windows build (temporary)
+        if: always() && matrix.os == 'windows-latest'
+        run: node scripts/diagnose-windows-build.mjs
       - name: Test
         # FIXME: Merge `watcher.run.spec.ts` test to the above when it works for Node22+ in Ubuntu
         run: pnpm test packages/graphql-codegen-cli/tests/watcher.run.spec.ts
