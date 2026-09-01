@@ -15,7 +15,3 @@ preset's `baseOutputDir`, not by any generated file's path (and a preset can emi
 files outside that directory), and the lookup additionally required a `plugins` key
 that preset entries don't have. Both cases fell through to the global `config.overwrite`
 (default `true`).
-
-The entry's `overwrite` is now carried on each `FileOutput` (alongside `hooks` and
-`contentComparison`) when outputs are built, and honored per file — including for
-files a preset emits outside its `baseOutputDir`.
