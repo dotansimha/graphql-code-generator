@@ -1,4 +1,4 @@
-import { isAbsolute, join, relative, resolve, sep } from 'path';
+import { isAbsolute, join, relative, resolve } from 'path';
 import isGlob from 'is-glob';
 import type { Mock } from 'vitest';
 import type { Options } from '@parcel/watcher';
@@ -272,17 +272,19 @@ const assertParcelWouldIgnorePath = (
       relative(process.cwd(), watchDirectory),
       relPathFromWatchDir,
     );
-    const relPathFromCwd = relative(process.cwd(), absPath);
+    // `relative()` returns OS-native separators (`\` on Windows), but expected paths in this
+    // test file (and glob patterns generally) are always written with POSIX `/`, so normalize.
+    const relPathFromCwd = relative(process.cwd(), absPath).replace(/\\/g, '/');
 
     // NOTE: This will not include "./"
     return relPathFromCwd;
   });
 
-  // Match on exact match, or exact match with ./ prefix (or .\ on windows)
+  // Match on exact match, or exact match with "./" prefix
   const hasMatch = parcelIgnoredPathsRelativeFromCwd.some(
     ignorePathRelFromCwd =>
       expectToIgnoreRelPathFromCwd === ignorePathRelFromCwd ||
-      expectToIgnoreRelPathFromCwd === `.${sep}${ignorePathRelFromCwd}`,
+      expectToIgnoreRelPathFromCwd === `./${ignorePathRelFromCwd}`,
   );
 
   try {
