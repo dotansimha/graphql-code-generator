@@ -57,6 +57,12 @@ export namespace Types {
      * to decide whether the write can be skipped. See {@link Types.ContentComparison}.
      */
     contentComparison?: Types.ContentComparison;
+    /**
+     * @description Carries the `overwrite` setting from the `generates` entry that
+     * produced this file, so the CLI can honor it per file (e.g. a preset keyed by a
+     * directory, which can't be looked up by a generated file's path).
+     */
+    overwrite?: boolean | Partial<NormalizedOverwriteOption>;
   };
 
   export interface DocumentFile extends Source {

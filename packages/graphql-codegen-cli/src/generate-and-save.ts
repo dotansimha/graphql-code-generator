@@ -30,16 +30,18 @@ export async function generate(
     'Lifecycle: afterStart',
   );
 
-  let previouslyGeneratedFilenames: string[] = [];
+  // Store only the projection (`filename` + `overwrite`) rather than full results, so a
+  // file that disappears is still judged by the `overwrite` of the entry that produced it.
+  let previouslyGeneratedFiles: Pick<Types.FileOutput, 'filename' | 'overwrite'>[] = [];
 
   function removeStaleFiles(config: Types.Config, generationResult: Types.FileOutput[]) {
     const filenames = generationResult.map(o => o.filename);
     // find stale files from previous build which are not present in current build
-    const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
-    for (const filename of staleFilenames) {
-      if (normalizeOverwriteConfig(config, filename).removeStaleFiles) {
-        unlinkFile(filename, err => {
-          const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
+    const staleFiles = previouslyGeneratedFiles.filter(f => !filenames.includes(f.filename));
+    for (const staleFile of staleFiles) {
+      if (normalizeOverwriteConfig(config, staleFile).removeStaleFiles) {
+        unlinkFile(staleFile.filename, err => {
+          const prettyFilename = staleFile.filename.replace(`${input.cwd || process.cwd()}/`, '');
           if (err) {
             debugLog(`Cannot remove stale file: ${prettyFilename}\n${err}`);
           } else {
@@ -48,7 +50,10 @@ export async function generate(
         });
       }
     }
-    previouslyGeneratedFilenames = filenames;
+    previouslyGeneratedFiles = generationResult.map(o => ({
+      filename: o.filename,
+      overwrite: o.overwrite,
+    }));
   }
 
   // Records the hash of the content codegen last wrote per file. This is always
@@ -99,7 +104,7 @@ export async function generate(
               recentOutputHash.set(result.filename, previousHash);
             }
 
-            if (!normalizeOverwriteConfig(config, result.filename).updateExistingFiles && exists) {
+            if (!normalizeOverwriteConfig(config, result).updateExistingFiles && exists) {
               return;
             }
 
@@ -219,22 +224,10 @@ export async function generate(
 
 function normalizeOverwriteConfig(
   config: Types.Config,
-  outputPath: string,
+  fileOutput: Pick<Types.FileOutput, 'filename' | 'overwrite'>,
 ): Types.NormalizedOverwriteOption {
-  const overwrite = (function getOverwriteOption(): Types.Config['overwrite'] {
-    const { overwrite: result = true } = config;
-    const outputConfig = config.generates[outputPath];
-
-    if (!outputConfig) {
-      debugLog(`Couldn't find a config of ${outputPath}`);
-      return result;
-    }
-    if (isConfiguredOutput(outputConfig) && outputConfig.overwrite !== undefined) {
-      return outputConfig.overwrite;
-    }
-
-    return result;
-  })();
+  // `??` (not `||`) is load-bearing: `overwrite: false` is meaningful and must survive.
+  const overwrite = fileOutput.overwrite ?? config.overwrite ?? true;
 
   if (overwrite === true) {
     return {
@@ -253,10 +246,6 @@ function normalizeOverwriteConfig(
   const { removeStaleFiles = true, updateExistingFiles = true } = overwrite;
 
   return { removeStaleFiles, updateExistingFiles };
-}
-
-function isConfiguredOutput(output: any): output is Types.ConfiguredOutput {
-  return typeof output.plugins !== 'undefined';
 }
 
 async function hashFile(filePath: string): Promise<string | null> {

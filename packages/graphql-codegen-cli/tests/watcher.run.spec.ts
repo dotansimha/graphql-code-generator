@@ -10,6 +10,7 @@ import {
 import * as path from 'path';
 import type { Mock } from 'vitest';
 import * as addPlugin from '@graphql-codegen/add';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import { CodegenContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as watcherModule from '../src/utils/watcher.js';
@@ -316,6 +317,118 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     expect(existsSync(keptOutputFile)).toBe(true);
     // removeStaleFiles=false means the stale file is left on disk
     expect(existsSync(staleOutputFile)).toBe(true);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
+
+  test('honors overwrite.removeStaleFiles=false set on a preset-based `generates` entry', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    // The `generates` entry is keyed by a directory (`baseOutputDir`), not a file path,
+    // and has no `plugins` key — the preset supplies plugins itself. Both facts used to
+    // defeat the per-file `overwrite` lookup, so the entry's setting was silently ignored.
+    const baseOutputDir = path.join(testDir, 'generated');
+    const fileUnderDirA = path.join(baseOutputDir, 'a.ts');
+    const fileUnderDirB = path.join(baseOutputDir, 'b.ts');
+    // Deliberately outside `baseOutputDir` — a preset may emit files anywhere, so a
+    // path-prefix match on the directory key would not cover this one either.
+    const fileOutsideDir = path.join(testDir, 'outside.ts');
+
+    // A minimal stub preset that emits one file per name in `presetConfig.filenames`,
+    // with an inline plugin so the content is non-empty and the files land on disk.
+    const stubPreset: Types.OutputPreset = {
+      buildGeneratesSection: options =>
+        (options.presetConfig.filenames as string[]).map(filename => ({
+          filename,
+          plugins: [{ inline: {} }],
+          pluginMap: { inline: { plugin: () => 'export const generated = true;' } },
+          schema: options.schema,
+          schemaAst: options.schemaAst,
+          documents: options.documents,
+          config: options.config,
+          pluginContext: options.pluginContext,
+          profiler: options.profiler,
+          documentTransforms: options.documentTransforms,
+        })),
+    };
+
+    const { context, runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        // Global `overwrite` is left at its default (`removeStaleFiles: true`), so the
+        // stale files would be deleted unless the entry's setting is honored.
+        generates: {
+          [baseOutputDir]: {
+            preset: stubPreset,
+            presetConfig: { filenames: [fileUnderDirA, fileUnderDirB, fileOutsideDir] },
+            overwrite: { removeStaleFiles: false },
+          },
+        },
+      },
+    });
+
+    // Initial run: all three outputs are generated
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    expect(existsSync(fileUnderDirB)).toBe(true);
+    expect(existsSync(fileOutsideDir)).toBe(true);
+
+    // Second run: the preset now emits only one file, so the other two become stale
+    context.updateConfig({
+      generates: {
+        [baseOutputDir]: {
+          preset: stubPreset,
+          presetConfig: { filenames: [fileUnderDirA] },
+          overwrite: { removeStaleFiles: false },
+        },
+      },
+    });
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    // removeStaleFiles=false on the preset entry means both stale files are left on disk,
+    // whether they were under `baseOutputDir` or outside it.
+    expect(existsSync(fileUnderDirB)).toBe(true);
+    expect(existsSync(fileOutsideDir)).toBe(true);
 
     await stopWatching();
     await runningWatcher;
