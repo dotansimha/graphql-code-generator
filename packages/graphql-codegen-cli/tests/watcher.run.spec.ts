@@ -9,7 +9,6 @@ import {
 } from 'fs';
 import * as path from 'path';
 import type { Mock } from 'vitest';
-import * as addPlugin from '@graphql-codegen/add';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import { CodegenContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
@@ -613,8 +612,8 @@ describe('Watch runs - externally modified output files', () => {
                   schemaAst: options.schemaAst,
                   documents: [],
                   config: {},
-                  pluginMap: { add: addPlugin },
-                  plugins: [{ add: { content: 'Default Content' } }],
+                  pluginMap: { inline: { plugin: () => 'Default Content' } },
+                  plugins: [{ inline: {} }],
                   contentComparison: 'disk',
                 },
               ],
@@ -667,8 +666,8 @@ describe('Watch runs - externally modified output files', () => {
                   schemaAst: options.schemaAst,
                   documents: [],
                   config: {},
-                  pluginMap: { add: addPlugin },
-                  plugins: [{ add: { content: 'Default Content' } }],
+                  pluginMap: { inline: { plugin: () => 'Default Content' } },
+                  plugins: [{ inline: {} }],
                 },
               ],
             },
