@@ -1,5 +1,49 @@
 # @graphql-codegen/plugin-helpers
 
+## 7.3.0
+
+### Minor Changes
+
+- [#10928](https://github.com/dotansimha/graphql-code-generator/pull/10928)
+  [`90229a5`](https://github.com/dotansimha/graphql-code-generator/commit/90229a5406ffeaa16422a0172340fcb53b94b1b9)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add
+  `contentComparison?: 'cache-first' | 'disk'` to control disk-vs-cache write comparison in watch
+  mode.
+
+  In watch mode the CLI caches the hash of the content it last wrote per file and compares new
+  output against that cached hash to skip redundant writes. This assumes generated output is a pure
+  function of the codegen inputs. An output whose content depends on the file's existing content
+  (e.g. a preset that reads the file and rewrites part of it) breaks that assumption: if the file is
+  changed on disk and codegen regenerates content identical to a previous run, the cached hash still
+  matches and the write is skipped, so the on-disk change is never corrected.
+
+  `contentComparison: 'disk'` opts an output into comparing the generated content against the file
+  on disk instead of the in-memory record of what codegen last wrote, so the file is rewritten when
+  it was changed externally. It can be set:
+  - by a preset, on the `GenerateOptions` it returns from `buildGeneratesSection`, or
+  - on the output config (`generates[output].contentComparison`) for any output, including plain
+    plugin outputs without a preset.
+
+  When both are present, the preset's value takes precedence. The default, `'cache-first'`, keeps
+  the existing in-memory-cache behaviour for outputs that are a pure function of their inputs.
+
+### Patch Changes
+
+- [#10930](https://github.com/dotansimha/graphql-code-generator/pull/10930)
+  [`448431a`](https://github.com/dotansimha/graphql-code-generator/commit/448431a6c4bdbfeb68d7e4a3c3d417139f2e1565)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `overwrite` being ignored for
+  preset-based `generates` outputs.
+
+  A `generates` entry that used a preset and set `overwrite` (e.g.
+  `overwrite: { removeStaleFiles: false }`) had that setting silently ignored, so in watch mode its
+  generated files could still be deleted as stale.
+
+  The CLI resolved `overwrite` per generated file by looking the file's path up in
+  `config.generates`. That fails for a preset: its `generates` entry is keyed by the preset's
+  `baseOutputDir`, not by any generated file's path (and a preset can emit files outside that
+  directory), and the lookup additionally required a `plugins` key that preset entries don't have.
+  Both cases fell through to the global `config.overwrite` (default `true`).
+
 ## 7.2.1
 
 ### Patch Changes
