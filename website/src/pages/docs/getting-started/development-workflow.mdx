@@ -85,6 +85,37 @@ const config: CodegenConfig = {
 export default config
 ```
 
+### Skipping unchanged writes
+
+To avoid redundant writes on every rebuild, watch mode remembers the hash of the content it last
+wrote for each output and skips the write when the newly generated content is identical. This
+assumes each output is a pure function of its inputs (schema and documents), which is true for
+regular plugin outputs.
+
+If an output's content instead depends on the file's existing content on disk — for example a preset
+that reads the current file and rewrites only part of it — that assumption breaks: if the file is
+changed externally and codegen regenerates content matching an earlier run, the cached hash still
+matches and the change on disk is never corrected. Set
+[`contentComparison`](/docs/config-reference/codegen-config) to `'disk'` on that output to compare
+against the file on disk instead:
+
+```ts {8}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000/graphql',
+  watch: true,
+  generates: {
+    './src/generated.ts': {
+      contentComparison: 'disk',
+      plugins: ['typescript']
+    }
+  }
+}
+
+export default config
+```
+
 ## Monorepo and pnpm Workspaces
 
 If you are using a monorepo structure, with tools such as

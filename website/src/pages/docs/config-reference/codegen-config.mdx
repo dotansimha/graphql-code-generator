@@ -83,6 +83,16 @@ Here are the supported options that you can define in the config file (see
   - **`generates.overwrite`** - Same as root `overwrite`, but applies only for the specific output
     file. When set, it takes precedence over the root `overwrite` option for this output file
 
+  - **`generates.contentComparison`** - Controls how Codegen decides whether a generated file needs
+    to be rewritten in [watch mode](/docs/getting-started/development-workflow#watch-mode)
+    (`'cache-first'` by default). In watch mode the CLI remembers the hash of the content it last
+    wrote for each file and skips the write when the newly generated content matches, which assumes
+    the output is a pure function of its inputs. If an output's content instead depends on the
+    file's existing content on disk (for example a preset that reads the file and rewrites part of
+    it), set this to `'disk'` so the comparison is made against the file on disk, ensuring the file
+    is rewritten when it was changed externally. A preset can also set this on the outputs it
+    returns from `buildGeneratesSection`; when both are set, the preset's value takes precedence
+
 - [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()`
   handlers for custom file extensions. This option is essential if the code generator has to go
   through files that require other files in an unsupported format
