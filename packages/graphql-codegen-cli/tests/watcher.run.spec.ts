@@ -9,7 +9,7 @@ import {
 } from 'fs';
 import * as path from 'path';
 import type { Mock } from 'vitest';
-import * as addPlugin from '@graphql-codegen/add';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import { CodegenContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as watcherModule from '../src/utils/watcher.js';
@@ -321,6 +321,214 @@ describe('Watch runs - overwrite.removeStaleFiles', () => {
     await runningWatcher;
     await waitForNextEvent();
   });
+
+  test('preset - does not remove stale files when overwrite.removeStaleFiles=false', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    // The `generates` entry is keyed by a directory (`baseOutputDir`), not a file path,
+    // and has no `plugins` key — the preset supplies plugins itself. Both facts used to
+    // defeat the per-file `overwrite` lookup, so the entry's setting was silently ignored.
+    const baseOutputDir = path.join(testDir, 'generated');
+    const fileUnderDirA = path.join(baseOutputDir, 'a.ts');
+    const fileUnderDirB = path.join(baseOutputDir, 'b.ts');
+    // Deliberately outside `baseOutputDir` — a preset may emit files anywhere, so a
+    // path-prefix match on the directory key would not cover this one either.
+    const fileOutsideDir = path.join(testDir, 'outside.ts');
+
+    let run = 0;
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        // Global `overwrite` is left at its default (`removeStaleFiles: true`), so the
+        // stale files would be deleted unless the entry's setting is honored.
+        generates: {
+          [baseOutputDir]: {
+            preset: {
+              buildGeneratesSection: options => {
+                const runFiles: string[][] = [
+                  [fileUnderDirA, fileUnderDirB, fileOutsideDir],
+                  [fileUnderDirA],
+                ];
+
+                const result = runFiles[run].map((filename: string) => ({
+                  filename,
+                  plugins: [{ inline: {} }],
+                  pluginMap: { inline: { plugin: () => 'export const generated = true;' } },
+                  schema: options.schema,
+                  schemaAst: options.schemaAst,
+                  documents: [],
+                  config: {},
+                }));
+
+                run++;
+
+                return result;
+              },
+            } satisfies Types.OutputPreset,
+            overwrite: { removeStaleFiles: false },
+          },
+        },
+      },
+    });
+
+    // Initial run: all three outputs are generated
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    expect(existsSync(fileUnderDirB)).toBe(true);
+    expect(existsSync(fileOutsideDir)).toBe(true);
+
+    // Second run: the preset now emits only one file, so the other two become stale
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    // removeStaleFiles=false on the preset entry means both stale files are left on disk,
+    // whether they were under `baseOutputDir` or outside it.
+    expect(existsSync(fileUnderDirB)).toBe(true);
+    expect(existsSync(fileOutsideDir)).toBe(true);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
+
+  test('preset - removes stale files when overwrite.removeStaleFiles=true', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    const baseOutputDir = path.join(testDir, 'generated');
+    const fileUnderDirA = path.join(baseOutputDir, 'a.ts');
+    const fileUnderDirB = path.join(baseOutputDir, 'b.ts');
+    const fileOutsideDir = path.join(testDir, 'outside.ts');
+
+    let run = 0;
+    const { runningWatcher, stopWatching } = await runWatchAndGetStopWatching({
+      filepath: path.join(testDir, 'codegen.ts'),
+      config: {
+        schema: schemaFile.relative,
+        documents: documentFile.relative,
+        watch: true,
+        // Global `overwrite` disables stale removal, so the stale files would be kept
+        // unless the entry's `removeStaleFiles: true` is honored and overrides it.
+        overwrite: { removeStaleFiles: false },
+        generates: {
+          [baseOutputDir]: {
+            preset: {
+              buildGeneratesSection: options => {
+                const runFiles: string[][] = [
+                  [fileUnderDirA, fileUnderDirB, fileOutsideDir],
+                  [fileUnderDirA],
+                ];
+
+                const result = runFiles[run].map((filename: string) => ({
+                  filename,
+                  plugins: [{ inline: {} }],
+                  pluginMap: { inline: { plugin: () => 'export const generated = true;' } },
+                  schema: options.schema,
+                  schemaAst: options.schemaAst,
+                  documents: [],
+                  config: {},
+                }));
+
+                run++;
+
+                return result;
+              },
+            } satisfies Types.OutputPreset,
+            overwrite: { removeStaleFiles: true },
+          },
+        },
+      },
+    });
+
+    // Initial run: all three outputs are generated
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    expect(existsSync(fileUnderDirB)).toBe(true);
+    expect(existsSync(fileOutsideDir)).toBe(true);
+
+    // Second run: the preset now emits only one file, so the other two become stale
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+            name
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    expect(existsSync(fileUnderDirA)).toBe(true);
+    // removeStaleFiles=true on the preset entry means both stale files are removed,
+    // whether they were under `baseOutputDir` or outside it.
+    expect(existsSync(fileUnderDirB)).toBe(false);
+    expect(existsSync(fileOutsideDir)).toBe(false);
+
+    await stopWatching();
+    await runningWatcher;
+    await waitForNextEvent();
+  });
 });
 
 describe('Watch runs - externally modified output files', () => {
@@ -404,8 +612,8 @@ describe('Watch runs - externally modified output files', () => {
                   schemaAst: options.schemaAst,
                   documents: [],
                   config: {},
-                  pluginMap: { add: addPlugin },
-                  plugins: [{ add: { content: 'Default Content' } }],
+                  pluginMap: { inline: { plugin: () => 'Default Content' } },
+                  plugins: [{ inline: {} }],
                   contentComparison: 'disk',
                 },
               ],
@@ -458,8 +666,8 @@ describe('Watch runs - externally modified output files', () => {
                   schemaAst: options.schemaAst,
                   documents: [],
                   config: {},
-                  pluginMap: { add: addPlugin },
-                  plugins: [{ add: { content: 'Default Content' } }],
+                  pluginMap: { inline: { plugin: () => 'Default Content' } },
+                  plugins: [{ inline: {} }],
                 },
               ],
             },

@@ -526,6 +526,13 @@ export async function executeCodegen(
                               // Fall back to `outputConfig` so plugin outputs can opt in too.
                               contentComparison:
                                 outputArgs.contentComparison ?? outputConfig.contentComparison,
+
+                              // Carry the entry's `overwrite` onto the file so the CLI can honor it per file.
+                              // Unlike `contentComparison`, this is intentionally not
+                              // `outputArgs.overwrite ?? outputConfig.overwrite`: presets should not
+                              // be able to set `overwrite` per file from buildGeneratesSection
+                              // (a capability this doesn't need).
+                              overwrite: outputConfig.overwrite,
                             });
                           };
 
