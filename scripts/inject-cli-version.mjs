@@ -22,6 +22,14 @@ const versionFiles = [
   path.resolve(__dirname, '..', 'packages', 'graphql-codegen-cli', 'dist', 'esm', 'version.js'),
 ];
 
+console.log('*** Test ***');
+fs.readdir(path.resolve(__dirname, '..', 'packages', 'graphql-codegen-cli'), (err, files) => {
+  files.forEach(file => {
+    console.log(file);
+  });
+});
+console.log('*** Test ***');
+
 const packageJson = JSON.parse(fs.readFileSync(packageJsonFile, 'utf8'));
 
 for (const versionFile of versionFiles) {
