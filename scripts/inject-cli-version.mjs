@@ -9,11 +9,25 @@ import * as url from 'node:url';
 
 const __dirname = url.fileURLToPath(new url.URL('.', import.meta.url));
 
-const packageJsonFile = path.resolve(__dirname, '../packages/graphql-codegen-cli/package.json');
+const packageJsonFile = path.resolve(
+  __dirname,
+  '..',
+  'packages',
+  'graphql-codegen-cli',
+  'package.json',
+);
+
 const versionFiles = [
-  path.resolve(__dirname, '../packages/graphql-codegen-cli/dist/cjs/version.js'),
-  path.resolve(__dirname, '../packages/graphql-codegen-cli/dist/esm/version.js'),
+  path.resolve(__dirname, '..', 'packages', 'graphql-codegen-cli', 'dist', 'cjs', 'version.js'),
+  path.resolve(__dirname, '..', 'packages', 'graphql-codegen-cli', 'dist', 'esm', 'version.js'),
 ];
+
+console.log('*** Test ***');
+const files = fs.readdirSync(path.resolve(__dirname, '..', 'packages', 'graphql-codegen-cli'));
+for (const file of files) {
+  console.log(file);
+}
+console.log('*** Test ***');
 
 const packageJson = JSON.parse(fs.readFileSync(packageJsonFile, 'utf8'));
 
