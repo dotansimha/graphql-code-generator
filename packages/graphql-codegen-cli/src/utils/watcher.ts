@@ -1,4 +1,4 @@
-import { isAbsolute, relative, resolve, sep } from 'path';
+import { isAbsolute, join, relative, resolve, sep } from 'path';
 import debounce from 'debounce';
 import logSymbols from 'log-symbols';
 import mm from 'micromatch';
@@ -123,20 +123,16 @@ export const createWatcher = (
       config: normalizeOutputParam(config.generates[filename]),
     }))) {
       // ParcelWatcher expects relative ignore patterns to be relative from watchDirectory,
-      // but we expect filename from config to be relative from cwd, so we need to convert.
-      // ParcelWatcher (like micromatch, see findHighestCommonDirectory below) expects glob
-      // patterns with POSIX `/` separators even on Windows, so normalize `relative()`'s
-      // OS-native output and build the preset glob by string concatenation instead of
-      // `path.join`, which would otherwise re-introduce `\` on Windows.
+      // but we expect filename from config to be relative from cwd, so we need to convert
       const filenameRelativeFromWatchDirectory = relative(
         watchDirectory,
         resolve(process.cwd(), entry.filename),
-      ).replace(/\\/g, '/');
+      );
 
       if (entry.config.preset) {
         const extension = entry.config.presetConfig?.extension;
         if (extension) {
-          ignored.push(`${filenameRelativeFromWatchDirectory}/**/*${extension}`);
+          ignored.push(join(filenameRelativeFromWatchDirectory, '**', '*' + extension));
         }
       } else {
         ignored.push(filenameRelativeFromWatchDirectory);
