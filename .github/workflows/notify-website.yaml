@@ -1,0 +1,32 @@
+name: notify-website
+
+# The docs at the-guild.dev/graphql/codegen are built by
+# the-guild-org/website, which fetches this repo's website/src/pages content
+# at build time. Tell it to redeploy whenever that content changes.
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - website/src/pages/**
+      - website/src/components/java-installation.mdx
+      - website/src/lib/plugins/**
+      - website/src/category-to-packages.mjs
+      - website/public/assets/**
+      - website/public/config.schema.json
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: trigger website rebuild
+        env:
+          # Fine-grained PAT for the-guild-org/website with contents:write
+          # (repository_dispatch permission).
+          TOKEN: ${{ secrets.WEBSITE_DISPATCH_TOKEN }}
+        run: |
+          curl --fail-with-body -X POST \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/the-guild-org/website/dispatches \
+            -d '{"event_type":"codegen-content-update"}'
