@@ -1,4 +1,4 @@
-import { isAbsolute, join, relative, resolve, sep } from 'path';
+import { isAbsolute, relative, resolve, sep } from 'path';
 import debounce from 'debounce';
 import logSymbols from 'log-symbols';
 import mm from 'micromatch';
@@ -124,15 +124,20 @@ export const createWatcher = (
     }))) {
       // ParcelWatcher expects relative ignore patterns to be relative from watchDirectory,
       // but we expect filename from config to be relative from cwd, so we need to convert
+      //
+      // ParcelWatcher's `ignore` patterns are glob patterns, which always use `/` as the
+      // separator, regardless of platform - so we normalize away Windows' `\` separator.
       const filenameRelativeFromWatchDirectory = relative(
         watchDirectory,
         resolve(process.cwd(), entry.filename),
-      );
+      )
+        .split(sep)
+        .join('/');
 
       if (entry.config.preset) {
         const extension = entry.config.presetConfig?.extension;
         if (extension) {
-          ignored.push(join(filenameRelativeFromWatchDirectory, '**', '*' + extension));
+          ignored.push([filenameRelativeFromWatchDirectory, '**', '*' + extension].join('/'));
         }
       } else {
         ignored.push(filenameRelativeFromWatchDirectory);

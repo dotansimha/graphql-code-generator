@@ -1,4 +1,5 @@
-import { dirname, join } from 'path';
+import { platform } from 'os';
+import { dirname, join, sep } from 'path';
 import logSymbols from 'log-symbols';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
@@ -401,8 +402,34 @@ describe('generate-and-save', () => {
           false,
         );
       } catch {
-        const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
-        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+        // cwd is different for every machine, remember to replace local path with this after updating snapshot.
+        // GraphQL source names are always forward-slash, regardless of platform, so normalize to match.
+        const cwd = process.cwd().split(sep).join('/');
+        if (platform() === 'win32') {
+          expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+            "[FAILED] Failed to load schema from ./tests/test-files/schema-dir/error-schema.graphql:
+            Syntax Error: Expected Name, found "!".
+
+            ${cwd}/tests/test-files/schema-dir/error-schema.graphql:2:15
+            1 | type Query {
+            2 |   foo: String!!
+              |               ^
+            3 | }
+
+            GraphQL Code Generator supports:
+
+            - ES Modules and CommonJS exports (export as default or named export "schema")
+            - Introspection JSON File
+            - URL of GraphQL endpoint
+            - Multiple files with type definitions (glob expression)
+            - String in config file
+
+            Try to use one of above options and run codegen again.
+
+            "
+          `);
+        } else {
+          expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "[FAILED] Failed to load schema from ./tests/test-files/schema-dir/error-schema.graphql:
           [FAILED] Syntax Error: Expected Name, found "!".
 
@@ -424,6 +451,7 @@ describe('generate-and-save', () => {
 
           "
         `);
+        }
       }
     });
 
@@ -445,8 +473,22 @@ describe('generate-and-save', () => {
           false,
         );
       } catch {
-        const cwd = process.cwd(); // cwd is different for every machine, remember to replace local path with this after updating snapshot
-        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+        // cwd is different for every machine, remember to replace local path with this after updating snapshot.
+        // GraphQL source names are always forward-slash, regardless of platform, so normalize to match.
+        const cwd = process.cwd().split(sep).join('/');
+        if (platform() === 'win32') {
+          expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+            "[FAILED] Failed to load documents from ./tests/test-files/error-document.graphql:
+            Syntax Error: Expected "{", found <EOF>.
+
+            ${cwd}/tests/test-files/error-document.graphql:2:1
+            1 | query
+            2 |
+              | ^
+            "
+          `);
+        } else {
+          expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "[FAILED] Failed to load documents from ./tests/test-files/error-document.graphql:
           [FAILED] Syntax Error: Expected "{", found <EOF>.
 
@@ -456,6 +498,7 @@ describe('generate-and-save', () => {
           [FAILED]   | ^
           "
         `);
+        }
       }
     });
 
@@ -477,24 +520,42 @@ describe('generate-and-save', () => {
           false,
         );
       } catch {
-        // Note: cannot use toMatchInlineSnapshot here because spacing in the snapshot gets formatted by prettier.
-        expect(outputErrorSpy.mock.calls[0][0]).toContain(
-          '[FAILED] Failed to load documents from ./tests/test-files/error-document-error-keyword.graphql.*.ts,!src/gql/:',
-        );
-        expect(outputErrorSpy.mock.calls[0][0]).toContain(
-          '[FAILED] Syntax Error: Unexpected Name "qu".',
-        );
-        expect(outputErrorSpy.mock.calls[0][0]).toContain(
-          `[FAILED] ${process.cwd()}/tests/test-files/error-document-error-keyword.graphql.1.ts:2:3`,
-        );
-        expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] 2 |   qu ery Test {');
-        expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED]   |   ^');
-        expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] 3 |     user {');
+        // GraphQL source names are always forward-slash, regardless of platform, so normalize to match.
+        const cwd = process.cwd().split(sep).join('/');
+        if (platform() === 'win32') {
+          // Note: cannot use toMatchInlineSnapshot here because spacing in the snapshot gets formatted by prettier.
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            '[FAILED] Failed to load documents from ./tests/test-files/error-document-error-keyword.graphql.*.ts,!src/gql/:',
+          );
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('Syntax Error: Unexpected Name "qu".');
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            // GraphQL source names are always forward-slash, regardless of platform.
+            `${cwd}/tests/test-files/error-document-error-keyword.graphql.1.ts:2:3`,
+          );
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('2 |   qu ery Test {');
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('  |   ^');
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('3 |     user {');
+        } else {
+          // Note: cannot use toMatchInlineSnapshot here because spacing in the snapshot gets formatted by prettier.
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            '[FAILED] Failed to load documents from ./tests/test-files/error-document-error-keyword.graphql.*.ts,!src/gql/:',
+          );
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            '[FAILED] Syntax Error: Unexpected Name "qu".',
+          );
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            // GraphQL source names are always forward-slash, regardless of platform.
+            `[FAILED] ${cwd}/tests/test-files/error-document-error-keyword.graphql.1.ts:2:3`,
+          );
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] 2 |   qu ery Test {');
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED]   |   ^');
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('[FAILED] 3 |     user {');
+        }
       }
     });
 
     test('No documents found - should throw error by default', async () => {
-      expect.assertions(1);
+      expect.assertions(platform() === 'win32' ? 2 : 1);
       outputErrorSpy.mockImplementation(() => true);
       try {
         await generate(
@@ -511,12 +572,22 @@ describe('generate-and-save', () => {
           false,
         );
       } catch {
-        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+        if (platform() === 'win32') {
+          // Note: cannot use toMatchInlineSnapshot here because spacing in the snapshot gets formatted by prettier.
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            'Unable to find any GraphQL type definitions for the following pointers:',
+          );
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            '- ./tests/test-files/document-file-does-not-exist.graphql',
+          );
+        } else {
+          expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "
           [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
           [FAILED]         - ./tests/test-files/document-file-does-not-exist.graphql
           "
         `);
+        }
       }
     });
 
@@ -541,7 +612,7 @@ describe('generate-and-save', () => {
 
     test('No documents found - GraphQL Config - should throw error by default', async () => {
       outputErrorSpy.mockImplementation(() => true);
-      expect.assertions(1);
+      expect.assertions(platform() === 'win32' ? 2 : 1);
       try {
         const config = await createContext({
           config: './tests/test-files/graphql.config.no-doc.cjs',
@@ -556,12 +627,20 @@ describe('generate-and-save', () => {
 
         await generate(config, false);
       } catch {
-        expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+        if (platform() === 'win32') {
+          // Note: cannot use toMatchInlineSnapshot here because spacing in the snapshot gets formatted by prettier.
+          expect(outputErrorSpy.mock.calls[0][0]).toContain(
+            'Unable to find any GraphQL type definitions for the following pointers:',
+          );
+          expect(outputErrorSpy.mock.calls[0][0]).toContain('- ../test-documents/empty.graphql');
+        } else {
+          expect(outputErrorSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
           "
           [FAILED]       Unable to find any GraphQL type definitions for the following pointers:
           [FAILED]         - ../test-documents/empty.graphql
           "
         `);
+        }
       }
     });
 
