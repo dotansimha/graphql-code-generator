@@ -30,7 +30,7 @@ export class TempDir {
 
   clean() {
     const cleanPattern = join(this.dir, '**/*');
-    rimraf.sync(cleanPattern);
+    rimraf.sync(cleanPattern, { glob: true });
   }
 
   deleteTempDir() {
