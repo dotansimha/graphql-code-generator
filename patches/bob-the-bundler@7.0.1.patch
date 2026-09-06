@@ -1,0 +1,13 @@
+diff --git a/dist/utils/get-workspace-package-paths.js b/dist/utils/get-workspace-package-paths.js
+index 7510c02d0ff5d8aaee00366c809001e8599fdb0b..b88c94857f37d6adf6a9006de0d975b1bc452cb0 100644
+--- a/dist/utils/get-workspace-package-paths.js
++++ b/dist/utils/get-workspace-package-paths.js
+@@ -5,7 +5,7 @@ export async function getWorkspacePackagePaths(workspaces, cwd = process.cwd())
+     const packageJSONPaths = await globby(workspaces
+         /** We are only interested in workspaces that are packages (for now.) */
+         .filter(workspacePattern => workspacePattern.startsWith('packages/'))
+-        .map(workspacePattern => path.join(workspacePattern, 'package.json')), {
++        .map(workspacePattern => path.posix.join(workspacePattern, 'package.json')), {
+         cwd,
+         ignore: ['**/node_modules/**', ...buildArtifactDirectories],
+     });

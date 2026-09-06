@@ -32,3 +32,5 @@ overrides:
   '@typescript-eslint/typescript-estree': 8.59.3
   '@typescript-eslint/utils': 8.59.3
   '@typescript-eslint/visitor-keys': 8.59.3
+patchedDependencies:
+  bob-the-bundler@7.0.1: patches/bob-the-bundler@7.0.1.patch
