@@ -1,19 +1,14 @@
 name: notify-website
 
 # The docs at the-guild.dev/graphql/codegen are built by
-# the-guild-org/website, which fetches this repo's website/src/pages content
-# at build time. Tell it to redeploy whenever that content changes.
+# the-guild-org/website, which fetches this repo's website/ folder at build
+# time. Tell it to redeploy whenever that content changes.
 on:
   push:
     branches:
       - master
     paths:
-      - website/src/pages/**
-      - website/src/components/java-installation.mdx
-      - website/src/lib/plugins/**
-      - website/src/category-to-packages.mjs
-      - website/public/assets/**
-      - website/public/config.schema.json
+      - website/**
 
 jobs:
   dispatch:

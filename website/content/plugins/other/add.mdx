@@ -1,0 +1,60 @@
+---
+title: add
+description:
+  Adds custom text to your output file. You can use this plugin to add custom code, imports,
+  comments and more to your output file.
+---
+
+`add` plugin adds custom text to your output file.
+
+You can use this plugin to add custom code, imports, comments and more to your output file.
+
+## Examples
+
+```ts title="codegen.ts" {8-10}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: [
+        {
+          add: {
+            content: '/* eslint-disable */'
+          }
+        },
+        'typescript'
+      ]
+    }
+  }
+}
+export default config
+```
+
+```ts title="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/file.ts': {
+      plugins: [
+        {
+          add: {
+            content: ['declare namespace GraphQL {']
+          }
+        },
+        {
+          add: {
+            placement: 'append',
+            content: '}'
+          }
+        },
+        'typescript'
+      ]
+    }
+  }
+}
+export default config
+```

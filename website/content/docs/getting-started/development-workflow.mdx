@@ -1,0 +1,150 @@
+---
+description:
+  How to integrate GraphQL Code Generator into your development workflow. Learn how to run it in
+  watch mode, or as part of your CI flow.
+title: Development workflow
+---
+
+GraphQL Code Generator should be integrated as part of your development workflow.
+
+## Scripts Integration
+
+If you wish to run the codegen before starting your server/app, you can use `pre` scripts in your
+`package.json`, for example:
+
+```json title="package.json" {6-7}
+{
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "generate": "graphql-codegen",
+    "prestart": "pnpm generate",
+    "predev": "pnpm generate"
+  }
+}
+```
+
+This way, the codegen generates the output according to your configuration before each time you run
+`dev` or `start` scripts.
+
+It's also helpful to run the codegen during your continuous integration flow and ensure that your
+code continually compiles with the generated output; this way, you can detect breaking changes in
+your GraphQL schema and GraphQL documents.
+
+## Watch Mode
+
+<Callout type="info">
+Watch mode was made optional to reduce install size in CI and prevent build errors in certain environments.
+
+To use watch mode, install [`@parcel/watcher`](https://www.npmjs.com/package/@parcel/watcher).
+
+</Callout>
+
+If you wish to run the codegen in watch mode, you can specify `--watch` (or `-w`) when running it.
+
+You can either run it in a separate terminal session or use tools like
+[`concurrently`](https://npmjs.com/package/concurrently) to run two scripts at the same time:
+
+```json {3} /--watch/
+{
+  "scripts": {
+    "dev": "concurrently \"nodemon app.js\" \"pnpm generate --watch\"",
+    "start": "node app.js",
+    "generate": "graphql-codegen",
+    "prestart": "pnpm generate"
+  }
+}
+```
+
+If you wish, you can specify a custom list of files to watch, by adding a glob expression to the
+command, using `--watch` flag:
+
+```sh /"src/**/*.js"/
+pnpm graphql-codegen --watch "src/**/*.js"
+```
+
+Use this when you are loading your schema or documents from a single code file that depends on other
+files internally because codegen can't tell that you're using those files automatically.
+
+We use [`@parcel/watcher`](https://github.com/parcel-bundler/watcher) which supports subscribing to
+realtime notifications of changes in a directory. It works recursively, so changes in
+sub-directories will also be emitted.
+
+```ts {6-10}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000/graphql',
+  // ...
+  watch: true
+}
+
+export default config
+```
+
+### Skipping unchanged writes
+
+To avoid redundant writes on every rebuild, watch mode remembers the hash of the content it last
+wrote for each output and skips the write when the newly generated content is identical. This
+assumes each output is a pure function of its inputs (schema and documents), which is true for
+regular plugin outputs.
+
+If an output's content instead depends on the file's existing content on disk — for example a preset
+that reads the current file and rewrites only part of it — that assumption breaks: if the file is
+changed externally and codegen regenerates content matching an earlier run, the cached hash still
+matches and the change on disk is never corrected. Set
+[`contentComparison`](/docs/config-reference/codegen-config) to `'disk'` on that output to compare
+against the file on disk instead:
+
+```ts {8}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'http://localhost:4000/graphql',
+  watch: true,
+  generates: {
+    './src/generated.ts': {
+      contentComparison: 'disk',
+      plugins: ['typescript']
+    }
+  }
+}
+
+export default config
+```
+
+## Monorepo and pnpm Workspaces
+
+If you are using a monorepo structure, with tools such as
+[pnpm Workspaces](https://pnpm.io/workspaces) or [Lerna](https://github.com/lerna/lerna), we
+recommend installing the codegen in the root of your monorepo.
+
+If you need to execute the codegen multiple times, note that you can specify multiple fields for
+`generates` field, for example:
+
+```ts {7-8}
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'server/src/**/*.graphql',
+  documents: 'client/src/**/*.graphql',
+  generates: {
+    'client/src/models.ts': ['typescript-operations'],
+    'server/src/models.ts': ['typescript', 'typescript-resolver']
+  }
+}
+
+export default config
+```
+
+## What's next?
+
+Get started with our guides:
+
+- [React and Vue](/docs/guides/react-vue)
+- [Angular](/docs/guides/angular)
+- [Svelte](/docs/guides/svelte)
+- [Apollo and Yoga server](/docs/guides/graphql-server-apollo-yoga)
+- [GraphQL Modules](/docs/guides/graphql-modules)
+
+If your stack is not listed above, please refer to [our plugins directory](/plugins).

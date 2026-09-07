@@ -1,0 +1,9 @@
+{
+  "pages": [
+    "preset-client",
+    "graphql-modules-preset",
+    "import-types-preset",
+    "near-operation-file-preset"
+  ],
+  "title": "Presets"
+}

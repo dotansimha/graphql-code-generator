@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "codegen-config",
+    "schema-field",
+    "documents-field",
+    "config-field",
+    "require-field",
+    "naming-convention",
+    "lifecycle-hooks",
+    "multiproject-config"
+  ],
+  "title": "Config Reference"
+}

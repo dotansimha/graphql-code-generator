@@ -9,12 +9,7 @@ name: docs-preview
 on:
   pull_request:
     paths:
-      - website/src/pages/**
-      - website/src/components/java-installation.mdx
-      - website/src/lib/plugins/**
-      - website/src/category-to-packages.mjs
-      - website/public/assets/**
-      - website/public/config.schema.json
+      - website/**
 
 jobs:
   request-preview:
