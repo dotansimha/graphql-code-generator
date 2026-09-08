@@ -1,0 +1,66 @@
+{
+  "name": "@graphql-codegen/client-preset-codemod",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A codemod that rewrites `client-preset` tagged GraphQL documents into direct imports from the generated artifacts, so bundlers can code-split/tree-shake them without a build-time Babel or SWC plugin.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git",
+    "directory": "packages/presets/codemod"
+  },
+  "homepage": "https://the-guild.dev/graphql/codegen/plugins/presets/preset-client",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-code-generator/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "bin": {
+    "client-preset-codemod": "dist/esm/bin.js"
+  },
+  "main": "dist/cjs/index.js",
+  "typings": "dist/typings/index.d.ts",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "graphql-codegen",
+    "preset-client",
+    "codemod"
+  ],
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "vitest --no-watch"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
+  },
+  "dependencies": {
+    "@graphql-codegen/visitor-plugin-common": "workspace:^",
+    "ts-morph": "^25.0.0",
+    "tslib": "^2.8.0"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
+}
