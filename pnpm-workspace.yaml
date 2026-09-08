@@ -32,6 +32,6 @@ overrides:
   '@typescript-eslint/typescript-estree': 8.59.3
   '@typescript-eslint/utils': 8.59.3
   '@typescript-eslint/visitor-keys': 8.59.3
-  jiti: 2.7.0
+  jiti: 2.7.0 # single resolution avoids a duplicate vitest instance breaking init.spec.ts's SnapshotClient
 patchedDependencies:
   bob-the-bundler@7.0.1: patches/bob-the-bundler@7.0.1.patch
