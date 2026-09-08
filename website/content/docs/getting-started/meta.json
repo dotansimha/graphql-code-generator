@@ -1,0 +1,4 @@
+{
+  "pages": ["index", "installation", "development-workflow", "esm-typescript-usage"],
+  "title": "Getting Started"
+}

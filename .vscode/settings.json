@@ -1,6 +1,6 @@
 {
   "yaml.schemas": {
-    "./website/static/config.schema.json": "*codegen.*"
+    "./website/config.schema.json": "*codegen.*"
   },
   "eslint.useFlatConfig": false,
   "editor.tabSize": 2,

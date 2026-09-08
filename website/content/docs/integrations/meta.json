@@ -1,0 +1,4 @@
+{
+  "pages": ["vscode", "prettier", "federation", "apollo-local-state", "create-react-app", "gatsby"],
+  "title": "Integrations"
+}

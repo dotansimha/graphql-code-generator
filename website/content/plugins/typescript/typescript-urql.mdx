@@ -1,0 +1,51 @@
+---
+title: typescript-urql
+description:
+  GraphQL codegen plugin for generating TypeScript code using urql. This plugin generates React
+  Hooks and TypeScript types.
+hasOperationsNote: true
+sidebarTitle: urql
+---
+
+<Callout type="info">
+
+We now recommend using the `client-preset` package for a **better developer experience** and smaller
+impact on bundle size.
+
+**Get started on [our "React/Vue" guide](/docs/guides/react-vue).**
+
+</Callout>
+
+## Usage Example
+
+For the given input:
+
+```graphql
+query Test {
+  feed {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+  }
+}
+```
+
+We can use the generated code like this:
+
+```tsx
+<TestComponent variables={...}>
+  …
+</TestComponent>
+```
+
+Or if you prefer:
+
+```ts
+const [result] = useTestQuery(...)
+```

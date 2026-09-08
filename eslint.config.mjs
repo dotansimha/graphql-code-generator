@@ -50,7 +50,6 @@ const theGuildIndex = compat.config({
         'babel.config.js',
         'postcss.config.{js,cjs}',
         'rollup.config.js',
-        'next-sitemap.config.js',
       ],
       env: { node: true },
     },
@@ -140,13 +139,6 @@ export default [
 
   // Node environment for all files
   ...compat.env({ node: true }),
-
-  // Website files: extend @theguild react config
-  ...compat
-    .config({
-      extends: ['./node_modules/@theguild/eslint-config/src/react.js'],
-    })
-    .map(config => ({ ...config, files: ['website/**'] })),
 
   // Test files
   {
