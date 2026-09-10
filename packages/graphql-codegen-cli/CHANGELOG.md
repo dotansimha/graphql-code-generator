@@ -1,5 +1,51 @@
 # @graphql-codegen/cli
 
+## 7.4.1
+
+### Patch Changes
+
+- [#10935](https://github.com/dotansimha/graphql-code-generator/pull/10935)
+  [`fb1a7c4`](https://github.com/dotansimha/graphql-code-generator/commit/fb1a7c499e3f4f6ce5887e068ceabd270550f074)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/code-file-loader@^8.1.39` ↗︎](https://www.npmjs.com/package/@graphql-tools/code-file-loader/v/8.1.39)
+    (from `^8.1.28`, in `dependencies`)
+
+- [#10942](https://github.com/dotansimha/graphql-code-generator/pull/10942)
+  [`57c3e7b`](https://github.com/dotansimha/graphql-code-generator/commit/57c3e7b2574f6c9451ec618957acdf73564441de)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/merge@^9.2.4` ↗︎](https://www.npmjs.com/package/@graphql-tools/merge/v/9.2.4)
+    (from `^9.0.6`, in `dependencies`)
+
+- [#10942](https://github.com/dotansimha/graphql-code-generator/pull/10942)
+  [`57c3e7b`](https://github.com/dotansimha/graphql-code-generator/commit/57c3e7b2574f6c9451ec618957acdf73564441de)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Bump `@graphql-tools/merge` from `^9.0.6` to
+  `^9.2.4`.
+
+- [#10935](https://github.com/dotansimha/graphql-code-generator/pull/10935)
+  [`fb1a7c4`](https://github.com/dotansimha/graphql-code-generator/commit/fb1a7c499e3f4f6ce5887e068ceabd270550f074)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix a Windows-specific `import()` failure on
+  absolute paths when loading a schema/document from a `.js`/`.cjs`/`.mjs` file (via
+  `@graphql-tools/code-file-loader`), and when loading modules passed to that loader's own `require`
+  option. Node's dynamic `import()` rejects raw absolute Windows paths (the drive letter is parsed
+  as a URL scheme). Fixed by bumping `@graphql-tools/code-file-loader` to `8.1.39`, which contains
+  the upstream fix
+  ([ardatan/graphql-tools#8421](https://github.com/ardatan/graphql-tools/pull/8421)).
+
+- [#10936](https://github.com/dotansimha/graphql-code-generator/pull/10936)
+  [`9521c0c`](https://github.com/dotansimha/graphql-code-generator/commit/9521c0cba30c1378fc13acfceef3cc9c3e9c82e6)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix watch mode's generated `ignore` glob
+  patterns using the platform path separator (`\` on Windows), which `@parcel/watcher` never
+  matched, so generated output files were watched (and could re-trigger builds) instead of being
+  ignored. Ignore patterns are now always forward-slash, as `@parcel/watcher` expects.
+
+  Also fixes the test suite's `TempDir.clean()` helper on Windows, where `rimraf.sync()` rejected
+  its own glob-style cleanup pattern as containing illegal path characters; now passes
+  `{ glob: true }`. This is a test-only change (`tests/utils.ts` is not part of the published
+  package) included here since it was needed to get the suite green on Windows alongside the
+  watch-mode fix.
+
 ## 7.4.0
 
 ### Minor Changes
