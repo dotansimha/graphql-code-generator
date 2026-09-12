@@ -635,6 +635,45 @@ const client = new createClient({
 })
 ```
 
+## Index File
+
+By default, the `client-preset` generates an `index.ts` file that re-exports the other generated
+files (`gql.ts`, and `fragment-masking.ts` when Fragment Masking is enabled), so you can import
+everything from the output directory itself:
+
+```ts
+import { graphql } from './gql'
+```
+
+Some projects prefer to avoid barrel files, for example because they interfere with tree-shaking or
+because of a lint rule against them. In that case, `index.ts` generation can be disabled with the
+`skipIndexFile` option:
+
+```ts title="codegen.ts" {9-11}
+import { type CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  documents: ['src/**/*.tsx', '!src/gql/**/*'],
+  generates: {
+    './src/gql/': {
+      preset: 'client',
+      presetConfig: {
+        skipIndexFile: true
+      }
+    }
+  }
+}
+
+export default config
+```
+
+With `skipIndexFile` enabled, import from the specific generated files instead:
+
+```ts
+import { graphql } from './gql/gql'
+```
+
 ## Reducing Bundle Size
 
 Large scale projects might want to enable code splitting or tree shaking on the `client-preset`
