@@ -30,7 +30,6 @@ describe('client-preset - presetConfig.skipIndexFile', () => {
 
     expect(result).toHaveLength(4);
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile).toBeDefined();
     expect(indexFile.content).toEqual(`export * from "./fragment-masking";
 export * from "./gql";`);
   });
@@ -70,7 +69,6 @@ export * from "./gql";`);
 
     expect(result).toHaveLength(4);
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile).toBeDefined();
     expect(indexFile.content).toEqual(`export * from "./fragment-masking";
 export * from "./gql";`);
   });
