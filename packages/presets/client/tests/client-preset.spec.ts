@@ -2722,4 +2722,74 @@ export * from "./gql.cjs";`);
       export const Test_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Test_User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"StringValue","value":"user-001","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<Test_UserQuery, Test_UserQueryVariables>;"
     `);
   });
+
+  describe('skipIndexFile option', () => {
+    const schema = [
+      /* GraphQL */ `
+        type Query {
+          a: String
+          b: String
+          c: String
+        }
+      `,
+    ];
+
+    it('generates index.ts by default', async () => {
+      const { result } = await executeCodegen({
+        schema,
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+      });
+
+      expect(result).toHaveLength(4);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      expect(indexFile).toBeDefined();
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+export * from "./gql";`);
+    });
+
+    it('does not generate index.ts when `skipIndexFile: true`', async () => {
+      const { result } = await executeCodegen({
+        schema,
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              skipIndexFile: true,
+            },
+          },
+        },
+      });
+
+      expect(result).toHaveLength(3);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      expect(indexFile).toBeUndefined();
+    });
+
+    it('generates index.ts when `skipIndexFile: false`', async () => {
+      const { result } = await executeCodegen({
+        schema,
+        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+        generates: {
+          'out1/': {
+            preset,
+            presetConfig: {
+              skipIndexFile: false,
+            },
+          },
+        },
+      });
+
+      expect(result).toHaveLength(4);
+      const indexFile = result.find(file => file.filename === 'out1/index.ts');
+      expect(indexFile).toBeDefined();
+      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+export * from "./gql";`);
+    });
+  });
 });
