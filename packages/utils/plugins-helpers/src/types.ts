@@ -43,6 +43,13 @@ export namespace Types {
      * to decide whether the write can be skipped. See {@link Types.ContentComparison}.
      */
     contentComparison?: Types.ContentComparison;
+    /**
+     * PoC (see https://github.com/dotansimha/graphql-code-generator/issues/10943, "Option 1: Sequential Stages"):
+     * called synchronously with each plugin's raw output as it completes, so a caller
+     * (e.g. a later sequential stage) can observe the `meta` a plugin produced without
+     * changing `codegen()`'s existing `Promise<string>` return type.
+     */
+    onPluginOutput?: (pluginName: string, output: Types.PluginOutput) => void;
   }
 
   export type FileOutput = {
@@ -276,6 +283,16 @@ export namespace Types {
   export type NamedPreset = string;
   export type OutputConfig = NamedPlugin | ConfiguredPlugin;
 
+  /**
+   * PoC (see https://github.com/dotansimha/graphql-code-generator/issues/10943, "Option 1:
+   * Sequential Stages"): an ordered list of stages sharing a single output path. Stages run one
+   * after another (not in parallel like plugins within a single stage do), and a stage's `meta`
+   * (from `Types.ComplexPluginOutput['meta']`) is made available to the next stage via
+   * `pluginContext.previousStageMeta`, keyed by plugin name. Each stage's `content` is appended to
+   * the same output file, in order.
+   */
+  export type SequentialStages = ConfiguredOutput[];
+
   export type PresetNamesBase =
     | 'client'
     | 'near-operation-file'
@@ -502,9 +519,14 @@ export namespace Types {
      * @description A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file.
      *
      * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
+     *
+     * PoC (see https://github.com/dotansimha/graphql-code-generator/issues/10943, "Option 1: Sequential
+     * Stages"): the value can also be an array of `ConfiguredOutput` "stages" (each entry has a `plugins`
+     * and/or `preset` key), executed in order against the same output path. A stage's plugins can read the
+     * `meta` returned by a plugin from an earlier stage via `pluginContext.previousStageMeta`.
      */
     generates: {
-      [outputPath: string]: ConfiguredOutput | ConfiguredPlugin[];
+      [outputPath: string]: ConfiguredOutput | ConfiguredPlugin[] | Types.SequentialStages;
     };
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).

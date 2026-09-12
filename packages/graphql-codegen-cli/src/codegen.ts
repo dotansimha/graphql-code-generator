@@ -8,6 +8,7 @@ import { codegen } from '@graphql-codegen/core';
 import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
+  isSequentialStagesArray,
   normalizeConfig,
   normalizeImportExtension,
   normalizeInstanceOrArray,
@@ -84,6 +85,15 @@ export async function executeCodegen(
   let rootDocuments: Types.OperationDocument[];
   let rootExternalDocuments: Types.OperationDocument[];
   const generates: { [filename: string]: Types.ConfiguredOutput } = {};
+  /**
+   * PoC (see https://github.com/dotansimha/graphql-code-generator/issues/10943, "Option 1:
+   * Sequential Stages"): `generates` entries written as an array of `{ plugins }` stage objects
+   * are collected here instead of `generates`, and run through the dedicated sequential-stages
+   * code path below rather than the normal single-stage `ConfiguredOutput` path. Per-stage
+   * `schema`/`documents` overrides are out of scope for this PoC: stages share the root
+   * `schema`/`documents`.
+   */
+  const generatesStages: { [filename: string]: Types.SequentialStages } = {};
 
   const cache = createCache();
 
@@ -159,7 +169,14 @@ export async function executeCodegen(
     }
 
     for (const filename of generateKeys) {
-      const output = (generates[filename] = normalizeOutputParam(config.generates[filename]));
+      const rawEntry = config.generates[filename];
+
+      if (isSequentialStagesArray(rawEntry)) {
+        generatesStages[filename] = rawEntry;
+        continue;
+      }
+
+      const output = (generates[filename] = normalizeOutputParam(rawEntry));
 
       if (!output.preset && (!output.plugins || output.plugins.length === 0)) {
         throw new Error(
@@ -567,7 +584,150 @@ export async function executeCodegen(
             };
           });
 
-          return task.newListr(generateTasks, {
+          /**
+           * PoC (see https://github.com/dotansimha/graphql-code-generator/issues/10943,
+           * "Option 1: Sequential Stages"): one task per `generatesStages` entry. Unlike
+           * `generateTasks` above, each stage here runs its plugins sequentially (not in
+           * parallel) via successive calls to `codegen()`, and threads the `meta` a stage's
+           * plugins produced into the next stage via `pluginContext.previousStageMeta`.
+           */
+          const stageGenerateTasks: ListrTask<Ctx>[] = Object.keys(generatesStages).map(
+            filename => {
+              const stages = generatesStages[filename];
+              const title = `Generate to ${filename} (sequential stages)`;
+
+              return {
+                title,
+                async task(_, subTask) {
+                  let stageSchemaAst: GraphQLSchema;
+                  let stageSchema: DocumentNode;
+                  let stageDocuments: Types.DocumentFile[] = [];
+
+                  return subTask.newListr(
+                    [
+                      {
+                        title: 'Load GraphQL schemas',
+                        task: wrapTask(
+                          async () => {
+                            stageSchemaAst = await context.loadSchema(rootSchemas);
+                            stageSchema = getCachedDocumentNodeFromSchema(stageSchemaAst);
+                          },
+                          filename,
+                          `Load GraphQL schemas: ${filename}`,
+                          ctx,
+                        ),
+                      },
+                      {
+                        title: 'Load GraphQL documents',
+                        task: wrapTask(
+                          async () => {
+                            const documentPointerMap: UnnormalizedTypeDefPointer = {};
+                            for (const ptr of rootDocuments) {
+                              if (typeof ptr === 'string') {
+                                documentPointerMap[ptr] = {};
+                              } else if (typeof ptr === 'object') {
+                                Object.assign(documentPointerMap, ptr);
+                              }
+                            }
+                            stageDocuments =
+                              Object.keys(documentPointerMap).length > 0
+                                ? await context.loadDocuments(documentPointerMap, 'standard')
+                                : [];
+                          },
+                          filename,
+                          `Load GraphQL documents: ${filename}`,
+                          ctx,
+                        ),
+                      },
+                      {
+                        title: 'Generate (sequential stages)',
+                        task: wrapTask(
+                          async () => {
+                            const pluginLoader =
+                              config.pluginLoader || makeDefaultLoader(context.cwd);
+                            let content = '';
+                            // Meta handed off from the previous stage's plugins, keyed by plugin
+                            // name, so the next stage's plugins can build on top of it.
+                            let previousStageMeta: Record<string, unknown> = {};
+
+                            for (const stageConfig of stages) {
+                              const normalizedPluginsArray = normalizeConfig(
+                                stageConfig.plugins || [],
+                              );
+                              const pluginPackages = await Promise.all(
+                                normalizedPluginsArray.map(plugin =>
+                                  getPluginByName(Object.keys(plugin)[0], pluginLoader),
+                                ),
+                              );
+                              const pluginMap: { [name: string]: CodegenPlugin } =
+                                Object.fromEntries(
+                                  pluginPackages.map((pkg, i) => [
+                                    Object.keys(normalizedPluginsArray[i])[0],
+                                    pkg,
+                                  ]),
+                                );
+
+                              const mergedConfig = {
+                                ...rootConfig,
+                                emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
+                                importExtension: config.importExtension,
+                                ...stageConfig.config,
+                              };
+
+                              const stageMeta: Record<string, unknown> = {};
+
+                              const stageContent = await codegen({
+                                filename,
+                                plugins: normalizedPluginsArray,
+                                schema: stageSchema,
+                                schemaAst: stageSchemaAst,
+                                documents: stageDocuments,
+                                config: mergedConfig,
+                                pluginMap,
+                                pluginContext: { ...pluginContext, previousStageMeta },
+                                profiler: context.profiler,
+                                cache,
+                                onPluginOutput: (name, output) => {
+                                  if (
+                                    output &&
+                                    typeof output === 'object' &&
+                                    'meta' in output &&
+                                    output.meta !== undefined
+                                  ) {
+                                    stageMeta[name] = output.meta;
+                                  }
+                                },
+                              });
+
+                              content += (content ? '\n' : '') + stageContent;
+                              // Hand this stage's meta off to the next one.
+                              previousStageMeta = { ...previousStageMeta, ...stageMeta };
+                            }
+
+                            result.push({
+                              filename,
+                              content,
+                              hooks: {},
+                            });
+                          },
+                          filename,
+                          `Generate: ${filename}`,
+                          ctx,
+                        ),
+                      },
+                    ],
+                    {
+                      exitOnError: true,
+                      concurrent: false,
+                    },
+                  );
+                },
+                exitOnError: false,
+              };
+            },
+          );
+
+          return task.newListr([...generateTasks, ...stageGenerateTasks], {
             concurrent: cpus().length || 1,
           });
         },
