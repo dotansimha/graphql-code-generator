@@ -1,4 +1,3 @@
-import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
 import { preset } from '../src/index.js';
 
@@ -12,11 +11,16 @@ describe('client-preset - presetConfig.skipIndexFile', () => {
       }
     `,
   ];
+  const documents = /* GraphQL */ `
+    query A {
+      a
+    }
+  `;
 
   it('generates index.ts by default', async () => {
     const { result } = await executeCodegen({
       schema,
-      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      documents,
       generates: {
         'out1/': {
           preset,
@@ -34,7 +38,7 @@ export * from "./gql";`);
   it('does not generate index.ts when `skipIndexFile: true`', async () => {
     const { result } = await executeCodegen({
       schema,
-      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      documents,
       generates: {
         'out1/': {
           preset,
@@ -53,7 +57,7 @@ export * from "./gql";`);
   it('generates index.ts when `skipIndexFile: false`', async () => {
     const { result } = await executeCodegen({
       schema,
-      documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
+      documents,
       generates: {
         'out1/': {
           preset,
