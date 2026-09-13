@@ -23,6 +23,7 @@ allowBuilds:
   vue-demi: false
   workerd: false
 overrides:
+  graphql: 17.0.2 # keep in sync with the root devDependency so every workspace package resolves a single graphql install
   '@rushstack/eslint-patch': 1.16.1
   '@typescript-eslint/eslint-plugin': 8.59.3
   '@typescript-eslint/parser': 8.59.3
