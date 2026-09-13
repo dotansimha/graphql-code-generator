@@ -30,7 +30,8 @@ describe('client-preset', () => {
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+    expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
     // gql.ts
@@ -148,7 +149,8 @@ export * from "./gql";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+    expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
     // gql.ts
@@ -705,7 +707,8 @@ export * from "./gql";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+    expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.js";
 export * from "./gql.js";`);
 
     // gql.ts
@@ -920,7 +923,8 @@ export * from "./gql.js";`);
       expect(result).toHaveLength(4);
       // index.ts (re-exports)
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+      expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.js";
 export * from "./gql.js";`);
 
       // gql.ts
@@ -980,7 +984,8 @@ export * from "./gql.js";`);
 
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.mjs";
+      expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.mjs";
 export * from "./gql.mjs";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -1009,7 +1014,8 @@ export * from "./gql.mjs";`);
 
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+      expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -1040,7 +1046,8 @@ export * from "./gql";`);
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
       // Should use .mjs from importExtension, not .js from emitLegacyCommonJSImports: false
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.mjs";
+      expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.mjs";
 export * from "./gql.mjs";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -1071,7 +1078,8 @@ export * from "./gql.mjs";`);
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
       // Should use empty string from importExtension, not .js from emitLegacyCommonJSImports: false
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+      expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
@@ -1100,7 +1108,8 @@ export * from "./gql";`);
 
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.cjs";
+      expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.cjs";
 export * from "./gql.cjs";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');

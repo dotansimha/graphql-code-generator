@@ -32,7 +32,10 @@ describe('client-preset - fragment masking', () => {
     expect(fileNames).toContain('out1/graphql.ts');
 
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toMatchInlineSnapshot(`"export * from "./gql";"`);
+    expect(indexFile.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      export * from "./gql";"
+    `);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
     expect(gqlFile.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
@@ -792,7 +795,8 @@ describe('client-preset - fragment masking', () => {
 
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
     expect(indexFile.content).toMatchInlineSnapshot(`
-      "export * from "./fragment-masking";
+      "/* eslint-disable */
+      export * from "./fragment-masking";
       export * from "./gql";"
     `);
 
