@@ -10,10 +10,10 @@
   },
   "packageRules": [
     {
-      "excludePackagePatterns": [
+      "excludePackageNames": [
         "@changesets/*",
         "typescript",
-        "^@theguild/",
+        "/^@theguild\\//",
         "next",
         "tailwindcss",
         "@whatwg-node/*",
@@ -22,7 +22,6 @@
         "@types/lz-string",
         "swc*"
       ],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch"
