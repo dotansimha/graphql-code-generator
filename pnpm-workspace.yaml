@@ -23,9 +23,9 @@ allowBuilds:
   vue-demi: false
   workerd: false
 overrides:
-  # Without this, transitive deps (e.g. graphql-helix, used by @graphql-codegen/testing)
-  # resolve their own graphql@16.x copy alongside the root's graphql@17.x, creating two
-  # physically distinct `graphql` installs. TypeScript then treats types like
+  # Without this, transitive deps (e.g. msw, used by @graphql-codegen/typescript-msw via
+  # website) resolve their own graphql@16.x copy alongside the root's graphql@17.x, creating
+  # two physically distinct `graphql` installs. TypeScript then treats types like
   # `GraphQLSchema` from each copy as incompatible with each other (a "dual package
   # hazard"), which breaks `pnpm build` with a TS2345 error. Forcing a single resolved
   # version keeps the whole workspace on one graphql install. Keep this in sync with the
