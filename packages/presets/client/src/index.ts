@@ -321,6 +321,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
           [`add`]: addPlugin,
         },
         plugins: [
+          { [`add`]: { content: `/* eslint-disable */` } },
           {
             [`add`]: {
               content: reexports
