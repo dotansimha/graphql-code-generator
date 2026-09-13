@@ -1,5 +1,26 @@
 # @graphql-codegen/testing
 
+## 5.0.2
+
+### Patch Changes
+
+- [#10951](https://github.com/dotansimha/graphql-code-generator/pull/10951)
+  [`464b531`](https://github.com/dotansimha/graphql-code-generator/commit/464b531bd954dc3cd283a281f132e93ab395f291)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Added dependency [`graphql-yoga@^5.21.0` ↗︎](https://www.npmjs.com/package/graphql-yoga/v/5.21.0)
+    (to `dependencies`)
+  - Removed dependency
+    [`graphql-helix@1.13.0` ↗︎](https://www.npmjs.com/package/graphql-helix/v/1.13.0) (from
+    `dependencies`)
+
+- [#10951](https://github.com/dotansimha/graphql-code-generator/pull/10951)
+  [`464b531`](https://github.com/dotansimha/graphql-code-generator/commit/464b531bd954dc3cd283a281f132e93ab395f291)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Replace unmaintained `graphql-helix`
+  dependency with `graphql-yoga` in the internal `mockGraphQLServer` test utility. `graphql-helix`
+  has had no releases in years; `graphql-yoga` is actively maintained and already used elsewhere in
+  this monorepo. This is an internal implementation detail — the `mockGraphQLServer` function
+  signature is unchanged.
+
 ## 5.0.1
 
 ### Patch Changes
