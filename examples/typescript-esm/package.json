@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "3.2.0",
-    "graphql": "16.14.0"
+    "graphql": "17.0.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*",

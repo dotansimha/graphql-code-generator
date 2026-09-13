@@ -11,7 +11,7 @@
     "test:end2end": "start-server-and-test start http://localhost:3000 test"
   },
   "dependencies": {
-    "graphql": "16.14.0",
+    "graphql": "17.0.2",
     "villus": "3.5.2",
     "vue": "3.5.34"
   },
