@@ -101,6 +101,31 @@ export * from "./gql";`);
     expect(graphqlFile).toBeDefined();
   });
 
+  it('adds an eslint-disable comment to index.ts like the other generated files (issue #10210)', async () => {
+    const { result } = await executeCodegen({
+      schema: /* GraphQL */ `
+        type Query {
+          a: String
+        }
+      `,
+      documents: /* GraphQL */ `
+        query A {
+          a
+        }
+      `,
+      generates: {
+        'out1/': {
+          preset,
+        },
+      },
+    });
+
+    const indexFile = result.find(file => file.filename === 'out1/index.ts');
+    expect(indexFile.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
+export * from "./gql";`);
+  });
+
   it('can generate simple examples lowercase names', async () => {
     const { result } = await executeCodegen({
       schema: [
