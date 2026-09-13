@@ -665,11 +665,19 @@ export const getFieldNames = ({
   fieldNames = new Set(),
   parentName = '',
   loadedFragments,
+  fragmentFieldNamesCache = new Map<string, ReadonlySet<string>>(),
 }: {
   selections: readonly SelectionNode[];
   fieldNames?: Set<string>;
   parentName?: string;
   loadedFragments: LoadedFragment[];
+  // Field names contributed by a fragment don't depend on where the fragment
+  // is spread from - only on its own body. Memoizing them here (keyed by
+  // fragment name, for the lifetime of one top-level getFieldNames call)
+  // means a fragment nested inside other reused fragments gets its subtree
+  // walked once instead of once per spread, which is otherwise exponential
+  // in the fragment nesting depth. See #10940.
+  fragmentFieldNamesCache?: Map<string, ReadonlySet<string>>;
 }) => {
   for (const selection of selections) {
     switch (selection.kind) {
@@ -682,19 +690,30 @@ export const getFieldNames = ({
             fieldNames,
             parentName: fieldName,
             loadedFragments,
+            fragmentFieldNamesCache,
           });
         }
         break;
       }
       case Kind.FRAGMENT_SPREAD: {
-        getFieldNames({
-          selections: loadedFragments
-            .filter(def => def.name === selection.name.value)
-            .flatMap(s => s.node.selectionSet.selections),
-          fieldNames,
-          parentName,
-          loadedFragments,
-        });
+        const fragmentName = selection.name.value;
+        let relativeFieldNames = fragmentFieldNamesCache.get(fragmentName);
+        if (!relativeFieldNames) {
+          // Compute the fragment's own field names once, relative to its own
+          // root (parentName ''), so the result is reusable no matter where
+          // this fragment ends up being spread from.
+          relativeFieldNames = getFieldNames({
+            selections: loadedFragments
+              .filter(def => def.name === fragmentName)
+              .flatMap(s => s.node.selectionSet.selections),
+            loadedFragments,
+            fragmentFieldNamesCache,
+          });
+          fragmentFieldNamesCache.set(fragmentName, relativeFieldNames);
+        }
+        for (const relativeFieldName of relativeFieldNames) {
+          fieldNames.add(parentName ? `${parentName}.${relativeFieldName}` : relativeFieldName);
+        }
         break;
       }
       case Kind.INLINE_FRAGMENT: {
@@ -703,6 +722,7 @@ export const getFieldNames = ({
           fieldNames,
           parentName,
           loadedFragments,
+          fragmentFieldNamesCache,
         });
         break;
       }
