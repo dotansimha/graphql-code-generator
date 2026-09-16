@@ -711,6 +711,10 @@ export const getFieldNames = ({
           });
           fragmentFieldNamesCache.set(fragmentName, relativeFieldNames);
         }
+        // The cached names are relative to the fragment's own root, but this
+        // same fragment can be spread under a different parentName at each
+        // call site - re-prefix the cached (unprefixed) names with *this*
+        // call's parentName instead of recomputing them.
         for (const relativeFieldName of relativeFieldNames) {
           fieldNames.add(parentName ? `${parentName}.${relativeFieldName}` : relativeFieldName);
         }
