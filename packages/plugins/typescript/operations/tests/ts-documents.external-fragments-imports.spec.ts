@@ -1,11 +1,10 @@
 import { buildSchema, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index.js';
+import { plugin, TypeScriptDocumentsPluginConfig } from '../src/index.js';
 
-describe('TypeScript Operations Plugin - importSchemaTypesFrom with inlineFragmentTypes: "combine"', () => {
-  // https://github.com/dotansimha/graphql-code-generator/issues/10922
-  it('does not emit an unused schema-types import when a document only spreads a fragment that itself uses a schema type', async () => {
+describe('TypeScript Operations Plugin - external fragment imports', () => {
+  it('Issue #10922 - importSchemaTypesFrom with inlineFragmentTypes=combine - does not import Types when a document only spreads a fragment, with no direct reference to an enum type', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
         book: Book
@@ -51,11 +50,8 @@ describe('TypeScript Operations Plugin - importSchemaTypesFrom with inlineFragme
       throw new Error('Expected fragment definition');
     }
 
-    const config = {
-      // Fragment types are referenced, not inlined - this is what makes the bug
-      // observable: `BookFragment` never names `Types` itself, it only references
-      // `CategoryFragment`.
-      inlineFragmentTypes: 'combine' as const,
+    const config: TypeScriptDocumentsPluginConfig = {
+      inlineFragmentTypes: 'combine',
       importSchemaTypesFrom: './types',
       namespacedImportName: 'Types',
     };
@@ -68,8 +64,15 @@ describe('TypeScript Operations Plugin - importSchemaTypesFrom with inlineFragme
       }),
     ]);
 
-    expect(categoryResult).toContain("import type * as Types from './types';");
-    expect(categoryResult).toContain('Types.CategoryKind');
+    expect(categoryResult).toMatchInlineSnapshot(`
+      "import type * as Types from './types';
+
+
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type CategoryFragment = { id: string, kind: Types.CategoryKind };
+      "
+    `);
     validateTs(categoryResult, undefined, undefined, undefined, undefined, true);
 
     // book.generated.ts: only spreads `...Category`, so the generated type merely
@@ -93,7 +96,12 @@ describe('TypeScript Operations Plugin - importSchemaTypesFrom with inlineFragme
       ),
     ]);
 
-    expect(bookResult).toContain('category: CategoryFragment');
-    expect(bookResult).not.toContain('Types');
+    expect(bookResult).toMatchInlineSnapshot(`
+      "
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type BookFragment = { id: string, category: CategoryFragment };
+      "
+    `);
   });
 });

@@ -144,6 +144,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     this._outputPath = outputPath;
     autoBind(this);
 
+    // #region collectUsedSchemaTypes
     const allFragments: LoadedFragment[] = [
       ...(
         documentNode.definitions.filter(
@@ -171,23 +172,23 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema,
       documentNode: documentWithAllFragments,
     });
+    // #endregion collectUsedSchemaTypes
 
-    // In `inline` mode (the default), every fragment spread - internal or external - is inlined
-    // into whatever printed declaration references it, transitively, so anything reachable via
-    // `documentWithAllFragments` genuinely ends up named in this file's output too.
-    //
-    // In `combine`/`mask` mode, a fragment spread instead collapses to a bare reference to the
-    // fragment's own generated type. That reference only actually names a schema type when the
-    // fragment's own declaration is ALSO printed in this file (i.e. it's part of
-    // `documentsToVisitAST`) - an external fragment's fields are never printed (or inlined) here,
-    // so types reached only through one must be excluded.
-    const inlinesFragmentFields =
-      this.config.inlineFragmentTypes !== 'combine' && this.config.inlineFragmentTypes !== 'mask';
-
+    // #region collectNamedSchemaTypes
     const printedDefinitionNodes = new Set(documentsToVisitAST.definitions);
-    const namedFragments = inlinesFragmentFields
-      ? allFragments
-      : allFragments.filter(fragment => printedDefinitionNodes.has(fragment.node));
+    const namedFragments =
+      this.config.inlineFragmentTypes === 'inline'
+        ? // In `inline` mode (the default), every fragment spread - internal or external - is inlined
+          // into whatever printed declaration references it, transitively, so anything reachable via
+          // `documentWithAllFragments` genuinely ends up named in this file's output too.
+          allFragments
+        : // In `combine`/`mask` mode, a fragment spread instead collapses to a bare reference to the
+          // fragment's own generated type. That reference only actually names a schema type when the
+          // fragment's own declaration is ALSO printed in this file (i.e. it's part of
+          // `documentsToVisitAST`) - an external fragment's fields are never printed (or inlined) here,
+          //
+          // i.e. only find fragments named in the same document
+          allFragments.filter(fragment => printedDefinitionNodes.has(fragment.node));
 
     const namedDocument: DocumentNode = {
       ...documentNode,
@@ -201,6 +202,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema,
       documentNode: namedDocument,
     });
+    // #endregion collectNamedSchemaTypes
 
     const processorConfig: SelectionSetProcessorConfig = {
       namespacedImportName: this.config.namespacedImportName,
