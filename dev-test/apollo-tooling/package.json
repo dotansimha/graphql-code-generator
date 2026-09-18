@@ -16,6 +16,7 @@
   "dependencies": {
     "@apollo/client": "3.14.1",
     "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/near-operation-file-preset": "5.2.1",
     "@graphql-codegen/plugin-helpers": "workspace:*",
     "@graphql-codegen/typed-document-node": "workspace:*",
     "@graphql-codegen/typescript-operations": "workspace:*",
