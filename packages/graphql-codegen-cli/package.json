@@ -119,7 +119,6 @@
     "@graphql-codegen/typescript": "workspace:*",
     "@graphql-codegen/typescript-graphql-files-modules": "4.0.1",
     "@graphql-codegen/typescript-operations": "workspace:*",
-    "@graphql-codegen/typescript-resolvers": "workspace:*",
     "@inquirer/testing": "3.3.6",
     "@parcel/watcher": "^2.1.0",
     "@types/is-glob": "4.0.4",
