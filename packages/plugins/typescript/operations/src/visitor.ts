@@ -80,6 +80,16 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsParsedConfig
 > {
   protected _usedSchemaTypes: UsedSchemaTypes = {};
+  /**
+   * _namedSchemaTypes is a subset of _usedSchemaTypes: the schema types this file's own
+   * generated declarations actually name, as opposed to types merely reached through the
+   * document (e.g. via a fragment). Those two diverge when `inlineFragmentTypes` is `'combine'`
+   * or `'mask'`: a fragment spread there collapses to a bare reference to the fragment's own
+   * generated type (printed in whichever file defines that fragment) instead of inlining its
+   * fields, so a schema type selected only inside such a fragment is never named here.
+   * This is what should gate whether a schema-type import/declaration is actually emitted.
+   */
+  protected _namedSchemaTypes: UsedSchemaTypes = {};
   protected _needsExactUtilityType: boolean = false;
   /**
    * _usedEnumIntrospectionType is a metadata value
@@ -95,6 +105,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     schema: GraphQLSchema,
     config: TypeScriptDocumentsPluginConfig,
     documentNode: DocumentNode,
+    documentsToVisitAST: DocumentNode,
     outputPath: string,
   ) {
     super(
@@ -133,6 +144,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     this._outputPath = outputPath;
     autoBind(this);
 
+    // #region collectUsedSchemaTypes
     const allFragments: LoadedFragment[] = [
       ...(
         documentNode.definitions.filter(
@@ -160,6 +172,37 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema,
       documentNode: documentWithAllFragments,
     });
+    // #endregion collectUsedSchemaTypes
+
+    // #region collectNamedSchemaTypes
+    const printedDefinitionNodes = new Set(documentsToVisitAST.definitions);
+    const namedFragments =
+      this.config.inlineFragmentTypes === 'inline'
+        ? // In `inline` mode (the default), every fragment spread - internal or external - is inlined
+          // into whatever printed declaration references it, transitively, so anything reachable via
+          // `documentWithAllFragments` genuinely ends up named in this file's output too.
+          allFragments
+        : // In `combine`/`mask` mode, a fragment spread instead collapses to a bare reference to the
+          // fragment's own generated type. That reference only actually names a schema type when the
+          // fragment's own declaration is ALSO printed in this file (i.e. it's part of
+          // `documentsToVisitAST`) - an external fragment's fields are never printed (or inlined) here,
+          //
+          // i.e. only find fragments named in the same document
+          allFragments.filter(fragment => printedDefinitionNodes.has(fragment.node));
+
+    const namedDocument: DocumentNode = {
+      ...documentNode,
+      definitions: [
+        ...documentsToVisitAST.definitions.filter(d => d.kind !== Kind.FRAGMENT_DEFINITION),
+        ...namedFragments.map(f => f.node),
+      ],
+    };
+
+    this._namedSchemaTypes = this.collectUsedSchemaTypesToGenerate({
+      schema,
+      documentNode: namedDocument,
+    });
+    // #endregion collectNamedSchemaTypes
 
     const processorConfig: SelectionSetProcessorConfig = {
       namespacedImportName: this.config.namespacedImportName,
@@ -227,7 +270,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
     if (
-      !this._usedSchemaTypes[enumName] || // If not used...
+      !this._namedSchemaTypes[enumName] || // If not named in this file's own output...
       this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
     ) {
       return null; // ... then, don't generate in this file
@@ -257,7 +300,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string | null {
     const inputTypeName = node.name.value;
     if (
-      !this._usedSchemaTypes[inputTypeName] || // If not used...
+      !this._namedSchemaTypes[inputTypeName] || // If not named in this file's own output...
       this.config.importSchemaTypesFrom // ... Or, is imported from a shared file
     ) {
       return null; // ... then, don't generate in this file
@@ -412,7 +455,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     }
 
     const hasTypesToImport =
-      Object.values(this._usedSchemaTypes).filter(
+      Object.values(this._namedSchemaTypes).filter(
         value => value.type === 'GraphQLEnumType' || value.type === 'GraphQLInputObjectType', // Only Enums and Inputs are stored in the shared type file (never Scalar), so we should only print import line if Enums and Inputs are used.
       ).length > 0;
 
@@ -443,7 +486,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   public getEnumsImports(): string[] {
     const usedEnumMap: ParsedEnumValuesMap = {};
     for (const [enumName, enumDetails] of Object.entries(this.config.enumValues)) {
-      if (this._usedSchemaTypes[enumName]) {
+      if (this._namedSchemaTypes[enumName]) {
         usedEnumMap[enumName] = enumDetails;
       }
     }
@@ -478,7 +521,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       };
     } = {};
     for (const [scalarName, parsedScalar] of Object.entries(this.config.scalars)) {
-      const usedScalar = this._usedSchemaTypes[scalarName];
+      const usedScalar = this._namedSchemaTypes[scalarName];
       if (!usedScalar || usedScalar.type !== 'GraphQLScalarType') {
         continue;
       }
