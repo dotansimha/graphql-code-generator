@@ -8,13 +8,20 @@
     "cli"
   ],
   "scripts": {
-    "start": "tsx cli/index.ts",
-    "start:debug": "NODE_OPTIONS='--trace-warnings' tsx cli/index.ts",
-    "start:verbose": "DEBUG='*' tsx cli/index.ts",
-    "test": "vitest --no-watch"
+    "generate": "pnpm generate:esm",
+    "generate:cjs": "node ../../packages/graphql-codegen-cli/dist/cjs/bin.js --config codegen.ts",
+    "generate:esm": "node ../../packages/graphql-codegen-cli/dist/esm/bin.js --config codegen.ts",
+    "start": "node cli/index.ts",
+    "start:debug": "NODE_OPTIONS='--trace-warnings' node cli/index.ts",
+    "start:verbose": "DEBUG='*' node cli/index.ts",
+    "test": "vitest --no-watch",
+    "watch": "pnpm watch:esm",
+    "watch:cjs": "pnpm generate:cjs --watch",
+    "watch:esm": "pnpm generate:esm --watch"
   },
   "dependencies": {
     "@apollo/client": "3.14.1",
+    "@graphql-codegen/add": "workspace:*",
     "@graphql-codegen/cli": "workspace:*",
     "@graphql-codegen/near-operation-file-preset": "5.2.1",
     "@graphql-codegen/plugin-helpers": "workspace:*",
@@ -24,7 +31,6 @@
   },
   "devDependencies": {
     "@types/node": "24.12.4",
-    "tsx": "4.22.0",
     "typescript": "6.0.3",
     "vitest": "4.1.6"
   },

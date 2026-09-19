@@ -30,9 +30,14 @@ const GRAPHQL_CODEGEN_CONFIG = {
   generateOperationTypes: true,
 };
 
-export const main = async () => {
-  const cwd = process.cwd();
-
+/**
+ * Shared by both entry points into this package's codegen:
+ * - `main()` below, i.e. the programmatic `start` script, which is what the real
+ *   apollo-tooling setup this package mimics does.
+ * - `codegen.ts`, which the `generate:{cjs,esm}` scripts feed to the CLI binary so
+ *   the dev-tests CI job covers this package the same way it covers the others.
+ */
+export const buildCodegenConfig = (cwd: string): Types.Config => {
   const localSchemaFilePath = `${cwd}/schema.graphql`;
 
   const includes = ['src'];
@@ -59,7 +64,7 @@ export const main = async () => {
     };
   });
 
-  await generate({
+  return {
     schema: localSchemaFilePath,
     documents: [
       ...includes.map((include: any) => `${include}/**/*.{js,jsx,ts,tsx}`),
@@ -71,7 +76,11 @@ export const main = async () => {
     overwrite: true,
     debug: false,
     verbose: false,
-  });
+  };
+};
+
+export const main = async () => {
+  await generate(buildCodegenConfig(process.cwd()));
 };
 
 if (import.meta.url === process.argv[1] || import.meta.url === `file://${process.argv[1]}`) {
