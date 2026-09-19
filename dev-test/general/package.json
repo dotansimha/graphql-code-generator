@@ -14,6 +14,7 @@
   "devDependencies": {
     "@graphql-codegen/add": "workspace:*",
     "@graphql-codegen/cli": "workspace:*",
+    "@graphql-codegen/client-preset": "workspace:*",
     "@graphql-codegen/flow": "3.0.1",
     "@graphql-codegen/flow-resolvers": "3.0.1",
     "@graphql-codegen/graphql-modules-preset": "workspace:*",
