@@ -24,14 +24,20 @@ describe.skipIf(platform() !== 'win32')('lifecycleHooks - win32', () => {
     ]);
 
     expect(mockExec).toHaveBeenCalledTimes(1);
-
-    // FIXME: this snapshot locks in the current BUGGY output -- the path wrapped in
-    // POSIX single quotes, which cmd.exe does not strip, breaking the hook on Windows.
-    // Once hooks.ts quotes conditionally per `process.platform`, this should become:
-    // "prettier --write D:\a\graphql-code-generator\graphql-code-generator\dev-test\general\modules\types.ts"
-    // (no surrounding quotes) -- update the snapshot then.
     expect(mockExec.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"prettier --write 'D:\\a\\graphql-code-generator\\graphql-code-generator\\dev-test\\general\\modules\\types.ts'"`,
+      `"prettier --write D:\\a\\graphql-code-generator\\graphql-code-generator\\dev-test\\general\\modules\\types.ts"`,
+    );
+  });
+
+  it('wraps a path argument containing a space in double quotes', async () => {
+    // cmd.exe's own quoting convention is double quotes, not POSIX single quotes.
+    await lifecycleHooks({ afterAllFileWrite: ['prettier --write'] }).afterAllFileWrite([
+      'C:\\Program Files\\dev-test\\general\\modules\\types.ts',
+    ]);
+
+    expect(mockExec).toHaveBeenCalledTimes(1);
+    expect(mockExec.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"prettier --write "C:\\Program Files\\dev-test\\general\\modules\\types.ts""`,
     );
   });
 });
