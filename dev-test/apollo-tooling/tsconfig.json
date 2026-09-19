@@ -3,6 +3,11 @@
     "target": "ES2020",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    // This package is a dev fixture: it is never built, only typechecked and run
+    // directly (`node cli/index.ts`). Node's native type stripping does not rewrite
+    // `./x.js` to `./x.ts`, so relative imports here carry their real `.ts` extension.
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "verbatimModuleSyntax": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
