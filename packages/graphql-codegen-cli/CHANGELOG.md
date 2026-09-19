@@ -1,5 +1,38 @@
 # @graphql-codegen/cli
 
+## 7.4.2
+
+### Patch Changes
+
+- [#10956](https://github.com/dotansimha/graphql-code-generator/pull/10956)
+  [`cec9c1c`](https://github.com/dotansimha/graphql-code-generator/commit/cec9c1c5c1b1fd42b2e41bcec0203ab6a540831f)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix dynamically-loaded plugins/presets in ESM
+  builds. Previously, ESM used the bare module specifier without resolving it relative to the
+  consuming project first, so a plugin only loaded if it happened to be reachable from the CLI
+  package's own `node_modules`. Resolving it the same way the CJS build already does
+  (`relativeRequire.resolve(mod)`) fixes that, but the resolved absolute path also has to be
+  converted to a `file://` URL (`pathToFileURL(...).href`) before being passed to `import()` —
+  otherwise, on Windows, the loader misparses a raw path like `C:\...` as a `c:` protocol scheme and
+  throws `ERR_UNSUPPORTED_ESM_URL_SCHEME`.
+
+- [#10966](https://github.com/dotansimha/graphql-code-generator/pull/10966)
+  [`3029b60`](https://github.com/dotansimha/graphql-code-generator/commit/3029b60c671c27aa9ac2c5697c17fa02ef9ad5a9)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix lifecycle hook scripts (e.g.
+  `hooks: { afterAllFileWrite: ['prettier --write'] } }`) failing on Windows when the file paths
+  passed to them contain a backslash or other POSIX shell-special character. Hook arguments were
+  always quoted using POSIX single-quoting, but `child_process.exec()` runs through `cmd.exe` on
+  Windows by default, which doesn't strip single quotes — so the hook script received the literal
+  quote characters as part of its argument and failed to find the file. Arguments are now quoted
+  per-platform: POSIX quoting stays unchanged elsewhere, and Windows arguments are wrapped in double
+  quotes only when they actually need it, matching `cmd.exe`'s own convention.
+
+- [#10959](https://github.com/dotansimha/graphql-code-generator/pull/10959)
+  [`7dffaae`](https://github.com/dotansimha/graphql-code-generator/commit/7dffaae29ce507c2dd0db4f3bea9eb3e173a03f6)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix the CLI reporting success (exit code `0`)
+  when a `generates` output's `preset` can't be resolved. The error was shown in the terminal but
+  never counted toward the run's failure state, so `allowPartialOutputs: false` (the default) never
+  took effect for this case.
+
 ## 7.4.1
 
 ### Patch Changes
