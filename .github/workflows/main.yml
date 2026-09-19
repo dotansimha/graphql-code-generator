@@ -50,9 +50,11 @@ jobs:
 
   dev-tests:
     name: Validating dev-tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         method:
           - 'cjs'
           - 'esm'
@@ -76,6 +78,12 @@ jobs:
         env:
           CI: true
       - name: Test dev-tests ${{matrix.method}}
+        # windows-latest defaults multi-line `run:` blocks to pwsh, which does not
+        # stop the script when an earlier command exits non-zero (unlike bash's
+        # default -e). That silently turned a failing `generate:esm` into a green
+        # step here, because `git diff` then found nothing to report. Forcing bash
+        # (bundled via Git for Windows) makes this fail the way it does on Linux.
+        shell: bash
         run: |
           pnpm run dev-test:generate:${{matrix.method}}
           git diff --exit-code -- dev-test/
