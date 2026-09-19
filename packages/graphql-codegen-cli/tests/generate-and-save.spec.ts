@@ -779,6 +779,30 @@ describe('generate-and-save', () => {
       }
     });
 
+    test('when allowPartialOutputs=false - an unresolvable preset also throws (no partial output)', async () => {
+      await expect(
+        generate(
+          {
+            allowPartialOutputs: false,
+            schema: SIMPLE_TEST_SCHEMA,
+            generates: {
+              'src/a.ts': {
+                preset: 'this-preset-does-not-exist',
+              },
+              'src/b.ts': {
+                plugins: ['typescript'],
+              },
+            },
+          },
+          false,
+        ),
+      ).rejects.toThrow("Unable to find preset matching 'this-preset-does-not-exist'");
+
+      expect(mockLogger.error.mock.calls[0][0]).toBeSimilarStringTo(
+        `${logSymbols.error} One or more errors occurred, no files were generated. To allow output on errors, set config.allowPartialOutputs=true`,
+      );
+    });
+
     test('when allowPartialOutputs=false - complete failure throws', async () => {
       expect.assertions(2);
 
