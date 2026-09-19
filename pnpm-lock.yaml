@@ -1107,9 +1107,6 @@ importers:
       '@graphql-codegen/graphql-modules-preset':
         specifier: workspace:*
         version: link:../presets/graphql-modules/dist
-      '@graphql-codegen/near-operation-file-preset':
-        specifier: 5.2.1
-        version: 5.2.1(graphql@17.0.2)
       '@graphql-codegen/typed-document-node':
         specifier: workspace:*
         version: link:../plugins/typescript/typed-document-node/dist
