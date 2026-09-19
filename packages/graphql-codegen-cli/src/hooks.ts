@@ -1,4 +1,5 @@
 import { exec } from 'child_process';
+import { platform } from 'os';
 import { delimiter, sep } from 'path';
 import { quote } from 'shell-quote';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -14,6 +15,18 @@ const DEFAULT_HOOKS: Types.LifecycleHooksDefinition = {
   beforeOneFileWrite: [],
   beforeAllFileWrite: [],
 };
+
+// shell-quote's `quote()` always produces POSIX-style single-quoting, but
+// `execShellCommand` below runs through `cmd.exe` on Windows (Node's
+// `child_process.exec` default shell there), which doesn't understand single
+// quotes and leaves them in literally. Quote per-platform instead: cmd.exe's
+// own convention is double-quoting only the arguments that need it.
+function quoteShellArgs(args: string[]): string {
+  if (platform() === 'win32') {
+    return args.map(arg => (/[\s&|<>^"]/.test(arg) ? `"${arg}"` : arg)).join(' ');
+  }
+  return quote(args);
+}
 
 function execShellCommand(cmd: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -49,7 +62,7 @@ async function executeHooks(
   let state = initialState;
   const scripts = Array.isArray(_scripts) ? _scripts : [_scripts];
 
-  const quotedArgs = quote(args);
+  const quotedArgs = quoteShellArgs(args);
   for (const script of scripts) {
     if (typeof script === 'string') {
       debugLog(
