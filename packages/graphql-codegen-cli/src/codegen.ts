@@ -2,6 +2,7 @@ import fs from 'fs';
 import { createRequire } from 'module';
 import { cpus } from 'os';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import { buildASTSchema, DocumentNode, GraphQLError, GraphQLSchema, isSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
 import { codegen } from '@graphql-codegen/core';
@@ -31,18 +32,17 @@ const makeDefaultLoader = (from: string) => {
   const relativeRequire = createRequire(from);
 
   return async (mod: string) => {
-    return import(
-      isESMModule
-        ? /**
-           * For ESM we currently have no "resolve path" solution
-           * as import.meta is unavailable in a CommonJS context
-           * and furthermore unavailable in stable Node.js.
-           **/
-          // FIXME(pnpm-update): this causes dev-test devDeps to be brought into CLI's package.json, which is not ideal.
-          // Note that `relativeRequire.resolve(mod)` seems to work correctly for ESM as well.
-          mod
-        : relativeRequire.resolve(mod)
-    );
+    const resolved = relativeRequire.resolve(mod);
+    /**
+     * `resolved` is always an absolute filesystem path. In the CJS build, TypeScript
+     * rewrites `import()` into `require()`, which accepts native OS paths as-is. In
+     * the ESM build, `import()` stays a real dynamic import, whose loader parses the
+     * specifier as a URL — a raw Windows path (e.g. `C:\...`) is misread as a `c:`
+     * protocol scheme and rejected with `ERR_UNSUPPORTED_ESM_URL_SCHEME` (see #10935,
+     * which hit the same issue in `@graphql-tools/code-file-loader`). Converting to a
+     * `file://` URL only for the real-ESM case avoids that.
+     */
+    return import(isESMModule ? pathToFileURL(resolved).href : resolved);
   };
 };
 
