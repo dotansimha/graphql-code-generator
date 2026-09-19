@@ -24,8 +24,9 @@ const DEFAULT_HOOKS: Types.LifecycleHooksDefinition = {
 function quoteShellArgs(args: string[]): string {
   if (platform() === 'win32') {
     // Only wrap an argument that contains a character cmd.exe treats specially --
-    // whitespace, pipe/redirection, caret, or a literal quote. E.g. `C:\Program
-    // Files\x.ts` becomes `"C:\Program Files\x.ts"`, but `D:\a\x.ts` is left bare.
+    // whitespace, pipe/redirection, caret, or a literal quote. e.g.
+    // - `C:\Program Files\x.ts` becomes `"C:\Program Files\x.ts"`
+    // - `D:\a\x.ts` is left bare.
     return args.map(arg => (/[\s&|<>^"]/.test(arg) ? `"${arg}"` : arg)).join(' ');
   }
   return quote(args);
