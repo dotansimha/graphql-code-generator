@@ -1095,36 +1095,9 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
     devDependencies:
-      '@graphql-codegen/add':
-        specifier: workspace:*
-        version: link:../plugins/other/add/dist
-      '@graphql-codegen/flow':
-        specifier: 3.0.1
-        version: 3.0.1(graphql@17.0.2)
-      '@graphql-codegen/flow-resolvers':
-        specifier: 3.0.1
-        version: 3.0.1(graphql@17.0.2)
-      '@graphql-codegen/graphql-modules-preset':
-        specifier: workspace:*
-        version: link:../presets/graphql-modules/dist
-      '@graphql-codegen/near-operation-file-preset':
-        specifier: 5.2.1
-        version: 5.2.1(graphql@17.0.2)
-      '@graphql-codegen/typed-document-node':
-        specifier: workspace:*
-        version: link:../plugins/typescript/typed-document-node/dist
       '@graphql-codegen/typescript':
         specifier: workspace:*
         version: link:../plugins/typescript/typescript/dist
-      '@graphql-codegen/typescript-graphql-files-modules':
-        specifier: 4.0.1
-        version: 4.0.1(graphql@17.0.2)
-      '@graphql-codegen/typescript-operations':
-        specifier: workspace:*
-        version: link:../plugins/typescript/operations/dist
-      '@graphql-codegen/typescript-resolvers':
-        specifier: workspace:*
-        version: link:../plugins/typescript/resolvers/dist
       '@inquirer/testing':
         specifier: 3.3.6
         version: 3.3.6(@inquirer/checkbox@5.1.5(@types/node@24.12.4))(@inquirer/confirm@6.0.13(@types/node@24.12.4))(@inquirer/editor@5.1.2(@types/node@24.12.4))(@inquirer/expand@5.0.14(@types/node@24.12.4))(@inquirer/external-editor@3.0.0(@types/node@24.12.4))(@inquirer/input@5.0.13(@types/node@24.12.4))(@inquirer/number@4.0.13(@types/node@24.12.4))(@inquirer/password@5.0.13(@types/node@24.12.4))(@inquirer/prompts@8.4.3(@types/node@24.12.4))(@inquirer/rawlist@5.2.9(@types/node@24.12.4))(@inquirer/search@4.1.9(@types/node@24.12.4))(@inquirer/select@5.1.5(@types/node@24.12.4))(@types/node@24.12.4)(vitest@4.1.6(@types/node@24.12.4)(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)))
