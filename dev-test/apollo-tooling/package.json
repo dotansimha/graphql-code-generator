@@ -8,6 +8,8 @@
     "cli"
   ],
   "scripts": {
+    "generate": "pnpm generate:esm",
+    "generate:esm": "tsx cli/index.ts",
     "start": "tsx cli/index.ts",
     "start:debug": "NODE_OPTIONS='--trace-warnings' tsx cli/index.ts",
     "start:verbose": "DEBUG='*' tsx cli/index.ts",
