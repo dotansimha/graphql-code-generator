@@ -240,11 +240,20 @@ export async function executeCodegen(
                 let outputSpecificExternalDocuments =
                   normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.externalDocuments);
 
-                const preset: Types.OutputPreset | null = hasPreset
-                  ? typeof outputConfig.preset === 'string'
-                    ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
-                    : outputConfig.preset
-                  : null;
+                let preset: Types.OutputPreset | null;
+                try {
+                  preset = hasPreset
+                    ? typeof outputConfig.preset === 'string'
+                      ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
+                      : outputConfig.preset
+                    : null;
+                } catch (error: any) {
+                  // ctx.errors is what determines CLI success/failure, so it must be pushed here
+                  // before rethrowing — otherwise the CLI reports success even though the
+                  // terminal printed this error.
+                  ctx.errors.push(error);
+                  throw error;
+                }
 
                 if (preset?.prepareDocuments) {
                   outputSpecificDocuments = await preset.prepareDocuments(
