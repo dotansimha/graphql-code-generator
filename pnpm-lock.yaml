@@ -1540,6 +1540,9 @@ importers:
       '@types/lz-string':
         specifier: 1.5.0
         version: 1.5.0
+      '@types/node':
+        specifier: 24.12.4
+        version: 24.12.4
     publishDirectory: dist
 
   packages/utils/plugins-helpers:

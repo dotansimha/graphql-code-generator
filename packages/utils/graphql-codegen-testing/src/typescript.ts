@@ -1,4 +1,4 @@
-import { dirname, join, resolve } from 'path';
+import { dirname, join } from 'path';
 import * as LZString from 'lz-string'; // lz-string is a package which has CJS/ESM issues. So, we cannot do `import { something } from 'lz-string'`
 import {
   CompilerOptions,
@@ -26,7 +26,7 @@ export function validateTs(
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
     target: ScriptTarget.ES5,
-    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    typeRoots: resolveTypeRoots(),
     jsx: JsxEmit.React,
     allowJs: true,
     skipLibCheck: true,
@@ -58,7 +58,7 @@ export function validateTs(
   }
   if (tsVersion.startsWith('6.')) {
     options.ignoreDeprecations ||= '6.0';
-    // options.types ||= ['node']; FIXME(pnpm-update): causing errors about missing node. Maybe resolving at the wrong location?
+    options.types ||= ['node'];
   }
 
   const contents: string =
@@ -177,7 +177,7 @@ export function compileTs(
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
     target: ScriptTarget.ES5,
-    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    typeRoots: resolveTypeRoots(),
     jsx: JsxEmit.Preserve,
     allowJs: true,
     lib: [
@@ -257,3 +257,24 @@ export function compileTs(
     throw e;
   }
 }
+
+/**
+ * Resolve the `@types` directory that actually contains `@types/node`.
+ *
+ * This used to be derived from `require.resolve('typescript')` as
+ * `<ts>/lib/../../../@types`, which only lands on `node_modules/@types` in a flat
+ * (npm/yarn) layout. Under pnpm's default isolated layout `require.resolve` returns the
+ * realpath inside the virtual store, so it pointed at
+ * `node_modules/.pnpm/typescript@<version>/node_modules/@types` -- a directory that does
+ * not exist -- and no ambient typings were ever loaded.
+ *
+ * Locating the directory from `@types/node` itself keeps it correct under every layout.
+ */
+const resolveTypeRoots = (): string[] => {
+  // A `typeRoots` entry is a *container* directory, not a type package: TypeScript resolves
+  // every name in `types` as `<typeRoot>/<name>`, so `types: ['node']` looks for
+  // `<typeRoot>/node`. Hence two steps up from the manifest -- to the package, then to the
+  // `@types` directory holding it.
+  const nodeTypesPackageDir = dirname(require.resolve('@types/node/package.json')); // <..>/@types/node
+  return [dirname(nodeTypesPackageDir)]; // <..>/@types
+};
