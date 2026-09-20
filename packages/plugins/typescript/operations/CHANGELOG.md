@@ -1,5 +1,20 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.7
+
+### Patch Changes
+
+- [#10954](https://github.com/dotansimha/graphql-code-generator/pull/10954)
+  [`2deb08f`](https://github.com/dotansimha/graphql-code-generator/commit/2deb08fd705da2f2e29cffec01b781e383b8d55e)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `typescript-operations` emitting an
+  unused `import type * as Types from '...'` (with `importSchemaTypesFrom`) or an unused local
+  enum/input declaration (without it) when `inlineFragmentTypes` is `'combine'` or `'mask'` and the
+  generated file only ever references a schema type through a fragment spread that collapses to a
+  bare `FooFragment` reference, never naming the type itself. The schema-type import/declaration
+  decision, and the enum/scalar re-export decisions, are now based on the schema types actually
+  named by this file's own generated output, rather than every schema type reachable through the
+  document (including via fragments defined elsewhere).
+
 ## 6.1.6
 
 ### Patch Changes
