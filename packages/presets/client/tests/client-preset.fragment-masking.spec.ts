@@ -1,5 +1,8 @@
+import * as fs from 'fs';
 import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { preset } from '../src/index.js';
 
 describe('client-preset - fragment masking', () => {
@@ -361,18 +364,17 @@ describe('client-preset - fragment masking', () => {
       "
     `);
 
-    // FIXME(pnpm-update): TypeScript errors. Maybe content shouldn't be merged?
-    // const content = mergeOutputs([
-    //   ...result,
-    //   fs.readFileSync(docPath, 'utf8'),
-    //   `
-    //   function App(props: { data: FooQuery }) {
-    //     const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
-    //     return fragment == null ? "no data" : fragment.value;
-    //   }
-    //   `,
-    // ]);
-    // validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    const content = mergeOutputs([
+      ...result,
+      fs.readFileSync(docPath, 'utf8'),
+      `
+      function App(props: { data: FooQuery }) {
+        const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
+        return fragment == null ? "no data" : fragment.value;
+      }
+      `,
+    ]);
+    validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
   });
 
   it('can accept list in useFragment', async () => {
@@ -494,18 +496,17 @@ describe('client-preset - fragment masking', () => {
       "
     `);
 
-    // FIXME(pnpm-update): TypeScript errors. Maybe content shouldn't be merged?
-    // const content = mergeOutputs([
-    //   ...result,
-    //   fs.readFileSync(docPath, 'utf8'),
-    //   `
-    //   function App(props: { foos: Array<FragmentType<typeof Fragment>> }) {
-    //     const fragments: Array<FooFragment> = useFragment(Fragment, props.foos);
-    //     return fragments.map(f => f.value);
-    //   }
-    //   `,
-    // ]);
-    // validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    const content = mergeOutputs([
+      ...result,
+      fs.readFileSync(docPath, 'utf8'),
+      `
+      function App(props: { foos: Array<FragmentType<typeof Fragment>> }) {
+        const fragments: Array<FooFragment> = useFragment(Fragment, props.foos);
+        return fragments.map(f => f.value);
+      }
+      `,
+    ]);
+    validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
   });
 
   it('useFragment preserves ReadonlyArray<T> type', async () => {
@@ -627,18 +628,17 @@ describe('client-preset - fragment masking', () => {
       "
     `);
 
-    // FIXME(pnpm-update): TypeScript errors. Maybe content shouldn't be merged?
-    // const content = mergeOutputs([
-    //   ...result,
-    //   fs.readFileSync(docPath, 'utf8'),
-    //   `
-    //   function App(props: { data: FoosQuery }) {
-    //     const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);
-    //     return fragments == null ? "no data" : fragments.map(f => f.value);
-    //   }
-    //   `,
-    // ]);
-    // validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    const content = mergeOutputs([
+      ...result,
+      fs.readFileSync(docPath, 'utf8'),
+      `
+      function App(props: { data: FoosQuery }) {
+        const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);
+        return fragments == null ? "no data" : fragments.map(f => f.value);
+      }
+      `,
+    ]);
+    validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
   });
 
   it('#10896 - reserves fragmentMasking=true behaviour, even when used with conditional directives @include/@skip', async () => {
