@@ -218,6 +218,31 @@ export default config
 npm run generate
 ```
 
+## Troubleshooting
+
+### `build_runner` fails when the project also depends on `amplify_flutter`
+
+After generating your Freezed-annotated models, you still need to run Freezed's own code generation
+step (`dart run build_runner build` or `flutter pub run build_runner build`) to produce the
+`.freezed.dart`/`.g.dart` files. If your Flutter project also depends on `amplify_flutter`, this step
+can fail while `build_runner` tries to compile its build script.
+
+This isn't a bug in `flutter-freezed` or GraphQL Code Generator. `amplify_flutter` transitively
+depends on `sqlite3` and `jni`, both of which declare Dart's
+[Native Assets ("build hooks")](https://github.com/dart-lang/native) feature. `build_runner` compiles
+its build script into a native (AOT) executable, and currently fails outright whenever any dependency
+in the graph declares a build hook — tracked upstream at
+[dart-lang/native#2792](https://github.com/dart-lang/native/issues/2792).
+
+**Workaround:** run `build_runner` in JIT mode instead of compiling an AOT snapshot:
+
+```sh
+dart run build_runner build --no-precompile
+```
+
+This is a temporary workaround until the underlying incompatibility between `build_runner` and Dart's
+native-assets tooling is resolved upstream.
+
 ## Configuring the plugin
 
 To configure the plugin, you need to first understand how to use Patterns to configure specific
