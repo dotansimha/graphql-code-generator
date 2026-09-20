@@ -1,5 +1,26 @@
 # @graphql-codegen/testing
 
+## 5.0.3
+
+### Patch Changes
+
+- [#10977](https://github.com/dotansimha/graphql-code-generator/pull/10977)
+  [`9f28176`](https://github.com/dotansimha/graphql-code-generator/commit/9f281768c4a6458e642328586e4247ccf17cfba2)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Resolve the `@types` directory from
+  `@types/node`'s own location rather than from TypeScript's.
+
+  `validateTs` and `compileTs` derived `typeRoots` as
+  `resolve(require.resolve('typescript'), '../../../@types/')`, which only lands on
+  `node_modules/@types` in a flat npm/yarn layout. Under pnpm's default isolated layout
+  `require.resolve` returns the realpath inside the virtual store, so it pointed at a directory that
+  does not exist and no ambient Node typings were ever loaded — which is why
+  `options.types ||= ['node']` had to be disabled on TypeScript 6. Locating the directory from
+  `@types/node` itself is correct under every layout, and the `types` option is restored alongside
+  it.
+
+  `@types/node` is now a declared devDependency of this package rather than a phantom dependency of
+  the workspace root. This is an internal test-utility fix; no exported signature changes.
+
 ## 5.0.2
 
 ### Patch Changes
