@@ -15,6 +15,7 @@ import {
   ScriptTarget as ScriptTargetType,
   version as tsVersion,
 } from 'typescript';
+import { expect } from 'vitest';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 export function validateTs(
@@ -72,7 +73,8 @@ export function validateTs(
           ]),
         ].join('\n');
 
-  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+  const cwd = resolveCallerDirectory();
+  const testFile = join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
   const errors: string[] = [];
 
   if (compileProgram) {
@@ -99,7 +101,7 @@ export function validateTs(
         return filename;
       },
       getCurrentDirectory() {
-        return '';
+        return cwd;
       },
       getNewLine() {
         return '\n';
@@ -198,7 +200,8 @@ export function compileTs(
   }
 
   try {
-    const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+    const cwd = resolveCallerDirectory();
+    const testFile = join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
     const host = createCompilerHost(options);
     const program = createProgram([testFile], options, {
       ...host,
@@ -222,7 +225,7 @@ export function compileTs(
         return filename;
       },
       getCurrentDirectory() {
-        return '';
+        return cwd;
       },
       getNewLine() {
         return '\n';
@@ -257,6 +260,20 @@ export function compileTs(
     throw e;
   }
 }
+
+/**
+ * Resolve the directory of the test file currently being run.
+ *
+ * The file these helpers type-check exists only in memory, but TypeScript still needs a real
+ * directory to anchor Node module resolution to. `process.cwd()` is not usable: it is the repo
+ * root, and under pnpm's isolated layout a package's dependencies live in that package's own
+ * `node_modules`.
+ */
+const resolveCallerDirectory = (): string => {
+  const testPath = expect.getState().testPath;
+
+  return testPath ? dirname(testPath) : process.cwd();
+};
 
 /**
  * Resolve the `@types` directory that actually contains `@types/node`.
