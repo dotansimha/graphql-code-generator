@@ -1,4 +1,4 @@
-import { dirname, join } from 'path';
+import { dirname, join, posix } from 'path';
 import * as LZString from 'lz-string'; // lz-string is a package which has CJS/ESM issues. So, we cannot do `import { something } from 'lz-string'`
 import {
   CompilerOptions,
@@ -15,6 +15,7 @@ import {
   ScriptTarget as ScriptTargetType,
   version as tsVersion,
 } from 'typescript';
+import { expect } from 'vitest';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 export function validateTs(
@@ -72,7 +73,8 @@ export function validateTs(
           ]),
         ].join('\n');
 
-  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+  const cwd = resolveCallerDirectory();
+  const testFile = posix.join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
   const errors: string[] = [];
 
   if (compileProgram) {
@@ -99,7 +101,7 @@ export function validateTs(
         return filename;
       },
       getCurrentDirectory() {
-        return '';
+        return cwd;
       },
       getNewLine() {
         return '\n';
@@ -198,7 +200,8 @@ export function compileTs(
   }
 
   try {
-    const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+    const cwd = resolveCallerDirectory();
+    const testFile = posix.join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
     const host = createCompilerHost(options);
     const program = createProgram([testFile], options, {
       ...host,
@@ -222,7 +225,7 @@ export function compileTs(
         return filename;
       },
       getCurrentDirectory() {
-        return '';
+        return cwd;
       },
       getNewLine() {
         return '\n';
@@ -257,6 +260,31 @@ export function compileTs(
     throw e;
   }
 }
+
+/**
+ * Resolve the directory of the test file currently being run.
+ *
+ * The file these helpers type-check exists only in memory, but TypeScript still needs a real
+ * directory to anchor Node module resolution to. `process.cwd()` is not usable: it is the repo
+ * root, and under pnpm's isolated layout a package's dependencies live in that package's own
+ * `node_modules`.
+ *
+ * The result uses forward slashes, as does the synthetic file path built from it: TypeScript
+ * normalizes every path it hands back to the host that way, so on Windows a backslash path would
+ * never match the `fileName === testFile` check in `getSourceFile`.
+ *
+ * Throws outside a vitest test rather than falling back to `process.cwd()`, which would silently
+ * reintroduce unresolved imports.
+ */
+const resolveCallerDirectory = (): string => {
+  const testPath = expect.getState().testPath;
+
+  if (!testPath) {
+    throw new Error('validateTs / compileTs must be called from within a vitest test');
+  }
+
+  return dirname(testPath).replace(/\\/g, '/');
+};
 
 /**
  * Resolve the `@types` directory that actually contains `@types/node`.
