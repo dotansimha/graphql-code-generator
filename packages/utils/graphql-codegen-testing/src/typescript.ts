@@ -272,11 +272,18 @@ export function compileTs(
  * The result uses forward slashes, as does the synthetic file path built from it: TypeScript
  * normalizes every path it hands back to the host that way, so on Windows a backslash path would
  * never match the `fileName === testFile` check in `getSourceFile`.
+ *
+ * Throws outside a vitest test rather than falling back to `process.cwd()`, which would silently
+ * reintroduce unresolved imports.
  */
 const resolveCallerDirectory = (): string => {
   const testPath = expect.getState().testPath;
 
-  return (testPath ? dirname(testPath) : process.cwd()).replace(/\\/g, '/');
+  if (!testPath) {
+    throw new Error('validateTs / compileTs must be called from within a vitest test');
+  }
+
+  return dirname(testPath).replace(/\\/g, '/');
 };
 
 /**
