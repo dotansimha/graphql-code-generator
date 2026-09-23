@@ -12,8 +12,8 @@ error to show for it.
 
 `process.cwd()` is not a usable anchor either: it is the repo root, and under pnpm's isolated layout
 a package's dependencies live in that package's own `node_modules`. The directory of the running
-test file is, so it is taken from `expect.getState().testPath`, falling back to `process.cwd()`
-outside a test run.
+test file is, so it is taken from `expect.getState().testPath`; calling these helpers outside a
+vitest test now throws instead of silently resolving from the wrong place.
 
 `vitest` is now declared as a peer dependency rather than relied on as a phantom one — `src/index.ts`
 already imported it, and `validateTs` now does too.
