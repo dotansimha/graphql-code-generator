@@ -1,4 +1,4 @@
-import { dirname, join } from 'path';
+import { dirname, join, posix } from 'path';
 import * as LZString from 'lz-string'; // lz-string is a package which has CJS/ESM issues. So, we cannot do `import { something } from 'lz-string'`
 import {
   CompilerOptions,
@@ -74,7 +74,7 @@ export function validateTs(
         ].join('\n');
 
   const cwd = resolveCallerDirectory();
-  const testFile = join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
+  const testFile = posix.join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
   const errors: string[] = [];
 
   if (compileProgram) {
@@ -201,7 +201,7 @@ export function compileTs(
 
   try {
     const cwd = resolveCallerDirectory();
-    const testFile = join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
+    const testFile = posix.join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
     const host = createCompilerHost(options);
     const program = createProgram([testFile], options, {
       ...host,
@@ -268,11 +268,15 @@ export function compileTs(
  * directory to anchor Node module resolution to. `process.cwd()` is not usable: it is the repo
  * root, and under pnpm's isolated layout a package's dependencies live in that package's own
  * `node_modules`.
+ *
+ * The result uses forward slashes, as does the synthetic file path built from it: TypeScript
+ * normalizes every path it hands back to the host that way, so on Windows a backslash path would
+ * never match the `fileName === testFile` check in `getSourceFile`.
  */
 const resolveCallerDirectory = (): string => {
   const testPath = expect.getState().testPath;
 
-  return testPath ? dirname(testPath) : process.cwd();
+  return (testPath ? dirname(testPath) : process.cwd()).replace(/\\/g, '/');
 };
 
 /**
