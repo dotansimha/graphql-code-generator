@@ -1,4 +1,5 @@
 import { buildSchema, parse, print } from 'graphql';
+import { selectionSetCacheKeys } from '@graphql-codegen/visitor-plugin-common';
 import { plugin } from '../src/index.js';
 
 const schema = buildSchema(/* GraphQL */ `
@@ -58,29 +59,11 @@ describe('TypeScript Operations Plugin - deeply nested fragments (issue #10940)'
     const document = parse(buildDocumentSource());
     const printedDocumentLength = print(document).length;
 
-    // Instrument Map#set to measure the cache keys stored in the selection-set processor's `typeCache`
-    // (its inner maps are keyed by `<field selections> @ <possible types>` strings).
-    let retainedCacheKeyLength = 0;
-    let longestCacheKey = 0;
-    const originalSet = Map.prototype.set;
-    const setSpy = vi.spyOn(Map.prototype, 'set').mockImplementation(function (
-      this: Map<unknown, unknown>,
-      key,
-      value,
-    ) {
-      if (
-        typeof key === 'string' &&
-        key.includes(' @ ') &&
-        Array.isArray(value) &&
-        value.length === 2
-      ) {
-        retainedCacheKeyLength += key.length;
-        longestCacheKey = Math.max(longestCacheKey, key.length);
-      }
-      return originalSet.call(this, key, value);
-    });
+    // Spy on the memo behind the type cache keys, so we can measure every key that gets built.
+    const setSpy = vi.spyOn(selectionSetCacheKeys, 'set');
 
     let result: Awaited<ReturnType<typeof plugin>>;
+    let cacheKeys: string[];
     try {
       // No config needed: each option (including every `inlineFragmentTypes` mode) was measured
       // and none changes the cache key sizes; the growth comes from nested fragment reuse alone.
@@ -91,6 +74,8 @@ describe('TypeScript Operations Plugin - deeply nested fragments (issue #10940)'
         { outputFile: 'graphql.ts' },
       );
     } finally {
+      // Read the calls before restoring: `mockRestore()` also clears them.
+      cacheKeys = setSpy.mock.calls.map(([, key]) => key);
       setSpy.mockRestore();
     }
 
@@ -101,8 +86,11 @@ describe('TypeScript Operations Plugin - deeply nested fragments (issue #10940)'
     // In user terms: memory retained by the type cache must scale with the documents as written,
     // not with the fragment-expanded tree. Otherwise it grows exponentially with nested fragment
     // reuse, and large projects with deeply nested, widely reused fragments run out of memory.
+    // Guard against the spy silently seeing nothing, which would make the bounds below pass vacuously.
+    expect(cacheKeys.length).toBeGreaterThan(0);
+
     const bound = 10 * printedDocumentLength;
-    expect(longestCacheKey).toBeLessThan(bound);
-    expect(retainedCacheKeyLength).toBeLessThan(bound);
+    expect(Math.max(...cacheKeys.map(key => key.length))).toBeLessThan(bound);
+    expect(cacheKeys.reduce((total, key) => total + key.length, 0)).toBeLessThan(bound);
   });
 });

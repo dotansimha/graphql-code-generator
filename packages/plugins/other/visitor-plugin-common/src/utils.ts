@@ -21,6 +21,7 @@ import {
   Kind,
   NamedTypeNode,
   NameNode,
+  print,
   SelectionNode,
   SelectionSetNode,
   StringValueNode,
@@ -30,12 +31,7 @@ import type { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import type { EnrichedFieldNode } from './selection-set-to-object.js';
-import type {
-  LoadedFragment,
-  NormalizedScalarsMap,
-  ParsedScalarsMap,
-  ScalarsMap,
-} from './types.js';
+import type { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -652,64 +648,70 @@ export function unique<T>(
   return Object.values(array.reduce((acc, item) => ({ [key(item)]: item, ...acc }), {}));
 }
 
-function getFullPathFieldName(selection: FieldNode, parentName: string) {
-  const fullName =
-    'alias' in selection && selection.alias
-      ? `${selection.alias.value}@${selection.name.value}`
-      : selection.name.value;
-  return parentName ? `${parentName}.${fullName}` : fullName;
-}
+/**
+ * Memoizes `getSelectionSetCacheKey` per selection set node. Entries are dropped once the node's
+ * document is no longer referenced.
+ *
+ * @internal Exported for tests only; not part of the public API.
+ */
+export const selectionSetCacheKeys = new WeakMap<SelectionSetNode, string>();
 
-export const getFieldNames = ({
-  selections,
-  fieldNames = new Set(),
-  parentName = '',
-  loadedFragments,
-}: {
-  selections: readonly SelectionNode[];
-  fieldNames?: Set<string>;
-  parentName?: string;
-  loadedFragments: LoadedFragment[];
-}) => {
-  for (const selection of selections) {
+/**
+ * Builds a cache key describing a selection set as written: fragment spreads are referenced by
+ * name rather than expanded, so the key stays linear in the size of the document even when
+ * fragments are deeply nested and widely reused. The parts are sorted so the key does not depend
+ * on selection order.
+ *
+ * Examples:
+ * - `{ user { id name } }` becomes `user{id,name}` (the inner `{ id name }` becomes `id,name`)
+ * - `{ id ...UserFields }` becomes `...UserFields,id` (the fragment is referenced by name, not
+ *   expanded)
+ * - `{ ... on Admin { role } }` becomes `... on Admin{role}`
+ * - `{ me: user { id ...UserFields @include(if: $withFields) ... on Admin { role } } }` becomes
+ *   `me@user{... on Admin{role},...UserFields @include(if: $withFields),id}`
+ *
+ * @internal Not part of the public API.
+ */
+export function getSelectionSetCacheKey(selectionSet: SelectionSetNode): string {
+  const cached = selectionSetCacheKeys.get(selectionSet);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const printDirectives = (directives: readonly DirectiveNode[] | undefined): string =>
+    directives?.length ? ` ${directives.map(directive => print(directive)).join(' ')}` : '';
+
+  const parts = new Set<string>();
+  for (const selection of selectionSet.selections) {
     switch (selection.kind) {
       case Kind.FIELD: {
-        const fieldName = getFullPathFieldName(selection, parentName);
-        fieldNames.add(fieldName);
-        if (selection.selectionSet) {
-          getFieldNames({
-            selections: selection.selectionSet.selections,
-            fieldNames,
-            parentName: fieldName,
-            loadedFragments,
-          });
-        }
+        const name = selection.alias
+          ? `${selection.alias.value}@${selection.name.value}`
+          : selection.name.value;
+        const subKey = selection.selectionSet
+          ? `{${getSelectionSetCacheKey(selection.selectionSet)}}`
+          : '';
+        parts.add(`${name}${printDirectives(selection.directives)}${subKey}`);
         break;
       }
       case Kind.FRAGMENT_SPREAD: {
-        getFieldNames({
-          selections: loadedFragments
-            .filter(def => def.name === selection.name.value)
-            .flatMap(s => s.node.selectionSet.selections),
-          fieldNames,
-          parentName,
-          loadedFragments,
-        });
+        parts.add(`...${selection.name.value}${printDirectives(selection.directives)}`);
         break;
       }
       case Kind.INLINE_FRAGMENT: {
-        getFieldNames({
-          selections: selection.selectionSet.selections,
-          fieldNames,
-          parentName,
-          loadedFragments,
-        });
+        const onType = selection.typeCondition ? ` on ${selection.typeCondition.name.value}` : '';
+        parts.add(
+          `...${onType}${printDirectives(selection.directives)}{${getSelectionSetCacheKey(selection.selectionSet)}}`,
+        );
         break;
       }
     }
   }
-  return fieldNames;
-};
+
+  const key = [...parts].sort().join(',');
+  selectionSetCacheKeys.set(selectionSet, key);
+  return key;
+}
 
 export const getNodeComment = (
   node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode,

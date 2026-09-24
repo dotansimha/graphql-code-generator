@@ -44,9 +44,9 @@ import type {
 import {
   DeclarationBlock,
   DeclarationBlockConfig,
-  getFieldNames,
   getFieldNodeNameValue,
   getPossibleTypes,
+  getSelectionSetCacheKey,
   hasConditionalDirectives,
   hasIncrementalDeliveryDirectives,
   mergeSelectionSets,
@@ -1107,12 +1107,7 @@ export class SelectionSetToObject<
   public transformSelectionSet(fieldName: string) {
     const possibleTypesList = getPossibleTypes(this._schema, this._parentSchemaType);
     const possibleTypes = possibleTypesList.map(v => v.name).sort();
-    const fieldSelections = [
-      ...getFieldNames({
-        selections: this._selectionSet.selections,
-        loadedFragments: this._loadedFragments,
-      }),
-    ].sort();
+    const selectionSetKey = getSelectionSetCacheKey(this._selectionSet);
 
     // Optimization: Do not create new dependentTypes if fragment typename exists in cache
     // 2-layer cache: LOC => Field Selection Type Combination => cachedTypeString
@@ -1120,7 +1115,7 @@ export class SelectionSetToObject<
       this._processor.typeCache.get(this._selectionSet.loc) ?? new Map<string, [string, string]>();
     this._processor.typeCache.set(this._selectionSet.loc, objMap);
 
-    const cacheHashKey = `${fieldSelections.join(',')} @ ${possibleTypes.join('|')}`;
+    const cacheHashKey = `${selectionSetKey} @ ${possibleTypes.join('|')}`;
     const [cachedTypeString] = objMap.get(cacheHashKey) ?? [];
     if (cachedTypeString) {
       // reuse previously generated type, as it is identical
