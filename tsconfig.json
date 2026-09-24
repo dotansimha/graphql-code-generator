@@ -15,8 +15,7 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
+    "strict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
@@ -52,9 +51,7 @@
       "@graphql-codegen/plugin-helpers": ["packages/utils/plugins-helpers/src/index.ts"]
     },
     "ignoreDeprecations": "6.0",
-    "types": ["node"],
-    "noImplicitAny": false,
-    "strictNullChecks": false
+    "types": ["node"]
   },
   "include": ["packages"],
   "exclude": [
