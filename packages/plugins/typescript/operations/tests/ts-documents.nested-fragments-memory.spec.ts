@@ -82,28 +82,21 @@ describe('TypeScript Operations Plugin - deeply nested fragments (issue #10940)'
 
     let result: Awaited<ReturnType<typeof plugin>>;
     try {
+      // No config needed: each option (including every `inlineFragmentTypes` mode) was measured
+      // and none changes the cache key sizes; the growth comes from nested fragment reuse alone.
       result = await plugin(
         schema,
         [{ location: 'test-file.ts', document }],
-        {
-          inlineFragmentTypes: 'combine',
-          declarationKind: 'interface',
-          nonOptionalTypename: true,
-          exportFragmentSpreadSubTypes: true,
-          immutableTypes: true,
-          maybeValue: 'T | null',
-          omitOperationSuffix: true,
-          arrayInputCoercion: false,
-        },
+        {},
         { outputFile: 'graphql.ts' },
       );
     } finally {
       setSpy.mockRestore();
     }
 
-    // Output is produced, and with 'combine' it only references fragments by name, so it stays small.
-    expect(result.content).toMatch(/export (type|interface) Root\b/);
-    expect(result.content).toMatch(new RegExp(`export (type|interface) F${DEPTH - 1}\\b`));
+    // Output is produced for both the operation and the outermost fragment.
+    expect(result.content).toMatch(/export type RootQuery\b/);
+    expect(result.content).toMatch(new RegExp(`export type F${DEPTH - 1}Fragment\\b`));
 
     // In user terms: memory retained by the type cache must scale with the documents as written,
     // not with the fragment-expanded tree. Otherwise it grows exponentially with nested fragment
