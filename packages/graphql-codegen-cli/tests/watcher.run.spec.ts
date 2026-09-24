@@ -10,6 +10,7 @@ import {
 import * as path from 'path';
 import type { Mock } from 'vitest';
 import type { Types } from '@graphql-codegen/plugin-helpers';
+import * as codegenModule from '../src/codegen.js';
 import { CodegenContext } from '../src/config.js';
 import { generate } from '../src/generate-and-save.js';
 import * as watcherModule from '../src/utils/watcher.js';
@@ -956,6 +957,104 @@ describe('Watch runs - profiler output', () => {
       for (const filename of listProfilerFiles()) {
         unlinkSync(path.join(process.cwd(), filename));
       }
+    }
+  });
+});
+
+describe('Watch runs - duplicate initial run (#6803)', () => {
+  // https://github.com/dotansimha/graphql-code-generator/issues/6803
+  //
+  // A typical CI/dev workflow runs `codegen` once (to fail fast on errors before
+  // compiling), then starts `codegen watch` to keep types up to date while
+  // developing. Each of those is a separate CLI invocation against the exact
+  // same schema/documents, one right after the other.
+  test('running `codegen` and then `codegen watch` runs codegen twice with nothing changed in between', async () => {
+    const { testDir, schemaFile, documentFile } = setupTestFiles();
+    writeFileSync(
+      schemaFile.absolute,
+      /* GraphQL */ `
+        type Query {
+          me: User
+        }
+
+        type User {
+          id: ID!
+          name: String!
+        }
+      `,
+    );
+    writeFileSync(
+      documentFile.absolute,
+      /* GraphQL */ `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    );
+    await waitForNextEvent();
+
+    const executeCodegenSpy = vi.spyOn(codegenModule, 'executeCodegen');
+    executeCodegenSpy.mockClear();
+
+    const outputFile = path.join(testDir, 'output.ts');
+    const config: Types.Config = {
+      schema: schemaFile.relative,
+      documents: documentFile.relative,
+      generates: {
+        // An inline preset, like the other tests in this file use, rather than
+        // a plugin looked up by name -- this test only cares how many times
+        // `executeCodegen` runs, not about exercising a real named plugin.
+        [testDir]: {
+          preset: {
+            buildGeneratesSection: options => [
+              {
+                filename: outputFile,
+                schema: options.schema,
+                schemaAst: options.schemaAst,
+                documents: [],
+                config: {},
+                pluginMap: { inline: { plugin: () => 'export const generated = true;' } },
+                plugins: [{ inline: {} }],
+              },
+            ],
+          } satisfies Types.OutputPreset,
+        },
+      },
+    };
+
+    // Step 1: `codegen` -- a plain, one-off run, e.g. run in CI to fail fast
+    // before compiling. In real life this is its own CLI invocation; here
+    // it's a `generate()` call against a fresh, non-watch context.
+    await generate(new CodegenContext({ filepath: path.join(testDir, 'codegen.ts'), config }));
+    expect(executeCodegenSpy).toHaveBeenCalledTimes(1);
+
+    // Step 2: `codegen watch` -- started right after, with nothing having
+    // changed on disk since step 1. In real life this is a second, separate
+    // CLI invocation.
+    const { stopWatching } = watcherModule.createWatcher(
+      new CodegenContext({
+        filepath: path.join(testDir, 'codegen.ts'),
+        config: { ...config, watch: true },
+      }),
+      vi.fn().mockResolvedValue([]),
+    );
+
+    try {
+      await waitForNextEvent();
+
+      // #6803: codegen was already run against this exact schema and these
+      // exact documents one step ago -- nothing has changed since. Watch mode
+      // should not need to regenerate anything before it starts watching, so
+      // the total call count should still be 1. Instead, watch mode always
+      // runs its own initial codegen pass unconditionally, so codegen ends up
+      // triggered twice for no reason.
+      expect(executeCodegenSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      await stopWatching();
+      await waitForNextEvent();
+      executeCodegenSpy.mockRestore();
     }
   });
 });
