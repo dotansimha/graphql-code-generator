@@ -1,5 +1,36 @@
 # @graphql-codegen/testing
 
+## 5.0.4
+
+### Patch Changes
+
+- [#10979](https://github.com/dotansimha/graphql-code-generator/pull/10979)
+  [`2052509`](https://github.com/dotansimha/graphql-code-generator/commit/205250908d52b8496d366efaf1d7188e7f5baa94)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Added dependency [`vitest@^4.0.0` ↗︎](https://www.npmjs.com/package/vitest/v/4.0.0) (to
+    `peerDependencies`)
+
+- [#10979](https://github.com/dotansimha/graphql-code-generator/pull/10979)
+  [`2052509`](https://github.com/dotansimha/graphql-code-generator/commit/205250908d52b8496d366efaf1d7188e7f5baa94)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Anchor `validateTs` / `compileTs` module
+  resolution at the directory of the test being run.
+
+  The file these helpers type-check exists only in memory, but TypeScript still needs a real
+  directory to anchor Node module resolution to. The compiler host reported `''` as the current
+  directory, so nothing resolved — and every resulting diagnostic was swallowed by the blanket
+  `Cannot find module` filter, leaving generics to silently degrade to `never` with only a confusing
+  downstream overload error to show for it.
+
+  `process.cwd()` is not a usable anchor either: it is the repo root, and under pnpm's isolated
+  layout a package's dependencies live in that package's own `node_modules`. The directory of the
+  running test file is, so it is taken from `expect.getState().testPath`; calling these helpers
+  outside a vitest test now throws instead of silently resolving from the wrong place.
+
+  `vitest` is now declared as a peer dependency rather than relied on as a phantom one —
+  `src/index.ts` already imported it, and `validateTs` now does too.
+
+  This is an internal test-utility fix; no exported signature changes.
+
 ## 5.0.3
 
 ### Patch Changes
