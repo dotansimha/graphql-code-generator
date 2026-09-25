@@ -167,7 +167,7 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
   documents: Types.DocumentFile[],
   config: TypeScriptDocumentNodesRawPluginConfig,
 ) => {
-  const allAst = concatAST(documents.map(v => v.document));
+  const allAst = concatAST(documents.map(v => v.document!));
 
   const allFragments: LoadedFragment[] = [
     ...(
@@ -190,7 +190,7 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
     prepend: visitor.getImports(),
     content: [
       visitor.fragments,
-      ...visitorResult.definitions.filter(t => typeof t === 'string'),
+      ...visitorResult.definitions.filter((t: unknown) => typeof t === 'string'),
     ].join('\n'),
   };
 };
