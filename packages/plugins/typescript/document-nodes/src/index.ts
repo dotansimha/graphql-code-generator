@@ -1,4 +1,4 @@
-import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind } from 'graphql';
+import { concatAST, FragmentDefinitionNode, GraphQLSchema, Kind, type DocumentNode } from 'graphql';
 import { oldVisit, PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import {
   LoadedFragment,
@@ -167,7 +167,11 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
   documents: Types.DocumentFile[],
   config: TypeScriptDocumentNodesRawPluginConfig,
 ) => {
-  const allAst = concatAST(documents.map(v => v.document!));
+  const allAst = concatAST(
+    documents
+      .filter((v): v is Types.DocumentFile & { document: DocumentNode } => !!v.document)
+      .map(v => v.document),
+  );
 
   const allFragments: LoadedFragment[] = [
     ...(
