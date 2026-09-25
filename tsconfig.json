@@ -15,8 +15,6 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
@@ -53,8 +51,7 @@
     },
     "ignoreDeprecations": "6.0",
     "types": ["node"],
-    "noImplicitAny": false,
-    "strictNullChecks": false
+    "strict": true
   },
   "include": ["packages"],
   "exclude": [
