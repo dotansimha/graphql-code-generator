@@ -334,7 +334,7 @@ export type DirectiveResolverFn<TResult = ${emptyObjectType}, TParent = ${emptyO
       resolversInterfaceTypesMapping,
       resolversTypeMapping,
       resolversParentTypeMapping,
-      ...visitorResult.definitions.filter(d => typeof d === 'string'),
+      ...visitorResult.definitions.filter((d: unknown) => typeof d === 'string'),
       rootResolver.content,
       getAllDirectiveResolvers(),
     ].join('\n'),
