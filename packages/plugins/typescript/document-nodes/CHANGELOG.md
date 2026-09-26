@@ -1,5 +1,15 @@
 # @graphql-codegen/typescript-document-nodes
 
+## 6.1.1
+
+### Patch Changes
+
+- [#10990](https://github.com/dotansimha/graphql-code-generator/pull/10990)
+  [`df288d8`](https://github.com/dotansimha/graphql-code-generator/commit/df288d8e047bbb7581a9bdc34c465a2988535e80)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Skip documents without a `document` AST
+  instead of throwing from `concatAST` when the plugin is called directly with one. Generated output
+  from the CLI is unchanged.
+
 ## 6.1.0
 
 ### Minor Changes

@@ -1,5 +1,15 @@
 # @graphql-codegen/core
 
+## 6.2.1
+
+### Patch Changes
+
+- [#10991](https://github.com/dotansimha/graphql-code-generator/pull/10991)
+  [`dc70125`](https://github.com/dotansimha/graphql-code-generator/commit/dc7012530290b1b7fa8ad1b017b66e18a6db6078)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Skip documents without a `document` AST when
+  validating documents against the schema, instead of passing `undefined` to validation. Generated
+  output from the CLI is unchanged.
+
 ## 6.2.0
 
 ### Minor Changes
