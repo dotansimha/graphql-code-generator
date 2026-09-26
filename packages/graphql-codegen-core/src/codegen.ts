@@ -140,7 +140,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       if (
         !schemaHash ||
         !options.cache ||
-        !documentHashes.every((hash): hash is string => typeof hash === 'string')
+        !documentHashes.every(hash => typeof hash === 'string')
       ) {
         return Promise.resolve(
           validateGraphQlDocuments(
