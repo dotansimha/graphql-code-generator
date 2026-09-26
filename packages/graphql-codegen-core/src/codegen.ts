@@ -135,17 +135,18 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         rule => !ignored.some(ignoredRule => rule.name.startsWith(ignoredRule)),
       );
       const schemaHash = extractHashFromSchema(schemaInstance);
+      const documentHashes = transformedDocuments.map(d => d.hash);
 
       if (
         !schemaHash ||
         !options.cache ||
-        transformedDocuments.some(d => typeof d.hash !== 'string')
+        !documentHashes.every(hash => typeof hash === 'string')
       ) {
         return Promise.resolve(
           validateGraphQlDocuments(
             schemaInstance,
             [
-              ...transformedDocuments.flatMap(d => d.document),
+              ...transformedDocuments.flatMap(d => (d.document ? [d.document] : [])),
               ...fragments.flatMap(f => f.document),
             ],
             rules,
@@ -154,7 +155,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       }
 
       const cacheKey = [schemaHash]
-        .concat(transformedDocuments.map(doc => doc.hash))
+        .concat(documentHashes)
         .concat(JSON.stringify(fragments))
         .join(',');
 
@@ -163,7 +164,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
           validateGraphQlDocuments(
             schemaInstance,
             [
-              ...transformedDocuments.flatMap(d => d.document),
+              ...transformedDocuments.flatMap(d => (d.document ? [d.document] : [])),
               ...fragments.flatMap(f => f.document),
             ],
             rules,
