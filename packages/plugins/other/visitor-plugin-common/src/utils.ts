@@ -37,7 +37,7 @@ import type {
   ScalarsMap,
 } from './types.js';
 
-export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
+export const getConfigValue = <T = any>(value: T | null | undefined, defaultValue: T): T => {
   if (value === null || value === undefined) {
     return defaultValue;
   }

@@ -439,7 +439,7 @@ export function buildModule(
         defined.objects.push(name);
         collectFields(node, picks.objects);
 
-        if (node.interfaces?.length > 0) {
+        if ((node.interfaces?.length ?? 0) > 0) {
           withIsTypeOf.objects.push(name);
         }
 
@@ -495,7 +495,7 @@ export function buildModule(
 
         pushUnique(extended.objects, name);
 
-        if (node.interfaces?.length > 0) {
+        if ((node.interfaces?.length ?? 0) > 0) {
           pushUnique(withIsTypeOf.objects, name);
         }
 
