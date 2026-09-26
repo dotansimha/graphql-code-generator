@@ -10,7 +10,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
   buildGeneratesSection: options => {
     const { baseOutputDir } = options;
     const { baseTypesPath, encapsulateModuleTypes } = options.presetConfig;
-    const useGraphQLModules = options?.presetConfig.useGraphQLModules ?? true;
+    const useGraphQLModules = getConfigValue(options?.presetConfig.useGraphQLModules, true);
     const requireRootResolvers = getConfigValue(options?.presetConfig.requireRootResolvers, false);
     const useTypeImports = getConfigValue(options?.config.useTypeImports, false) || false;
 
