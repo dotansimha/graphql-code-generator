@@ -143,7 +143,18 @@ export const plugin: PluginFunction = async (
   };
 
   const apolloClientVersion = parseInt(config.apolloClientVersion as any);
-  const cleanSchema = config.federation ? removeFederation(schema) : schema;
+  const federationlessSchema = config.federation ? removeFederation(schema) : schema;
+  // graphql@17's execute() throws on any schema that declares @defer or @stream, even when the
+  // document does not use them. The introspection query below never does, so strip them first.
+  const cleanSchema =
+    federationlessSchema.getDirective('defer') || federationlessSchema.getDirective('stream')
+      ? new GraphQLSchema({
+          ...federationlessSchema.toConfig(),
+          directives: federationlessSchema
+            .getDirectives()
+            .filter(d => d.name !== 'defer' && d.name !== 'stream'),
+        })
+      : federationlessSchema;
   const { useExplicitTyping } = config;
 
   const introspection = (await execute({
