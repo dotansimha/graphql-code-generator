@@ -127,7 +127,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                   schema.getQueryType()?.name,
                   schema.getMutationType()?.name,
                   schema.getSubscriptionType()?.name,
-                ].filter((name): name is string => !!name),
+                ].filter((name): name is string => typeof name === 'string'),
                 useTypeImports,
               }),
           },
