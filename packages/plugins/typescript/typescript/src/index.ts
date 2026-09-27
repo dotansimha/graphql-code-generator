@@ -106,5 +106,6 @@ export function includeIntrospectionTypesDefinitions(
     }
   }
 
-  return result.definitions.filter((def): def is string => typeof def === 'string');
+  // FIXME(strict=true) this is the existing logic, casting to avoid runtime differences
+  return result.definitions as string[];
 }

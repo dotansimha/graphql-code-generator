@@ -73,7 +73,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     node: SelectionSetNode,
     _: unknown,
     parent?: ASTNode,
-  ): SelectionSetNode | undefined {
+  ): SelectionSetNode | void {
     if (!this.pluginConfig.addTypenameToSelectionSets) {
       return;
     }
