@@ -1,5 +1,5 @@
 import autoBind from 'auto-bind';
-import {
+import type {
   ASTNode,
   FragmentDefinitionNode,
   GraphQLSchema,
@@ -69,20 +69,24 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     }
   }
 
-  public SelectionSet(node: SelectionSetNode, _: unknown, parent?: ASTNode) {
+  public SelectionSet(
+    node: SelectionSetNode,
+    _: unknown,
+    parent?: ASTNode,
+  ): SelectionSetNode | undefined {
     if (!this.pluginConfig.addTypenameToSelectionSets) {
-      return undefined;
+      return;
     }
 
     // Don't add __typename to OperationDefinitions.
     if (parent && parent.kind === 'OperationDefinition') {
-      return undefined;
+      return;
     }
 
     // No changes if no selections.
     const { selections } = node;
     if (!selections) {
-      return undefined;
+      return;
     }
 
     // If selections already have a __typename or is introspection do nothing.
@@ -92,7 +96,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
         (selection.name.value === '__typename' || selection.name.value.lastIndexOf('__', 0) === 0),
     );
     if (hasTypename) {
-      return undefined;
+      return;
     }
 
     return {
@@ -114,7 +118,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     resultType: string,
     variablesTypes: string,
     node: FragmentDefinitionNode | OperationDefinitionNode,
-  ) {
+  ): string {
     const shouldUseImportPrefix = !!this.config.importOperationTypesFrom;
     const resultImportPrefix = shouldUseImportPrefix && resultType !== 'unknown' ? 'Types.' : '';
     const variablesImportPrefix =

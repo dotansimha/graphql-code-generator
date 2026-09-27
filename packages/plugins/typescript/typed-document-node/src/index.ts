@@ -48,7 +48,7 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
     content: [
       ...content,
       visitor.fragments,
-      ...visitorResult.definitions.filter((t: unknown) => typeof t === 'string'),
+      ...visitorResult.definitions.filter(t => typeof t === 'string'),
     ].join('\n'),
   };
 };

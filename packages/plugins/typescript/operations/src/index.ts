@@ -7,9 +7,9 @@ import {
 } from 'graphql';
 import {
   oldVisit,
-  OldVisitDocumentResult,
-  PluginFunction,
-  Types,
+  type OldVisitDocumentResult,
+  type PluginFunction,
+  type Types,
 } from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
@@ -79,7 +79,8 @@ export const plugin: PluginFunction<
     leave: visitor,
   });
 
-  const operationsDefinitions = findTransformedDefinitions(operationsResult);
+  // FIXME(strict=true) this is the existing logic, casting to avoid runtime differences
+  const operationsDefinitions: string[] = operationsResult.definitions as string[];
   if (config.addOperationExport) {
     for (const d of allDocumentsAST.definitions) {
       if ('name' in d) {
