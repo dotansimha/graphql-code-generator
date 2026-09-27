@@ -94,7 +94,9 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
         normalize(join(relativePath, baseTypesFilename));
       const sources = sourcesByModuleMap[moduleName];
 
-      const moduleDocument = concatAST(sources.map(source => source.document));
+      const moduleDocument = concatAST(
+        sources.flatMap(source => (source.document ? [source.document] : [])),
+      );
 
       const shouldDeclare = filename.endsWith('.d.ts');
 
@@ -125,7 +127,7 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
                   schema.getQueryType()?.name,
                   schema.getMutationType()?.name,
                   schema.getSubscriptionType()?.name,
-                ].filter(Boolean),
+                ].filter((name): name is string => typeof name === 'string'),
                 useTypeImports,
               }),
           },
