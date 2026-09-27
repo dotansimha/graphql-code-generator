@@ -144,9 +144,13 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types',
       );
     }
+    if (!options.schemaAst) {
+      throw new Error('[client-preset] missing `schemaAst` in preset options');
+    }
+
     const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
     if (options.config.nullability?.errorHandlingClient) {
-      options.schemaAst = await semanticToStrict(options.schemaAst!);
+      options.schemaAst = await semanticToStrict(options.schemaAst);
       options.schema = parse(printSchema(options.schemaAst));
     }
 
@@ -282,7 +286,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       importExtension: options.config.importExtension,
     });
 
-    if (isMaskingFragments === true) {
+    if (fragmentMaskingConfig != null) {
       const fragmentMaskingArtifactFileExtension = '.ts';
 
       reexports.push('fragment-masking');

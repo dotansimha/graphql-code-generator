@@ -1,9 +1,8 @@
 import * as path from 'path';
 import { buildSchema, parse } from 'graphql';
-import type { PluginObj, PluginPass } from '@babel/core';
+import type { NodePath, PluginObj, PluginPass } from '@babel/core';
 import { declare } from '@babel/helper-plugin-utils';
 import template from '@babel/template';
-import type { NodePath } from '@babel/traverse';
 import type { Program } from '@babel/types';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 
@@ -82,11 +81,10 @@ function getRelativeImportPath(
   artifactDirectory: string,
   fileToRequire = 'graphql',
 ): string {
-  if (state.file == null) {
+  const filename = state.file?.opts.filename;
+  if (filename == null) {
     throw new Error('Babel state is missing expected file name');
   }
-
-  const { filename } = state.file.opts;
 
   const relative = path.relative(path.dirname(filename), path.resolve(artifactDirectory));
 
