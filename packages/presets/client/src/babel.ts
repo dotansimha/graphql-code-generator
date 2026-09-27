@@ -82,7 +82,7 @@ function getRelativeImportPath(
   fileToRequire = 'graphql',
 ): string {
   const filename = state.file?.opts.filename;
-  if (filename == null) {
+  if (!filename) {
     throw new Error('Babel state is missing expected file name');
   }
 

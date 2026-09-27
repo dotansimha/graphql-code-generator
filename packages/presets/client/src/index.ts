@@ -286,7 +286,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       importExtension: options.config.importExtension,
     });
 
-    if (fragmentMaskingConfig != null) {
+    if (fragmentMaskingConfig !== null) {
       const fragmentMaskingArtifactFileExtension = '.ts';
 
       reexports.push('fragment-masking');
