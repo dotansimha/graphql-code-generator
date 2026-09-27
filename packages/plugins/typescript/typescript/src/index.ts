@@ -1,5 +1,4 @@
 import {
-  DocumentNode,
   getNamedType,
   GraphQLNamedType,
   GraphQLSchema,
@@ -83,7 +82,7 @@ export function includeIntrospectionTypesDefinitions(
   }
 
   const visitor = new TsIntrospectionVisitor(schema, config, typesToInclude);
-  const result: DocumentNode = oldVisit(parse(printIntrospectionSchema(schema)), {
+  const result = oldVisit(parse(printIntrospectionSchema(schema)), {
     leave: visitor,
   });
 
@@ -107,5 +106,5 @@ export function includeIntrospectionTypesDefinitions(
     }
   }
 
-  return result.definitions as any[];
+  return result.definitions.filter((def): def is string => typeof def === 'string');
 }
