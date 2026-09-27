@@ -1,10 +1,11 @@
 import autoBind from 'auto-bind';
-import type {
-  ASTNode,
-  FragmentDefinitionNode,
-  GraphQLSchema,
-  OperationDefinitionNode,
-  SelectionSetNode,
+import {
+  Kind,
+  type ASTNode,
+  type FragmentDefinitionNode,
+  type GraphQLSchema,
+  type OperationDefinitionNode,
+  type SelectionSetNode,
 } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import {
@@ -104,9 +105,9 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       selections: [
         ...selections,
         {
-          kind: 'Field',
+          kind: Kind.FIELD,
           name: {
-            kind: 'Name',
+            kind: Kind.NAME,
             value: '__typename',
           },
         },
