@@ -1,5 +1,11 @@
 import autoBind from 'auto-bind';
-import { GraphQLSchema } from 'graphql';
+import {
+  ASTNode,
+  FragmentDefinitionNode,
+  GraphQLSchema,
+  OperationDefinitionNode,
+  SelectionSetNode,
+} from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import {
   ClientSideBasePluginConfig,
@@ -48,31 +54,35 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
         this.config.documentNodeImport || 'graphql#DocumentNode',
       );
       const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
-      this._imports.add(tagImport);
+      if (tagImport) {
+        this._imports.add(tagImport);
+      }
     } else if (this.config.documentMode === DocumentMode.string) {
       const tagImport = this._generateImport(
         typedDocumentString.import,
         typedDocumentString.import.propName,
         true,
       );
-      this._imports.add(tagImport);
+      if (tagImport) {
+        this._imports.add(tagImport);
+      }
     }
   }
 
-  public SelectionSet(node, _, parent) {
+  public SelectionSet(node: SelectionSetNode, _: unknown, parent?: ASTNode) {
     if (!this.pluginConfig.addTypenameToSelectionSets) {
-      return;
+      return undefined;
     }
 
     // Don't add __typename to OperationDefinitions.
     if (parent && parent.kind === 'OperationDefinition') {
-      return;
+      return undefined;
     }
 
     // No changes if no selections.
     const { selections } = node;
     if (!selections) {
-      return;
+      return undefined;
     }
 
     // If selections already have a __typename or is introspection do nothing.
@@ -82,7 +92,7 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
         (selection.name.value === '__typename' || selection.name.value.lastIndexOf('__', 0) === 0),
     );
     if (hasTypename) {
-      return;
+      return undefined;
     }
 
     return {
@@ -100,7 +110,11 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     };
   }
 
-  protected getDocumentNodeSignature(resultType: string, variablesTypes: string, node) {
+  protected getDocumentNodeSignature(
+    resultType: string,
+    variablesTypes: string,
+    node: FragmentDefinitionNode | OperationDefinitionNode,
+  ) {
     const shouldUseImportPrefix = !!this.config.importOperationTypesFrom;
     const resultImportPrefix = shouldUseImportPrefix && resultType !== 'unknown' ? 'Types.' : '';
     const variablesImportPrefix =
