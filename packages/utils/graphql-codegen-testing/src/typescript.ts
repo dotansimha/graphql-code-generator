@@ -88,7 +88,7 @@ export function validateTs(
         shouldCreateNewSourceFile?: boolean,
       ) => {
         if (fileName === testFile) {
-          return createSourceFile(fileName, contents, options.target);
+          return createSourceFile(fileName, contents, options.target ?? languageVersion);
         }
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
@@ -111,7 +111,7 @@ export function validateTs(
     const allDiagnostics = emitResult.diagnostics;
 
     for (const diagnostic of allDiagnostics) {
-      if (diagnostic.file) {
+      if (diagnostic.file && diagnostic.start !== undefined) {
         const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->
@@ -212,7 +212,7 @@ export function compileTs(
         shouldCreateNewSourceFile?: boolean,
       ) => {
         if (fileName === testFile) {
-          return createSourceFile(fileName, contents, options.target);
+          return createSourceFile(fileName, contents, options.target ?? languageVersion);
         }
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
@@ -236,7 +236,7 @@ export function compileTs(
     const errors: string[] = [];
 
     for (const diagnostic of allDiagnostics) {
-      if (diagnostic.file) {
+      if (diagnostic.file && diagnostic.start !== undefined) {
         const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->

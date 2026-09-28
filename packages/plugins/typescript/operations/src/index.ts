@@ -5,7 +5,12 @@ import {
   printIntrospectionSchema,
   type DocumentNode,
 } from 'graphql';
-import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import {
+  oldVisit,
+  type OldVisitDocumentResult,
+  type PluginFunction,
+  type Types,
+} from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
@@ -74,7 +79,8 @@ export const plugin: PluginFunction<
     leave: visitor,
   });
 
-  const operationsDefinitions: string[] = operationsResult.definitions;
+  // FIXME(strict=true) this is the existing logic, casting to avoid runtime differences
+  const operationsDefinitions: string[] = operationsResult.definitions as string[];
   if (config.addOperationExport) {
     for (const d of allDocumentsAST.definitions) {
       if ('name' in d) {
@@ -161,6 +167,6 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
 //
 // This helper function filters in nodes that have been turned into strings, i.e. they have been transformed
 // This way, we do not have to explicitly declare a method for every node type to convert them to null
-const findTransformedDefinitions = (visitedResult: any): string[] => {
-  return visitedResult.definitions.filter(def => typeof def === 'string');
+const findTransformedDefinitions = (visitedResult: OldVisitDocumentResult): string[] => {
+  return visitedResult.definitions.filter((def): def is string => typeof def === 'string');
 };

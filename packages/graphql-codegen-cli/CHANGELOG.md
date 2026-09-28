@@ -1,5 +1,13 @@
 # @graphql-codegen/cli
 
+## 7.4.3
+
+### Patch Changes
+
+- [#10983](https://github.com/dotansimha/graphql-code-generator/pull/10983)
+  [`8512e51`](https://github.com/dotansimha/graphql-code-generator/commit/8512e51378f6341c1a40585b6db3ef2003cc480a)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add missing --check in CLI --help config
+
 ## 7.4.2
 
 ### Patch Changes

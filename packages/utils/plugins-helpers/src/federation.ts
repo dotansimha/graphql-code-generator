@@ -630,7 +630,7 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
   const arg = directive.arguments.find(arg => arg.name.value === 'fields');
   const { value } = arg.value as StringValueNode;
 
-  return oldVisit(parse(`{${value}}`), {
+  return oldVisit<ReferenceSelectionSet>(parse(`{${value}}`), {
     leave: {
       SelectionSet(node) {
         return (node.selections as any as DirectiveSelectionSet[]).reduce((accum, field) => {

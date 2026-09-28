@@ -33,7 +33,7 @@ import { DEFAULT_SCALARS } from './scalars.js';
 import type { EnrichedFieldNode } from './selection-set-to-object.js';
 import type { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
 
-export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
+export const getConfigValue = <T = any>(value: T | null | undefined, defaultValue: T): T => {
   if (value === null || value === undefined) {
     return defaultValue;
   }
