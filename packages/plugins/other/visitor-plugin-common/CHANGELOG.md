@@ -1,5 +1,30 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.6
+
+### Patch Changes
+
+- [#10982](https://github.com/dotansimha/graphql-code-generator/pull/10982)
+  [`e5361bc`](https://github.com/dotansimha/graphql-code-generator/commit/e5361bcb7ba0c21d94ead07d7b7dfc3d2b11e98c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix out-of-memory errors with deeply nested,
+  widely reused fragments
+  ([#10940](https://github.com/dotansimha/graphql-code-generator/issues/10940)).
+
+  The type cache used while generating selection set types was keyed by every fragment-expanded
+  field path, so its keys grew exponentially with fragment nesting. Keys are now built from the
+  selection set as written, referencing fragment spreads by name, so they stay linear in the size of
+  the documents. The exported `getFieldNames` helper from `@graphql-codegen/visitor-plugin-common`,
+  which built those expanded paths, is removed.
+
+- [#10993](https://github.com/dotansimha/graphql-code-generator/pull/10993)
+  [`be69e9d`](https://github.com/dotansimha/graphql-code-generator/commit/be69e9d1a9c234061754a1922b8b961ec80a2fcb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Type `getConfigValue`'s `value` parameter as
+  `T | null | undefined`, so the result is non-nullable when a non-nullable default is given.
+
+- Updated dependencies
+  [[`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3)]:
+  - @graphql-codegen/plugin-helpers@7.4.0
+
 ## 7.2.5
 
 ### Patch Changes

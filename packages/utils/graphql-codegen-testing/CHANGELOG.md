@@ -1,5 +1,20 @@
 # @graphql-codegen/testing
 
+## 5.0.5
+
+### Patch Changes
+
+- [#10992](https://github.com/dotansimha/graphql-code-generator/pull/10992)
+  [`024fa34`](https://github.com/dotansimha/graphql-code-generator/commit/024fa34a88073d073c7fa10db0092ee5000dfdca)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Make `validateTs`/`compileTs` type-check
+  under `strict: true`: fall back to the compiler host's script target when the passed options have
+  no `target`, and only compute a diagnostic's line/column when it has a `start` position. Adds
+  `@types/common-tags` as a devDependency.
+
+- Updated dependencies
+  [[`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3)]:
+  - @graphql-codegen/plugin-helpers@7.4.0
+
 ## 5.0.4
 
 ### Patch Changes
