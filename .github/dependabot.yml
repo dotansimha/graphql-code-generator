@@ -1,0 +1,72 @@
+version: 2
+
+updates:
+  # Tier 1: published packages + root tooling. Weekly, one grouped PR per package.
+  - package-ecosystem: npm
+    directories:
+      - '/'
+      - '/packages/graphql-codegen-cli'
+      - '/packages/graphql-codegen-core'
+      - '/packages/plugins/*/*'
+      - '/packages/presets/*'
+      - '/packages/utils/*'
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 1 # mirrors pnpm-workspace.yaml minimumReleaseAge (1 day)
+    open-pull-requests-limit: 15
+    labels: [dependencies]
+    groups:
+      minor-patch:
+        update-types: [minor, patch]
+        exclude-patterns: # these still get their own PRs
+          - '@changesets/*'
+          - 'typescript'
+          - '@theguild/*'
+          - '@whatwg-node/*'
+          - 'graphql-jit'
+          - 'husky'
+          - '@types/lz-string'
+          - 'swc*'
+          - '@swc/*'
+      security:
+        applies-to: security-updates
+        patterns: ['*']
+    ignore:
+      # Pinned via pnpm-workspace.yaml `overrides` and must move together with them
+      - dependency-name: 'graphql'
+      - dependency-name: '@typescript-eslint/*'
+      - dependency-name: '@rushstack/eslint-patch'
+      - dependency-name: 'jiti'
+      # Version is fixed by the bob-the-bundler@7.0.1 patch
+      - dependency-name: 'bob-the-bundler'
+
+  # Tier 2: non-published code. Monthly, one PR per directory with everything in it.
+  - package-ecosystem: npm
+    directories:
+      - '/website'
+      - '/dev-test/*'
+      - '/examples/*'
+      - '/examples/*/*'
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 1
+    open-pull-requests-limit: 10
+    labels: [dependencies]
+    groups:
+      all:
+        patterns: ['*']
+    ignore:
+      - dependency-name: 'graphql'
+      - dependency-name: '@graphql-codegen/*' # workspace packages
+
+  # CI actions (pinned by SHA; Dependabot keeps the SHA and the "# vX" comment in sync)
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
