@@ -315,10 +315,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind(
-          getOneOfInputDeclarationKind(
-            (node.fields || []).length,
-            this.config.declarationKind.input,
-          ),
+          getOneOfInputDeclarationKind({
+            fieldCount: (node.fields || []).length,
+            inputDeclarationKind: this.config.declarationKind.input,
+          }),
         )
         .withName(this.convertName(node))
         .withComment(node.description?.value)

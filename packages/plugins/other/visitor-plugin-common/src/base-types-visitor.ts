@@ -697,7 +697,10 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(
-        getOneOfInputDeclarationKind(node.fields.length, this._parsedConfig.declarationKind.input),
+        getOneOfInputDeclarationKind({
+          fieldCount: node.fields.length,
+          inputDeclarationKind: this._parsedConfig.declarationKind.input,
+        }),
       )
       .withName(this.convertName(node))
       .withComment(node.description?.value)

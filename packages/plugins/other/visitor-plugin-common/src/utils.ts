@@ -612,10 +612,13 @@ function stripTrailingSpaces(str: string): string {
  * A @oneOf input with multiple fields is emitted as a union, which only a `type` alias can declare,
  * so the configured declaration kind applies only when there is a single field.
  */
-export function getOneOfInputDeclarationKind(
-  fieldCount: number,
-  inputDeclarationKind: DeclarationKind,
-): DeclarationKind {
+export function getOneOfInputDeclarationKind({
+  fieldCount,
+  inputDeclarationKind,
+}: {
+  fieldCount: number;
+  inputDeclarationKind: DeclarationKind;
+}): DeclarationKind {
   return fieldCount === 1 ? inputDeclarationKind : 'type';
 }
 
