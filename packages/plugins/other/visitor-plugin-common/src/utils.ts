@@ -31,7 +31,12 @@ import type { RawConfig } from './base-visitor.js';
 import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import type { EnrichedFieldNode } from './selection-set-to-object.js';
-import type { NormalizedScalarsMap, ParsedScalarsMap, ScalarsMap } from './types.js';
+import type {
+  DeclarationKind,
+  NormalizedScalarsMap,
+  ParsedScalarsMap,
+  ScalarsMap,
+} from './types.js';
 
 export const getConfigValue = <T = any>(value: T | null | undefined, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -601,6 +606,20 @@ function clearOptional(str: string): string {
 
 function stripTrailingSpaces(str: string): string {
   return str.replace(/ +\n/g, '\n');
+}
+
+/**
+ * A @oneOf input with multiple fields is emitted as a union, which only a `type` alias can declare,
+ * so the configured declaration kind applies only when there is a single field.
+ */
+export function getOneOfInputDeclarationKind({
+  fieldCount,
+  inputDeclarationKind,
+}: {
+  fieldCount: number;
+  inputDeclarationKind: DeclarationKind;
+}): DeclarationKind {
+  return fieldCount === 1 ? inputDeclarationKind : 'type';
 }
 
 const isOneOfTypeCache = new WeakMap<GraphQLNamedType, boolean>();
