@@ -33,6 +33,7 @@ import {
   getConfigValue,
   getEnumsImports,
   getNodeComment,
+  getOneOfInputDeclarationKind,
   indent,
   isNativeNamedType,
   isOneOfInputObjectType,
@@ -313,7 +314,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     if (isOneOfInputObjectType(this._schema.getType(inputTypeName))) {
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
-        .asKind(this.config.declarationKind.input)
+        .asKind(
+          getOneOfInputDeclarationKind(
+            (node.fields || []).length,
+            this.config.declarationKind.input,
+          ),
+        )
         .withName(this.convertName(node))
         .withComment(node.description?.value)
         .withContent(`\n` + (node.fields || []).join('\n  |')).string;

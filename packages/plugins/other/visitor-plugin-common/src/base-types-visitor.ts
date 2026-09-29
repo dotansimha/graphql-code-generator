@@ -38,6 +38,7 @@ import {
   DeclarationBlockConfig,
   getConfigValue,
   getNodeComment,
+  getOneOfInputDeclarationKind,
   indent,
   isOneOfInputObjectType,
   transformComment,
@@ -693,13 +694,11 @@ export class BaseTypesVisitor<
   }
 
   getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
-    // As multiple fields always result in a union, we have
-    // to force a declaration kind of `type` in this case
-    const declarationKind =
-      node.fields.length === 1 ? this._parsedConfig.declarationKind.input : 'type';
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind(declarationKind)
+      .asKind(
+        getOneOfInputDeclarationKind(node.fields.length, this._parsedConfig.declarationKind.input),
+      )
       .withName(this.convertName(node))
       .withComment(node.description?.value)
       .withContent(`\n` + node.fields.join('\n  |'));
