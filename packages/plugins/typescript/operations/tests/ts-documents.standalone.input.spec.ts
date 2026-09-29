@@ -374,6 +374,50 @@ describe('TypeScript Operations Plugin - Input', () => {
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
+  it('generates @oneOf input as a type alias when declarationKind is interface', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      directive @oneOf on INPUT_OBJECT
+
+      type Query {
+        foo(input: FooInput!): Boolean
+      }
+
+      input FooInput @oneOf {
+        a: String
+        b: Int
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      query Foo($input: FooInput!) {
+        foo(input: $input)
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { declarationKind: 'interface' }, { outputFile: '' }),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type FooInput =
+        {   a: string; b?: never; }
+        |  { a?: never;   b: number; };
+
+      export type FooQueryVariables = Exact<{
+        input: FooInput;
+      }>;
+
+
+      export interface FooQuery { foo: boolean | null }
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
   it('generates with custom inputMaybeValue', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
