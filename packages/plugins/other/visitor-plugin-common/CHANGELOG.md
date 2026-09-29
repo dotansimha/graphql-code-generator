@@ -1,5 +1,20 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.7
+
+### Patch Changes
+
+- [#11001](https://github.com/dotansimha/graphql-code-generator/pull/11001)
+  [`65e5599`](https://github.com/dotansimha/graphql-code-generator/commit/65e55991740a23f05886fa07770f8bc7be4bf8a5)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `typescript-operations` generating
+  invalid `interface` declarations for `@oneOf` inputs when `declarationKind` is `interface`
+  ([#10996](https://github.com/dotansimha/graphql-code-generator/issues/10996)).
+
+  A `@oneOf` input with multiple fields is a union, so it is always generated as a `type` alias; a
+  single-field `@oneOf` input keeps the configured `declarationKind.input`. `typescript` and
+  `typescript-operations` share this rule through the new `getOneOfInputDeclarationKind` export from
+  `@graphql-codegen/visitor-plugin-common`.
+
 ## 7.2.6
 
 ### Patch Changes
