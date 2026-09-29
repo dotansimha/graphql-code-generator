@@ -5,7 +5,7 @@ import { optimizeDocuments } from '@graphql-tools/relay-operation-optimizer';
 export function optimizeOperations(
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  options?: { includeFragments: boolean },
+  options?: { includeFragments?: boolean },
 ): Types.DocumentFile[] {
   const newDocuments = optimizeDocuments(
     schema,

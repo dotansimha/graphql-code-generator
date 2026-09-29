@@ -21,7 +21,7 @@ export type ImportSource<T = string> = {
   /**
    * Namespace to import source as
    */
-  namespace?: string;
+  namespace?: string | null;
   /**
    * Entity names to import
    */
