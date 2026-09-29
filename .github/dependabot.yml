@@ -10,6 +10,9 @@ updates:
       - '/packages/plugins/*/*'
       - '/packages/presets/*'
       - '/packages/utils/*'
+    # Keep ranges like `^1.7.3` when the new version already satisfies them: only the lockfile moves.
+    # Raising the floor would force a needless release of the published package.
+    versioning-strategy: increase-if-necessary
     schedule:
       interval: weekly
       day: monday
