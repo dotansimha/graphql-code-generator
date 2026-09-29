@@ -92,7 +92,7 @@ export function processSources(
 function fixLinebreaks(source: Types.DocumentFile) {
   const fixedSource = { ...source };
 
-  fixedSource.rawSDL = source.rawSDL.replace(/\r\n/g, '\n');
+  fixedSource.rawSDL = source.rawSDL?.replace(/\r\n/g, '\n');
 
   return fixedSource;
 }

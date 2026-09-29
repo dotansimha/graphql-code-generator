@@ -146,7 +146,7 @@ export const plugin: PluginFunction<{
     unmaskFunctionName,
     emitLegacyCommonJSImports,
     importExtension,
-    isStringDocumentMode,
+    isStringDocumentMode = false,
   },
   _info,
 ) => {
