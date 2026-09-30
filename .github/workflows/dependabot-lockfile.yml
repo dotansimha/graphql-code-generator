@@ -18,8 +18,14 @@ jobs:
     permissions:
       contents: write # allows pushing the lockfile to the Dependabot branch
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/setup@v2
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }} # the Dependabot branch, not the PR merge commit
+      - name: Install pnpm
+        uses: pnpm/setup@703c52620218391530e48b9e8870d5c0082e1b9b # v2.1.0
+        with:
+          install: false # a frozen install would fail on the stale lockfile
       - name: Update lockfile
         run: pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
       - name: Commit and push
