@@ -131,7 +131,7 @@ export const plugin: PluginFunction = async (
   schema: GraphQLSchema,
   _documents,
   pluginConfig: FragmentMatcherConfig,
-  info,
+  info = {},
 ): Promise<string> => {
   const config: Required<FragmentMatcherConfig> = {
     module: 'es2015',
@@ -162,7 +162,7 @@ export const plugin: PluginFunction = async (
       }
     `),
   })) as unknown as ExecutionResult<IntrospectionResultData>;
-  const ext = extname(info?.outputFile as string).toLowerCase();
+  const ext = extname(info.outputFile || '').toLowerCase();
 
   if (!introspection.data) {
     throw new Error(`Plugin "fragment-matcher" couldn't introspect the schema`);
@@ -179,19 +179,6 @@ export const plugin: PluginFunction = async (
     .filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE')
     .sort((a, b) => sortStringsLexicographically(a.name, b.name));
 
-  const createPossibleTypesCollection = (
-    acc: PossibleTypesResultData['possibleTypes'],
-    type: IntrospectionResultData['__schema']['types'][number],
-  ): PossibleTypesResultData['possibleTypes'] => {
-    return {
-      ...acc,
-      // Unions and interfaces always have possibleTypes
-      [type.name]: type
-        .possibleTypes!.map(possibleType => possibleType.name)
-        .sort(sortStringsLexicographically),
-    };
-  };
-
   const filteredData: IntrospectionResultData | PossibleTypesResultData =
     apolloClientVersion === 2
       ? {
@@ -201,7 +188,16 @@ export const plugin: PluginFunction = async (
           },
         }
       : {
-          possibleTypes: unionAndInterfaceTypes.reduce(createPossibleTypesCollection, {}),
+          possibleTypes: unionAndInterfaceTypes.reduce((acc, type) => {
+            return {
+              ...acc,
+              // Unions and interfaces always have possibleTypes
+              // This `|| []` is only to satisfy type safety
+              [type.name]: (type.possibleTypes || [])
+                .map(possibleType => possibleType.name)
+                .sort(sortStringsLexicographically),
+            };
+          }, {}),
         };
 
   const content = JSON.stringify(filteredData, null, 2);
