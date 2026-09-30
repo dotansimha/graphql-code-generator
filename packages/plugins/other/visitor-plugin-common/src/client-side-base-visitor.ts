@@ -30,6 +30,7 @@ export enum DocumentMode {
   documentNodeImportFragments = 'documentNodeImportFragments',
   external = 'external',
   string = 'string',
+  plainString = 'plainString',
 }
 
 const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
@@ -134,6 +135,8 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * - `documentNode`: document nodes will be generated as objects when we generate the templates.
    * - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
    * - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
+   * - `string`: documents are generated as `TypedDocumentString` instances, a `String` subclass that carries result and variables types. The class is generated into the output.
+   * - `plainString`: documents are generated as plain template strings, with fragments embedded. No class, import or type cast is generated, so the documents are typed as `string`.
    *
    * Note that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.
    *
@@ -335,7 +338,8 @@ export class ClientSideBaseVisitor<
     if (fragments && fragments.length > 0) {
       if (
         this.config.documentMode === DocumentMode.documentNode ||
-        this.config.documentMode === DocumentMode.string
+        this.config.documentMode === DocumentMode.string ||
+        this.config.documentMode === DocumentMode.plainString
       ) {
         return Array.from(this._fragments.values())
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
@@ -362,6 +366,7 @@ export class ClientSideBaseVisitor<
     const includeNestedFragments =
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.string ||
+      this.config.documentMode === DocumentMode.plainString ||
       node.kind === 'OperationDefinition';
     const fragmentNames = this._extractFragments(node, includeNestedFragments);
     const fragments = this._transformFragments(fragmentNames);
@@ -451,6 +456,10 @@ export class ClientSideBaseVisitor<
       }
 
       return `new TypedDocumentString(\`${doc}\`)`;
+    }
+
+    if (this.config.documentMode === DocumentMode.plainString) {
+      return `\`${doc}\``;
     }
 
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
