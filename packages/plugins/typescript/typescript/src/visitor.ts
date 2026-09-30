@@ -234,11 +234,7 @@ export class TsVisitor<
     )}>`;
   }
 
-  UnionTypeDefinition(
-    node: UnionTypeDefinitionNode,
-    key: string | number | undefined,
-    parent: any,
-  ): string {
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
 
     let withFutureAddedValue: string[] = [];
@@ -249,9 +245,7 @@ export class TsVisitor<
           : `{ __typename?: "%other" }`,
       ];
     }
-    // This `?? 0` is only to satisfy type safety:
-    // oldVisit always passes the definition's index in `document.definitions` as `key`
-    const originalNode = parent[key ?? 0] as UnionTypeDefinitionNode;
+    const originalNode = parent[key] as UnionTypeDefinitionNode;
     // This `|| []` is only to satisfy type safety: a union without members has no types to list
     const possibleTypes = (originalNode.types || [])
       .map(t =>
@@ -279,13 +273,11 @@ export class TsVisitor<
     return this.clearOptional(baseValue);
   }
 
-  FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
+  FieldDefinition(node: FieldDefinitionNode, key: number | string, parent: any): string {
     const typeString = this.config.wrapEntireDefinitions
       ? `EntireFieldWrapper<${node.type}>`
       : (node.type as any as string);
-    // This `?? 0` is only to satisfy type safety:
-    // oldVisit always passes the field's index in `fields` as `key`
-    const originalFieldNode = parent[key ?? 0] as FieldDefinitionNode;
+    const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign =
       !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = getNodeComment(node);
@@ -303,14 +295,12 @@ export class TsVisitor<
 
   InputValueDefinition(
     node: InputValueDefinitionNode,
-    key?: number | string,
-    parent?: any,
-    _path?: Array<string | number>,
+    key: number | string,
+    parent: any,
+    _path?: ReadonlyArray<string | number>,
     ancestors?: Array<TypeDefinitionNode>,
   ): string {
-    // This `?? 0` is only to satisfy type safety:
-    // oldVisit always passes the field's index in `fields` as `key`
-    const originalFieldNode = parent[key ?? 0] as FieldDefinitionNode;
+    const originalFieldNode = parent[key] as FieldDefinitionNode;
 
     const addOptionalSign =
       !this.config.avoidOptionals.inputValue &&

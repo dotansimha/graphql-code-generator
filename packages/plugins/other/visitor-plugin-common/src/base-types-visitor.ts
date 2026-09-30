@@ -721,7 +721,13 @@ export class BaseTypesVisitor<
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
-  InputValueDefinition(node: InputValueDefinitionNode): string {
+  InputValueDefinition(
+    node: InputValueDefinitionNode,
+    _key: string | number,
+    _parent: any,
+    _path?: ReadonlyArray<string | number>,
+    _ancestors?: ASTNode[],
+  ): string {
     if (this.config.onlyEnums) return '';
 
     const comment = transformComment(node.description.value, 1);
@@ -735,7 +741,7 @@ export class BaseTypesVisitor<
     return comment + indent(`${node.name.value}: ${type}${this.getPunctuation(input)}`);
   }
 
-  FieldDefinition(node: FieldDefinitionNode): string {
+  FieldDefinition(node: FieldDefinitionNode, _key: string | number, _parent: any): string {
     if (this.config.onlyEnums) return '';
 
     const typeString = node.type as any as string;
@@ -745,11 +751,7 @@ export class BaseTypesVisitor<
     return comment + indent(`${node.name.value}: ${typeString}${this.getPunctuation(type)}`);
   }
 
-  UnionTypeDefinition(
-    node: UnionTypeDefinitionNode,
-    key: string | number | undefined,
-    parent: any,
-  ): string {
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
