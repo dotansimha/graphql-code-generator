@@ -36,7 +36,7 @@ export class TsIntrospectionVisitor extends TsVisitor {
     return null;
   }
 
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const name: string = node.name.value;
 
     if (this.typesToInclude.some(type => type.name === name)) {

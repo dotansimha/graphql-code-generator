@@ -12,6 +12,7 @@ import {
   NonNullTypeNode,
   TypeDefinitionNode,
   UnionTypeDefinitionNode,
+  type ASTNode,
 } from 'graphql';
 import {
   BaseTypesVisitor,
@@ -194,14 +195,20 @@ export class TsVisitor<
     return super.getExportPrefix();
   }
 
-  getMaybeWrapper(ancestors): string {
+  getMaybeWrapper(ancestors: ASTNode[]): string {
     const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
     const isInputContext = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
 
     return isInputContext ? 'InputMaybe' : 'Maybe';
   }
 
-  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+  NamedType(
+    node: NamedTypeNode,
+    key: string | number | undefined,
+    parent: any,
+    path: ReadonlyArray<string | number>,
+    ancestors: ASTNode[],
+  ): string {
     return `${this.getMaybeWrapper(ancestors)}<${super.NamedType(
       node,
       key,
@@ -211,7 +218,13 @@ export class TsVisitor<
     )}>`;
   }
 
-  ListType(node: ListTypeNode, key, parent, path, ancestors): string {
+  ListType(
+    node: ListTypeNode,
+    key: string | number | undefined,
+    parent: any,
+    path: ReadonlyArray<string | number>,
+    ancestors: ASTNode[],
+  ): string {
     return `${this.getMaybeWrapper(ancestors)}<${super.ListType(
       node,
       key,
@@ -236,8 +249,11 @@ export class TsVisitor<
           : `{ __typename?: "%other" }`,
       ];
     }
-    const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types
+    // This `?? 0` is only to satisfy type safety:
+    // oldVisit always passes the definition's index in `document.definitions` as `key`
+    const originalNode = parent[key ?? 0] as UnionTypeDefinitionNode;
+    // This `|| []` is only to satisfy type safety: a union without members has no types to list
+    const possibleTypes = (originalNode.types || [])
       .map(t =>
         this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t),
       )
@@ -267,7 +283,9 @@ export class TsVisitor<
     const typeString = this.config.wrapEntireDefinitions
       ? `EntireFieldWrapper<${node.type}>`
       : (node.type as any as string);
-    const originalFieldNode = parent[key] as FieldDefinitionNode;
+    // This `?? 0` is only to satisfy type safety:
+    // oldVisit always passes the field's index in `fields` as `key`
+    const originalFieldNode = parent[key ?? 0] as FieldDefinitionNode;
     const addOptionalSign =
       !this.config.avoidOptionals.field && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = getNodeComment(node);
@@ -290,7 +308,9 @@ export class TsVisitor<
     _path?: Array<string | number>,
     ancestors?: Array<TypeDefinitionNode>,
   ): string {
-    const originalFieldNode = parent[key] as FieldDefinitionNode;
+    // This `?? 0` is only to satisfy type safety:
+    // oldVisit always passes the field's index in `fields` as `key`
+    const originalFieldNode = parent[key ?? 0] as FieldDefinitionNode;
 
     const addOptionalSign =
       !this.config.avoidOptionals.inputValue &&
@@ -337,7 +357,7 @@ export class TsVisitor<
     return comment + indent(buildFieldDefinition());
   }
 
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
 
     const outputType = ((): Parameters<

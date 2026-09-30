@@ -1,6 +1,8 @@
 import { DeclarationKind, DeclarationKindConfig } from './types.js';
 
-export const DEFAULT_DECLARATION_KINDS: DeclarationKindConfig = {
+export type NormalizedDeclarationKindConfig = Required<DeclarationKindConfig>;
+
+export const DEFAULT_DECLARATION_KINDS: NormalizedDeclarationKindConfig = {
   directive: 'type',
   scalar: 'type',
   input: 'type',
@@ -11,7 +13,7 @@ export const DEFAULT_DECLARATION_KINDS: DeclarationKindConfig = {
 
 export function normalizeDeclarationKind(
   declarationKind?: DeclarationKind | DeclarationKindConfig,
-): DeclarationKindConfig {
+): NormalizedDeclarationKindConfig {
   if (typeof declarationKind === 'string') {
     return {
       directive: declarationKind,
