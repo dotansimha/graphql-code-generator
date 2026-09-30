@@ -15,10 +15,14 @@ import {
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
+  type ASTNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import { buildEnumValuesBlock } from './convert-schema-enum-to-declaration-block-string.js';
-import { normalizeDeclarationKind } from './declaration-kinds.js';
+import {
+  normalizeDeclarationKind,
+  type NormalizedDeclarationKindConfig,
+} from './declaration-kinds.js';
 import { parseEnumValues } from './enum-values.js';
 import { buildTypeImport, getEnumsImports } from './imports.js';
 import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
@@ -49,7 +53,7 @@ import { OperationVariablesToObject } from './variables-to-object.js';
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   ignoreEnumValuesFromSchema: boolean;
-  declarationKind: DeclarationKindConfig;
+  declarationKind: NormalizedDeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
   onlyEnums: boolean;
   onlyOperationTypes: boolean;
@@ -717,7 +721,13 @@ export class BaseTypesVisitor<
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
-  InputValueDefinition(node: InputValueDefinitionNode): string {
+  InputValueDefinition(
+    node: InputValueDefinitionNode,
+    _key: string | number,
+    _parent: any,
+    _path?: ReadonlyArray<string | number>,
+    _ancestors?: ASTNode[],
+  ): string {
     if (this.config.onlyEnums) return '';
 
     const comment = transformComment(node.description.value, 1);
@@ -731,7 +741,7 @@ export class BaseTypesVisitor<
     return comment + indent(`${node.name.value}: ${type}${this.getPunctuation(input)}`);
   }
 
-  FieldDefinition(node: FieldDefinitionNode): string {
+  FieldDefinition(node: FieldDefinitionNode, _key: string | number, _parent: any): string {
     if (this.config.onlyEnums) return '';
 
     const typeString = node.type as any as string;
@@ -741,11 +751,7 @@ export class BaseTypesVisitor<
     return comment + indent(`${node.name.value}: ${typeString}${this.getPunctuation(type)}`);
   }
 
-  UnionTypeDefinition(
-    node: UnionTypeDefinitionNode,
-    key: string | number | undefined,
-    parent: any,
-  ): string {
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
@@ -825,7 +831,11 @@ export class BaseTypesVisitor<
     return allFields.join('\n');
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
+  ObjectTypeDefinition(
+    node: ObjectTypeDefinitionNode,
+    key: number | string,
+    parent: any,
+  ): string | null {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
@@ -878,7 +888,7 @@ export class BaseTypesVisitor<
     });
   }
 
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
 
     // In case of mapped external enum string
@@ -924,7 +934,7 @@ export class BaseTypesVisitor<
     return identifier;
   }
 
-  DirectiveDefinition(_node: DirectiveDefinitionNode): string {
+  DirectiveDefinition(_node: DirectiveDefinitionNode): string | null {
     return '';
   }
 
@@ -1014,7 +1024,13 @@ export class BaseTypesVisitor<
     return this.convertName(node);
   }
 
-  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+  NamedType(
+    node: NamedTypeNode,
+    _key: string | number | undefined,
+    _parent: any,
+    _path: ReadonlyArray<string | number>,
+    ancestors: ASTNode[],
+  ): string {
     const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
     const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
     const typeToUse = this._getTypeForNode(node, isVisitingInputType);
@@ -1026,7 +1042,13 @@ export class BaseTypesVisitor<
     return typeToUse;
   }
 
-  ListType(node: ListTypeNode, _key, _parent, _path, _ancestors): string {
+  ListType(
+    node: ListTypeNode,
+    _key: string | number | undefined,
+    _parent: any,
+    _path: ReadonlyArray<string | number>,
+    _ancestors: ASTNode[],
+  ): string {
     const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);

@@ -72,6 +72,9 @@ export function includeIntrospectionTypesDefinitions(
   });
 
   for (const doc of documents) {
+    if (!doc.document) {
+      continue;
+    }
     visit(doc.document, documentsVisitor);
   }
 
