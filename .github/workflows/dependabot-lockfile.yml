@@ -18,18 +18,8 @@ jobs:
     permissions:
       contents: write # allows pushing the lockfile to the Dependabot branch
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Install pnpm
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        with:
-          standalone: true
-      - name: Install Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 24
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v2
       - name: Update lockfile
         run: pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
       - name: Commit and push
