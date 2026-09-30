@@ -19,7 +19,7 @@ import { TypeScriptDocumentsVisitor } from './visitor.js';
 export const plugin: PluginFunction<
   TypeScriptDocumentsPluginConfig,
   Types.ComplexPluginOutput
-> = async (inputSchema, rawDocuments, config, { outputFile }) => {
+> = async (inputSchema, rawDocuments, config, { outputFile = '' } = {}) => {
   const schema = config.nullability?.errorHandlingClient
     ? await semanticToStrict(inputSchema)
     : inputSchema;
@@ -41,6 +41,10 @@ export const plugin: PluginFunction<
     };
   }>(
     (prev, document) => {
+      if (!document.document) {
+        return prev;
+      }
+
       prev.all.documentFiles.push(document);
       prev.all.documentNodes.push(document.document);
 
@@ -83,7 +87,7 @@ export const plugin: PluginFunction<
   const operationsDefinitions: string[] = operationsResult.definitions as string[];
   if (config.addOperationExport) {
     for (const d of allDocumentsAST.definitions) {
-      if ('name' in d) {
+      if ('name' in d && d.name) {
         operationsDefinitions.push(
           `export declare const ${d.name.value}: import("graphql").DocumentNode;`,
         );

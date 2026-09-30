@@ -618,8 +618,8 @@ export namespace Types {
 
   export type ComplexPluginOutput<M = Record<string, unknown>> = {
     content: string;
-    prepend?: string[];
-    append?: string[];
+    prepend?: Array<string | null>;
+    append?: Array<string | null>;
     meta?: M;
   };
   export type PluginOutput = string | ComplexPluginOutput;

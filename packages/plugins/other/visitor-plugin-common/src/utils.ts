@@ -136,7 +136,7 @@ export class DeclarationBlock {
   _content = null;
   _block = null;
   _nameGenerics = null;
-  _comment = null;
+  _comment: string | null = null;
   _ignoreBlockWrapper = false;
 
   constructor(private _config: DeclarationBlockConfig) {
@@ -168,10 +168,13 @@ export class DeclarationBlock {
     return this;
   }
 
-  withComment(comment: string | StringValueNode | null, disabled = false): DeclarationBlock {
+  withComment(
+    comment: string | StringValueNode | null | undefined,
+    disabled = false,
+  ): DeclarationBlock {
     const nonEmptyComment = !!(isStringValueNode(comment) ? comment.value : comment);
 
-    if (nonEmptyComment && !disabled) {
+    if (comment && nonEmptyComment && !disabled) {
       this._comment = transformComment(comment, 0);
     }
 
