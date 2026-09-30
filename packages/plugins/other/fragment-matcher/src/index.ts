@@ -1,5 +1,5 @@
 import { extname } from 'path';
-import { execute, GraphQLSchema, parse } from 'graphql';
+import { execute, GraphQLSchema, parse, type ExecutionResult } from 'graphql';
 import {
   PluginFunction,
   PluginValidateFn,
@@ -161,8 +161,8 @@ export const plugin: PluginFunction = async (
         }
       }
     `),
-  })) as any;
-  const ext = extname(info.outputFile).toLowerCase();
+  })) as unknown as ExecutionResult<IntrospectionResultData>;
+  const ext = extname(info?.outputFile as string).toLowerCase();
 
   if (!introspection.data) {
     throw new Error(`Plugin "fragment-matcher" couldn't introspect the schema`);
@@ -179,11 +179,15 @@ export const plugin: PluginFunction = async (
     .filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE')
     .sort((a, b) => sortStringsLexicographically(a.name, b.name));
 
-  const createPossibleTypesCollection = (acc, type) => {
+  const createPossibleTypesCollection = (
+    acc: PossibleTypesResultData['possibleTypes'],
+    type: IntrospectionResultData['__schema']['types'][number],
+  ): PossibleTypesResultData['possibleTypes'] => {
     return {
       ...acc,
-      [type.name]: type.possibleTypes
-        .map(possibleType => possibleType.name)
+      // Unions and interfaces always have possibleTypes
+      [type.name]: type
+        .possibleTypes!.map(possibleType => possibleType.name)
         .sort(sortStringsLexicographically),
     };
   };
@@ -216,14 +220,14 @@ export const plugin: PluginFunction = async (
   }
 
   if (extensions.ts.includes(ext)) {
-    let typename: string;
+    let typename: string | undefined;
     if (apolloClientVersion === 2) {
       typename = `IntrospectionResultData`;
     } else if (apolloClientVersion === 3) {
       typename = `PossibleTypesResultData`;
     }
 
-    let type: string;
+    let type: string | undefined;
     if (useExplicitTyping) {
       type = `export type ${typename} = ${content};`;
     } else if (apolloClientVersion === 2) {
