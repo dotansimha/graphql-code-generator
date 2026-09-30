@@ -63,7 +63,7 @@ export function normalizeConfig(
     return config.map(plugin => (typeof plugin === 'string' ? { [plugin]: {} } : plugin));
   }
   if (typeof config === 'object') {
-    return Object.keys(config).reduce(
+    return Object.keys(config).reduce<Types.ConfiguredPlugin[]>(
       (prev, pluginName) => [...prev, { [pluginName]: config[pluginName] }],
       [],
     );
@@ -93,7 +93,12 @@ export function isUsingTypes(
 
   visit(document, {
     SelectionSet: {
-      enter(node: SelectionSetNode, key, parent: ASTNode | readonly ASTNode[], anscestors) {
+      enter(
+        node: SelectionSetNode,
+        key,
+        parent: ASTNode | readonly ASTNode[] | undefined,
+        anscestors,
+      ) {
         const insideIgnoredFragment = (anscestors as any).find(
           (f: ASTNode) =>
             f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value),
@@ -105,7 +110,13 @@ export function isUsingTypes(
 
         const selections = node.selections || [];
 
-        if (schema && selections.length > 0 && !Array.isArray(parent) && 'kind' in parent) {
+        if (
+          schema &&
+          selections.length > 0 &&
+          parent &&
+          !Array.isArray(parent) &&
+          'kind' in parent
+        ) {
           const nextTypeName = (() => {
             if (parent.kind === Kind.FRAGMENT_DEFINITION) {
               return parent.typeCondition.name.value;
@@ -130,13 +141,29 @@ export function isUsingTypes(
             }
             if (parent.kind === Kind.OPERATION_DEFINITION) {
               if (parent.operation === 'query') {
-                return schema.getQueryType().name;
+                const queryType = schema.getQueryType();
+                if (!queryType) {
+                  throw new Error(`Unable to find Query type in schema for "query" operation!`);
+                }
+                return queryType.name;
               }
               if (parent.operation === 'mutation') {
-                return schema.getMutationType().name;
+                const mutationType = schema.getMutationType();
+                if (!mutationType) {
+                  throw new Error(
+                    `Unable to find Mutation type in schema for "mutation" operation!`,
+                  );
+                }
+                return mutationType.name;
               }
               if (parent.operation === 'subscription') {
-                return schema.getSubscriptionType().name;
+                const subscriptionType = schema.getSubscriptionType();
+                if (!subscriptionType) {
+                  throw new Error(
+                    `Unable to find Subscription type in schema for "subscription" operation!`,
+                  );
+                }
+                return subscriptionType.name;
               }
             } else if (parent.kind === Kind.INLINE_FRAGMENT) {
               if (parent.typeCondition) {
@@ -148,7 +175,7 @@ export function isUsingTypes(
             return null;
           })();
 
-          typesStack.push(schema.getType(nextTypeName) as any);
+          typesStack.push((nextTypeName ? schema.getType(nextTypeName) : undefined) as any);
 
           return node;
         }
