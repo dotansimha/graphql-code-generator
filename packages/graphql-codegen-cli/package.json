@@ -119,7 +119,7 @@
     "@types/micromatch": "^4.0.2",
     "@types/shell-quote": "1.7.5",
     "change-case-all": "2.1.0",
-    "js-yaml": "4.1.1",
+    "js-yaml": "4.3.2",
     "make-dir": "5.1.0",
     "memfs": "4.57.2",
     "prettier": "3.8.3"
