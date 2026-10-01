@@ -193,7 +193,7 @@ export function addFederationReferencesToSchema(
       const base = selectionSets.slice(0, baseIndex + 1);
       const rest = selectionSets.slice(baseIndex + 1, selectionSets.length);
 
-      const currentSelectionSet = base.reduce<ReferenceSelectionSet>((acc, selectionSet) => {
+      const currentSelectionSet = base.reduce((acc, selectionSet) => {
         acc = { ...acc, ...selectionSet };
         return acc;
       }, {});
