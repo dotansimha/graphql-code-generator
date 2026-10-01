@@ -170,6 +170,11 @@ export function isUsingTypes(
             return null;
           })();
 
+          // `as any` is needed because `typesStack` is typed `GraphQLObjectType[]`, but `schema.getType()`
+          // returns `GraphQLNamedType | undefined`. Removing it is a small follow-up:
+          // type `typesStack` as `Array<GraphQLNamedType | undefined>`, then
+          // 1. in the `Kind.FIELD` branch, guard `lastType` with `isObjectType`/`isInterfaceType` before `getFields()`
+          // 2. in the `Kind.INLINE_FRAGMENT` branch, return `typesStack[typesStack.length - 1]?.name || null`
           typesStack.push((nextTypeName ? schema.getType(nextTypeName) : undefined) as any);
 
           return node;
