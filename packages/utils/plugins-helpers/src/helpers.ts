@@ -42,7 +42,7 @@ export function normalizeOutputParam(
   throw new Error(`Invalid "generates" config!`);
 }
 
-export function normalizeInstanceOrArray<T>(type: T | T[]): T[] {
+export function normalizeInstanceOrArray<T>(type: T | T[] | null | undefined): T[] {
   if (Array.isArray(type)) {
     return type;
   }
@@ -54,7 +54,7 @@ export function normalizeInstanceOrArray<T>(type: T | T[]): T[] {
 }
 
 export function normalizeConfig(
-  config: Types.OutputConfig | Types.OutputConfig[],
+  config: Types.OutputConfig | Types.OutputConfig[] | null | undefined,
 ): Types.ConfiguredPlugin[] {
   if (typeof config === 'string') {
     return [{ [config]: {} }];
@@ -62,7 +62,7 @@ export function normalizeConfig(
   if (Array.isArray(config)) {
     return config.map(plugin => (typeof plugin === 'string' ? { [plugin]: {} } : plugin));
   }
-  if (typeof config === 'object') {
+  if (config && typeof config === 'object') {
     return Object.keys(config).reduce<Types.ConfiguredPlugin[]>(
       (prev, pluginName) => [...prev, { [pluginName]: config[pluginName] }],
       [],
