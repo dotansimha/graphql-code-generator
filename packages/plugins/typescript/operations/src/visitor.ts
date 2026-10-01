@@ -335,10 +335,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
 
   InputValueDefinition(
     node: InputValueDefinitionNode,
-    _key?: number | string,
-    _parent?: any,
-    _path?: Array<string | number>,
-    ancestors?: Array<TypeDefinitionNode>,
+    _key: number | string,
+    _parent: any,
+    _path: ReadonlyArray<string | number>,
+    ancestors: Array<TypeDefinitionNode>,
   ): string {
     const oneOfDetails = parseOneOfInputValue({
       node,
