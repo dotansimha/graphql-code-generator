@@ -93,12 +93,7 @@ export function isUsingTypes(
 
   visit(document, {
     SelectionSet: {
-      enter(
-        node: SelectionSetNode,
-        key,
-        parent: ASTNode | readonly ASTNode[] | undefined,
-        anscestors,
-      ) {
+      enter(node, key, parent, anscestors) {
         const insideIgnoredFragment = (anscestors as any).find(
           (f: ASTNode) =>
             f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value),
