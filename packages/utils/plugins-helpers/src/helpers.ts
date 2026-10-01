@@ -25,9 +25,45 @@ export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
   return typeof type === 'object';
 }
 
+/**
+ * PoC (see https://github.com/dotansimha/graphql-code-generator/issues/10943, "Option 1:
+ * Sequential Stages"): distinguishes the new `Types.SequentialStages` array shape (an ordered
+ * list of `{ plugins }` / `{ preset }` stage objects) from the pre-existing `ConfiguredPlugin[]`
+ * shorthand (a flat list of plugin names/configs, e.g. `['typescript', 'typescript-operations']`).
+ */
+export function isSequentialStagesArray(type: any): type is Types.SequentialStages {
+  return (
+    Array.isArray(type) &&
+    type.length > 0 &&
+    type.every(
+      item =>
+        item &&
+        typeof item === 'object' &&
+        !Array.isArray(item) &&
+        ('plugins' in item || 'preset' in item),
+    )
+  );
+}
+
 export function normalizeOutputParam(
-  config: Types.OutputConfig | Types.ConfiguredPlugin[] | Types.ConfiguredOutput,
+  config:
+    | Types.OutputConfig
+    | Types.ConfiguredPlugin[]
+    | Types.ConfiguredOutput
+    | Types.SequentialStages,
 ): Types.ConfiguredOutput {
+  // PoC (see https://github.com/dotansimha/graphql-code-generator/issues/10943, "Option 1:
+  // Sequential Stages"): callers that only care about this output's `schema`/`documents`/
+  // `watchPattern` (e.g. watch-mode pattern matching) can treat a stages array as a single
+  // `ConfiguredOutput` by merging each stage's values. This does *not* merge `plugins`/`preset`,
+  // since running the stages themselves is handled by the dedicated sequential-stages code path.
+  if (isSequentialStagesArray(config)) {
+    return {
+      documents: config.flatMap(stage => normalizeInstanceOrArray(stage.documents)),
+      schema: config.flatMap(stage => normalizeInstanceOrArray(stage.schema)),
+      watchPattern: config.flatMap(stage => normalizeInstanceOrArray(stage.watchPattern)),
+    };
+  }
   // In case of direct array with a list of plugins
   if (isOutputConfigArray(config)) {
     return {
