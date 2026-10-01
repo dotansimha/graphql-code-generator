@@ -297,8 +297,8 @@ export class TsVisitor<
     node: InputValueDefinitionNode,
     key: number | string,
     parent: any,
-    _path?: ReadonlyArray<string | number>,
-    ancestors?: Array<TypeDefinitionNode>,
+    _path: ReadonlyArray<string | number>,
+    ancestors: Array<TypeDefinitionNode>,
   ): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
 

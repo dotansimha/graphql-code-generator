@@ -2,7 +2,7 @@ export interface ProfilerEvent {
   /** The name of the event, as displayed in Trace Viewer */
   name: string;
   /** The event categories. This is a comma separated list of categories for the event. The categories can be used to hide events in the Trace Viewer UI. */
-  cat: string;
+  cat?: string;
   /** The event type. This is a single character which changes depending on the type of event being output. The valid values are listed in the table below. We will discuss each phase type below. */
   ph: string;
   /** The tracing clock timestamp of the event. The timestamps are provided at microsecond granularity. */
