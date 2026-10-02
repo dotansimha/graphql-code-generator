@@ -53,6 +53,7 @@
     "tslib": "^2.8.0"
   },
   "devDependencies": {
+    "@graphql-codegen/near-operation-file-preset": "5.2.2",
     "graphql-sock": "1.0.1"
   },
   "publishConfig": {
