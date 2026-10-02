@@ -74,15 +74,22 @@ export namespace Types {
   export type Promisable<T> = T | Promise<T>;
   export type InstanceOrArray<T> = T | T[];
 
+  export type CustomSchemaLoaderFn = (
+    pointer: string,
+    config: any,
+    pointerOptionMap?: Record<string, any>
+  ) => Promisable<GraphQLSchema | DocumentNode | Source | void>;
+
   /**
    * @additionalProperties false
-   * @description Loads schema using a pointer, with a custom loader (code file).
+   * @description Loads schema using a pointer, with a custom loader (code file or function).
    */
   export interface SchemaWithLoaderOptions {
     /**
-     * @description Specify a path to a custom code file (local or module) that will handle the schema loading.
+     * @description Specify a path to a custom code file (local or module), or a
+     * custom loader function directly, that will handle the schema loading.
      */
-    loader: string;
+    loader: string | CustomSchemaLoaderFn;
   }
   export interface SchemaWithLoader {
     [pointer: string]: SchemaWithLoaderOptions;
