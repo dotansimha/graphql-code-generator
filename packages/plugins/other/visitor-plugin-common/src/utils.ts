@@ -10,6 +10,7 @@ import {
   GraphQLOutputType,
   GraphQLScalarType,
   GraphQLSchema,
+  GraphQLType,
   InlineFragmentNode,
   InputValueDefinitionNode,
   isAbstractType,
@@ -510,16 +511,16 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
 
 export function getPossibleTypes(
   schema: GraphQLSchema,
-  type: GraphQLNamedType | undefined,
+  type: GraphQLType | undefined,
 ): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
-    return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
+    return getPossibleTypes(schema, type.ofType);
   }
   if (isObjectType(type)) {
     return [type];
   }
   if (isAbstractType(type)) {
-    return schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
+    return [...schema.getPossibleTypes(type)];
   }
 
   return [];
