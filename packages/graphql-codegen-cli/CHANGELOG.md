@@ -1,5 +1,34 @@
 # @graphql-codegen/cli
 
+## 7.4.4
+
+### Patch Changes
+
+- [#11020](https://github.com/dotansimha/graphql-code-generator/pull/11020)
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `cli` under
+  `strict: true`:
+  - `@graphql-codegen/cli`: `loadCodegenConfig` returns `Promise<LoadCodegenConfigResult | null>`,
+    matching the `null` it resolves to when no config file is found. `YamlCliFlags` includes the
+    kebab-case `ignore-no-documents`, `emit-legacy-common-js-imports` and `import-extension` flags
+    that the CLI reads. `CodegenContext.filepath` is optional, and watch mode only watches the
+    config file when the context has a `filepath`. `CodegenContext.getConfig()` without an argument
+    returns `Types.Config`, and `getConfig(extraConfig)` returns `T & Types.Config`.
+    `CodegenContext.checkModeStaleFiles` is typed as `string[]`. Adds `@types/yargs`,
+    `@types/babel__generator` and `@types/babel__template` as dev dependencies.
+  - `@graphql-codegen/plugin-helpers`: `normalizeInstanceOrArray` and `normalizeConfig` accept
+    `null` and `undefined`, returning `[]`.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973),
+  [`e972b6d`](https://github.com/dotansimha/graphql-code-generator/commit/e972b6d2a2a388748887d87c54fbb66617fc8f44),
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52),
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)]:
+  - @graphql-codegen/plugin-helpers@7.4.1
+  - @graphql-codegen/client-preset@6.2.1
+
 ## 7.4.3
 
 ### Patch Changes
