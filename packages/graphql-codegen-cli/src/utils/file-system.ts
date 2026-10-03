@@ -14,7 +14,7 @@ export function readFile(filepath: string) {
   return fsReadFile(filepath, 'utf-8');
 }
 
-export function unlinkFile(filePath: string, cb?: (err?: Error) => any): void {
+export function unlinkFile(filePath: string, cb: (err: Error | null) => void): void {
   fsUnlink(filePath, cb);
 }
 

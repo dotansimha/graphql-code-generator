@@ -2,7 +2,7 @@ import { getLogger } from './logger.js';
 
 let queue: Array<{
   message: string;
-  meta?: any[];
+  meta: any[];
 }> = [];
 
 export function debugLog(message: string, ...meta: any[]) {

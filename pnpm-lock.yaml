@@ -706,7 +706,7 @@ importers:
         version: 3.2.0(graphql@17.0.2)
       '@vitejs/plugin-react-swc':
         specifier: 4.3.1
-        version: 4.3.1(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))
+        version: 4.3.1(vite@8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))
       graphql:
         specifier: 17.0.2
         version: 17.0.2
@@ -717,8 +717,8 @@ importers:
         specifier: 19.2.6
         version: 19.2.6(react@19.2.6)
       vite:
-        specifier: 8.0.13
-        version: 8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
+        specifier: 8.0.16
+        version: 8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: workspace:*
@@ -752,7 +752,7 @@ importers:
         version: 3.2.0(graphql@17.0.2)
       '@vitejs/plugin-react-swc':
         specifier: 4.3.1
-        version: 4.3.1(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))
+        version: 4.3.1(vite@8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))
       graphql:
         specifier: 17.0.2
         version: 17.0.2
@@ -763,8 +763,8 @@ importers:
         specifier: 19.2.6
         version: 19.2.6(react@19.2.6)
       vite:
-        specifier: 8.0.13
-        version: 8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
+        specifier: 8.0.16
+        version: 8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: workspace:*
@@ -1102,6 +1102,12 @@ importers:
       '@parcel/watcher':
         specifier: ^2.1.0
         version: 2.5.6
+      '@types/babel__generator':
+        specifier: 7.27.0
+        version: 7.27.0
+      '@types/babel__template':
+        specifier: 7.4.4
+        version: 7.4.4
       '@types/is-glob':
         specifier: 4.0.4
         version: 4.0.4
@@ -1114,6 +1120,9 @@ importers:
       '@types/shell-quote':
         specifier: 1.7.5
         version: 1.7.5
+      '@types/yargs':
+        specifier: ^17.0.35
+        version: 17.0.35
       change-case-all:
         specifier: 2.1.0
         version: 2.1.0
@@ -5009,6 +5018,12 @@ packages:
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
+
+  '@types/yargs-parser@21.0.3':
+    resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
+
+  '@types/yargs@17.0.35':
+    resolution: {integrity: sha512-qUHkeCyQFxMXg79wQfTtfndEC+N9ZZg76HJftDJp+qH2tV7Gj4OJi7l+PiWwJ+pWtW8GwSmqsDj/oymhrTWXjg==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -13921,6 +13936,12 @@ snapshots:
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 24.12.4
+
+  '@types/yargs-parser@21.0.3': {}
+
+  '@types/yargs@17.0.35':
+    dependencies:
+      '@types/yargs-parser': 21.0.3
 
   '@types/yauzl@2.10.3':
     dependencies:
