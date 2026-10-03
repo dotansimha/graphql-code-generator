@@ -246,7 +246,6 @@ export class TsVisitor<
       ];
     }
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    // This `|| []` is only to satisfy type safety: a union without members has no types to list
     const possibleTypes = (originalNode.types || [])
       .map(t =>
         this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t),
