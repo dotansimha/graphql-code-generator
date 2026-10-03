@@ -424,7 +424,6 @@ export class CodegenContext {
         };
       } else {
         this.config = {
-          // This `generates: {}` is only to satisfy type safety: a context created without `config` still fails with codegen's missing "generates" error
           generates: {},
           ...this._config,
           pluginContext: this._pluginContext,
