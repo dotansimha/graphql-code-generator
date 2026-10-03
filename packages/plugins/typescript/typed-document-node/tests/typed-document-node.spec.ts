@@ -81,6 +81,61 @@ describe('TypedDocumentNode', () => {
     `);
   });
 
+  it('generates plain strings with embedded fragments when documentMode=plainString', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        person(id: ID!): Person!
+      }
+      type Person {
+        id: ID!
+        name: String!
+      }
+    `);
+
+    const document = parse(/* GraphQL */ `
+      query Person {
+        person(id: 1) {
+          ...PersonDetails
+        }
+      }
+
+      fragment PersonDetails on Person {
+        id
+        name
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          documentMode: DocumentMode.plainString,
+        },
+        { outputFile: '' },
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "export const PersonDetailsFragmentDoc = \`
+          fragment PersonDetails on Person {
+        id
+        name
+      }
+          \`;
+      export const PersonDocument = \`
+          query Person {
+        person(id: 1) {
+          ...PersonDetails
+        }
+      }
+          fragment PersonDetails on Person {
+        id
+        name
+      }\`;"
+    `);
+  });
+
   describe('addTypenameToSelectionSets', () => {
     it('Check is add __typename to typed document', async () => {
       const schema = buildSchema(/* GraphQL */ `
