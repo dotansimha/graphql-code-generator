@@ -220,7 +220,6 @@ export async function executeCodegen(
         task: (ctx, task) => {
           const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
             const outputConfig = generates[filename];
-            const hasPreset = !!outputConfig.preset;
 
             const title = `Generate to ${filename}`;
 
@@ -242,7 +241,7 @@ export async function executeCodegen(
 
                 let preset: Types.OutputPreset | null;
                 try {
-                  preset = hasPreset
+                  preset = outputConfig.preset
                     ? typeof outputConfig.preset === 'string'
                       ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
                       : outputConfig.preset

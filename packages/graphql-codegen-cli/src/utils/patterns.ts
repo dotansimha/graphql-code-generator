@@ -126,23 +126,15 @@ export const makeShouldRebuild = ({
  * mixed into the pattern set of each local config.
  */
 export const makeGlobalPatternSet = (initialContext: CodegenContext) => {
-  const config: Types.Config & { configFilePath?: string } = initialContext.getConfig();
+  const config = initialContext.getConfig();
 
   return {
     watch: sortPatterns([
-      ...(typeof config.watch === 'boolean'
-        ? []
-        : normalizeInstanceOrArray<string>(config.watch ?? [])),
-      relative(process.cwd(), initialContext.filepath),
+      ...(typeof config.watch === 'boolean' ? [] : normalizeInstanceOrArray(config.watch)),
+      ...(initialContext.filepath ? [relative(process.cwd(), initialContext.filepath)] : []),
     ]),
-    schemas: sortPatterns(
-      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(config.schema!)),
-    ),
-    documents: sortPatterns(
-      makePatternsFromDocuments(
-        normalizeInstanceOrArray<Types.OperationDocument>(config.documents!),
-      ),
-    ),
+    schemas: sortPatterns(makePatternsFromSchemas(normalizeInstanceOrArray(config.schema))),
+    documents: sortPatterns(makePatternsFromDocuments(normalizeInstanceOrArray(config.documents))),
   };
 };
 
@@ -156,13 +148,9 @@ export const makeGlobalPatternSet = (initialContext: CodegenContext) => {
  */
 export const makeLocalPatternSet = (conf: Types.ConfiguredOutput) => {
   return {
-    watch: sortPatterns(normalizeInstanceOrArray(conf.watchPattern!)),
-    documents: sortPatterns(
-      makePatternsFromDocuments(normalizeInstanceOrArray<Types.OperationDocument>(conf.documents!)),
-    ),
-    schemas: sortPatterns(
-      makePatternsFromSchemas(normalizeInstanceOrArray<Types.Schema>(conf.schema!)),
-    ),
+    watch: sortPatterns(normalizeInstanceOrArray(conf.watchPattern)),
+    documents: sortPatterns(makePatternsFromDocuments(normalizeInstanceOrArray(conf.documents))),
+    schemas: sortPatterns(makePatternsFromSchemas(normalizeInstanceOrArray(conf.schema))),
   };
 };
 
