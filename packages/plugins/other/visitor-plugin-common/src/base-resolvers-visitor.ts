@@ -1701,7 +1701,6 @@ export class BaseResolversVisitor<
         const avoidInputsOptionals = this.config.avoidOptionals.inputValue;
 
         if (argsType !== null) {
-          // This `|| []` is only to satisfy type safety: `argsType` is only set when the field has arguments
           const originalArguments = original.arguments || [];
           const argsToForceRequire = originalArguments.filter(
             arg => !!arg.defaultValue || arg.type.kind === 'NonNullType',
@@ -1806,7 +1805,6 @@ export class BaseResolversVisitor<
   private getContextType(parentName: string, node: FieldDefinitionNode): string {
     let contextType = this.getFieldContextType(parentName, node);
 
-    // This `|| []` is only to satisfy type safety: a field without directives has none to apply
     for (const directive of node.directives || []) {
       const name = directive.name.value;
       const directiveMap = this._directiveContextTypesMap[name];
@@ -1968,7 +1966,6 @@ export class BaseResolversVisitor<
     // `parent[key]` is the original node, before oldVisit replaced its children.
     // Removing this cast needs `parent` to be typed (see above).
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    // This `|| []` is only to satisfy type safety: a union without members has no types to list
     const possibleTypes = (originalNode.types || [])
       .map(node => node.name.value)
       .map(f => `'${f}'`)
