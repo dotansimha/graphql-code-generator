@@ -14,7 +14,7 @@ export type PrimitiveAliasedFields = {
   fieldName: string;
 };
 export type LinkField = {
-  alias: string;
+  alias?: string;
   name: string;
   type: string;
   selectionSet: string;
@@ -34,7 +34,8 @@ export type SelectionSetProcessorConfig = {
 };
 
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {
-  typeCache = new Map<Location, Map<string, [string, string]>>();
+  // Keyed by the selection set's `loc`, which is `undefined` for documents parsed with `noLocation`
+  typeCache = new Map<Location | undefined, Map<string, [string, string]>>();
 
   constructor(public config: Config) {}
 

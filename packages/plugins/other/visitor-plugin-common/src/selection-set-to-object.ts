@@ -32,7 +32,6 @@ import {
   NameAndType,
   PrimitiveAliasedFields,
   PrimitiveField,
-  ProcessResult,
   type SelectionSetProcessorConfig as BaseSelectionSetProcessorConfig,
 } from './selection-set-processor/base.js';
 import type {
@@ -248,7 +247,10 @@ export class SelectionSetToObject<
             const fragmentSpreadType = this._schema.getType(node.typeCondition.name.value);
             // the field should only be added to the valid selections
             // in case the possible type actually implements the given interface
-            if (isTypeSubTypeOf(this._schema, possibleType, fragmentSpreadType)) {
+            if (
+              fragmentSpreadType &&
+              isTypeSubTypeOf(this._schema, possibleType, fragmentSpreadType)
+            ) {
               this._appendToTypeMap(types, possibleType.name, fields);
               this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
             }
@@ -319,7 +321,7 @@ export class SelectionSetToObject<
           const usage = this.buildFragmentTypeName(
             spread.name.value,
             fragmentSuffix,
-            possibleTypesForFragment.length === 1 ? null : possibleType.name,
+            possibleTypesForFragment.length === 1 ? undefined : possibleType.name,
           );
 
           selectionNodesByTypeName[possibleType.name] ||= [];
@@ -361,6 +363,13 @@ export class SelectionSetToObject<
       selectionNodesByTypeName: new Map<string, Array<GroupedTypeNameNode>>(),
       selectionNodesByTypeNameConditional: [],
     };
+
+    const parentType = parentSchemaType ?? this._parentSchemaType;
+    if (!parentType) {
+      throw new Error(
+        'Unable to flatten the selection set: no parent schema type was given or set on this SelectionSetToObject',
+      );
+    }
 
     const inlineFragmentSelections: InlineFragmentNode[] = [];
     /**
@@ -418,7 +427,7 @@ export class SelectionSetToObject<
           kind: Kind.NAMED_TYPE,
           name: {
             kind: Kind.NAME,
-            value: (parentSchemaType ?? this._parentSchemaType).name,
+            value: parentType.name,
           },
         },
         directives: [],
@@ -429,7 +438,7 @@ export class SelectionSetToObject<
       });
     }
     this._collectInlineFragments(
-      parentSchemaType ?? this._parentSchemaType,
+      parentType,
       inlineFragmentSelections,
       result.selectionNodesByTypeName,
     );
@@ -446,7 +455,7 @@ export class SelectionSetToObject<
     for (const inlineFragmentConditionalSelection of inlineFragmentConditionalSelections) {
       const selectionNodes = new Map<string, Array<GroupedTypeNameNode>>();
       this._collectInlineFragments(
-        parentSchemaType ?? this._parentSchemaType,
+        parentType,
         [inlineFragmentConditionalSelection],
         selectionNodes,
       );
@@ -475,12 +484,14 @@ export class SelectionSetToObject<
     typeName: string,
     nodes: Array<GroupedTypeNameNode>,
   ): void {
-    if (!types.has(typeName)) {
-      types.set(typeName, []);
+    let typeNodes = types.get(typeName);
+    if (!typeNodes) {
+      typeNodes = [];
+      types.set(typeName, typeNodes);
     }
 
     if (nodes && nodes.length > 0) {
-      types.get(typeName).push(...nodes);
+      typeNodes.push(...nodes);
     }
   }
 
@@ -586,7 +597,7 @@ export class SelectionSetToObject<
                     partialTypes: true,
                     parentFieldName: parentName,
                   });
-                prev[typeName].push(this.selectionSetStringFromFields(partialFields));
+                prev[typeName].push(this.selectionSetStringFromFields(partialFields) || '');
                 dependentTypes.push(...partialDependentTypes);
                 continue;
               }
@@ -649,7 +660,7 @@ export class SelectionSetToObject<
                     parentFieldName: parentName,
                   });
                 const incrementalSet = this.selectionSetStringFromFields(incrementalFields);
-                prev[typeName].push(incrementalSet);
+                prev[typeName].push(incrementalSet || '');
                 dependentTypes.push(...incrementalDependentTypes);
 
                 continue;
@@ -671,7 +682,7 @@ export class SelectionSetToObject<
               const subsequentSet = this.selectionSetStringFromFields(subsequentFields);
               dependentTypes.push(...initialDependentTypes, ...subsequentDependentTypes);
 
-              prev[typeName].push({ union: [initialSet, subsequentSet] });
+              prev[typeName].push({ union: [initialSet || '', subsequentSet || ''] });
             }
           }
         }
@@ -721,7 +732,9 @@ export class SelectionSetToObject<
       });
       dependentTypes.push(...subDependentTypes);
 
-      const key = this.selectionSetStringFromFields(fields);
+      // `selectionSetStringFromFields` returns `null` when there are no fields (e.g. only `__typename`
+      // is selected), and `String()` groups those types under the `null` key
+      const key = String(this.selectionSetStringFromFields(fields));
       prev[key] = {
         fields,
         types: [...(prev[key]?.types ?? []), typeInfo || { name: '', type: type.name }].filter(
@@ -749,7 +762,7 @@ export class SelectionSetToObject<
           ? this._processor.transformTypenameField(
               selectedTypes.join(' | '),
               grouped[key].types[0].name,
-            )
+            ) || []
           : [];
         const transformedSet = this.selectionSetStringFromFields([
           ...typenameUnion,
@@ -768,7 +781,7 @@ export class SelectionSetToObject<
                 // Remove invalid characters to produce a valid type name
                 .digest('base64')
                 .replace(/[=+/]/g, '')
-        ] = [transformedSet];
+        ] = [transformedSet || ''];
       }
       return acc;
     }, {});
@@ -785,7 +798,7 @@ export class SelectionSetToObject<
       .map(t => `${t.name}: ${t.type}`);
     const mergedObjects = allObjects.length
       ? this._processor.buildFieldsIntoObject(allObjects)
-      : null;
+      : '';
     const transformedSet = this._processor.buildSelectionSetFromStrings(
       [...allStrings, mergedObjects].filter(Boolean),
     );
@@ -804,6 +817,7 @@ export class SelectionSetToObject<
       {
         selectedFieldType: GraphQLOutputType;
         field: EnrichedFieldNode;
+        selectionSet: SelectionSetNode;
       }
     >();
     let requireTypename = false;
@@ -819,10 +833,8 @@ export class SelectionSetToObject<
       if ('kind' in selectionNode) {
         if (selectionNode.kind === Kind.FIELD) {
           if (selectionNode.selectionSet) {
-            let selectedField: GraphQLField<any, any, any> = null;
-
             const fields = parentSchemaType.getFields();
-            selectedField = fields[selectionNode.name.value];
+            let selectedField = fields[selectionNode.name.value];
 
             if (isMetadataFieldName(selectionNode.name.value)) {
               selectedField = metadataFieldMap[selectionNode.name.value];
@@ -837,18 +849,16 @@ export class SelectionSetToObject<
             if (linkFieldNode) {
               linkFieldNode = {
                 ...linkFieldNode,
-                field: {
-                  ...linkFieldNode.field,
-                  selectionSet: mergeSelectionSets(
-                    linkFieldNode.field.selectionSet,
-                    selectionNode.selectionSet,
-                  ),
-                },
+                selectionSet: mergeSelectionSets(
+                  linkFieldNode.selectionSet,
+                  selectionNode.selectionSet,
+                ),
               };
             } else {
               linkFieldNode = {
                 selectedFieldType: selectedField.type,
                 field: selectionNode,
+                selectionSet: selectionNode.selectionSet,
               };
             }
             linkFieldSelectionSets.set(fieldName, linkFieldNode);
@@ -941,9 +951,13 @@ export class SelectionSetToObject<
 
     const linkFields: LinkField[] = [];
     const linkFieldsInterfaces: DependentType[] = [];
-    for (const { field, selectedFieldType } of linkFieldSelectionSets.values()) {
+    for (const {
+      field,
+      selectedFieldType,
+      selectionSet: fieldSelectionSet,
+    } of linkFieldSelectionSets.values()) {
       const realSelectedFieldType = getBaseType(selectedFieldType);
-      const selectionSet = this.createNext(realSelectedFieldType, field.selectionSet);
+      const selectionSet = this.createNext(realSelectedFieldType, fieldSelectionSet);
       const fieldName = field.alias?.value ?? field.name.value;
       const selectionSetObjects = selectionSet.transformSelectionSet(
         options.parentFieldName ? `${options.parentFieldName}_${fieldName}` : fieldName,
@@ -1000,8 +1014,8 @@ export class SelectionSetToObject<
     );
     const transformedAliasesPrimitiveFields = this._processor.transformAliasesPrimitiveFields(
       parentSchemaType,
-      Array.from(primitiveAliasFields.values()).map(field => ({
-        alias: field.alias.value,
+      Array.from(primitiveAliasFields.entries()).map(([alias, field]) => ({
+        alias,
         fieldName: field.name.value,
         isConditional:
           hasConditionalDirectives(field.directives) ||
@@ -1014,20 +1028,20 @@ export class SelectionSetToObject<
       options.unsetTypes,
     );
 
-    const transformed: ProcessResult = [
-      ...transformedTypenameFields,
-      ...transformedPrimitiveFields,
-      ...transformedAliasesPrimitiveFields,
-      ...transformedLinkFields,
+    const transformed = [
+      ...(transformedTypenameFields || []),
+      ...(transformedPrimitiveFields || []),
+      ...(transformedAliasesPrimitiveFields || []),
+      ...(transformedLinkFields || []),
     ].filter(Boolean);
 
-    const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
+    const allStrings = transformed.filter((t): t is string => typeof t === 'string');
 
-    const allObjectsMerged: string[] = transformed
-      .filter(t => typeof t !== 'string')
-      .map((t: NameAndType) => `${t.name}: ${t.type}`);
+    const allObjectsMerged = transformed
+      .filter((t): t is NameAndType => typeof t !== 'string')
+      .map(t => `${t.name}: ${t.type}`);
 
-    let mergedObjectsAsString: string = null;
+    let mergedObjectsAsString = '';
 
     if (allObjectsMerged.length > 0) {
       mergedObjectsAsString = this._processor.buildFieldsIntoObject(allObjectsMerged);
@@ -1104,7 +1118,17 @@ export class SelectionSetToObject<
     return mustAddEmptyObject ? this.getEmptyObjectType() : ``;
   }
 
-  public transformSelectionSet(fieldName: string) {
+  public transformSelectionSet(fieldName: string): {
+    mergedTypeString: string;
+    dependentTypes: DependentType[];
+    isUnionType?: boolean;
+  } {
+    if (!this._selectionSet) {
+      throw new Error(
+        'Unable to transform the selection set: no selection set was set on this SelectionSetToObject',
+      );
+    }
+
     const possibleTypesList = getPossibleTypes(this._schema, this._parentSchemaType);
     const possibleTypes = possibleTypesList.map(v => v.name).sort();
     const selectionSetKey = getSelectionSetCacheKey(this._selectionSet);
