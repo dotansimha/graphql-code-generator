@@ -1035,11 +1035,11 @@ export class SelectionSetToObject<
       ...(transformedLinkFields || []),
     ].filter(Boolean);
 
-    const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
+    const allStrings = transformed.filter((t): t is string => typeof t === 'string');
 
-    const allObjectsMerged: string[] = transformed
-      .filter(t => typeof t !== 'string')
-      .map((t: NameAndType) => `${t.name}: ${t.type}`);
+    const allObjectsMerged = transformed
+      .filter((t): t is NameAndType => typeof t !== 'string')
+      .map(t => `${t.name}: ${t.type}`);
 
     let mergedObjectsAsString = '';
 

@@ -10,6 +10,7 @@ Fix type errors in `visitor-plugin-common` (`selection-set-to-object`, `client-s
 - `SelectionSetToObject.transformSelectionSet` declares its return type, and throws a descriptive error when the instance has no selection set.
 - `LinkField`'s `alias` is optional, matching the link fields built for fields without an alias.
 - `BaseSelectionSetProcessor.typeCache` is keyed by `Location | undefined`, since selection sets parsed with `noLocation` have no `loc`.
-- `getPossibleTypes` and `OperationVariablesToObject.transform` accept `undefined`, which they already handle by returning no types and `null`.
+- `getPossibleTypes` accepts any `GraphQLType` or `undefined`, which it already handles by unwrapping lists and non-nulls and returning no types, and returns a copy of the schema's possible types instead of the schema's own readonly array.
+- `OperationVariablesToObject.transform` accepts `undefined`, which it already handles by returning `null`.
 
 Generated output is unchanged.
