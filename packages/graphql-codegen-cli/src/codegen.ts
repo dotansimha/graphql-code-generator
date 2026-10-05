@@ -87,17 +87,18 @@ export async function executeCodegen(
 
   const cache = createCache();
 
-  // We need a simple string to uniqually identify the provided GraphQLSchema objects for the above cache.
+  // We need a simple string to uniqually identify the provided objects (e.g. GraphQLSchema
+  // instances passed inline, or custom loader functions) for the above cache.
   // Because JavaScript does not provide access to its internal object ids, we need a workaround.
   // Below is a common way to get unique ids for objects in JavaScript,
   // by using a WeakMap and autoincrementing the id.
-  const jsObjectIds = new WeakMap<GraphQLSchema, number>();
+  const jsObjectIds = new WeakMap<object, number>();
   let jsObjectIdCounter = 0;
-  function getJsObjectId(schema: GraphQLSchema): number {
-    if (!jsObjectIds.has(schema)) {
-      jsObjectIds.set(schema, jsObjectIdCounter++);
+  function getJsObjectId(obj: object): number {
+    if (!jsObjectIds.has(obj)) {
+      jsObjectIds.set(obj, jsObjectIdCounter++);
     }
-    return jsObjectIds.get(schema)!;
+    return jsObjectIds.get(obj)!;
   }
 
   function wrapTask(task: () => void | Promise<void>, source: string, taskName: string, ctx: Ctx) {
@@ -290,8 +291,12 @@ export async function executeCodegen(
                           }
 
                           const hash =
-                            JSON.stringify(schemaPointerMap) +
-                            parsedSchemas.map(getJsObjectId).join(',');
+                            // `JSON.stringify` drops functions, so custom loader functions
+                            // would all serialize to the same key and collide in the cache.
+                            // Key them by object identity instead, like `parsedSchemas` below.
+                            JSON.stringify(schemaPointerMap, (_key, value) =>
+                              typeof value === 'function' ? `[fn:${getJsObjectId(value)}]` : value,
+                            ) + parsedSchemas.map(getJsObjectId).join(',');
                           const result = await cache('schema', hash, async () => {
                             // collect parsed schemas
                             const schemasToMerge: GraphQLSchema[] = [...parsedSchemas];

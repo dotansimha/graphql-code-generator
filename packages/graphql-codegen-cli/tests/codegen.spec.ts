@@ -990,6 +990,66 @@ describe('Codegen Executor', () => {
       expect(error.message).toContain('Failed to load schema');
       expect(error.message).toContain('Failed to load custom loader');
     });
+
+    it('Should allow a loader to be a function passed directly', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          {
+            'schema.graphql': {
+              loader: () => buildSchema(`type Query { fromFunctionLoader: String }`),
+            },
+          },
+        ],
+        generates: {
+          'out1.ts': { plugins: ['typescript'] },
+        },
+      });
+
+      expect(result[0].content).toContain('fromFunctionLoader');
+    });
+
+    it('Should not collide distinct function loaders using the same pointer across outputs', async () => {
+      const { result } = await executeCodegen({
+        generates: {
+          'a.ts': {
+            schema: [
+              { 'schema.graphql': { loader: () => buildSchema(`type Query { fromA: String }`) } },
+            ],
+            plugins: ['typescript'],
+          },
+          'b.ts': {
+            schema: [
+              { 'schema.graphql': { loader: () => buildSchema(`type Query { fromB: String }`) } },
+            ],
+            plugins: ['typescript'],
+          },
+        },
+      });
+
+      const a = result.find(f => f.filename === 'a.ts').content;
+      const b = result.find(f => f.filename === 'b.ts').content;
+      expect(a).toContain('fromA');
+      expect(a).not.toContain('fromB');
+      expect(b).toContain('fromB');
+      expect(b).not.toContain('fromA');
+    });
+
+    it('Should call a function loader reused across outputs only once (cached by identity)', async () => {
+      let calls = 0;
+      const loader = () => {
+        calls++;
+        return buildSchema(`type Query { shared: String }`);
+      };
+
+      await executeCodegen({
+        generates: {
+          'a.ts': { schema: [{ 'schema.graphql': { loader } }], plugins: ['typescript'] },
+          'b.ts': { schema: [{ 'schema.graphql': { loader } }], plugins: ['typescript'] },
+        },
+      });
+
+      expect(calls).toBe(1);
+    });
   });
 
   describe('Custom documents loader', () => {
