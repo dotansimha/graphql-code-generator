@@ -1,5 +1,83 @@
 # @graphql-codegen/plugin-helpers
 
+## 7.4.1
+
+### Patch Changes
+
+- [#11025](https://github.com/dotansimha/graphql-code-generator/pull/11025)
+  [`43d0f65`](https://github.com/dotansimha/graphql-code-generator/commit/43d0f65c5a0f19a9743aef875e7a2ef3fe8c6e35)
+  Thanks [@BuddhaBing](https://github.com/BuddhaBing)! - Widen
+  `Types.SchemaWithLoaderOptions['loader']` to accept a custom loader function
+  (`CustomSchemaLoaderFn`) in addition to a path string.
+
+  A per-entry `schema` custom loader (`{ '<pointer>': { loader, ...options } }`) is resolved by
+  `@graphql-tools/load`'s `useCustomLoader`, which already accepts either a path string (resolved
+  via `require()`) or a function value at runtime (`typeof loaderPointer === 'function'`). Only the
+  TypeScript type restricted `loader` to `string`, forcing consumers who pass an imported loader
+  function (or a class instance exposing a bound `loader` property) to cast the `schema` array to
+  bypass the type error, even though it worked correctly at runtime.
+
+  This is additive and backward compatible — `loader: string` continues to type-check exactly as
+  before.
+
+  Also fixes a schema-cache collision for function loaders in `@graphql-codegen/cli`: the cache key
+  is `JSON.stringify(schemaPointerMap)`, and `JSON.stringify` drops functions, so two `generates`
+  targets using different loader functions for the same pointer
+  (`{ 'schema.graphql': { loader: fnA } }` vs `{ loader: fnB }`) both keyed as
+  `{"schema.graphql":{}}` and the second silently reused the first's schema. Function values are now
+  keyed by object identity (via the existing `getJsObjectId`), so distinct loaders load separately
+  while one function reused across targets still loads once.
+
+- [#11020](https://github.com/dotansimha/graphql-code-generator/pull/11020)
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `cli` under
+  `strict: true`:
+  - `@graphql-codegen/cli`: `loadCodegenConfig` returns `Promise<LoadCodegenConfigResult | null>`,
+    matching the `null` it resolves to when no config file is found. `YamlCliFlags` includes the
+    kebab-case `ignore-no-documents`, `emit-legacy-common-js-imports` and `import-extension` flags
+    that the CLI reads. `CodegenContext.filepath` is optional, and watch mode only watches the
+    config file when the context has a `filepath`. `CodegenContext.getConfig()` without an argument
+    returns `Types.Config`, and `getConfig(extraConfig)` returns `T & Types.Config`.
+    `CodegenContext.checkModeStaleFiles` is typed as `string[]`. Adds `@types/yargs`,
+    `@types/babel__generator` and `@types/babel__template` as dev dependencies.
+  - `@graphql-codegen/plugin-helpers`: `normalizeInstanceOrArray` and `normalizeConfig` accept
+    `null` and `undefined`, returning `[]`.
+
+  Generated output is unchanged.
+
+- [#11019](https://github.com/dotansimha/graphql-code-generator/pull/11019)
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `plugin-helpers` under
+  `strict: true`:
+  - `@graphql-codegen/plugin-helpers`: `ProfilerEvent.cat` is optional, matching the Trace Event
+    format and `Profiler.run`'s optional `cat`. `FederationMeta`'s reference selection sets are
+    typed recursively (`{ [field: string]: true | ReferenceSelectionSet }`), matching the nested
+    selections `@key`/`@requires`/`@provides` produce. `oldVisit`'s `visitor` param is typed as
+    `OldVisitor`: `enter` and `leave` maps keyed by AST node kind, whose callbacks receive the typed
+    node plus graphql's `key`, `parent`, `path` and `ancestors`. Federation directives missing their
+    `fields` argument, and operations whose root type is missing from the schema, throw a
+    descriptive error.
+  - `@graphql-codegen/typescript` and `@graphql-codegen/typescript-operations`: the
+    `InputValueDefinition` visitor methods take `path` and `ancestors` as required params, since the
+    visitor always passes them.
+
+  Generated output is unchanged.
+
+- [#11009](https://github.com/dotansimha/graphql-code-generator/pull/11009)
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `typescript-operations`
+  under `strict: true` by widening the shared types it calls into:
+  - `@graphql-codegen/plugin-helpers`: `Types.ComplexPluginOutput`'s `prepend` and `append` now
+    accept `null` items. Core already skipped them.
+  - `@graphql-codegen/visitor-plugin-common`: `DeclarationBlock.withComment` accepts `undefined`,
+    `parseEnumValues`'s `mapOrStr` is optional (it already defaulted to `{}`),
+    `ImportSource.namespace` accepts `null`, and `optimizeOperations`'s `includeFragments` is
+    optional.
+  - `@graphql-codegen/typescript-operations`: skips document files without a `document`, and no
+    longer throws when called without the plugin info argument.
+
+  Generated output is unchanged.
+
 ## 7.4.0
 
 ### Minor Changes
