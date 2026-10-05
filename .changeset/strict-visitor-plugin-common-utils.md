@@ -2,7 +2,7 @@
 '@graphql-codegen/visitor-plugin-common': patch
 ---
 
-Fix type errors in `visitor-plugin-common` (`utils`, `imports`, `naming`, `mappers`, `enum-values`, `variables-to-object`, `convert-schema-enum-to-declaration-block-string`, `selection-set-processor/base` and `optimize-operations`) under `strict: true`:
+Fix type errors in `visitor-plugin-common` (`utils`, `imports`, `naming`, `mappers`, `types`, `variables-to-object`, `convert-schema-enum-to-declaration-block-string`, `selection-set-processor/base` and `optimize-operations`) under `strict: true`:
 
 - `transformComment` accepts `undefined` and `null`, which it already handles by returning an empty string.
 - `block` declares its param as `string[] | null | undefined`, which it already handles by returning an empty string.
@@ -15,5 +15,11 @@ Fix type errors in `visitor-plugin-common` (`utils`, `imports`, `naming`, `mappe
 - `buildEnumValuesBlock` throws a descriptive error when an enum value is not defined on the schema's enum.
 - `optimizeOperations` throws a descriptive error when a document file has no parsed document.
 - `unique`'s default key uses `String(item)`.
+- `convertSchemaEnumToDeclarationBlockString` treats an enum node without `values` as empty instead of throwing.
+- `generateFragmentImportStatement` treats a missing `identifiers` as empty.
+- `getDeprecationReason` returns the default reason for a `@deprecated` directive without arguments.
+- `isOneOfInputObjectType` returns `false` instead of `undefined`.
+- `buildEnumValuesBlock` treats a non-enum schema type with the enum's name as having no schema enum.
+- `OperationVariablesToObject` emits `''` instead of the text `undefined`/`null` when a variable has no name or no type identifier.
 
-Generated output is unchanged.
+Generated output is unchanged, except in the error cases above.

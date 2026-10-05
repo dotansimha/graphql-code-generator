@@ -100,12 +100,11 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     }
 
     if (typeof config.namingConvention === 'function') {
+      const namingConvention = config.namingConvention;
       return (str: string, opts: ConvertOptions = {}) => {
         return convertNameParts(
           str,
-          // The `typeof` check above doesn't narrow inside this closure; removing this cast needs a
-          // local holding the narrowed function
-          config.namingConvention as (str: string) => string,
+          namingConvention,
           getConfigValue(opts?.transformUnderscore, false),
         );
       };
@@ -116,12 +115,11 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     }
 
     if (typeof config.namingConvention === 'object') {
-      if (!config.namingConvention[type]) {
+      const namingConvention = config.namingConvention;
+      if (!namingConvention[type]) {
         return (str: string, opts: ConvertOptions = {}) => {
           const transformUnderscore =
-            (typeof config.namingConvention === 'object' &&
-              config.namingConvention.transformUnderscore) ||
-            opts?.transformUnderscore;
+            namingConvention.transformUnderscore || opts?.transformUnderscore;
           return convertNameParts(str, pascalCase, getConfigValue(transformUnderscore, false));
         };
       }
@@ -129,9 +127,7 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       return (str: string, opts: ConvertOptions = {}) => {
         return convertNameParts(
           str,
-          resolveExternalModuleAndFn(
-            typeof config.namingConvention === 'object' ? config.namingConvention[type] : undefined,
-          ),
+          resolveExternalModuleAndFn(namingConvention[type]),
           getConfigValue(opts?.transformUnderscore, true),
         );
       };
