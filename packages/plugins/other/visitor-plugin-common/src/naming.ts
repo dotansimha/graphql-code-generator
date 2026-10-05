@@ -16,7 +16,7 @@ function getKind(node: ASTNode | string): keyof NamingConventionMap {
   return 'typeNames';
 }
 
-function getName(node: ASTNode | string): string | undefined {
+function getName(node: ASTNode | string | undefined): string | undefined {
   if (node == null) {
     return undefined;
   }
@@ -103,6 +103,8 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       return (str: string, opts: ConvertOptions = {}) => {
         return convertNameParts(
           str,
+          // The `typeof` check above doesn't narrow inside this closure; removing this cast needs a
+          // local holding the narrowed function
           config.namingConvention as (str: string) => string,
           getConfigValue(opts?.transformUnderscore, false),
         );
@@ -117,7 +119,8 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       if (!config.namingConvention[type]) {
         return (str: string, opts: ConvertOptions = {}) => {
           const transformUnderscore =
-            (config.namingConvention as NamingConventionMap).transformUnderscore ||
+            (typeof config.namingConvention === 'object' &&
+              config.namingConvention.transformUnderscore) ||
             opts?.transformUnderscore;
           return convertNameParts(str, pascalCase, getConfigValue(transformUnderscore, false));
         };
@@ -126,13 +129,15 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       return (str: string, opts: ConvertOptions = {}) => {
         return convertNameParts(
           str,
-          resolveExternalModuleAndFn(config.namingConvention[type]),
+          resolveExternalModuleAndFn(
+            typeof config.namingConvention === 'object' ? config.namingConvention[type] : undefined,
+          ),
           getConfigValue(opts?.transformUnderscore, true),
         );
       };
     }
 
-    return config.namingConvention[type] as any;
+    return config.namingConvention[type];
   }
 
   return (node, opts) => {

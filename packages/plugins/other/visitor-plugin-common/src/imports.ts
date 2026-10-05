@@ -40,7 +40,7 @@ export function generateFragmentImportStatement(
   const { importSource: fragmentImportSource, ...rest } = statement;
   const { identifiers, path, namespace } = fragmentImportSource;
   const importSource: ImportSource<string> = {
-    identifiers: identifiers
+    identifiers: (identifiers || [])
       .filter(fragmentImport => kind === 'both' || kind === fragmentImport.kind)
       .map(({ name }) => name),
     path,
@@ -126,9 +126,9 @@ export function getEnumsImports({
     useTypeImports,
   }: {
     typeIdentifierConverted: string;
-    importIdentifier: string | null;
-    sourceIdentifier: string | null;
-    sourceFile: string | null;
+    importIdentifier?: string | null;
+    sourceIdentifier?: string | null;
+    sourceFile?: string | null;
     useTypeImports: boolean;
   }): string[] {
     if (importIdentifier !== sourceIdentifier) {
@@ -196,11 +196,16 @@ export function buildTypeImport({
   useTypeImports,
   asDefault = false,
 }: {
-  identifier: string;
-  source: string;
+  identifier: string | null | undefined;
+  source: string | null | undefined;
   useTypeImports: boolean;
   asDefault?: boolean;
 }): string {
+  if (identifier == null || source == null) {
+    throw new Error(
+      `Cannot build a type import without an identifier and a source (identifier: ${identifier}, source: ${source})`,
+    );
+  }
   if (asDefault) {
     if (useTypeImports) {
       return `import type { default as ${identifier} } from '${source}';`;

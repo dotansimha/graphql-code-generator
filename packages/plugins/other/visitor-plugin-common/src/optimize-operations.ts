@@ -9,7 +9,14 @@ export function optimizeOperations(
 ): Types.DocumentFile[] {
   const newDocuments = optimizeDocuments(
     schema,
-    documents.map(s => s.document),
+    documents.map(s => {
+      if (!s.document) {
+        throw new Error(
+          `Cannot optimize the document at "${s.location}": it has no parsed document`,
+        );
+      }
+      return s.document;
+    }),
     options,
   );
 
