@@ -48,7 +48,7 @@ export class OperationVariablesToObject {
   }
 
   transform<TDefinitionType extends InterfaceOrVariable>(
-    variablesNode: ReadonlyArray<TDefinitionType>,
+    variablesNode: ReadonlyArray<TDefinitionType> | undefined,
   ): string {
     if (!variablesNode || variablesNode.length === 0) {
       return null;

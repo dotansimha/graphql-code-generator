@@ -256,7 +256,7 @@ export class ClientSideBaseVisitor<
     fragments: LoadedFragment[],
     rawConfig: TRawConfig,
     additionalConfig: Partial<TPluginConfig>,
-    documents?: Types.DocumentFile[],
+    documents: Types.DocumentFile[] = [],
   ) {
     super(rawConfig, {
       scalars: buildScalarsFromConfig(_schema, rawConfig),
@@ -464,10 +464,10 @@ export class ClientSideBaseVisitor<
   ): Record<string, any> | void | undefined {
     let meta: Record<string, any> | void | undefined;
 
-    if (node.kind === Kind.OPERATION_DEFINITION) {
+    if (node.kind === Kind.OPERATION_DEFINITION && this._onExecutableDocumentNode) {
       meta = this._onExecutableDocumentNode({
         kind: Kind.DOCUMENT,
-        definitions,
+        definitions: definitions || [],
       });
     }
 
@@ -487,8 +487,8 @@ export class ClientSideBaseVisitor<
   } {
     const deferredFields: { [fargmentName: string]: string[] } = {};
     const queue: SelectionNode[] = [...node.selectionSet.selections];
-    while (queue.length) {
-      const selection = queue.shift();
+    // `for...of` also visits the selections pushed to `queue` while iterating
+    for (const selection of queue) {
       if (
         selection.kind === Kind.FRAGMENT_SPREAD &&
         selection.directives?.some((d: DirectiveNode) => d.name.value === 'defer')
@@ -675,7 +675,7 @@ export class ClientSideBaseVisitor<
             this.config.importDocumentNodeExternallyFrom === 'near-operation-file' &&
             this._documents.length === 1
           ) {
-            let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
+            let documentPath = `./${this.clearExtension(basename(this._documents[0].location || ''))}`;
             documentPath += normalizeImportExtension({
               emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
               importExtension: this.config.importExtension,
@@ -692,7 +692,7 @@ export class ClientSideBaseVisitor<
 
             this._imports.add(
               `import * as Operations from '${this.clearExtension(
-                this.config.importDocumentNodeExternallyFrom,
+                this.config.importDocumentNodeExternallyFrom || '',
               )}';`,
             );
           }
@@ -722,7 +722,7 @@ export class ClientSideBaseVisitor<
             importSource: {
               ...fragmentImports[0].importSource,
               identifiers: unique(
-                flatten(fragmentImports.map(fi => fi.importSource.identifiers)),
+                flatten(fragmentImports.map(fi => fi.importSource.identifiers || [])),
                 identifier => identifier.name,
               ),
             },
@@ -747,7 +747,7 @@ export class ClientSideBaseVisitor<
     _operationResultType: string,
     _operationVariablesTypes: string,
     _hasRequiredVariables: boolean,
-  ): string {
+  ): string | null {
     return null;
   }
 
