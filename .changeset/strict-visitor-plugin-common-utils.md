@@ -7,6 +7,7 @@ Fix type errors in `visitor-plugin-common` (`utils`, `imports`, `naming`, `mappe
 - `transformComment` accepts `undefined` and `null`, which it already handles by returning an empty string.
 - `block` declares its param as `string[] | null | undefined`, which it already handles by returning an empty string.
 - `DeclarationBlock`'s fields are typed as `string | null` (`_name` as `string | NameNode | null`), and `withBlock` accepts `null`, which renders the same as no block.
+- `DeclarationBlock` falls back to returning the block unchanged when `blockTransformer` is passed as `undefined`, instead of throwing.
 - `buildScalars` accepts an `undefined` scalars mapping, which it already handles by using only the defaults and the schema.
 - `buildTypeImport` accepts a nullish `identifier` and `source`, and throws a descriptive error when either is missing.
 - `ParsedEnumValuesMap`'s `mappedValues`, `sourceIdentifier`, `sourceFile` and `importIdentifier` accept `null`, which `parseEnumValues` already emits.
@@ -22,4 +23,4 @@ Fix type errors in `visitor-plugin-common` (`utils`, `imports`, `naming`, `mappe
 - `buildEnumValuesBlock` treats a non-enum schema type with the enum's name as having no schema enum.
 - `OperationVariablesToObject` emits `''` instead of the text `undefined`/`null` when a variable has no name or no type identifier.
 
-Generated output is unchanged, except in the error cases above.
+Generated output is unchanged, except in the cases above.
