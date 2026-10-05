@@ -694,11 +694,11 @@ export class BaseTypesVisitor<
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
       .withComment(node.description?.value)
-      .withBlock((node.fields ?? []).join('\n'));
+      .withBlock((node.fields || []).join('\n'));
   }
 
   getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
-    const fields = node.fields ?? [];
+    const fields = node.fields || [];
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(
@@ -734,6 +734,7 @@ export class BaseTypesVisitor<
     const comment = transformComment(node.description?.value || '', 1);
     const { input } = this._parsedConfig.declarationKind;
 
+    // `node.type` is already printed to a string by the visitor; removing the cast needs a visited-AST type for `node`
     let type: string = node.type as any as string;
     if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
       type = this._getDirectiveOverrideType(node.directives) || type;
@@ -754,8 +755,9 @@ export class BaseTypesVisitor<
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
+    // `node.types` are already printed strings, so the original AST node is read from `parent[key]`, and `parent` is `any` because oldVisit's parent is untyped
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = (originalNode.types ?? [])
+    const possibleTypes = (originalNode.types || [])
       .map(t =>
         this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t),
       )
@@ -799,7 +801,7 @@ export class BaseTypesVisitor<
             ),
           ]
         : []),
-      ...(node.fields ?? []),
+      ...(node.fields || []),
     ] as string[];
     const interfacesNames = originalNode.interfaces
       ? originalNode.interfaces.map(i => this.convertName(i))
@@ -859,7 +861,7 @@ export class BaseTypesVisitor<
       .withName(this.convertName(node))
       .withComment(node.description?.value);
 
-    return declarationBlock.withBlock((node.fields ?? []).join('\n'));
+    return declarationBlock.withBlock((node.fields || []).join('\n'));
   }
 
   InterfaceTypeDefinition(
@@ -911,7 +913,7 @@ export class BaseTypesVisitor<
       .withBlock(
         buildEnumValuesBlock({
           typeName: enumName,
-          values: node.values ?? [],
+          values: node.values || [],
           schema: this._schema,
           naming: {
             convert: this.config.convert,
