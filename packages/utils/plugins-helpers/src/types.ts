@@ -77,7 +77,7 @@ export namespace Types {
   export type CustomSchemaLoaderFn = (
     pointer: string,
     config: any,
-    pointerOptionMap?: Record<string, any>
+    pointerOptionMap?: Record<string, any>,
   ) => Promisable<GraphQLSchema | DocumentNode | Source | void>;
 
   /**
