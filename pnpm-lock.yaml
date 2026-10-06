@@ -1030,8 +1030,8 @@ importers:
         specifier: ^9.0.6
         version: 9.1.2(@types/node@24.12.4)(graphql@17.0.2)
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       '@inquirer/prompts':
         specifier: ^8.3.2
         version: 8.4.3(@types/node@24.12.4)
@@ -1149,8 +1149,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.33(graphql@17.0.2)
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       graphql:
         specifier: 17.0.2
         version: 17.0.2
@@ -1211,8 +1211,8 @@ importers:
         specifier: workspace:^
         version: link:../../../utils/plugins-helpers/dist
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       graphql:
         specifier: 17.0.2
         version: 17.0.2
@@ -1246,8 +1246,8 @@ importers:
         specifier: ^7.1.1
         version: 7.1.4(graphql@17.0.2)
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1303,8 +1303,8 @@ importers:
         specifier: workspace:^
         version: link:../../other/visitor-plugin-common/dist
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1354,8 +1354,8 @@ importers:
         specifier: workspace:^
         version: link:../../other/visitor-plugin-common/dist
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1451,8 +1451,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.1(graphql@17.0.2)
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@17.0.2)
@@ -1495,8 +1495,8 @@ importers:
         specifier: workspace:^
         version: link:../../plugins/other/visitor-plugin-common/dist
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       change-case-all:
         specifier: ^2.1.0
         version: 2.1.0
@@ -1561,8 +1561,8 @@ importers:
   packages/utils/plugins-helpers:
     dependencies:
       '@graphql-tools/utils':
-        specifier: ^11.2.0
-        version: 11.2.0(graphql@17.0.2)
+        specifier: ^12.0.1
+        version: 12.0.1(graphql@17.0.2)
       change-case-all:
         specifier: ^2.1.0
         version: 2.1.0
