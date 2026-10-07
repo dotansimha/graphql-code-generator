@@ -4046,14 +4046,29 @@
       ]
     },
     "GraphQLSchema": {
-      "description": "Schema Definition\n\nA Schema is created by supplying the root types of each type of operation,\nquery and mutation (optional). A schema definition is then supplied to the\nvalidator and executor.\n\nExample:\n\n```ts\nconst MyAppSchema = new GraphQLSchema({\n  query: MyAppQueryRootType,\n  mutation: MyAppMutationRootType,\n})\n```\n\nNote: When the schema is constructed, by default only the types that are\nreachable by traversing the root types are included, other types must be\nexplicitly referenced.\n\nExample:\n\n```ts\nconst characterInterface = new GraphQLInterfaceType({\n  name: 'Character',\n  ...\n});\n\nconst humanType = new GraphQLObjectType({\n  name: 'Human',\n  interfaces: [characterInterface],\n  ...\n});\n\nconst droidType = new GraphQLObjectType({\n  name: 'Droid',\n  interfaces: [characterInterface],\n  ...\n});\n\nconst schema = new GraphQLSchema({\n  query: new GraphQLObjectType({\n    name: 'Query',\n    fields: {\n      hero: { type: characterInterface, ... },\n    }\n  }),\n  ...\n  // Since this schema references only the `Character` interface it's\n  // necessary to explicitly list the types that implement it if\n  // you want them to be included in the final schema.\n  types: [humanType, droidType],\n})\n```\n\nNote: If an array of `directives` are provided to GraphQLSchema, that will be\nthe exact list of directives represented and allowed. If `directives` is not\nprovided then a default set of the specified directives (e.g. `@include` and\n`@skip`) will be used. If you wish to provide *additional* directives to these\nspecified directives, you must explicitly declare them. Example:\n\n```ts\nconst MyAppSchema = new GraphQLSchema({\n  ...\n  directives: specifiedDirectives.concat([ myCustomDirective ]),\n})\n```",
+      "description": "Schema Definition\n\nA Schema is created by supplying the root types of each type of operation,\nquery and mutation (optional). A schema definition is then supplied to the\nvalidator and executor.",
       "type": "object",
       "properties": {
-        "description": { "$ref": "#/definitions/Maybe" },
-        "extensions": { "$ref": "#/definitions/GraphQLSchemaExtensions" },
-        "astNode": { "$ref": "#/definitions/Maybe_1" },
-        "extensionASTNodes": { "$ref": "#/definitions/ReadonlyArray_5" },
-        "__validationErrors": { "$ref": "#/definitions/Maybe_2" },
+        "description": {
+          "$ref": "#/definitions/Maybe",
+          "description": "Human-readable description for this schema element, if provided."
+        },
+        "extensions": {
+          "$ref": "#/definitions/GraphQLSchemaExtensions",
+          "description": "Custom extension fields reserved for users."
+        },
+        "astNode": {
+          "$ref": "#/definitions/Maybe_1",
+          "description": "AST node from which this schema element was built, if available."
+        },
+        "extensionASTNodes": {
+          "$ref": "#/definitions/ReadonlyArray_3",
+          "description": "AST extension nodes applied to this schema element."
+        },
+        "assumeValid": {
+          "description": "Whether this schema instance skips validation checks.",
+          "type": "boolean"
+        },
         "_queryType": {},
         "_mutationType": {},
         "_subscriptionType": {},
@@ -4061,7 +4076,10 @@
         "_typeMap": {},
         "_subTypeMap": {},
         "_implementationsMap": {},
-        "__@toStringTag@38": { "type": "string" }
+        "__@toStringTag@38": {
+          "description": "Returns the value used by `Object.prototype.toString`.",
+          "type": "string"
+        }
       }
     },
     "Maybe": {
@@ -4074,19 +4092,32 @@
       "additionalProperties": {}
     },
     "SchemaDefinitionNode": {
+      "description": "A schema definition in a type-system document.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.SCHEMA_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "operationTypes": { "$ref": "#/definitions/ReadonlyArray_4" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "SchemaDefinition"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "description": {
+          "$ref": "#/definitions/StringValueNode",
+          "description": "The optional GraphQL description associated with this definition."
+        },
+        "directives": {
+          "description": "Directives available in this schema or applied to this AST node.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/ConstDirectiveNode" }
+        },
+        "operationTypes": {
+          "$ref": "#/definitions/ReadonlyArray_2",
+          "description": "Root operation types declared by this schema definition or extension."
+        }
       }
-    },
-    "Kind.SCHEMA_DEFINITION": {
-      "description": "Type System Definitions",
-      "type": "string",
-      "const": "SchemaDefinition"
     },
     "Location": {
       "description": "Contains a range of UTF-8 character offsets and token references that\nidentify the region of the source from which the AST derived.",
@@ -4109,7 +4140,10 @@
           "$ref": "#/definitions/Source",
           "description": "The Source document the AST represents."
         },
-        "__@toStringTag@38": { "type": "string" }
+        "__@toStringTag@38": {
+          "description": "Returns the value used by `Object.prototype.toString`.",
+          "type": "string"
+        }
       }
     },
     "Token": {
@@ -4138,16 +4172,19 @@
           "$ref": "#/definitions/Token",
           "description": "Tokens exist as nodes in a double-linked-list amongst all tokens\nincluding ignored tokens. <SOF> is always the first node and <EOF>\nthe last."
         },
-        "next": { "$ref": "#/definitions/Token" },
-        "__@toStringTag@38": { "type": "string" }
+        "next": {
+          "$ref": "#/definitions/Token",
+          "description": "Next token in the token stream, including ignored tokens."
+        },
+        "__@toStringTag@38": {
+          "description": "Returns the value used by `Object.prototype.toString`.",
+          "type": "string"
+        }
       }
     },
     "TokenKind": {
       "description": "An exported enum describing the different kinds of tokens that the\nlexer emits.",
-      "type": "string",
       "enum": [
-        "<SOF>",
-        "<EOF>",
         "!",
         "$",
         "&",
@@ -4156,29 +4193,41 @@
         ".",
         "...",
         ":",
+        "<EOF>",
+        "<SOF>",
         "=",
         "@",
+        "BlockString",
+        "Comment",
+        "Float",
+        "Int",
+        "Name",
+        "String",
         "[",
         "]",
         "{",
         "|",
-        "}",
-        "Name",
-        "Int",
-        "Float",
-        "String",
-        "BlockString",
-        "Comment"
-      ]
+        "}"
+      ],
+      "type": "string"
     },
     "Source": {
       "description": "A representation of source input to GraphQL. The `name` and `locationOffset` parameters are\noptional, but they are useful for clients who store GraphQL documents in source files.\nFor example, if the GraphQL input starts at line 40 in a file named `Foo.graphql`, it might\nbe useful for `name` to be `\"Foo.graphql\"` and location to be `{ line: 40, column: 1 }`.\nThe `line` and `column` properties in `locationOffset` are 1-indexed.",
       "type": "object",
       "properties": {
-        "body": { "type": "string" },
-        "name": { "type": "string" },
-        "locationOffset": { "$ref": "#/definitions/Location_1" },
-        "__@toStringTag@38": { "type": "string" }
+        "body": { "description": "The GraphQL source text.", "type": "string" },
+        "name": {
+          "description": "Name used in diagnostics for this source, such as a file path or request name.",
+          "type": "string"
+        },
+        "locationOffset": {
+          "$ref": "#/definitions/Location_1",
+          "description": "One-indexed line and column where this source begins."
+        },
+        "__@toStringTag@38": {
+          "description": "Returns the value used by `Object.prototype.toString`.",
+          "type": "string"
+        }
       }
     },
     "Location_1": {
@@ -4186,48 +4235,90 @@
       "properties": { "line": { "type": "number" }, "column": { "type": "number" } }
     },
     "StringValueNode": {
+      "description": "A string value literal.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.STRING" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "value": { "type": "string" },
-        "block": { "type": "boolean" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "StringValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "value": { "description": "Parsed value represented by this node.", "type": "string" },
+        "block": {
+          "description": "Whether this string was parsed from block string syntax.",
+          "type": "boolean"
+        }
       }
     },
-    "Kind.STRING": { "type": "string", "const": "StringValue" },
-    "ReadonlyArray": { "type": "array", "items": { "$ref": "#/definitions/ConstDirectiveNode" } },
     "ConstDirectiveNode": {
+      "description": "A directive whose arguments are all constant values.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.DIRECTIVE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "arguments": { "$ref": "#/definitions/ReadonlyArray_1" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "Directive"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode",
+          "description": "Name node identifying this AST node."
+        },
+        "arguments": {
+          "description": "Arguments supplied to this field, directive, or coordinate.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/ConstArgumentNode" }
+        }
       }
     },
-    "Kind.DIRECTIVE": { "description": "Directives", "type": "string", "const": "Directive" },
     "NameNode": {
-      "description": "Name",
+      "description": "An identifier in a GraphQL document.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.NAME" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "value": { "type": "string" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "Name"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "value": { "description": "Parsed value represented by this node.", "type": "string" }
       }
     },
-    "Kind.NAME": { "description": "Name", "type": "string", "const": "Name" },
-    "ReadonlyArray_1": { "type": "array", "items": { "$ref": "#/definitions/ConstArgumentNode" } },
     "ConstArgumentNode": {
+      "description": "An argument node whose value is guaranteed to be constant.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.ARGUMENT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "value": { "$ref": "#/definitions/ConstValueNode" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "Argument"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode",
+          "description": "Name node identifying this AST node."
+        },
+        "value": {
+          "$ref": "#/definitions/ConstValueNode",
+          "description": "Parsed value represented by this node."
+        }
       }
     },
-    "Kind.ARGUMENT": { "type": "string", "const": "Argument" },
     "ConstValueNode": {
+      "description": "Any value literal that is guaranteed not to contain a variable reference.",
       "anyOf": [
         { "$ref": "#/definitions/IntValueNode" },
         { "$ref": "#/definitions/FloatValueNode" },
@@ -4240,768 +4331,234 @@
       ]
     },
     "IntValueNode": {
+      "description": "An integer value literal.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.INT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "value": { "type": "string" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "IntValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "value": { "description": "Parsed value represented by this node.", "type": "string" }
       }
     },
-    "Kind.INT": { "type": "string", "const": "IntValue" },
     "FloatValueNode": {
+      "description": "A floating-point value literal.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.FLOAT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "value": { "type": "string" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "FloatValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "value": { "description": "Parsed value represented by this node.", "type": "string" }
       }
     },
-    "Kind.FLOAT": { "type": "string", "const": "FloatValue" },
     "BooleanValueNode": {
+      "description": "A boolean value literal.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.BOOLEAN" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "value": { "type": "boolean" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "BooleanValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "value": { "description": "Parsed value represented by this node.", "type": "boolean" }
       }
     },
-    "Kind.BOOLEAN": { "type": "string", "const": "BooleanValue" },
     "NullValueNode": {
+      "description": "A null value literal.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.NULL" },
-        "loc": { "$ref": "#/definitions/Location" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "NullValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        }
       }
     },
-    "Kind.NULL": { "type": "string", "const": "NullValue" },
     "EnumValueNode": {
+      "description": "An enum value literal.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.ENUM" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "value": { "type": "string" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "EnumValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "value": { "description": "Parsed value represented by this node.", "type": "string" }
       }
     },
-    "Kind.ENUM": { "type": "string", "const": "EnumValue" },
     "ConstListValueNode": {
+      "description": "A list value literal whose elements are all constant values.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.LIST" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "values": { "$ref": "#/definitions/ReadonlyArray_2" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "ListValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "values": {
+          "$ref": "#/definitions/ReadonlyArray",
+          "description": "Values contained in this enum, list, or input-object definition."
+        }
       }
     },
-    "Kind.LIST": { "type": "string", "const": "ListValue" },
-    "ReadonlyArray_2": { "type": "array", "items": { "$ref": "#/definitions/ConstValueNode" } },
+    "ReadonlyArray": { "type": "array", "items": { "$ref": "#/definitions/ConstValueNode" } },
     "ConstObjectValueNode": {
+      "description": "An input object value literal whose fields are all constant values.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OBJECT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_3" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "ObjectValue"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "fields": {
+          "$ref": "#/definitions/ReadonlyArray_1",
+          "description": "Fields declared by this object, interface, input object, or literal."
+        }
       }
     },
-    "Kind.OBJECT": { "type": "string", "const": "ObjectValue" },
-    "ReadonlyArray_3": {
+    "ReadonlyArray_1": {
       "type": "array",
       "items": { "$ref": "#/definitions/ConstObjectFieldNode" }
     },
     "ConstObjectFieldNode": {
+      "description": "A field inside a constant input object value literal.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OBJECT_FIELD" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "value": { "$ref": "#/definitions/ConstValueNode" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "ObjectField"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode",
+          "description": "Name node identifying this AST node."
+        },
+        "value": {
+          "$ref": "#/definitions/ConstValueNode",
+          "description": "Parsed value represented by this node."
+        }
       }
     },
-    "Kind.OBJECT_FIELD": { "type": "string", "const": "ObjectField" },
-    "ReadonlyArray_4": {
+    "ReadonlyArray_2": {
       "type": "array",
       "items": { "$ref": "#/definitions/OperationTypeDefinitionNode" }
     },
     "OperationTypeDefinitionNode": {
+      "description": "A root operation type declaration inside a schema definition or extension.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OPERATION_TYPE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "operation": { "$ref": "#/definitions/OperationTypeNode" },
-        "type": { "$ref": "#/definitions/NamedTypeNode" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "OperationTypeDefinition"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "operation": {
+          "$ref": "#/definitions/OperationTypeNode",
+          "description": "The operation selected for execution."
+        },
+        "type": {
+          "$ref": "#/definitions/NamedTypeNode",
+          "description": "The GraphQL type reference or runtime type for this element."
+        }
       }
     },
-    "Kind.OPERATION_TYPE_DEFINITION": { "type": "string", "const": "OperationTypeDefinition" },
-    "OperationTypeNode": { "type": "string", "enum": ["query", "mutation", "subscription"] },
+    "OperationTypeNode": {
+      "description": "The operation types supported by GraphQL executable definitions.",
+      "enum": ["mutation", "query", "subscription"],
+      "type": "string"
+    },
     "NamedTypeNode": {
+      "description": "A named type reference.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.NAMED_TYPE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" }
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "NamedType"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "name": {
+          "$ref": "#/definitions/NameNode",
+          "description": "Name node identifying this AST node."
+        }
       }
     },
-    "Kind.NAMED_TYPE": { "description": "Types", "type": "string", "const": "NamedType" },
-    "Maybe_1": { "$ref": "#/definitions/SchemaDefinitionNode" },
-    "ReadonlyArray_5": {
+    "Maybe_1": {
+      "$ref": "#/definitions/SchemaDefinitionNode",
+      "description": "A schema definition in a type-system document."
+    },
+    "ReadonlyArray_3": {
       "type": "array",
       "items": { "$ref": "#/definitions/SchemaExtensionNode" }
     },
     "SchemaExtensionNode": {
+      "description": "A schema extension in a type-system document.",
       "type": "object",
       "properties": {
-        "kind": { "$ref": "#/definitions/Kind.SCHEMA_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "operationTypes": { "$ref": "#/definitions/ReadonlyArray_4" }
-      }
-    },
-    "Kind.SCHEMA_EXTENSION": {
-      "description": "Type System Extensions",
-      "type": "string",
-      "const": "SchemaExtension"
-    },
-    "ReadonlyArray_6": { "type": "array", "items": { "$ref": "#/definitions/GraphQLError" } },
-    "GraphQLError": {
-      "description": "A GraphQLError describes an Error found during the parse, validate, or\nexecute phases of performing a GraphQL operation. In addition to a message\nand stack trace, it also includes information about the locations in a\nGraphQL document and/or execution result that correspond to the Error.",
-      "type": "object",
-      "properties": {
-        "locations": {
-          "description": "An array of `{ line, column }` locations within the source GraphQL document\nwhich correspond to this error.\n\nErrors during validation often contain multiple locations, for example to\npoint out two things with the same name. Errors during execution include a\nsingle location, the field which produced the error.\n\nEnumerable, and appears in the result of JSON.stringify().",
+        "kind": {
+          "description": "The discriminator identifying the concrete AST or introspection kind.",
+          "type": "string",
+          "const": "SchemaExtension"
+        },
+        "loc": {
+          "$ref": "#/definitions/Location",
+          "description": "The source location for this AST node, if location tracking was enabled."
+        },
+        "directives": {
+          "description": "Directives available in this schema or applied to this AST node.",
           "type": "array",
-          "items": { "$ref": "#/definitions/SourceLocation" }
+          "items": { "$ref": "#/definitions/ConstDirectiveNode" }
         },
-        "path": {
-          "description": "An array describing the JSON-path into the execution response which\ncorresponds to this error. Only included for errors during execution.\n\nEnumerable, and appears in the result of JSON.stringify().",
+        "operationTypes": {
+          "description": "Root operation types declared by this schema definition or extension.",
           "type": "array",
-          "items": { "type": ["string", "number"] }
-        },
-        "nodes": {
-          "description": "An array of GraphQL AST Nodes corresponding to this error.",
-          "type": "array",
-          "items": { "$ref": "#/definitions/ASTNode" }
-        },
-        "source": {
-          "$ref": "#/definitions/Source",
-          "description": "The source GraphQL document for the first location of this error.\n\nNote that if this Error represents more than one node, the source may not\nrepresent nodes after the first node."
-        },
-        "positions": {
-          "description": "An array of character offsets within the source GraphQL document\nwhich correspond to this error.",
-          "type": "array",
-          "items": { "type": "number" }
-        },
-        "originalError": {
-          "$ref": "#/definitions/Error",
-          "description": "The original error thrown from a field resolver during execution."
-        },
-        "extensions": {
-          "$ref": "#/definitions/GraphQLErrorExtensions",
-          "description": "Extension fields to add to the formatted error."
-        },
-        "coordinate": {
-          "description": "An optional schema coordinate (e.g. \"MyType.myField\") associated with this error.",
-          "type": "string"
-        },
-        "__@toStringTag@38": { "type": "string" },
-        "name": { "type": "string" },
-        "message": { "type": "string" },
-        "stack": { "type": "string" },
-        "cause": {}
-      }
-    },
-    "SourceLocation": {
-      "description": "Represents a location in a Source.",
-      "type": "object",
-      "properties": { "line": { "type": "number" }, "column": { "type": "number" } }
-    },
-    "ASTNode": {
-      "description": "The list of all possible AST node types.",
-      "anyOf": [
-        { "$ref": "#/definitions/DocumentNode" },
-        { "$ref": "#/definitions/EnumTypeDefinitionNode" },
-        { "$ref": "#/definitions/InputObjectTypeDefinitionNode" },
-        { "$ref": "#/definitions/ScalarTypeDefinitionNode" },
-        { "$ref": "#/definitions/EnumTypeExtensionNode" },
-        { "$ref": "#/definitions/InputObjectTypeExtensionNode" },
-        { "$ref": "#/definitions/ScalarTypeExtensionNode" },
-        { "$ref": "#/definitions/ObjectTypeDefinitionNode" },
-        { "$ref": "#/definitions/ObjectTypeExtensionNode" },
-        { "$ref": "#/definitions/UnionTypeDefinitionNode" },
-        { "$ref": "#/definitions/UnionTypeExtensionNode" },
-        { "$ref": "#/definitions/InterfaceTypeDefinitionNode" },
-        { "$ref": "#/definitions/InterfaceTypeExtensionNode" },
-        { "$ref": "#/definitions/DirectiveNode" },
-        { "$ref": "#/definitions/FieldDefinitionNode" },
-        { "$ref": "#/definitions/NameNode" },
-        { "$ref": "#/definitions/ArgumentNode" },
-        { "$ref": "#/definitions/VariableNode" },
-        { "$ref": "#/definitions/IntValueNode" },
-        { "$ref": "#/definitions/FloatValueNode" },
-        { "$ref": "#/definitions/StringValueNode" },
-        { "$ref": "#/definitions/BooleanValueNode" },
-        { "$ref": "#/definitions/NullValueNode" },
-        { "$ref": "#/definitions/EnumValueNode" },
-        { "$ref": "#/definitions/ListValueNode" },
-        { "$ref": "#/definitions/ObjectValueNode" },
-        { "$ref": "#/definitions/ObjectFieldNode" },
-        { "$ref": "#/definitions/OperationDefinitionNode" },
-        { "$ref": "#/definitions/VariableDefinitionNode" },
-        { "$ref": "#/definitions/SelectionSetNode" },
-        { "$ref": "#/definitions/FieldNode" },
-        { "$ref": "#/definitions/FragmentSpreadNode" },
-        { "$ref": "#/definitions/InlineFragmentNode" },
-        { "$ref": "#/definitions/FragmentDefinitionNode" },
-        { "$ref": "#/definitions/NamedTypeNode" },
-        { "$ref": "#/definitions/ListTypeNode" },
-        { "$ref": "#/definitions/NonNullTypeNode" },
-        { "$ref": "#/definitions/SchemaDefinitionNode" },
-        { "$ref": "#/definitions/OperationTypeDefinitionNode" },
-        { "$ref": "#/definitions/InputValueDefinitionNode" },
-        { "$ref": "#/definitions/EnumValueDefinitionNode" },
-        { "$ref": "#/definitions/DirectiveDefinitionNode" },
-        { "$ref": "#/definitions/SchemaExtensionNode" },
-        { "$ref": "#/definitions/DirectiveExtensionNode" },
-        { "$ref": "#/definitions/TypeCoordinateNode" },
-        { "$ref": "#/definitions/MemberCoordinateNode" },
-        { "$ref": "#/definitions/ArgumentCoordinateNode" },
-        { "$ref": "#/definitions/DirectiveCoordinateNode" },
-        { "$ref": "#/definitions/DirectiveArgumentCoordinateNode" }
-      ]
-    },
-    "DocumentNode": {
-      "description": "Document",
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.DOCUMENT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "definitions": { "$ref": "#/definitions/ReadonlyArray_7" },
-        "tokenCount": { "type": "number" }
-      }
-    },
-    "Kind.DOCUMENT": { "description": "Document", "type": "string", "const": "Document" },
-    "ReadonlyArray_7": { "type": "array", "items": { "$ref": "#/definitions/DefinitionNode" } },
-    "DefinitionNode": {
-      "anyOf": [
-        { "$ref": "#/definitions/EnumTypeDefinitionNode" },
-        { "$ref": "#/definitions/InputObjectTypeDefinitionNode" },
-        { "$ref": "#/definitions/ScalarTypeDefinitionNode" },
-        { "$ref": "#/definitions/EnumTypeExtensionNode" },
-        { "$ref": "#/definitions/InputObjectTypeExtensionNode" },
-        { "$ref": "#/definitions/ScalarTypeExtensionNode" },
-        { "$ref": "#/definitions/ObjectTypeDefinitionNode" },
-        { "$ref": "#/definitions/ObjectTypeExtensionNode" },
-        { "$ref": "#/definitions/UnionTypeDefinitionNode" },
-        { "$ref": "#/definitions/UnionTypeExtensionNode" },
-        { "$ref": "#/definitions/InterfaceTypeDefinitionNode" },
-        { "$ref": "#/definitions/InterfaceTypeExtensionNode" },
-        { "$ref": "#/definitions/OperationDefinitionNode" },
-        { "$ref": "#/definitions/FragmentDefinitionNode" },
-        { "$ref": "#/definitions/SchemaDefinitionNode" },
-        { "$ref": "#/definitions/DirectiveDefinitionNode" },
-        { "$ref": "#/definitions/SchemaExtensionNode" },
-        { "$ref": "#/definitions/DirectiveExtensionNode" }
-      ]
-    },
-    "EnumTypeDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.ENUM_TYPE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "values": { "$ref": "#/definitions/ReadonlyArray_8" }
-      }
-    },
-    "Kind.ENUM_TYPE_DEFINITION": { "type": "string", "const": "EnumTypeDefinition" },
-    "ReadonlyArray_8": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/EnumValueDefinitionNode" }
-    },
-    "EnumValueDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.ENUM_VALUE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" }
-      }
-    },
-    "Kind.ENUM_VALUE_DEFINITION": { "type": "string", "const": "EnumValueDefinition" },
-    "InputObjectTypeDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.INPUT_OBJECT_TYPE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_9" }
-      }
-    },
-    "Kind.INPUT_OBJECT_TYPE_DEFINITION": { "type": "string", "const": "InputObjectTypeDefinition" },
-    "ReadonlyArray_9": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/InputValueDefinitionNode" }
-    },
-    "InputValueDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.INPUT_VALUE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "type": { "$ref": "#/definitions/TypeNode" },
-        "defaultValue": { "$ref": "#/definitions/ConstValueNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" }
-      }
-    },
-    "Kind.INPUT_VALUE_DEFINITION": { "type": "string", "const": "InputValueDefinition" },
-    "TypeNode": {
-      "description": "Type Reference",
-      "anyOf": [
-        { "$ref": "#/definitions/NamedTypeNode" },
-        { "$ref": "#/definitions/ListTypeNode" },
-        { "$ref": "#/definitions/NonNullTypeNode" }
-      ]
-    },
-    "ListTypeNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.LIST_TYPE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "type": { "$ref": "#/definitions/TypeNode" }
-      }
-    },
-    "Kind.LIST_TYPE": { "type": "string", "const": "ListType" },
-    "NonNullTypeNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.NON_NULL_TYPE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "type": {
-          "anyOf": [
-            { "$ref": "#/definitions/NamedTypeNode" },
-            { "$ref": "#/definitions/ListTypeNode" }
-          ]
+          "items": { "$ref": "#/definitions/OperationTypeDefinitionNode" }
         }
       }
     },
-    "Kind.NON_NULL_TYPE": { "type": "string", "const": "NonNullType" },
-    "ScalarTypeDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.SCALAR_TYPE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" }
-      }
-    },
-    "Kind.SCALAR_TYPE_DEFINITION": {
-      "description": "Type Definitions",
-      "type": "string",
-      "const": "ScalarTypeDefinition"
-    },
-    "EnumTypeExtensionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.ENUM_TYPE_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "values": { "$ref": "#/definitions/ReadonlyArray_8" }
-      }
-    },
-    "Kind.ENUM_TYPE_EXTENSION": { "type": "string", "const": "EnumTypeExtension" },
-    "InputObjectTypeExtensionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.INPUT_OBJECT_TYPE_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_9" }
-      }
-    },
-    "Kind.INPUT_OBJECT_TYPE_EXTENSION": { "type": "string", "const": "InputObjectTypeExtension" },
-    "ScalarTypeExtensionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.SCALAR_TYPE_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" }
-      }
-    },
-    "Kind.SCALAR_TYPE_EXTENSION": {
-      "description": "Type Extensions",
-      "type": "string",
-      "const": "ScalarTypeExtension"
-    },
-    "ObjectTypeDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OBJECT_TYPE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "interfaces": { "$ref": "#/definitions/ReadonlyArray_10" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_11" }
-      }
-    },
-    "Kind.OBJECT_TYPE_DEFINITION": { "type": "string", "const": "ObjectTypeDefinition" },
-    "ReadonlyArray_10": { "type": "array", "items": { "$ref": "#/definitions/NamedTypeNode" } },
-    "ReadonlyArray_11": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/FieldDefinitionNode" }
-    },
-    "FieldDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.FIELD_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "arguments": { "$ref": "#/definitions/ReadonlyArray_9" },
-        "type": { "$ref": "#/definitions/TypeNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" }
-      }
-    },
-    "Kind.FIELD_DEFINITION": { "type": "string", "const": "FieldDefinition" },
-    "ObjectTypeExtensionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OBJECT_TYPE_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "interfaces": { "$ref": "#/definitions/ReadonlyArray_10" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_11" }
-      }
-    },
-    "Kind.OBJECT_TYPE_EXTENSION": { "type": "string", "const": "ObjectTypeExtension" },
-    "UnionTypeDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.UNION_TYPE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "types": { "$ref": "#/definitions/ReadonlyArray_10" }
-      }
-    },
-    "Kind.UNION_TYPE_DEFINITION": { "type": "string", "const": "UnionTypeDefinition" },
-    "UnionTypeExtensionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.UNION_TYPE_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "types": { "$ref": "#/definitions/ReadonlyArray_10" }
-      }
-    },
-    "Kind.UNION_TYPE_EXTENSION": { "type": "string", "const": "UnionTypeExtension" },
-    "InterfaceTypeDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.INTERFACE_TYPE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "interfaces": { "$ref": "#/definitions/ReadonlyArray_10" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_11" }
-      }
-    },
-    "Kind.INTERFACE_TYPE_DEFINITION": { "type": "string", "const": "InterfaceTypeDefinition" },
-    "InterfaceTypeExtensionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.INTERFACE_TYPE_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "interfaces": { "$ref": "#/definitions/ReadonlyArray_10" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_11" }
-      }
-    },
-    "Kind.INTERFACE_TYPE_EXTENSION": { "type": "string", "const": "InterfaceTypeExtension" },
-    "OperationDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OPERATION_DEFINITION" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "operation": { "$ref": "#/definitions/OperationTypeNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "variableDefinitions": { "$ref": "#/definitions/ReadonlyArray_12" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray_13" },
-        "selectionSet": { "$ref": "#/definitions/SelectionSetNode" }
-      }
-    },
-    "Kind.OPERATION_DEFINITION": { "type": "string", "const": "OperationDefinition" },
-    "ReadonlyArray_12": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/VariableDefinitionNode" }
-    },
-    "VariableDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.VARIABLE_DEFINITION" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "variable": { "$ref": "#/definitions/VariableNode" },
-        "type": { "$ref": "#/definitions/TypeNode" },
-        "defaultValue": { "$ref": "#/definitions/ConstValueNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" }
-      }
-    },
-    "Kind.VARIABLE_DEFINITION": { "type": "string", "const": "VariableDefinition" },
-    "VariableNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.VARIABLE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" }
-      }
-    },
-    "Kind.VARIABLE": { "description": "Values", "type": "string", "const": "Variable" },
-    "ReadonlyArray_13": { "type": "array", "items": { "$ref": "#/definitions/DirectiveNode" } },
-    "DirectiveNode": {
-      "description": "Directives",
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.DIRECTIVE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "arguments": { "$ref": "#/definitions/ReadonlyArray_14" }
-      }
-    },
-    "ReadonlyArray_14": { "type": "array", "items": { "$ref": "#/definitions/ArgumentNode" } },
-    "ArgumentNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.ARGUMENT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "value": { "$ref": "#/definitions/ValueNode" }
-      }
-    },
-    "ValueNode": {
-      "description": "Values",
-      "anyOf": [
-        { "$ref": "#/definitions/VariableNode" },
-        { "$ref": "#/definitions/IntValueNode" },
-        { "$ref": "#/definitions/FloatValueNode" },
-        { "$ref": "#/definitions/StringValueNode" },
-        { "$ref": "#/definitions/BooleanValueNode" },
-        { "$ref": "#/definitions/NullValueNode" },
-        { "$ref": "#/definitions/EnumValueNode" },
-        { "$ref": "#/definitions/ListValueNode" },
-        { "$ref": "#/definitions/ObjectValueNode" }
-      ]
-    },
-    "ListValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.LIST" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "values": { "$ref": "#/definitions/ReadonlyArray_15" }
-      }
-    },
-    "ReadonlyArray_15": { "type": "array", "items": { "$ref": "#/definitions/ValueNode" } },
-    "ObjectValueNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OBJECT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "fields": { "$ref": "#/definitions/ReadonlyArray_16" }
-      }
-    },
-    "ReadonlyArray_16": { "type": "array", "items": { "$ref": "#/definitions/ObjectFieldNode" } },
-    "ObjectFieldNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.OBJECT_FIELD" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "value": { "$ref": "#/definitions/ValueNode" }
-      }
-    },
-    "SelectionSetNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.SELECTION_SET" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "selections": { "$ref": "#/definitions/ReadonlyArray_17" }
-      }
-    },
-    "Kind.SELECTION_SET": { "type": "string", "const": "SelectionSet" },
-    "ReadonlyArray_17": { "type": "array", "items": { "$ref": "#/definitions/SelectionNode" } },
-    "SelectionNode": {
-      "anyOf": [
-        { "$ref": "#/definitions/FieldNode" },
-        { "$ref": "#/definitions/FragmentSpreadNode" },
-        { "$ref": "#/definitions/InlineFragmentNode" }
-      ]
-    },
-    "FieldNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.FIELD" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "alias": { "$ref": "#/definitions/NameNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "arguments": { "$ref": "#/definitions/ReadonlyArray_14" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray_13" },
-        "selectionSet": { "$ref": "#/definitions/SelectionSetNode" }
-      }
-    },
-    "Kind.FIELD": { "type": "string", "const": "Field" },
-    "FragmentSpreadNode": {
-      "description": "Fragments",
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.FRAGMENT_SPREAD" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray_13" }
-      }
-    },
-    "Kind.FRAGMENT_SPREAD": {
-      "description": "Fragments",
-      "type": "string",
-      "const": "FragmentSpread"
-    },
-    "InlineFragmentNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.INLINE_FRAGMENT" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "typeCondition": { "$ref": "#/definitions/NamedTypeNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray_13" },
-        "selectionSet": { "$ref": "#/definitions/SelectionSetNode" }
-      }
-    },
-    "Kind.INLINE_FRAGMENT": { "type": "string", "const": "InlineFragment" },
-    "FragmentDefinitionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.FRAGMENT_DEFINITION" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "variableDefinitions": { "$ref": "#/definitions/ReadonlyArray_12" },
-        "typeCondition": { "$ref": "#/definitions/NamedTypeNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray_13" },
-        "selectionSet": { "$ref": "#/definitions/SelectionSetNode" }
-      }
-    },
-    "Kind.FRAGMENT_DEFINITION": { "type": "string", "const": "FragmentDefinition" },
-    "DirectiveDefinitionNode": {
-      "description": "Directive Definitions",
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.DIRECTIVE_DEFINITION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "description": { "$ref": "#/definitions/StringValueNode" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "arguments": { "$ref": "#/definitions/ReadonlyArray_9" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" },
-        "repeatable": { "type": "boolean" },
-        "locations": { "$ref": "#/definitions/ReadonlyArray_18" }
-      }
-    },
-    "Kind.DIRECTIVE_DEFINITION": {
-      "description": "Directive Definitions",
-      "type": "string",
-      "const": "DirectiveDefinition"
-    },
-    "ReadonlyArray_18": { "type": "array", "items": { "$ref": "#/definitions/NameNode" } },
-    "DirectiveExtensionNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.DIRECTIVE_EXTENSION" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "directives": { "$ref": "#/definitions/ReadonlyArray" }
-      }
-    },
-    "Kind.DIRECTIVE_EXTENSION": { "type": "string", "const": "DirectiveExtension" },
-    "TypeCoordinateNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.TYPE_COORDINATE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" }
-      }
-    },
-    "Kind.TYPE_COORDINATE": {
-      "description": "Schema Coordinates",
-      "type": "string",
-      "const": "TypeCoordinate"
-    },
-    "MemberCoordinateNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.MEMBER_COORDINATE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "memberName": { "$ref": "#/definitions/NameNode" }
-      }
-    },
-    "Kind.MEMBER_COORDINATE": { "type": "string", "const": "MemberCoordinate" },
-    "ArgumentCoordinateNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.ARGUMENT_COORDINATE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "fieldName": { "$ref": "#/definitions/NameNode" },
-        "argumentName": { "$ref": "#/definitions/NameNode" }
-      }
-    },
-    "Kind.ARGUMENT_COORDINATE": { "type": "string", "const": "ArgumentCoordinate" },
-    "DirectiveCoordinateNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.DIRECTIVE_COORDINATE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" }
-      }
-    },
-    "Kind.DIRECTIVE_COORDINATE": { "type": "string", "const": "DirectiveCoordinate" },
-    "DirectiveArgumentCoordinateNode": {
-      "type": "object",
-      "properties": {
-        "kind": { "$ref": "#/definitions/Kind.DIRECTIVE_ARGUMENT_COORDINATE" },
-        "loc": { "$ref": "#/definitions/Location" },
-        "name": { "$ref": "#/definitions/NameNode" },
-        "argumentName": { "$ref": "#/definitions/NameNode" }
-      }
-    },
-    "Kind.DIRECTIVE_ARGUMENT_COORDINATE": {
-      "type": "string",
-      "const": "DirectiveArgumentCoordinate"
-    },
-    "Error": {
-      "type": "object",
-      "properties": {
-        "name": { "type": "string" },
-        "message": { "type": "string" },
-        "stack": { "type": "string" },
-        "cause": {}
-      }
-    },
-    "GraphQLErrorExtensions": {
-      "description": "Custom extensions",
-      "type": "object",
-      "additionalProperties": {}
-    },
-    "Maybe_2": { "$ref": "#/definitions/ReadonlyArray_6" },
     "Types.SchemaWithLoader": {
       "type": "object",
       "additionalProperties": { "$ref": "#/definitions/Types.SchemaWithLoaderOptions" }
