@@ -1,5 +1,46 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.9
+
+### Patch Changes
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/relay-operation-optimizer@^7.1.12` ↗︎](https://www.npmjs.com/package/@graphql-tools/relay-operation-optimizer/v/7.1.12)
+    (from `^7.1.1`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `^11.2.0`, in `dependencies`)
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Update `@graphql-tools/utils` to v12, and
+  other `@graphql-tools/*` dependencies and `graphql-config` to releases that use it, to pick up the
+  fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype
+  pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
+
+  `@graphql-codegen/cli` now unwraps the `AggregateError` that newer `@graphql-tools/load` versions
+  throw, so schema and document syntax errors still print the native `GraphQLError` with its file
+  location.
+
+- [#11037](https://github.com/dotansimha/graphql-code-generator/pull/11037)
+  [`463e6ef`](https://github.com/dotansimha/graphql-code-generator/commit/463e6eff471a4e55d4a727b342051e5ff4e4c3e0)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `visitor-plugin-common`
+  (`base-types-visitor`) under `strict: true`:
+  - `BaseTypesVisitor`'s constructor takes `additionalConfig` as `Partial<TPluginConfig>`, since the
+    visitor fills in the defaults for every key it leaves out.
+  - `BaseTypesVisitor` handles input objects, objects, interfaces, unions and enums without
+    `fields`, `types`, `values` or `description` by treating them as empty, instead of throwing.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)]:
+  - @graphql-codegen/plugin-helpers@7.4.2
+
 ## 7.2.8
 
 ### Patch Changes

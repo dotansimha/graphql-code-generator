@@ -1,5 +1,66 @@
 # @graphql-codegen/cli
 
+## 7.4.5
+
+### Patch Changes
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/apollo-engine-loader@^8.0.38` ↗︎](https://www.npmjs.com/package/@graphql-tools/apollo-engine-loader/v/8.0.38)
+    (from `^8.0.28`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/code-file-loader@^8.1.41` ↗︎](https://www.npmjs.com/package/@graphql-tools/code-file-loader/v/8.1.41)
+    (from `^8.1.39`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/git-loader@^8.0.44` ↗︎](https://www.npmjs.com/package/@graphql-tools/git-loader/v/8.0.44)
+    (from `^8.0.32`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/github-loader@^9.1.11` ↗︎](https://www.npmjs.com/package/@graphql-tools/github-loader/v/9.1.11)
+    (from `^9.0.6`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/graphql-file-loader@^8.1.22` ↗︎](https://www.npmjs.com/package/@graphql-tools/graphql-file-loader/v/8.1.22)
+    (from `^8.1.11`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/json-file-loader@^8.0.36` ↗︎](https://www.npmjs.com/package/@graphql-tools/json-file-loader/v/8.0.36)
+    (from `^8.0.26`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/load@^8.1.19` ↗︎](https://www.npmjs.com/package/@graphql-tools/load/v/8.1.19)
+    (from `^8.1.8`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/merge@^9.2.6` ↗︎](https://www.npmjs.com/package/@graphql-tools/merge/v/9.2.6)
+    (from `^9.2.4`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/url-loader@^9.1.12` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/9.1.12)
+    (from `^9.0.6`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `^11.2.0`, in `dependencies`)
+  - Updated dependency
+    [`graphql-config@^5.1.8` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.1.8) (from
+    `^5.1.6`, in `dependencies`)
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Update `@graphql-tools/utils` to v12, and
+  other `@graphql-tools/*` dependencies and `graphql-config` to releases that use it, to pick up the
+  fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype
+  pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
+
+  `@graphql-codegen/cli` now unwraps the `AggregateError` that newer `@graphql-tools/load` versions
+  throw, so schema and document syntax errors still print the native `GraphQLError` with its file
+  location.
+
+- Updated dependencies
+  [[`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)]:
+  - @graphql-codegen/client-preset@6.2.2
+  - @graphql-codegen/core@6.2.2
+  - @graphql-codegen/plugin-helpers@7.4.2
+
 ## 7.4.4
 
 ### Patch Changes
