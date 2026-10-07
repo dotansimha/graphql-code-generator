@@ -12,3 +12,4 @@ dependencies updates:
   - Updated dependency [`@graphql-tools/merge@^9.2.6` ↗︎](https://www.npmjs.com/package/@graphql-tools/merge/v/9.2.6) (from `^9.2.4`, in `dependencies`)
   - Updated dependency [`@graphql-tools/url-loader@^9.1.12` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/9.1.12) (from `^9.0.6`, in `dependencies`)
   - Updated dependency [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3) (from `^11.2.0`, in `dependencies`)
+  - Updated dependency [`graphql-config@^5.1.8` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.1.8) (from `^5.1.6`, in `dependencies`)
