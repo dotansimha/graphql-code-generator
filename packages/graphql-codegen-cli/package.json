@@ -96,7 +96,7 @@
     "cosmiconfig": "^9.0.0",
     "debounce": "^3.0.0",
     "detect-indent": "^7.0.0",
-    "graphql-config": "^5.1.6",
+    "graphql-config": "^5.1.8",
     "is-glob": "^4.0.1",
     "jiti": "^2.3.0",
     "json-to-pretty-yaml": "^1.2.2",
