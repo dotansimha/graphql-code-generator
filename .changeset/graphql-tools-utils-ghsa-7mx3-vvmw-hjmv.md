@@ -10,6 +10,6 @@
 '@graphql-codegen/graphql-modules-preset': patch
 ---
 
-Update `@graphql-tools/utils` to v12 and other `@graphql-tools/*` dependencies to releases that use it, to pick up the fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
+Update `@graphql-tools/utils` to v12, and other `@graphql-tools/*` dependencies and `graphql-config` to releases that use it, to pick up the fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
 
 `@graphql-codegen/cli` now unwraps the `AggregateError` that newer `@graphql-tools/load` versions throw, so schema and document syntax errors still print the native `GraphQLError` with its file location.
