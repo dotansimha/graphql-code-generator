@@ -46,7 +46,7 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
     return `{ ${allObjectsMerged.join(', ')} }`;
   }
 
-  buildSelectionSetFromStrings(pieces: string[]): string {
+  buildSelectionSetFromStrings(pieces: string[]): string | null {
     if (pieces.length === 0) {
       return null;
     }

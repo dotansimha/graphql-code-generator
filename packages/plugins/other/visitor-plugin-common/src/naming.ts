@@ -16,7 +16,7 @@ function getKind(node: ASTNode | string): keyof NamingConventionMap {
   return 'typeNames';
 }
 
-function getName(node: ASTNode | string): string | undefined {
+function getName(node: ASTNode | string | undefined): string | undefined {
   if (node == null) {
     return undefined;
   }
@@ -100,10 +100,11 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     }
 
     if (typeof config.namingConvention === 'function') {
+      const namingConvention = config.namingConvention;
       return (str: string, opts: ConvertOptions = {}) => {
         return convertNameParts(
           str,
-          config.namingConvention as (str: string) => string,
+          namingConvention,
           getConfigValue(opts?.transformUnderscore, false),
         );
       };
@@ -114,11 +115,11 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     }
 
     if (typeof config.namingConvention === 'object') {
-      if (!config.namingConvention[type]) {
+      const namingConvention = config.namingConvention;
+      if (!namingConvention[type]) {
         return (str: string, opts: ConvertOptions = {}) => {
           const transformUnderscore =
-            (config.namingConvention as NamingConventionMap).transformUnderscore ||
-            opts?.transformUnderscore;
+            namingConvention.transformUnderscore || opts?.transformUnderscore;
           return convertNameParts(str, pascalCase, getConfigValue(transformUnderscore, false));
         };
       }
@@ -126,13 +127,13 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       return (str: string, opts: ConvertOptions = {}) => {
         return convertNameParts(
           str,
-          resolveExternalModuleAndFn(config.namingConvention[type]),
+          resolveExternalModuleAndFn(namingConvention[type]),
           getConfigValue(opts?.transformUnderscore, true),
         );
       };
     }
 
-    return config.namingConvention[type] as any;
+    return config.namingConvention[type];
   }
 
   return (node, opts) => {

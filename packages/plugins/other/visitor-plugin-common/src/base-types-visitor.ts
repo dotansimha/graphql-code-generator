@@ -731,7 +731,7 @@ export class BaseTypesVisitor<
   ): string {
     if (this.config.onlyEnums) return '';
 
-    const comment = transformComment(node.description?.value || '', 1);
+    const comment = transformComment(node.description?.value, 1);
     const { input } = this._parsedConfig.declarationKind;
 
     // `node.type` is already printed to a string by the visitor; removing the cast needs a visited-AST type for `node`
