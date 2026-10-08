@@ -1,7 +1,6 @@
 minimumReleaseAge: 1440 # in minutes. 1440 minutes === 1 day
 minimumReleaseAgeExclude:
   - '@graphql-tools/utils'
-  - graphql-config # TODO: remove after 2026-10-08, once graphql-config@5.1.8 (published 2026-10-07) is past minimumReleaseAge
 packages:
   - packages/*
   - packages/plugins/typescript/*
