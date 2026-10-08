@@ -1,5 +1,27 @@
 # @graphql-codegen/plugin-helpers
 
+## 7.4.2
+
+### Patch Changes
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `^11.2.0`, in `dependencies`)
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Update `@graphql-tools/utils` to v12, and
+  other `@graphql-tools/*` dependencies and `graphql-config` to releases that use it, to pick up the
+  fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype
+  pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
+
+  `@graphql-codegen/cli` now unwraps the `AggregateError` that newer `@graphql-tools/load` versions
+  throw, so schema and document syntax errors still print the native `GraphQLError` with its file
+  location.
+
 ## 7.4.1
 
 ### Patch Changes
