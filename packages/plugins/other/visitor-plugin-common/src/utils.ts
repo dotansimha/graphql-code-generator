@@ -512,7 +512,7 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
 
 export function getPossibleTypes(
   schema: GraphQLSchema,
-  type: GraphQLType | undefined,
+  type: GraphQLType | null | undefined,
 ): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
     return getPossibleTypes(schema, type.ofType);
