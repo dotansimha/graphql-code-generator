@@ -13,6 +13,7 @@ import mongodbIcon from './icons/mongodb.png';
 import mswIcon from './icons/msw.svg';
 import nhostIcon from './icons/nhost.svg';
 import nodeJsIcon from './icons/nodejs.svg';
+import pythonIcon from './icons/python.svg';
 import reactQueryIcon from './icons/react-query.svg';
 import reactIcon from './icons/react.svg';
 import typeGraphqlIcon from './icons/type-graphql.png';
@@ -43,6 +44,7 @@ const ALL_ICONS = [
   'reason_client',
   'msw',
   'nodejs',
+  'python',
   'react',
   'urql',
 ] as const;
@@ -66,6 +68,7 @@ export const icons: Record<Icon, StaticImageData> = {
   nhost: nhostIcon,
   msw: mswIcon,
   nodejs: nodeJsIcon,
+  python: pythonIcon,
   react: reactIcon,
   react_query: reactQueryIcon,
   reason_client: reasonClientIcon,
@@ -85,6 +88,7 @@ export const ALL_TAGS = [
   'flutter',
   'flow',
   'java',
+  'python',
   'utilities',
   'mongodb',
   'nhost',

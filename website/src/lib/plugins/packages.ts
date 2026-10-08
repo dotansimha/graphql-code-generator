@@ -111,6 +111,18 @@ export const PACKAGES: Record<
     icon: 'codegen',
     tags: ['preset', 'utilities'],
   },
+  python: {
+    title: 'Python',
+    npmPackage: '@graphql-codegen/python',
+    icon: 'python',
+    tags: ['plugin', 'python'],
+  },
+  'python-operations': {
+    title: 'Python Operations',
+    npmPackage: '@graphql-codegen/python-operations',
+    icon: 'python',
+    tags: ['plugin', 'python'],
+  },
   'reason-client': {
     title: 'Reason Client',
     npmPackage: 'graphql-codegen-reason-client',

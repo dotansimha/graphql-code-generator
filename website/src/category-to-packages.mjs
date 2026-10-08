@@ -22,6 +22,7 @@ export const CategoryToPackages = {
     'graphql-modules-preset',
     'preset-client',
   ],
+  python: ['python', 'python-operations'],
   typescript: [
     'named-operations-object',
     'relay-operation-optimizer',

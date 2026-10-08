@@ -9,4 +9,5 @@ export default {
   java: 'Java',
   'c-sharp': 'C-Sharp',
   flow: 'Flow',
+  python: 'Python',
 };
