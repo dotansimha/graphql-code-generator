@@ -50,17 +50,17 @@ export type EnumValuesMap<AdditionalProps = {}> =
 export type ParsedEnumValuesMap = {
   [enumName: string]: {
     // If values are explictly set, this will include the mapped values
-    mappedValues?: { [valueName: string]: string | number };
+    mappedValues?: { [valueName: string]: string | number } | null;
     // The GraphQL enum name
     typeIdentifier: string;
     // The GraphQL enum name after namingConvention conversion
     typeIdentifierConverted: string;
     // The actual identifier that you should use in the code (original or aliased)
-    sourceIdentifier?: string;
+    sourceIdentifier?: string | null;
     // In case of external enum, this will contain the source file path
-    sourceFile?: string;
+    sourceFile?: string | null;
     // If the identifier is external (imported) - this will contain the imported expression (including alias), otherwise null
-    importIdentifier?: string;
+    importIdentifier?: string | null;
     // Is defualt import is used to import the enum
     isDefault?: boolean;
   };

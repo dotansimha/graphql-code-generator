@@ -1,8 +1,8 @@
-import type {
-  EnumTypeDefinitionNode,
-  EnumValueDefinitionNode,
-  GraphQLEnumType,
-  GraphQLSchema,
+import {
+  isEnumType,
+  type EnumTypeDefinitionNode,
+  type EnumValueDefinitionNode,
+  type GraphQLSchema,
 } from 'graphql';
 import { convertName } from './naming.js';
 import type { ConvertFn, ParsedEnumValuesMap } from './types.js';
@@ -75,7 +75,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
       .withName(enumTypeName)
       .withContent(
         '\n' +
-          node.values
+          (node.values || [])
             .map(enumOption => {
               const name = enumOption.name.value;
               const enumValue: string | number = getValueFromConfig(name) ?? name;
@@ -95,7 +95,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
       .withName(enumTypeName)
       .asKind('enum')
       .withBlock(
-        node.values
+        (node.values || [])
           .map((enumOption, i) => {
             const valueFromConfig = getValueFromConfig(enumOption.name.value);
             const enumValue: string | number = valueFromConfig ?? i;
@@ -130,7 +130,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
       .withName(enumTypeName)
       .withComment(node.description?.value)
       .withBlock(
-        node.values
+        (node.values || [])
           .map(enumOption => {
             const optionName = makeValidEnumIdentifier(
               convertName({
@@ -164,7 +164,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
     .withBlock(
       buildEnumValuesBlock({
         typeName: enumName,
-        values: node.values,
+        values: node.values || [],
         schema,
         naming,
         ignoreEnumValuesFromSchema,
@@ -189,9 +189,8 @@ export const buildEnumValuesBlock = ({
   typeName: string;
   values: ReadonlyArray<EnumValueDefinitionNode>;
 }): string => {
-  const schemaEnumType: GraphQLEnumType | undefined = schema
-    ? (schema.getType(typeName) as GraphQLEnumType)
-    : undefined;
+  const schemaType = schema?.getType(typeName);
+  const schemaEnumType = isEnumType(schemaType) ? schemaType : undefined;
 
   return values
     .map(enumOption => {
@@ -212,10 +211,16 @@ export const buildEnumValuesBlock = ({
         }),
       );
       const comment = getNodeComment(enumOption);
-      const schemaEnumValue =
-        schemaEnumType && !ignoreEnumValuesFromSchema
-          ? schemaEnumType.getValue(enumOption.name.value).value
-          : undefined;
+      let schemaEnumValue;
+      if (schemaEnumType && !ignoreEnumValuesFromSchema) {
+        const schemaEnumValueDefinition = schemaEnumType.getValue(enumOption.name.value);
+        if (!schemaEnumValueDefinition) {
+          throw new Error(
+            `Enum value "${enumOption.name.value}" is not defined on enum "${typeName}" in the schema`,
+          );
+        }
+        schemaEnumValue = schemaEnumValueDefinition.value;
+      }
       let enumValue: string | number =
         typeof schemaEnumValue === 'undefined' ? enumOption.name.value : schemaEnumValue;
 
