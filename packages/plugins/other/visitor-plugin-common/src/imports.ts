@@ -201,6 +201,7 @@ export function buildTypeImport({
   useTypeImports: boolean;
   asDefault?: boolean;
 }): string {
+  // `== null` (not a falsy check) so only a missing identifier or source throws; an empty string is still allowed
   if (identifier == null || source == null) {
     throw new Error(
       `Cannot build a type import without an identifier and a source (identifier: ${identifier}, source: ${source})`,
