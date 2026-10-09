@@ -3337,8 +3337,8 @@ packages:
     peerDependencies:
       graphql: 17.0.2
 
-  '@graphql-tools/batch-execute@10.0.8':
-    resolution: {integrity: sha512-Kobt37qrVTFhX4HUK5/vPgMXFw/5f97AzmAlfmDBSRh/GnoAmLKCb48FrEI3gdeIwZB2fEhVHJyDqsojldnLQA==}
+  '@graphql-tools/batch-execute@10.2.0':
+    resolution: {integrity: sha512-lXz9fGum2shGKMMU7zmt0mXHUFo/KbPzHpv/Qzb2/MrJUYDNfWCKPPpiJi0e4uS09xmuafub02VPH2IZfFlGJw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       graphql: 17.0.2
@@ -3349,8 +3349,8 @@ packages:
     peerDependencies:
       graphql: 17.0.2
 
-  '@graphql-tools/delegate@12.0.16':
-    resolution: {integrity: sha512-WEJaFwWG82a0VzhfE4sRsaOPjxgCVfn4fOe3ho+r3uIbPYpc7qHpFdu1PLg6meikq6fuW9NJ1J88fEgnWuXDVg==}
+  '@graphql-tools/delegate@12.2.1':
+    resolution: {integrity: sha512-kGCrmSM2VMwLqrYtSWVYJC9AiwWxk4zZCLWmS0rln1uzHbhTuZ359UnQyGrz+P9hemUEBp4DGw3lmZPhtuAL3w==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       graphql: 17.0.2
@@ -3393,6 +3393,12 @@ packages:
 
   '@graphql-tools/executor@1.5.3':
     resolution: {integrity: sha512-mgBFC0bsrZPZLu9EnydpMnAuQ8Iiq0CEbUcsmvXsm2/iYektGHDN/+bmb7hicA6dWZtdPfklYJmr21WD0GnOfA==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: 17.0.2
+
+  '@graphql-tools/executor@2.0.3':
+    resolution: {integrity: sha512-0qUCtalTDdanDuvW4EiHnNMct8QHYKTuGjI2lXU388LrpoV+5tlqp/xPqdYbrDtl3OBpZHToOEBcQunWz1UDig==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: 17.0.2
@@ -3525,8 +3531,8 @@ packages:
     peerDependencies:
       graphql: 17.0.2
 
-  '@graphql-tools/wrap@11.1.15':
-    resolution: {integrity: sha512-GCMx6l0MPwHVaBMHf29oG8eIrsJ8PBXq9y5DNX9/r9oCpCBfqxfWzcejx4CpO4chA3+yylGOKcAyEbOUgxfI1Q==}
+  '@graphql-tools/wrap@11.2.1':
+    resolution: {integrity: sha512-N/3Z4SD9MKhfycX8RgkoBAx2uNBIOCfY2LlrVY5hNNqLEBndgYQ29Lluhye5PO+NeTR5lN5ScCDfGEfTVk58FA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       graphql: 17.0.2
@@ -4394,6 +4400,9 @@ packages:
 
   '@repeaterjs/repeater@3.0.6':
     resolution: {integrity: sha512-Javneu5lsuhwNCryN+pXH93VPQ8g0dBX7wItHFgYiwQmzE1sVdg5tWHiOgHywzL2W21XQopa7IwIEnNbmeUJYA==}
+
+  '@repeaterjs/repeater@3.1.0':
+    resolution: {integrity: sha512-TaoVksZRSx2KWYYpyLQtMQXXeS98VsgZImzW65xmiVgbYhXLk+aEsmzPLirqVuE4/XuUapH2iMtxUzaBNDzdSQ==}
 
   '@reteps/dockerfmt@0.5.2':
     resolution: {integrity: sha512-Hbr7yen4fP5TxGM54ucXa4o5NwWXatJ6Bd9I8gp0PValYbI4Rug2Gu+rVv7K7o/efQc3F5ctqWJz47rYaa8zBw==}
@@ -11735,9 +11744,9 @@ snapshots:
       sync-fetch: 0.7.1
       tslib: 2.8.1
 
-  '@graphql-tools/batch-execute@10.0.8(graphql@17.0.2)':
+  '@graphql-tools/batch-execute@10.2.0(graphql@17.0.2)':
     dependencies:
-      '@graphql-tools/utils': 11.2.0(graphql@17.0.2)
+      '@graphql-tools/utils': 12.0.3(graphql@17.0.2)
       '@whatwg-node/promise-helpers': 1.3.2
       dataloader: 2.2.3
       graphql: 17.0.2
@@ -11754,12 +11763,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@graphql-tools/delegate@12.0.16(graphql@17.0.2)':
+  '@graphql-tools/delegate@12.2.1(graphql@17.0.2)':
     dependencies:
-      '@graphql-tools/batch-execute': 10.0.8(graphql@17.0.2)
-      '@graphql-tools/executor': 1.5.3(graphql@17.0.2)
+      '@graphql-tools/batch-execute': 10.2.0(graphql@17.0.2)
+      '@graphql-tools/executor': 2.0.3(graphql@17.0.2)
       '@graphql-tools/schema': 10.1.3(graphql@17.0.2)
-      '@graphql-tools/utils': 11.2.0(graphql@17.0.2)
+      '@graphql-tools/utils': 12.0.3(graphql@17.0.2)
       '@repeaterjs/repeater': 3.0.6
       '@whatwg-node/promise-helpers': 1.3.2
       dataloader: 2.2.3
@@ -11843,6 +11852,16 @@ snapshots:
       '@repeaterjs/repeater': 3.0.6
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/promise-helpers': 1.3.2
+      graphql: 17.0.2
+      tslib: 2.8.1
+
+  '@graphql-tools/executor@2.0.3(graphql@17.0.2)':
+    dependencies:
+      '@graphql-tools/utils': 12.0.3(graphql@17.0.2)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@17.0.2)
+      '@repeaterjs/repeater': 3.1.0
+      '@whatwg-node/disposablestack': 0.1.0
+      '@whatwg-node/promise-helpers': 2.0.0
       graphql: 17.0.2
       tslib: 2.8.1
 
@@ -11986,7 +12005,7 @@ snapshots:
       '@graphql-tools/executor-http': 3.4.1(@types/node@24.12.4)(graphql@17.0.2)
       '@graphql-tools/executor-legacy-ws': 1.1.37(graphql@17.0.2)
       '@graphql-tools/utils': 12.0.3(graphql@17.0.2)
-      '@graphql-tools/wrap': 11.1.15(graphql@17.0.2)
+      '@graphql-tools/wrap': 11.2.1(graphql@17.0.2)
       '@types/ws': 8.18.1
       '@whatwg-node/fetch': 0.12.1
       '@whatwg-node/promise-helpers': 2.0.0
@@ -12037,11 +12056,11 @@ snapshots:
       graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-tools/wrap@11.1.15(graphql@17.0.2)':
+  '@graphql-tools/wrap@11.2.1(graphql@17.0.2)':
     dependencies:
-      '@graphql-tools/delegate': 12.0.16(graphql@17.0.2)
+      '@graphql-tools/delegate': 12.2.1(graphql@17.0.2)
       '@graphql-tools/schema': 10.1.3(graphql@17.0.2)
-      '@graphql-tools/utils': 11.2.0(graphql@17.0.2)
+      '@graphql-tools/utils': 12.0.3(graphql@17.0.2)
       '@whatwg-node/promise-helpers': 1.3.2
       graphql: 17.0.2
       tslib: 2.8.1
@@ -12792,6 +12811,8 @@ snapshots:
       react: 19.2.6
 
   '@repeaterjs/repeater@3.0.6': {}
+
+  '@repeaterjs/repeater@3.1.0': {}
 
   '@reteps/dockerfmt@0.5.2': {}
 
