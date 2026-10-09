@@ -1,5 +1,77 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.10
+
+### Patch Changes
+
+- [#10985](https://github.com/dotansimha/graphql-code-generator/pull/10985)
+  [`d8aa07f`](https://github.com/dotansimha/graphql-code-generator/commit/d8aa07fed45a2787f46da30a7ffb52651b32dc67)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Build with `strict: true`, which changes
+  these emitted type declarations:
+  - `@graphql-codegen/cli`: `mkdirp` returns `Promise<string | undefined>`, and the `require` (`-r`)
+    CLI option's `default` is typed `never[]` instead of `any[]`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseResolversVisitor` and `BaseTypesVisitor`
+    `SchemaDefinition()`/`SchemaExtension()` return `null` instead of `any`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseSelectionSetProcessor.typeCache` is keyed by
+    `Location | undefined`.
+  - `@graphql-codegen/visitor-plugin-common`: `SelectionSetToObject.buildSelectionSet` returns
+    `typeInfo` as `{ name: string; type: string } | null`.
+  - `@graphql-codegen/visitor-plugin-common`: `getPossibleTypes` accepts `null` as the type, which
+    graphql 15's `schema.getType()` can return.
+  - `@graphql-codegen/visitor-plugin-common`: `removeDescription` returns nodes with
+    `description: undefined` instead of `any`.
+  - `@graphql-codegen/typescript`: `TsIntrospectionVisitor`'s constructor takes `pluginConfig` as
+    `TypeScriptPluginConfig | undefined`, `DirectiveDefinition()` returns `null` and
+    `ObjectTypeDefinition()` returns `string | null`.
+  - `@graphql-codegen/client-preset`: the babel preset accepts `options` as
+    `ClientBabelPresetOptions | null | undefined`.
+  - `@graphql-codegen/testing`: `mockGraphQLServer` returns `nock.Scope | null`.
+  - `@graphql-codegen/graphql-modules-preset`: a schema without `extensions` (graphql 15) throws the
+    "requires to use GraphQL SDL" error instead of a `TypeError`.
+
+  Generated output is unchanged.
+
+- [#11039](https://github.com/dotansimha/graphql-code-generator/pull/11039)
+  [`5078faf`](https://github.com/dotansimha/graphql-code-generator/commit/5078faf7ba4cef1c7164ce0b9d6fc01af56a5497)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `visitor-plugin-common`
+  (`utils`, `imports`, `naming`, `mappers`, `types`, `variables-to-object`,
+  `convert-schema-enum-to-declaration-block-string`, `selection-set-processor/base` and
+  `optimize-operations`) under `strict: true`:
+  - `transformComment` accepts `undefined` and `null`, which it already handles by returning an
+    empty string.
+  - `block` declares its param as `string[] | null | undefined`, which it already handles by
+    returning an empty string.
+  - `DeclarationBlock`'s fields are typed as `string | null` (`_name` as
+    `string | NameNode | null`), and `withBlock` accepts `null`, which renders the same as no block.
+  - `DeclarationBlock` falls back to returning the block unchanged when `blockTransformer` is passed
+    as `undefined`, instead of throwing.
+  - `buildScalars` accepts an `undefined` scalars mapping, which it already handles by using only
+    the defaults and the schema.
+  - `buildTypeImport` accepts a nullish `identifier` and `source`, and throws a descriptive error
+    when either is missing.
+  - `ParsedEnumValuesMap`'s `mappedValues`, `sourceIdentifier`, `sourceFile` and `importIdentifier`
+    accept `null`, which `parseEnumValues` already emits.
+  - `transformMappers` defaults `rawMappers` to `{}`.
+  - `OperationVariablesToObject.getName`, `OperationVariablesToObject.transform` and
+    `BaseSelectionSetProcessor.buildSelectionSetFromStrings` may return `null`, which they already
+    return.
+  - `buildEnumValuesBlock` throws a descriptive error when an enum value is not defined on the
+    schema's enum.
+  - `optimizeOperations` throws a descriptive error when a document file has no parsed document.
+  - `unique`'s default key uses `String(item)`.
+  - `convertSchemaEnumToDeclarationBlockString` treats an enum node without `values` as empty
+    instead of throwing.
+  - `generateFragmentImportStatement` treats a missing `identifiers` as empty.
+  - `getDeprecationReason` returns the default reason for a `@deprecated` directive without
+    arguments.
+  - `isOneOfInputObjectType` returns `false` instead of `undefined`.
+  - `buildEnumValuesBlock` treats a non-enum schema type with the enum's name as having no schema
+    enum.
+  - `OperationVariablesToObject` emits `''` instead of the text `undefined`/`null` when a variable
+    has no name or no type identifier.
+
+  Generated output is unchanged, except in the cases above.
+
 ## 7.2.9
 
 ### Patch Changes
