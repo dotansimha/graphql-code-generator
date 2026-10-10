@@ -21,7 +21,7 @@ describe('client-preset - Enum', () => {
     });
 
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };"
@@ -68,7 +68,7 @@ describe('client-preset - Enum', () => {
     });
 
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -132,7 +132,7 @@ describe('client-preset - Enum', () => {
     });
 
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -191,7 +191,7 @@ describe('client-preset - Enum', () => {
     });
 
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };

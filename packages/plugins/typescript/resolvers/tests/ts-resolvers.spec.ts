@@ -2392,9 +2392,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         outputFile: 'graphql.ts',
       });
 
-      expect(output.prepend.filter(t => t.includes('import')).length).toBe(2);
-      expect(output.prepend.filter(t => t.includes('ProjectRole')).length).toBe(0);
-      expect(tsContent.prepend.filter(t => t.includes('ProjectRole')).length).toBe(1);
+      if (!output.prepend || !tsContent.prepend) {
+        throw new Error('prepend is missing');
+      }
+      expect(output.prepend.filter(t => t?.includes('import')).length).toBe(2);
+      expect(output.prepend.filter(t => t?.includes('ProjectRole')).length).toBe(0);
+      expect(tsContent.prepend.filter(t => t?.includes('ProjectRole')).length).toBe(1);
       expect(output.content.includes('AnotherProjectRole')).toBeFalsy();
       expect(
         tsContent.prepend.includes(

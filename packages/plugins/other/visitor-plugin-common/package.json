@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "7.2.8",
+  "version": "7.2.10",
   "type": "module",
   "repository": {
     "type": "git",

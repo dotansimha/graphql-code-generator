@@ -32,7 +32,7 @@ export class OperationVariablesToObject {
     autoBind(this);
   }
 
-  getName<TDefinitionType extends InterfaceOrVariable>(node: TDefinitionType): string {
+  getName<TDefinitionType extends InterfaceOrVariable>(node: TDefinitionType): string | null {
     if (node.name) {
       if (typeof node.name === 'string') {
         return node.name;
@@ -49,7 +49,7 @@ export class OperationVariablesToObject {
 
   transform<TDefinitionType extends InterfaceOrVariable>(
     variablesNode: ReadonlyArray<TDefinitionType> | undefined,
-  ): string {
+  ): string | null {
     if (!variablesNode || variablesNode.length === 0) {
       return null;
     }
@@ -110,7 +110,8 @@ export class OperationVariablesToObject {
       } else if (this._enumValues[typeName]?.sourceFile) {
         typeValue =
           this._enumValues[typeName].typeIdentifierConverted ||
-          this._enumValues[typeName].sourceIdentifier;
+          this._enumValues[typeName].sourceIdentifier ||
+          '';
       } else {
         typeValue = `${prefix}${this._convertName(baseType, {
           useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,
@@ -119,7 +120,7 @@ export class OperationVariablesToObject {
       }
     }
 
-    const fieldName = this.getName(variable);
+    const fieldName = this.getName(variable) || '';
     const fieldType = this.wrapAstTypeWithModifiers(typeValue, variable.type, this._applyCoercion);
 
     const hasDefaultValue =

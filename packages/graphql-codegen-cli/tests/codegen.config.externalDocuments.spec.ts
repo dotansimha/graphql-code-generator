@@ -16,7 +16,7 @@ describe('externalDocuments', () => {
   it('Dedupes documents by location + hash', async () => {
     const basePath = path.join(__dirname, 'codegen.config.externalDocuments');
 
-    let receivedDocuments: Types.DocumentFile[];
+    let receivedDocuments: Types.DocumentFile[] = [];
     await executeCodegen({
       schema: SIMPLE_TEST_SCHEMA,
       documents: [
@@ -41,9 +41,9 @@ describe('externalDocuments', () => {
 
     expect(receivedDocuments.length).toBe(5);
 
-    const file1 = receivedDocuments.find(d => d.location.includes('file1.graphql.ts'));
-    expect(file1.type).toBe('standard');
-    expect(file1.rawSDL).toMatchInlineSnapshot(`
+    const file1 = receivedDocuments.find(d => d.location?.includes('file1.graphql.ts'));
+    expect(file1?.type).toBe('standard');
+    expect(file1?.rawSDL).toMatchInlineSnapshot(`
       "
         query Root {
           user {
@@ -53,9 +53,9 @@ describe('externalDocuments', () => {
       "
     `);
 
-    const file2 = receivedDocuments.find(d => d.location.includes('file2.graphql.ts'));
-    expect(file2.type).toBe('standard');
-    expect(file2.rawSDL).toMatchInlineSnapshot(`
+    const file2 = receivedDocuments.find(d => d.location?.includes('file2.graphql.ts'));
+    expect(file2?.type).toBe('standard');
+    expect(file2?.rawSDL).toMatchInlineSnapshot(`
       "
         query User {
           user {
@@ -65,9 +65,9 @@ describe('externalDocuments', () => {
       "
     `);
 
-    const file3 = receivedDocuments.find(d => d.location.includes('file3.graphql.ts'));
-    expect(file3.type).toBe('standard');
-    expect(file3.rawSDL).toMatchInlineSnapshot(`
+    const file3 = receivedDocuments.find(d => d.location?.includes('file3.graphql.ts'));
+    expect(file3?.type).toBe('standard');
+    expect(file3?.rawSDL).toMatchInlineSnapshot(`
       "
         fragment UserFragment on User {
           name
@@ -75,9 +75,9 @@ describe('externalDocuments', () => {
       "
     `);
 
-    const external1 = receivedDocuments.find(d => d.location.includes('external1.graphql.ts'));
-    expect(external1.type).toBe('external');
-    expect(external1.rawSDL).toMatchInlineSnapshot(`
+    const external1 = receivedDocuments.find(d => d.location?.includes('external1.graphql.ts'));
+    expect(external1?.type).toBe('external');
+    expect(external1?.rawSDL).toMatchInlineSnapshot(`
       "
         fragment UserFragment on User {
           name
@@ -85,9 +85,9 @@ describe('externalDocuments', () => {
       "
     `);
 
-    const external2 = receivedDocuments.find(d => d.location.includes('external2.graphql.ts'));
-    expect(external2.type).toBe('standard');
-    expect(external2.rawSDL).toMatchInlineSnapshot(`
+    const external2 = receivedDocuments.find(d => d.location?.includes('external2.graphql.ts'));
+    expect(external2?.type).toBe('standard');
+    expect(external2?.rawSDL).toMatchInlineSnapshot(`
       "
         fragment UserFragment2 on User {
           name
@@ -161,10 +161,12 @@ describe('externalDocuments', () => {
     expect(capturedDocuments).toHaveLength(1);
     expect(capturedExternalDocuments).toHaveLength(1);
 
-    const documentNames = capturedDocuments.flatMap(
+    // `|| []` only satisfies type safety; toHaveLength above already fails if missing
+    const documentNames = (capturedDocuments || []).flatMap(
       d => d.document?.definitions.map((def: any) => def.name?.value) ?? [],
     );
-    const readOnlyNames = capturedExternalDocuments.flatMap(
+    // `|| []` only satisfies type safety; toHaveLength above already fails if missing
+    const readOnlyNames = (capturedExternalDocuments || []).flatMap(
       d => d.document?.definitions.map((def: any) => def.name?.value) ?? [],
     );
 
