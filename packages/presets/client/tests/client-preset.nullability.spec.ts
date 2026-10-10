@@ -79,7 +79,8 @@ describe('client-preset - nullability', () => {
     });
 
     const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
-    const formattedContent = await prettier.format(graphqlFile.content, {
+    // `|| ''` only satisfies type safety; toBeSimilarStringTo below already fails if missing
+    const formattedContent = await prettier.format(graphqlFile?.content || '', {
       parser: 'typescript',
     });
 
@@ -128,7 +129,8 @@ describe('client-preset - nullability', () => {
     });
 
     const graphqlFile = result.find(f => f.filename === 'out1/graphql.ts');
-    const formattedContent = await prettier.format(graphqlFile.content, {
+    // `|| ''` only satisfies type safety; toBeSimilarStringTo below already fails if missing
+    const formattedContent = await prettier.format(graphqlFile?.content || '', {
       parser: 'typescript',
     });
 

@@ -31,7 +31,7 @@
     "prerelease": "pnpm build",
     "release": "changeset publish",
     "test": "vitest",
-    "types:check": "tsc --noEmit"
+    "types:check": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.spec.json --noEmit"
   },
   "devDependencies": {
     "@babel/core": "7.29.6",

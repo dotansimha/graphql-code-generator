@@ -37,9 +37,9 @@ const { plugins, presets } = JSON.parse(readFileSync(join(CWD, 'plugin-configs.j
 
 function buildSchema(): TJS.Definition {
   const all = [...plugins, ...presets];
-  // Workspace packages resolve to their sources through the root tsconfig's
+  // Workspace packages resolve to their sources through the root tsconfig.build.json's
   // path aliases, so the generator does not need the packages built first.
-  const rootTsconfig = JSON.parse(readFileSync(join(REPO_ROOT, 'tsconfig.json'), 'utf8')) as {
+  const rootTsconfig = JSON.parse(readFileSync(join(REPO_ROOT, 'tsconfig.build.json'), 'utf8')) as {
     compilerOptions: { paths: Record<string, string[]> };
   };
   const program = TJS.getProgramFromFiles([ROOT_FILE, ...all.map(f => f.file)], {

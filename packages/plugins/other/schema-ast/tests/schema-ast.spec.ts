@@ -8,6 +8,12 @@ const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
 describe('Schema AST', () => {
   describe('Validation', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        foo: String
+      }
+    `);
+
     it('Should enforce graphql extension when its the only plugin', async () => {
       const fileName = 'output.ts';
       const plugins: Types.ConfiguredPlugin[] = [
@@ -17,7 +23,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(schema, [], null, fileName, plugins);
 
         throw new Error(SHOULD_THROW_ERROR);
       } catch (e: any) {
@@ -40,7 +46,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(schema, [], null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }
@@ -55,7 +61,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(schema, [], null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }
@@ -70,7 +76,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(schema, [], null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }
@@ -85,7 +91,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(schema, [], null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }
