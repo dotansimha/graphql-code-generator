@@ -1,12 +1,18 @@
-import { parse } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
 
 describe('graphql-codegen typescript-graphql-document-nodes', () => {
+  const schema = buildSchema(/* GraphQL */ `
+    type Query {
+      field: String
+    }
+  `);
+
   it('Should generate simple module with one file', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -33,7 +39,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate correctly for mutiple files', async () => {
     const result = (await plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -74,7 +80,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should ignore unnamed documents', async () => {
     const result = (await plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -95,7 +101,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate simple module with two documents in one file', async () => {
     const result = (await plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -132,7 +138,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate module with a name as a camel case', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -159,7 +165,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate module with a name as a pascal case with underscores', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -189,7 +195,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate module with a name as a pascal case without underscores', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -221,7 +227,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate module with a name as a contant case', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -248,7 +254,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate module with prefix for a name', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -275,7 +281,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('Should generate module with suffix for a name', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',
@@ -302,7 +308,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
 
   it('should contain fragment definitions', async () => {
     const result = plugin(
-      null!,
+      schema,
       [
         {
           location: 'some/file/my-query.graphql',

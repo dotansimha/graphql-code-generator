@@ -911,7 +911,7 @@ describe('TypeScript', () => {
         { outputFile: '' },
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend![0]).toBe(`import IMyEnum from './files';`);
+      expect(result.prepend?.[0]).toBe(`import IMyEnum from './files';`);
     });
 
     it('#4834 - enum members should be quoted if numeric', async () => {

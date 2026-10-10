@@ -333,7 +333,7 @@ describe('Codegen Executor', () => {
           'out1.ts': { plugins: ['typescript'] },
         },
       });
-      expect(error!.message).toContain('Not all operations have an unique name: q');
+      expect(error?.message).toContain('Not all operations have an unique name: q');
     });
 
     it('should handle gql tag in ts with with nested fragment', async () => {
@@ -623,7 +623,7 @@ describe('Codegen Executor', () => {
           },
         },
       });
-      expect(error!.message).toContain('Invalid Custom Plugin');
+      expect(error?.message).toContain('Invalid Custom Plugin');
     });
 
     it('Should execute custom plugin validation and return error when it fails', async () => {
@@ -635,7 +635,7 @@ describe('Codegen Executor', () => {
           },
         },
       });
-      expect(error!.message).toContain('validation failed');
+      expect(error?.message).toContain('validation failed');
     });
 
     it('Should allow plugins to extend schema', async () => {
@@ -715,12 +715,12 @@ describe('Codegen Executor', () => {
       );
 
       expect(
-        merged.getType('Post')!.astNode!.directives!.map(({ name }) => name.value),
+        merged.getType('Post')?.astNode?.directives?.map(({ name }) => name.value),
       ).toContainEqual('test');
       expect(
         (merged.getType('Post') as GraphQLObjectType)
           .getFields()
-          .id.astNode!.directives!.map(({ name }) => name.value),
+          .id.astNode?.directives?.map(({ name }) => name.value),
       ).toContainEqual('id');
     });
 
@@ -949,7 +949,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(error!.message).toContain('Failed to load schema');
+      expect(error?.message).toContain('Failed to load schema');
     });
 
     it('Should return error when invalid module specified as loader', async () => {
@@ -968,7 +968,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(error!.message).toContain('Failed to load custom loader');
+      expect(error?.message).toContain('Failed to load custom loader');
     });
 
     it('Should return error when invalid file declaration', async () => {
@@ -987,8 +987,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(error!.message).toContain('Failed to load schema');
-      expect(error!.message).toContain('Failed to load custom loader');
+      expect(error?.message).toContain('Failed to load schema');
+      expect(error?.message).toContain('Failed to load custom loader');
     });
 
     it('Should allow a loader to be a function passed directly', async () => {
@@ -1026,8 +1026,8 @@ describe('Codegen Executor', () => {
         },
       });
 
-      const a = result.find(f => f.filename === 'a.ts')!.content;
-      const b = result.find(f => f.filename === 'b.ts')!.content;
+      const a = result.find(f => f.filename === 'a.ts')?.content;
+      const b = result.find(f => f.filename === 'b.ts')?.content;
       expect(a).toContain('fromA');
       expect(a).not.toContain('fromB');
       expect(b).toContain('fromB');
@@ -1110,7 +1110,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(error!.message).toContain(
+      expect(error?.message).toContain(
         'Unable to find any GraphQL type definitions for the following pointers',
       );
     });
@@ -1132,7 +1132,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(error!.message).toContain('Failed to load custom loader');
+      expect(error?.message).toContain('Failed to load custom loader');
     });
 
     it('Should return error when invalid file declaration', async () => {
@@ -1152,7 +1152,7 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(error!.message).toContain('Failed to load custom loader');
+      expect(error?.message).toContain('Failed to load custom loader');
     });
   });
 
@@ -1358,13 +1358,17 @@ describe('Codegen Executor', () => {
   describe('Document Transform', () => {
     it('Should transform documents', async () => {
       const transform: Types.DocumentTransformFunction = ({ documents }) => {
+        const { document } = documents[0];
+        if (!document) {
+          throw new Error('document is missing');
+        }
         const newDocuments: Types.DocumentFile[] = [
           {
             document: {
-              ...documents[0].document!,
+              ...document,
               definitions: [
                 {
-                  ...documents[0].document!.definitions[0],
+                  ...document.definitions[0],
                   name: { kind: Kind.NAME, value: 'bar' },
                 } as OperationDefinitionNode,
               ],
@@ -1395,13 +1399,17 @@ describe('Codegen Executor', () => {
       }) => Types.DocumentTransformObject = ({ queryName }) => {
         return {
           transform: ({ documents }) => {
+            const { document } = documents[0];
+            if (!document) {
+              throw new Error('document is missing');
+            }
             const newDocuments: Types.DocumentFile[] = [
               {
                 document: {
-                  ...documents[0].document!,
+                  ...document,
                   definitions: [
                     {
-                      ...documents[0].document!.definitions[0],
+                      ...document.definitions[0],
                       name: { kind: Kind.NAME, value: queryName },
                     } as OperationDefinitionNode,
                   ],
@@ -1475,7 +1483,10 @@ describe('Codegen Executor', () => {
             documentTransforms: [
               {
                 transform: ({ pluginContext, documents }) => {
-                  pluginContext!.myPluginInfo = 'world';
+                  if (!pluginContext) {
+                    throw new Error('pluginContext is missing');
+                  }
+                  pluginContext.myPluginInfo = 'world';
                   return documents;
                 },
               },
@@ -1507,21 +1518,25 @@ describe('Codegen Executor', () => {
         },
       });
 
-      expect(error!.message).toContain(
+      expect(error?.message).toContain(
         'DocumentTransform "the element at index 0 of the documentTransforms" failed',
       );
-      expect(error!.message).toContain('Something Wrong!');
+      expect(error?.message).toContain('Something Wrong!');
     });
 
     it('Should transform documents with client-preset', async () => {
       const transform: Types.DocumentTransformFunction = ({ documents }) => {
+        const { document } = documents[0];
+        if (!document) {
+          throw new Error('document is missing');
+        }
         const newDocuments: Types.DocumentFile[] = [
           {
             document: {
-              ...documents[0].document!,
+              ...document,
               definitions: [
                 {
-                  ...documents[0].document!.definitions[0],
+                  ...document.definitions[0],
                   name: { kind: Kind.NAME, value: 'bar' },
                 } as OperationDefinitionNode,
               ],
@@ -1543,7 +1558,7 @@ describe('Codegen Executor', () => {
       });
 
       const fileOutput = result.find(file => file.filename === './src/gql/graphql.ts');
-      expect(fileOutput!.content).toContain('export type BarQuery');
+      expect(fileOutput?.content).toContain('export type BarQuery');
     });
   });
 

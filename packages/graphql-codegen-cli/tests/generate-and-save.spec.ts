@@ -681,7 +681,7 @@ describe('generate-and-save', () => {
       try {
         const config = await createContext({
           config: './tests/test-files/graphql.config.no-doc.cjs',
-          project: undefined!,
+          project: '',
           errorsOnly: true,
           overwrite: true,
           profile: true,
@@ -714,7 +714,7 @@ describe('generate-and-save', () => {
       vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
       const config = await createContext({
         config: './tests/test-files/graphql.config.no-doc-ignored.cjs',
-        project: undefined!,
+        project: '',
         errorsOnly: true,
         overwrite: true,
         profile: true,

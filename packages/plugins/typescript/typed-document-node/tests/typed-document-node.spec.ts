@@ -7,7 +7,7 @@ describe('TypedDocumentNode', () => {
   it('Should not output imports when there are no operations at all', async () => {
     const result = (await plugin(null as any, [], {})) as Types.ComplexPluginOutput;
     expect(result.content).toBe('');
-    expect(result.prepend!.length).toBe(0);
+    expect(result.prepend?.length).toBe(0);
   });
 
   it('dedupes fragments automatically when documentMode=graphQLTag', async () => {

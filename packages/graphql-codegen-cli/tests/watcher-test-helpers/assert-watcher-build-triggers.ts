@@ -161,7 +161,7 @@ export const assertBuildTriggers = async (
     );
     expect(onWatchTriggeredMock).toHaveBeenCalledTimes(shouldTriggerBuild.length);
 
-    const ignore = subscribeOpts!.ignore ?? [];
+    const ignore = subscribeOpts?.ignore ?? [];
     if (pathsWouldBeIgnoredByParcelWatcher) {
       for (const relPathFromCwd of pathsWouldBeIgnoredByParcelWatcher) {
         if (isGlob(relPathFromCwd)) {

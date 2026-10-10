@@ -28,7 +28,8 @@ const setupMockWatcher = async (
   const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
 
   const dispatchChange = async (path: string) =>
-    subscribeCallbackMock(undefined!, [{ type: 'update', path }]);
+    // @ts-expect-error err is typed `Error | null`, but assertBuildTriggers expects the mock to be called with `undefined`
+    subscribeCallbackMock(undefined, [{ type: 'update', path }]);
 
   // createWatcher doesn't set up subscription immediately, so we wait for a tick before continuing
   await new Promise(resolve => setTimeout(resolve, 100));

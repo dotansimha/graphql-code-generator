@@ -35,12 +35,12 @@ describe('client-preset - fragment masking', () => {
     expect(fileNames).toContain('out1/graphql.ts');
 
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile!.content).toMatchInlineSnapshot(`
+    expect(indexFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       export * from "./gql";"
     `);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile!.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import * as types from './graphql';
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -153,7 +153,7 @@ describe('client-preset - fragment masking', () => {
 
     expect(result).toHaveLength(4);
     const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
-    expect(gqlFile!.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -273,7 +273,7 @@ describe('client-preset - fragment masking', () => {
 
     const fragmentFile = result.find(file => file.filename.includes('fragment-masking.ts'));
 
-    expect(fragmentFile!.content).toMatchInlineSnapshot(`
+    expect(fragmentFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -405,7 +405,7 @@ describe('client-preset - fragment masking', () => {
 
     const fragmentFile = result.find(file => file.filename.includes('fragment-masking.ts'));
 
-    expect(fragmentFile!.content).toMatchInlineSnapshot(`
+    expect(fragmentFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -537,7 +537,7 @@ describe('client-preset - fragment masking', () => {
 
     const fragmentFile = result.find(file => file.filename.includes('fragment-masking.ts'));
 
-    expect(fragmentFile!.content).toMatchInlineSnapshot(`
+    expect(fragmentFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -682,7 +682,7 @@ describe('client-preset - fragment masking', () => {
     expect(result).toHaveLength(4);
 
     const typeFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(typeFile!.content).toMatchInlineSnapshot(`
+    expect(typeFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -702,7 +702,7 @@ describe('client-preset - fragment masking', () => {
       export const GetUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"withNicknames"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserNicknames"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"BooleanValue","value":true}}]}]},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"BooleanValue","value":true}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserNicknames"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nicknames"}}]}}]} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;"
     `);
     const fragmentMaskingFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
-    expect(fragmentMaskingFile!.content).toMatchInlineSnapshot(`
+    expect(fragmentMaskingFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -794,14 +794,14 @@ describe('client-preset - fragment masking', () => {
     `);
 
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile!.content).toMatchInlineSnapshot(`
+    expect(indexFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       export * from "./fragment-masking";
       export * from "./gql";"
     `);
 
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile!.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -1024,7 +1024,7 @@ describe('client-preset - fragment masking', () => {
     });
 
     const typeFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(typeFile!.content).toMatchInlineSnapshot(`
+    expect(typeFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
