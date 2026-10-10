@@ -28,7 +28,7 @@ const setupMockWatcher = async (
   const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
 
   const dispatchChange = async (path: string) =>
-    subscribeCallbackMock(undefined, [{ type: 'update', path }]);
+    subscribeCallbackMock(undefined!, [{ type: 'update', path }]);
 
   // createWatcher doesn't set up subscription immediately, so we wait for a tick before continuing
   await new Promise(resolve => setTimeout(resolve, 100));
@@ -51,7 +51,7 @@ describe('Watch patterns', () => {
     const { stopWatching } = await setupMockWatcher({
       filepath: './foo/some-config.ts',
       config: {
-        hooks: { onWatchTriggered: vi.fn() },
+        hooks: { onWatchTriggered: vi.fn<() => void>() },
         schema: './foo/something.ts',
         generates: {
           ['./foo/some-output.ts']: {
@@ -72,7 +72,7 @@ describe('Watch patterns', () => {
     const { stopWatching } = await setupMockWatcher({
       filepath: './foo/some-config.ts',
       config: {
-        hooks: { onWatchTriggered: vi.fn() },
+        hooks: { onWatchTriggered: vi.fn<() => void>() },
         schema: 'http://localhost/graphql',
         generates: {
           ['./foo/some-output.ts']: {
@@ -97,7 +97,7 @@ describe('Watch patterns', () => {
     const { stopWatching } = await setupMockWatcher({
       filepath: './foo/some-config.ts',
       config: {
-        hooks: { onWatchTriggered: vi.fn() },
+        hooks: { onWatchTriggered: vi.fn<() => void>() },
         schema: './foo/something.ts',
         generates: {
           ['./foo/some-output.ts']: {

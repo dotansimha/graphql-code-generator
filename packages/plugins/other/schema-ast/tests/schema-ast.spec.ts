@@ -17,7 +17,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(null!, null!, null, fileName, plugins);
 
         throw new Error(SHOULD_THROW_ERROR);
       } catch (e: any) {
@@ -40,7 +40,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(null!, null!, null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }
@@ -55,7 +55,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(null!, null!, null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }
@@ -70,7 +70,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(null!, null!, null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }
@@ -85,7 +85,7 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(null, null, null, fileName, plugins);
+        await validate(null!, null!, null, fileName, plugins);
       } catch {
         expect(true).toBeFalsy();
       }

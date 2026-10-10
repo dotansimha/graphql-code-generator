@@ -2392,17 +2392,19 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         outputFile: 'graphql.ts',
       });
 
-      expect(output.prepend.filter(t => t.includes('import')).length).toBe(2);
-      expect(output.prepend.filter(t => t.includes('ProjectRole')).length).toBe(0);
-      expect(tsContent.prepend.filter(t => t.includes('ProjectRole')).length).toBe(1);
+      expect(output.prepend!.filter(t => t!.includes('import')).length).toBe(2);
+      expect(output.prepend!.filter(t => t!.includes('ProjectRole')).length).toBe(0);
+      expect(tsContent.prepend!.filter(t => t!.includes('ProjectRole')).length).toBe(1);
       expect(output.content.includes('AnotherProjectRole')).toBeFalsy();
       expect(
-        tsContent.prepend.includes(
+        tsContent.prepend!.includes(
           `import { AnotherProjectRole as ProjectRole } from '../entities';`,
         ),
       ).toBeTruthy();
       expect(
-        output.prepend.includes(`import { AnotherProjectRole as ProjectRole } from '../entities';`),
+        output.prepend!.includes(
+          `import { AnotherProjectRole as ProjectRole } from '../entities';`,
+        ),
       ).toBeFalsy();
     });
 

@@ -681,7 +681,7 @@ describe('generate-and-save', () => {
       try {
         const config = await createContext({
           config: './tests/test-files/graphql.config.no-doc.cjs',
-          project: undefined,
+          project: undefined!,
           errorsOnly: true,
           overwrite: true,
           profile: true,
@@ -714,7 +714,7 @@ describe('generate-and-save', () => {
       vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
       const config = await createContext({
         config: './tests/test-files/graphql.config.no-doc-ignored.cjs',
-        project: undefined,
+        project: undefined!,
         errorsOnly: true,
         overwrite: true,
         profile: true,
@@ -852,6 +852,7 @@ describe('generate-and-save', () => {
             schema: SIMPLE_TEST_SCHEMA,
             generates: {
               'src/a.ts': {
+                // @ts-expect-error intentionally invalid preset name
                 preset: 'this-preset-does-not-exist',
               },
               'src/b.ts': {

@@ -220,7 +220,7 @@ describe('isUsingTypes', () => {
       }
     `);
 
-    expect(isUsingTypes(ast, [], null)).toBeTruthy();
+    expect(isUsingTypes(ast, [], null!)).toBeTruthy();
   });
 
   it('Should ignore fragments when they are extenral', () => {
@@ -234,7 +234,7 @@ describe('isUsingTypes', () => {
       }
     `);
 
-    expect(isUsingTypes(ast, ['UserFields'], null)).toBeFalsy();
+    expect(isUsingTypes(ast, ['UserFields'], null!)).toBeFalsy();
   });
 
   it('Should includes types import when fragment spread is used over an optional field', () => {
