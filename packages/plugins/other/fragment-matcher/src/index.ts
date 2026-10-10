@@ -210,9 +210,7 @@ export const plugin: PluginFunction = async (
     const defaultExportStatement =
       config.module === 'es2015' ? `export default` : 'module.exports =';
 
-    return `
-      ${defaultExportStatement} ${content}
-    `;
+    return `${defaultExportStatement} ${content}\n`;
   }
 
   if (extensions.ts.includes(ext)) {
@@ -228,29 +226,28 @@ export const plugin: PluginFunction = async (
       type = `export type ${typename} = ${content};`;
     } else if (apolloClientVersion === 2) {
       type = `export interface ${typename} {
-        __schema: {
-          types: {
-            kind: string;
-            name: string;
-            possibleTypes: {
-              name: string;
-            }[];
-          }[];
-        };
-      }`;
+  __schema: {
+    types: {
+      kind: string;
+      name: string;
+      possibleTypes: {
+        name: string;
+      }[];
+    }[];
+  };
+}`;
     } else if (apolloClientVersion === 3) {
       type = `export interface ${typename} {
-        possibleTypes: {
-          [key: string]: string[]
-        }
-      }`;
+  possibleTypes: {
+    [key: string]: string[]
+  }
+}`;
     }
 
-    return `
-      ${type}
-      const result: ${typename} = ${content};
-      export default result;
-    `;
+    return `${type}
+const result: ${typename} = ${content};
+export default result;
+`;
   }
 
   throw new Error(`Extension ${ext} is not supported`);
