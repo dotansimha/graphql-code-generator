@@ -161,9 +161,11 @@ describe('externalDocuments', () => {
     expect(capturedDocuments).toHaveLength(1);
     expect(capturedExternalDocuments).toHaveLength(1);
 
+    // `|| []` only satisfies type safety; toHaveLength above already fails if missing
     const documentNames = (capturedDocuments || []).flatMap(
       d => d.document?.definitions.map((def: any) => def.name?.value) ?? [],
     );
+    // `|| []` only satisfies type safety; toHaveLength above already fails if missing
     const readOnlyNames = (capturedExternalDocuments || []).flatMap(
       d => d.document?.definitions.map((def: any) => def.name?.value) ?? [],
     );
