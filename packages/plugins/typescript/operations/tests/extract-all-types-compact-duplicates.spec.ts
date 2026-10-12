@@ -66,6 +66,7 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       extractAllFieldsToTypesCompact: true,
       printFieldsOnNewLines: true,
       nonOptionalTypename: true,
+      // @ts-expect-error fragmentSuffix is not a typescript-operations option (no-op here)
       fragmentSuffix: '',
     };
 
@@ -145,6 +146,7 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       extractAllFieldsToTypesCompact: true,
       printFieldsOnNewLines: true,
       nonOptionalTypename: true,
+      // @ts-expect-error fragmentSuffix is not a typescript-operations option (no-op here)
       fragmentSuffix: '',
     };
 
@@ -203,6 +205,7 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       extractAllFieldsToTypesCompact: true,
       printFieldsOnNewLines: true,
       nonOptionalTypename: true,
+      // @ts-expect-error fragmentSuffix is not a typescript-operations option (no-op here)
       fragmentSuffix: '',
     };
 
@@ -309,6 +312,7 @@ describe('extractAllFieldsToTypesCompact: duplicate type names', () => {
       extractAllFieldsToTypesCompact: true,
       printFieldsOnNewLines: true,
       nonOptionalTypename: true,
+      // @ts-expect-error fragmentSuffix is not a typescript-operations option (no-op here)
       fragmentSuffix: '',
     };
 

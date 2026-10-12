@@ -63,7 +63,8 @@ export function includeIntrospectionTypesDefinitions(
   const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {
     Field() {
-      const type = getNamedType(typeInfo.getType());
+      const fieldType = typeInfo.getType();
+      const type = fieldType ? getNamedType(fieldType) : undefined;
 
       if (type && isIntrospectionType(type) && !usedTypes.includes(type)) {
         usedTypes.push(type);

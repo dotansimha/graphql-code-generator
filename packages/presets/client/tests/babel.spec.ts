@@ -11,7 +11,7 @@ describe('client-preset > babelPlugin', () => {
         babelrc: false,
         configFile: false,
       },
-    ).code;
+    )?.code;
 
     expect(result).toMatchInlineSnapshot(`
       "import { CFragmentDoc } from "./graphql";
@@ -39,7 +39,7 @@ describe('client-preset > babelPlugin', () => {
         babelrc: false,
         configFile: false,
       },
-    ).code;
+    )?.code;
     expect(result).toMatchInlineSnapshot(`
       "import { CFragmentDoc } from "../graphql";
       import { BDocument } from "../graphql";

@@ -194,7 +194,7 @@ export function isExternalMapper(value: string): boolean {
 }
 
 export function transformMappers(
-  rawMappers: RawResolversConfig['mappers'],
+  rawMappers: RawResolversConfig['mappers'] = {},
   mapperTypeSuffix?: string,
 ): ParsedResolversConfig['mappers'] {
   const result: ParsedResolversConfig['mappers'] = {};

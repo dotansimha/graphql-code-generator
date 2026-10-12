@@ -116,9 +116,16 @@ export async function loadDocuments(
   }
 }
 
-const printError = (error: any) => {
+const printError = (error: unknown): string => {
   if (error instanceof GraphQLError) {
     return String(error);
   }
-  return [String(error.message || error), String(error.stack)].join('\n');
+  // `@graphql-tools/load` wraps loader errors in an AggregateError, so print each one to keep e.g. GraphQLError's location
+  if (error instanceof AggregateError && error.errors.length > 0) {
+    return error.errors.map(printError).join('\n\n');
+  }
+  if (error instanceof Error) {
+    return [error.message || String(error), String(error.stack)].join('\n');
+  }
+  return String(error);
 };
