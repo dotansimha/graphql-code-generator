@@ -284,7 +284,18 @@ export class ClientSideBaseVisitor<
     this._documents = documents;
     this._onExecutableDocumentNode = (rawConfig as any).unstable_onExecutableDocumentNode;
     this._omitDefinitions = (rawConfig as any).unstable_omitDefinitions;
-    this._fragments = new Map(fragments.map(fragment => [fragment.name, fragment]));
+    const fragmentsByName = new Map<string, LoadedFragment>();
+    for (const fragment of fragments) {
+      // A fragment can be passed both as a local definition and as an external one, e.g. when
+      // near-operation-file reports a fragment generated into the same file as external.
+      // Keep the local definition so its document is still generated.
+      const existing = fragmentsByName.get(fragment.name);
+      if (existing && !existing.isExternal && fragment.isExternal) {
+        continue;
+      }
+      fragmentsByName.set(fragment.name, fragment);
+    }
+    this._fragments = fragmentsByName;
     this.fragmentsGraph = this._getFragmentsGraph();
     autoBind(this);
   }
