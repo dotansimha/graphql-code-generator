@@ -1,5 +1,16 @@
 # @graphql-codegen/fragment-matcher
 
+## 7.1.1
+
+### Patch Changes
+
+- [#11046](https://github.com/dotansimha/graphql-code-generator/pull/11046)
+  [`2162538`](https://github.com/dotansimha/graphql-code-generator/commit/2162538d670bf38e56ea83b2efa35b303a041ed3)
+  Thanks [@cpruijsen](https://github.com/cpruijsen)! - Fix indentation of generated TypeScript and
+  JavaScript output. The plugin previously emitted declarations indented by six spaces while the
+  `JSON.stringify` content was flush left, producing misaligned code (for example an empty
+  `possibleTypes` map). The generated output is now emitted flush left with consistent indentation.
+
 ## 7.1.0
 
 ### Minor Changes

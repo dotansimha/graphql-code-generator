@@ -1,5 +1,21 @@
 # @graphql-codegen/typed-document-node
 
+## 7.2.0
+
+### Minor Changes
+
+- [#11011](https://github.com/dotansimha/graphql-code-generator/pull/11011)
+  [`b3fbb13`](https://github.com/dotansimha/graphql-code-generator/commit/b3fbb13203d4f7683027ba871e13eb5e9cbc6a93)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add `documentMode: 'plainString'`. Documents
+  are generated as plain template strings with fragments embedded, instead of `TypedDocumentString`
+  instances. No class, import or type cast is generated, so each document is typed as `string`.
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b3fbb13`](https://github.com/dotansimha/graphql-code-generator/commit/b3fbb13203d4f7683027ba871e13eb5e9cbc6a93)]:
+  - @graphql-codegen/visitor-plugin-common@7.3.0
+
 ## 7.1.1
 
 ### Patch Changes
