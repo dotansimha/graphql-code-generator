@@ -9,25 +9,23 @@ import {
 import { Types } from './types.js';
 
 export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOutput>): string {
-  const result: Types.ComplexPluginOutput = {
-    content: '',
-    prepend: [],
-    append: [],
-  };
+  let mergedContent = '';
+  const prepend: Array<string | null> = [];
+  const append: Array<string | null> = [];
 
   if (Array.isArray(content)) {
     for (const item of content) {
       if (typeof item === 'string') {
-        result.content += item;
+        mergedContent += item;
       } else {
-        result.content += item.content;
-        result.prepend.push(...(item.prepend || []));
-        result.append.push(...(item.append || []));
+        mergedContent += item.content;
+        prepend.push(...(item.prepend || []));
+        append.push(...(item.append || []));
       }
     }
   }
 
-  return [...result.prepend, result.content, ...result.append].join('\n');
+  return [...prepend, mergedContent, ...append].join('\n');
 }
 
 export function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {

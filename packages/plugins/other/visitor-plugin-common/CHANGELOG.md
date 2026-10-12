@@ -1,5 +1,202 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.2.10
+
+### Patch Changes
+
+- [#10985](https://github.com/dotansimha/graphql-code-generator/pull/10985)
+  [`d8aa07f`](https://github.com/dotansimha/graphql-code-generator/commit/d8aa07fed45a2787f46da30a7ffb52651b32dc67)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Build with `strict: true`, which changes
+  these emitted type declarations:
+  - `@graphql-codegen/cli`: `mkdirp` returns `Promise<string | undefined>`, and the `require` (`-r`)
+    CLI option's `default` is typed `never[]` instead of `any[]`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseResolversVisitor` and `BaseTypesVisitor`
+    `SchemaDefinition()`/`SchemaExtension()` return `null` instead of `any`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseSelectionSetProcessor.typeCache` is keyed by
+    `Location | undefined`.
+  - `@graphql-codegen/visitor-plugin-common`: `SelectionSetToObject.buildSelectionSet` returns
+    `typeInfo` as `{ name: string; type: string } | null`.
+  - `@graphql-codegen/visitor-plugin-common`: `getPossibleTypes` accepts `null` as the type, which
+    graphql 15's `schema.getType()` can return.
+  - `@graphql-codegen/visitor-plugin-common`: `removeDescription` returns nodes with
+    `description: undefined` instead of `any`.
+  - `@graphql-codegen/typescript`: `TsIntrospectionVisitor`'s constructor takes `pluginConfig` as
+    `TypeScriptPluginConfig | undefined`, `DirectiveDefinition()` returns `null` and
+    `ObjectTypeDefinition()` returns `string | null`.
+  - `@graphql-codegen/client-preset`: the babel preset accepts `options` as
+    `ClientBabelPresetOptions | null | undefined`.
+  - `@graphql-codegen/testing`: `mockGraphQLServer` returns `nock.Scope | null`.
+  - `@graphql-codegen/graphql-modules-preset`: a schema without `extensions` (graphql 15) throws the
+    "requires to use GraphQL SDL" error instead of a `TypeError`.
+
+  Generated output is unchanged.
+
+- [#11039](https://github.com/dotansimha/graphql-code-generator/pull/11039)
+  [`5078faf`](https://github.com/dotansimha/graphql-code-generator/commit/5078faf7ba4cef1c7164ce0b9d6fc01af56a5497)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `visitor-plugin-common`
+  (`utils`, `imports`, `naming`, `mappers`, `types`, `variables-to-object`,
+  `convert-schema-enum-to-declaration-block-string`, `selection-set-processor/base` and
+  `optimize-operations`) under `strict: true`:
+  - `transformComment` accepts `undefined` and `null`, which it already handles by returning an
+    empty string.
+  - `block` declares its param as `string[] | null | undefined`, which it already handles by
+    returning an empty string.
+  - `DeclarationBlock`'s fields are typed as `string | null` (`_name` as
+    `string | NameNode | null`), and `withBlock` accepts `null`, which renders the same as no block.
+  - `DeclarationBlock` falls back to returning the block unchanged when `blockTransformer` is passed
+    as `undefined`, instead of throwing.
+  - `buildScalars` accepts an `undefined` scalars mapping, which it already handles by using only
+    the defaults and the schema.
+  - `buildTypeImport` accepts a nullish `identifier` and `source`, and throws a descriptive error
+    when either is missing.
+  - `ParsedEnumValuesMap`'s `mappedValues`, `sourceIdentifier`, `sourceFile` and `importIdentifier`
+    accept `null`, which `parseEnumValues` already emits.
+  - `transformMappers` defaults `rawMappers` to `{}`.
+  - `OperationVariablesToObject.getName`, `OperationVariablesToObject.transform` and
+    `BaseSelectionSetProcessor.buildSelectionSetFromStrings` may return `null`, which they already
+    return.
+  - `buildEnumValuesBlock` throws a descriptive error when an enum value is not defined on the
+    schema's enum.
+  - `optimizeOperations` throws a descriptive error when a document file has no parsed document.
+  - `unique`'s default key uses `String(item)`.
+  - `convertSchemaEnumToDeclarationBlockString` treats an enum node without `values` as empty
+    instead of throwing.
+  - `generateFragmentImportStatement` treats a missing `identifiers` as empty.
+  - `getDeprecationReason` returns the default reason for a `@deprecated` directive without
+    arguments.
+  - `isOneOfInputObjectType` returns `false` instead of `undefined`.
+  - `buildEnumValuesBlock` treats a non-enum schema type with the enum's name as having no schema
+    enum.
+  - `OperationVariablesToObject` emits `''` instead of the text `undefined`/`null` when a variable
+    has no name or no type identifier.
+
+  Generated output is unchanged, except in the cases above.
+
+## 7.2.9
+
+### Patch Changes
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/relay-operation-optimizer@^7.1.12` ↗︎](https://www.npmjs.com/package/@graphql-tools/relay-operation-optimizer/v/7.1.12)
+    (from `^7.1.1`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `^11.2.0`, in `dependencies`)
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Update `@graphql-tools/utils` to v12, and
+  other `@graphql-tools/*` dependencies and `graphql-config` to releases that use it, to pick up the
+  fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype
+  pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
+
+  `@graphql-codegen/cli` now unwraps the `AggregateError` that newer `@graphql-tools/load` versions
+  throw, so schema and document syntax errors still print the native `GraphQLError` with its file
+  location.
+
+- [#11037](https://github.com/dotansimha/graphql-code-generator/pull/11037)
+  [`463e6ef`](https://github.com/dotansimha/graphql-code-generator/commit/463e6eff471a4e55d4a727b342051e5ff4e4c3e0)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `visitor-plugin-common`
+  (`base-types-visitor`) under `strict: true`:
+  - `BaseTypesVisitor`'s constructor takes `additionalConfig` as `Partial<TPluginConfig>`, since the
+    visitor fills in the defaults for every key it leaves out.
+  - `BaseTypesVisitor` handles input objects, objects, interfaces, unions and enums without
+    `fields`, `types`, `values` or `description` by treating them as empty, instead of throwing.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)]:
+  - @graphql-codegen/plugin-helpers@7.4.2
+
+## 7.2.8
+
+### Patch Changes
+
+- [#11009](https://github.com/dotansimha/graphql-code-generator/pull/11009)
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `typescript-operations`
+  under `strict: true` by widening the shared types it calls into:
+  - `@graphql-codegen/plugin-helpers`: `Types.ComplexPluginOutput`'s `prepend` and `append` now
+    accept `null` items. Core already skipped them.
+  - `@graphql-codegen/visitor-plugin-common`: `DeclarationBlock.withComment` accepts `undefined`,
+    `parseEnumValues`'s `mapOrStr` is optional (it already defaulted to `{}`),
+    `ImportSource.namespace` accepts `null`, and `optimizeOperations`'s `includeFragments` is
+    optional.
+  - `@graphql-codegen/typescript-operations`: skips document files without a `document`, and no
+    longer throws when called without the plugin info argument.
+
+  Generated output is unchanged.
+
+- [#11014](https://github.com/dotansimha/graphql-code-generator/pull/11014)
+  [`7a376ef`](https://github.com/dotansimha/graphql-code-generator/commit/7a376effc2dcb7ac8decaf53c2c18eb0e28e71e6)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `typescript` under
+  `strict: true` by typing the shared visitor methods it overrides:
+  - `@graphql-codegen/visitor-plugin-common`: adds `NormalizedDeclarationKindConfig` (every
+    declaration kind set), used by `normalizeDeclarationKind`, `DEFAULT_DECLARATION_KINDS` and
+    `ParsedTypesConfig.declarationKind`. `BaseTypesVisitor`'s `NamedType`, `ListType`,
+    `FieldDefinition`, `InputValueDefinition` and `UnionTypeDefinition` have typed visitor params
+    (`key` and `parent` are required, since the visitor always passes them), and
+    `ObjectTypeDefinition`, `EnumTypeDefinition` and `DirectiveDefinition` may return `null`.
+  - `@graphql-codegen/typescript`: skips document files without a `document` when collecting
+    introspection types, types the `TsVisitor` visitor params, and `TsVisitor.EnumTypeDefinition`
+    may return `null` like the introspection visitor's override.
+
+  Generated output is unchanged.
+
+- [#11031](https://github.com/dotansimha/graphql-code-generator/pull/11031)
+  [`3caccd3`](https://github.com/dotansimha/graphql-code-generator/commit/3caccd34f191c7e95b09ff8e80a426b8b133be62)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `visitor-plugin-common`
+  (`selection-set-to-object`, `client-side-base-visitor` and `base-documents-visitor`) under
+  `strict: true`:
+  - `BaseDocumentsVisitor._selectionSetToObject` is optional, since it is only set by
+    `setSelectionSetHandler`. `FragmentDefinition` and `OperationDefinition` throw a descriptive
+    error when it is not set, and `FragmentDefinition` throws one when the fragment's type condition
+    is not in the schema.
+  - `BaseDocumentsVisitor.FragmentDefinition` may return `null`, which it already returns when
+    `generateOperationTypes` is `false`.
+  - `ClientSideBaseVisitor.buildOperation` may return `null`, which its base implementation already
+    returns.
+  - `SelectionSetToObject.transformSelectionSet` declares its return type, and throws a descriptive
+    error when the instance has no selection set.
+  - `LinkField`'s `alias` is optional, matching the link fields built for fields without an alias.
+  - `BaseSelectionSetProcessor.typeCache` is keyed by `Location | undefined`, since selection sets
+    parsed with `noLocation` have no `loc`.
+  - `getPossibleTypes` accepts any `GraphQLType` or `undefined`, which it already handles by
+    unwrapping lists and non-nulls and returning no types, and returns a copy of the schema's
+    possible types instead of the schema's own readonly array.
+  - `OperationVariablesToObject.transform` accepts `undefined`, which it already handles by
+    returning `null`.
+
+  Generated output is unchanged.
+
+- [#11030](https://github.com/dotansimha/graphql-code-generator/pull/11030)
+  [`ccc0d5c`](https://github.com/dotansimha/graphql-code-generator/commit/ccc0d5c205842405dbe95f5b95aded5b5e487e8e)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `visitor-plugin-common`
+  (`base-resolvers-visitor`) under `strict: true`:
+  - `BaseResolversVisitor`'s constructor takes `additionalConfig` as `Partial<TPluginConfig>`, since
+    the visitor fills in the defaults for every key it leaves out.
+  - `BaseResolversVisitor`'s `ScalarTypeDefinition`, `DirectiveDefinition` and `EnumTypeDefinition`
+    may return `null`, which they already return for skipped federation scalars and directives and
+    for enums without `mappers` or `enumValues`.
+  - `BaseResolversVisitor.getAbstractMembersType`'s `isTypenameNonOptional` is optional, matching
+    the optional `resolversNonOptionalTypename` flags it is read from.
+  - `BaseResolversVisitor.defaultMapperType` throws a descriptive error when the `defaultMapper`
+    config is not set.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`43d0f65`](https://github.com/dotansimha/graphql-code-generator/commit/43d0f65c5a0f19a9743aef875e7a2ef3fe8c6e35),
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973),
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52),
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)]:
+  - @graphql-codegen/plugin-helpers@7.4.1
+
 ## 7.2.7
 
 ### Patch Changes

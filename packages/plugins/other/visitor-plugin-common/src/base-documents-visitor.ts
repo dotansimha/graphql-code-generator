@@ -370,7 +370,7 @@ export class BaseDocumentsVisitor<
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
-  protected _selectionSetToObject: SelectionSetToObject;
+  protected _selectionSetToObject?: SelectionSetToObject;
   protected _globalDeclarations: Set<string> = new Set<string>();
 
   constructor(
@@ -469,12 +469,23 @@ export class BaseDocumentsVisitor<
     });
   }
 
-  FragmentDefinition(node: FragmentDefinitionNode): string {
+  FragmentDefinition(node: FragmentDefinitionNode): string | null {
     if (!this.config.generateOperationTypes) {
       return null;
     }
 
+    if (!this._selectionSetToObject) {
+      throw new Error('Unable to visit fragments: call "setSelectionSetHandler" first');
+    }
+
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value);
+
+    if (!fragmentRootType) {
+      throw new Error(
+        `Unable to find schema type "${node.typeCondition.name.value}" for fragment "${node.name.value}"!`,
+      );
+    }
+
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.getFragmentSuffix(node);
     return [
@@ -516,6 +527,10 @@ export class BaseDocumentsVisitor<
 
     if (!operationRootType) {
       throw new Error(`Unable to find root schema type for operation type "${node.operation}"!`);
+    }
+
+    if (!this._selectionSetToObject) {
+      throw new Error('Unable to visit operations: call "setSelectionSetHandler" first');
     }
 
     const selectionSet = this._selectionSetToObject.createNext(

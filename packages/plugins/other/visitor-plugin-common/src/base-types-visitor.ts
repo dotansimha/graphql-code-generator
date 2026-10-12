@@ -15,10 +15,14 @@ import {
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
+  type ASTNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import { buildEnumValuesBlock } from './convert-schema-enum-to-declaration-block-string.js';
-import { normalizeDeclarationKind } from './declaration-kinds.js';
+import {
+  normalizeDeclarationKind,
+  type NormalizedDeclarationKindConfig,
+} from './declaration-kinds.js';
 import { parseEnumValues } from './enum-values.js';
 import { buildTypeImport, getEnumsImports } from './imports.js';
 import { transformDirectiveArgumentAndInputFieldMappings } from './mappers.js';
@@ -49,7 +53,7 @@ import { OperationVariablesToObject } from './variables-to-object.js';
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   ignoreEnumValuesFromSchema: boolean;
-  declarationKind: DeclarationKindConfig;
+  declarationKind: NormalizedDeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
   onlyEnums: boolean;
   onlyOperationTypes: boolean;
@@ -499,7 +503,7 @@ export class BaseTypesVisitor<
   constructor(
     protected _schema: GraphQLSchema,
     rawConfig: TRawConfig,
-    additionalConfig: TPluginConfig,
+    additionalConfig: Partial<TPluginConfig>,
     defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS,
   ) {
     super(rawConfig, {
@@ -564,7 +568,7 @@ export class BaseTypesVisitor<
   }
 
   public getScalarsImports(): string[] {
-    return Object.keys(this.config.scalars).reduce((res, enumName) => {
+    return Object.keys(this.config.scalars).reduce<string[]>((res, enumName) => {
       const mappedValue = this.config.scalars[enumName];
 
       if (mappedValue.input.isExternal) {
@@ -609,7 +613,7 @@ export class BaseTypesVisitor<
 
         return null;
       })
-      .filter(a => a);
+      .filter((a): a is string => !!a);
   }
 
   public get scalarsDefinition(): string {
@@ -690,21 +694,22 @@ export class BaseTypesVisitor<
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
       .withComment(node.description?.value)
-      .withBlock(node.fields.join('\n'));
+      .withBlock((node.fields || []).join('\n'));
   }
 
   getInputObjectOneOfDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
+    const fields = node.fields || [];
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(
         getOneOfInputDeclarationKind({
-          fieldCount: node.fields.length,
+          fieldCount: fields.length,
           inputDeclarationKind: this._parsedConfig.declarationKind.input,
         }),
       )
       .withName(this.convertName(node))
       .withComment(node.description?.value)
-      .withContent(`\n` + node.fields.join('\n  |'));
+      .withContent(`\n` + fields.join('\n  |'));
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
@@ -717,12 +722,19 @@ export class BaseTypesVisitor<
     return this.getInputObjectDeclarationBlock(node).string;
   }
 
-  InputValueDefinition(node: InputValueDefinitionNode): string {
+  InputValueDefinition(
+    node: InputValueDefinitionNode,
+    _key: string | number,
+    _parent: any,
+    _path?: ReadonlyArray<string | number>,
+    _ancestors?: ASTNode[],
+  ): string {
     if (this.config.onlyEnums) return '';
 
-    const comment = transformComment(node.description.value, 1);
+    const comment = transformComment(node.description?.value, 1);
     const { input } = this._parsedConfig.declarationKind;
 
+    // `node.type` is already printed to a string by the visitor; removing the cast needs a visited-AST type for `node`
     let type: string = node.type as any as string;
     if (node.directives && this.config.directiveArgumentAndInputFieldMappings) {
       type = this._getDirectiveOverrideType(node.directives) || type;
@@ -731,7 +743,7 @@ export class BaseTypesVisitor<
     return comment + indent(`${node.name.value}: ${type}${this.getPunctuation(input)}`);
   }
 
-  FieldDefinition(node: FieldDefinitionNode): string {
+  FieldDefinition(node: FieldDefinitionNode, _key: string | number, _parent: any): string {
     if (this.config.onlyEnums) return '';
 
     const typeString = node.type as any as string;
@@ -741,14 +753,11 @@ export class BaseTypesVisitor<
     return comment + indent(`${node.name.value}: ${typeString}${this.getPunctuation(type)}`);
   }
 
-  UnionTypeDefinition(
-    node: UnionTypeDefinitionNode,
-    key: string | number | undefined,
-    parent: any,
-  ): string {
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
+    // `node.types` are already printed strings, so the original AST node is read from `parent[key]`, and `parent` is `any` because oldVisit's parent is untyped
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types
+    const possibleTypes = (originalNode.types || [])
       .map(t =>
         this.scalars[t.name.value] ? this._getScalar(t.name.value, 'output') : this.convertName(t),
       )
@@ -758,7 +767,7 @@ export class BaseTypesVisitor<
       .export()
       .asKind('type')
       .withName(this.convertName(node))
-      .withComment(node.description.value)
+      .withComment(node.description?.value)
       .withContent(possibleTypes).string;
   }
 
@@ -781,6 +790,7 @@ export class BaseTypesVisitor<
   ): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type, interface: interfacesType } = this._parsedConfig.declarationKind;
+    // `node.fields` are already printed to strings by the visitor; dropping `as string[]` needs a visited-AST type for `node`
     const allFields = [
       ...(this.config.addTypename
         ? [
@@ -791,7 +801,7 @@ export class BaseTypesVisitor<
             ),
           ]
         : []),
-      ...node.fields,
+      ...(node.fields || []),
     ] as string[];
     const interfacesNames = originalNode.interfaces
       ? originalNode.interfaces.map(i => this.convertName(i))
@@ -825,7 +835,11 @@ export class BaseTypesVisitor<
     return allFields.join('\n');
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
+  ObjectTypeDefinition(
+    node: ObjectTypeDefinitionNode,
+    key: number | string,
+    parent: any,
+  ): string | null {
     if (this.config.onlyOperationTypes || this.config.onlyEnums) return '';
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
@@ -847,7 +861,7 @@ export class BaseTypesVisitor<
       .withName(this.convertName(node))
       .withComment(node.description?.value);
 
-    return declarationBlock.withBlock(node.fields.join('\n'));
+    return declarationBlock.withBlock((node.fields || []).join('\n'));
   }
 
   InterfaceTypeDefinition(
@@ -878,7 +892,7 @@ export class BaseTypesVisitor<
     });
   }
 
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const enumName = node.name.value;
 
     // In case of mapped external enum string
@@ -895,11 +909,11 @@ export class BaseTypesVisitor<
           useTypesSuffix: this.config.enumSuffix,
         }),
       )
-      .withComment(node.description.value)
+      .withComment(node.description?.value)
       .withBlock(
         buildEnumValuesBlock({
           typeName: enumName,
-          values: node.values,
+          values: node.values || [],
           schema: this._schema,
           naming: {
             convert: this.config.convert,
@@ -924,7 +938,7 @@ export class BaseTypesVisitor<
     return identifier;
   }
 
-  DirectiveDefinition(_node: DirectiveDefinitionNode): string {
+  DirectiveDefinition(_node: DirectiveDefinitionNode): string | null {
     return '';
   }
 
@@ -950,9 +964,11 @@ export class BaseTypesVisitor<
     return this.getArgumentsObjectDeclarationBlock(node, name, field).string;
   }
 
-  protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode) {
+  protected buildArgumentsBlock(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+  ): string {
     const fieldsWithArguments =
-      node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
+      node.fields?.filter(field => field.arguments && field.arguments.length > 0) || [];
     return fieldsWithArguments
       .map(field => {
         const name =
@@ -1014,7 +1030,13 @@ export class BaseTypesVisitor<
     return this.convertName(node);
   }
 
-  NamedType(node: NamedTypeNode, key, parent, path, ancestors): string {
+  NamedType(
+    node: NamedTypeNode,
+    _key: string | number | undefined,
+    _parent: any,
+    _path: ReadonlyArray<string | number>,
+    ancestors: ASTNode[],
+  ): string {
     const currentVisitContext = this.getVisitorKindContextFromAncestors(ancestors);
     const isVisitingInputType = currentVisitContext.includes(Kind.INPUT_OBJECT_TYPE_DEFINITION);
     const typeToUse = this._getTypeForNode(node, isVisitingInputType);
@@ -1026,7 +1048,13 @@ export class BaseTypesVisitor<
     return typeToUse;
   }
 
-  ListType(node: ListTypeNode, _key, _parent, _path, _ancestors): string {
+  ListType(
+    node: ListTypeNode,
+    _key: string | number | undefined,
+    _parent: any,
+    _path: ReadonlyArray<string | number>,
+    _ancestors: ASTNode[],
+  ): string {
     const asString = node.type as any as string;
 
     return this.wrapWithListType(asString);

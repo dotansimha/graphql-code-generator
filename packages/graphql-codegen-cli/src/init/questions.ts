@@ -30,7 +30,7 @@ export async function getAnswers(possibleTargets: Record<Tags, boolean>): Promis
         validate: str => str.length > 0,
       });
 
-    let plugins: PluginOption[];
+    let plugins: PluginOption[] = [];
     if (!targets.includes(Tags.client)) {
       plugins = await checkbox({
         message: 'Pick plugins:',

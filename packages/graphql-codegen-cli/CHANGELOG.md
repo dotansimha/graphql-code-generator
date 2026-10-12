@@ -1,5 +1,155 @@
 # @graphql-codegen/cli
 
+## 7.4.6
+
+### Patch Changes
+
+- [#10985](https://github.com/dotansimha/graphql-code-generator/pull/10985)
+  [`d8aa07f`](https://github.com/dotansimha/graphql-code-generator/commit/d8aa07fed45a2787f46da30a7ffb52651b32dc67)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Build with `strict: true`, which changes
+  these emitted type declarations:
+  - `@graphql-codegen/cli`: `mkdirp` returns `Promise<string | undefined>`, and the `require` (`-r`)
+    CLI option's `default` is typed `never[]` instead of `any[]`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseResolversVisitor` and `BaseTypesVisitor`
+    `SchemaDefinition()`/`SchemaExtension()` return `null` instead of `any`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseSelectionSetProcessor.typeCache` is keyed by
+    `Location | undefined`.
+  - `@graphql-codegen/visitor-plugin-common`: `SelectionSetToObject.buildSelectionSet` returns
+    `typeInfo` as `{ name: string; type: string } | null`.
+  - `@graphql-codegen/visitor-plugin-common`: `getPossibleTypes` accepts `null` as the type, which
+    graphql 15's `schema.getType()` can return.
+  - `@graphql-codegen/visitor-plugin-common`: `removeDescription` returns nodes with
+    `description: undefined` instead of `any`.
+  - `@graphql-codegen/typescript`: `TsIntrospectionVisitor`'s constructor takes `pluginConfig` as
+    `TypeScriptPluginConfig | undefined`, `DirectiveDefinition()` returns `null` and
+    `ObjectTypeDefinition()` returns `string | null`.
+  - `@graphql-codegen/client-preset`: the babel preset accepts `options` as
+    `ClientBabelPresetOptions | null | undefined`.
+  - `@graphql-codegen/testing`: `mockGraphQLServer` returns `nock.Scope | null`.
+  - `@graphql-codegen/graphql-modules-preset`: a schema without `extensions` (graphql 15) throws the
+    "requires to use GraphQL SDL" error instead of a `TypeError`.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`d8aa07f`](https://github.com/dotansimha/graphql-code-generator/commit/d8aa07fed45a2787f46da30a7ffb52651b32dc67)]:
+  - @graphql-codegen/client-preset@6.2.3
+
+## 7.4.5
+
+### Patch Changes
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/apollo-engine-loader@^8.0.38` ↗︎](https://www.npmjs.com/package/@graphql-tools/apollo-engine-loader/v/8.0.38)
+    (from `^8.0.28`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/code-file-loader@^8.1.41` ↗︎](https://www.npmjs.com/package/@graphql-tools/code-file-loader/v/8.1.41)
+    (from `^8.1.39`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/git-loader@^8.0.44` ↗︎](https://www.npmjs.com/package/@graphql-tools/git-loader/v/8.0.44)
+    (from `^8.0.32`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/github-loader@^9.1.11` ↗︎](https://www.npmjs.com/package/@graphql-tools/github-loader/v/9.1.11)
+    (from `^9.0.6`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/graphql-file-loader@^8.1.22` ↗︎](https://www.npmjs.com/package/@graphql-tools/graphql-file-loader/v/8.1.22)
+    (from `^8.1.11`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/json-file-loader@^8.0.36` ↗︎](https://www.npmjs.com/package/@graphql-tools/json-file-loader/v/8.0.36)
+    (from `^8.0.26`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/load@^8.1.19` ↗︎](https://www.npmjs.com/package/@graphql-tools/load/v/8.1.19)
+    (from `^8.1.8`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/merge@^9.2.6` ↗︎](https://www.npmjs.com/package/@graphql-tools/merge/v/9.2.6)
+    (from `^9.2.4`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/url-loader@^9.1.12` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/9.1.12)
+    (from `^9.0.6`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `^11.2.0`, in `dependencies`)
+  - Updated dependency
+    [`graphql-config@^5.1.8` ↗︎](https://www.npmjs.com/package/graphql-config/v/5.1.8) (from
+    `^5.1.6`, in `dependencies`)
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Update `@graphql-tools/utils` to v12, and
+  other `@graphql-tools/*` dependencies and `graphql-config` to releases that use it, to pick up the
+  fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype
+  pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
+
+  `@graphql-codegen/cli` now unwraps the `AggregateError` that newer `@graphql-tools/load` versions
+  throw, so schema and document syntax errors still print the native `GraphQLError` with its file
+  location.
+
+- Updated dependencies
+  [[`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c),
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)]:
+  - @graphql-codegen/client-preset@6.2.2
+  - @graphql-codegen/core@6.2.2
+  - @graphql-codegen/plugin-helpers@7.4.2
+
+## 7.4.4
+
+### Patch Changes
+
+- [#11025](https://github.com/dotansimha/graphql-code-generator/pull/11025)
+  [`43d0f65`](https://github.com/dotansimha/graphql-code-generator/commit/43d0f65c5a0f19a9743aef875e7a2ef3fe8c6e35)
+  Thanks [@BuddhaBing](https://github.com/BuddhaBing)! - Widen
+  `Types.SchemaWithLoaderOptions['loader']` to accept a custom loader function
+  (`CustomSchemaLoaderFn`) in addition to a path string.
+
+  A per-entry `schema` custom loader (`{ '<pointer>': { loader, ...options } }`) is resolved by
+  `@graphql-tools/load`'s `useCustomLoader`, which already accepts either a path string (resolved
+  via `require()`) or a function value at runtime (`typeof loaderPointer === 'function'`). Only the
+  TypeScript type restricted `loader` to `string`, forcing consumers who pass an imported loader
+  function (or a class instance exposing a bound `loader` property) to cast the `schema` array to
+  bypass the type error, even though it worked correctly at runtime.
+
+  This is additive and backward compatible — `loader: string` continues to type-check exactly as
+  before.
+
+  Also fixes a schema-cache collision for function loaders in `@graphql-codegen/cli`: the cache key
+  is `JSON.stringify(schemaPointerMap)`, and `JSON.stringify` drops functions, so two `generates`
+  targets using different loader functions for the same pointer
+  (`{ 'schema.graphql': { loader: fnA } }` vs `{ loader: fnB }`) both keyed as
+  `{"schema.graphql":{}}` and the second silently reused the first's schema. Function values are now
+  keyed by object identity (via the existing `getJsObjectId`), so distinct loaders load separately
+  while one function reused across targets still loads once.
+
+- [#11020](https://github.com/dotansimha/graphql-code-generator/pull/11020)
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `cli` under
+  `strict: true`:
+  - `@graphql-codegen/cli`: `loadCodegenConfig` returns `Promise<LoadCodegenConfigResult | null>`,
+    matching the `null` it resolves to when no config file is found. `YamlCliFlags` includes the
+    kebab-case `ignore-no-documents`, `emit-legacy-common-js-imports` and `import-extension` flags
+    that the CLI reads. `CodegenContext.filepath` is optional, and watch mode only watches the
+    config file when the context has a `filepath`. `CodegenContext.getConfig()` without an argument
+    returns `Types.Config`, and `getConfig(extraConfig)` returns `T & Types.Config`.
+    `CodegenContext.checkModeStaleFiles` is typed as `string[]`. Adds `@types/yargs`,
+    `@types/babel__generator` and `@types/babel__template` as dev dependencies.
+  - `@graphql-codegen/plugin-helpers`: `normalizeInstanceOrArray` and `normalizeConfig` accept
+    `null` and `undefined`, returning `[]`.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`43d0f65`](https://github.com/dotansimha/graphql-code-generator/commit/43d0f65c5a0f19a9743aef875e7a2ef3fe8c6e35),
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973),
+  [`e972b6d`](https://github.com/dotansimha/graphql-code-generator/commit/e972b6d2a2a388748887d87c54fbb66617fc8f44),
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52),
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)]:
+  - @graphql-codegen/plugin-helpers@7.4.1
+  - @graphql-codegen/client-preset@6.2.1
+
 ## 7.4.3
 
 ### Patch Changes

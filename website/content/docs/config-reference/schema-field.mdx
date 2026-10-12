@@ -567,6 +567,35 @@ module.exports = (schemaString, config) => {
   plugins.
 </Callout>
 
+### Passing a Loader Function Directly
+
+Instead of a path string, `loader` can also be a function defined directly in your config,
+typed with the `Types.CustomSchemaLoaderFn` type. This skips the file-path/`require()`
+resolution step, so there's no need for `ts-node/register` to transpile a loader file at
+runtime (see the note at the end of the previous section).
+
+```ts
+import { CodegenConfig } from '@graphql-codegen/cli';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import { buildSchema } from 'graphql';
+
+const loader: Types.CustomSchemaLoaderFn = async (pointer, config) => {
+  // Your logic for loading your GraphQLSchema
+  return buildSchema(/* ... */);
+};
+
+const config: CodegenConfig = {
+  schema: [
+    {
+      'schema.graphql': {
+        loader,
+      },
+    },
+  ],
+};
+export default config;
+```
+
 ### Loading API URL from TypeScript file example:
 
 If you store your API config in a file, and don't want to repeat the URL in the codegen config. You can follow the following example:

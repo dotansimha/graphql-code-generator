@@ -2,9 +2,7 @@ import { convertFactory } from '../src/naming.js';
 
 describe('convertFactory', () => {
   it('Should use pascal case by default', () => {
-    const factory = convertFactory({
-      namingConvention: null,
-    });
+    const factory = convertFactory({});
 
     expect(factory('MyName')).toBe('MyName');
     expect(factory('myName')).toBe('MyName');
@@ -85,9 +83,7 @@ describe('convertFactory', () => {
   });
 
   it('Should keep underscore by default', () => {
-    const factory = convertFactory({
-      namingConvention: null,
-    });
+    const factory = convertFactory({});
 
     expect(factory('My_Name')).toBe('My_Name');
     expect(factory('_Myname')).toBe('_Myname');
@@ -95,9 +91,7 @@ describe('convertFactory', () => {
   });
 
   it('Should allow to override underscore behaviour', () => {
-    const factory = convertFactory({
-      namingConvention: null,
-    });
+    const factory = convertFactory({});
 
     expect(factory('My_Name', { transformUnderscore: true })).toBe('MyName');
     expect(factory('_Myname', { transformUnderscore: true })).toBe('Myname');

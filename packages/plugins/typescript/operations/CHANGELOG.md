@@ -1,5 +1,53 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.10
+
+### Patch Changes
+
+- [#11019](https://github.com/dotansimha/graphql-code-generator/pull/11019)
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `plugin-helpers` under
+  `strict: true`:
+  - `@graphql-codegen/plugin-helpers`: `ProfilerEvent.cat` is optional, matching the Trace Event
+    format and `Profiler.run`'s optional `cat`. `FederationMeta`'s reference selection sets are
+    typed recursively (`{ [field: string]: true | ReferenceSelectionSet }`), matching the nested
+    selections `@key`/`@requires`/`@provides` produce. `oldVisit`'s `visitor` param is typed as
+    `OldVisitor`: `enter` and `leave` maps keyed by AST node kind, whose callbacks receive the typed
+    node plus graphql's `key`, `parent`, `path` and `ancestors`. Federation directives missing their
+    `fields` argument, and operations whose root type is missing from the schema, throw a
+    descriptive error.
+  - `@graphql-codegen/typescript` and `@graphql-codegen/typescript-operations`: the
+    `InputValueDefinition` visitor methods take `path` and `ancestors` as required params, since the
+    visitor always passes them.
+
+  Generated output is unchanged.
+
+- [#11009](https://github.com/dotansimha/graphql-code-generator/pull/11009)
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `typescript-operations`
+  under `strict: true` by widening the shared types it calls into:
+  - `@graphql-codegen/plugin-helpers`: `Types.ComplexPluginOutput`'s `prepend` and `append` now
+    accept `null` items. Core already skipped them.
+  - `@graphql-codegen/visitor-plugin-common`: `DeclarationBlock.withComment` accepts `undefined`,
+    `parseEnumValues`'s `mapOrStr` is optional (it already defaulted to `{}`),
+    `ImportSource.namespace` accepts `null`, and `optimizeOperations`'s `includeFragments` is
+    optional.
+  - `@graphql-codegen/typescript-operations`: skips document files without a `document`, and no
+    longer throws when called without the plugin info argument.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`43d0f65`](https://github.com/dotansimha/graphql-code-generator/commit/43d0f65c5a0f19a9743aef875e7a2ef3fe8c6e35),
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973),
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52),
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3),
+  [`7a376ef`](https://github.com/dotansimha/graphql-code-generator/commit/7a376effc2dcb7ac8decaf53c2c18eb0e28e71e6),
+  [`3caccd3`](https://github.com/dotansimha/graphql-code-generator/commit/3caccd34f191c7e95b09ff8e80a426b8b133be62),
+  [`ccc0d5c`](https://github.com/dotansimha/graphql-code-generator/commit/ccc0d5c205842405dbe95f5b95aded5b5e487e8e)]:
+  - @graphql-codegen/plugin-helpers@7.4.1
+  - @graphql-codegen/visitor-plugin-common@7.2.8
+
 ## 6.1.9
 
 ### Patch Changes

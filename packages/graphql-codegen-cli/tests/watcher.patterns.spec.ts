@@ -28,6 +28,7 @@ const setupMockWatcher = async (
   const { stopWatching } = createWatcher(new CodegenContext(codegenContext), onNext);
 
   const dispatchChange = async (path: string) =>
+    // @ts-expect-error err is typed `Error | null`, but assertBuildTriggers expects the mock to be called with `undefined`
     subscribeCallbackMock(undefined, [{ type: 'update', path }]);
 
   // createWatcher doesn't set up subscription immediately, so we wait for a tick before continuing
@@ -51,7 +52,7 @@ describe('Watch patterns', () => {
     const { stopWatching } = await setupMockWatcher({
       filepath: './foo/some-config.ts',
       config: {
-        hooks: { onWatchTriggered: vi.fn() },
+        hooks: { onWatchTriggered: vi.fn<() => void>() },
         schema: './foo/something.ts',
         generates: {
           ['./foo/some-output.ts']: {
@@ -72,7 +73,7 @@ describe('Watch patterns', () => {
     const { stopWatching } = await setupMockWatcher({
       filepath: './foo/some-config.ts',
       config: {
-        hooks: { onWatchTriggered: vi.fn() },
+        hooks: { onWatchTriggered: vi.fn<() => void>() },
         schema: 'http://localhost/graphql',
         generates: {
           ['./foo/some-output.ts']: {
@@ -97,7 +98,7 @@ describe('Watch patterns', () => {
     const { stopWatching } = await setupMockWatcher({
       filepath: './foo/some-config.ts',
       config: {
-        hooks: { onWatchTriggered: vi.fn() },
+        hooks: { onWatchTriggered: vi.fn<() => void>() },
         schema: './foo/something.ts',
         generates: {
           ['./foo/some-output.ts']: {
