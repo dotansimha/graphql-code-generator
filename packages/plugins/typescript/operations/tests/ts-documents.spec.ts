@@ -5326,6 +5326,69 @@ function test(q: GetEntityBrandDataQuery): void {
       `);
     });
 
+    it('#10920 - keeps masked fragment member types that a nested spread references', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Human {
+          id: String!
+          name: String!
+        }
+        type Robot {
+          id: String!
+          registeredAt: String!
+        }
+        union User = Human | Robot
+        type Task {
+          id: String!
+          assignee: User!
+        }
+        type Query {
+          task(id: String!): Task!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment HumanName_User on User {
+          ... on Human {
+            name
+          }
+        }
+
+        fragment TaskUser_User on User {
+          ... on Human {
+            id
+          }
+          ... on Robot {
+            id
+          }
+          ...HumanName_User
+        }
+
+        fragment TaskDetail_Task on Task {
+          id
+          assignee {
+            ...TaskUser_User
+          }
+        }
+
+        query GetTask($id: String!) {
+          task(id: $id) {
+            ...TaskDetail_Task
+          }
+        }
+      `);
+
+      const { content } = await plugin(
+        testSchema,
+        [{ location: '', document: fragment }],
+        { inlineFragmentTypes: 'mask' },
+        { outputFile: 'graphql.ts' },
+      );
+
+      expect(content).toContain('type HumanName_User_Human_Fragment =');
+      expect(content).toContain('type HumanName_User_Robot_Fragment =');
+      await validate(content);
+    });
+
     it('#6874 - generates types when parent type differs from spread fragment member types', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Animal {

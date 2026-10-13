@@ -1259,7 +1259,18 @@ export class SelectionSetToObject<
           : this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
 
       if (possibleFields.length === 0) {
-        return [];
+        const namesEveryMember =
+          hasMultipleTypes &&
+          (this._config.inlineFragmentTypes === 'mask' ||
+            this._config.inlineFragmentTypes === 'combine');
+        if (!namesEveryMember) {
+          return [];
+        }
+        return {
+          name: declarationName,
+          content: this.getEmptyObjectType(),
+          isUnionType: false,
+        };
       }
 
       const flatFields = possibleFields.map(selectionObject => {
