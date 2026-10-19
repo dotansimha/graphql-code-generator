@@ -19,9 +19,14 @@ describe('TypeScript Operations Plugin - allowEnumStringTypes', () => {
     }
   `);
 
-  it('adds template literal union to enum variables when allowEnumStringTypes is true', async () => {
+  it('adds string values union to enum variables when enumType is native-with-string-values', async () => {
     const result = mergeOutputs([
-      await plugin(schema, [{ document }], { allowEnumStringTypes: true }, { outputFile: '' }),
+      await plugin(
+        schema,
+        [{ document }],
+        { enumType: 'native-with-string-values' },
+        { outputFile: '' },
+      ),
     ]);
 
     expect(result).toMatchInlineSnapshot(`
@@ -29,9 +34,10 @@ describe('TypeScript Operations Plugin - allowEnumStringTypes', () => {
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      export type TargetType =
-        | 'A'
-        | 'B';
+      export enum TargetType {
+        A = 'A',
+        B = 'B'
+      }
 
       export type GetTargetsQueryVariables = Exact<{
         id: string;
@@ -44,17 +50,20 @@ describe('TypeScript Operations Plugin - allowEnumStringTypes', () => {
     `);
   });
 
-  it('keeps plain enum type in variables when allowEnumStringTypes is unset', async () => {
-    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+  it('keeps plain enum type in variables when enumType is native', async () => {
+    const result = mergeOutputs([
+      await plugin(schema, [{ document }], { enumType: 'native' }, { outputFile: '' }),
+    ]);
 
     expect(result).toMatchInlineSnapshot(`
       "/** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-      export type TargetType =
-        | 'A'
-        | 'B';
+      export enum TargetType {
+        A = 'A',
+        B = 'B'
+      }
 
       export type GetTargetsQueryVariables = Exact<{
         id: string;
