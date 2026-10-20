@@ -402,6 +402,68 @@ describe('TypeScript Operations Plugin - Enum', () => {
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
 
+  it('handles `native-with-string-values` enum: adding template literal to input, variables but not result', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        search(filter: SearchFilter, type: TargetType, types: [TargetType!]): [TargetType!]!
+      }
+
+      enum TargetType {
+        A
+        B
+      }
+
+      input SearchFilter {
+        type: TargetType!
+        optionalType: TargetType
+        types: [TargetType]
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      query search($filter: SearchFilter, $type: TargetType, $types: [TargetType!]) {
+        search(filter: $filter, type: $type, types: $types)
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        { enumType: 'native-with-string-values' },
+        { outputFile: '' },
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export enum TargetType {
+        A = 'A',
+        B = 'B'
+      }
+
+      export type SearchFilter = {
+        type: TargetType | \`\${TargetType}\`;
+        optionalType?: TargetType | \`\${TargetType}\` | null | undefined;
+        types?: Array<TargetType | \`\${TargetType}\` | null | undefined> | null | undefined;
+      };
+
+      export type SearchQueryVariables = Exact<{
+        filter?: SearchFilter | null | undefined;
+        type?: TargetType | \`\${TargetType}\` | null | undefined;
+        types?: Array<TargetType | \`\${TargetType}\`> | TargetType | \`\${TargetType}\` | null | undefined;
+      }>;
+
+
+      export type SearchQuery = { search: Array<TargetType> };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
   it('removes underscore from enum values', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {
@@ -1454,6 +1516,124 @@ describe('TypeScript Operations Plugin - Enum enumValues', () => {
 
 
       export type MeQuery = { me: { id: string, role: UserRole } | null };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `enumValues` with `native-with-string-values` enum', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        search(filter: SearchFilter, type: TargetType): [String!]!
+      }
+
+      enum TargetType {
+        A
+        B
+      }
+
+      input SearchFilter {
+        type: TargetType!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      query search($filter: SearchFilter, $type: TargetType) {
+        search(filter: $filter, type: $type)
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native-with-string-values',
+          enumValues: { TargetType: { A: 1, B: 2 } },
+        },
+        { outputFile: '' },
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export enum TargetType {
+        A = 1,
+        B = 2
+      }
+
+      export type SearchFilter = {
+        type: TargetType | \`\${TargetType}\`;
+      };
+
+      export type SearchQueryVariables = Exact<{
+        filter?: SearchFilter | null | undefined;
+        type?: TargetType | \`\${TargetType}\` | null | undefined;
+      }>;
+
+
+      export type SearchQuery = { search: Array<string> };
+      "
+    `);
+
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+
+  it('handles `enumValues` with `native-with-string-values` enum as file import', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        search(filter: SearchFilter, type: TargetType): [String!]!
+      }
+
+      enum TargetType {
+        A
+        B
+      }
+
+      input SearchFilter {
+        type: TargetType!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      query search($filter: SearchFilter, $type: TargetType) {
+        search(filter: $filter, type: $type)
+      }
+    `);
+
+    const result = mergeOutputs([
+      await plugin(
+        schema,
+        [{ document }],
+        {
+          enumType: 'native-with-string-values',
+          enumValues: { TargetType: './enums#MyTargetType' },
+        },
+        { outputFile: '' },
+      ),
+    ]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "import { MyTargetType as TargetType } from './enums';
+      /** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export { TargetType };
+
+      export type SearchFilter = {
+        type: TargetType | \`\${TargetType}\`;
+      };
+
+      export type SearchQueryVariables = Exact<{
+        filter?: SearchFilter | null | undefined;
+        type?: TargetType | \`\${TargetType}\` | null | undefined;
+      }>;
+
+
+      export type SearchQuery = { search: Array<string> };
       "
     `);
 
