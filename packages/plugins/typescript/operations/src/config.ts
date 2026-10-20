@@ -325,11 +325,6 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
 
   /**
    * @description Controls the enum output type. Options: `string-literal` | `native-numeric` | `const` | `native-const` | `native` | `native-with-string-values`;
-   *
-   * `native-with-string-values` declares enums the same way as `native`, and types enums in operation variables and input object fields as ``E | `${E}` ``,
-   * so either the enum member or its string value can be passed, e.g. `TargetType.A` or `'A'`.
-   * Enums in operation result types stay `E`.
-   * Note: if `enumValues` maps an enum's values to numbers, `` `${E}` `` yields their string forms, e.g. `'0' | '1'`.
    * @default `string-literal`
    *
    * @exampleMarkdown
