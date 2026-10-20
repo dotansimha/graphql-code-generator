@@ -213,4 +213,139 @@ describe('TypeScript Operations Plugin - allowEnumStringTypes', () => {
       `);
     });
   });
+
+  describe('enumType: native-with-string-values with enumValues and prefixes', () => {
+    const schemaWithInput = buildSchema(/* GraphQL */ `
+      type Query {
+        search(filter: SearchFilter, type: TargetType): [String!]!
+      }
+
+      enum TargetType {
+        A
+        B
+      }
+
+      input SearchFilter {
+        type: TargetType!
+      }
+    `);
+    const searchDocument = parse(/* GraphQL */ `
+      query search($filter: SearchFilter, $type: TargetType) {
+        search(filter: $filter, type: $type)
+      }
+    `);
+
+    it('renders enum with numeric enumValues mapping', async () => {
+      const result = mergeOutputs([
+        await plugin(
+          schemaWithInput,
+          [{ document: searchDocument }],
+          {
+            enumType: 'native-with-string-values',
+            enumValues: { TargetType: { A: 1, B: 2 } },
+          },
+          { outputFile: '' },
+        ),
+      ]);
+
+      expect(result).toMatchInlineSnapshot(`
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export enum TargetType {
+          A = 1,
+          B = 2
+        }
+
+        export type SearchFilter = {
+          type: TargetType | \`\${TargetType}\`;
+        };
+
+        export type SearchQueryVariables = Exact<{
+          filter?: SearchFilter | null | undefined;
+          type?: TargetType | \`\${TargetType}\` | null | undefined;
+        }>;
+
+
+        export type SearchQuery = { search: Array<string> };
+        "
+      `);
+    });
+
+    it('renders enum mapped to an imported type', async () => {
+      const result = mergeOutputs([
+        await plugin(
+          schemaWithInput,
+          [{ document: searchDocument }],
+          {
+            enumType: 'native-with-string-values',
+            enumValues: { TargetType: './enums#MyTargetType' },
+          },
+          { outputFile: '' },
+        ),
+      ]);
+
+      expect(result).toMatchInlineSnapshot(`
+        "import { MyTargetType as TargetType } from './enums';
+        /** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export { TargetType };
+
+        export type SearchFilter = {
+          type: TargetType | \`\${TargetType}\`;
+        };
+
+        export type SearchQueryVariables = Exact<{
+          filter?: SearchFilter | null | undefined;
+          type?: TargetType | \`\${TargetType}\` | null | undefined;
+        }>;
+
+
+        export type SearchQuery = { search: Array<string> };
+        "
+      `);
+    });
+
+    it('renders enum with typesPrefix and enumPrefix', async () => {
+      const result = mergeOutputs([
+        await plugin(
+          schemaWithInput,
+          [{ document: searchDocument }],
+          {
+            enumType: 'native-with-string-values',
+            typesPrefix: 'I',
+            enumPrefix: true,
+          },
+          { outputFile: '' },
+        ),
+      ]);
+
+      expect(result).toMatchInlineSnapshot(`
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export enum ITargetType {
+          A = 'A',
+          B = 'B'
+        }
+
+        export type ISearchFilter = {
+          type: ITargetType | \`\${ITargetType}\`;
+        };
+
+        export type ISearchQueryVariables = Exact<{
+          filter?: ISearchFilter | null | undefined;
+          type?: ITargetType | \`\${ITargetType}\` | null | undefined;
+        }>;
+
+
+        export type ISearchQuery = { search: Array<string> };
+        "
+      `);
+    });
+  });
 });
